@@ -1,0 +1,604 @@
+// [========================================================]
+// [=============     Yggdrasil - mapflags      ============]
+// [========================================================]
+// [ Version 1                                              ]
+// [========================================================]
+// [ Original script by: Alayne				    ]
+// [========================================================]
+// [ Description:                                           ]
+// [--------------------------------------------------------]
+// [                                                        ]
+// [ - The Yggdrasil Project - mapflags			    ]
+// [========================================================]
+// [ Changelog: (5 last updates)                            ]
+// [--------------------------------------------------------]
+// [                                                        ]
+// [ v0: Creation                      			    ]
+// [                                                        ]
+// [                                                        ]
+// [========================================================]
+// [                                                        ]
+// [========================================================]
+
+lum_boss	mapflag	gvg_castle
+
+//Midgard
+
+Hyrule	mapflag	nowarp
+Hyrule	mapflag	nomemo
+Hyrule	mapflag	nowarpto
+Hyrule	mapflag	loadevent
+
+heidelberg	mapflag	nowarp
+heidelberg	mapflag	nomemo
+heidelberg	mapflag	nowarpto
+heidelberg	mapflag	loadevent
+//heidelberg	mapflag	bexp	10
+//heidelberg	mapflag	jexp	10
+
+dep_lb	mapflag	nowarp
+dep_lb	mapflag	nomemo
+dep_lb	mapflag	nowarpto
+dep_lb	mapflag	noteleport
+dep_lb	mapflag	loadevent
+//dep_lb	mapflag	bexp	10
+//dep_lb	mapflag	jexp	10
+
+aqt_fild02	mapflag	nowarp
+aqt_fild02	mapflag	nomemo
+aqt_fild02	mapflag	nowarpto
+aqt_fild02	mapflag	loadevent
+//aqt_fild02	mapflag	bexp	10
+//aqt_fild02	mapflag	jexp	10
+
+aqt_fild01	mapflag	nowarp
+aqt_fild01	mapflag	nomemo
+aqt_fild01	mapflag	nowarpto
+aqt_fild01	mapflag	loadevent
+//aqt_fild01	mapflag	bexp	10
+//aqt_fild01	mapflag	jexp	10
+
+aquitaine	mapflag	nowarp
+aquitaine	mapflag	nomemo
+aquitaine	mapflag	nowarpto
+aquitaine	mapflag	loadevent
+//aquitaine	mapflag	bexp	10
+//aquitaine	mapflag	jexp	10
+
+lafayette	mapflag	nowarp
+lafayette	mapflag	nomemo
+lafayette	mapflag	nowarpto
+lafayette	mapflag	loadevent
+//lafayette	mapflag	bexp	10
+//lafayette	mapflag	jexp	10
+
+temple_lb	mapflag	nowarp
+temple_lb	mapflag	nomemo
+temple_lb	mapflag	nowarpto
+temple_lb	mapflag	loadevent
+//temple_lb	mapflag	bexp	10
+//temple_lb	mapflag	jexp	10
+
+thalys_o	mapflag	nowarp
+thalys_o	mapflag	nomemo
+thalys_o	mapflag	nowarpto
+thalys_o	mapflag	loadevent
+//thalys_o	mapflag	bexp	10
+//thalys_o	mapflag	jexp	10
+
+cs_lb	mapflag	nowarp
+cs_lb	mapflag	nomemo
+cs_lb	mapflag	nowarpto
+cs_lb	mapflag	loadevent
+//cs_lb	mapflag	bexp	10
+//cs_lb	mapflag	jexp	10
+
+lumina	mapflag	nowarp
+lumina	mapflag	nomemo
+lumina	mapflag	nowarpto
+lumina	mapflag	loadevent
+//lumina	mapflag	bexp	10
+//lumina	mapflag	jexp	10
+
+aqt_shrine	mapflag	nowarp
+aqt_shrine	mapflag	nomemo
+aqt_shrine	mapflag	nowarpto
+aqt_shrine	mapflag	loadevent
+//aqt_shrine	mapflag	bexp	10
+//aqt_shrine	mapflag	jexp	10
+
+mysterio	mapflag	nowarp
+mysterio	mapflag	nomemo
+mysterio	mapflag	nowarpto
+mysterio	mapflag	loadevent
+//mysterio	mapflag	bexp	10
+//mysterio	mapflag	jexp	10
+
+revencia	mapflag	nowarp
+revencia	mapflag	nomemo
+revencia	mapflag	nowarpto
+revencia	mapflag	loadevent
+//revencia	mapflag	bexp	10
+//revencia	mapflag	jexp	10
+
+zhakastia	mapflag	nowarp
+zhakastia	mapflag	nomemo
+zhakastia	mapflag	nowarpto
+zhakastia	mapflag	loadevent
+//zhakastia	mapflag	bexp	10
+//zhakastia	mapflag	jexp	10
+
+casp_cave	mapflag	nowarp
+casp_cave	mapflag	nomemo
+casp_cave	mapflag	nowarpto
+casp_cave	mapflag	loadevent
+//casp_cave	mapflag	bexp	10
+//casp_cave	mapflag	jexp	10
+
+casp_step	mapflag	nowarp
+casp_step	mapflag	nomemo
+casp_step	mapflag	nowarpto
+casp_step	mapflag	loadevent
+//casp_step	mapflag	bexp	10
+//casp_step	mapflag	jexp	10
+
+casp_dun01	mapflag	nowarp
+casp_dun01	mapflag	nomemo
+casp_dun01	mapflag	nowarpto
+casp_dun01	mapflag	loadevent
+//casp_dun01	mapflag	bexp	10
+//casp_dun01	mapflag	jexp	10
+
+casp_dun02	mapflag	nowarp
+casp_dun02	mapflag	nomemo
+casp_dun02	mapflag	nowarpto
+casp_dun02	mapflag	loadevent
+//casp_dun02	mapflag	bexp	10
+//casp_dun02	mapflag	jexp	10
+
+//Jotunheim
+
+ars_fild07	mapflag	nowarp
+ars_fild07	mapflag	nomemo
+ars_fild07	mapflag	nowarpto
+ars_fild07	mapflag	loadevent
+//ars_fild07	mapflag	bexp	10
+//ars_fild07	mapflag	jexp	10
+
+invek	mapflag	nowarp
+invek	mapflag	nomemo
+invek	mapflag	nowarpto
+invek	mapflag	loadevent
+
+ars_fild08	mapflag	nowarp
+ars_fild08	mapflag	nomemo
+ars_fild08	mapflag	nowarpto
+ars_fild08	mapflag	loadevent
+//ars_fild08	mapflag	bexp	10
+//ars_fild08	mapflag	jexp	10
+
+ars_fild16	mapflag	nowarp
+ars_fild16	mapflag	nomemo
+ars_fild16	mapflag	nowarpto
+ars_fild16	mapflag	loadevent
+//ars_fild16	mapflag	bexp	10
+//ars_fild16	mapflag	jexp	10
+
+ars_fild20	mapflag	nowarp
+ars_fild20	mapflag	nomemo
+ars_fild20	mapflag	nowarpto
+ars_fild20	mapflag	loadevent
+//ars_fild20	mapflag	bexp	10
+//ars_fild20	mapflag	jexp	10
+
+ars_fild51	mapflag	nowarp
+ars_fild51	mapflag	nomemo
+ars_fild51	mapflag	nowarpto
+ars_fild51	mapflag	loadevent
+//ars_fild51	mapflag	bexp	10
+//ars_fild51	mapflag	jexp	10
+
+ars_fild52	mapflag	nowarp
+ars_fild52	mapflag	nomemo
+ars_fild52	mapflag	nowarpto
+ars_fild52	mapflag	loadevent
+//ars_fild52	mapflag	bexp	10
+//ars_fild52	mapflag	jexp	10
+
+ars_fild55	mapflag	nowarp
+ars_fild55	mapflag	nomemo
+ars_fild55	mapflag	nowarpto
+ars_fild55	mapflag	loadevent
+//ars_fild55	mapflag	bexp	10
+//ars_fild55	mapflag	jexp	10
+
+ars_dun08	mapflag	nowarp
+ars_dun08	mapflag	nomemo
+ars_dun08	mapflag	nowarpto
+ars_dun08	mapflag	loadevent
+//ars_dun08	mapflag	bexp	10
+//ars_dun08	mapflag	jexp	10
+
+ars_dun33	mapflag	nowarp
+ars_dun33	mapflag	nomemo
+ars_dun33	mapflag	nowarpto
+ars_dun33	mapflag	loadevent
+//ars_dun33	mapflag	bexp	10
+//ars_dun33	mapflag	jexp	10
+
+//Muspelheim
+
+ars_fild23	mapflag	nowarp
+ars_fild23	mapflag	nomemo
+ars_fild23	mapflag	nowarpto
+ars_fild23	mapflag	loadevent
+//ars_fild23	mapflag	bexp	10
+//ars_fild23	mapflag	jexp	10
+
+ars_fild24	mapflag	nowarp
+ars_fild24	mapflag	nomemo
+ars_fild24	mapflag	nowarpto
+ars_fild24	mapflag	loadevent
+//ars_fild24	mapflag	bexp	10
+//ars_fild24	mapflag	jexp	10
+
+ars_fild30	mapflag	nowarp
+ars_fild30	mapflag	nomemo
+ars_fild30	mapflag	nowarpto
+ars_fild30	mapflag	loadevent
+//ars_fild30	mapflag	bexp	10
+//ars_fild30	mapflag	jexp	10
+
+ars_fild31	mapflag	nowarp
+ars_fild31	mapflag	nomemo
+ars_fild31	mapflag	nowarpto
+ars_fild31	mapflag	loadevent
+//ars_fild31	mapflag	bexp	10
+//ars_fild31	mapflag	jexp	10
+
+ars_fild32	mapflag	nowarp
+ars_fild32	mapflag	nomemo
+ars_fild32	mapflag	nowarpto
+ars_fild32	mapflag	loadevent
+//ars_fild32	mapflag	bexp	10
+//ars_fild32	mapflag	jexp	10
+
+ars_fild56	mapflag	nowarp
+ars_fild56	mapflag	nomemo
+ars_fild56	mapflag	nowarpto
+ars_fild56	mapflag	loadevent
+//ars_fild56	mapflag	bexp	10
+//ars_fild56	mapflag	jexp	10
+
+ars_fild57	mapflag	nowarp
+ars_fild57	mapflag	nomemo
+ars_fild57	mapflag	nowarpto
+ars_fild57	mapflag	loadevent
+//ars_fild57	mapflag	bexp	10
+//ars_fild57	mapflag	jexp	10
+
+ars_dun71	mapflag	nowarp
+ars_dun71	mapflag	nomemo
+ars_dun71	mapflag	nowarpto
+ars_dun71	mapflag	loadevent
+//ars_dun71	mapflag	bexp	10
+//ars_dun71	mapflag	jexp	10
+
+//Niflheim
+
+ars_fild43	mapflag	nowarp
+ars_fild43	mapflag	nomemo
+ars_fild43	mapflag	nowarpto
+ars_fild43	mapflag	loadevent
+//ars_fild43	mapflag	bexp	10
+//ars_fild43	mapflag	jexp	10
+
+ars_fild44	mapflag	nowarp
+ars_fild44	mapflag	nomemo
+ars_fild44	mapflag	nowarpto
+ars_fild44	mapflag	loadevent
+//ars_fild44	mapflag	bexp	10
+//ars_fild44	mapflag	jexp	10
+
+ars_fild46	mapflag	nowarp
+ars_fild46	mapflag	nomemo
+ars_fild46	mapflag	nowarpto
+ars_fild46	mapflag	loadevent
+//ars_fild46	mapflag	bexp	10
+//ars_fild46	mapflag	jexp	10
+
+ars_dun25	mapflag	nowarp
+ars_dun25	mapflag	nomemo
+ars_dun25	mapflag	nowarpto
+ars_dun25	mapflag	loadevent
+//ars_dun25	mapflag	bexp	10
+//ars_dun25	mapflag	jexp	10
+
+ars_dun60	mapflag	nowarp
+ars_dun60	mapflag	nomemo
+ars_dun60	mapflag	nowarpto
+ars_dun60	mapflag	loadevent
+//ars_dun60	mapflag	bexp	10
+//ars_dun60	mapflag	jexp	10
+
+ars_dun62	mapflag	nowarp
+ars_dun62	mapflag	nomemo
+ars_dun62	mapflag	nowarpto
+ars_dun62	mapflag	loadevent
+//ars_dun62	mapflag	bexp	10
+//ars_dun62	mapflag	jexp	10
+
+//Vanaheim
+
+ars_fild11	mapflag	nowarp
+ars_fild11	mapflag	nomemo
+ars_fild11	mapflag	nowarpto
+ars_fild11	mapflag	loadevent
+//ars_fild11	mapflag	bexp	10
+//ars_fild11	mapflag	jexp	10
+
+ars_fild13	mapflag	nowarp
+ars_fild13	mapflag	nomemo
+ars_fild13	mapflag	nowarpto
+ars_fild13	mapflag	loadevent
+//ars_fild13	mapflag	bexp	10
+//ars_fild13	mapflag	jexp	10
+
+ars_fild33	mapflag	nowarp
+ars_fild33	mapflag	nomemo
+ars_fild33	mapflag	nowarpto
+ars_fild33	mapflag	loadevent
+//ars_fild33	mapflag	bexp	10
+//ars_fild33	mapflag	jexp	10
+
+ars_fild36	mapflag	nowarp
+ars_fild36	mapflag	nomemo
+ars_fild36	mapflag	nowarpto
+ars_fild36	mapflag	loadevent
+//ars_fild36	mapflag	bexp	10
+//ars_fild36	mapflag	jexp	10
+
+ars_fild45	mapflag	nowarp
+ars_fild45	mapflag	nomemo
+ars_fild45	mapflag	nowarpto
+ars_fild45	mapflag	loadevent
+//ars_fild45	mapflag	bexp	10
+//ars_fild45	mapflag	jexp	10
+
+ars_fild49	mapflag	nowarp
+ars_fild49	mapflag	nomemo
+ars_fild49	mapflag	nowarpto
+ars_fild49	mapflag	loadevent
+//ars_fild49	mapflag	bexp	10
+//ars_fild49	mapflag	jexp	10
+
+ars_dun02	mapflag	nowarp
+ars_dun02	mapflag	nomemo
+ars_dun02	mapflag	nowarpto
+ars_dun02	mapflag	loadevent
+//ars_dun02	mapflag	bexp	10
+//ars_dun02	mapflag	jexp	10
+
+//Shwarzalfheim
+
+ars_fild35	mapflag	nowarp
+ars_fild35	mapflag	nomemo
+ars_fild35	mapflag	nowarpto
+ars_fild35	mapflag	loadevent
+//ars_fild35	mapflag	bexp	10
+//ars_fild35	mapflag	jexp	10
+
+ars_fild37	mapflag	nowarp
+ars_fild37	mapflag	nomemo
+ars_fild37	mapflag	nowarpto
+ars_fild37	mapflag	loadevent
+//ars_fild37	mapflag	bexp	10
+//ars_fild37	mapflag	jexp	10
+
+ars_fild38	mapflag	nowarp
+ars_fild38	mapflag	nomemo
+ars_fild38	mapflag	nowarpto
+ars_fild38	mapflag	loadevent
+//ars_fild38	mapflag	bexp	10
+//ars_fild38	mapflag	jexp	10
+
+ars_fild39	mapflag	nowarp
+ars_fild39	mapflag	nomemo
+ars_fild39	mapflag	nowarpto
+ars_fild39	mapflag	loadevent
+//ars_fild39	mapflag	bexp	10
+//ars_fild39	mapflag	jexp	10
+
+ars_fild40	mapflag	nowarp
+ars_fild40	mapflag	nomemo
+ars_fild40	mapflag	nowarpto
+ars_fild40	mapflag	loadevent
+//ars_fild40	mapflag	bexp	10
+//ars_fild40	mapflag	jexp	10
+
+ars_dun19	mapflag	nowarp
+ars_dun19	mapflag	nomemo
+ars_dun19	mapflag	nowarpto
+ars_dun19	mapflag	loadevent
+//ars_dun19	mapflag	bexp	10
+//ars_dun19	mapflag	jexp	10
+
+ars_dun20	mapflag	nowarp
+ars_dun20	mapflag	nomemo
+ars_dun20	mapflag	nowarpto
+ars_dun20	mapflag	loadevent
+//ars_dun20	mapflag	bexp	10
+//ars_dun20	mapflag	jexp	10
+
+ars_dun21	mapflag	nowarp
+ars_dun21	mapflag	nomemo
+ars_dun21	mapflag	nowarpto
+ars_dun21	mapflag	loadevent
+//ars_dun21	mapflag	bexp	10
+//ars_dun21	mapflag	jexp	10
+
+//Helheim
+
+Biarmaland	mapflag	nowarp
+Biarmaland	mapflag	nomemo
+Biarmaland	mapflag	nowarpto
+Biarmaland	mapflag	loadevent
+//Biarmaland	mapflag	bexp	10
+//Biarmaland	mapflag	jexp	10
+
+ars_fild10	mapflag	nowarp
+ars_fild10	mapflag	nomemo
+ars_fild10	mapflag	nowarpto
+ars_fild10	mapflag	loadevent
+//ars_fild10	mapflag	bexp	10
+//ars_fild10	mapflag	jexp	10
+
+ars_fild21	mapflag	nowarp
+ars_fild21	mapflag	nomemo
+ars_fild21	mapflag	pvp
+ars_fild21	mapflag	nowarpto
+ars_fild21	mapflag	loadevent
+//ars_fild21	mapflag	bexp	10
+//ars_fild21	mapflag	jexp	10
+
+ars_fild48	mapflag	nowarp
+ars_fild48	mapflag	pvp
+ars_fild48	mapflag	nomemo
+ars_fild48	mapflag	nowarpto
+ars_fild48	mapflag	loadevent
+//ars_fild48	mapflag	bexp	10
+//ars_fild48	mapflag	jexp	10
+
+br_lb	mapflag	nowarp
+br_lb	mapflag	nomemo
+br_lb	mapflag	nowarpto
+br_lb	mapflag	pvp
+br_lb	mapflag	loadevent
+//br_lb	mapflag	bexp	10
+//br_lb	mapflag	jexp	10
+
+//Ljosalfheim
+
+ars_fild04	mapflag	nowarp
+ars_fild04	mapflag	nomemo
+ars_fild04	mapflag	nowarpto
+ars_fild04	mapflag	loadevent
+//ars_fild04	mapflag	bexp	10
+//ars_fild04	mapflag	jexp	10
+
+ars_fild25	mapflag	nowarp
+ars_fild25	mapflag	nomemo
+ars_fild25	mapflag	nowarpto
+ars_fild25	mapflag	loadevent
+//ars_fild25	mapflag	bexp	10
+//ars_fild25	mapflag	jexp	10
+
+ars_fild26	mapflag	nowarp
+ars_fild26	mapflag	nomemo
+ars_fild26	mapflag	nowarpto
+ars_fild26	mapflag	loadevent
+//ars_fild26	mapflag	bexp	10
+//ars_fild26	mapflag	jexp	10
+
+ars_fild27	mapflag	nowarp
+ars_fild27	mapflag	nomemo
+ars_fild27	mapflag	nowarpto
+ars_fild27	mapflag	loadevent
+//ars_fild27	mapflag	bexp	10
+//ars_fild27	mapflag	jexp	10
+
+ars_fild28	mapflag	nowarp
+ars_fild28	mapflag	nomemo
+ars_fild28	mapflag	nowarpto
+ars_fild28	mapflag	loadevent
+//ars_fild28	mapflag	bexp	10
+//ars_fild28	mapflag	jexp	10
+
+ars_dun31	mapflag	nowarp
+ars_dun31	mapflag	nomemo
+ars_dun31	mapflag	nowarpto
+ars_dun31	mapflag	loadevent
+//ars_dun31	mapflag	bexp	10
+//ars_dun31	mapflag	jexp	10
+
+ars_dun64	mapflag	nowarp
+ars_dun64	mapflag	nomemo
+ars_dun64	mapflag	nowarpto
+ars_dun64	mapflag	loadevent
+//ars_dun64	mapflag	bexp	10
+//ars_dun64	mapflag	jexp	10
+
+ars_dun65	mapflag	nowarp
+ars_dun65	mapflag	nomemo
+ars_dun65	mapflag	nowarpto
+ars_dun65	mapflag	loadevent
+//ars_dun65	mapflag	bexp	10
+//ars_dun65	mapflag	jexp	10
+
+//Asgard
+
+ars_fild58	mapflag	nowarp
+ars_fild58	mapflag	nomemo
+ars_fild58	mapflag	nowarpto
+ars_fild58	mapflag	loadevent
+//ars_fild58	mapflag	bexp	10
+//ars_fild58	mapflag	jexp	10
+
+ars_fild59	mapflag	nowarp
+ars_fild59	mapflag	nomemo
+ars_fild59	mapflag	nowarpto
+ars_fild59	mapflag	loadevent
+//ars_fild59	mapflag	bexp	10
+//ars_fild59	mapflag	jexp	10
+
+ars_fild60	mapflag	nowarp
+ars_fild60	mapflag	nomemo
+ars_fild60	mapflag	nowarpto
+ars_fild60	mapflag	loadevent
+//ars_fild60	mapflag	bexp	10
+//ars_fild60	mapflag	jexp	10
+
+ars_fild61	mapflag	nowarp
+ars_fild61	mapflag	nomemo
+ars_fild61	mapflag	nowarpto
+ars_fild61	mapflag	loadevent
+//ars_fild61	mapflag	bexp	10
+//ars_fild61	mapflag	jexp	10
+
+ars_fild62	mapflag	nowarp
+ars_fild62	mapflag	nomemo
+ars_fild62	mapflag	nowarpto
+ars_fild62	mapflag	loadevent
+//ars_fild62	mapflag	bexp	10
+//ars_fild62	mapflag	jexp	10
+
+ars_dun32	mapflag	nowarp
+ars_dun32	mapflag	nomemo
+ars_dun32	mapflag	nowarpto
+ars_dun32	mapflag	loadevent
+//ars_dun32	mapflag	bexp	10
+//ars_dun32	mapflag	jexp	10
+
+ars_dun39	mapflag	nowarp
+ars_dun39	mapflag	nomemo
+ars_dun39	mapflag	nowarpto
+ars_dun39	mapflag	loadevent
+//ars_dun39	mapflag	bexp	10
+//ars_dun39	mapflag	jexp	10
+
+//Yggdrasil Root
+
+tortuga	mapflag	nowarp
+tortuga	mapflag	nomemo
+tortuga	mapflag	nowarpto
+tortuga	mapflag	loadevent
+//tortuga	mapflag	bexp	10
+//tortuga	mapflag	jexp	10
+
+ygg_village	mapflag	nowarp
+ygg_village	mapflag	nomemo
+ygg_village	mapflag	nowarpto
+ygg_village	mapflag	loadevent
+ygg_village	mapflag	pvp
+//ygg_village	mapflag	bexp	10
+//ygg_village	mapflag	jexp	10

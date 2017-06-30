@@ -1,0 +1,351 @@
+yggmaze01,159,98,0	script	BossGate#1::mazebg1	4_SYS_MSG,{ //10083
+	if(.cleanLabyrinth == 1)
+	{
+		set .checkFreeLanding, callfunc("CheckLandingMap", $landingMap$, 1);
+		if (.checkFreeLanding)
+		{
+			if (getcharid(1) == 0)
+			{
+				warp $landingMap$, $landingMapX, $landingMapY;
+				callfunc("InvokLanding", atoi(strnpcinfo(2)), $landingMap$, 0);
+				set .cleanLabyrinth, 0;
+				goto OnPopMonster;
+				close;
+			}
+			getpartymember getcharid(1), 2;
+			copyarray .@partyAid[0], $@partymemberaid[0], getarraysize($@partymemberaid);
+			for (set .@i,0; .@i < getarraysize(.@partyAid); set .@i, .@i+1)
+			{
+				attachrid(.@partyAid[.@i]);
+				if (strnpcinfo(4) == strcharinfo(3))
+				{
+					warp $landingMap$, $landingMapX, $landingMapY;
+				}
+			}
+			callfunc("InvokLanding", atoi(strnpcinfo(2)), $landingMap$, 0);
+			set .cleanLabyrinth, 0;
+			goto OnPopMonster;
+		}
+		else
+		{
+			dispbottom "The Landing Guardian is under reconstruction. Please wait.";
+		}
+	}
+	else
+	{
+		mes "[Cardinal System]";
+		mes "This boss area isn't available yet.";
+	}
+	close;
+	
+OnChangeCleanState:
+	set .cleanLabyrinth, 1;
+	end;
+	
+OnPopMonster:
+	if(.cleanLabyrinth == 0)
+	{
+		if(atoi(strnpcinfo(2)) <= 5)
+		{
+			copyarray .@mobArray[0], $labMidMobId[0], getarraysize($labMidMobId);
+			copyarray .@mobCount[0], $labMidMobCount[0], getarraysize($labMidMobCount);
+		}
+		else if(atoi(strnpcinfo(2)) <= 10)
+		{
+			copyarray .@mobArray[0], $labJotMobId[0], getarraysize($labJotMobId);
+			copyarray .@mobCount[0], $labJotMobCount[0], getarraysize($labJotMobCount);
+		}
+		else if(atoi(strnpcinfo(2)) <= 15)
+		{
+			copyarray .@mobArray[0], $labMusMobId[0], getarraysize($labMusMobId);
+			copyarray .@mobCount[0], $labMusMobCount[0], getarraysize($labMusMobCount);
+		}
+		else if(atoi(strnpcinfo(2)) <= 20)
+		{
+			copyarray .@mobArray[0], $labNifMobId[0], getarraysize($labNifMobId);
+			copyarray .@mobCount[0], $labNifMobCount[0], getarraysize($labNifMobCount);
+		}
+		else if(atoi(strnpcinfo(2)) <= 25)
+		{
+			copyarray .@mobArray[0], $labVanMobId[0], getarraysize($labVanMobId);
+			copyarray .@mobCount[0], $labVanMobCount[0], getarraysize($labVanMobCount);
+		}
+		else if(atoi(strnpcinfo(2)) <= 30)
+		{
+			copyarray .@mobArray[0], $labSchMobId[0], getarraysize($labSchMobId);
+			copyarray .@mobCount[0], $labSchMobCount[0], getarraysize($labSchMobCount);
+		}
+		else if(atoi(strnpcinfo(2)) <= 35)
+		{
+			copyarray .@mobArray[0], $labHelMobId[0], getarraysize($labHelMobId);
+			copyarray .@mobCount[0], $labHelMobCount[0], getarraysize($labHelMobCount);
+		}
+		else if(atoi(strnpcinfo(2)) <= 40)
+		{
+			copyarray .@mobArray[0], $labLjoMobId[0], getarraysize($labLjoMobId);
+			copyarray .@mobCount[0], $labLjoMobCount[0], getarraysize($labLjoMobCount);
+		}
+		else if(atoi(strnpcinfo(2)) <= 45)
+		{
+			copyarray .@mobArray[0], $labAsgMobId[0], getarraysize($labAsgMobId);
+			copyarray .@mobCount[0], $labAsgMobCount[0], getarraysize($labAsgMobCount);
+		}
+		
+		for(set .@i,0; .@i<5; set .@i,.@i+1)
+		{
+			monster strnpcinfo(4),0,0,"--ja--",.@mobArray[.@i],.@mobCount[.@i],"landing" + atoi(strnpcinfo(2)) + "::OnLabMobDead", rand(0,2);
+		}
+	}	
+	end;
+
+OnInit:
+	set .cleanLabyrinth, 0;
+	set .@baseLanding, atoi(strnpcinfo(2));
+	if($mainLabyrinthClear > .@baseLanding)
+	{
+		set .cleanLabyrinth, 1;
+	}
+	goto OnPopMonster;
+	end;
+}
+
+yggmaze05,102,8,0	script	BossGate#5::mazewg5	4_SYS_MSG,{ //10083
+	if(.cleanLabyrinth == 1)
+	{
+		set .checkFreeLanding, callfunc("CheckLandingMap", $landingMap$, 1);
+		if (.checkFreeLanding)
+		{
+			if (getcharid(1) == 0)
+			{
+				warp $worldMap$, $worldMapX, $worldMapY;
+				callfunc("InvokLanding", atoi(strnpcinfo(2)), $worldMap$, 1);
+				set .cleanLabyrinth, 0;
+				goto OnPopMonster;
+				close;
+			}
+			getpartymember getcharid(1), 2;
+			copyarray .@partyAid[0], $@partymemberaid[0], getarraysize($@partymemberaid);
+			for (set .@i,0; .@i < getarraysize(.@partyAid); set .@i, .@i+1)
+			{
+				attachrid(.@partyAid[.@i]);
+				if (strnpcinfo(4) == strcharinfo(3))
+				{
+					warp $worldMap$, $worldMapX, $worldMapY;
+				}
+			}
+			callfunc("InvokLanding", atoi(strnpcinfo(2)), $worldMap$, 1);
+			set .cleanLabyrinth, 0;
+			goto OnPopMonster;
+		}
+		else
+		{
+			dispbottom "The Landing Guardian is under reconstruction. Please wait.";
+		}
+	}
+	else
+	{
+		mes "[Cardinal System]";
+		mes "This boss area isn't available yet.";
+	}
+	close;
+	
+OnChangeCleanState:
+	set .cleanLabyrinth, 1;
+	end;
+	
+OnPopMonster:
+	if(.cleanLabyrinth == 0)
+	{
+		if(atoi(strnpcinfo(2)) <= 5)
+		{
+			copyarray .@mobArray[0], $labMidMobId[0], getarraysize($labMidMobId);
+			copyarray .@mobCount[0], $labMidMobCount[0], getarraysize($labMidMobCount);
+		}
+		else if(atoi(strnpcinfo(2)) <= 10)
+		{
+			copyarray .@mobArray[0], $labJotMobId[0], getarraysize($labJotMobId);
+			copyarray .@mobCount[0], $labJotMobCount[0], getarraysize($labJotMobCount);
+		}
+		else if(atoi(strnpcinfo(2)) <= 15)
+		{
+			copyarray .@mobArray[0], $labMusMobId[0], getarraysize($labMusMobId);
+			copyarray .@mobCount[0], $labMusMobCount[0], getarraysize($labMusMobCount);
+		}
+		else if(atoi(strnpcinfo(2)) <= 20)
+		{
+			copyarray .@mobArray[0], $labNifMobId[0], getarraysize($labNifMobId);
+			copyarray .@mobCount[0], $labNifMobCount[0], getarraysize($labNifMobCount);
+		}
+		else if(atoi(strnpcinfo(2)) <= 25)
+		{
+			copyarray .@mobArray[0], $labVanMobId[0], getarraysize($labVanMobId);
+			copyarray .@mobCount[0], $labVanMobCount[0], getarraysize($labVanMobCount);
+		}
+		else if(atoi(strnpcinfo(2)) <= 30)
+		{
+			copyarray .@mobArray[0], $labSchMobId[0], getarraysize($labSchMobId);
+			copyarray .@mobCount[0], $labSchMobCount[0], getarraysize($labSchMobCount);
+		}
+		else if(atoi(strnpcinfo(2)) <= 35)
+		{
+			copyarray .@mobArray[0], $labHelMobId[0], getarraysize($labHelMobId);
+			copyarray .@mobCount[0], $labHelMobCount[0], getarraysize($labHelMobCount);
+		}
+		else if(atoi(strnpcinfo(2)) <= 40)
+		{
+			copyarray .@mobArray[0], $labLjoMobId[0], getarraysize($labLjoMobId);
+			copyarray .@mobCount[0], $labLjoMobCount[0], getarraysize($labLjoMobCount);
+		}
+		else if(atoi(strnpcinfo(2)) <= 45)
+		{
+			copyarray .@mobArray[0], $labAsgMobId[0], getarraysize($labAsgMobId);
+			copyarray .@mobCount[0], $labAsgMobCount[0], getarraysize($labAsgMobCount);
+		}
+		
+		for(set .@i,0; .@i<5; set .@i,.@i+1)
+		{
+			monster strnpcinfo(4),0,0,"--ja--",.@mobArray[.@i],.@mobCount[.@i],"landing" + atoi(strnpcinfo(2)) + "::OnLabMobDead", rand(0,2);
+		}
+	}	
+	end;
+
+OnInit:
+	set .cleanLabyrinth, 0;
+	set .@baseLanding, atoi(strnpcinfo(2));
+	if($mainLabyrinthClear > .@baseLanding)
+	{
+		set .cleanLabyrinth, 1;
+	}
+	goto OnPopMonster;
+	end;
+}
+
+yggmaze02,159,98,3	duplicate(mazebg1)	BossGate#2::mazebg2	4_SYS_MSG
+yggmaze03,159,98,3	duplicate(mazebg1)	BossGate#3::mazebg3	4_SYS_MSG
+yggmaze04,159,98,3	duplicate(mazebg1)	BossGate#4::mazebg4	4_SYS_MSG
+yggmaze06,159,98,3	duplicate(mazebg1)	BossGate#6::mazebg6	4_SYS_MSG
+yggmaze07,159,98,3	duplicate(mazebg1)	BossGate#7::mazebg7	4_SYS_MSG
+yggmaze08,159,98,3	duplicate(mazebg1)	BossGate#8::mazebg8	4_SYS_MSG
+yggmaze09,159,98,3	duplicate(mazebg1)	BossGate#9::mazebg9	4_SYS_MSG
+yggmaze11,146,57,3	duplicate(mazebg1)	BossGate#11::mazebg11	4_SYS_MSG
+yggmaze12,146,57,3	duplicate(mazebg1)	BossGate#12::mazebg12	4_SYS_MSG
+yggmaze13,146,57,3	duplicate(mazebg1)	BossGate#13::mazebg13	4_SYS_MSG
+yggmaze14,146,57,3	duplicate(mazebg1)	BossGate#14::mazebg14	4_SYS_MSG
+yggmaze16,146,57,3	duplicate(mazebg1)	BossGate#16::mazebg16	4_SYS_MSG
+yggmaze17,146,57,3	duplicate(mazebg1)	BossGate#17::mazebg17	4_SYS_MSG
+yggmaze18,146,57,3	duplicate(mazebg1)	BossGate#18::mazebg18	4_SYS_MSG
+yggmaze19,146,57,3	duplicate(mazebg1)	BossGate#19::mazebg19	4_SYS_MSG
+yggmaze21,146,57,3	duplicate(mazebg1)	BossGate#21::mazebg21	4_SYS_MSG
+yggmaze22,146,57,3	duplicate(mazebg1)	BossGate#22::mazebg22	4_SYS_MSG
+yggmaze23,146,57,3	duplicate(mazebg1)	BossGate#23::mazebg23	4_SYS_MSG
+yggmaze24,146,57,3	duplicate(mazebg1)	BossGate#24::mazebg24	4_SYS_MSG
+yggmaze26,146,57,3	duplicate(mazebg1)	BossGate#26::mazebg26	4_SYS_MSG
+yggmaze27,146,57,3	duplicate(mazebg1)	BossGate#27::mazebg27	4_SYS_MSG
+yggmaze28,146,57,3	duplicate(mazebg1)	BossGate#28::mazebg28	4_SYS_MSG
+yggmaze29,146,57,3	duplicate(mazebg1)	BossGate#29::mazebg29	4_SYS_MSG
+yggmaze31,190,14,3	duplicate(mazebg1)	BossGate#31::mazebg31	4_SYS_MSG
+yggmaze32,190,14,3	duplicate(mazebg1)	BossGate#32::mazebg32	4_SYS_MSG
+yggmaze33,190,14,3	duplicate(mazebg1)	BossGate#33::mazebg33	4_SYS_MSG
+yggmaze34,190,14,3	duplicate(mazebg1)	BossGate#34::mazebg34	4_SYS_MSG
+yggmaze36,190,14,3	duplicate(mazebg1)	BossGate#36::mazebg36	4_SYS_MSG
+yggmaze37,190,14,3	duplicate(mazebg1)	BossGate#37::mazebg37	4_SYS_MSG
+yggmaze38,190,14,3	duplicate(mazebg1)	BossGate#38::mazebg38	4_SYS_MSG
+yggmaze39,190,14,3	duplicate(mazebg1)	BossGate#39::mazebg39	4_SYS_MSG
+yggmaze41,190,14,3	duplicate(mazebg1)	BossGate#41::mazebg41	4_SYS_MSG
+yggmaze42,190,14,3	duplicate(mazebg1)	BossGate#42::mazebg42	4_SYS_MSG
+yggmaze43,190,14,3	duplicate(mazebg1)	BossGate#43::mazebg43	4_SYS_MSG'   
+yggmaze44,190,14,3	duplicate(mazebg1)	BossGate#44::mazebg44	4_SYS_MSG
+
+yggmaze10,102,8,3	duplicate(mazewg5)	BossGate#10::mazewg10	4_SYS_MSG
+yggmaze15,102,8,3	duplicate(mazewg5)	BossGate#15::mazewg15	4_SYS_MSG
+yggmaze20,102,8,3	duplicate(mazewg5)	BossGate#20::mazewg20	4_SYS_MSG
+yggmaze25,102,8,3	duplicate(mazewg5)	BossGate#25::mazewg25	4_SYS_MSG
+yggmaze30,102,8,3	duplicate(mazewg5)	BossGate#30::mazewg30	4_SYS_MSG
+yggmaze35,102,8,3	duplicate(mazewg5)	BossGate#35::mazewg35	4_SYS_MSG
+yggmaze40,102,8,3	duplicate(mazewg5)	BossGate#40::mazewg40	4_SYS_MSG
+yggmaze45,102,8,3	duplicate(mazewg5)	BossGate#45::mazewg45	4_SYS_MSG
+
+yggmaze00,159,98,0	script	BossGate#0::mazebg0	4_SYS_MSG,{ //10083
+	if(.cleanLabyrinth == 1)
+	{
+		set .checkFreeLanding, callfunc("CheckLandingMap", $landingMap$, 1);
+		if (.checkFreeLanding)
+		{
+			if (getcharid(1) == 0)
+			{
+				warp $landingMap$, $landingMapX, $landingMapY;
+				set .@tutorialBoss, 1096;
+				monster $landingMap$,0,0,strmobinfo(1,.@tutorialBoss),.@tutorialBoss,1,strnpcinfo(3) + "::OnTutorialBossKilled",2,0;	
+				sleep 5000;
+				mapannounce .@mapCheck$,"[Yggdrasil System] Landing Guardian invoked. Good Luck.",bc_map;
+				set $reservedLandingMap, 0;
+				end;
+			}
+			getpartymember getcharid(1), 2;
+			copyarray .@partyAid[0], $@partymemberaid[0], getarraysize($@partymemberaid);
+			for (set .@i,0; .@i < getarraysize(.@partyAid); set .@i, .@i+1)
+			{
+				attachrid(.@partyAid[.@i]);
+				if (strnpcinfo(4) == strcharinfo(3))
+				{
+					warp $landingMap$, $landingMapX, $landingMapY;
+				}
+			}
+			warp $landingMap$, $landingMapX, $landingMapY;
+			set .@tutorialBoss, 1096;
+			monster $landingMap$,0,0,strmobinfo(1,.@tutorialBoss),.@tutorialBoss,1,strnpcinfo(3) + "::OnTutorialBossKilled",2,0;	
+			sleep 5000;
+			mapannounce .@mapCheck$,"[Yggdrasil System] Landing Guardian invoked. Good Luck.",bc_map;
+			set $reservedLandingMap, 0;
+			end;
+		}
+		else
+		{
+			dispbottom "The Landing Guardian is under reconstruction. Please wait.";
+		}
+	}
+	else
+	{
+		mes "[Cardinal System]";
+		mes "This boss area isn't available yet.";
+	}
+	close;
+
+OnTutorialBossKilled:
+	mes "[Cardinal System]";
+	mes "Perfect. You now know how the System works.";
+	mes "Now, go on. Start your climbing.";
+	close2;
+	set FIRSTIN, 0;
+	charcommand "#load " + strcharinfo(0);
+	end;
+	
+OnChangeCleanState:
+	set .cleanLabyrinth, 1;
+	end;
+	
+OnPopMonster:
+	if(.cleanLabyrinth == 0)
+	{
+		setarray .@mobArray[0], 1031, 1076, 1013, 1051;
+		setarray .@mobCount[0], 10, 15, 10, 15;
+		setarray .@bossArray[0], 1090;
+		
+		for(set .@i,0; .@i<4; set .@i,.@i+1)
+		{
+			monster strnpcinfo(4),0,0,"--ja--",.@mobArray[.@i],.@mobCount[.@i],"landing" + atoi(strnpcinfo(2)) + "::OnLabMobDead", rand(0,2);
+		}
+		monster strnpcinfo(4),0,0,"--ja--",.@bossArray[0],1,"landing" + atoi(strnpcinfo(2)) + "::OnLabMobDead";
+	}	
+	end;
+
+OnInit:
+	set .cleanLabyrinth, 0;
+	set .@baseLanding, atoi(strnpcinfo(2));
+	if($mainLabyrinthClear > .@baseLanding)
+	{
+		set .cleanLabyrinth, 1;
+	}
+	goto OnPopMonster;
+	end;
+}

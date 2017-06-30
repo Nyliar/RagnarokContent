@@ -1,0 +1,126 @@
+// [========================================================]
+// [=============     Yggdrasil - Mobs     	============]
+// [========================================================]
+// [ Version 1                                              ]
+// [========================================================]
+// [ Original script by: Alayne				    ]
+// [========================================================]
+// [ Description:                                           ]
+// [--------------------------------------------------------]
+// [                                                        ]
+// [ - The Yggdrasil Project - Jotunheim Mobs spawn		    ]
+// [========================================================]
+// [ Changelog: (5 last updates)                            ]
+// [--------------------------------------------------------]
+// [                                                        ]
+// [ v0: Creation                      			    ]
+// [                                                        ]
+// [                                                        ]
+// [========================================================]
+// [                                                        ]
+// [========================================================]
+
+//Big
+ars_fild07,0,0,0,0	monster	Uzhas	1883,4,60000,30000,0,2,0
+ars_fild07,0,0,0,0	monster	Garm Baby	1515,5,60000,30000,0,2,0
+ars_fild07,0,0,0,0	monster	Anolian	1206,6,60000,30000,0,2,0
+ars_fild07,0,0,0,0	monster	Seal	1317,7,60000,30000,0,2,0
+ars_fild07,0,0,0,0	monster	Freezer	1319,10,60000,30000,0,2,0
+
+//Normal
+ars_fild07,0,0,0,0	monster	Uzhas	1883,8,0,0,0,0,0
+ars_fild07,0,0,0,0	monster	Garm Baby	1515,10,0,0,0,0,0
+ars_fild07,0,0,0,0	monster	Anolian	1206,12,0,0,0,0,0
+ars_fild07,0,0,0,0	monster	Seal	1317,14,0,0,0,0,0
+ars_fild07,0,0,0,0	monster	Freezer	1319,20,0,0,0,0,0
+
+//Big
+ars_fild08,0,0,0,0	monster	Marozka Guard	1889,5,60000,30000,0,2,0
+ars_fild08,0,0,0,0	monster	Venatu	1679,5,60000,30000,0,2,0
+ars_fild08,0,0,0,0	monster	Dimik	1671,6,60000,30000,0,2,0
+ars_fild08,0,0,0,0	monster	Swordfish	1609,2,60000,30000,0,2,0
+ars_fild08,0,0,0,0	monster	Sohee	1170,5,60000,30000,0,2,0
+
+//Normal
+ars_fild08,0,0,0,0	monster	Marozka Guard	1889,10,0,0,0,0,0
+ars_fild08,0,0,0,0	monster	Venatu	1679,10,0,0,0,0,0
+ars_fild08,0,0,0,0	monster	Dimik	1671,12,0,0,0,0,0
+ars_fild08,0,0,0,0	monster	Swordfish	1609,4,0,0,0,0,0
+ars_fild08,0,0,0,0	monster	Sohee	1170,10,0,0,0,0,0
+
+//Big
+ars_fild16,0,0,0,0	monster	Marc	1045,4,60000,30000,0,2,0
+ars_fild16,0,0,0,0	monster	Iceicle	1789,6,60000,30000,0,2,0
+ars_fild16,0,0,0,0	monster	Plasma	1697,10,60000,30000,0,2,0
+ars_fild16,0,0,0,0	monster	Deviace	1108,5,60000,30000,0,2,0
+ars_fild16,0,0,0,0	monster	Strouf	1065,7,60000,30000,0,2,0
+
+//Normal
+ars_fild16,0,0,0,0	monster	Marc	1045,8,0,0,0,0,0
+ars_fild16,0,0,0,0	monster	Iceicle	1789,12,0,0,0,0,0
+ars_fild16,0,0,0,0	monster	Plasma	1697,20,0,0,0,0,0
+ars_fild16,0,0,0,0	monster	Deviace	1108,10,0,0,0,0,0
+ars_fild16,0,0,0,0	monster	Strouf	1065,14,0,0,0,0,0
+
+//Big
+ars_fild51,0,0,0,0	monster	Baba Yaga	1882,6,60000,30000,0,2,0
+ars_fild51,0,0,0,0	monster	Merman	1264,4,60000,30000,0,2,0
+ars_fild51,0,0,0,0	monster	Sea Otter	1323,5,60000,30000,0,2,0
+ars_fild51,0,0,0,0	monster	Siroma	1776,2,60000,30000,0,2,0
+ars_fild51,0,0,0,0	monster	Iceicle	1789,2,60000,30000,0,2,0
+
+//Normal
+ars_fild51,0,0,0,0	monster	Baba Yaga	1882,12,0,0,0,0,0
+ars_fild51,0,0,0,0	monster	Merman	1264,8,0,0,0,0,0
+ars_fild51,0,0,0,0	monster	Sea Otter	1323,10,0,0,0,0,0
+ars_fild51,0,0,0,0	monster	Siroma	1776,4,0,0,0,0,0
+ars_fild51,0,0,0,0	monster	Iceicle	1789,4,0,0,0,0,0
+
+//Normal
+ars_fild52,0,0,0,0	monster	Sohee	1170,20,0,0,0,0,0
+ars_fild52,0,0,0,0	monster	Strouf	1065,25,0,0,0,0,0
+ars_fild52,0,0,0,0	monster	Snowier	1775,12,0,0,0,0,0
+ars_fild52,0,0,0,0	monster	Plasma	1697,5,0,0,0,0,0
+ars_fild52,0,0,0,0	monster	Siroma	1002,15,0,0,0,0,0
+
+//Big
+ars_fild55,0,0,0,0	monster	Ice Titan	1777,8,0,0,0,2,0
+ars_fild55,0,0,0,0	monster	Snowier	1775,10,60000,30000,0,2,0
+ars_fild55,0,0,0,0	monster	Gazeti	1778,5,60000,30000,0,2,0
+ars_fild55,0,0,0,0	monster	Siroma	1776,4,60000,30000,0,2,0
+ars_fild55,0,0,0,0	monster	Iceicle	1789,15,0,0,0,0,0
+
+//Normal
+ars_fild55,0,0,0,0	monster	Ice Titan	1777,10,0,0,0,0,0
+ars_fild55,0,0,0,0	monster	Snowier	1775,15,0,0,0,0,0
+ars_fild55,0,0,0,0	monster	Gazeti	1778,6,0,0,0,0,0
+ars_fild55,0,0,0,0	monster	Siroma	1776,25,0,0,0,0,0
+ars_fild55,0,0,0,0	monster	Iceicle	1789,15,0,0,0,0,0
+
+//Big
+ars_dun39,0,0,0,0	monster	Marozka Guard	1889,2,60000,30000,0,2,0
+ars_dun39,0,0,0,0	monster	Venatu	1679,5,60000,30000,0,2,0
+ars_dun39,0,0,0,0	monster	Dimik	1671,6,60000,30000,0,2,0
+ars_dun39,0,0,0,0	monster	Swordfish	1609,2,60000,30000,0,2,0
+ars_dun39,0,0,0,0	monster	Sohee	1170,5,60000,30000,0,2,0
+
+//Normal
+ars_dun39,0,0,0,0	monster	Marozka Guard	1889,4,0,0,0,0,0
+ars_dun39,0,0,0,0	monster	Venatu	1679,10,0,0,0,0,0
+ars_dun39,0,0,0,0	monster	Dimik	1671,12,0,0,0,0,0
+ars_dun39,0,0,0,0	monster	Swordfish	1609,4,0,0,0,0,0
+ars_dun39,0,0,0,0	monster	Sohee	1170,10,0,0,0,0,0
+
+//Big
+ars_fild20,0,0,0,0	monster	Ice Titan	1777,4,0,0,0,0,0
+ars_fild20,0,0,0,0	monster	Marozka Guard	1889,3,60000,30000,0,0,0
+ars_fild20,0,0,0,0	monster	Gazeti	1778,7,60000,30000,0,0,0
+ars_fild20,0,0,0,0	monster	Plasma	1697,9,60000,30000,0,0,0
+ars_fild20,0,0,0,0	monster	Seal	1317,13,60000,30000,0,0,0
+
+//Big
+ars_dun08,0,0,0,0	monster	Ice Titan	1777,14,0,0,0,2,0
+ars_dun08,0,0,0,0	monster	Marozka Guard	1889,6,60000,30000,0,2,0
+ars_dun08,0,0,0,0	monster	Gazeti	1778,7,60000,30000,0,2,0
+ars_dun08,0,0,0,0	monster	Plasma	1697,9,60000,30000,0,2,0
+ars_dun08,0,0,0,0	monster	Seal	1317,13,60000,30000,0,2,0

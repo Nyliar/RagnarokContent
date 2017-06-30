@@ -1,0 +1,129 @@
+// [========================================================]
+// [=============           Yggdrasil           ============]
+// [========================================================]
+// [ Version 1                                              ]
+// [========================================================]
+// [ Original script by: Alayne				    ]
+// [========================================================]
+// [ Description:                                           ]
+// [--------------------------------------------------------]
+// [                                                        ]
+// [ - The Yggdrasil Project jotunheim special Warps  	    ]
+// [========================================================]
+// [ Changelog: (5 last updates)                            ]
+// [--------------------------------------------------------]
+// [                                                        ]
+// [ v0: Creation                      			    ]
+// [                                                        ]
+// [                                                        ]
+// [========================================================]
+// [                                                        ]
+// [========================================================]
+
+cs_lb,103,40,0	script	Batteler::midbat1	4_M_JP_MID,{ //429
+	set .@npcname$, "[Batteler]";
+	mes .@npcname$;
+	mes "";
+	mes "Hey. I can bring you across.";
+	mes "Interested?";
+	mes "It cost only " + .@price + "z.";
+	
+	set .@menu$,"";
+	if (YGGPALIER > 4)
+	{
+		set .@menu$,.@menu$+":Go to Entry Point";
+		set .@menu$,.@menu$+":Go to Thiercellieux";
+	}
+	if (YGGPALIER > 5)
+	{
+		set .@menu$,.@menu$+":Go to Calm Garden";
+	}
+	if (YGGPALIER > 6)
+	{
+		set .@menu$,.@menu$+":Go to Mysterio";
+	}
+	if (YGGPALIER > 7)
+	{
+		set .@menu$,.@menu$+":Go to Revencia";
+	}
+	if (YGGPALIER > 8)
+	{
+		set .@menu$,.@menu$+":Go to Caspen";
+	}
+	if (YGGPALIER > 9)
+	{
+		set .@menu$,.@menu$+":Go to Crash Island";
+	}
+	set .@menu$, .@menu$ + ":No Thanks.";
+	
+	set .@choice, select(.@menu$) - 1;
+	switch (.@choice)
+	{
+		case 1:
+			set .@map$, "dep_lb";
+			set .@mapX, 103;
+			set .@mapY, 34;
+			break;
+		case 2:
+			set .@map$, "thier_vlg";
+			set .@mapX, 48;
+			set .@mapY, 105;
+			break;
+		case 3:
+			set .@map$, "cs_lb";
+			set .@mapX, 103;
+			set .@mapY, 34;
+			break;
+		case 4:
+			set .@map$, "mysterio";
+			set .@mapX, 107;
+			set .@mapY, 38;
+			break;
+		case 5:
+			set .@map$, "revencia";
+			set .@mapX, 248;
+			set .@mapY, 64;
+			break;	
+		case 6:
+			set .@map$, "caspen";
+			set .@mapX, 242;
+			set .@mapY, 55;
+			break;
+		case 7:
+			set .@map$, "crash";
+			set .@mapX, 66;
+			set .@mapY, 138;
+			break;	
+		default:
+			//nothing
+			break;
+	}
+	if (.@choice != 255)
+	{
+		if (Zeny > .@price)
+		{
+			warp .@map$, .@mapX, .@mapY;
+			set Zeny, Zeny - .@price;
+		}
+		else
+		{
+			mes "You don't have that money...";
+		}
+	}
+	else
+	{
+		mes "Humpf...Do not make me lose my time then...";
+	}
+	close;
+	
+OnInit:
+	set .@price, 25000;
+	end;
+}
+
+dep_lb,119,34,4	duplicate(midbat1)	Batteler::midbat2	4_M_JP_MID
+mysterio,111,33,4	duplicate(midbat1)	Batteler::midbat3	4_M_JP_MID
+revencia,250,64,4	duplicate(midbat1)	Batteler::midbat4	4_M_JP_MID
+thier_vlg,44,103,4	duplicate(midbat1)	Batteler::midbat5	4_M_JP_MID
+caspen,246,53,4	duplicate(midbat1)	Batteler::midbat6	4_M_JP_MID
+crash,62,138,4	duplicate(midbat1)	Batteler::midbat7	4_M_JP_MID

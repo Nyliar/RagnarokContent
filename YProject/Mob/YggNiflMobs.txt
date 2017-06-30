@@ -1,0 +1,63 @@
+// [========================================================]
+// [=============     Yggdrasil - Mobs     	============]
+// [========================================================]
+// [ Version 1                                              ]
+// [========================================================]
+// [ Original script by: Alayne				    ]
+// [========================================================]
+// [ Description:                                           ]
+// [--------------------------------------------------------]
+// [                                                        ]
+// [ - The Yggdrasil Project - Niflheim Mobs spawn		    ]
+// [========================================================]
+// [ Changelog: (5 last updates)                            ]
+// [--------------------------------------------------------]
+// [                                                        ]
+// [ v0: Creation                      			    ]
+// [                                                        ]
+// [                                                        ]
+// [========================================================]
+// [                                                        ]
+// [========================================================]
+
+//Normal
+ars_fild46,0,0,0,0	monster	Disguise	1506,8,0,0,0,0,0
+ars_fild46,0,0,0,0	monster	Sting	1207,12,0,0,0,0,0
+ars_fild46,0,0,0,0	monster	Tengu	1405,20,0,0,0,0,0
+ars_fild46,0,0,0,0	monster	Baby Leopard	1415,10,0,0,0,0,0
+ars_fild46,0,0,0,0	monster	Giant Whisper	1186,14,0,0,0,0,0
+
+//Normal
+ars_fild44,0,0,0,0	monster	Noxious	1620,8,0,0,0,0,0
+ars_fild44,0,0,0,0	monster	Marionette	1143,12,0,0,0,0,0
+ars_fild44,0,0,0,0	monster	Nightmare	1061,20,0,0,0,0,0
+ars_fild44,0,0,0,0	monster	Kraben	1587,10,0,0,0,0,0
+ars_fild44,0,0,0,0	monster	Plasma	1693,14,0,0,0,0,0
+
+//Normal
+ars_dun60,0,0,0,0	monster	Flame Skull	1869,8,0,0,0,0,0
+ars_dun60,0,0,0,0	monster	Thanatos Dolor	1707,2,0,0,0,0,0
+ars_dun60,0,0,0,0	monster	Zombie Prisoner	1197,20,0,0,0,0,0
+ars_dun60,0,0,0,0	monster	Marduk	1140,10,0,0,0,0,0
+ars_dun60,0,0,0,0	monster	Dulahan	1504,14,0,0,0,0,0
+
+//Normal
+ars_fild43,0,0,0,0	monster	Anubis	1098,8,0,0,0,0,0
+ars_fild43,0,0,0,0	monster	Thanatos Maero	1706,2,0,0,0,0,0
+ars_fild43,0,0,0,0	monster	Evil Druid	1117,20,0,0,0,0,0
+ars_fild43,0,0,0,0	monster	Zombie Slaugther	1864,10,0,0,0,0,0
+ars_fild43,0,0,0,0	monster	Dead King	1875,14,0,0,0,0,0
+
+//Normal
+ars_dun25,0,0,0,0	monster	Necromancer	1870,8,0,0,0,0,0
+ars_dun25,0,0,0,0	monster	Thanatos Odium	1704,2,0,0,0,0,0
+ars_dun25,0,0,0,0	monster	Noxious	1620,20,0,0,0,0,0
+ars_dun25,0,0,0,0	monster	Disguise	1506,10,0,0,0,0,0
+ars_dun25,0,0,0,0	monster	Banshee	1867,14,0,0,0,0,0
+
+//Normal
+ars_dun62,0,0,0,0	monster	Zombie Master	1298,8,0,0,0,0,0
+ars_dun62,0,0,0,0	monster	Plasma	1693,12,0,0,0,0,0
+ars_dun62,0,0,0,0	monster	Ragged Zombie	1865,20,0,0,0,0,0
+ars_dun62,0,0,0,0	monster	Dead King	1875,10,0,0,0,0,0
+ars_dun62,0,0,0,0	monster	Necromancer	1870,14,0,0,0,0,0

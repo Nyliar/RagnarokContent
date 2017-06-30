@@ -1,0 +1,72 @@
+// [========================================================]
+// [ Version 1                                              ]
+// [========================================================]
+// [ Original script by: Alayne				    ]
+// [========================================================]
+// [ Description:                                           ]
+// [--------------------------------------------------------]
+// [                                                        ]
+// [ - The Yggdrasil Project functions		    	    ]
+// [========================================================]
+// [ Changelog: (5 last updates)                            ]
+// [--------------------------------------------------------]
+// [                                                        ]
+// [ v0: Creation                      			    ]
+// [                                                        ]
+// [                                                        ]
+// [========================================================]
+// [                                                        ]
+// [========================================================]
+
+function	script	InvokLanding	{
+	set .@palierLvl, getarg(0);
+	set .@mapCheck$, getarg(1);
+	set .@palierMode, getarg(2);
+
+    //monster     "<map name>",<x>,<y>,"<name to show>",<mob id>,<amount>{,"<event label>"{,<size>{,<ai>}}};
+	set $activeBoss, $yggMvPIdArray[.@palierLvl - 1];
+	if (.@palierLvl >= YGGPALIER)
+	{
+		if (.@palierMode == 0)
+		{
+			set .@event$, "yggman::OnLandingDead";
+		}
+		else
+		{
+			set .@event$, "yggman::OnWorldDead";
+		}
+	}
+	else
+	{
+		set .@even$, "yggman::OnLandingKilled";
+	}
+	monster .@mapCheck$,0,0,strmobinfo(1,$activeBoss),$activeBoss,1,.@event$,YGGMODE - 1,0;	
+	sleep 5000;
+	mapannounce .@mapCheck$,"[Yggdrasil System] Landing Guardian invoked. Good Luck.",bc_map;
+	set $reservedLandingMap, 0;
+	return;
+}
+
+function	script	CheckLandingMap	{
+	set .registerAreaIfEmpty, getarg(1);
+	set .@mapCheck$, getarg(0);
+	if (getmapusers(.@mapCheck$) == 0)
+	{
+		if (.registerAreaIfEmpty)
+		{
+			killmonsterall .@mapCheck$;
+			set $reservedLandingMap, 1;
+		}
+		return 1;
+	}
+	return 0;
+}
+
+function	script	DisplayLandingInfo	{
+	set .@map$, getarg(0);
+	setarray .@palierInfo$[0], "";
+	set .@palierLvl, getarg(1);
+	
+	mapannounce .@map$, .@palierInfo$[.@palierLvl - 1], bc_map;
+	end;
+}

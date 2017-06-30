@@ -1,0 +1,316 @@
+// [========================================================]
+// [=============       Yggdrasil Landing        ============]
+// [========================================================]
+// [ Version 1                                              ]
+// [========================================================]
+// [ Original script by: Alayne				    ]
+// [========================================================]
+// [ Description:                                           ]
+// [--------------------------------------------------------]
+// [                                                        ]
+// [ - The Yggdrasil Project Niflheim Landing			    ]
+// [========================================================]
+// [ Changelog: (5 last updates)                            ]
+// [--------------------------------------------------------]
+// [                                                        ]
+// [ v0: Creation                      			    ]
+// [                                                        ]
+// [                                                        ]
+// [========================================================]
+// [                                                        ]
+// [========================================================]
+
+ars_fild44,103,87,0	script	Landing#16::landing16	4_ENERGY_BLACK,{
+	if (countitem(.requiredId) >= .requiredCount && YGGPALIER >= atoi(strnpcinfo(2)))
+	{
+		warp ($yggLabMap$ + strnpcinfo(2)),$yggLabMapCoordinates[2],$yggLabMapCoordinates[3];	
+	}
+	close;
+	
+OnLabMobDead:
+	set .@mobCount, mobcount($yggLabMap$ + "16", strnpcinfo(3) + "::OnLabMobDead");
+	if(.@mobCount == 0)
+	{
+		doevent "mazebg16::OnChangeCleanState";
+	}
+	end;
+
+OnPCLoadMapEvent:
+	if (strnpcinfo(4) == strcharinfo(3))
+	{
+		viewpoint 1,103,87,1,0xFF0000;
+	}
+	end;
+
+OnNPCKillEvent:
+	setarray .@mobArrayBloodLooter[0],1620,1143,1061,1587,1693;
+	if (strcharinfo(3) == strnpcinfo(4) 
+		&& YGGPALIER >= atoi(strnpcinfo(2)))
+	{
+		set .@rand, rand(0,100);
+		for(set .@i,0; .@i<getarraysize(.@mobArrayBloodLooter); set .@i,.@i+1)
+		{
+			if (killedrid == .@mobArrayBloodLooter[.@i]
+				&& .@rand <= .soulLootPercent)
+			{
+				getitem .requiredId, 1;
+			}
+		}
+	}
+	end;
+	
+OnInit:
+	set .requiredId, 7701;
+	set .requiredCount, 100;
+	set .soulLootPercent, 10;
+	end;
+}
+
+ars_fild46,155,137,0	script	Landing#17::landing17	4_ENERGY_BLACK,{
+	if (countitem(.requiredSoulId) >= 1 && YGGPALIER >= atoi(strnpcinfo(2)))
+	{
+		mes "Do you wish to spill Demon Souls in the Gauge?";
+		if (select("Yes","No") == 1)
+		{
+			set SOULGAUGE, SOULGAUGE + countitem(.requiredSoulId) * rand(1,5);
+			delitem .requiredSoulId, countitem(.requiredSoulId);
+			if (SOULGAUGE >= .soulGaugeCount)
+			{
+				close2;
+				warp ($yggLabMap$ + strnpcinfo(2)),$yggLabMapCoordinates[2],$yggLabMapCoordinates[3];	
+			}
+			dispbottom "You're current blood gauge is " + SOULGAUGE + "/" + .soulGaugeCount + ".";
+		}	
+	}
+	close;
+	
+OnLabMobDead:
+	set .@mobCount, mobcount($yggLabMap$ + "17", strnpcinfo(3) + "::OnLabMobDead");
+	if(.@mobCount == 0)
+	{
+		doevent "mazebg17::OnChangeCleanState";
+	}
+	end;
+
+OnPCLoadMapEvent:
+	if (strnpcinfo(4) == strcharinfo(3))
+	{
+		viewpoint 1,155,137,1,0xFF0000;
+	}
+	end;
+	
+OnNPCKillEvent:
+	setarray .@mobArraySoulLooter[0],1506,1207,1405,1415,1186;
+	if (strcharinfo(3) == strnpcinfo(4) 
+		&& YGGPALIER >= atoi(strnpcinfo(2)))
+	{
+		set .@rand, rand(0,100);
+		for(set .@i,0; .@i<getarraysize(.@mobArraySoulLooter); set .@i,.@i+1)
+		{
+			if (killedrid == .@mobArraySoulLooter[.@i]
+				&& .@rand <= .soulLootPercent)
+			{
+				getitem .requiredSoulId, 1;
+			}
+		}
+	}
+	end;	
+	
+OnInit:
+	set .requiredSoulId, 7306;
+	set .soulLootPercent, 20;
+	set .soulGaugeCount, rand(0,500);
+	end;
+}
+
+ars_fild43,116,47,0	script	Landing#18::landing18	4_ENERGY_BLACK,{
+	if (countitem(.requiredId) >= .requiredCount && YGGPALIER >= atoi(strnpcinfo(2)))
+	{
+		warp ($yggLabMap$ + strnpcinfo(2)),$yggLabMapCoordinates[2],$yggLabMapCoordinates[3];		
+	}
+	close;
+	
+OnLabMobDead:
+	set .@mobCount, mobcount($yggLabMap$ + "18", strnpcinfo(3) + "::OnLabMobDead");
+	if(.@mobCount == 0)
+	{
+		doevent "mazebg18::OnChangeCleanState";
+	}
+	end;
+
+OnNPCKillEvent:	
+OnPCLoadMapEvent:
+	if (strcharinfo(3) == strnpcinfo(4) 
+		&& countitem(.requiredId) >= .requiredCount
+		&& YGGPALIER >= atoi(strnpcinfo(2))
+		&& .activated == 0)
+	{
+		dispbottom "Landing Guardian is now accessible for 1 minute.";
+		viewpoint 1,116,47,1,0xFF0000;
+		addtimer 60000, strnpcinfo(3)+"::OnHideOn";
+		goto Onhideoffnpc;
+	}
+	end;
+		
+Onhideoffnpc:
+	hideoffnpc strnpcinfo(3);
+	initnpctimer;
+	set .activated, 1;
+	end;
+	
+OnTimer60000:
+	hideonnpc strnpcinfo(3);
+	stopnpctimer;
+	set .activated, 0;
+	end;
+
+OnHideOn:
+	viewpoint 2,116,47,1,0xFF0000;
+	end;
+	
+OnInit:
+	set .requiredId, 523;
+	set .requiredCount, 50;
+	hideonnpc strnpcinfo(3);
+	end;
+}
+
+ars_dun25,133,76,0	script	Landing#19::landing19	4_ENERGY_BLACK,{
+	if (YGGPALIER >= atoi(strnpcinfo(2)))
+	{
+		warp ($yggLabMap$ + strnpcinfo(2)),$yggLabMapCoordinates[2],$yggLabMapCoordinates[3];		
+	}
+	close;
+	
+OnLabMobDead:
+	set .@mobCount, mobcount($yggLabMap$ + "19", strnpcinfo(3) + "::OnLabMobDead");
+	if(.@mobCount == 0)
+	{
+		doevent "mazebg19::OnChangeCleanState";
+	}
+	end;
+	
+Onhideoffnpc:
+	hideoffnpc strnpcinfo(3);
+	set .activated, 1;
+	initnpctimer;
+	end;
+
+OnApplyCurse:
+	//get map user
+	mapannounce strnpcinfo(4), "[Cardinal System] Come...Be like us...", bc_map;
+	if (getstatus(SC_CURSE) == 0 && strcharinfo(3) == strnpcinfo(4))
+	{
+		dispbottom "[Cardinal System] You've been touched by the Curse.";
+		//cause Curse + 5% Hp/SP Loss
+		sc_start SC_CURSE,30000,0;
+		percentheal -5, -5;
+	}
+	end;
+	
+OnTimer1000:
+	if (.activated == 1)
+	{	
+		set .count10s, .count10s + 1;
+		if (.count10s == 6)
+		{
+			hideonnpc strnpcinfo(3);
+			set .activated, 0;
+		}
+	}
+	
+	stopnpctimer;
+	initnpctimer;
+	end;
+
+OnHideOn:
+	viewpoint 2,133,76,1,0xFF0000;
+	end;
+	
+OnNPCKillEvent:	
+OnPCLoadMapEvent:
+	if (strcharinfo(3) == strnpcinfo(4))
+	{
+		if(YGGPALIER >= atoi(strnpcinfo(2))
+			&& .activated == 0)
+		{
+			dispbottom "Landing Guardian is now accessible for 1 minute.";
+			viewpoint 1,133,76,1,0xFF0000;
+			addtimer 60000, strnpcinfo(3)+"::OnHideOn";
+			goto Onhideoffnpc;
+		}
+		addtimer 10000, strnpcinfo(3)+"::OnApplyCurse";
+	}
+	end;	
+	
+OnInit:
+	hideonnpc strnpcinfo(3);
+	set .activated, 0;
+	end;
+}
+
+ars_dun62,34,205,0	script	World#20::landing20	4_ENERGY_BLACK,{
+	if (YGGPALIER >= atoi(strnpcinfo(2)))
+	{
+		set .@iok, 1;
+		for (set .@i, 0; .@i<getarraysize(.requiredIds); set .@i,.@i+1)
+		{
+			if (countitem(.requiredIds[.@i]) < (.requiredCount * (.@i + 1)))
+				set .@iok, 0;
+		}
+		if (.@iok)
+		{
+			warp ($yggLabMap$ + strnpcinfo(2)),$yggLabMapCoordinates[6],$yggLabMapCoordinates[7];
+		}			
+	}
+	close;
+	
+OnLabMobDead:
+	set .@mobCount, mobcount($yggLabMap$ + "20", strnpcinfo(3) + "::OnLabMobDead");
+	if(.@mobCount == 0)
+	{
+		doevent "mazewg20::OnChangeCleanState";
+	}
+	end;
+	
+OnNPCKillEvent:	
+OnPCLoadMapEvent:
+	if (strcharinfo(3) == strnpcinfo(4) 
+		&& YGGPALIER >= atoi(strnpcinfo(2))
+		&& .activated == 0)
+	{
+		set .@iok, 1;
+		for (set .@i, 0; .@i<getarraysize(.requiredIds); set .@i,.@i+1)
+		{
+			if (countitem(.requiredIds[.@i]) < (.requiredCount * (.@i + 1)))
+				set .@iok, 0;
+		}
+		if (.@iok)
+		{
+			dispbottom "Landing Guardian is now accessible for 30 seconds.";
+			viewpoint 1,34,205,1,0xFF0000;
+			goto Onhideoffnpc;
+		}
+	}
+	end;
+		
+Onhideoffnpc:
+	hideoffnpc strnpcinfo(3);
+	initnpctimer;
+	set .activated, 1;
+	end;
+	
+OnTimer30000:
+	hideonnpc strnpcinfo(3);
+	stopnpctimer;
+	set .activated, 0;
+	end;
+	
+OnInit:
+	setarray .requiredIds[0], 994, 995, 996, 997;
+	//will be required 5, then 10, then 15...
+	set .requiredCount, 5;
+	hideonnpc strnpcinfo(3);
+	end;
+}
+

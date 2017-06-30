@@ -1,0 +1,83 @@
+// [========================================================]
+// [=============     Yggdrasil - helunheim     ============]
+// [========================================================]
+// [ Version 1                                              ]
+// [========================================================]
+// [ Original script by: Alayne				    ]
+// [========================================================]
+// [ Description:                                           ]
+// [--------------------------------------------------------]
+// [                                                        ]
+// [ - The helunheim NPC		    	   	    ]
+// [========================================================]
+// [ Changelog: (5 last updates)                            ]
+// [--------------------------------------------------------]
+// [                                                        ]
+// [ v0: Creation                      			    ]
+// [                                                        ]
+// [                                                        ]
+// [========================================================]
+// [                                                        ]
+// [========================================================]
+
+ars_fild21,169,220,1	script	Slo::helsl	4_EREMES,{
+	set .@npcname$, "[Slo]";
+	mes .@npcname$;
+	mes "When I was alive, I was a great fighter.";
+	mes "I was known to have fight against the strongest, in all the Arena.";
+	mes "Everyone known my name. Don't you?";
+	if(select("Of course I do","No sorry...") == 1)
+	{
+		mes "Ahah! I knew it!";
+	}
+	else
+	{
+		mes "Oh...I guess it's been to long ever since...";
+	}
+	close;
+}
+
+ars_fild21,131,293,2	script	Zurn::helzu	4_MAGALETA,{
+	set .@npcname$, "[Zurn]";
+	mes .@npcname$;
+	mes "...I don't talk to humans.";
+	if (HELQ == 0)
+	{
+		mes "You're still alive, while I'm rotting here.";
+		mes "Helheim is the last place everybody goes.";
+		mes "Except for the braves, the fair, the vanes and the gods.";
+		mes "Does that mean I wasn't good enough during my life?";
+		set HELQ, 1;
+	}
+	close;
+}
+
+ars_fild21,227,126,3	script	Traj::heltr	4_KATRINN,{
+	set .@npcname$, "[Traj]";
+	mes .@npcname$;
+	mes "Don't be to dramatic, nor acid against the 'living' here.";
+	mes "All of them would like to be you right now.";
+	mes "We've all lost our right to go amongst the living, while you're going amongst the dead.";
+	mes "Isn't death more unfair than life?";
+	close;
+}
+
+ars_fild21,172,154,5	script	Pulj::helpu	4_SHECIL,{
+	set .@npcname$, "[Pulj]";
+	mes .@npcname$;
+	mes "When I was alive, I was a greate sorcerer.";
+	mes "I've fight, made people burn, or froze to death.";
+	mes "I was able to fly, to disappear, and to invoke the elemental powers.";
+	mes "And now, look at me. I'm so...dead.";
+	close;
+}
+
+ars_fild21,292,71,5	script	Quil::helqu	4_SEYREN,{
+	set .@npcname$, "[Quil]";
+	mes .@npcname$;
+	mes "I want to go back...";
+	mes "Have you seen my mummy?";
+	mes "She was with me just before the blinding light strucke...";
+	mes "I'm looking for her ever since...";
+	close;
+}

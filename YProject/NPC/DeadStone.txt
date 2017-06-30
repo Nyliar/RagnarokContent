@@ -1,0 +1,44 @@
+Hyrule,152,172,0	script	Death System::yggroot	4_M_DEATH,{ //if unavailable, use 111. Otherwise, 10028
+	set .@npcname$, "[Death System]";
+	mes .@npcname$;
+	mes "";
+	mes "Dead climbers will be known forever.";
+	query_sql("SELECT `name`, `date`, `landing` FROM `ygg_climber`", .@deadName$, .@date$, .@landing$);
+	if (YGGWORLD < 9)
+	{
+		set .@count, 0;
+		for(set .@i,0; .@i < getarraysize(.@deadName$); set .@i, .@i+1)
+		{
+			mes "	~ ^FF0000" + .@deadName$[.@i] + "^000000, died on " + .@landing$[.@i] + " floor on " + .@date$[.@i];
+			set .@count, .@count + 1;
+			if (.@count == 5)
+			{
+				set .@count, 0;
+				next;
+				mes .@npcname$;
+				mes "See the next 5?";
+				if (select("Yes","No") == 2)
+				{
+					close;
+				}
+				next;
+				mes .@npcname$;
+			}
+		}
+	}
+	else
+	{
+		if (getarraysize(.@deadName$) >= .deadRequirement && $yggRootStarted == 0)
+		{
+			//warp to hidden section
+			warp $yggRootEntrance$, $yggRootEntranceX, $yggRootEntranceY;
+			doevent "yggvill::OnPopClone";
+		}
+		//nothing, the door is closed
+	}
+	close;
+	
+OnInit:
+	set .deadRequirement, 1;
+	end;
+}

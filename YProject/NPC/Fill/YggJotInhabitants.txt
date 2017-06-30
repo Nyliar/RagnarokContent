@@ -1,0 +1,62 @@
+// [========================================================]
+// [=============     Yggdrasil - Jotunheim     ============]
+// [========================================================]
+// [ Version 1                                              ]
+// [========================================================]
+// [ Original script by: Alayne				    ]
+// [========================================================]
+// [ Description:                                           ]
+// [--------------------------------------------------------]
+// [                                                        ]
+// [ - The Jotunheim NPC		    	   	    ]
+// [========================================================]
+// [ Changelog: (5 last updates)                            ]
+// [--------------------------------------------------------]
+// [                                                        ]
+// [ v0: Creation                      			    ]
+// [                                                        ]
+// [                                                        ]
+// [========================================================]
+// [                                                        ]
+// [========================================================]
+
+invek,173,168,5	script	Stor::jotst	1889,{
+	set .@npcname$, "[Stor]";
+	mes .@npcname$;
+	mes "You're here in Jotunheim, Realm of the Ice Giants.";
+	mes "Stay calm, the Giants are known to be a ferocious against strangers.";
+	close;
+}
+
+invek,133,205,5	script	Rjul::jotrj	1065,{
+	set .@npcname$, "[Rjul]";
+	mes .@npcname$;
+	mes "...I don't talk to humans.";
+	if (JOTQ == 0)
+	{
+		mes "We've been hunted, like beast, by your kind and Asgards.";
+		mes "Odin, the almighty father of sky, is a filthy traitor.";
+		mes "I spit on his face, and his childs.";
+		set JOTQ, 1;
+	}
+	close;
+}
+
+invek,188,194,4	script	Kyos::jotky	1777,{
+	set .@npcname$, "[Kyos]";
+	mes .@npcname$;
+	mes "Stay calm, the Giants are known to be a ferocious against strangers.";
+	mes "Don't think that we're only ferocious beasts.";
+	mes "We, and the Fire Giants, have been associated to the 'Bads' guys.";
+	mes "All we wanted was to be free, and not under Ases power.";
+	mes "Was it so bad?";
+	close;
+}
+
+invek,174,122,5	script	Pjul::jotpj	2_M_PHARMACIST,{
+	set .@npcname$, "[Pjul]";
+	mes .@npcname$;
+	mes "You're here in Jotunheim, Realm of the Ice Giants.";
+	mes "Stay calm, the Giants are known to be a ferocious against strangers.";
+	close;
+}

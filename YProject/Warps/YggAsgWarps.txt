@@ -1,0 +1,42 @@
+// [========================================================]
+// [=============           Yggdrasil           ============]
+// [========================================================]
+// [ Version 1                                              ]
+// [========================================================]
+// [ Original script by: Alayne				    ]
+// [========================================================]
+// [ Description:                                           ]
+// [--------------------------------------------------------]
+// [                                                        ]
+// [ - The Yggdrasil Project asgard special Warps	    ]
+// [========================================================]
+// [ Changelog: (5 last updates)                            ]
+// [--------------------------------------------------------]
+// [                                                        ]
+// [ v0: Creation                      			    ]
+// [                                                        ]
+// [                                                        ]
+// [========================================================]
+// [                                                        ]
+// [========================================================]
+
+ars_fild60,95,103,0	script	Guardien::asgguard	1_M_KNIGHTMASTER,{ //56
+	set .@npcname$, "[Guardian]";
+	mes .@npcname$;
+	mes "";
+	mes "I'm the Guardian of this path.";
+	mes "You can't go further if you're not strong enough.";
+	if (YGGPALIER >= 42)
+	{
+		if (select("Send me further","I'll stay here") == 1)
+		{
+			mes "Looks like you are.";
+			warp "ars_fild62",82,173;
+		}
+		else
+		{
+			mes "Sure.";
+		}
+	}
+	close;
+}

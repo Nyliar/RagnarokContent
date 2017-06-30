@@ -1,0 +1,405 @@
+// [========================================================]
+// [=============       Yggdrasil Landing        ============]
+// [========================================================]
+// [ Version 1                                              ]
+// [========================================================]
+// [ Original script by: Alayne				    ]
+// [========================================================]
+// [ Description:                                           ]
+// [--------------------------------------------------------]
+// [                                                        ]
+// [ - The Yggdrasil Project Muspelheim Landing			    ]
+// [========================================================]
+// [ Changelog: (5 last updates)                            ]
+// [--------------------------------------------------------]
+// [                                                        ]
+// [ v0: Creation                      			    ]
+// [                                                        ]
+// [                                                        ]
+// [========================================================]
+// [                                                        ]
+// [========================================================]
+
+//Survive the Braise
+ars_fild23,156,165,0	script	Landing#11::landing11	4_ENERGY_RED,2,2,{
+	if (YGGPALIER >= atoi(strnpcinfo(2)))
+	{
+		warp ($yggLabMap$ + strnpcinfo(2)),$yggLabMapCoordinates[2],$yggLabMapCoordinates[3];		
+	}
+	close;
+	
+OnLabMobDead:
+	set .@mobCount, mobcount($yggLabMap$ + "11", strnpcinfo(3) + "::OnLabMobDead");
+	if(.@mobCount == 0)
+	{
+		doevent "mazebg11::OnChangeCleanState";
+	}
+	end;
+	
+Onhideoffnpc:
+	hideoffnpc strnpcinfo(3);
+	set .activated, 1;
+	initnpctimer;
+	end;
+	
+OnApplyBraise:
+	//get map user
+	mapannounce strnpcinfo(4), "[Cardinal System] The Braise will burn your bones...", bc_map;
+	if (getstatus(SC_BURNING) == 0 && strcharinfo(3) == strnpcinfo(4))
+	{
+		dispbottom "[Cardinal System] You've been touched by the Braise.";
+		//cause burning + 25% Hp/SP Loss
+		sc_start SC_BURNING,30000,0;
+		percentheal -5, -5;
+		addtimer 10000, strnpcinfo(3)+"::OnApplyBraise";		
+	}
+	end;
+	
+OnTimer10000:	
+	if (.activated == 1)
+	{	
+		set .count10s, .count10s + 1;
+		if (.count10s == 6)
+		{
+			hideonnpc strnpcinfo(3);
+			set .activated, 0;
+		}
+	}
+	stopnpctimer;
+	initnpctimer;
+	end;	
+
+OnHideOn:
+	viewpoint 2,156,165,1,0xFF0000;
+	end;
+	
+OnNPCKillEvent:
+OnPCLoadMapEvent:
+	if (strcharinfo(3) == strnpcinfo(4))
+	{
+		if(YGGPALIER >= atoi(strnpcinfo(2))
+			&& .activated == 0)
+		{
+			dispbottom "Landing Guardian is now accessible for 1 minute.";
+			viewpoint 1,156,165,1,0xFF0000;
+			addtimer 60000, strnpcinfo(3)+"::OnHideOn";
+			goto Onhideoffnpc;
+		}	
+		addtimer 10000, strnpcinfo(3)+"::OnApplyBraise";
+	}
+	end;	
+	
+OnInit:
+	hideonnpc strnpcinfo(3);
+	set .activated, 0;
+	end;
+}
+
+//Cross the Meteor Plain
+ars_fild57,104,104,0	script	Landing#12::landing12	4_ENERGY_RED,2,2,{
+	if (YGGPALIER >= atoi(strnpcinfo(2)))
+	{
+		warp ($yggLabMap$ + strnpcinfo(2)),$yggLabMapCoordinates[2],$yggLabMapCoordinates[3];			
+	}
+	close;
+	
+OnLabMobDead:
+	set .@mobCount, mobcount($yggLabMap$ + "12", strnpcinfo(3) + "::OnLabMobDead");
+	if(.@mobCount == 0)
+	{
+		doevent "mazebg12::OnChangeCleanState";
+	}
+	end;
+	
+Onhideoffnpc:
+	hideoffnpc strnpcinfo(3);
+	set .count10s, 0;
+	set .activated, 1;
+	initnpctimer;
+	end;
+	
+OnTimer10000:
+	mapannounce strnpcinfo(4), "[Cardinal System] Be careful, a new meteor wave is coming!", bc_map;
+	setarray .@mobIdArray[0],1072,1694,1413,1495,1140;
+	set .@mobId, .@mobIdArray[rand(0,getarraysize(.@mobIdArray) - 1)];
+	areamobuseskill "ars_fild57",102,105,100,.@mobId,"WZ_METEOR",10,0,0,e_gg,3;
+	if (.activated == 1)
+	{	
+		set .count10s, .count10s + 1;
+		if (.count10s == 6)
+		{
+			hideonnpc strnpcinfo(3);
+			set .activated, 0;
+		}
+	}
+	stopnpctimer;
+	initnpctimer;
+	end;
+
+OnHideOn:
+	viewpoint 2,104,104,1,0xFF0000;
+	end;
+	
+OnNPCKillEvent:
+OnPCLoadMapEvent:
+	if (strcharinfo(3) == strnpcinfo(4) 
+		&& YGGPALIER >= atoi(strnpcinfo(2))
+	&& .activated == 0)
+	{
+		dispbottom "Landing Guardian is now accessible for 1 minute.";
+		viewpoint 1,104,104,1,0xFF0000;
+		addtimer 60000, strnpcinfo(3)+"::OnHideOn";
+		goto Onhideoffnpc;
+	}
+	end;	
+	
+OnInit:
+	hideonnpc strnpcinfo(3);
+	set .activated, 0;
+	end;
+}
+
+ars_fild32,135,56,0	script	Landing#13::landing13	4_ENERGY_RED,{
+	if (YGGPALIER >= atoi(strnpcinfo(2)))
+	{
+		warp ($yggLabMap$ + strnpcinfo(2)),$yggLabMapCoordinates[2],$yggLabMapCoordinates[3];			
+	}
+	close;
+	
+OnLabMobDead:
+	set .@mobCount, mobcount($yggLabMap$ + "13", strnpcinfo(3) + "::OnLabMobDead");
+	if(.@mobCount == 0)
+	{
+		doevent "mazebg13::OnChangeCleanState";
+	}
+	end;
+		
+Onhideoffnpc:
+	hideoffnpc strnpcinfo(3);
+	set .activated, 1;
+	dispbottom "Landing Guardian is now accessible for 1 minute.";
+	dispbottom "If you missed it, you'll have to leave and enter the map again.";
+	viewpoint 1,135,56,1,0xFF0000;
+	addtimer 60000, strnpcinfo(3)+"::OnHideOn";
+	initnpctimer;
+	end;
+	
+OnTimer60000:
+	hideonnpc strnpcinfo(3);
+	set .activated, 0;
+	stopnpctimer;
+	end;
+
+OnHideOn:
+	viewpoint 2,135,56,1,0xFF0000;
+	end;
+	
+OnNPCKillEvent:
+OnPCLoadMapEvent:
+	if (strcharinfo(3) == strnpcinfo(4) && mobcount(strnpcinfo(4), strnpcinfo(3)+"::Onhideoffnpc") == 0 
+		&& .activated == 0)
+	{
+		monster strnpcinfo(4),0,0,strmobinfo(1,.mobId),.mobId,1,strnpcinfo(3)+"::Onhideoffnpc",2,0;	
+	}
+	end;
+	
+OnInit:
+	set .mobId, 1837;
+	hideonnpc strnpcinfo(3);
+	set .activated, 0;
+	end;
+}
+
+ars_fild31,126,148,0	script	Landing#14::landing14	4_ENERGY_RED,{
+	if (YGGPALIER >= atoi(strnpcinfo(2)))
+	{
+		warp ($yggLabMap$ + strnpcinfo(2)),$yggLabMapCoordinates[2],$yggLabMapCoordinates[3];		
+	}
+	close;
+	
+OnLabMobDead:
+	set .@mobCount, mobcount($yggLabMap$ + "14", strnpcinfo(3) + "::OnLabMobDead");
+	if(.@mobCount == 0)
+	{
+		doevent "mazebg14::OnChangeCleanState";
+	}
+	end;
+	
+OnPCLoadMapEvent:	
+	if ($enabled14 == 0)
+	{
+		hideonnpc strnpcinfo(3);
+		mapannounce strnpcinfo(4), "[Cardinal System] Find the Pillar...", bc_map;
+		hideonnpc "muspelPillar4";
+		hideonnpc "muspelPillar3";
+		hideonnpc "muspelPillar2";
+		hideoffnpc "muspelPillar1";
+		set $activePillar1, 0;
+		set $activePillar2, 0;
+		set $activePillar3, 0;
+		set $activePillar4, 0;
+		set $enabled14, 1;
+	}
+	end;
+		
+Onhideoffnpc:
+	if (.activated == 0)
+	{
+		hideoffnpc strnpcinfo(3);
+		initnpctimer;
+		set .activated, 1;
+	}
+	end;
+	
+OnTimer60000:
+	hideonnpc strnpcinfo(3);
+	stopnpctimer;
+	set .activated, 0;
+	set $enabled14, 0;
+	hideonnpc "muspelPillar4";
+	hideonnpc "muspelPillar3";
+	hideonnpc "muspelPillar2";
+	hideonnpc "muspelPillar1";
+	end;
+
+OnHideOn:
+	viewpoint 2,126,148,1,0xFF0000;
+	end;
+	
+OnInit:
+	hideonnpc strnpcinfo(3);
+	set $activePillar1, 0;
+	set $activePillar2, 0;
+	set $activePillar3, 0;
+	set $activePillar4, 0;
+	set $end,0;
+	set $enabled14, 0;
+	end;
+}
+
+ars_fild31,154,146,0	script	Pilier::muspelPillar1	406,2,2,{
+	end;
+
+OnTouch:
+	if ($activePillar1 == 0 && $enabled14 == 1)
+	{
+		set $activePillar1, getcharid(0);
+		sc_start SC_STONECURSE,15000,0;
+		mapannounce strnpcinfo(4), "The First Pillar has been activated!",bc_map,"0x00ff99";
+		hideoffnpc "muspelPillar2";
+	}
+	end;
+	
+OnInit:
+	hideonnpc strnpcinfo(3);
+	end;
+}
+
+ars_fild31,120,44,0	script	Pilier::muspelPillar2	406,2,2,{
+	end;
+
+OnTouch:
+	if ($activePillar2 == 0 && $activePillar1 != 0 && $enabled14 == 1)
+	{
+		set $activePillar2, getcharid(0);
+		sc_start SC_STONECURSE,15000,0;
+		mapannounce strnpcinfo(4), "The Second Pillar has been activated!",bc_map,"0x00ff99";
+		hideoffnpc "muspelPillar3";
+	}
+	end;
+
+OnInit:
+	hideonnpc strnpcinfo(3);
+	end;
+}
+
+ars_fild31,75,162,0	script	Pilier::muspelPillar3	406,2,2,{
+	end;
+
+OnTouch:
+	if ($activePillar3 == 0 && $activePillar2 != 0 && $enabled14 == 1)
+	{
+		set $activePillar3, getcharid(0);
+		sc_start SC_STONECURSE,15000,0;
+		mapannounce strnpcinfo(4), "The Third Pillar has been activated!",bc_map,"0x00ff99";
+		hideoffnpc "muspelPillar4";
+	}
+	end;
+
+OnInit:
+	hideonnpc strnpcinfo(3);
+	end;
+}
+
+ars_fild31,135,177,0	script	Pilier::muspelPillar4	406,2,2,{
+	end;
+
+OnTouch:
+	if ($activePillar4 == 0 && $activePillar3 != 0 && $enabled14 == 1)
+	{
+		set $activePillar1, getcharid(0);
+		sc_start SC_STONECURSE,15000,0;
+		mapannounce strnpcinfo(4), "The Fourth Pillar has been activated!",bc_map,"0x00ff99";
+		mapannounce strnpcinfo(4), "The Guardian will be available in 15 secondes.",bc_map,"0x00ff99";
+		dispbottom "Landing Guardian is now accessible for 1 minute.";
+		dispbottom "If you missed it, you'll have to leave and enter the map again.";
+		viewpoint 1,126,148,1,0xFF0000;
+		addtimer 60000, strnpcinfo(3)+"::OnHideOn";
+		donpcevent "landing14::Onhideoffnpc";
+	}
+	end;
+
+OnHideOn:
+OnInit:
+	hideonnpc strnpcinfo(3);
+	end;
+}
+
+
+ars_fild24,239,242,0	script	World#15::landing15	4_ENERGY_RED,2,2,{
+	if (countitem(.requiredId) >= .requiredCount && YGGPALIER >= atoi(strnpcinfo(2)))
+	{
+		warp ($yggLabMap$ + strnpcinfo(2)),$yggLabMapCoordinates[6],$yggLabMapCoordinates[7];			
+	}
+	close;
+	
+OnLabMobDead:
+	set .@mobCount, mobcount($yggLabMap$ + "15", strnpcinfo(3) + "::OnLabMobDead");
+	if(.@mobCount == 0)
+	{
+		doevent "mazewg15::OnChangeCleanState";
+	}
+	end;
+	
+OnNPCKillEvent:
+OnPCLoadMapEvent:
+	if (strcharinfo(3) == strnpcinfo(4) 
+		&& countitem(.requiredId) >= .requiredCount
+		&& YGGPALIER >= atoi(strnpcinfo(2))
+		&& .activated == 0)
+	{
+		dispbottom "Landing Guardian is now accessible for 30 seconds.";
+		viewpoint 1,239,242,1,0xFF0000;
+		goto Onhideoffnpc;
+	}
+	end;
+		
+Onhideoffnpc:
+	hideoffnpc strnpcinfo(3);
+	initnpctimer;
+	set .activated, 1;
+	end;
+	
+OnTimer30000:
+	hideonnpc strnpcinfo(3);
+	stopnpctimer;
+	set .activated, 0;
+	end;
+	
+OnInit:
+	set .requiredId, 994;
+	set .requiredCount, 150;
+	hideonnpc strnpcinfo(3);
+	end;
+}
+

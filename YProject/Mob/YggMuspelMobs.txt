@@ -1,0 +1,107 @@
+// [========================================================]
+// [=============     Yggdrasil - Mobs     	============]
+// [========================================================]
+// [ Version 1                                              ]
+// [========================================================]
+// [ Original script by: Alayne				    ]
+// [========================================================]
+// [ Description:                                           ]
+// [--------------------------------------------------------]
+// [                                                        ]
+// [ - The Yggdrasil Project - Muspelheim Mobs spawn		    ]
+// [========================================================]
+// [ Changelog: (5 last updates)                            ]
+// [--------------------------------------------------------]
+// [                                                        ]
+// [ v0: Creation                      			    ]
+// [                                                        ]
+// [                                                        ]
+// [========================================================]
+// [                                                        ]
+// [========================================================]
+
+//Big
+ars_fild23,0,0,0,0	monster	Kobold	1135,4,60000,30000,0,2,0
+ars_fild23,0,0,0,0	monster	Kobold Archer	1282,5,60000,30000,0,2,0
+ars_fild23,0,0,0,0	monster	Horong	1129,6,60000,30000,0,2,0
+ars_fild23,0,0,0,0	monster	Jakk	1130,7,60000,30000,0,2,0
+ars_fild23,0,0,0,0	monster	Marduk	1140,10,60000,30000,0,2,0
+
+//Normal
+ars_fild23,0,0,0,0	monster	Kobold	1135,8,0,0,0,0,0
+ars_fild23,0,0,0,0	monster	Kobold Archer	1282,10,0,0,0,0,0
+ars_fild23,0,0,0,0	monster	Horong	1129,12,0,0,0,0,0
+ars_fild23,0,0,0,0	monster	Jakk	1130,14,0,0,0,0,0
+ars_fild23,0,0,0,0	monster	Marduk	1140,20,0,0,0,0,0
+
+//Big
+ars_fild24,0,0,0,0	monster	Wootan Fighter	1499,4,60000,30000,0,2,0
+ars_fild24,0,0,0,0	monster	Stone Shooter	1495,5,60000,30000,0,2,0
+ars_fild24,0,0,0,0	monster	Blazer	1367,6,60000,30000,0,2,0
+ars_fild24,0,0,0,0	monster	Choco	1214,7,60000,30000,0,2,0
+ars_fild24,0,0,0,0	monster	Plasma	1694,10,60000,30000,0,2,0
+
+//Normal
+ars_fild24,0,0,0,0	monster	Wootan Fighter	1499,8,0,0,0,0,0
+ars_fild24,0,0,0,0	monster	Stone Shooter	1495,10,0,0,0,0,0
+ars_fild24,0,0,0,0	monster	Blazer	1367,12,0,0,0,0,0
+ars_fild24,0,0,0,0	monster	Choco	1214,14,0,0,0,0,0
+ars_fild24,0,0,0,0	monster	Plasma	1694,20,0,0,0,0,0
+
+//Big
+ars_fild30,0,0,0,0	monster	Wild Ginseng	1413,2,60000,30000,0,2,0
+ars_fild30,0,0,0,0	monster	Photon Canon	1683,5,60000,30000,0,2,0
+ars_fild30,0,0,0,0	monster	Explosion	1383,6,60000,30000,0,2,0
+ars_fild30,0,0,0,0	monster	Nine Tails	1180,2,60000,30000,0,2,0
+ars_fild30,0,0,0,0	monster	Majoruros	1310,5,60000,30000,0,2,0
+ars_fild30,0,0,0,0	monster	Lava Golem	1366,5,60000,30000,0,2,0
+
+//Normal
+ars_fild30,0,0,0,0	monster	Wild Ginseng	1413,4,0,0,0,0,0
+ars_fild30,0,0,0,0	monster	Photon Canon	1683,10,0,0,0,0,0
+ars_fild30,0,0,0,0	monster	Explosion	1383,12,0,0,0,0,0
+ars_fild30,0,0,0,0	monster	Nine Tails	1180,4,0,0,0,0,0
+ars_fild30,0,0,0,0	monster	Majoruros	1310,10,0,0,0,0,0
+ars_fild30,0,0,0,0	monster	Lava Golem	1366,10,0,0,0,0,0
+
+//Big
+ars_fild31,0,0,0,0	monster	Grand Peco	1369,4,60000,30000,0,2,0
+ars_fild31,0,0,0,0	monster	Kaho	1072,6,60000,30000,0,2,0
+ars_fild31,0,0,0,0	monster	Gajomart	1309,10,60000,30000,0,2,0
+ars_fild31,0,0,0,0	monster	Mutant Dragonoid	1262,5,60000,30000,0,2,0
+ars_fild31,0,0,0,0	monster	Grizzly	1381,7,60000,30000,0,2,0
+
+//Normal
+ars_fild31,0,0,0,0	monster	Grand Peco	1369,8,0,0,0,0,0
+ars_fild31,0,0,0,0	monster	Kaho	1072,12,0,0,0,0,0
+ars_fild31,0,0,0,0	monster	Gajomart	1309,20,0,0,0,0,0
+ars_fild31,0,0,0,0	monster	Mutant Dragonoid	1262,10,0,0,0,0,0
+ars_fild31,0,0,0,0	monster	Grizzly	1381,14,0,0,0,0,0
+
+//Big
+ars_fild32,0,0,0,0	monster	Kasa	1833,6,60000,30000,0,2,0
+ars_fild32,0,0,0,0	monster	Chimera	1283,4,60000,30000,0,2,0
+ars_fild32,0,0,0,0	monster	Ferus	1714,5,60000,30000,0,2,0
+//ars_fild32,0,0,0,0	monster	Fire Imp	1837,2,60000,30000,0,2,0
+ars_fild32,0,0,0,0	monster	Salamander	1831,2,60000,30000,0,2,0
+
+//Normal
+ars_fild32,0,0,0,0	monster	Kasa	1833,12,0,0,0,0,0
+ars_fild32,0,0,0,0	monster	Chimera	1283,8,0,0,0,0,0
+ars_fild32,0,0,0,0	monster	Ferus	1714,10,0,0,0,0,0
+//ars_fild32,0,0,0,0	monster	Fire Imp	1837,4,0,0,0,0,0
+ars_fild32,0,0,0,0	monster	Salamander	1831,4,0,0,0,0,0
+
+//Normal
+ars_fild57,0,0,0,0	monster	Plasma	1694,8,0,0,0,0,0
+ars_fild57,0,0,0,0	monster	Wild Ginseng	1413,12,0,0,0,0,0
+ars_fild57,0,0,0,0	monster	Stone Shooter	1495,20,0,0,0,0,0
+ars_fild57,0,0,0,0	monster	Marduk	1140,10,0,0,0,0,0
+ars_fild57,0,0,0,0	monster	Kaho	1072,14,0,0,0,0,0
+
+//Big
+ars_dun71,0,0,0,0	monster	Kasa	1833,6,60000,30000,0,2,0
+ars_dun71,0,0,0,0	monster	Mutant Dragonoid	1262,4,60000,30000,0,2,0
+ars_dun71,0,0,0,0	monster	Ferus	1714,5,60000,30000,0,2,0
+ars_dun71,0,0,0,0	monster	Fire Imp	1837,2,60000,30000,0,2,0
+ars_dun71,0,0,0,0	monster	Salamander	1831,2,60000,30000,0,2,0

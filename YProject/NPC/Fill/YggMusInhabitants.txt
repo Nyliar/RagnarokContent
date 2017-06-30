@@ -1,0 +1,72 @@
+// [========================================================]
+// [=============     Yggdrasil - Muspelheim     ============]
+// [========================================================]
+// [ Version 1                                              ]
+// [========================================================]
+// [ Original script by: Alayne				    ]
+// [========================================================]
+// [ Description:                                           ]
+// [--------------------------------------------------------]
+// [                                                        ]
+// [ - The Muspelheim NPC		    	   	    ]
+// [========================================================]
+// [ Changelog: (5 last updates)                            ]
+// [--------------------------------------------------------]
+// [                                                        ]
+// [ v0: Creation                      			    ]
+// [                                                        ]
+// [                                                        ]
+// [========================================================]
+// [                                                        ]
+// [========================================================]
+
+ars_fild56,63,140,5	script	Filr::musst	4_M_DOGTRAVELER,{
+	set .@npcname$, "[Filr]";
+	mes .@npcname$;
+	mes "You're here in musunheim, Realm of the Ice Giants.";
+	mes "Stay calm, the Giants are known to be a ferocious against strangers.";
+	close;
+}
+
+ars_fild56,103,135,5	script	Olir::musol	4_M_DOGTRAVELER2,{
+	set .@npcname$, "[Olir]";
+	mes .@npcname$;
+	mes "...I don't talk to humans.";
+	if (MUSQ == 0)
+	{
+		mes "We've been hunted, like beast, by your kind and Asgards.";
+		mes "Odin, the almighty father of sky, is a filthy traitor.";
+		mes "I spit on his face, and his childs.";
+		set MUSQ, 1;
+	}
+	close;
+}
+
+ars_fild56,90,93,2	script	Trorn::mustr	4_F_DOGTRAVELER,{
+	set .@npcname$, "[Trorn]";
+	mes .@npcname$;
+	mes "Stay calm, the Giants are known to be a ferocious against strangers.";
+	mes "Don't think that we're only ferocious beasts.";
+	mes "We, and the Ice Giants, have been associated to the 'Bads' guys.";
+	mes "All we wanted was to be free, and not under Ases power.";
+	mes "Was it so bad?";
+	close;
+}
+
+ars_fild56,103,74,1	script	Atru::musat	4_M_CATMAN1,{
+	set .@npcname$, "[Atru]";
+	mes .@npcname$;
+	mes "You're here in Muspelheim, Realm of the Fire Giants.";
+	mes "Stay calm, the Giants are known to be a ferocious against strangers.";
+	close;
+}
+
+ars_fild56,78,63,5	script	Frol::musfr	4_M_CATMAN2,{
+	set .@npcname$, "[Frol]";
+	mes .@npcname$;
+	mes "Why won't go in Jotunheim? The weather here is hot, and ferocious.";
+	mes "It's also true there, but it cold instead.";
+	mes "All giants have grown in difficult situations, and have learn to fight to survive.";
+	mes "That's something the Gods and Vanes would never understand.";
+	close;
+}

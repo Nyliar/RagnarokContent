@@ -1,0 +1,787 @@
+// [========================================================]
+// [=============           YGGDRASIL           ============]
+// [========================================================]
+// [ Version 1                                              ]
+// [========================================================]
+// [ Original script by: Alayne				    			]
+// [========================================================]
+// [ Description:                                           ]
+// [--------------------------------------------------------]
+// [                                                        ]
+// [ - The YGGDRASIL Project Entry			    	    	]
+// [========================================================]
+// [ Changelog: (5 last updates)                            ]
+// [--------------------------------------------------------]
+// [                                                        ]
+// [ v0: Creation                      			    		]
+// [ v1: Difficulty Mode addons        			    		]
+// [ v2: Floor Maze addons             			    		]
+// [                                                        ]
+// [                                                        ]
+// [========================================================]
+// [                                                        ]
+// [========================================================]
+
+dep_lb,119,42,0	script	Yggdrasil::yggman	4_SYS_MSG,2,2,{ //-1
+	end;
+
+OnWhisperGlobal:
+	//set YGGDRASIL, 1;
+	//set YGGPALIER, 5;
+	//set YGGWORLD, 0;
+	//set FIRSTIN, 0;
+	//set YGGDEATH, 0;
+	//set yggproject_delay, 0;
+	dispbottom "Level: " + YGGPALIER;
+	end;
+	
+OnTouch:
+	set .@npcname$, "[Cardinal System]";
+	if (YGGPALIER == 0 && YGGDRASIL == 1)
+	{
+		mes .@npcname$;
+		mes "Welcome in Yggdrasil.";
+		mes "You're actually on Floor 0.";
+		mes "The start city, " + .startTown$ + ", is on north from here.";
+		mes "By entering it, you'll be registered as an Yggdrasil Climber.";
+		if ($yggJob == 1)
+		{
+			next;
+			mes .@npcname$;
+			mes "This status give you the possibility to get a Job.";
+			mes "In each Yggdrasil town, you'll be able to buy items to use your Job.";
+			mes "There's " + getarraysize(.jobArrayName$) + " different Jobs.";
+			mes "Here's the list:";
+			for(set .@i,0; .@i<getarraysize(.jobArrayName$); set .@i,.@i+1)
+			{
+				mes "The " + .jobArrayName$[.@i] + ".";
+			}
+			next;
+			mes .@npcname$;
+			mes "In each town, you'll also found the required option to progress in Yggdrasil:";
+			for( set .@i, 0; .@i<getarraysize(.optionArrayName$); set .@i,.@i+1 )
+			{
+				mes "The " + .optionArrayName$[.@i] + ".";
+			}
+			mes "Each option got its own specificity. Get informed.";
+		}
+		next;
+		mes .@npcname$;
+		mes "Know that return is now forbidden to you.";
+		mes "You can navigate freely in the Yggdrasil worlds you've discovered, but not anymore in Midgard.";
+		mes "The teleport, under any form, except Crystals and Portal, is forbidden.";
+		mes "Here's some items to use the allowed warps. Talk to the Portal Manager to learn more about them.";
+		if (FIRSTIN == 1)
+		{
+			getitem $portalCrystalId, 5;
+			getitem $returnCrystalId, 5;
+		}
+		next;
+		mes .@npcname$;
+		mes "A special warper will appear during wars to allow you to leave, but you'll be automatically warped in after that.";
+		mes "Death in Yggdrasil forbids you the access for 3 days.";
+		mes "On top of that, all your progression will be resetted. You'll have to start all over again.";
+		if (FIRSTIN == 1)
+		{
+			next;
+			mes .@npcname$;
+			mes "To progress in Yggdrasil, you'll have to free the floors, which are guarded by monsters.";
+			mes "Each floor has its own monsters, guardians, and condition to fulfill.";
+			mes "A floor is divided in two. The Surface, which is the part you'll be able to access through warps,";
+			mes "as long as you've been granted access to this floor. Otherwise, the system will warn you that you can't access it yet.";
+			cutin "Guide_Surface", 4;
+			next;
+			mes .@npcname$;
+			mes "Once on the Surface of a floor, you'll have to understand and find how to access the Power Stream of this floor.";
+			cutin "Guide_PowerStream", 4;
+			mes "This Stream will allow you to access to the second part of the Floor.";
+			mes "The condition to fullfill is different on each floor, but informations may be obtained through several options:";
+			next;
+			mes .@npcname$;
+			cutin "Guide_Informator", 4;
+			mes "The Informator, which can be find in all town, and which may have informations to sell to you.";
+			next;
+			mes .@npcname$;
+			cutin "Guide_InformativeMonsters", 4;
+			mes "The Informative Monsters. By killing one with a Blue Crystal on your inventory, you may capture its soul to extract infos.";
+			next;
+			mes .@npcname$;
+			cutin "Guide_PileDust", 4;
+			mes "And finally, by looking into Pile of Dust, which appears on some foors fields.";
+			next;
+			mes .@npcname$;
+			mes "Once the condition has been fullfilled, you'll grant access to the second part.";
+			mes "The second part is composed by the Maze, an underground place where you'll have to kill the Maze Guardian and all monsters to progress.";
+			mes "By doing so, the Cardinal System will allow you to fight the Floor Guardian in a dedicated place.";
+			mes "Be careful, only one guardian at a time can be fight. The System will warn you if the place isn't available.";
+			next;
+			mes .@npcname$;
+			mes "As nothing's better than an example, you'll have to find the condition of this Floor to access its maze.";
+			mes "You'll better kill a bunch of Porings.";
+		}
+		next;
+		mes .@npcname$;
+		mes "Stay alert.";
+		mes "Good luck.";
+		set YGGDRASIL, 2;
+	}
+	close;
+	
+OnLandingKilled:
+	callsub OnDisplayBossKill;
+	dispbottom "[Cardinal System] You've already unlocked this landing.";
+	charcommand "#load " + strcharinfo(0);	
+	end; 
+
+OnLandingDead:
+	if (getcharid(1) == 0)
+	{
+		callsub OnDisplayBossKill;
+		set YGGPALIER, YGGPALIER + 1;
+		if(YGGPALIER > $mainLabyrinthClear)
+		{
+			set $mainLabyrinthClear, YGGPALIER;
+		}
+		mes "[Cardinal System]";
+		mes "You've unlocked Landing " + YGGPALIER;
+		next;
+		cutin "", 255;
+		charcommand "#load " + strcharinfo(0);
+	}
+	set .@mainId, getcharid(0);
+	getpartymember getcharid(1), 2;
+	copyarray .@partyAid[0], $@partymemberaid[0], getarraysize($@partymemberaid);
+	for (set .@i,0; .@i < getarraysize(.@partyAid); set .@i, .@i+1)
+	{
+		if(attachrid(.@partyAid[.@i]) && .@partyAid[.@i] != .@mainId)
+		{
+			callsub OnDisplayBossKill;
+			set YGGPALIER, YGGPALIER + 1;
+			if(YGGPALIER > $mainLabyrinthClear)
+			{
+				set $mainLabyrinthClear, YGGPALIER;
+			}
+			mes "[Cardinal System]";
+			mes "You've unlocked Landing " + YGGPALIER;
+			next;
+			cutin "", 255;
+			charcommand "#load " + strcharinfo(0);
+		}
+	}
+	end;
+	
+OnWorldDead:
+	if (getcharid(1) == 0)
+	{
+		callsub OnDisplayBossKill;
+		set YGGPALIER, YGGPALIER + 1;
+		set YGGWORLD, YGGWORLD + 1;
+		mes "[Cardinal System]";
+		mes "You've unlocked Landing " + YGGPALIER;	
+		next;
+		mes "[Cardinal System]";
+		set .@message$, "You've freed ";
+		switch(YGGWORLD)
+		{
+			case 1:
+				set .@message$, .@message$ + "Midgard World";
+				break;
+			case 2:
+				set .@message$, .@message$ + "Jotunheim World";
+				break;
+			case 3:
+				set .@message$, .@message$ + "Muspelheim World";
+				break;
+			case 4:
+				set .@message$, .@message$ + "Niflheim World";
+				break;
+			case 5:
+				set .@message$, .@message$ + "Vanaheim World";
+				break;
+			case 6:
+				set .@message$, .@message$ + "Shwartzalfheim World";
+				break;
+			case 7:
+				set .@message$, .@message$ + "Helheim World";
+				break;
+			case 8:
+				set .@message$, .@message$ + "Ljosalfheim World";
+				break;
+			case 9:
+				set .@message$, .@message$ + "Asgard World, the last one. Congratulations.";
+				break;
+		}
+		mes .@message$;
+		next;
+		cutin "", 255;
+		charcommand "#load " + strcharinfo(0);	
+	}
+	set .@mainId, getcharid(0);
+	getpartymember getcharid(1), 2;
+	copyarray .@partyAid[0], $@partymemberaid[0], getarraysize($@partymemberaid);
+	for (set .@i,0; .@i < getarraysize(.@partyAid); set .@i, .@i+1)
+	{
+		if (attachrid(.@partyAid[.@i]) && .@mainId != .@partyAid[.@i])
+		{
+			callsub OnDisplayBossKill;
+			set YGGPALIER, YGGPALIER + 1;
+			set YGGWORLD, YGGWORLD + 1;
+			mes "[Cardinal System]";
+			mes "You've unlocked Landing " + YGGPALIER;
+			next;
+			mes "[Cardinal System]";
+			set .@message$, "You've freed ";
+			switch(YGGWORLD)
+			{
+				case 1:
+					set .@message$, .@message$ + "Midgard World";
+					break;
+				case 2:
+					set .@message$, .@message$ + "Jotunheim World";
+					break;
+				case 3:
+					set .@message$, .@message$ + "Muspelheim World";
+					break;
+				case 4:
+					set .@message$, .@message$ + "Niflheim World";
+					break;
+				case 5:
+					set .@message$, .@message$ + "Vanaheim World";
+					break;
+				case 6:
+					set .@message$, .@message$ + "Shwartzalfheim World";
+					break;
+				case 7:
+					set .@message$, .@message$ + "Helheim World";
+					break;
+				case 8:
+					set .@message$, .@message$ + "Ljosalfheim World";
+					break;
+				case 9:
+					set .@message$, .@message$ + "Asgard World, the last one. Congratulations.";
+					break;
+			}
+			mes .@message$;
+			next;
+			cutin "", 255;
+			charcommand "#load " + strcharinfo(0);	
+		}
+	}
+	if(YGGPALIER > $mainLabyrinthClear)
+	{
+		set $mainLabyrinthClear, YGGPALIER;
+	}
+	end;
+	
+OnDisplayBossKill:
+	switch($activeBoss)
+	{
+		case 1115: cutin "SealedEddga", 2; break;
+		case 1086: cutin "SealedGolden", 2; break;
+		case 1150: cutin "SealedMoonlight", 2; break;
+		case 1583: cutin "SealedTao", 2; break;
+		case 1112: cutin "SealedDrake", 2; break;
+		//Jotunheim       
+		case 1252: cutin "SealedGarm", 2; break;
+		case 1251: cutin "SealedStormy", 2; break;
+		case 1990: cutin "SealedHardrock", 2; break;
+		case 1312: cutin "SealedTurtle", 2; break;
+		case 1779: cutin "SealedKtullanux", 2; break;
+		//Muspelheim     
+		case 1885: cutin "SealedGopinich", 2; break;
+		case 2476: cutin "SealedAmdarias", 2; break;
+		case 1719: cutin "SealedDetale", 2; break;
+		case 2068: cutin "SealedBoitata", 2; break;
+		case 1832: cutin "SealedIfrit", 2; break;
+		//Niflheim        
+		case 1389: cutin "SealedDracula", 2; break;
+		case 1038: cutin "SealedOsiris", 2; break;
+		case 1871: cutin "SealedFallen", 2; break;
+		case 1734: cutin "SealedKiel", 2; break;
+		case 1373: cutin "SealedLordOfDeath", 2; break;
+		//Vanaheim        
+		case 1785: cutin "SealedAtroce", 2; break;
+		case 1039: cutin "SealedBaphomet", 2; break;
+		case 1708: cutin "SealedThanatos", 2; break;
+		case 2253: cutin "SealedDaehyon", 2; break;
+		case 1991: cutin "SealedTendrillion", 2; break;
+		//Shwarzalfheim  
+		case 1418: cutin "SealedEvilSnake", 2; break;
+		case 1623: cutin "SealedRSX", 2; break;
+		case 1511: cutin "SealedAmonRa", 2; break;
+		case 1685: cutin "SealedVesper", 2; break;
+		case 2087: cutin "SealedQueen", 2; break;
+		//Helheim         
+		case 1492: cutin "SealedIncantation", 2; break;
+		case 1157: cutin "SealedPharaoh", 2; break;
+		case 1046: cutin "SealedDoppel", 2; break;
+		case 1272: cutin "SealedDarkLord", 2; break;
+		case 1768: cutin "SealedGloom", 2; break;
+		//Ljosalfheim
+		case 1688: cutin "SealedLadyTanee", 2; break;
+		case 1147: cutin "SealedMaya", 2; break;
+		case 1190: cutin "SealedOrcLord", 2; break;
+		case 1630: cutin "SealedBacsojin", 2; break;
+		case 2022: cutin "SealedNyddhog", 2; break;
+		//Asgard
+		case 1874: cutin "SealedBeelzebub", 2; break;
+		case 1751: cutin "SealedRandgris", 2; break;
+		case 2131: cutin "SealedLostDragon", 2; break;
+		case 2156: cutin "SealedLeak", 2; break;
+		case 2249: cutin "SealedPyuriel", 2; break;	
+		default: cutin "", 255; break;
+	}
+	addtimer 10000, "yggman::OnCleanCutin";	
+	return;
+
+OnCleanCutin:
+	cutin "", 255;
+	end;
+
+OnDeathDelayElasped:
+	deltimer "yggman::OnDeathDelayElasped";
+	set YGGTIMERCOUNT, YGGTIMERCOUNT + 1;
+	if(YGGTIMERCOUNT >= 60)
+	{
+		if (Hp == 0)
+		{
+			//10 minutes elasped, if still at 0hp, won't be resurrected.
+			//force loading
+			cutin "", 255;
+			charcommand "#load " + strcharinfo(0);	
+		}
+		else
+		{
+			cutin "", 255;
+			set YGGDEATH, 0;
+		}
+	}
+	else
+	{
+		if (Hp != 0)
+		{
+			cutin "", 255;
+			set YGGDEATH, 0;
+			end;
+		}
+		if(YGGTIMERCOUNT == 6)
+		{
+			cutin "dead_1min", 4;
+		}
+		else if(YGGTIMERCOUNT == 12)
+		{
+			cutin "dead_2min", 4;
+		}
+		else if(YGGTIMERCOUNT == 18)
+		{
+			cutin "dead_3min", 4;
+		}
+		else if(YGGTIMERCOUNT == 24)
+		{
+			cutin "dead_4min", 4;
+		}
+		else if(YGGTIMERCOUNT == 30)
+		{
+			cutin "dead_5min", 4;
+		}
+		else if(YGGTIMERCOUNT == 36)
+		{
+			cutin "dead_6min", 4;
+		}
+		else if(YGGTIMERCOUNT == 42)
+		{
+			cutin "dead_7min", 4;
+		}
+		else if(YGGTIMERCOUNT == 48)
+		{
+			cutin "dead_8min", 4;
+		}
+		else if(YGGTIMERCOUNT == 54)
+		{
+			cutin "dead_9min", 4;
+		}
+		else if(YGGTIMERCOUNT == 57)
+		{
+			cutin "dead_9min30", 4;
+		}
+		else if(YGGTIMERCOUNT == 58)
+		{
+			cutin "dead_9min40", 4;
+		}
+		else if(YGGTIMERCOUNT == 59)
+		{
+			cutin "dead_9min50", 4;
+		}
+		addtimer 10000, "yggman::OnDeathDelayElasped";	
+	}
+	end;
+	
+OnPlayerDied:
+	deltimer "yggman::OnDeathDelayElasped";
+	cutin "malaya_ghost01", 4;
+	mes "[Cardinal System] You have been eliminated.";
+	set YGGPALIER, 0;
+	set YGGWORLD, 0;
+	set yggproject_delay, ( gettimetick(2) + ( .returnForbbidDelay ) );
+	close2;
+	warp $returnTown$,$returnTownX,$returnTownY;
+	cutin "", 255;
+	end;
+	
+OnNPCKillEvent:
+	set .@randCrys, rand(0,$randMaxPercent);
+	if ($giveCrystal == 1 && .@randCrys <= $crystalPercent)
+	{
+		set .@id, rand($crystalFirstId, $crystalLastId);
+		getitem .@id, 1;
+		logmes "[Scaled Yggdrasil] " + strcharinfo(0) + " obtains a " + getitemname(.@id);
+	}
+	set .@randMap, rand(0,$randMaxPercent);
+	if ($giveMap == 1 && .@randMap <= $mapPercent)
+	{
+		set .@id, rand($mapFirstId, $mapLastId);
+		getitem .@id, 1;
+		logmes "[Scaled Yggdrasil] " + strcharinfo(0) + " obtains a " + getitemname(.@id);
+	}
+	goto OnForceWarpBack;
+	end;
+	
+OnPCDieEvent:
+	dispbottom "[Cardinal System] You died. You now have 10 minutes to get raised, or you'll get eliminated.";
+	cutin "dead_0", 4;
+	set YGGDEATH, 1;
+	set YGGTIMERCOUNT, 0;
+	addtimer 10000, "yggman::OnDeathDelayElasped";	
+	end;
+	
+OnPCLoginEvent:
+	goto OnForceWarpBack;
+	end;
+	
+OnForceWarpBack:
+	if(yggproject_forcedreturndelay > 0 && yggproject_forcedreturndelay < gettimetick(2))
+	{
+		savepoint .YggdrasilMapStart$,.YggdrasilMapStartX,.YggdrasilMapStartY;
+		warp .YggdrasilMapStart$,.YggdrasilMapStartX,.YggdrasilMapStartY;
+		dispbottom "[Cardinal System] Welcome back to Scaled Yggdrasil.";
+		set yggproject_forcedreturndelay, 0;
+	}
+	end;	
+	
+OnPCLoadMapEvent:
+	for(set .@i,0; .@i<getarraysize($townByLandingMap$); set .@i,.@i+1)
+	{
+		if (strcharinfo(3) == $townByLandingMap$[.@i] && YGGDEATH == 1)
+		{
+			query_sql("INSERT INTO `ygg_climber` (`name`, `date`, `landing`) VALUES ('" + strcharinfo(0) + "','" + gettimestr("%Y-%m/%d %H:%M:%S",21) + "'," + YGGPALIER + ")", .@count);
+			doevent "yggman::OnPlayerDied";
+		}
+	}
+end;	
+	
+OnInit:
+	set .@npcname$, "[Yggdrasil - System]";
+	set .startTown$, "Hyrule";
+	set $returnTown$,"prontera"; set $returnTownX,0; set $returnTownY,0;
+	setarray .jobArrayName$[0], "Smith", "Cook", "Tailor", "ArmorSmith", "Sorcerer", "Alchemist";
+	setarray .optionArrayName$[0], "Teleport Portal", "Merchant", "Healer";
+	
+	set .returnForbbidDelay, 259200; //return delay. Default: 3 days - 1814400. For 3 weeks - 1814400
+	
+	set $worldMap$,"lum_boss";set $worldMapX,14; set $worldMapY,188;
+	set $landingMap$,"pvp_valk";set $landingMapX,96; set $landingMapY,129;
+	
+	set $yggJob, 0;
+	set $giveCurrency, 0; //define if mob kill should give currency
+	set $giveCrystal, 1; //define if mob kill should give crystal
+	set $giveMap, 0; //define if mob kill should give map
+	set $enableLeaving, 1; //0 for no option, 1 for temporary exit option through portal, 2 for permanent out through portal
+	set $enableLevelChoice, 1;
+
+	set $mapFirstId, 10000;
+	set $mapLastId, 20000;
+	set $mapPercent, 2;
+
+	set $portalCrystalId, 29501;
+	set $returnCrystalId, 29502;
+
+	set $crystalFirstId, 29500;
+	set $crystalLastId, 29504;
+	set $crystalPercent, 4;
+
+	set $randMaxPercent, 1000;
+	
+	setarray $townByLandingMapName$[0],"Hyrule","Hrylar","Sturlim","Dodsfall","Helt","Morkhet","Fordomt","Dagslys","Varherre";
+	setarray $townByLandingMapLanding[0],1,6,11,16,21,26,31,36,41;
+	setarray $townByLandingMap$[0],"Hyrule","invek","ars_fild56","ars_fild44","ars_fild11","ars_fild40","ars_fild21","ars_fild04","ars_fild58";
+	setarray $townByLandingX[0],134,198,61,38,162,118,231,90,97;
+	setarray $townByLandingY[0],182,181,101,89,38,195,147,112,170;
+	
+	setarray $yggLabMap$,"yggmaze";
+	setarray $yggLabMapCoordinates[0],20,143,20,170,162,158,102,95; //X then Y
+	
+	//5 mobs, 1 Guardian
+	setarray $labMidMobId[0],2136,2287,2285,2726,2254; //Little Fatum, Abysmal Kobold Archer, Dark Hammer Kobold, Samurai Soheon 
+	setarray $labMidMobCount[0],20,10,15,25,1;
+	//Jotun
+	setarray $labJotMobId[0],2183, 2367, 2092, 2016, 2198; //Mutant Anolian, Blue Lichtern, Dolomedes, Aqua Elemental, King Dramoh
+	setarray $labJotMobCount[0],1, 20, 30, 35, 2;
+	//Muspel
+	setarray $labMusMobId[0],2250, 2353, 1831, 1262; //Elder Willow, Lora, Nightmare Minorous, Salamander, Mutant Dragonoid
+	setarray $labMusMobCount[0], 1, 15, 25, 35;
+	//Nifl
+	setarray $labNifMobId[0],1198, 1875, 1712, 1704; //Necromancer, Dead King, Suffering Khalitzburg, Thanatos Dolor, Thanatos Odium
+	setarray $labNifMobCount[0],18, 15, 10, 5;
+	//Vanaheim
+	setarray $labVanMobId[0],1169, 2734, 2365, 2363, 1994; //Neo Munk, Furious Wanderer, Cenere, Mebaltt, Luciola Vespa
+	setarray $labVanMobCount[0],25, 1, 25, 15, 30;
+	//Shwartzalfheim
+	setarray $labSchMobId[0],2871, 2019, 2086, 2018; //Furious Clock, Ancient Tree, Rake Scaraba, Duneyrr, Nightmare Arclouse
+	setarray $labSchMobCount[0],30, 15, 25, 10;
+	//Hel
+	setarray $labHelMobId[0],2334, 2470, 2744, 1268; //Wakwak, Evil Shadow, Corrupted Abysmal Knigh, Swift Incarnation of Morroc, Bloody Knight
+	setarray $labHelMobCount[0],20, 5, 25, 10;
+	//Ljos
+	setarray $labLjoMobId[0],2047, 1987, 1988, 2015, 2324; //Centipede, Nepenthes, Dark Pinguicula, Penomena
+	setarray $labLjoMobCount[0],15, 25, 20, 30, 20;
+	//Asg
+	setarray $labAsgMobId[0],2256, 1992, 1371, 1637, 1655; //Rudo, Cornus, Fake Angel, Magaletan, Errende
+	setarray $labAsgMobCount[0],1, 25, 35, 5, 20;
+	
+	setarray $yggdrasilArrayMap$[0], 
+	"heidelberg",
+	"aqt_fild01",
+	"aqt_fild02",
+	"aqt_shrine",
+	"aquitaine",
+	"lafayette",
+	"temple_lb",
+	"thalys_o",
+	"cs_lb",
+	"lumina",
+	"ars_fild07", //Jotun
+	"ars_fild08",
+	"ars_fild51",
+	"ars_fild55",
+	"ars_fild16",
+	"ars_fild20",
+	"ars_fild52",
+	"ars_dun08",
+	"ars_fild56", //Muspel
+	"ars_fild23",
+	"ars_fild57",
+	"ars_fild32",
+	"ars_fild31",
+	"ars_dun71",
+	"ars_fild30",
+	"ars_fild24",
+	"ars_fild44", //Nifl
+	"ars_fild46",
+	"ars_dun60",
+	"ars_fild43",
+	"ars_dun25",
+	"ars_dun62",
+	"ars_fild13", //vana
+	"ars_fild11",
+	"ars_fild36",
+	"ars_fild45",
+	"ars_fild33",
+	"ars_fild36",
+	"ars_fild49",
+	"ars_fild37", //schwar
+	"ars_fild35",
+	"ars_fild39",
+	"ars_fild40",
+	"ars_dun20",
+	"ars_fild38",
+	"ars_fild48", //hel
+	"ars_fild21",
+	"Biarmaland",
+	"ars_fild10",
+	"br_lb",
+	"ars_fild27", //Ljos
+	"ars_fild04",
+	"ars_dun64",
+	"ars_fild25",
+	"ars_fild26",
+	"ars_fild28",
+	"ars_dun31",
+	"ars_fild59", //Asg
+	"ars_fild58",
+	"ars_dun32",
+	"ars_fild60",
+	"ars_fild62",
+	"ars_dun39",
+	"ars_fild61",
+	"ygg_village"; //root;	
+	
+	setarray $yggMvPIdArray[0], 
+	//Midgard
+	1115, //Golden Thief Bug, Landing 1
+	1086, //Eddga
+	1150, //Moonlight
+	1583, //Tao
+	1112, //Landing 5 Drake
+	//Jotunheim
+	1252, //Garm
+	1251, //Stormy
+	1990, //Hardrock Mammoth
+	1312, //Turtle
+	1779, //Ktullanux
+	//Muspelheim
+	1885, //Gopinich
+	2476, //Amdarias
+	1719, //Detardeurus
+	2068, //Boitata
+	1832, //Ifrit
+	//Niflheim
+	1389, //Dracula
+	1038, //Osiris
+	1871, //Fallen
+	1734, //Kiel
+	1373, //Lord of Death
+	//Vanaheim
+	1785, //Atroce
+	1039, //Baphomet	
+	1708, //Thanatos
+	2253, //Daehyon
+	1991, //Tendrilrion
+	//Shwarzalfheim
+	1418, //Evil snake lord
+	1623, //RSX
+	1511, //Amon Ra
+	1685, //Vesper
+	2087, //Queen Scaraba
+	//Helheim
+	1492, //Incantation
+	1157, //Pharaoh
+	1046, //Doppelganger
+	1272, //Dark lord
+	1768, //Gloom
+	//Ljosalfheim
+	1688, //Lady Tanee
+	1147, //Maya
+	1190, //Orc Lord
+	1630, //Bacsojin
+	2022, //Nidhogur
+	//Asgard
+	1874, //Beelze
+	1751, //Randgris
+	2131, //Lost Dragon
+	2156, //Leak
+	2249; //Pyuriel
+	
+	setarray $yggLandConditionInfoArray$[0],"Be the only one on the map.","Be 6 on the map at the same time.","Get in with a team of 5 members at least.","Get in a guild at least lvl 8","Be at least lvl 80",
+	"Cross the Frozen Land","Kill enough Giants","Get 50 " + getitemname(12119) + ".","Fill the Pillar Blood Gauge","Get 350 " + getitemname(7561) + ".",
+	"Survive to the Braise","Cross the Meteor Rain","Kill the right Giant","Activate the 4 Pillars","Get 250 " + getitemname(994) + ".",
+	"Get 100 " + getitemname(7701) + ".","Fill the Pillar Soul Gauge","Purify the Pillar","Find the Pillar in the delay","Get all elementals stones",
+	"Kill 500 Small monsters","Kill 600 Medium monsters","Kill 150 monsters with 20 levels lower than you","Kill 100 monsters with 10 levels higher than you","Be at least lvl 90",
+	"Mine 60 rocks like a Dwarf","Corrupt a Dward Soul","Get 10 " + getitemname(969) + ".","Kill 250 whites Alfes","Capture Mavka",
+	"Kill 5 different players","Get 10 " + getitemname(994) + ".","","Get killed 2 times","Kill all Folkvang Inhabitants",
+	"Belong to a team with 2 archers classes at least","Kill 250 Black Alfes","Protect the forest against Fire Monsters","Find 10 Fairies","Save Mavka",
+	"Kill 500 Formless monsters","Don't belong to a team","Kill 50 dark souls of your classe","Be in a team with all base classes","Be lvl 99/70";
+	
+	setarray $yggLandPositionInfoArray$[0],"Midgard Field 01","Midgard Field 02","Midgard Field 06","Midgard Field 07","Midgard Field 04",
+	"Jotunheim Field 01","Jotunheim Field 02","Jotunheim Field 03","Jotunheim Field 07","Jotunheim Field 08",
+	"Muspelheim Field 02","Muspelheim Field 03","Muspelheim Field 04","Muspelheim Field 05","Muspelheim Field 08",
+	"Niflheim Field 01","Niflheim Field 02","Niflheim Field 04","Niflheim Field 05","Niflheim Field 06",
+	"Vanaheim Field 02","Vanaheim Field 04","Vanaheim Field 08","Vanaheim Field 05","Vanaheim Field 07",
+	"Shwartzalfheim Field 04","Shwartzalfheim Field 04","Shwartzalfheim Field 05","Shwartzalfheim Field 06","Shwartzalfheim Field 07",
+	"Helheim Field 01","Helheim Field 03","Helheim Field 04","Helheim Field 02","Helheim Field 05",
+	"Ljosalfheim Field 02","Ljosalfheim Field 01","Ljosalfheim Field 05","Ljosalfheim Field 07","Ljosalfheim Field 04",
+	"Asgard Field 01","Asgard Field 03","Asgard Field 04","Asgard Field 05","Asgard Field 07";
+	
+	setarray $yggLandMvpInfoArray$[0],"Eddga","Golden Thief Bug","Moonlight Flower","Tao Gunka","Drake",
+	"Garm","Stormy Knight","Boitata","Turtle General","Ktullanux",
+	"Gopinich","Amdarias","Detardeurus","Boitata","Ifrit",
+	"Dracula","Osiris","Fallen Bishop Hibram","Kiel D-01","Lord of Death",
+	"Atroce","Baphomet","Thanatos Memory","Daehyon","Tendrilrion",
+	"Evil Snake Lord","RSX 0806","Amon Ra","Vesper","Queen Scaraba",
+	"Incantation Samurai","Pharaoh","DoppelGanger","Dark Lord","Gloom Under Night",
+	"Lady Tanee","Maya","Orc Lord","Bacsojin","Lost Dragon",
+	"Beelzebub","Valkyrie Randgris","LostDragon","Leak","Pyuriel";
+	
+	setarray $yggUtilitiesInfoArray$[0],"There's a stone somewhere in Hyrule on which are engraved all the dead Climbers.",
+	"You can sometimes earn some items by killing monsters in Yggdrasil.",
+	"There's two kind of Spiritual Stone. But one is rarer than the other.",
+	"The blue Spiritual Stone can be used with the Teleportation Portal.",
+	"The red Spiritual Stone can be used to capture the soul of a particular monster on a map.",
+	"When captured, a monster soul gives its owner an information.",
+	"There's several hidden stone on the Yggdrasil world, on which are engraved infos.",
+	"Entering on a map with a red Spiritual Stone can indicate if there's a Stone somewhere.",
+	"There's an hidden part of the Yggdrasil. Nobody ever found it.",
+	"Some says the last part of the dungeon is really to hard for one player alone."
+	"Some says that the last part is harder when there's more people to fight it.",
+	"On several landings, if you can't find how to complete a condition, try leaving and entering the map again.";
+	
+	set $yggRootEntrance$, "ygg_village"; set $yggRootEntranceX, 36; set $yggRootEntranceY, 128;
+	set $yggRootGuardianId, 2255;
+	end;
+}
+
+pvp_valk,96,124,0	script	YggdrasilBossHandler::yggbosshandl	HIDDEN_WARP_NPC,2,2,{ //-1
+	end;
+	
+OnTouch:
+	switch($activeBoss)
+	{
+		case 1115: cutin "Eddga", 2; break;
+		case 1086: cutin "Golden", 2; break;
+		case 1150: cutin "Moonlight", 2; break;
+		case 1583: cutin "Tao", 2; break;
+		case 1112: cutin "Drake", 2; break;
+		//Jotunheim
+		case 1252: cutin "Garm", 2; break;
+		case 1251: cutin "Stormy", 2; break;
+		case 1990: cutin "Hardrock", 2; break;
+		case 1312: cutin "Turtle", 2; break;
+		case 1779: cutin "Ktullanux", 2; break;
+		//Muspelheim
+		case 1885: cutin "Gopinich", 2; break;
+		case 2476: cutin "Amdarias", 2; break;
+		case 1719: cutin "Detale", 2; break;
+		case 2068: cutin "Boitata", 2; break;
+		case 1832: cutin "Ifrit", 2; break;
+		//Niflheim
+		case 1389: cutin "Dracula", 2; break;
+		case 1038: cutin "Osiris", 2; break;
+		case 1871: cutin "Fallen", 2; break;
+		case 1734: cutin "Kiel", 2; break;
+		case 1373: cutin "LordOfDeath", 2; break;
+		//Vanaheim
+		case 1785: cutin "Atroce", 2; break;
+		case 1039: cutin "Baphomet", 2; break;
+		case 1708: cutin "Thanatos", 2; break;
+		case 2253: cutin "Daehyon", 2; break;
+		case 1991: cutin "Tendrillion", 2; break;
+		//Shwarzalfheim
+		case 1418: cutin "EvilSnake", 2; break;
+		case 1623: cutin "RSX", 2; break;
+		case 1511: cutin "AmonRa", 2; break;
+		case 1685: cutin "Vesper", 2; break;
+		case 2087: cutin "Queen", 2; break;
+		//Helheim
+		case 1492: cutin "Incantation", 2; break;
+		case 1157: cutin "Pharaoh", 2; break;
+		case 1046: cutin "Doppel", 2; break;
+		case 1272: cutin "DarkLord", 2; break;
+		case 1768: cutin "Gloom", 2; break;
+		//Ljosalfheim
+		case 1688: cutin "LadyTanee", 2; break;
+		case 1147: cutin "Maya", 2; break;
+		case 1190: cutin "OrcLord", 2; break;
+		case 1630: cutin "Bacsojin", 2; break;
+		case 2022: cutin "Nyddhog", 2; break;
+		//Asgard
+		case 1874: cutin "Beelzebub", 2; break;
+		case 1751: cutin "Randgris", 2; break;
+		case 2131: cutin "LostDragon", 2; break;
+		case 2156: cutin "Leak", 2; break;
+		case 2249: cutin "Pyuriel", 2; break;	
+		default: cutin "", 255; break;
+	}
+	addtimer 10000, "yggman::OnCleanCutin";	
+	end;
+}
+
+lum_boss,14,182,3	duplicate(yggbosshandl)	YggdrasilBossHandler::yggbosshandl5	HIDDEN_WARP_NPC,2,2

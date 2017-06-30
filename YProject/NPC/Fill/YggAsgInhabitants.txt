@@ -1,0 +1,136 @@
+// [========================================================]
+// [=============     Yggdrasil - Asgard     ============]
+// [========================================================]
+// [ Version 1                                              ]
+// [========================================================]
+// [ Original script by: Alayne				    ]
+// [========================================================]
+// [ Description:                                           ]
+// [--------------------------------------------------------]
+// [                                                        ]
+// [ - The Asgard NPC		    	   	    ]
+// [========================================================]
+// [ Changelog: (5 last updates)                            ]
+// [--------------------------------------------------------]
+// [                                                        ]
+// [ v0: Creation                      			    ]
+// [                                                        ]
+// [                                                        ]
+// [========================================================]
+// [                                                        ]
+// [========================================================]
+
+ars_fild58,113,82,5	script	Stor::asgst	4_F_NYDHOG,{
+	set .@npcname$, "[Stor]";
+	mes .@npcname$;
+	mes "You're here in Asgard, Realm of the Ase.";
+	mes "Every living people here is known as a God. A prior God.";
+	mes "The Vanes are known as heros, or minor gods.";
+	close;
+}
+
+ars_fild58,114,133,5	script	Loki::asglo	4_M_ROKI,{
+	set .@npcname$, "[Loki]";
+	mes .@npcname$;
+	mes "...I don't talk to humans.";
+	if (ASGQ == 0)
+	{
+		mes "I'm Loki, the Devious, as they call me.";
+		mes "Odin, the almighty father of sky, is a filthy traitor.";
+		mes "I take me from my kind, and raise me as a beloved son.";
+		mes "But when I was ready to take place to his right, he turns his back on me.";
+		mes "I can't believe in him again. I promised that I will have my revenge on him.";
+		mes "But until now, I haven't find the good moment.";
+		set ASGQ, 1;
+	}
+	close;
+}
+
+ars_fild58,105,34,5	script	Thor::asgth	4_M_KNIGHT_GOLD,{
+	set .@npcname$, "[Thor]";
+	mes .@npcname$;
+	mes "My name's Thor, God of Thunder.";
+	mes "I ride the thunderstorm, and kill my foes with my mighty hammer, mjolnir.";
+	mes "Ever heard about it?";
+	mes "I'm ready to fight against my brother and father during the Ragnarok";
+	mes "Have you ever met them?";
+	mes "Loki and Odin are my pride.";
+	close;
+}
+
+ars_fild58,50,90,5	script	Freyja::asgfr	4_M_FARIYKING,{
+	set .@npcname$, "[Freyja]";
+	mes .@npcname$;
+	mes "...";
+	mes "I'm Freyja, the Bountyfull.";
+	mes "I'm Odin's wife.";
+	mes "Not that I choose it, thought.";
+	mes "But I can now use my power to help all the womens or weak.";
+	close;
+}
+
+ars_fild58,172,158,5	script	Andhrímnir::asgand	4_CAT_CHEF,{
+	set .@npcname$, "[Andhrímnir]";
+	mes .@npcname$;
+	mes "...";
+	mes "I'm Andhrímnir, the Ase Cooker.";
+	mes "I'm the one who raise all cooks around the universe.";
+	mes "You can join my family if you want, I'll teach you how to make delicious dishes.";
+	close;
+}
+
+ars_fild58,173,171,5	script	Bragi::asgbr	4_BARYO_CHIEF,{
+	set .@npcname$, "[Bragi]";
+	mes .@npcname$;
+	mes "...";
+	mes "I'm sure you've already heard my name.";
+	mes "I'm Bragi, but I'm not a clown.";
+	mes "I'm the poetry god. A simple note, taken from my luth,";
+	mes "and everyone fall in peace.";
+	close;
+}
+
+ars_fild58,54,67,5	script	Kvasir::asgkva	4_M_5THPRIN1,{
+	set .@npcname$, "[Kvasir]";
+	mes .@npcname$;
+	mes "...";
+	mes "Kvasir is my name.";
+	mes "I'm known to be the one with all powers.";
+	mes "Actually, that's a bit overestimated.";
+	mes "Odin is still the Almighty.";
+	close;
+}
+
+ars_fild58,115,165,5	script	Odin::asgod	4_M_KAGE_OLD,{
+	set .@npcname$, "[Odin]";
+	mes .@npcname$;
+	mes "...";
+	mes "Welcome in Asgard, human.";
+	mes "I'm Odin, the Almighty.";
+	mes "I'm ruling over the 9 Realms, and I'm Yggdrasil guardian.";
+	mes "I'm the one who send back the giants to their rotten kingdom.";
+	mes "But I'm also the fairest of them all.";
+	mes "*" + strcharinfo(0) + ": Not the one with the lowest self esteem, I guess...*";
+	close;
+}
+
+ars_fild58,84,36,5	script	Leikn::asgle	4W_M_01,{
+	set .@npcname$, "[Leikn]";
+	mes .@npcname$;
+	mes "...";
+	mes "I'm Leikn, daughter of Hel.";
+	mes "My mother has been sent to helheim, to rule the lost souls.";
+	mes "Since that, I'm waiting for an occasion to bring her back.";
+	mes "She was so joyful before, and now she's...so dark...";
+	close;
+}
+
+ars_fild58,164,109,5	script	Nott::asgno	4_F_FAIRY1,{
+	set .@npcname$, "[Nott]";
+	mes .@npcname$;
+	mes "...";
+	mes "...";
+	mes "...";
+	mes "She doesn't answer. She got a necklace, saying 'Nott, Night Goddess.";
+	close;
+}

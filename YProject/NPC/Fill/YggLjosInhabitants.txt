@@ -1,0 +1,120 @@
+// [========================================================]
+// [=============     Yggdrasil - Ljosalfheim     ============]
+// [========================================================]
+// [ Version 1                                              ]
+// [========================================================]
+// [ Original script by: Alayne				    ]
+// [========================================================]
+// [ Description:                                           ]
+// [--------------------------------------------------------]
+// [                                                        ]
+// [ - The Ljosalfheim NPC		    	   	    ]
+// [========================================================]
+// [ Changelog: (5 last updates)                            ]
+// [--------------------------------------------------------]
+// [                                                        ]
+// [ v0: Creation                      			    ]
+// [                                                        ]
+// [                                                        ]
+// [========================================================]
+// [                                                        ]
+// [========================================================]
+
+ars_fild04,116,108,5	script	Alif::ljosal	4_F_MORAFINE1,{
+	set .@npcname$, "[Alif]";
+	mes .@npcname$;
+	mes "You're here in Ljosalfheim, Realm of the Light Alfes.";
+	mes "We're living here, in the forest. You're actually in our only city, invek.";
+	mes "Most of us prefer living around the trees, with the beasts.";
+	close;
+}
+
+ars_fild04,197,127,5	script	Monai::ljosmo	4_F_MORAFINE2,{
+	set .@npcname$, "[Monai]";
+	mes .@npcname$;
+	mes "...I don't talk to humans.";
+	if (LJOSQ == 0)
+	{
+		mes "That's not really that I don't like you.";
+		mes "But your kind...You're walking with your boots...";
+		mes "You're hunting, destroying our Mother the forest.";
+		mes "I don't think I can live in peace with your kind...";
+		set LJOSQ, 1;
+	}
+	close;
+}
+
+ars_fild04,161,112,5	script	Relus::ljosre	4_F_FAIRY2,{
+	set .@npcname$, "[Relus]";
+	mes .@npcname$;
+	mes "I've been through the 17 landings once.";
+	mes "But now, I'm here, and I can't remember how I finished here...";
+	mes "That's a bit stupid, I'm probably one of the furthest adventurer, and I can't remember how.";
+	close;
+}
+
+ars_fild04,357,110,5	script	Wiun::ljoswi	4_M_FAIRYANG,{
+	set .@npcname$, "[Wiun]";
+	mes .@npcname$;
+	mes "Sorry, but I'm currently listening to our Mother.";
+	mes "You can't do that?";
+	mes "That's a bit sad...She has so much to tell us...";
+	close;
+}
+
+ars_fild04,142,279,5	script	Fiuln::ljosfi	4_M_FAIRYAVANT,{
+	set .@npcname$, "[Fiuln]";
+	mes .@npcname$;
+	mes "Mavka was once one of our highest members.";
+	mes "She fight around the universe for the forest protection.";
+	mes "She fought against black alfes, the fire demons, and the destroying humans.";
+	mes "People like you, in fact...";
+	close;
+}
+
+ars_fild04,98,95,5	script	Soila::ljosso	4_M_FARIY_HISIE,{
+	set .@npcname$, "[Soila]";
+	mes .@npcname$;
+	mes "Haven't you heard about the Mother Forest before?";
+	mes "Do you have time for me to explain you how it works?";
+	mes "Why are you...Please let me...Stahp!";
+	emotion e_sob;
+	close;
+}
+
+ars_fild04,109,182,5	script	Eso::ljoses	4_M_FAIRYKID6,{
+	set .@npcname$, "[Eso]";
+	mes .@npcname$;
+	mes "Sorry, but I'm currently listening to our Mother.";
+	mes "I can learn you to do so.";
+	mes "...";
+	mes "Sorry but looks like you're deaf to her crying...";
+	close;
+}
+
+ars_fild04,343,351,5	script	Triua::ljostr	4_M_FAIRYSCHOLAR,{
+	set .@npcname$, "[Triua]";
+	mes .@npcname$;
+	mes "Black Alfes, or Shwarz like they like to be called,";
+	mes "live in black and wet caverns.";
+	mes "...";
+	mes "I'll never understand how they can do that...";
+	close;
+}
+
+ars_fild04,284,102,5	script	Dilur::ljosdi	4_M_FAIRYSCHOLAR_DIRTY,{
+	set .@npcname$, "[Dilur]";
+	mes .@npcname$;
+	mes "I don't think black alfes are our ennemies.";
+	mes "They're not like us, but I don't think they've chosen it.";
+	mes "Maybe the Ase has been a bit tough for them...";
+	close;
+}
+
+ars_fild04,63,234,5	script	Xiu::ljosxi	4_M_FARIY_HISIE,{
+	set .@npcname$, "[Xiu]";
+	mes .@npcname$;
+	mes "Do you know that the Forest was the beginning of all life?";
+	mes "Without her, nobody and nothing can live.";
+	close;
+}

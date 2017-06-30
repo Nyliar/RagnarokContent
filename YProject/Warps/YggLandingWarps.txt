@@ -1,0 +1,649 @@
+// [========================================================]
+// [=============     Yggdrasil - warps		============]
+// [========================================================]
+// [ Version 1                                              ]
+// [========================================================]
+// [ Original script by: Alayne				    ]
+// [========================================================]
+// [ Description:                                           ]
+// [--------------------------------------------------------]
+// [                                                        ]
+// [ - The Yggdrasil Project - warps navigation	    	    ]
+// [========================================================]
+// [ Changelog: (5 last updates)                            ]
+// [--------------------------------------------------------]
+// [                                                        ]
+// [ v0: Creation                      			    ]
+// [                                                        ]
+// [                                                        ]
+// [========================================================]
+// [                                                        ]
+// [========================================================]
+
+//Midgard
+
+louyang,209,99,5	script	yggwarp::yggwarp	HIDDEN_WARP_NPC,2,2,{ //-1
+	end;
+	
+OnTouch:
+	set .@uniquename$, strnpcinfo(3);
+	if (.@uniquename$ != "yggwarp")
+	{
+		explode(.@warpnumber$, strnpcinfo(3), "-");
+		if (getarraysize(.@warpnumber$) > 0)
+		{
+			set .@warp, atoi(.@warpnumber$[1]);
+			set .@landing, atoi(strnpcinfo(2));
+
+			//debugmes strnpcinfo(3) + ": [" + .@warpnumber$[1] + "] warping " + strcharinfo(0) + " using warp " + atoi(.@warpnumber$[1]) + " to " + $warpMap$[.@warp] + " on " + $warpX[.@warp] + ","	+ $warpY[.@warp];		
+
+			if (YGGPALIER >= .@landing || ($enableLevelChoice == 1 && YGGMODE == 1))
+			{
+				//warp authorized
+				warp $warpMap$[.@warp], $warpX[.@warp], $warpY[.@warp];
+			}
+			else
+			{
+				dispbottom "[Cardinal System] You don't have access to the floor number " + .@landing + ".";
+				dispbottom "[Cardinal System] Your maximum allowed floor is " + YGGPALIER + ".";
+				if ($debugMode == 1)
+				{
+					set YGGPALIER, .@landing;
+				}
+			}
+			//nothing
+		}
+	}
+	end;
+	
+OnInit:
+	//structure: go, back
+	setarray $warpMap$[0],
+	"Hyrule", //Palier 1, Midgard
+	"heidelberg",
+	"Hyrule", //Palier 2
+	"aqt_fild02",
+	"aqt_fild01",
+	"aqt_fild02",
+	"aquitaine",
+	"aqt_fild01",
+	"Hyrule", //Palier 3
+	"lafayette",
+	"temple_lb",
+	"lafayette",
+	"thalys_o", //Palier 4
+	"temple_lb",
+	"cs_lb", 
+	"temple_lb",
+	"Hyrule", //Palier 5
+	"lumina",
+	"aqt_fild02",
+	"aqt_shrine",
+	//Palier 6, Jotunheim
+	"ars_fild07",
+	"invek",
+	"ars_fild07", //Palier 7
+	"ars_fild08",
+	"ars_fild08", 
+	"ars_fild08",
+	"ars_fild51",
+	"ars_fild08",
+	"ars_fild55", //Palier 8
+	"ars_fild08",
+	"ars_fild08",
+	"ars_fild55",
+	"ars_fild20", //Palier 9
+	"ars_fild52",
+	"ars_fild07",
+	"ars_fild16",
+	"ars_dun08", //Palier 10
+	"ars_fild51",
+	//Palier 11, Muspelheim
+	"ars_fild56", 
+	"ars_fild23",
+	"ars_fild23", //Palier 12
+	"ars_fild57",
+	"ars_fild32", //Palier 13
+	"ars_fild57",
+	"ars_fild32",
+	"ars_fild31",
+	"ars_fild31", //Palier 14
+	"ars_fild30",
+	"ars_dun71",
+	"ars_fild32",
+	"ars_fild23", //Palier 15
+	"ars_fild24",
+	"ars_fild24",
+	"ars_fild30",
+	//Palier 16, Niflheim
+	"ars_fild46",
+	"ars_fild44",
+	"ars_fild46", //Palier 17
+	"ars_fild46", 
+	"ars_fild46",
+	"ars_dun60",
+	"ars_fild46",
+	"ars_fild43", //Palier 18
+	"ars_fild44",
+	"ars_dun25", //Palier 19
+	"ars_fild43",
+	"ars_dun25",
+	"ars_dun25",
+	"ars_dun60", //Palier 20
+	"ars_dun62",
+	//Palier 21, Vanaheim
+	"ars_fild13",
+	"ars_fild11",
+	"ars_fild36", //Palier 22
+	"ars_fild13",
+	"ars_fild36",
+	"ars_fild45",
+	"ars_dun02", //Palier 23
+	"ars_fild45",
+	"ars_fild33", //Palier 24
+	"ars_fild45",
+	"ars_fild36",
+	"ars_fild33",
+	"ars_fild49", //Palier 25
+	"ars_fild11",
+	//Palier 26, Shwaralfheim
+	"ars_fild40",
+	"ars_fild37",
+	"ars_fild37", //Palier 27
+	"ars_fild35",
+	"ars_fild35",
+	"ars_fild39",
+	"ars_dun20", //Palier 28
+	"ars_dun20",
+	"ars_fild40",
+	"ars_dun20",
+	"ars_dun20",
+	"ars_fild38", //Palier 29
+	"ars_fild38",
+	"ars_fild38", //Palier 30
+	//Palier 31 Helheim
+	"ars_fild48",
+	"ars_fild21",
+	"Biarmaland", //Palier 32
+	"ars_fild48",
+	"ars_fild10", //Palier 33
+	"ars_fild48",
+	//Palier 34
+	"Biarmaland", //Palier 35
+	//Palier 36, Ljosalfheim
+	"ars_fild27",
+	"ars_fild04",
+	"ars_fild04",
+	"ars_dun64",
+	"ars_fild27", //Palier 37
+	"ars_fild25",
+	"ars_fild27",
+	"ars_fild26",
+	"ars_fild25",
+	"ars_fild28", //Palier 38
+	"ars_fild25",
+	"ars_fild28",
+	"ars_fild25", //Palier 39
+	"ars_dun31",
+	"ars_fild25", //Palier 40
+	//Palier 41, Asgard
+	"ars_fild59",
+	"ars_fild58",
+	"ars_dun32", //Palier 42
+	"ars_fild59",
+	"ars_fild60",
+	"ars_fild60", //Palier 43
+	"ars_fild59",
+	"ars_fild62", //Palier 44
+	"ars_fild62",
+	"ars_dun39",
+	"ars_fild62",
+	"ars_fild61", //Palier 45
+	"ars_fild62";
+	setarray $warpX[0],
+	134, //Palier 1, Midgard
+	158,
+	133, //Palier 2
+	271,
+	12,
+	387,
+	29,
+	390,
+	249, //Palier 3
+	118,
+	173,
+	199,
+	30, //Palier 4
+	179,
+	36,
+	145,
+	21, //Palier 5
+	383,
+	179,
+	200,
+	//Palier 6, Jotunheim
+	110,
+	199,
+	31, //Palier 7
+	173,
+	79,
+	95,
+	172,
+	21,
+	158, //Palier 8
+	35,
+	57,
+	158,
+	170, //Palier 9
+	22,
+	171,
+	22,
+	71, //Palier 10
+	106,
+	//Palier 11, Muspelheim
+	27, 
+	182,
+	93, //Palier 12
+	101,
+	8, //Palier 13
+	181,
+	111,
+	90,
+	191, //Palier 14
+	10,
+	129,
+	175,
+	28, //Palier 15
+	25,
+	196,
+	45,
+	//Palier 16, Niflheim
+	90,
+	85,
+	69, //Palier 17
+	125,
+	108,
+	101,
+	146,
+	184, //Palier 18
+	84,
+	77, //Palier 19
+	28,
+	79,
+	80,
+	59, //Palier 20
+	138,
+	//Palier 21, Vanaheim
+	23,
+	177,
+	55, //Palier 22
+	68,
+	182,
+	178,
+	109, //Palier 23
+	43,
+	191, //Palier 24
+	11,
+	190,
+	28,
+	217, //Palier 25
+	15,
+	//Palier 26, Shwarzalfheim
+	307, 
+	13,
+	184, //Palier 27
+	21,
+	179,
+	14,
+	221, //Palier 28
+	273,
+	274,
+	230,
+	117,
+	79, //Palier 29
+	47,
+	103, //Palier 30
+	//Palier 31, Helheim
+	188,
+	46,
+	123, //Palier 32
+	235,
+	63, //Palier 33
+	11,
+	//Palier 34
+	127, //Palier 35
+	//Palier 36, Ljosalfheim
+	67,
+	77,
+	203,
+	112,
+	165, //Palier 37
+	189,
+	136,
+	59,
+	188,
+	135, //Palier 38
+	190,
+	150,
+	121, //Palier 39
+	36,
+	248, //Palier 40
+	//Palier 41 Asgars
+	105,
+	97,
+	49, //Palier 42
+	173,
+	94,
+	97, //Palier 43
+	105,
+	247, //Palier 44
+	247,
+	100,
+	248,
+	178, //Palier 45
+	54;
+	setarray $warpY[0],
+	21, //Palier 1, Midgard
+	368,
+	246, //Palier 2
+	17,
+	200,
+	200,
+	357,
+	194,
+	192, //Palier 3
+	250,
+	133,
+	11,
+	83, //Palier 4
+	65,
+	36,
+	25,
+	195, //Palier 5
+	280,
+	386,
+	10,
+	//Palier 6, Jotunheim
+	32,
+	39,
+	157, //Palier 7
+	61,
+	56,
+	56,
+	46,
+	103,
+	160, //Palier 8
+	170,
+	84,
+	21,
+	28, //Palier 9
+	40,
+	145,
+	167,
+	27, //Palier 10
+	168,
+	//Palier 11, Muspelheim
+	65, 
+	57,
+	171, //Palier 12
+	30,
+	28, //Palier 13
+	123,
+	191,
+	8,
+	172, //Palier 14
+	44,
+	100,
+	29,
+	46, //Palier 15
+	227,
+	34,
+	189,
+	//Palier 16, Niflheim
+	18,
+	141,
+	107, //Palier 17
+	135,
+	101,
+	26,
+	59,
+	154, //Palier 18
+	39,
+	146, //Palier 19
+	20,
+	105,
+	139,
+	202, //Palier 20
+	44,
+	//Palier 21, Vanaheim
+	27,
+	53,
+	56, //Palier 22
+	204,
+	181,
+	169,
+	16, //Palier 23
+	149,
+	179, //Palier 24
+	24,
+	70,
+	95,
+	205, //Palier 25
+	111,
+	//Palier 26, Shwaralfheim
+	60, 
+	160,
+	164, //Palier 27
+	83,
+	63,
+	74,
+	202, //Palier 28
+	52,
+	52,
+	187,
+	195,
+	155, //Palier 29
+	32,
+	45, //Palier 30
+	//Palier 31, Helheim
+	349,
+	10,
+	150, //Palier 32
+	9,
+	289, //Palier 33
+	121,
+	//Palier 34
+	61, //Palier 35
+	//Palier 36, Ljosalfheim
+	148,
+	344,
+	77,
+	136,
+	110, //Palier 37
+	328,
+	211,
+	249,
+	63,
+	211, //Palier 38
+	328,
+	234,
+	90, //Palier 39
+	120,
+	314, //Palier 40
+	//Palier 41, Asgard
+	179,
+	23,
+	135, //Palier 42
+	90,
+	108,
+	13, //Palier 43
+	12,
+	228, //Palier 44
+	197,
+	92,
+	372,
+	90, //Palier 45
+	102;
+
+	set $debugMode, 0;
+	end;
+}
+
+//Midgard
+
+heidelberg,158,373,4	duplicate(yggwarp)	midwarp#1::midwarp-0	WARPNPC,2,2
+Hyrule,134,16,4	duplicate(yggwarp)	midwarp#1::midwarp-1	WARPNPC,2,2
+aqt_fild02,271,10,4	duplicate(yggwarp)	midwarp#2::midwarp-2	WARPNPC,2,2
+Hyrule,133,251,4	duplicate(yggwarp)	midwarp#2::midwarp-3	WARPNPC,2,2
+aqt_fild02,391,200,4	duplicate(yggwarp)	midwarp#2::midwarp-4	WARPNPC,2,2
+aqt_fild01,6,200,4	duplicate(yggwarp)	midwarp#2::midwarp-5	WARPNPC,2,2
+aqt_fild01,394,194,4	duplicate(yggwarp)	midwarp#2::midwarp-6	WARPNPC,2,2
+aquitaine,21,357,4	duplicate(yggwarp)	midwarp#2::midwarp-7	WARPNPC,2,2
+lafayette,113,250,4	duplicate(yggwarp)	midwarp#3::midwarp-8	WARPNPC,2,2
+Hyrule,253,192,4	duplicate(yggwarp)	midwarp#3::midwarp-9	WARPNPC,2,2
+lafayette,199,7,4	duplicate(yggwarp)	midwarp#4::midwarp-10	WARPNPC,2,2
+temple_lb,174,138,4	duplicate(yggwarp)	midwarp#4::midwarp-11	WARPNPC,2,2
+temple_lb,183,66,4	duplicate(yggwarp)	midwarp#4::midwarp-12	WARPNPC,2,2
+thalys_o,26,83,4	duplicate(yggwarp)	midwarp#4::midwarp-13	WARPNPC,2,2
+temple_lb,145,21,4	duplicate(yggwarp)	midwarp#4::midwarp-14	WARPNPC,2,2
+cs_lb,36,31,4	duplicate(yggwarp)	midwarp#5::midwarp-15	WARPNPC,2,2
+lumina,389,280,4	duplicate(yggwarp)	midwarp#5::midwarp-16	WARPNPC,2,2
+Hyrule,16,195,4	duplicate(yggwarp)	midwarp#5::midwarp-17	WARPNPC,2,2
+aqt_shrine,200,4,4	duplicate(yggwarp)	midwarp#5::midwarp-18	WARPNPC,2,2
+aqt_fild02,179,392,4	duplicate(yggwarp)	midwarp#5::midwarp-19	WARPNPC,2,2
+
+//Jotunheim
+
+invek,199,34,4	duplicate(yggwarp)	jotunwarp#6::jotunwarp-20	WARPNPC,2,2
+ars_fild07,110,25,4	duplicate(yggwarp)	jotunwarp#6::jotunwarp-21	WARPNPC,2,2
+ars_fild08,177,63,4	duplicate(yggwarp)	jotunwarp#7::jotunwarp-22	WARPNPC,2,2
+ars_fild07,26,158,4	duplicate(yggwarp)	jotunwarp#7::jotunwarp-23	WARPNPC,2,2
+ars_fild08,91,56,4	duplicate(yggwarp)	jotunwarp#7::jotunwarp-24	WARPNPC,2,2
+ars_fild08,82,56,4	duplicate(yggwarp)	jotunwarp#7::jotunwarp-25	WARPNPC,2,2
+ars_fild08,19,106,4	duplicate(yggwarp)	jotunwarp#7::jotunwarp-26	WARPNPC,2,2
+ars_fild51,174,43,4	duplicate(yggwarp)	jotunwarp#7::jotunwarp-27	WARPNPC,2,2
+ars_fild08,34,166,4	duplicate(yggwarp)	jotunwarp#8::jotunwarp-28	WARPNPC,2,2
+ars_fild55,158,163,4	duplicate(yggwarp)	jotunwarp#8::jotunwarp-29	WARPNPC,2,2
+ars_fild55,158,18,4	duplicate(yggwarp)	jotunwarp#8::jotunwarp-30	WARPNPC,2,2
+ars_fild08,57,88,4	duplicate(yggwarp)	jotunwarp#8::jotunwarp-31	WARPNPC,2,2
+ars_fild52,17,40,4	duplicate(yggwarp)	jotunwarp#9::jotunwarp-32	WARPNPC,2,2
+ars_fild20,176,28,4	duplicate(yggwarp)	jotunwarp#9::jotunwarp-33	WARPNPC,2,2
+ars_fild16,16,167,4	duplicate(yggwarp)	jotunwarp#9::jotunwarp-34	WARPNPC,2,2
+ars_fild07,183,145,4	duplicate(yggwarp)	jotunwarp#9::jotunwarp-35	WARPNPC,2,2
+ars_fild51,106,174,4	duplicate(yggwarp)	jotunwarp#10::jotunwarp-36	WARPNPC,2,2
+ars_dun08,71,24,4	duplicate(yggwarp)	jotunwarp#10::jotunwarp-37	WARPNPC,2,2
+
+//Muspelheim
+
+ars_fild23,187,57,4	duplicate(yggwarp)	muspelwarp#11::muspelwarp-38	WARPNPC,2,2
+ars_fild56,31,65,4	duplicate(yggwarp)	muspelwarp#11::muspelwarp-39	WARPNPC,2,2
+ars_fild57,101,26,4	duplicate(yggwarp)	muspelwarp#12::muspelwarp-40	WARPNPC,2,2
+ars_fild23,94,175,4	duplicate(yggwarp)	muspelwarp#12::muspelwarp-41	WARPNPC,2,2
+ars_fild57,184,123,4	duplicate(yggwarp)	muspelwarp#13::muspelwarp-42	WARPNPC,2,2
+ars_fild32,5,28,4	duplicate(yggwarp)	muspelwarp#13::muspelwarp-43	WARPNPC,2,2
+ars_fild31,90,4,4	duplicate(yggwarp)	muspelwarp#13::muspelwarp-44	WARPNPC,2,2
+ars_fild32,111,195,4	duplicate(yggwarp)	muspelwarp#13::muspelwarp-45	WARPNPC,2,2
+ars_fild30,5,44,4	duplicate(yggwarp)	muspelwarp#14::muspelwarp-46	WARPNPC,2,2
+ars_fild31,195,172,4	duplicate(yggwarp)	muspelwarp#14::muspelwarp-47	WARPNPC,2,2
+ars_fild32,179,28,4	duplicate(yggwarp)	muspelwarp#14::muspelwarp-48	WARPNPC,2,2
+ars_dun71,134,99,4	duplicate(yggwarp)	muspelwarp#14::muspelwarp-49	WARPNPC,2,2
+ars_fild24,20,227,4	duplicate(yggwarp)	muspelwarp#15::muspelwarp-50	WARPNPC,2,2
+ars_fild23,23,46,4	duplicate(yggwarp)	muspelwarp#15::muspelwarp-51	WARPNPC,2,2
+ars_fild30,44,194,4	duplicate(yggwarp)	muspelwarp#15::muspelwarp-52	WARPNPC,2,2
+ars_fild24,196,31,4	duplicate(yggwarp)	muspelwarp#15::muspelwarp-53	WARPNPC,2,2
+
+//Niflheim
+
+ars_fild44,84,145,4	duplicate(yggwarp)	niflwarp#16::niflwarp-54	WARPNPC,2,2
+ars_fild46,90,13,4	duplicate(yggwarp)	niflwarp#16::niflwarp-55	WARPNPC,2,2
+ars_fild46,104,106,4	duplicate(yggwarp)	niflwarp#17::niflwarp-56	WARPNPC,2,2
+ars_fild46,71,110,4	duplicate(yggwarp)	niflwarp#17::niflwarp-57	WARPNPC,2,2
+ars_fild46,120,135,4	duplicate(yggwarp)	niflwarp#17::niflwarp-58	WARPNPC,2,2
+ars_fild46,149,55,4	duplicate(yggwarp)	niflwarp#17::niflwarp-59	WARPNPC,2,2
+ars_dun60,99,19,4	duplicate(yggwarp)	niflwarp#17::niflwarp-60	WARPNPC,2,2
+ars_fild44,84,34,4	duplicate(yggwarp)	niflwarp#18::niflwarp-61	WARPNPC,2,2
+ars_fild43,188,154,4	duplicate(yggwarp)	niflwarp#18::niflwarp-62	WARPNPC,2,2
+ars_fild43,31,18,4	duplicate(yggwarp)	niflwarp#19::niflwarp-63	WARPNPC,2,2
+ars_dun25,74,146,4	duplicate(yggwarp)	niflwarp#19::niflwarp-64	WARPNPC,2,2
+ars_dun25,80,135,4	duplicate(yggwarp)	niflwarp#19::niflwarp-65	WARPNPC,2,2
+ars_dun25,79,108,4	duplicate(yggwarp)	niflwarp#19::niflwarp-66	WARPNPC,2,2
+ars_dun62,137,40,4	duplicate(yggwarp)	niflwarp#20::niflwarp-67	WARPNPC,2,2
+ars_dun60,55,206,4	duplicate(yggwarp)	niflwarp#20::niflwarp-68	WARPNPC,2,2
+
+//Vanaheim
+
+ars_fild11,180,50,4	duplicate(yggwarp)	vanawarp#21::vanawarp-69	WARPNPC,2,2
+ars_fild13,20,27,4	duplicate(yggwarp)	vanawarp#21::vanawarp-70	WARPNPC,2,2
+ars_fild13,68,200,4	duplicate(yggwarp)	vanawarp#22::vanawarp-71	WARPNPC,2,2
+ars_fild36,53,53,4	duplicate(yggwarp)	vanawarp#22::vanawarp-72	WARPNPC,2,2
+ars_fild45,182,170,4	duplicate(yggwarp)	vanawarp#22::vanawarp-73	WARPNPC,2,2
+ars_fild36,187,181,4	duplicate(yggwarp)	vanawarp#22::vanawarp-74	WARPNPC,2,2
+ars_fild45,39,149,4	duplicate(yggwarp)	vanawarp#23::vanawarp-75	WARPNPC,2,2
+ars_dun02,109,12,4	duplicate(yggwarp)	vanawarp#23::vanawarp-76	WARPNPC,2,2
+ars_fild45,6,23,4	duplicate(yggwarp)	vanawarp#24::vanawarp-77	WARPNPC,2,2
+ars_fild33,195,179,4	duplicate(yggwarp)	vanawarp#24::vanawarp-78	WARPNPC,2,2
+ars_fild33,24,96,4	duplicate(yggwarp)	vanawarp#24::vanawarp-79	WARPNPC,2,2
+ars_fild36,195,70,4	duplicate(yggwarp)	vanawarp#24::vanawarp-80	WARPNPC,2,2
+ars_fild11,11,103,4	duplicate(yggwarp)	vanawarp#25::vanawarp-81	WARPNPC,2,2
+ars_fild49,221,206,4	duplicate(yggwarp)	vanawarp#25::vanawarp-82	WARPNPC,2,2
+
+//Shwarzalfheim
+
+ars_fild37,12,163,4	duplicate(yggwarp)	shwarwarp#26::shwarwarp-83	WARPNPC,2,2
+ars_fild40,310,57,4	duplicate(yggwarp)	shwarwarp#26::shwarwarp-84	WARPNPC,2,2
+ars_fild35,17,83,4	duplicate(yggwarp)	shwarwarp#27::shwarwarp-85	WARPNPC,2,2
+ars_fild37,188,164,4	duplicate(yggwarp)	shwarwarp#27::shwarwarp-86	WARPNPC,2,2
+ars_fild39,9,74,4	duplicate(yggwarp)	shwarwarp#27::shwarwarp-87	WARPNPC,2,2
+ars_fild35,183,63,4	duplicate(yggwarp)	shwarwarp#27::shwarwarp-88	WARPNPC,2,2
+ars_dun21,152,100,4	duplicate(yggwarp)	shwarwarp#28::shwarwarp-89	WARPNPC,2,2
+ars_fild40,272,49,4	duplicate(yggwarp)	shwarwarp#28::shwarwarp-90	WARPNPC,2,2
+ars_dun20,274,49,4	duplicate(yggwarp)	shwarwarp#28::shwarwarp-91	WARPNPC,2,2
+ars_dun20,117,199,4	duplicate(yggwarp)	shwarwarp#28::shwarwarp-92	WARPNPC,2,2
+ars_dun20,233,188,4	duplicate(yggwarp)	shwarwarp#28::shwarwarp-93	WARPNPC,2,2
+ars_fild38,44,35,4	duplicate(yggwarp)	shwarwarp#29::shwarwarp-94	WARPNPC,2,2
+ars_fild38,74,155,4	duplicate(yggwarp)	shwarwarp#29::shwarwarp-95	WARPNPC,2,2
+ars_dun19,103,32,4	duplicate(yggwarp)	shwarwarp#30::shwarwarp-96	WARPNPC,2,2
+
+//Helheim
+
+ars_fild21,46,4,4	duplicate(yggwarp)	helwarp#31::helwarp-97	WARPNPC,2,2
+ars_fild48,188,357,4	duplicate(yggwarp)	helwarp#31::helwarp-98	WARPNPC,2,2
+ars_fild48,235,6,4	duplicate(yggwarp)	helwarp#32::helwarp-99	WARPNPC,2,2
+Biarmaland,128,151,4	duplicate(yggwarp)	helwarp#32::helwarp-100	WARPNPC,2,2
+ars_fild48,7,114,4,4	duplicate(yggwarp)	helwarp#33::helwarp-101	WARPNPC,2,2
+ars_fild10,63,294,4	duplicate(yggwarp)	helwarp#33::helwarp-102	WARPNPC,2,2
+br_lb,50,85,4	duplicate(yggwarp)	helwarp#35::helwarp-103	WARPNPC,2,2
+
+//Ljosalfheim
+
+ars_fild04,74,348,4	duplicate(yggwarp)	ljoswarp#36::ljoswarp-104	WARPNPC,2,2
+ars_fild27,71,148,4	duplicate(yggwarp)	ljoswarp#36::ljoswarp-105	WARPNPC,2,2
+ars_dun64,112,142,4	duplicate(yggwarp)	ljoswarp#36::ljoswarp-106	WARPNPC,2,2
+ars_fild04,203,82,4	duplicate(yggwarp)	ljoswarp#36::ljoswarp-107	WARPNPC,2,2
+ars_fild27,141,320,4	duplicate(yggwarp)	ljoswarp#37::ljoswarp-108	WARPNPC,2,2
+ars_fild27,136,206,4	duplicate(yggwarp)	ljoswarp#37::ljoswarp-109	WARPNPC,2,2
+ars_fild25,189,333,4	duplicate(yggwarp)	ljoswarp#37::ljoswarp-110	WARPNPC,2,2
+ars_fild25,186,59,4	duplicate(yggwarp)	ljoswarp#37::ljoswarp-111	WARPNPC,2,2
+ars_fild26,57,244,4	duplicate(yggwarp)	ljoswarp#37::ljoswarp-112	WARPNPC,2,2
+ars_fild25,190,333,4	duplicate(yggwarp)	ljoswarp#38::ljoswarp-113	WARPNPC,2,2
+ars_fild28,135,206,4	duplicate(yggwarp)	ljoswarp#38::ljoswarp-114	WARPNPC,2,2
+ars_fild28,158,223,4	duplicate(yggwarp)	ljoswarp#38::ljoswarp-115	WARPNPC,2,2
+ars_dun31,36,124,4	duplicate(yggwarp)	ljoswarp#39::ljoswarp-116	WARPNPC,2,2
+ars_fild25,117,91,4	duplicate(yggwarp)	ljoswarp#39::ljoswarp-117	WARPNPC,2,2
+ars_dun65,137,58,4	duplicate(yggwarp)	ljoswarp#40::ljoswarp-118	WARPNPC,2,2
+
+//Asgard
+
+ars_fild58,97,19,4	duplicate(yggwarp)	asgwarp#41::asgwarp-119	WARPNPC,2,2
+ars_fild59,105,182,4	duplicate(yggwarp)	asgwarp#41::asgwarp-120	WARPNPC,2,2
+ars_fild59,177,90,4	duplicate(yggwarp)	asgwarp#42::asgwarp-121	WARPNPC,2,2
+ars_dun32,44,136,4	duplicate(yggwarp)	asgwarp#42::asgwarp-122	WARPNPC,2,2
+ars_fild62,76,173,4	duplicate(yggwarp)	asgwarp#42::asgwarp-123	WARPNPC,2,2
+ars_fild59,105,89,4	duplicate(yggwarp)	asgwarp#43::asgwarp-124	WARPNPC,2,2
+ars_fild60,97,9,4	duplicate(yggwarp)	asgwarp#43::asgwarp-125	WARPNPC,2,2
+ars_fild62,247,201,4	duplicate(yggwarp)	asgwarp#44::asgwarp-126	WARPNPC,2,2
+ars_fild62,247,224,4	duplicate(yggwarp)	asgwarp#44::asgwarp-127	WARPNPC,2,2
+ars_fild62,248,375,4	duplicate(yggwarp)	asgwarp#44::asgwarp-128	WARPNPC,2,2
+ars_dun39,100,86,4	duplicate(yggwarp)	asgwarp#44::asgwarp-129	WARPNPC,2,2
+ars_fild62,50,102,4	duplicate(yggwarp)	asgwarp#45::asgwarp-130	WARPNPC,2,2
+ars_fild61,183,90,4	duplicate(yggwarp)	asgwarp#45::asgwarp-131	WARPNPC,2,2

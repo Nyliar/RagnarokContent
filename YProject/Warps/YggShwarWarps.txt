@@ -1,0 +1,105 @@
+// [========================================================]
+// [=============           Yggdrasil           ============]
+// [========================================================]
+// [ Version 1                                              ]
+// [========================================================]
+// [ Original script by: Alayne				    ]
+// [========================================================]
+// [ Description:                                           ]
+// [--------------------------------------------------------]
+// [                                                        ]
+// [ - The Yggdrasil Project shwaralfheim special Warps	    ]
+// [========================================================]
+// [ Changelog: (5 last updates)                            ]
+// [--------------------------------------------------------]
+// [                                                        ]
+// [ v0: Creation                      			    ]
+// [                                                        ]
+// [                                                        ]
+// [========================================================]
+// [                                                        ]
+// [========================================================]
+
+ars_fild39,11,161,5	script	Guardien::shwarguard	4_MAN_GALTUN1,{ //492
+	set .@npcname$, "[Guardian]";
+	mes .@npcname$;
+	mes "";
+	mes "I'm the Guardian of this path.";
+	mes "You can't go further if you're not strong enough.";
+	if (YGGPALIER >= 29)
+	{
+		if (select("Send me further","I'll stay here") == 1)
+		{
+			mes "Looks like you are.";
+			warp "ars_fild38",130,145;
+		}
+		else
+		{
+			mes "Sure.";
+		}
+	}
+	close;
+}
+
+ars_fild38,123,153,3	script	Guardien::shwarguard2	4_MAN_GALTUN1,{
+	set .@npcname$, "[Guardian]";
+	mes .@npcname$;
+	mes "";
+	mes "I'm the Guardian of this path.";
+	mes "You can't go further if you're not strong enough.";
+	if (YGGPALIER >= 29)
+	{
+		if (select("Send me further","I'll stay here") == 1)
+		{
+			mes "Looks like you are.";
+			warp "ars_fild39",15,161;
+		}
+		else
+		{
+			mes "Sure.";
+		}
+	}
+	close;
+}
+
+ars_dun20,226,204,3	script	Guardien::shwarguard3	4_MAN_GALTUN1,{
+	set .@npcname$, "[Guardian]";
+	mes .@npcname$;
+	mes "";
+	mes "I'm the Guardian of this path.";
+	mes "You can't go further if you're not strong enough.";
+	if (YGGPALIER >= 28)
+	{
+		if (select("Send me further","I'll stay here") == 1)
+		{
+			mes "Looks like you are.";
+			warp "ars_dun21",152,97;
+		}
+		else
+		{
+			mes "Sure.";
+		}
+	}
+	close;
+}
+
+ars_fild38,102,48,2	script	Guardien::shwarguard4	4_MAN_GALTUN1,{
+	set .@npcname$, "[Guardian]";
+	mes .@npcname$;
+	mes "";
+	mes "I'm the Guardian of this path.";
+	mes "You can't go further if you're not strong enough.";
+	if (YGGPALIER >=30)
+	{
+		if (select("Send me further","I'll stay here") == 1)
+		{
+			mes "Looks like you are.";
+			warp "ars_dun19",103,37;
+		}
+		else
+		{
+			mes "Sure.";
+		}
+	}
+	close;
+}

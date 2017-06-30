@@ -1,0 +1,63 @@
+// [========================================================]
+// [=============           Yggdrasil           ============]
+// [========================================================]
+// [ Version 1                                              ]
+// [========================================================]
+// [ Original script by: Alayne				    ]
+// [========================================================]
+// [ Description:                                           ]
+// [--------------------------------------------------------]
+// [                                                        ]
+// [ - The Yggdrasil Project muspelheim special Warps  	    ]
+// [========================================================]
+// [ Changelog: (5 last updates)                            ]
+// [--------------------------------------------------------]
+// [                                                        ]
+// [ v0: Creation                      			    ]
+// [                                                        ]
+// [                                                        ]
+// [========================================================]
+// [                                                        ]
+// [========================================================]
+
+ars_fild56,137,59,0	script	Guardien::musguard	4_M_DOGTRAVELER,{ //513
+	set .@npcname$, "[Guardian]";
+	mes .@npcname$;
+	mes "";
+	mes "I'm the Guardian of this path.";
+	mes "You can't go further if you're not strong enough.";
+	if (YGGPALIER >= 11)
+	{
+		if (select("Send me further","I'll stay here") == 1)
+		{
+			mes "Looks like you are.";
+			warp "ars_fild56",176,59;
+		}
+		else
+		{
+			mes "Sure.";
+		}
+	}
+	close;
+}
+
+ars_fild56,172,59,0	script	Guardien::musguard2	4_M_DOGTRAVELER,{
+	set .@npcname$, "[Guardian]";
+	mes .@npcname$;
+	mes "";
+	mes "I'm the Guardian of this path.";
+	mes "You can't go further if you're not strong enough.";
+	if (YGGPALIER >= 11)
+	{
+		if (select("Send me further","I'll stay here") == 1)
+		{
+			mes "Looks like you are.";
+			warp "ars_fild56",133,59;
+		}
+		else
+		{
+			mes "Sure.";
+		}
+	}
+	close;
+}

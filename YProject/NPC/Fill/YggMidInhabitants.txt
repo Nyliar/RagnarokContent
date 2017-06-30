@@ -1,0 +1,105 @@
+// [========================================================]
+// [=============     Yggdrasil - Midgard     ============]
+// [========================================================]
+// [ Version 1                                              ]
+// [========================================================]
+// [ Original script by: Alayne				    ]
+// [========================================================]
+// [ Description:                                           ]
+// [--------------------------------------------------------]
+// [                                                        ]
+// [ - The Midgard NPC		    	   	    ]
+// [========================================================]
+// [ Changelog: (5 last updates)                            ]
+// [--------------------------------------------------------]
+// [                                                        ]
+// [ v0: Creation                      			    ]
+// [                                                        ]
+// [                                                        ]
+// [========================================================]
+// [                                                        ]
+// [========================================================]
+
+Hyrule,39,110,5	script	Frash::midfr	2_M_PHARMACIST,{
+	set .@npcname$, "[Frash]";
+	mes .@npcname$;
+	mes "You're here in the Midgard of the Yggdrasil Project.";
+	mes "It's like a small representation of our own world.";
+	mes "In Yggdrasil, there's 9 worlds:";
+	mes "Midgard, Jotunheim, Muspelheim, Niflheim.";
+	mes "That's the 4 I already visited.";
+	mes "I entered here for power and reknown.";
+	mes "Now...I'm stucked here...";
+	mes "Just like you.";
+	close;
+}
+
+Hyrule,54,152,3	script	Alfrid::midal	4_M_TELEPORTER,{
+	set .@npcname$, "[Alfrid]";
+	mes .@npcname$;
+	mes "You're here in Hyrule.";
+	mes "It's the Human capitale.";
+	mes "Everyone starts here.";
+	mes "That's the place where you can find the weakest of us all.";
+	if (MIDQ == 0)
+	{
+		mes "Just as you, I've entered the Yggdrasil Project for curiosity.";
+		mes "Now, I'm blocked here. My wife and childs are waiting for me outside.";
+		mes "I'd like to see them again...";
+		set MIDQ, 1;
+	}
+	close;
+}
+
+Hyrule,52,206,2	script	Renjis::midre	2_M_THIEFMASTER,{
+	set .@npcname$, "[Renjis]";
+	mes .@npcname$;
+	mes "I've gone through several landings.";
+	mes "But the further you go, the harder it become.";
+	mes "I don't want to have my name written on the Dead Stone.";
+	mes "That's why I'm now living here. I've abandonned the idea to get out...";
+	close;
+}
+
+Hyrule,111,206,4	script	Quarf::midqu	4_M_SCIENCE,{
+	set .@npcname$, "[Quarf]";
+	mes .@npcname$;
+	mes "Lots of adventurers have entered the dungeon without knowing what it means.";
+	mes "Now, only the strongest, or strong enough at least, are authorized to enter.";
+	mes "But I don't think the Rekenber do that to limit the loss.";
+	mes "I think they're trying to hide their mistakes.";
+	mes "And I think they send their foes here, to let them die slowly.";
+	close;
+}
+
+Hyrule,151,190,2	script	Slir::midsl	4_M_CRU_KNT,{
+	set .@npcname$, "[Slir]";
+	mes .@npcname$;
+	mes "I've been through several landings.";
+	mes "From now, I give my excess of stuff to the beginners.";
+	mes "I hope it will make the community advance in this dungeon...";
+	mes "And maybe one day, we'll be able to get out...";
+	close;
+}
+
+Hyrule,212,131,4	script	Worf::midwo	4_M_JP_MID,{
+	set .@npcname$, "[Worf]";
+	mes .@npcname$;
+	mes "Sorry, I'm a bit busy right now.";
+	mes "I've heard a discussion between two Informers.";
+	mes "They've let slip some usefull informations in my ears, and I want to make some profit with that.";
+	mes "Wanna know it?";
+	mes "No, just kidding.";
+	close;
+}
+
+Hyrule,168,87,5	script	Miul::midmiu	4_M_NOVELIST,{
+	set .@npcname$, "[Miul]";
+	mes .@npcname$;
+	mes "There's also women here.";
+	mes "Don't think we're weaker than mens.";
+	mes "Some of the more advanced fighters are womens.";
+	mes "And we don't bother fighting in first line.";
+	mes "We're not just here to make some food.";
+	close;
+}

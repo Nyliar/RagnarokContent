@@ -1,0 +1,61 @@
+// [========================================================]
+// [=============           Yggdrasil           ============]
+// [========================================================]
+// [ Version 1                                              ]
+// [========================================================]
+// [ Original script by: Alayne				    ]
+// [========================================================]
+// [ Description:                                           ]
+// [--------------------------------------------------------]
+// [                                                        ]
+// [ - The Yggdrasil Project Ygg Root entrance    ]
+// [========================================================]
+// [ Changelog: (5 last updates)                            ]
+// [--------------------------------------------------------]
+// [                                                        ]
+// [ v0: Creation                      			    ]
+// [                                                        ]
+// [                                                        ]
+// [========================================================]
+// [                                                        ]
+// [========================================================]
+
+ygg_village,36,128,0	script	Root Entrance::yggrootent	HIDDEN_WARP_NPC,3,3,{ //-1
+	end;
+	
+OnTouch:
+	//each entry pop one more monster
+	callsub OnPopRandomMonster;
+	end;
+
+OnGuardianDied:
+	if (mobcount(strnpcinfo(4), "yggrootent::OnGuardianDied") == 0)
+	{
+		mapannounce strnpcinfo(4), "[Cardinal System] The Entrance has been clear of its MvP!", bc_red;
+		if ($actualRootClone == 0)
+		{
+			doevent "yggvill::OnMvpDead";
+		}		
+	}
+	else
+	{
+		mapannounce strnpcinfo(4), "[Cardinal System] Go on! You're near the final stage!", bc_red;
+	}
+	end;
+	
+OnPopRandomMonster:
+	set .@mobId, $yggMvPIdArray[rand(0,getarraysize($yggMvPIdArray) - 1)];
+	monster $yggRootEntrance$,0,0,strmobinfo(1,.@mobId),.@mobId,1,strnpcinfo(3)+"::OnGuardianDied";
+	set $guardianDelay, $guardianDelay + 1;
+	return;
+	
+OnInit:
+	set $guardianDelay, 5;
+	killmonsterall strnpcinfo(4);
+	//pop 5 random mvp
+	for(set .@i, 0; .@i<5; set .@i,.@i+1)
+	{
+		callsub OnPopRandomMonster;
+	}
+	end;
+}

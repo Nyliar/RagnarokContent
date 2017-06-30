@@ -1,0 +1,247 @@
+//===== Hercules Script =======================================
+//= Annonceur pour Rose Of Sharon
+//= Adapté pour Artefact
+//===== Par: =================================================
+//= Hiero
+//===== Version du Script: =================================== 
+//= 4.2
+//===== Compatible Avec: =====================================
+//= Hercules
+//===== Commentaires =========================================
+//
+// Annonceur à multi-choix.
+
+prontera,127,214,6	script	Hermes the Announcer::announcer	902,{
+
+	function regAnnounce;
+	function partyAnnounce;
+	function pvpAnnounce;
+	function freeAnnounce;
+	
+	set @npc$, "[Hermes]";
+	set @zeny, 25000;
+	set @time, 10; // minutes
+
+	if (time > gettimetick(2))
+	{
+		mes @npc$; mes "Hello, you have to wait " + @time + " minutes between two announces.";
+		close;
+	}
+	
+	mes @npc$; mes "Hi, I can make an announce, visible in all Rune-Midgard."; next;
+	mes @npc$; mes "This will cost you " + @zeny + " zeny."; next;
+	
+	switch (select("Make an announce","Nah, nevermind"))
+	{
+		case 1:
+			mes @npc$; mes "Choose an announce type."; next;
+			switch (select("Look for fighting friends","Buy something","Sell something","Look for PvP","A free text"))
+			{
+				case 1:
+					switch (select("Of a lvl 29-39","Of a lvl 39-49","Of a lvl 49-59","Of a lvl 59-69","Of a lvl 69-79","Of a lvl 79-89","Of a lvl 89-99","Nothing, thanks..."))
+					{
+					case 1:
+						partyAnnounce(29, 39);
+						break;
+					case 2:
+						partyAnnounce(39, 49);
+						break;
+					case 3:
+						partyAnnounce(49, 59);
+						break;
+					case 4:
+						partyAnnounce(59, 69);
+						break;
+					case 5:
+						partyAnnounce(69, 79);
+						break;
+					case 6:
+						partyAnnounce(79, 89);	
+						break;
+					case 7:
+						partyAnnounce(89, 99);
+						break;
+					case 8:
+						mes @npc$; mes "Come back when you'll know what to ask.";
+						close;
+					}
+				case 2:
+					regAnnounce(0);
+					break;
+				case 3:
+					regAnnounce(1);
+					break;
+				case 4:
+					pvpAnnounce();
+					break;
+				case 5:
+					freeAnnounce(@annonce$);
+					break;
+			}
+		case 2:
+			mes @npc$; mes "Come back when you want.";
+			close;		
+	}
+	
+	function regAnnounce
+	{
+		setarray .@str$,
+			getarg(0) ? "to sell" : "to buy",
+			getarg(0) ? "selling" : "buying",
+			getarg(0) ? "sells" : "buys";
+		
+		do
+		{
+			if (Zeny < @zeny)
+			{
+				mes @npc$; mes "Sorry, but you lack some money. Come back with " + @zeny + " zeny.";
+				close;
+			}
+
+			mes @npc$; mes "Please enter item name " + .@str$[0] + "."; next;
+			input @item$;
+			mes @npc$; mes "Do you wanna add a price ?"; next;
+			set @select, select("Yes","No") - 1;
+
+			if (!@select)
+			{
+				mes @npc$; mes "Allright, enter your " + .@str$[1] + " price then."; next;
+				input @price;
+			}
+
+			mes @npc$; mes "Okay, so here we are :";
+			set @mes$, @select ? @item$ : @item$ + " for " + @price + " Zeny";
+			set @annonce$, strcharinfo(0) + " " + .@str$[2] + " " + @mes$ + ". Contact him, thanks.";
+
+			mes "^606060" + @annonce$ + "^000000"; next;
+			mes @npc$; mes "Are we allright ?"; next;
+			
+			switch (select("Yes, yes","Hum, I'd like to start again","I change my mind"))
+			{
+			case 1:
+				set Zeny, Zeny - @zeny;
+				set time, gettimetick(2) + 60 * @time;
+				announce @annonce$,0,0xFFFFFF;
+				logmes "[Annonce] " + @annonce$;
+				mes @npc$; mes "Thanks for using our services.";
+				close;
+			case 2:
+				continue;
+			case 3:
+				mes @npc$; mes "Come back when you'll be ready.";
+				close;
+			}
+		}
+		while (1);
+	}
+
+	function freeAnnounce
+	{
+		do
+		{
+			if (Zeny < @zeny)
+			{
+				mes @npc$; 
+				mes "Sorry, but you lack some money. Come back with " + @zeny + " zeny.";
+				close;
+			}
+			
+			mes @npc$; mes "Sure. Tell me the announce content."; next;
+			input @input$;
+			set @annonce$, strcharinfo(0) + " : " + @input$;
+
+			mes @npc$; mes "Ok, so it is :";
+			mes "^606060" + @annonce$ + "^000000"; next;
+			mes @npc$; mes "Is that so ?"; next;
+			
+			switch (select("Yes, yes","Hum, I'd like to start again","I change my mind"))
+			{
+			case 1:
+				set Zeny, Zeny - @zeny;
+				set time, gettimetick(2) + 60 * @time;
+				announce @annonce$,0,0xFFFFFF;
+				logmes "[Annonce] " + @annonce$;
+				mes @npc$; mes "Thanks for using our services.";
+				close;
+			case 2:
+				continue;
+			case 3:
+				mes @npc$; mes "Come back when you'll be ready.";
+				close;
+			}
+		}
+		while(1);
+	}
+	
+	function pvpAnnounce
+	{
+		do
+		{
+			set @annonce$, "[PvP] " + strcharinfo(0) + " is ready for a fight ! Come join in PvP room.";
+		
+			mes @npc$; mes "Ok, so it is :";
+			mes "^606060" + @annonce$ + "^000000"; next;
+			mes @npc$; mes "Is that so ?"; next;
+			
+			switch (select("Yes, yes","Hum, I'd like to start again","I change my mind"))
+			{
+			case 1:
+				set time, gettimetick(2) + 60 * @time;
+				announce @annonce$,0,0xFFFFFF;
+				logmes "[Annonce] " + @annonce$;
+				mes @npc$; mes "Thanks for using our services.";
+				close;
+			case 2:
+				continue;
+			case 3:
+				mes @npc$; mes "Come back when you'll be ready.";
+				close;
+			}
+		}
+		while (1);
+	}
+
+	function partyAnnounce
+	{
+		do
+		{
+			if (Zeny < @zeny)
+			{
+				mes @npc$; mes "Sorry, but you lack some money. Come back with " + @zeny + " zeny.";
+				close;
+			}
+			
+			mes @npc$; mes "Sure. Enter now the dungeon's name, or the fighting area."; next;
+			input @zone$;
+			
+			mes @npc$; mes "Do you wanna add personnal infos ?"; 
+			mes " ";
+			mes "^606060Note: You level and class will be displayed.^000000"; next;
+			
+			set @select, select("Yes","No") - 1;
+			set @mes$, @select ? "" : " (" + jobname(Class) + " " + BaseLevel + "/" + JobLevel + ")";
+			set @annonce$, strcharinfo(0) + "" + @mes$ + " looks for fighting friend, with a level from " + getarg(0) + " to " + getarg(1) + " for " + @zone$;
+		
+			mes @npc$; mes "Ok, so it is :";
+			mes "^606060" + @annonce$ + "^000000"; next;
+			mes @npc$; mes "Is that so ?"; next;
+			
+			switch (select("Yes, yes","Hum, I'd like to start again","I change my mind"))
+			{
+			case 1:
+				set Zeny, Zeny - @zeny;
+				set time, gettimetick(2) + 60 * @time;
+				announce @annonce$,0,0xFFFFFF;
+				logmes "[Annonce] " + @annonce$;
+				mes @npc$; mes "Thanks for using our services.";
+				close;
+			case 2:
+				continue;
+			case 3:
+				mes @npc$; mes "Come back when you'll be ready.";
+				close;
+			}
+		}
+		while (1);
+	}
+}

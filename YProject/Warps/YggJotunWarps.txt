@@ -1,0 +1,259 @@
+// [========================================================]
+// [=============           Yggdrasil           ============]
+// [========================================================]
+// [ Version 1                                              ]
+// [========================================================]
+// [ Original script by: Alayne				    ]
+// [========================================================]
+// [ Description:                                           ]
+// [--------------------------------------------------------]
+// [                                                        ]
+// [ - The Yggdrasil Project jotunheim special Warps  	    ]
+// [========================================================]
+// [ Changelog: (5 last updates)                            ]
+// [--------------------------------------------------------]
+// [                                                        ]
+// [ v0: Creation                      			    ]
+// [                                                        ]
+// [                                                        ]
+// [========================================================]
+// [                                                        ]
+// [========================================================]
+
+ars_fild16,97,48,3	script	Guardien::jotguard	4_M_KY_SOLD,{ //417
+	set .@npcname$, "[Guardian]";
+	mes .@npcname$;
+	mes "";
+	mes "I'm the Guardian of this path.";
+	mes "You can't go further if you're not strong enough.";
+	if (YGGPALIER >= 9)
+	{
+		if (select("Send me further","Send me back") == 1)
+		{
+			mes "Looks like you are.";
+			warp "ars_fild16", 104, 47;
+		}
+		else
+		{
+			mes "Sure.";
+			warp "ars_fild16", 93, 47;
+		}
+	}
+	close;
+}
+
+ars_fild16,144,100,4	script	Guardien::jotguarddun	4_M_KY_SOLD,{
+	set .@npcname$, "[Guardian]";
+	mes .@npcname$;
+	mes "";
+	mes "I'm the Guardian of this path.";
+	mes "You can't go further if you're not strong enough.";
+	if (YGGPALIER >= 10)
+	{
+		mes "Looks like you are.";
+		mes "Wanna enter?";
+		if (select("Send me further","No, thanks.") == 1)
+		{
+			warp "ars_dun33", 250,121;
+		}
+		else
+		{
+			mes "Humpf...Not sure, after all...";
+		}
+	}
+	close;
+}
+
+ars_fild20,51,75,0	script	Guardien::jotguarddun2	4_M_CRU_KNT,{ //414
+	set .@npcname$, "[Guardian]";
+	mes .@npcname$;
+	mes "";
+	mes "I'm the Guardian of this path.";
+	mes "You can't go further if you're not strong enough.";
+	if (YGGPALIER >= 10)
+	{
+		mes "Looks like you are.";
+		mes "Wanna enter?";
+		if (select("Send me further","No, thanks.") == 1)
+		{
+			warp "ars_dun33", 275,49;
+		}
+		else
+		{
+			mes "Humpf...Not sure, after all...";
+		}
+	}
+	close;
+}
+
+ars_dun33,246,121,0	script	Guardien::jotguarddunout1	4_M_CRU_KNT,{
+	set .@npcname$, "[Guardian]";
+	mes .@npcname$;
+	mes "";
+	mes "I'm the Guardian of this path.";
+	mes "Wanna get out?";
+	
+	if (select("Send me further","No, thanks.") == 1)
+	{
+		warp "ars_fild16",144,94;
+	}
+	else
+	{
+		mes "Humpf...Do not make me lose my time then...";
+	}
+	close;
+}
+
+ars_dun33,281,49,0	script	Guardien::jotguarddunout2	4_M_CRU_KNT,{
+	set .@npcname$, "[Guardian]";
+	mes .@npcname$;
+	mes "";
+	mes "I'm the Guardian of this path.";
+	mes "Wanna get out?";
+	
+	if (select("Send me further","No, thanks.") == 1)
+	{
+		warp "ars_fild20",45,75;
+	}
+	else
+	{
+		mes "Humpf...Do not make me lose my time then...";
+	}
+	close;
+}
+
+ars_fild20,54,47,0	script	Batteler::jotbat1	4_M_NFLOSTMAN,{ //797
+	set .@npcname$, "[Batteler]";
+	mes .@npcname$;
+	mes "";
+	mes "Hey. I can bring you across.";
+	mes "Interested?";
+	mes "It cost only " + .price + "z.";
+	
+	if (select("Send me further","No, thanks.") == 1)
+	{
+		if (Zeny > .price)
+		{
+			warp "ars_fild20",91,100;
+			set Zeny, Zeny - .price;
+		}
+		else
+		{
+			mes "You don't have that money...";
+		}
+	}
+	else
+	{
+		mes "Humpf...Do not make me lose my time then...";
+	}
+	close;
+	
+OnInit:
+	set .price, 25000;
+	end;
+}
+
+ars_fild51,107,21,4	duplicate(jotbat1)	Batteler::jotbat2	4_M_NFLOSTMAN
+
+ars_fild20,87,102,0	script	Batteler::jotbat3	4_M_NFLOSTMAN,{
+	set .@npcname$, "[Batteler]";
+	mes .@npcname$;
+	mes "";
+	mes "Hey. I can bring you across.";
+	mes "Interested?";
+	mes "It cost only " + .price + "z.";
+	
+	if (select("Send me further","No, thanks.") == 1)
+	{
+		if (Zeny > .price)
+		{
+			mes "Where do you wanna go?";
+			if (select("Across","Where you want.") == 1)
+			{
+				warp "ars_fild20",48,47;
+			}
+			else
+			{
+				mes "An adventurer he?";
+				mes "Allright then.";
+				warp "ars_fild51", 107, 25;
+			}
+			set Zeny, Zeny - .price;
+		}
+		else
+		{
+			mes "You don't have that money...";
+		}
+	}
+	else
+	{
+		mes "Humpf...Do not make me lose my time then...";
+	}
+	close;
+	
+OnInit:
+	set .price, 25000;
+	end;
+}
+
+invek,119,146,0	script	Batteler::jotbat4	4_M_NFLOSTMAN,{
+	set .@npcname$, "[Batteler]";
+	mes .@npcname$;
+	mes "";
+	mes "Hey. I can bring you across.";
+	mes "Interested?";
+	mes "It cost only " + .price + "z.";
+	
+	if (select("Send me further","No, thanks.") == 1)
+	{
+		if (Zeny > .price)
+		{
+			warp "ars_fild16",154,144;
+			set Zeny, Zeny - .price;
+		}
+		else
+		{
+			mes "You don't have that money...";
+		}
+	}
+	else
+	{
+		mes "Humpf...Do not make me lose my time then...";
+	}
+	close;
+	
+OnInit:
+	set .price, 25000;
+	end;
+}
+
+ars_fild16,154,144,0	script	Batteler::jotbat5	4_M_NFLOSTMAN,{
+	set .@npcname$, "[Batteler]";
+	mes .@npcname$;
+	mes "";
+	mes "Hey. I can bring you across.";
+	mes "Interested?";
+	mes "It cost only " + .price + "z.";
+	
+	if (select("Send me further","No, thanks.") == 1)
+	{
+		if (Zeny > .price)
+		{
+			warp "invek",120,151;
+			set Zeny, Zeny - .price;
+		}
+		else
+		{
+			mes "You don't have that money...";
+		}
+	}
+	else
+	{
+		mes "Humpf...Do not make me lose my time then...";
+	}
+	close;
+	
+OnInit:
+	set .price, 25000;
+	end;
+}

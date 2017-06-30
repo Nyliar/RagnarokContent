@@ -1,0 +1,124 @@
+// [========================================================]
+// [=============     Yggdrasil - Mobs     	============]
+// [========================================================]
+// [ Version 1                                              ]
+// [========================================================]
+// [ Original script by: Alayne				    ]
+// [========================================================]
+// [ Description:                                           ]
+// [--------------------------------------------------------]
+// [                                                        ]
+// [ - The Yggdrasil Project - Ljosalfheim Mobs spawn		    ]
+// [========================================================]
+// [ Changelog: (5 last updates)                            ]
+// [--------------------------------------------------------]
+// [                                                        ]
+// [ v0: Creation                      			    ]
+// [                                                        ]
+// [                                                        ]
+// [========================================================]
+// [                                                        ]
+// [========================================================]
+
+//Big
+ars_fild04,0,0,0,0	monster	Sandman	1165,6,60000,30000,0,2,0
+ars_fild04,0,0,0,0	monster	Les	1881,4,60000,30000,0,2,0
+ars_fild04,0,0,0,0	monster	Wootan Shooter	1498,5,60000,30000,0,2,0
+ars_fild04,0,0,0,0	monster	Wood Goblin	1880,2,60000,30000,0,2,0
+
+//Small
+ars_fild04,0,0,0,0	monster	Sandman	1165,3,18000,12000,0,1,0
+ars_fild04,0,0,0,0	monster	Les	1881,6,18000,12000,0,1,0
+ars_fild04,0,0,0,0	monster	Wootan Shooter	1498,4,18000,12000,0,1,0
+
+//Big
+ars_fild27,0,0,0,0	monster	Plasma	1695,6,60000,30000,0,2,0
+ars_fild27,0,0,0,0	monster	Dryad	1493,4,60000,30000,0,2,0
+ars_fild27,0,0,0,0	monster	Spring Rabbit	1322,5,60000,30000,0,2,0
+ars_fild27,0,0,0,0	monster	Orc Archer	1189,2,60000,30000,0,2,0
+ars_fild27,0,0,0,0	monster	Fake Angel	1371,2,60000,30000,0,2,0
+
+//Small
+ars_fild27,0,0,0,0	monster	Argyope	1099,3,18000,12000,0,1,0
+ars_fild27,0,0,0,0	monster	Venomous	1621,6,18000,12000,0,1,0
+ars_fild27,0,0,0,0	monster	Penomena	1216,4,18000,12000,0,1,0
+ars_fild27,0,0,0,0	monster	Matyr	1146,7,18000,12000,0,1,0
+
+//Small
+ars_fild27,0,0,0,0	monster	Plasma	1695,3,18000,12000,0,1,0
+ars_fild27,0,0,0,0	monster	Dryad	1493,6,18000,12000,0,1,0
+ars_fild27,0,0,0,0	monster	Spring Rabbit	1322,4,18000,12000,0,1,0
+
+//Big
+ars_fild25,0,0,0,0	monster	Enchanted Peach Tree	1410,6,60000,30000,0,2,0
+ars_fild25,0,0,0,0	monster	Mutant Dragonoid	1262,4,60000,30000,0,2,0
+ars_fild25,0,0,0,0	monster	Shelter	1701,5,60000,30000,0,2,0
+ars_fild25,0,0,0,0	monster	Lady Solace	1703,2,60000,30000,0,2,0
+ars_fild25,0,0,0,0	monster	Ferus	1717,2,60000,30000,0,2,0
+ars_fild25,0,0,0,0	monster	Mavka	1884,20,18000,12000,0,1,0
+
+//Small
+ars_fild25,0,0,0,0	monster	Enchanted Peach Tree	1410,3,18000,12000,0,1,0
+ars_fild25,0,0,0,0	monster	Mutant Dragonoid	1262,6,18000,12000,0,1,0
+ars_fild25,0,0,0,0	monster	Shelter	1701,4,18000,12000,0,1,0
+
+//Big
+ars_fild26,0,0,0,0	monster	Killer Mantis	1294,6,60000,30000,0,2,0
+ars_fild26,0,0,0,0	monster	Mavka	1884,4,60000,30000,0,2,0
+ars_fild26,0,0,0,0	monster	Archangeling	1388,1,60000,30000,0,2,0
+ars_fild26,0,0,0,0	monster	Skeggiold	1754,2,60000,30000,0,2,0
+ars_fild26,0,0,0,0	monster	Baroness of Retribution	1702,2,60000,30000,0,2,0
+ars_fild26,0,0,0,0	monster	Elder Willow	1033,5,18000,12000,0,2,0
+ars_fild26,0,0,0,0	monster	Stone Shooter	1495,5,18000,12000,0,2,0
+ars_fild26,0,0,0,0	monster	Wild Ginseng	1413,5,18000,12000,0,2,0
+
+//Small
+ars_fild26,0,0,0,0	monster	Killer Mantis	1294,3,18000,12000,0,1,0
+ars_fild26,0,0,0,0	monster	Mavka	1884,6,18000,12000,0,1,0
+ars_fild26,0,0,0,0	monster	Skeggiold	1754,4,18000,12000,0,1,0
+ars_fild26,0,0,0,0	monster	Elder Willow	1033,8,0,0,0,1,0
+ars_fild26,0,0,0,0	monster	Stone Shooter	1495,8,0,0,0,1,0
+ars_fild26,0,0,0,0	monster	Wild Ginseng	1413,8,0,0,0,1,0
+
+//Big
+ars_fild28,0,0,0,0	monster	Poison Toad	1402,6,60000,30000,0,2,0
+ars_fild28,0,0,0,0	monster	Giant Spider	1304,4,60000,30000,0,2,0
+ars_fild28,0,0,0,0	monster	Skeggiold	1755,5,60000,30000,0,2,0
+ars_fild28,0,0,0,0	monster	Dryad	1493,2,60000,30000,0,2,0
+ars_fild28,0,0,0,0	monster	Mavka	1884,2,60000,30000,0,2,0
+
+//Small
+ars_fild28,0,0,0,0	monster	Poison Toad	1402,3,18000,12000,0,1,0
+ars_fild28,0,0,0,0	monster	Giant Spider	1304,6,18000,12000,0,1,0
+ars_fild28,0,0,0,0	monster	Skeggiold	1755,4,18000,12000,0,1,0
+
+//Big
+ars_dun31,0,0,0,0	monster	Les	1881,6,60000,30000,0,2,0
+ars_dun31,0,0,0,0	monster	Mutant Dragonoid	1262,4,60000,30000,0,2,0
+ars_dun31,0,0,0,0	monster	Mavka	1884,10,60000,30000,0,2,0
+ars_dun31,0,0,0,0	monster	Lady Solace	1703,2,60000,30000,0,2,0
+ars_dun31,0,0,0,0	monster	Orc Archer	1189,2,60000,30000,0,2,0
+
+//Big
+ars_dun64,0,0,0,0	monster	Ferus	1717,6,60000,30000,0,2,0
+ars_dun64,0,0,0,0	monster	Acidus	1713,4,60000,30000,0,2,0
+ars_dun64,0,0,0,0	monster	Shelter	1701,5,60000,30000,0,2,0
+ars_dun64,0,0,0,0	monster	Lady Solace	1703,2,60000,30000,0,2,0
+ars_dun64,0,0,0,0	monster	Baroness	1702,2,60000,30000,0,2,0
+
+//Small
+ars_dun64,0,0,0,0	monster	Ferus	1717,3,18000,12000,0,1,0
+ars_dun64,0,0,0,0	monster	Acidus	1713,6,18000,12000,0,1,0
+ars_dun64,0,0,0,0	monster	Shelter	1701,4,18000,12000,0,1,0
+
+//Big
+ars_dun65,0,0,0,0	monster	Wootan Shooter	1498,6,60000,30000,0,2,0
+ars_dun65,0,0,0,0	monster	Spring Rabbit	1322,4,60000,30000,0,2,0
+ars_dun65,0,0,0,0	monster	Enchanted Peach Tree	1410,5,60000,30000,0,2,0
+ars_dun65,0,0,0,0	monster	Killer Mantis	1294,2,60000,30000,0,2,0
+ars_dun65,0,0,0,0	monster	Sandman	1165,2,60000,30000,0,2,0
+
+//Small
+ars_dun65,0,0,0,0	monster	Spring Rabbit	1322,3,18000,12000,0,1,0
+ars_dun65,0,0,0,0	monster	Enchanted Peach Tree	1410,6,18000,12000,0,1,0
+ars_dun65,0,0,0,0	monster	Demon Pungus	1378,4,18000,12000,0,1,0

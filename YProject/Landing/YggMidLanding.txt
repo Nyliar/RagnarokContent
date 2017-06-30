@@ -1,0 +1,294 @@
+
+
+// [========================================================]
+// [=============       Yggdrasil Landing        ============]
+// [========================================================]
+// [ Version 1                                              ]
+// [========================================================]
+// [ Original script by: Alayne				    ]
+// [========================================================]
+// [ Description:                                           ]
+// [--------------------------------------------------------]
+// [                                                        ]
+// [ - The Yggdrasil Project Landing			    ]
+// [========================================================]
+// [ Changelog: (5 last updates)                            ]
+// [--------------------------------------------------------]
+// [                                                        ]
+// [ v0: Creation                      			    ]
+// [                                                        ]
+// [                                                        ]
+// [========================================================]
+// [                                                        ]
+// [========================================================]
+
+//Midgard
+heidelberg,125,194,0	script	Landing#1::landing1	4_ENERGY_BLACK,{
+	if (YGGPALIER >= atoi(strnpcinfo(2)))
+	{
+		warp ($yggLabMap$ + "01" ),$yggLabMapCoordinates[0],$yggLabMapCoordinates[1];		
+	}
+	close;
+	
+OnLabMobDead:
+	set .@mobCount, mobcount($yggLabMap$ + "01", strnpcinfo(3) + "::OnLabMobDead");
+	if(.@mobCount == 0)
+	{
+		doevent "mazebg1::OnChangeCleanState";
+	}
+	end;
+		
+Onhideoffnpc:
+	set .activated, 1;
+	hideoffnpc strnpcinfo(3);
+	initnpctimer;
+	end;
+	
+OnTimer60000:
+	set .activated, 0;
+	hideonnpc strnpcinfo(3);
+	stopnpctimer;
+	end;
+
+OnHideOn:
+	viewpoint 2,125,194,1,0xFF0000;
+	end;
+	
+OnPCLoadMapEvent:
+OnNPCKillEvent:
+	if (strcharinfo(3) == strnpcinfo(4) 
+		&& YGGPALIER >= atoi(strnpcinfo(2))
+		&& .activated == 0)
+	{
+		if(getmapusers(strnpcinfo(4)) == .maxMapUserCount)
+		{
+			dispbottom "Landing Guardian is now accessible for 1 minute.";
+			viewpoint 1,125,194,1,0xFF0000;
+			addtimer 60000, strnpcinfo(3)+"::OnHideOn";
+			goto Onhideoffnpc;
+		}
+	}
+	end;	
+	
+OnInit:
+	hideonnpc strnpcinfo(3);
+	set .maxMapUserCount, 1;
+	end;
+}
+
+aqt_fild01,193,145,0	script	Landing#2::landing2	4_ENERGY_BLACK,{
+	if (YGGPALIER >= atoi(strnpcinfo(2)))
+	{
+		warp ($yggLabMap$ + "02"),$yggLabMapCoordinates[0],$yggLabMapCoordinates[1];		
+	}
+	close;
+	
+OnLabMobDead:
+	set .@mobCount, mobcount($yggLabMap$ + "02", strnpcinfo(3) + "::OnLabMobDead");
+	if(.@mobCount == 0)
+	{
+		doevent "mazebg1::OnChangeCleanState";
+	}
+	end;
+		
+Onhideoffnpc:
+	set .activated, 1;
+	hideoffnpc strnpcinfo(3);
+	initnpctimer;
+	end;
+	
+OnTimer60000:
+	set .activated, 0;
+	hideonnpc strnpcinfo(3);
+	stopnpctimer;
+	end;
+
+OnHideOn:
+	viewpoint 2,193,145,1,0xFF0000;
+	end;
+	
+OnNPCKillEvent:
+OnPCLoadMapEvent:
+	if (strcharinfo(3) == strnpcinfo(4) 
+		&& YGGPALIER >= atoi(strnpcinfo(2))
+		&& .activated == 0)
+	{
+		if(getmapusers(strnpcinfo(4)) == .maxMapUserCount)
+		{
+			dispbottom "Landing Guardian is now accessible for 1 minute.";
+			viewpoint 1,193,145,1,0xFF0000;
+			addtimer 60000, strnpcinfo(3)+"::OnHideOn";
+			goto Onhideoffnpc;
+		}
+		else
+		{
+			goto OnTimer60000;
+		}
+	}
+	end;	
+	
+OnInit:
+	hideonnpc strnpcinfo(3);
+	set .maxMapUserCount, 6;
+	end;
+}
+
+lafayette,346,72,0	script	Landing#3::landing3	4_ENERGY_BLACK,{
+	if (YGGPALIER >= atoi(strnpcinfo(2)))
+	{
+		warp ($yggLabMap$ + "03"),$yggLabMapCoordinates[0],$yggLabMapCoordinates[1];			
+	}
+	close;
+	
+OnLabMobDead:
+	set .@mobCount, mobcount($yggLabMap$ + "03", strnpcinfo(3) + "::OnLabMobDead");
+	if(.@mobCount == 0)
+	{
+		doevent "mazebg1::OnChangeCleanState";
+	}
+	end;
+		
+Onhideoffnpc:
+	set .activated, 1;
+	hideoffnpc strnpcinfo(3);
+	initnpctimer;
+	end;
+	
+OnTimer60000:
+	set .activated, 0;
+	hideonnpc strnpcinfo(3);	
+	end;
+
+OnHideOn:
+	viewpoint 2,346,72,1,0xFF0000;
+	end;
+	
+OnNPCKillEvent:
+OnPCLoadMapEvent:
+	if (strcharinfo(3) == strnpcinfo(4) 
+		&& YGGPALIER >= atoi(strnpcinfo(2))
+	&& .activated == 0)
+	{
+		getpartymember getcharid(1);
+		if($@partymembercount >= .teamMinCount)
+		{
+			dispbottom "Landing Guardian is now accessible for 1 minute.";
+			viewpoint 1,346,72,1,0xFF0000;
+			goto Onhideoffnpc;
+		}
+	}
+	end;	
+	
+OnInit:
+	hideonnpc strnpcinfo(3);
+	set .teamMinCount, 4;
+	end;
+}
+
+temple_lb,40,32,0	script	Landing#4::landing4	4_ENERGY_BLACK,{
+	if (YGGPALIER >= atoi(strnpcinfo(2)))
+	{
+		warp ($yggLabMap$ + "04"),$yggLabMapCoordinates[0],$yggLabMapCoordinates[1];			
+	}
+	close;
+	
+OnLabMobDead:
+	set .@mobCount, mobcount($yggLabMap$ + "04", strnpcinfo(3) + "::OnLabMobDead");
+	if(.@mobCount == 0)
+	{
+		doevent "mazebg1::OnChangeCleanState";
+	}
+	end;
+		
+Onhideoffnpc:
+	set .activated, 1;
+	hideoffnpc strnpcinfo(3);
+	initnpctimer;
+	end;
+	
+OnTimer60000:
+	set .activated, 0;
+	hideonnpc strnpcinfo(3);
+	stopnpctimer;
+	end;
+
+OnHideOn:
+	viewpoint 2,40,32,1,0xFF0000;
+	end;
+	
+OnNPCKillEvent:
+OnPCLoadMapEvent:
+	if (strcharinfo(3) == strnpcinfo(4) 
+		&& YGGPALIER >= atoi(strnpcinfo(2))
+	&& .activated == 0)
+	{
+		if (getcharid(2) != 0)
+		{
+			query_sql("SELECT `guild_lv` FROM `guild` WHERE guild_id=" + getcharid(2), .@guild_lvl);
+			if(.@guild_lvl >= .minGuildLvl)
+			{
+				dispbottom "Landing Guardian is now accessible for 1 minute.";
+				viewpoint 1,40,32,1,0xFF0000;
+				addtimer 60000, strnpcinfo(3)+"::OnHideOn";
+				goto Onhideoffnpc;
+			}
+		}
+	}
+	end;	
+	
+OnInit:
+	hideonnpc strnpcinfo(3);
+	set .minGuildLvl, 8;
+	end;
+}
+
+aqt_shrine,200,187,0	script	World#5::landing5	4_ENERGY_BLACK,{	
+	if (YGGPALIER >= atoi(strnpcinfo(2)))
+	{
+		warp ($yggLabMap$ + "05"),$yggLabMapCoordinates[6],$yggLabMapCoordinates[7];			
+	}
+	close;
+	
+OnLabMobDead:
+	set .@mobCount, mobcount($yggLabMap$ + "05", strnpcinfo(3) + "::OnLabMobDead");
+	if(.@mobCount == 0)
+	{
+		doevent "mazewg5::OnChangeCleanState";
+	}
+	end;
+		
+Onhideoffnpc:
+	set .activated, 1;
+	hideoffnpc strnpcinfo(3);
+	initnpctimer;
+	end;
+	
+OnTimer30000:
+	set .activated, 0;
+	hideonnpc strnpcinfo(3);
+	stopnpctimer;
+	viewpoint 2,200,187,1,0xFF0000;
+	end;
+
+OnNPCKillEvent:	
+OnPCLoadMapEvent:
+	if (strcharinfo(3) == strnpcinfo(4) 
+		&& YGGPALIER >= atoi(strnpcinfo(2))
+	&& .activated == 0)
+	{
+		if(BaseLevel >= .minLvl)
+		{
+			dispbottom "Landing Guardian is now accessible for 30 seconds.";
+			dispbottom "If you missed it, you'll have to leave and enter the map again.";
+			viewpoint 1,200,187,1,0xFF0000;
+			goto Onhideoffnpc;
+		}
+	}
+	end;	
+	
+OnInit:
+	hideonnpc strnpcinfo(3);
+	set .minLvl, 80;
+	end;
+}
+

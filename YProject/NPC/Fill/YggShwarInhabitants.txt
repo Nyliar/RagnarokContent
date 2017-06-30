@@ -1,0 +1,95 @@
+// [========================================================]
+// [=============   Yggdrasil - ShwarzalfHeim   ============]
+// [========================================================]
+// [ Version 1                                              ]
+// [========================================================]
+// [ Original script by: Alayne				    ]
+// [========================================================]
+// [ Description:                                           ]
+// [--------------------------------------------------------]
+// [                                                        ]
+// [ - The ShwarzalfHeim NPC		    	   	    ]
+// [========================================================]
+// [ Changelog: (5 last updates)                            ]
+// [--------------------------------------------------------]
+// [                                                        ]
+// [ v0: Creation                      			    ]
+// [                                                        ]
+// [                                                        ]
+// [========================================================]
+// [                                                        ]
+// [========================================================]
+
+ars_fild40,117,172,5	script	Klug::shwklu	4_MAN_PIOM6,{
+	set .@npcname$, "[Klug]";
+	mes .@npcname$;
+	mes "You're here in ShwarzalfHeim, Realm of the Dwarves and the Schwarz Alfes.";
+	mes "You can wonder around here, but never, and I say never, touch anything.";
+	mes "The Dwarves are a bit...Possessives?!",
+	close;
+}
+
+ars_fild40,212,163,5	script	Foril::shwfo	4_MAN_PIOM4,{
+	set .@npcname$, "[Foril]";
+	mes .@npcname$;
+	mes "...I don't talk to humans.";
+	if (SHWQ == 0)
+	{
+		mes "We've been hunted, like beast, by your kind and Asgards.";
+		mes "Odin, the almighty father of sky, is a filthy traitor.";
+		mes "All we wanted was to see the light, just as our blessed cousins.";
+		mes "But instead of that, he sent us in this dark and cold caves.";
+		set SHWQ, 1;
+	}
+	close;
+}
+
+ars_fild40,277,125,5	script	Rune::shwru	4_MAN_PIOM5,{
+	set .@npcname$, "[Rune]";
+	mes .@npcname$;
+	mes "Don't touch my gold, nor my stone, nor my pick, nor my axe, nor my clothes.";
+	mes "Nor my ground, nor my dust, nor my...";
+	mes "Well, don't touch anything around here. It's all mine.";
+	mes "It's my cave.";
+	close;
+}
+
+ars_fild40,127,118,5	script	Arte::shwar	4_MAN_BENKUNI,{
+	set .@npcname$, "[Arte]";
+	mes .@npcname$;
+	mes "You're here in Shwartzalfheim, Realm of the Frozen Cave.";
+	mes "There not as much Ice as in Jotunheim, but its always wet, and the air pressure make it hot too.";
+	mes "We're near the heart of the ground, and the inner volcanoes always make the temperature rise.";
+	mes "We're as much resistant to the fire as the Muspelheimer, and to the cold as the Jotun.";
+	close;
+}
+
+ars_fild40,175,67,5	script	Iluo::shwil	4_MAN_JERUTOO,{
+	set .@npcname$, "[Iluo]";
+	mes .@npcname$;
+	mes "I'm a Shwarz Alfe. As you can believe it, my kin are opposed to the White Alfes, from Ljosalfheim.";
+	mes "That's not that we hate them, not really.";
+	mes "Simply, as the have been authorized to leave in great Forest, and to communicate with our Mother,";
+	mes "we've been relegated to this mushroom caves.";
+	mes "Note that we don't hate it. But I'd like to run in fresh air, feel the grass under my feet...";
+	mes "Just as my brothers...";
+	close;
+}
+
+ars_fild40,317,50,5	script	Yink::shwyi	4_MAN_LAVAIL,{
+	set .@npcname$, "[Yink]";
+	mes .@npcname$;
+	mes "There's a reknown White Alfe. Her name is Mavka.";
+	mes "The monsters you can see around Midgard are some trace of her lost power.";
+	mes "She was the strongest of them all. And know, she's just a shadow amongst the others.";
+	close;
+}
+
+ars_fild40,166,82,5	script	Sio::shwsi	4_MAN_NITT,{
+	set .@npcname$, "[Sio]";
+	mes .@npcname$;
+	mes "We're not better, nor bader than our light brothers.";
+	mes "The Gods simply hasn't let us the same chance to prove that we're not as dark as our name says.";
+	mes "That's the main thing our kind regrets.";
+	close;
+}

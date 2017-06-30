@@ -1,0 +1,378 @@
+// [========================================================]
+// [=============           Yggdrasil           ============]
+// [========================================================]
+// [ Version 1                                              ]
+// [========================================================]
+// [ Original script by: Alayne				    ]
+// [========================================================]
+// [ Description:                                           ]
+// [--------------------------------------------------------]
+// [                                                        ]
+// [ - The Yggdrasil Project Informations    ]
+// [========================================================]
+// [ Changelog: (5 last updates)                            ]
+// [--------------------------------------------------------]
+// [                                                        ]
+// [ v0: Creation                      			    ]
+// [                                                        ]
+// [                                                        ]
+// [========================================================]
+// [                                                        ]
+// [========================================================]
+
+
+//Informer, a hided npc which can exchange informations for Silver Coins
+Hyrule,96,161,0	script	Informer::ygginfor	1_M_WIZARD,{ //64
+	set .@npcname$, "[Informer]";
+	mes .@npcname$;
+	mes "Sorry but I'm a bit busy right now.";
+	mes "Don't you have anything else to do?";
+	if (INSISTQ < 6)
+	{
+		set .@menu$, .@menu$ + "Call the Guards:";
+		if (INSISTQ <= 1)
+		{
+			set .@menu$, .@menu$ + "Pull his sleeves:Nothing";
+		}
+		else if (INSISTQ == 2)
+		{
+			set .@menu$, .@menu$ + "Steal his purse:Nothing";
+		}
+		else if (INSISTQ == 3)
+		{
+			set .@menu$, .@menu$ + "Punch him in the head:Nothing";
+		}
+		else if (INSISTQ == 4)
+		{
+			set .@menu$, .@menu$ + "Insult his mother:Nothing";
+		}
+		else if (INSISTQ == 5)
+		{
+			set .@menu$, .@menu$ + "Keep talking:Nothing";
+		}
+		switch(select(.@menu$))
+		{
+			case 1:
+				next;
+				mes .@npcname$;
+				mes "Kerps. Where do you think you are, kiddo?";
+				mes "I'm not affraid by the Guards. For two reasons.";
+				mes "First, I'm an adventurer, just as anyone else here.";
+				mes "I can fight for my life.";
+				mes "And second, there's no guards here. You're in the Yggdrasil.";
+				mes "Not in the stupid towns there's in Midgard.";
+				mes "Get away from here now.";
+				if (INSISTQ == 0)
+				{
+					set INSISTQ, INSISTQ + 1;
+				}
+				break;
+			case 2:
+				next;
+				mes .@npcname$;
+				if (INSISTQ <= 1)
+				{
+					mes "Stop bothering me. I'm on a big plan.";
+					mes "Get away, or I'll kick your bottoms.";
+					set INSISTQ, INSISTQ + 1;
+				}
+				else if (INSISTQ == 2)
+				{
+					mes "What do you think you're doing, asshole?";
+					mes "Get away, or I'll kick your bottoms.";
+					mes "And give me some Zenys in reparation.";
+					set Zeny, Zeny - 10000;
+					set INSISTQ, INSISTQ + 1;
+				}
+				else if (INSISTQ == 3)
+				{
+					mes "You're really unbelievable, do you know that?";
+					percentheal -50, -50;
+					mes "*He punched you back.*";
+					set INSISTQ, INSISTQ + 1;
+				}
+				else if (INSISTQ == 4)
+				{
+					mes "Leave my mother out that, you stupid kid.";
+					mes "You don't know her.";
+					set INSISTQ, INSISTQ + 1;
+				}
+				else if (INSISTQ == 5)
+				{
+					mes "...Get away. Now.";
+				}
+				break;
+			case 3:
+				next;
+				mes .@npcname$;
+				if (INSISTQ == 5)
+				{
+					mes "....You're kinda boring, you know that?";
+					if (countitem(.requiredId) >= .requiredCount)
+					{
+						mes "Wait a minute. What's that?";
+						mes "*He stole a " + getitemname(.requiredId) + " from you.*";
+						delitem .requiredId, 1;
+						mes "He. I like that. It's kinda rare around here.";
+						mes "But with that, I can have some infos.";
+						mes "And you can, too.";
+						mes "Give me " + (.requiredCount - 1) + " more, and I'll give you some infos.";
+						mes "But not now. I'm busy right now.";
+						set INSISTQ, 6;
+					}
+				}
+				else
+				{
+					mes "Yeah, you better do that.";
+				}
+				break;
+		}
+	}
+	else
+	{
+		mes "OK. Do you got my coins?";
+		mes "Without that, I won't tell you anything.";
+		mes "" + .requiredCount + " " + getitemname(.requiredId) + " for an info. Fair, hu?";
+		if (countitem(.requiredId) >= .requiredCount)
+		{
+			next;
+			mes .@npcname$;
+			mes "For me?";
+			if (select("Yes","No") == 1)
+			{
+				mes "Perfect.";
+				mes "Okay.";
+				mes "Here we go.";
+				switch(rand(0,10))
+				{
+					case 2:
+						//position
+						set .@info, rand(0,getarraysize($yggLandPositionInfoArray$) - 1);
+						mes "The landing " + .@info + " is on map " + $yggLandPositionInfoArray$[.@info];
+						break;
+					case 3:
+					case 4:
+					case 5:
+						//mvp
+						set .@info, rand(0,getarraysize($yggLandMvpInfoArray$) - 1);
+						mes "The landing " + .@info + " Guardian is " + $yggLandMvpInfoArray$[.@info];
+						mes "But be careful. They're not the monsters you know.";
+						break;
+					case 6:
+					case 7:
+						//condition
+						set .@info, rand(0,getarraysize($yggLandConditionInfoArray$) - 1);
+						mes "To access to the landing " + .@info + ", you should " + $yggLandConditionInfoArray$[.@info];
+						break;
+					case 8:
+					case 9:
+					case 10:
+						//utilities
+						set .@info, rand(0,getarraysize($yggUtilitiesInfoArray$) - 1);
+						mes $yggUtilitiesInfoArray$[.@info];
+						break;
+					default:
+						//failure
+						mes "....";
+						mes "For me anyway...";
+						delitem .requiredId, .requiredCount;
+						disablenpc strnpcinfo(3);
+						mes "*He disappears.*";
+						mes "He he he...";
+						initnpctimer;
+						close;
+				}
+				//del item in case of success infos retrieve
+				delitem .requiredId, .requiredCount;
+			}
+			else
+			{
+				mes "....";
+				if (countitem(.requiredId) >= 1)
+				{
+					mes "For me anyway...";
+					delitem .requiredId, 1;
+				}
+				disablenpc strnpcinfo(3);
+				mes "*He disappears.*";
+				initnpctimer;
+			}
+		}
+		else
+		{
+			mes "...Don't make me loose my time.";
+		}
+	}
+	close;
+	
+OnTimer180000:	
+	stopnpctimer;
+	enablenpc strnpcinfo(3);
+	end;
+	
+OnInit:
+	set .requiredId, 29500;
+	set .requiredCount, 1;
+	end;
+}
+
+//Informative Monsters, monsters spawn on each map (respawn 5 minutes) and whom souls can be captured and interrogated using a Red Spiritual Stone
+dep_lb,11,161,0	script	Informative Monsters::ygginfmob	4_M_BARMUND,{ //654
+	end;
+	
+OnPopMonster:
+	if (rand(0,1) == 1)
+	{
+		monster $yggdrasilArrayMap$[rand(0,getarraysize($yggdrasilArrayMap$) - 1)],0,0,strmobinfo(1,.infoMonsterId),.infoMonsterId,1,strnpcinfo(3)+"::OnInfoMonsterKilled",1,0;	
+	}
+	else
+	{
+		monster $townByLandingMap$[rand(0,getarraysize($townByLandingMap$) - 1)],0,0,strmobinfo(1,.infoMonsterId),.infoMonsterId,1,strnpcinfo(3)+"::OnInfoMonsterKilled",1,0;	
+	}
+	return;
+	
+OnInfoMonsterKilled:
+	if (countitem($returnCrystalId) >= 1)
+	{
+		dispbottom "[Cardinal System] You've killed an informative monster, and captured its soul in the Spiritual Stone.";
+		dispbottom "[Cardinal System] Here's the informations it contains:";
+		switch(rand(0,10))
+		{
+			case 2:
+				//position
+				set .@info, rand(0,getarraysize($yggLandPositionInfoArray$) - 1);
+				dispbottom "[Cardinal System] The landing " + .@info + " is on map " + $yggLandPositionInfoArray$[.@info];
+				break;
+			case 3:
+			case 4:
+			case 5:
+				//mvp
+				set .@info, rand(0,getarraysize($yggLandMvpInfoArray$) - 1);
+				dispbottom "[Cardinal System] The landing " + .@info + " Guardian is " + $yggLandMvpInfoArray$[.@info];
+				break;
+			case 6:
+			case 7:
+				//condition
+				set .@info, rand(0,getarraysize($yggLandConditionInfoArray$) - 1);
+				dispbottom "[Cardinal System] To access to the landing " + .@info + ", you should " + $yggLandConditionInfoArray$[.@info];
+				break;
+			case 8:
+			case 9:
+			case 10:
+				//utilities
+				set .@info, rand(0,getarraysize($yggUtilitiesInfoArray$) - 1);
+				dispbottom "[Cardinal System] " + $yggUtilitiesInfoArray$[.@info];
+				break;
+			default:
+				//failure
+				dispbottom "[Cardinal System] ....Nothing.";
+				close;
+		}
+		//del item in case of success infos retrieve
+		delitem $returnCrystalId, 1;
+	}
+	initnpctimer;
+	end;
+	
+OnTimer300000:
+	stopnpctimer;
+	callsub OnPopMonster;
+	end;
+	
+OnInit:
+	set .infoMonsterId, 1881;
+	set .popedMonster, 15;
+	
+	for(set .@i,0; .@i<.popedMonster; set .@i,.@i+1)
+	{
+		callsub OnPopMonster;
+	}
+	end;
+}
+
+//Strange Dust, a hided npc that contains infos, sensed by Red Spiritual Stone
+ars_fild61,178,83,0	script	Strange Dust::yggpowsto	4_SOIL,{ //557
+	if (countitem($returnCrystalId) >= 1)
+	{
+		dispbottom "[Cardinal System] You've killed an informative monster, and captured its soul in the Spiritual Stone.";
+		dispbottom "[Cardinal System] Here's the informations it contains:";
+		switch(rand(0,10))
+		{
+			case 2:
+				//position
+				set .@info, rand(0,getarraysize($yggLandPositionInfoArray$) - 1);
+				dispbottom "[Cardinal System] The landing " + .@info + " is on map " + $yggLandPositionInfoArray$[.@info];
+				break;
+			case 3:
+			case 4:
+			case 5:
+				//mvp
+				set .@info, rand(0,getarraysize($yggLandMvpInfoArray$) - 1);
+				dispbottom "[Cardinal System] The landing " + .@info + " Guardian is " + $yggLandMvpInfoArray$[.@info];
+				break;
+			case 6:
+			case 7:
+				//condition
+				set .@info, rand(0,getarraysize($yggLandConditionInfoArray$) - 1);
+				dispbottom "[Cardinal System] To access to the landing " + .@info + ", you should " + $yggLandConditionInfoArray$[.@info];
+				break;
+			case 8:
+			case 9:
+			case 10:
+				//utilities
+				set .@info, rand(0,getarraysize($yggUtilitiesInfoArray$) - 1);
+				dispbottom "[Cardinal System] " + $yggUtilitiesInfoArray$[.@info];
+				break;
+			default:
+				//failure
+				dispbottom "[Cardinal System] ....Nothing.";
+				close;
+		}
+		//del item in case of success infos retrieve
+		delitem $returnCrystalId, 1;
+		hideonnpc strnpcinfo(3);
+		set .activeNpc, 0;
+		initnpctimer;
+	}
+	end;
+	
+OnPCLoadMapEvent:	
+	if (countitem($returnCrystalId) >= 1 && strnpcinfo(4) == strcharinfo(3) && .activeNpc == 1)
+	{
+		dispbottom "[Cardinal System] A Strange Dust is hided on the map. Find her within 5 minutes to get some infos.";
+		initnpctimer;
+		hideoffnpc strnpcinfo(3);
+	}
+	end;
+	
+OnTimer300000:
+	stopnpctimer;
+	hideonnpc strnpcinfo(3);
+	set .activeNpc, 1;
+	end;
+	
+OnInit:
+	hideonnpc strnpcinfo(3);
+	set .activeNpc, 1;
+	end;
+}
+
+ars_fild07,52,44,0	duplicate(yggpowsto)	Strange Dust::yggpowsto1	4_SOIL
+ars_dun25,71,85,0	duplicate(yggpowsto)	Strange Dust::yggpowsto2	4_SOIL
+ars_fild33,174,105,0	duplicate(yggpowsto)	Strange Dust::yggpowsto3	4_SOIL
+ars_fild38,94,147,0	duplicate(yggpowsto)	Strange Dust::yggpowsto4	4_SOIL
+ars_fild10,276,46,0	duplicate(yggpowsto)	Strange Dust::yggpowsto5	4_SOIL
+ars_fild57,92,133,0	duplicate(yggpowsto)	Strange Dust::yggpowsto6	4_SOIL
+ars_fild52,76,54,0	duplicate(yggpowsto)	Strange Dust::yggpowsto7	4_SOIL
+temple_lb,34,42,0	duplicate(yggpowsto)	Strange Dust::yggpowsto8	4_SOIL
+aqt_fild02,257,45,0	duplicate(yggpowsto)	Strange Dust::yggpowsto9	4_SOIL
+lumina,230,222,0	duplicate(yggpowsto)	Strange Dust::yggpowsto10	4_SOIL
+ars_fild30,48,31,0	duplicate(yggpowsto)	Strange Dust::yggpowsto11	4_SOIL
+ars_fild43,73,92,0	duplicate(yggpowsto)	Strange Dust::yggpowsto12	4_SOIL
+ars_fild31,137,180,0	duplicate(yggpowsto)	Strange Dust::yggpowsto13	4_SOIL
+ars_fild35,84,78,0	duplicate(yggpowsto)	Strange Dust::yggpowsto14	4_SOIL
+ars_fild38,82,57,0	duplicate(yggpowsto)	Strange Dust::yggpowsto15	4_SOIL
+Biarmaland,89,103,0	duplicate(yggpowsto)	Strange Dust::yggpowsto16	4_SOIL
+ars_fild27,67,158,0	duplicate(yggpowsto)	Strange Dust::yggpowsto17	4_SOIL
+ars_fild28,230,126,0	duplicate(yggpowsto)	Strange Dust::yggpowsto18	4_SOIL
+//ars_fild60,110,71,0	duplicate(yggpowsto)	Strange Dust::yggpowsto19	4_SOIL

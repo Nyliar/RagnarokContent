@@ -1,0 +1,49 @@
+// [========================================================]
+// [=============     Yggdrasil - Mobs     	============]
+// [========================================================]
+// [ Version 1                                              ]
+// [========================================================]
+// [ Original script by: Alayne				    ]
+// [========================================================]
+// [ Description:                                           ]
+// [--------------------------------------------------------]
+// [                                                        ]
+// [ - The Yggdrasil Project - Helheim Mobs spawn		    ]
+// [========================================================]
+// [ Changelog: (5 last updates)                            ]
+// [--------------------------------------------------------]
+// [                                                        ]
+// [ v0: Creation                      			    ]
+// [                                                        ]
+// [                                                        ]
+// [========================================================]
+// [                                                        ]
+// [========================================================]
+
+//Normal
+ars_fild48,0,0,0,0	monster	Mysteltainn	1203,3,0,0,0,0,0
+ars_fild48,0,0,0,0	monster	Injustice	1257,12,0,0,0,0,0
+ars_fild48,0,0,0,0	monster	Tamruan	1584,20,0,0,0,0,0
+ars_fild48,0,0,0,0	monster	Giant Spider	1304,10,0,0,0,0,0
+ars_fild48,0,0,0,0	monster	Raydric	1163,14,0,0,0,0,0
+
+//Normal
+ars_fild21,0,0,0,0	monster	Raydric Archer	1276,8,0,0,0,0,0
+ars_fild21,0,0,0,0	monster	Gremlin	1632,12,0,0,0,0,0
+ars_fild21,0,0,0,0	monster	Gibbet	1503,20,0,0,0,0,0
+ars_fild21,0,0,0,0	monster	Drak Frame	1260,10,0,0,0,0,0
+ars_fild21,0,0,0,0	monster	Hodremlin	1773,14,0,0,0,0,0
+
+//Normal
+Biarmaland,0,0,0,0	monster	Evil Nymph	1416,8,0,0,0,0,0
+Biarmaland,0,0,0,0	monster	Mini Demon	1292,12,0,0,0,0,0
+Biarmaland,0,0,0,0	monster	Frus	1762,20,0,0,0,0,0
+Biarmaland,0,0,0,0	monster	Ogretooth	1204,5,0,0,0,0,0
+Biarmaland,0,0,0,0	monster	Bloody Knight	1268,14,0,0,0,0,0
+
+//Normal
+ars_fild10,0,0,0,0	monster	Executioner	1205,8,0,0,0,0,0
+ars_fild10,0,0,0,0	monster	Kinght of Abyss	1305,12,0,0,0,0,0
+ars_fild10,0,0,0,0	monster	Skogul	1752,20,0,0,0,0,0
+ars_fild10,0,0,0,0	monster	Shinobi	1401,10,0,0,0,0,0
+ars_fild10,0,0,0,0	monster	Hylozoist	1510,14,0,0,0,0,0

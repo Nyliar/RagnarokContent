@@ -1,0 +1,100 @@
+// [========================================================]
+// [=============     Yggdrasil - Mobs     	============]
+// [========================================================]
+// [ Version 1                                              ]
+// [========================================================]
+// [ Original script by: Alayne				    ]
+// [========================================================]
+// [ Description:                                           ]
+// [--------------------------------------------------------]
+// [                                                        ]
+// [ - The Yggdrasil Project - Schwartzalfheim Mobs spawn		    ]
+// [========================================================]
+// [ Changelog: (5 last updates)                            ]
+// [--------------------------------------------------------]
+// [                                                        ]
+// [ v0: Creation                      			    ]
+// [                                                        ]
+// [                                                        ]
+// [========================================================]
+// [                                                        ]
+// [========================================================]
+
+//Normal
+ars_fild37,0,0,0,0	monster	Argyope	1099,8,0,0,0,0,0
+ars_fild37,0,0,0,0	monster	Venomous	1621,12,0,0,0,0,0
+ars_fild37,0,0,0,0	monster	Penomena	1216,20,0,0,0,0,0
+ars_fild37,0,0,0,0	monster	Matyr	1146,10,0,0,0,0,0
+
+//Small
+ars_fild37,0,0,0,0	monster	Argyope	1099,3,18000,12000,0,1,0
+ars_fild37,0,0,0,0	monster	Venomous	1621,6,18000,12000,0,1,0
+ars_fild37,0,0,0,0	monster	Penomena	1216,4,18000,12000,0,1,0
+ars_fild37,0,0,0,0	monster	Matyr	1146,7,18000,12000,0,1,0
+
+//Normal
+ars_fild35,0,0,0,0	monster	Plasma	1696,8,0,0,0,0,0
+ars_fild35,0,0,0,0	monster	Bapho Jr.	1101,12,0,0,0,0,0
+ars_fild35,0,0,0,0	monster	Obsidian	1615,20,0,0,0,0,0
+ars_fild35,0,0,0,0	monster	Pest	1256,7,10,0,0,0,0,0
+ars_fild35,0,0,0,0	monster	Teddy Bear	1622,14,0,0,0,0,0
+
+//Small
+ars_fild35,0,0,0,0	monster	Plasma	1696,3,18000,12000,0,1,0
+ars_fild35,0,0,0,0	monster	Bapho Jr.	1101,6,18000,12000,0,1,0
+ars_fild35,0,0,0,0	monster	Obsidian	1615,4,18000,12000,0,1,0
+ars_fild35,0,0,0,0	monster	Pest	1256,7,18000,12000,0,1,0
+ars_fild35,0,0,0,0	monster	Teddy Bear	1622,5,18000,12000,0,1,0
+
+//Normal
+ars_fild39,0,0,0,0	monster	Bathory	1102,8,0,0,0,0,0
+ars_fild39,0,0,0,0	monster	Poison Toad	1402,12,0,0,0,0,0
+ars_fild39,0,0,0,0	monster	Demon Pungus	1378,20,0,0,0,0,0
+
+//Small
+ars_fild39,0,0,0,0	monster	Bathory	1102,3,18000,12000,0,1,0
+ars_fild39,0,0,0,0	monster	Poison Toad	1402,6,18000,12000,0,1,0
+ars_fild39,0,0,0,0	monster	Demon Pungus	1378,4,18000,12000,0,1,0
+
+//Normal
+ars_dun20,0,0,0,0	monster	Isis	1029,8,0,0,0,0,0
+ars_dun20,0,0,0,0	monster	Ancient Worm	1305,12,0,0,0,0,0
+ars_dun20,0,0,0,0	monster	Obsidian	1615,20,0,0,0,0,0
+ars_dun20,0,0,0,0	monster	Giant Spider	1304,10,0,0,0,0,0
+ars_dun20,0,0,0,0	monster	Pest	1256,14,0,0,0,0,0
+
+//Small
+ars_dun20,0,0,0,0	monster	Isis	1029,3,18000,12000,0,1,0
+ars_dun20,0,0,0,0	monster	Ancient Worm	1305,6,18000,12000,0,1,0
+ars_dun20,0,0,0,0	monster	Obsidian	1615,4,18000,12000,0,1,0
+ars_dun20,0,0,0,0	monster	Giant Spider	1304,7,18000,12000,0,1,0
+ars_dun20,0,0,0,0	monster	Pest	1256,5,18000,12000,0,1,0
+
+//Normal
+ars_fild38,0,0,0,0	monster	Bathory	1102,8,0,0,0,0,0
+ars_fild38,0,0,0,0	monster	Poison Toad	1402,12,0,0,0,0,0
+ars_fild38,0,0,0,0	monster	Demon Pungus	1378,20,0,0,0,0,0
+
+//Small
+ars_fild38,0,0,0,0	monster	Bathory	1102,3,18000,12000,0,1,0
+ars_fild38,0,0,0,0	monster	Poison Toad	1402,6,18000,12000,0,1,0
+ars_fild38,0,0,0,0	monster	Demon Pungus	1378,4,18000,12000,0,1,0
+
+//Small
+ars_fild38,0,0,0,0	monster	Sandman	1165,3,18000,12000,0,1,0
+ars_fild38,0,0,0,0	monster	Les	1881,6,18000,12000,0,1,0
+ars_fild38,0,0,0,0	monster	Wootan Shooter	1498,4,18000,12000,0,1,0
+
+//Normal
+ars_dun19,0,0,0,0	monster	Diabolic	1382,8,0,0,0,0,0
+ars_dun19,0,0,0,0	monster	Ungoliant	1618,12,0,0,0,0,0
+ars_dun19,0,0,0,0	monster	Caterpillar	1300,20,0,0,0,0,0
+ars_dun19,0,0,0,0	monster	Knocker	1838,10,0,0,0,0,0
+ars_dun19,0,0,0,0	monster	Kaho	1072,14,0,0,0,0,0
+
+//Small
+ars_dun19,0,0,0,0	monster	Diabolic	1382,3,18000,12000,0,1,0
+ars_dun19,0,0,0,0	monster	Ungoliant	1618,6,18000,12000,0,1,0
+ars_dun19,0,0,0,0	monster	Caterpillar	1300,4,18000,12000,0,1,0
+ars_dun19,0,0,0,0	monster	Knocker	1838,7,18000,12000,0,1,0
+ars_dun19,0,0,0,0	monster	Kaho	1072,5,18000,12000,0,1,0

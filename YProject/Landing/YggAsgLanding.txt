@@ -1,0 +1,353 @@
+// [========================================================]
+// [=============       Yggdrasil Landing        ============]
+// [========================================================]
+// [ Version 1                                              ]
+// [========================================================]
+// [ Original script by: Alayne				    ]
+// [========================================================]
+// [ Description:                                           ]
+// [--------------------------------------------------------]
+// [                                                        ]
+// [ - The Yggdrasil Project Asgard Landing			    ]
+// [========================================================]
+// [ Changelog: (5 last updates)                            ]
+// [--------------------------------------------------------]
+// [                                                        ]
+// [ v0: Creation                      			    ]
+// [                                                        ]
+// [                                                        ]
+// [========================================================]
+// [                                                        ]
+// [========================================================]
+
+ars_fild59,45,52,0	script	Landing#41::landing41	4_ENERGY_WHITE,{ //1905
+	if (FORMLESSKILL >= .killCount && YGGPALIER >= atoi(strnpcinfo(2)))
+	{
+		warp ($yggLabMap$ + strnpcinfo(2)),$yggLabMapCoordinates[4],$yggLabMapCoordinates[5];		
+	}
+	close;
+	
+OnLabMobDead:
+	set .@mobCount, mobcount($yggLabMap$ + "41", strnpcinfo(3) + "::OnLabMobDead");
+	if(.@mobCount == 0)
+	{
+		doevent "mazebg41::OnChangeCleanState";
+	}
+	end;
+	
+OnNPCKillEvent:
+	if (YGGPALIER >= atoi(strnpcinfo(2))
+		&& strcharinfo(3) == strnpcinfo(4)
+		&& .activated == 0)
+	{		
+		set .@monster_race, getmonsterinfo(killedrid, 19);
+		dispbottom "[Cardinal System] You've kill a " + .@monster_race;
+		if (.@monster_race == 0)
+		{
+			set FORMLESSKILL, FORMLESSKILL + 1;
+			if (FORMLESSKILL >= .killCount)
+			{
+				dispbottom "Landing Guardian is now accessible for 1 minute.";
+				goto Onhideoffnpc;
+			}
+		}
+	}
+	end;	
+	
+Onhideoffnpc:
+	hideoffnpc strnpcinfo(3);
+	initnpctimer;
+	set .activated, 1;
+	viewpoint 1,45,52,1,0xFF0000;
+	addtimer 60000, strnpcinfo(3)+"::OnHideOn";
+	end;
+	
+OnTimer60000:
+	hideonnpc strnpcinfo(3);
+	stopnpctimer;
+	set .activated, 0;
+	end;
+
+OnHideOn:
+	viewpoint 2,45,52,1,0xFF0000;
+	end;
+	
+OnInit:
+	hideonnpc strnpcinfo(3);
+	set .killCount, 250;
+	end;
+}
+
+ars_dun32,163,98,0	script	Landing#42::landing42	4_ENERGY_WHITE,{
+	if (FORMLESSKILL >= .killCount && YGGPALIER >= atoi(strnpcinfo(2)))
+	{
+		warp ($yggLabMap$ + strnpcinfo(2)),$yggLabMapCoordinates[4],$yggLabMapCoordinates[5];		
+	}
+	close;
+	
+OnLabMobDead:
+	set .@mobCount, mobcount($yggLabMap$ + "42", strnpcinfo(3) + "::OnLabMobDead");
+	if(.@mobCount == 0)
+	{
+		doevent "mazebg42::OnChangeCleanState";
+	}
+	end;
+	
+OnPCLoadMapEvent:
+	if (YGGPALIER >= atoi(strnpcinfo(2))
+		&& strcharinfo(3) == strnpcinfo(4)
+		&& getcharid(1) == 0
+		&& .activated == 0)
+	{
+		dispbottom "Landing Guardian is now accessible for 1 minute.";
+		goto Onhideoffnpc;
+	}
+	end;
+	
+Onhideoffnpc:
+	hideoffnpc strnpcinfo(3);
+	initnpctimer;
+	set .activated, 1;
+	viewpoint 1,163,98,1,0xFF0000;
+	addtimer 60000, strnpcinfo(3)+"::OnHideOn";
+	end;
+	
+OnTimer60000:
+	hideonnpc strnpcinfo(3);
+	stopnpctimer;
+	set .activated, 0;
+	end;
+
+OnHideOn:
+	viewpoint 2,163,98,1,0xFF0000;
+	end;
+	
+OnInit:
+	hideonnpc strnpcinfo(3);
+	end;
+}
+
+ars_fild60,178,69,0	script	Landing#43::landing43	4_ENERGY_WHITE,{
+	if (CLASSKILL >= .killCount && YGGPALIER >= atoi(strnpcinfo(2)))
+	{
+		warp ($yggLabMap$ + strnpcinfo(2)),$yggLabMapCoordinates[4],$yggLabMapCoordinates[5];		
+	}
+	close;
+	
+OnLabMobDead:
+	set .@mobCount, mobcount($yggLabMap$ + "43", strnpcinfo(3) + "::OnLabMobDead");
+	if(.@mobCount == 0)
+	{
+		doevent "mazebg43::OnChangeCleanState";
+	}
+	end;
+	
+OnNPCKillEvent:
+	if (YGGPALIER >= atoi(strnpcinfo(2))
+		&& strcharinfo(3) == strnpcinfo(4)
+		&& .activated == 0)
+	{	
+		switch(BaseClass)
+		{
+			case Job_Swordman:
+				set .@classId, 1652;
+				break;
+			case Job_Mage:
+				set .@classId, 1657;
+				break;
+			case Job_Archer:
+				set .@classId, 1656;
+				break;
+			case Job_Thief:
+				set .@classId, 1653;
+				break;
+			case Job_Acolyte:
+				set .@classId, 1655;
+				break;
+			case Job_Merchant:
+				set .@classId, 1654;
+				break;
+		}
+		if (killedrid == .@classId)
+		{
+			set CLASSKILL, CLASSKILL + 1;
+			if (CLASSKILL >= .killCount)
+			{
+				dispbottom "Landing Guardian is now accessible for 1 minute.";
+				goto Onhideoffnpc;				
+			}			
+		}
+		else
+		{
+			set NOCLASSKILL, NOCLASSKILL +1;
+			if (NOCLASSKILL >= 10)
+			{
+				set CLASSKILL, CLASSKILL - 1;
+				set NOCLASSKILL, 0;
+			}
+		}
+	}
+	end;
+	
+Onhideoffnpc:
+	hideoffnpc strnpcinfo(3);
+	initnpctimer;
+	set .activated, 1;
+	viewpoint 1,178,69,1,0xFF0000;
+	addtimer 60000, strnpcinfo(3)+"::OnHideOn";
+	end;
+	
+OnTimer60000:
+	hideonnpc strnpcinfo(3);
+	stopnpctimer;
+	set .activated, 0;
+	end;
+
+OnHideOn:
+	viewpoint 2,178,69,1,0xFF0000;
+	end;
+	
+OnInit:
+	hideonnpc strnpcinfo(3);
+	set .killCount, 90;
+	end;
+}
+
+ars_fild62,195,86,0	script	Landing#44::landing44	4_ENERGY_WHITE,{
+	if (YGGPALIER >= atoi(strnpcinfo(2)))
+	{
+		warp ($yggLabMap$ + strnpcinfo(2)),$yggLabMapCoordinates[4],$yggLabMapCoordinates[5];		
+	}
+	close;
+	
+OnLabMobDead:
+	set .@mobCount, mobcount($yggLabMap$ + "44", strnpcinfo(3) + "::OnLabMobDead");
+	if(.@mobCount == 0)
+	{
+		doevent "mazebg44::OnChangeCleanState";
+	}
+	end;
+	
+OnNPCKillEvent:
+OnPCLoadMapEvent:
+	if(YGGPALIER >= atoi(strnpcinfo(2))
+		&& strnpcinfo(4) == strcharinfo(3)
+		&& .activated == 0)
+	{
+		set .checking, 1;
+		getpartymember getcharid(1), 2;
+		copyarray .@partyAid[0], $@partymemberaid[0], getarraysize($@partymemberaid);
+		set .@swordy, 0;
+		set .@magy, 0;
+		set .@thievy, 0;
+		set .@merchy, 0;
+		set .@archy, 0;
+		set .@acoly, 0;
+		set .@concernedId, getcharid(3);
+		for (set .@i,0; .@i < getarraysize(.@partyAid); set .@i, .@i+1)
+		{
+			attachrid(.@partyAid[.@i]);
+			if (BaseClass == Job_Archer)
+			{
+				set .@archy, 1;
+			}
+			if (BaseClass == Job_Swordman)
+			{
+				set .@swordy, 1;
+			}
+			if (BaseClass == Job_Mage)
+			{
+				set .@magy, 1;
+			}
+			if (BaseClass == Job_Thief)
+			{
+				set .@thievy, 1;
+			}
+			if (BaseClass == Job_Acolyte)
+			{
+				set .@acoly, 1;
+			}
+			if (BaseClass == Job_Merchant)
+			{
+				set .@merchy, 1;
+			}
+		}
+		attachrid(.@concernedId);
+		if (.@swordy && .@archy && .@magy && .@merchy && .@thievy && .@acoly)
+		{
+			dispbottom "Landing Guardian is now accessible for 1 minute.";
+			goto Onhideoffnpc;
+		}
+		set .checking, 0;
+	}
+	end;
+	
+Onhideoffnpc:
+	hideoffnpc strnpcinfo(3);
+	initnpctimer;
+	set .activated, 1;
+	viewpoint 1,195,86,1,0xFF0000;
+	addtimer 60000, strnpcinfo(3)+"::OnHideOn";
+	end;
+	
+OnTimer60000:
+	hideonnpc strnpcinfo(3);
+	stopnpctimer;
+	set .activated, 0;
+	end;
+
+OnHideOn:
+	viewpoint 2,195,86,1,0xFF0000;
+	end;
+	
+OnInit:
+	hideonnpc strnpcinfo(3);
+	end;
+}
+
+ars_fild61,106,74,0	script	World#45::landing45	4_ENERGY_WHITE,{
+	if (YGGPALIER >= atoi(strnpcinfo(2)))
+	{
+		warp ($yggLabMap$ + strnpcinfo(2)),$yggLabMapCoordinates[6],$yggLabMapCoordinates[7];			
+	}
+	close;
+	
+OnLabMobDead:
+	set .@mobCount, mobcount($yggLabMap$ + "45", strnpcinfo(3) + "::OnLabMobDead");
+	if(.@mobCount == 0)
+	{
+		doevent "mazewg45::OnChangeCleanState";
+	}
+	end;
+	
+OnNPCKillEvent:
+OnPCLoadMapEvent:
+	if(YGGPALIER >= atoi(strnpcinfo(2))
+		&& strcharinfo(3) == strnpcinfo(4)
+		&& .activated == 0)
+	{
+		if ((Class >= 4054 && Class <= 4078 && BaseLevel == 175 && JobLevel == 60)
+			|| ((Upper == 1 || Class == 4049 || Class == 4047) && BaseLevel == 99 && JobLevel >= 50))
+		{
+			dispbottom "Landing Guardian is now accessible for 30 seconds.";
+			goto Onhideoffnpc;			
+		}
+	}
+	end;
+	
+Onhideoffnpc:
+	hideoffnpc strnpcinfo(3);
+	initnpctimer;
+	set .activated, 1;
+	end;
+	
+OnTimer30000:
+	hideonnpc strnpcinfo(3);
+	stopnpctimer;
+	set .activated, 0;
+	end;
+	
+OnInit:
+	hideonnpc strnpcinfo(3);
+	end;
+}

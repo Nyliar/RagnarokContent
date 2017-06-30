@@ -1,0 +1,107 @@
+// [========================================================]
+// [=============     Yggdrasil - nifunheim     ============]
+// [========================================================]
+// [ Version 1                                              ]
+// [========================================================]
+// [ Original script by: Alayne				    ]
+// [========================================================]
+// [ Description:                                           ]
+// [--------------------------------------------------------]
+// [                                                        ]
+// [ - The nifunheim NPC		    	   	    ]
+// [========================================================]
+// [ Changelog: (5 last updates)                            ]
+// [--------------------------------------------------------]
+// [                                                        ]
+// [ v0: Creation                      			    ]
+// [                                                        ]
+// [                                                        ]
+// [========================================================]
+// [                                                        ]
+// [========================================================]
+
+ars_fild44,48,102,5	script	Rost::nifst	4_WHIKEBAIN,{
+	set .@npcname$, "[Rost]";
+	mes .@npcname$;
+	mes "You don't have any foes around here.";
+	mes "All peoples or...whatever they are, around here, are your friends.";
+	mes "Would you mind leaving me a little piece of you? Or two?";
+	mes "An arm, maybe?";
+	close;
+}
+
+ars_fild44,91,80,5	script	Rufs::nifru	4_EREND,{
+	set .@npcname$, "[Rufs]";
+	mes .@npcname$;
+	mes "...I don't talk to humans.";
+	if (NIFQ == 0)
+	{
+		mes "I'd like to tear you appart.";
+		mes "The flesh...There's nothing more delicious than flesh....";
+		mes "All gods, vanes or humans, are just food to me!";
+		set NIFQ, 1;
+	}
+	close;
+}
+
+ars_fild44,132,79,5	script	Zert::nifze	4_RAWREL,{
+	set .@npcname$, "[Zert]";
+	mes .@npcname$;
+	mes "You shouldn't talk to Rost and Rufs.";
+	mes "They were two brothers, known for the bad actions.";
+	mes "While the first one split its victims in parts, the younger one has the bad habbits to stole some part to eat it.";
+	mes "They've killed lots of people...";
+	mes "Not as much as me thought...";
+	close;
+}
+
+ars_fild44,132,97,5	script	Drank::nifdr	4_ARMAIA,{
+	set .@npcname$, "[Drank]";
+	mes .@npcname$;
+	mes "Here, in Niflheim, there's no place for the good wills.";
+	mes "It's a doomed place, where the badest and dangerous souls of all Midgard come after they died.";
+	mes "I bet you think I'm normal, hu?";
+	mes "This place changed me. When you suffered a thousand death by day, you become more...reserved.";
+	if (select("Help him","Leave") == 1)
+	{
+		mes "That's to nice...Just a bite then.";
+		percentheal -50, -50;
+	}
+	else
+	{
+		mes "Oh...You're already leaving?";
+	}
+	close;
+}
+
+ars_fild44,64,33,5	script	Drink::nifdr2	4_KAVAC,{
+	set .@npcname$, "[Drink]";
+	mes .@npcname$;
+	mes "I...I don't know why I'm here.";
+	mes "I haven't kill, nor hit, nor stole anyone in my life.";
+	mes "I even can't lie...";
+	mes "I guess you're not believing me, but...Would you mind talk for me to the Ase?";
+	mes "Maybe they can do something for me.";
+	mes "I don't want to rott here for the eternity...";
+	if (select("Ok, I'll talk to them","No, sorry...") == 1)
+	{
+		mes "Thanks...I'll pay you back...";
+		set HELQ, 2;
+	}
+	else
+	{
+		mes "Oh...O...OK. I'll find someone else...";
+		mes "I hope...";
+		mes "I got the eternity, thought...";
+	}
+	close;
+}
+
+ars_fild44,87,134,5	script	Firl::niffi	4_YGNIZEM,{
+	set .@npcname$, "[Firl]";
+	mes .@npcname$;
+	mes "I've been captured, and killed when I was still alive.";
+	mes "I wasn't that bad, I think.";
+	mes "I haven't done anything right, perhaps, but except some burning or electrocution, I wasn't that bad.";
+	close;
+}

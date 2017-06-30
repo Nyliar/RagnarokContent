@@ -1,0 +1,195 @@
+// [========================================================]
+// [=============           Yggdrasil           ============]
+// [========================================================]
+// [ Version 1                                              ]
+// [========================================================]
+// [ Original script by: Alayne				    ]
+// [========================================================]
+// [ Description:                                           ]
+// [--------------------------------------------------------]
+// [                                                        ]
+// [ - The Yggdrasil Project NPC - Hyrule		    	    ]
+// [========================================================]
+// [ Changelog: (5 last updates)                            ]
+// [--------------------------------------------------------]
+// [                                                        ]
+// [ v0: Creation                      			    ]
+// [                                                        ]
+// [                                                        ]
+// [========================================================]
+// [                                                        ]
+// [========================================================]
+
+//=====================================================================================
+//Warper
+//=====================================================================================
+Hyrule,134,186,4	duplicate(yggport)	Portal::yggporthyr	PORTAL
+
+//=====================================================================================
+// Healer
+//=====================================================================================
+Hyrule,126,179,5	script	Healer::yggsoinhyr	2_M_MOLGENSTEIN,{
+	callfunc "F_menuheal",15;
+	
+	OnInit:
+		callfunc "F_recup",15;
+		end;
+}
+
+//=====================================================================================
+// Kafra
+//=====================================================================================
+Hyrule,141,179,3	script	Kafra Employee::yggkafhyr	4_F_KAFRA6,2,2,{
+	cutin "kafra_06",2;
+	callfunc "F_KafSet";	// Générer les warp points selon la ville
+	callfunc "F_Kafra",0,1,0,40,800;	// 2 derniers args = prix ouverture storage + prix location pushcart
+	if(getmapxy(@map$,@posX,@posY,1,strnpcinfo(3)) != 0) {
+		savepoint @map$,99,84;
+	}
+	else {
+		savepoint @map$,@posX,@posY;
+	}
+	callfunc "F_KafEnd",0,1,"next to me";
+	
+OnTouch:
+	if (YGGDEATH == 1)
+	{
+		query_sql("INSERT INTO `ygg_climber` (`name`, `date`, `landing`)  VALUES ('" + strcharinfo(0) + "', '" + gettimestr("%Y-%m/%d %H:%M:%S",21) + "', '" + YGGPALIER + "')", .@count);
+		doevent "yggman::OnPlayerDied";
+	}
+	end;
+}
+
+//=====================================================================================
+// Merchants
+//=====================================================================================
+Hyrule,167,222,5	shop	Tool Dealer#hyrule::toolhyr	4W_M_01,601:-1,602:-1,611:-1,717:-1,501:-1,502:-1,503:-1,504:-1,506:-1,645:-1,656:-1,657:-1
+
+//=====================================================================================
+// Woe Warper
+//=====================================================================================
+Hyrule,139,147,4	script	WoE::yggwoehyr	2_M_OLDBLSMITH,{
+	set .@npcname$, "[Recruteur]";
+	mes .@npcname$;
+	mes "Hello, " + strcharinfo(0);
+	mes "The War makes lots of dead people out there.";
+	mes "Do you wanna go to help your friends?";
+	mes "Remember to save outside or you'll be warped here at each death.";
+	if (select("Yes","No") == 1)
+	{
+		goto OnWarp;
+	}
+	mes "See you soon.";
+	close;
+	
+OnWarp:
+	//warp to last save map
+	warp $returnTown$, $returnTownX, $returnTownY;
+	set RETURNFROMWOE, 1;
+	query_sql("INSERT INTO `ygg_woe` (`account_id`,`char_id`,`returnMap`) VALUES (" + getcharid(3) + ", " + getcharid(0) + ", '" + strnpcinfo(4) + "')", .@count);
+	close;
+	
+OnAgitEnd:
+OnAgitEnd2:
+OnWoeEnd:
+	hideonnpc strnpcinfo(3);
+OnPCLoginEvent:
+	if (agitcheck() == 0)
+	{
+		query_sql("SELECT `account_id`,`char_id`,`returnMap` FROM `ygg_woe`", .@accountId, .@charId, .@returnMap$);
+		for(set .@i,0; .@i<getarraysize(.@accountId); set .@i,.@i+1)
+		{
+			if(attachrid(.@accountId[.@i]))
+			{
+				if (getcharid(0) == .@charId[.@i] && RETURNFROMWOE == 1)
+				{
+					for(set .@j,0; .@j<getarraysize($townByLandingMap$); set .@j,.@j+1)
+					{
+						if (.@returnMap$ == $townByLandingMap$[.@j])
+						{
+							warp $townByLandingMap$[.@j], $townByLandingX[.@j], $townByLandingY[.@j];
+							savepoint $townByLandingMap$[.@j], $townByLandingX[.@j], $townByLandingY[.@j];
+							query_sql("DELETE FROM `ygg_woe` WHERE `char_id`=" + getcharid(0) + "", .@count);
+							set RETURNFROMWOE, 0;
+						}
+					}
+				}			
+			}
+		}
+	}
+	end;
+	
+OnAgitStart:
+OnAgitStart2:
+OnWoeStart:
+	hideoffnpc strnpcinfo(3);
+	end;
+	
+OnInit:
+	hideonnpc strnpcinfo(3);
+	end;
+}
+
+//=====================================================================================
+// Weapon/Armor Refiners
+//=====================================================================================
+Hyrule,125,122,5	script	Heimerdinger#hyr::heihyr	4_M_02,{
+	callfunc "refinemain","Heimerdinger",1;
+	end;
+}
+
+//==============================================================================
+// Ori/Elu Refiners
+//==============================================================================
+Hyrule,141,122,3	script	Dietrich Shop#hyr::dishhyr	4_M_03,{
+	callfunc "orimain","Dietrich";
+	end;
+}
+
+//=====================================================================================
+// Equipment Repairmen
+//=====================================================================================
+Hyrule,125,114,7	script	Repair Shop#hyr::reshhyr	4_M_03,{
+	callfunc "repairmain","Grendals";
+	end;
+}
+
+//=====================================================================================
+// Announcer
+//=====================================================================================
+Hyrule,96,141,5	duplicate(announcer)	Announcer::annhyr	4_M_KHKIEL
+
+//=====================================================================================
+// Mailbox
+//=====================================================================================
+Hyrule,126,186,0	duplicate(MailBox)	Mailbox#hyr::mailhyr	2_POSTBOX
+
+//=====================================================================================
+// PvP
+//=====================================================================================
+Hyrule,96,215,4	duplicate(pvproom)	PvP#hyr::pvphyr	4_M_KAGE_OLD
+
+//=====================================================================================
+// Reset
+//=====================================================================================
+Hyrule,173,170,4	duplicate(Hoei)	Hoei#hyr::hohyr	4_M_JOB_KNIGHT2
+
+//=====================================================================================
+// Stylist
+//=====================================================================================
+Hyrule,114,99,5	duplicate(Styliste#1)	Stylist#hyr::stylhyr	2_M_DYEINGER
+
+//=====================================================================================
+// Guild
+//=====================================================================================
+Hyrule,141,174,3	duplicate(changegm)	Cydh#hyr::guildhyr	4_M_04
+
+//=====================================================================================
+// Reborn
+//=====================================================================================
+//Hyrule,142,103,3	duplicate(reman)	Reborn Manager#hyr::remanhyr	1_M_HOF
+
+//=====================================================================================
+// Steel Soul
+//=====================================================================================
+Hyrule,125,103,3	duplicate(ssman)	Soul Smith#hyr::ssmanhyr	1_M_YOUNGKNIGHT

@@ -1,0 +1,211 @@
+// [========================================================]
+// [=============     Yggdrasil - Mobs     	============]
+// [========================================================]
+// [ Version 1                                              ]
+// [========================================================]
+// [ Original script by: Alayne				    ]
+// [========================================================]
+// [ Description:                                           ]
+// [--------------------------------------------------------]
+// [                                                        ]
+// [ - The Yggdrasil Project - Midgard Mobs spawn		    ]
+// [========================================================]
+// [ Changelog: (5 last updates)                            ]
+// [--------------------------------------------------------]
+// [                                                        ]
+// [ v0: Creation                      			    ]
+// [                                                        ]
+// [                                                        ]
+// [========================================================]
+// [                                                        ]
+// [========================================================]
+
+//Midgard
+//Big
+heidelberg,0,0,0,0	monster	Carat	1267,22,60000,30000,0,2,0
+heidelberg,0,0,0,0	monster	Mimic	1474,22,60000,30000,0,2,0
+heidelberg,0,0,0,0	monster	Skeleton Prisoner	1196,23,60000,30000,0,2,0
+heidelberg,0,0,0,0	monster	Minorous	1149,23,60000,30000,0,2,0
+heidelberg,0,0,0,0	monster	Driller	1380,25,60000,30000,0,2,0
+
+//Normal
+heidelberg,0,0,0,0	monster	Carat	1267,24,0,0,0,0,0
+heidelberg,0,0,0,0	monster	Mimic	1474,25,0,0,0,0,0
+heidelberg,0,0,0,0	monster	Skeleton Prisoner	1196,26,0,0,0,0,0
+heidelberg,0,0,0,0	monster	Minorous	1149,27,0,0,0,0,0
+heidelberg,0,0,0,0	monster	Driller	1380,30,0,0,0,0,0
+
+//Small
+heidelberg,0,0,0,0	monster	Carat	1267,22,18000,12000,0,1,0
+heidelberg,0,0,0,0	monster	Mimic	1474,22,18000,12000,0,1,0
+heidelberg,0,0,0,0	monster	Skeleton Prisoner	1196,23,18000,12000,0,1,0
+heidelberg,0,0,0,0	monster	Minorous	1149,23,18000,12000,0,1,0
+heidelberg,0,0,0,0	monster	Driller	1380,25,18000,12000,0,1,0
+
+//Big
+aqt_fild02,0,0,0,0	monster	Gremlin	1632,17,60000,30000,0,2,0
+aqt_fild02,0,0,0,0	monster	Zhu Long Po	1514,22,60000,30000,0,2,0
+aqt_fild02,0,0,0,0	monster	Grove	1687,18,60000,30000,0,2,0
+aqt_fild02,0,0,0,0	monster	Bloody Butterfly	1408,24,60000,30000,0,2,0
+aqt_fild02,0,0,0,0	monster	Giant Hornet	1303,25,60000,30000,0,2,0
+
+//Normal
+aqt_fild02,0,0,0,0	monster	Gremlin	1632,24,0,0,0,0,0
+aqt_fild02,0,0,0,0	monster	Zhu Long Po	1514,35,0,0,0,0,0
+aqt_fild02,0,0,0,0	monster	Grove	1687,26,0,0,0,0,0
+aqt_fild02,0,0,0,0	monster	Bloody Butterfly	1408,27,0,0,0,0,0
+aqt_fild02,0,0,0,0	monster	Giant Hornet	1303,30,0,0,0,0,0
+
+//Small
+aqt_fild02,0,0,0,0	monster	Gremlin	1632,17,18000,12000,0,1,0
+aqt_fild02,0,0,0,0	monster	Zhu Long Po	1514,22,18000,12000,0,1,0
+aqt_fild02,0,0,0,0	monster	Grove	1687,18,18000,12000,0,1,0
+aqt_fild02,0,0,0,0	monster	Bloody Butterfly	1408,24,18000,12000,0,1,0
+aqt_fild02,0,0,0,0	monster	Giant Hornet	1303,25,18000,12000,0,1,0
+
+//Big
+aqt_fild01,0,0,0,0	monster	Beholder	1633,17,60000,30000,0,2,0
+aqt_fild01,0,0,0,0	monster	Arclouze	1194,22,60000,30000,0,2,0
+aqt_fild01,0,0,0,0	monster	Caterpillar	1300,18,60000,30000,0,2,0
+aqt_fild01,0,0,0,0	monster	Goat	1372,24,60000,30000,0,2,0
+aqt_fild01,0,0,0,0	monster	Teddy Bear	1622,25,60000,30000,0,2,0
+
+//Normal
+aqt_fild01,0,0,0,0	monster	Beholder	1633,24,0,0,0,0,0
+aqt_fild01,0,0,0,0	monster	Arclouze	1194,25,0,0,0,0,0
+aqt_fild01,0,0,0,0	monster	Caterpillar	1300,26,0,0,0,0,0
+aqt_fild01,0,0,0,0	monster	Goat	1372,27,0,0,0,0,0
+aqt_fild01,0,0,0,0	monster	Teddy Bear	1622,30,0,0,0,0,0
+
+//Small
+aqt_fild01,0,0,0,0	monster	Beholder	1633,17,18000,12000,0,1,0
+aqt_fild01,0,0,0,0	monster	Arclouze	1194,22,18000,12000,0,1,0
+aqt_fild01,0,0,0,0	monster	Caterpillar	1300,18,18000,12000,0,1,0
+aqt_fild01,0,0,0,0	monster	Goat	1372,24,18000,12000,0,1,0
+aqt_fild01,0,0,0,0	monster	Teddy Bear	1622,25,18000,12000,0,1,0
+
+//Normal
+aquitaine,0,0,0,0	monster	Yao Jun	1512,24,0,0,0,0,0
+aquitaine,0,0,0,0	monster	Aliot	1740,25,0,0,0,0,0
+aquitaine,0,0,0,0	monster	Alicel	1735,26,0,0,0,0,0
+aquitaine,0,0,0,0	monster	Violy	1390,27,0,0,0,0,0
+
+//Small
+aquitaine,0,0,0,0	monster	Yao Jun	1512,17,18000,12000,0,1,0
+aquitaine,0,0,0,0	monster	Aliot	1740,22,18000,12000,0,1,0
+aquitaine,0,0,0,0	monster	Alicel	1735,18,18000,12000,0,1,0
+aquitaine,0,0,0,0	monster	Violy	1390,24,18000,12000,0,1,0
+
+//Big
+lafayette,0,0,0,0	monster	Leib Olmai	1306,7,60000,30000,0,2,0
+lafayette,0,0,0,0	monster	Loli Ruri	1505,12,60000,30000,0,2,0
+lafayette,0,0,0,0	monster	Caterpillar	1300,8,60000,30000,0,2,0
+lafayette,0,0,0,0	monster	Owl Duke	1320,14,60000,30000,0,2,0
+lafayette,0,0,0,0	monster	Dragon Tail	1321,15,60000,30000,0,2,0
+
+//Normal
+lafayette,0,0,0,0	monster	Leib Olmai	1306,14,0,0,0,0,0
+lafayette,0,0,0,0	monster	Loli Ruri	1505,25,0,0,0,0,0
+lafayette,0,0,0,0	monster	Caterpillar	1300,16,0,0,0,0,0
+lafayette,0,0,0,0	monster	Owl Duke	1320,27,0,0,0,0,0
+lafayette,0,0,0,0	monster	Dragon Tail	1321,30,0,0,0,0,0
+
+//Small
+lafayette,0,0,0,0	monster	Leib Olmai	1306,7,18000,12000,0,1,0
+lafayette,0,0,0,0	monster	Loli Ruri	1505,12,18000,12000,0,1,0
+lafayette,0,0,0,0	monster	Caterpillar	1300,8,18000,12000,0,1,0
+lafayette,0,0,0,0	monster	Owl Duke	1320,14,18000,12000,0,1,0
+lafayette,0,0,0,0	monster	Dragon Tail	1321,15,18000,12000,0,1,0
+
+//Big
+temple_lb,0,0,0,0	monster	Hodremlin	1773,5,60000,30000,0,2,0
+temple_lb,0,0,0,0	monster	Anolian	1206,7,60000,30000,0,2,0
+temple_lb,0,0,0,0	monster	Gullinbursti	1311,4,60000,30000,0,2,0
+temple_lb,0,0,0,0	monster	Permeter	1316,6,60000,30000,0,2,0
+temple_lb,0,0,0,0	monster	Galapago	1391,7,60000,30000,0,2,0
+
+//Normal
+temple_lb,0,0,0,0	monster	Hodremlin	1773,10,0,0,0,0,0
+temple_lb,0,0,0,0	monster	Anolian	1206,15,0,0,0,0,0
+temple_lb,0,0,0,0	monster	Gullinbursti	1311,8,0,0,0,0,0
+temple_lb,0,0,0,0	monster	Permeter	1316,13,0,0,0,0,0
+temple_lb,0,0,0,0	monster	Galapago	1391,15,0,0,0,0,0
+
+//Small
+temple_lb,0,0,0,0	monster	Hodremlin	1773,5,18000,12000,0,1,0
+temple_lb,0,0,0,0	monster	Anolian	1206,7,18000,12000,0,1,0
+temple_lb,0,0,0,0	monster	Gullinbursti	1311,4,18000,12000,0,1,0
+temple_lb,0,0,0,0	monster	Permeter	1316,6,18000,12000,0,1,0
+temple_lb,0,0,0,0	monster	Galapago	1391,7,18000,12000,0,1,0
+
+//Big
+thalys_o,0,0,0,0	monster	Gremlin	1632,5,60000,30000,0,2,0
+thalys_o,0,0,0,0	monster	Grove	1687,7,60000,30000,0,2,0
+thalys_o,0,0,0,0	monster	Giant Hornet	1303,4,60000,30000,0,2,0
+thalys_o,0,0,0,0	monster	Remover	1682,6,60000,30000,0,2,0
+
+//Normal
+thalys_o,0,0,0,0	monster	Gremlin	1632,10,0,0,0,0,0
+thalys_o,0,0,0,0	monster	Grove	1687,15,0,0,0,0,0
+thalys_o,0,0,0,0	monster	Giant Hornet	1303,8,0,0,0,0,0
+thalys_o,0,0,0,0	monster	Remover	1682,13,0,0,0,0,0
+
+//Small
+thalys_o,0,0,0,0	monster	Gremlin	1632,5,18000,12000,0,1,0
+thalys_o,0,0,0,0	monster	Grove	1687,7,18000,12000,0,1,0
+thalys_o,0,0,0,0	monster	Giant Hornet	1303,4,18000,12000,0,1,0
+thalys_o,0,0,0,0	monster	Remover	1682,6,18000,12000,0,1,0
+
+//Big
+aqt_shrine,0,0,0,0	monster	Aliot	1740,15,60000,30000,0,2,0
+aqt_shrine,0,0,0,0	monster	Apocalypse	1635,17,60000,30000,0,2,0
+aqt_shrine,0,0,0,0	monster	Taoist Hermit	1412,14,60000,30000,0,2,0
+aqt_shrine,0,0,0,0	monster	Skeleton Prisoner	1196,16,60000,30000,0,2,0
+
+//Normal
+aqt_shrine,0,0,0,0	monster	Aliot	1740,20,0,0,0,0,0
+aqt_shrine,0,0,0,0	monster	Apocalypse	1635,25,0,0,0,0,0
+aqt_shrine,0,0,0,0	monster	Taoist Hermit	1412,18,0,0,0,0,0
+aqt_shrine,0,0,0,0	monster	Skeleton Prisoner	1196,23,0,0,0,0,0
+
+//Small
+aqt_shrine,0,0,0,0	monster	Aliot	1740,15,18000,12000,0,1,0
+aqt_shrine,0,0,0,0	monster	Apocalypse	1635,17,18000,12000,0,1,0
+aqt_shrine,0,0,0,0	monster	Taoist Hermit	1412,14,18000,12000,0,1,0
+aqt_shrine,0,0,0,0	monster	Skeleton Prisoner	1196,16,18000,12000,0,1,0
+
+//Big
+lumina,0,0,0,0	monster	Remover	1682,14,60000,30000,0,2,0
+lumina,0,0,0,0	monster	Mineral	1614,16,60000,30000,0,2,0
+lumina,0,0,0,0	monster	Gryphon	1259,12,60000,30000,0,2,0
+
+//Normal
+lumina,0,0,0,0	monster	Remover	1311,18,0,0,0,0,0
+lumina,0,0,0,0	monster	Mineral	1316,22,0,0,0,0,0
+lumina,0,0,0,0	monster	Gryphon	1391,14,0,0,0,0,0
+
+//Small
+lumina,0,0,0,0	monster	Remover	1311,14,18000,12000,0,1,0
+lumina,0,0,0,0	monster	Mineral	1316,16,18000,12000,0,1,0
+lumina,0,0,0,0	monster	Gryphon	1391,12,18000,12000,0,1,0
+
+//Big
+cs_lb,0,0,0,0	monster	Beholder	1633,13,60000,30000,0,2,0
+cs_lb,0,0,0,0	monster	Arclouze	1194,16,60000,30000,0,2,0
+cs_lb,0,0,0,0	monster	Caterpillar	1300,14,60000,30000,0,2,0
+cs_lb,0,0,0,0	monster	Goat	1372,17,60000,30000,0,2,0
+cs_lb,0,0,0,0	monster	Teddy Bear	1622,15,60000,30000,0,2,0
+
+//Normal
+cs_lb,0,0,0,0	monster	Beholder	1633,13,0,0,0,0,0
+cs_lb,0,0,0,0	monster	Arclouze	1194,16,0,0,0,0,0
+cs_lb,0,0,0,0	monster	Caterpillar	1300,14,0,0,0,0,0
+cs_lb,0,0,0,0	monster	Goat	1372,17,0,0,0,0,0
+cs_lb,0,0,0,0	monster	Teddy Bear	1622,15,0,0,0,0,0
+
+//Small
+cs_lb,0,0,0,0	monster	Beholder	1633,13,18000,12000,0,1,0
+cs_lb,0,0,0,0	monster	Arclouze	1194,16,18000,12000,0,1,0
+cs_lb,0,0,0,0	monster	Caterpillar	1300,14,18000,12000,0,1,0
+cs_lb,0,0,0,0	monster	Goat	1372,17,18000,12000,0,1,0
+cs_lb,0,0,0,0	monster	Teddy Bear	1622,15,18000,12000,0,1,0

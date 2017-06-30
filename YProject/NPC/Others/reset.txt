@@ -1,0 +1,418 @@
+//===== eAthena Script =======================================
+//= Reset Man pour Artefact (base de Rose of Sharon)
+//===== Par: =================================================
+//= Hiero + Lyyn (v3)
+//===== Version du Script: =================================== 
+//= 3
+//===== Compatible Avec: =====================================
+//= eAthena TxT & SQL
+//===== Commentaires =========================================
+//=
+//= Script de Reset, nécessite un canaliseur (de base ID=7321)
+
+
+//prt_in,89,72,4	script	Hoei the Initialisator::prtho	734,{
+prontera,176,174,3	script	Hoei	734,{
+
+	function cleanVar;		// Delete des variables ci-dessous
+	function cast_rp;		// Fonction de cast... RP...
+	function zenytostr;		// Formater les nombres
+	function checkItem;		// Renvoie 1 ou 0, 1 = on possède les items requis
+	function requireZeny;	// Renvoie le nombre de zeny nécessaire pour le reset choisi
+	function reset;			// Gère le reset en lui-même (getarg(0) = type de reset)
+
+	set @npcname$,"[Hoei the Initialisator]";
+	
+	set @choixCana, 1;			// Si 1, proposera le reset alternatif avec l'item @canaliseurID
+	setarray @resetId[0],		// ID des items pour le reset
+				999,		// Steel
+				1000;		// Star Crumb
+	setarray @resetIdNbSk[0],	// Nombre d'items pour reset skill (lié via l'indice à .@resetItems[]);
+				15,			// Steel
+				10;			// Star Crumb
+	setarray @resetIdNbSt[0],	// Nombre d'items pour reset stats (lié via l'indice à .@resetItems[]);
+				30,			// Steel
+				15;			// Star Crumb
+	setarray @resetIdNbTot[0],	// Nombre d'items pour reset complet (lié via l'indice à .@resetItems[]);
+				40,			// Steel
+				20;			// Star Crumb
+	setarray @resetZeny[0],	// Zenies nécessaires aux différents reset
+				450000,		// [0] Zeny pour reset skill
+				750000,		// [1] Zeny pour reset stats
+				1000000;	// [2] Zeny pour reset complet
+				
+	set @canaliseurID, 675; 	// Silver Coin
+	set @nbCanaliseur, 2;		// nombre de cata stat
+	set @nbCanaSkill, 1;		// nombre de cata skill
+	set @nbCanaTotal, 3;		// nombre de cata pour reset stat+skill
+	set @zeny, 750000;			// nombre de zenies pour un reset stat
+	set @zenySkill, 450000;		// nombre de zenies pour un reset skill
+	set @zenyTotal, 1000000;	// nombre de zenies pour un reset stat+skill
+	
+
+	mes @npcname$; mes "Hello, I'm Hoei, I can reset your status or skills to the original."; next;
+	mes @npcname$; mes "But that's not possible without a LOT of talent, a catalyst and some money."; next;
+	mes @npcname$; mes "Do you wanna try ?"; next;
+	
+	switch (select("Learn more:Start the reset:I'll come back later..."))
+	{
+		case 1:
+			mes @npcname$; mes "To use my talents, I need some money and a catalyst."; next;
+			mes @npcname$; mes "The first reset will be free, but the following will cost you some Zenies."; next;			
+			// Table des prix
+			mes @npcname$;
+			mes "Here's the prices :\n";
+			
+			// Reset stats
+			set .@tempNoms$, "Status :\n";
+			for(set .@i, 0; .@i < getarraysize(@resetId); set .@i, .@i + 1) {
+				set .@tempNoms$, .@tempNoms$ + "    - " + @resetIdNbSt[.@i] + "^FF0000" + getitemname(@resetId[.@i]) + "^000000.\n";
+			}
+			set .@tempNoms$, .@tempNoms$ + "    - " + zenytostr(@resetZeny[1]) +" z."; // Prix pour reset stat
+			mes .@tempNoms$;
+			mes "\n";
+			
+			
+			// Reset skill
+			set .@tempNoms$, "Skills :\n";
+			for(set .@i, 0; .@i < getarraysize(@resetId); set .@i, .@i + 1) {
+				set .@tempNoms$, .@tempNoms$ + "    - " + @resetIdNbSk[.@i] + "^FF0000" + getitemname(@resetId[.@i]) + "^000000.\n";
+			}
+			set .@tempNoms$, .@tempNoms$ + "    - " + zenytostr(@resetZeny[0]) + " z."; // Prix pour reset stat
+			mes .@tempNoms$;
+			mes "\n";
+			
+			
+			// Reset total
+			set .@tempNoms$, "Both :\n";
+			for(set .@i, 0; .@i < getarraysize(@resetId); set .@i, .@i + 1) {
+				set .@tempNoms$, .@tempNoms$ + "    - " + @resetIdNbTot[.@i] + "^FF0000" + getitemname(@resetId[.@i]) + "^000000.\n";
+			}
+			set .@tempNoms$, .@tempNoms$ + "    - " + zenytostr(@resetZeny[2]) + " z."; // Prix pour reset stat
+			mes .@tempNoms$;
+			mes "\n";
+			next;
+			
+			if(@choixCana) {
+				// Choix alternatif
+				mes @npcname$;
+				mes "You can also bring me " + getitemname(@canaliseurID) + " to replace the others items.\n";
+				mes "If so, the price will be changed :\n";
+				mes "Status :"; mes "- ^FF0000" + @nbCanaliseur + "^000000 " + getitemname(@canaliseurID) + " et ^FF0000" + @zeny/1000 + ".000" + "^000000 z.";
+				mes "Skills :"; mes "- ^FF0000" + @nbCanaSkill + "^000000 " + getitemname(@canaliseurID) + " et ^FF0000" + @zenySkill/1000 + ".000" + "^000000 z";
+				mes "Both :"; mes "- ^FF0000" + @nbCanaTotal + "^000000 " + getitemname(@canaliseurID) + " et ^FF00001.000.000" + "^000000 z.";
+				next;
+			}
+			
+			mes @npcname$; mes "If you're interested, come back see me!";
+			close;
+		
+		case 2:
+			mes @npcname$; mes "Let's try then."; next;
+			switch (select("Skills:Status:Both:Leave")) {
+				case 1:
+				case 2:
+				case 3:
+					reset(@menu-1);	// -1 car 1 = skill mais la fonction considère ça comme un 0.
+					break;
+				default:
+					mes @npcname$; mes "Come back later then.";
+					close2;
+					cleanVar(0);
+			}
+				
+		case 3:
+			mes @npcname$; mes "Come back later then.";
+			close2;
+			cleanVar(0);
+	}
+	
+	function cleanVar {
+		// Supprimer toutes les variables superflues
+		set @npcname$, "";
+		set @choixCana, 0;
+		set @canaliseurID, 0;
+		set @nbCanaliseur, 0;
+		set @nbCanaSkill, 0;
+		set @nbCanaTotal, 0;
+		set @zeny, 0;
+		set @zenySkill, 0;
+		set @zenyTotal, 0;
+		
+		deletearray @resetId;
+		deletearray @resetIdNbSk;
+		deletearray @resetIdNbSt;
+		deletearray @resetIdNbTot;
+		deletearray @resetZeny;
+		
+		if(!getarg(0)) end;
+		else return;
+	}
+	
+	
+	function cast_rp {
+		specialeffect 54;
+		npctalk "Wait a bit, just 10 more seconds !";
+		sleep2 5000;
+		npctalk "5";
+		sleep2 1000;
+		npctalk "4";
+		sleep2 1000;
+		npctalk "3";
+		sleep2 1000;
+		npctalk "2";
+		sleep2 1000;
+		npctalk "1";
+		sleep2 1000;
+		return;
+	}
+	
+	
+	function zenytostr {
+		// Cette fonction va insérer un point tous les 3 chiffres, pratique pour formater un nombre.
+		
+		set @zeny$, getarg(0);		// Contient la somme en zeny, dans un string
+		set .@str$, @zeny$;			// Contiendra la somme en zeny reformatée
+		set .@mod, 0;				// Utilisé pour compter tous les 3 nombres
+
+		
+		// On parse tout le nombre de l'arrière vers l'avant pour une séparation correcte des milliers
+		for(set .@i, getstrlen(@zeny$); .@i > 0; set .@i, .@i - 1) {
+					
+			if(.@mod != 0 && !(.@mod % 3)) {
+				set .@str$, insertchar(.@str$, ".", .@i);	// On insère un point à l'emplacement du chiffre (décale le reste vers la droite)
+				set .@mod, 0;								// Pour éviter un très hypothétique overflow et boucle infinie
+			}
+			set .@mod, .@mod + 1;
+		}
+		return .@str$;	// Renvoi du nombre formaté
+	}
+	
+	function checkItem {
+		// Renvoie 1 si on a les items. 0 s'il en manque
+		// arg(0) Type de reset
+		// arg(1) SC choisis ou non ?
+		
+		set .@ok, 1;	// Si ça reste à un, on a les items requis --> on peut reset
+		
+		if(!getarg(1)) {
+			// On a choisi les items pour payer
+			for(set .@i, 0; .@i < getarraysize(@resetId) && .@ok; set .@i, .@i + 1) {
+				switch(getarg(0)) {
+					case 0: // skill
+						if(countitem(@resetId[.@i]) < @resetIdNbSk[.@i]) set .@ok, 0;
+						break;
+					case 1:	// stats
+						if(countitem(@resetId[.@i]) < @resetIdNbSt[.@i]) set .@ok, 0;
+						break;
+					case 2:	// both
+						if(countitem(@resetId[.@i]) < @resetIdNbTot[.@i]) set .@ok, 0;
+						//npctalk "Tu as " + countitem(@resetId[.@i]) + " " + getitemname(countitem(@resetId[.@i])) + " et j'en veux "
+				}
+			}
+		}
+		else {
+			// On a choisi les SC pour payer
+			switch(getarg(0)) {
+				case 0:		// skill
+					if (countitem(@canaliseurID) < @nbCanaSkill) set .@ok, 0;
+					break;
+				case 1:		// stats
+					if (countitem(@canaliseurID) < @nbCanaliseur) set .@ok, 0;
+					break;
+				case 2:		// total
+					if (countitem(@canaliseurID) < @nbCanaTotal) set .@ok, 0;
+			}
+		}
+		
+		return .@ok;
+	}
+	
+	function requireZeny {
+		// Renvoie le nombre de zeny requis pour le reset
+		// arg(0) => Type de reset
+		// arg(1) => Si 1, on utilise des SC pour payer
+		
+		if (!getarg(1)) {
+			set .@z, @resetZeny[getarg(0)];
+		}
+		else {
+			switch(getarg(0)) {
+				case 0:		// skill
+					set .@z, @zenySkill;
+					break;
+				case 1:		// stats
+					set .@z, @zeny;
+					break;
+				case 2:		// both
+					set .@z, @zenyTotal;
+			}
+		}
+		
+		return .@z;
+	}
+	
+	
+	
+	function reset {
+		// Fonction pour reset
+		// getarg(0) = type de reset (1 = skill, 2 = stat, 3 = total)
+		mes @npcname$;
+		mes "Ok, let's go.\n";
+		mes "Do you  wanna use " + getitemname(@canaliseurID) + " to pay me ?";
+		
+		if(select("Yes", "No") == 1) set .@SC, 1;
+		else set .@SC, 0;	// 2 -> 0, pour if(!.@SC)
+		next;
+	
+		mes @npcname$;
+		mes "You won't be able to cancel once started. Are you sure ?";
+		
+		switch (select("Well let me think about it again:Yes, go on")) {
+		case 1:
+			next; mes @npcname$; mes "Sure, no problem.";
+			close2;
+			cleanVar(0);
+		
+		case 2:
+		
+			// Si c'est le premier reset, on l'offre !
+			if (firstReset == 0)
+			{
+				next; mes @npcname$; mes "That's your first try. This one will be free."; next;
+				cast_rp();
+				
+				switch(getarg(0)) {
+					case 0:	// Skill
+						resetskill;
+						break;
+					case 1:	// Stats
+						resetstatus;
+						set REBIRTHREB, 2;
+						break;
+					case 2:	// Both
+						resetskill;
+						resetstatus;
+						set REBIRTHREB, 2;
+				}
+				
+				set firstReset, 1;
+				specialeffect2 78;
+				mes @npcname$; mes "Your " + ((getarg(0) == 1) ? "skills" : ((getarg(0) == 2) ? "status" : "skills and status") ) + " has been resetted with success !"; next;
+				mes @npcname$; mes "Come back later.";	
+				close2;
+				cleanVar(0);
+			}
+			
+			// Check des items
+			.@ok = checkItem(getarg(0), .@SC);
+			
+			if (!.@ok) {
+				next; mes @npcname$; mes "You don't seems to have everything I need. Come back with them all, please.";
+				close2;
+				cleanVar(0);
+			}
+			
+			
+			// Vérification des zeny	
+			set .@z, requireZeny(getarg(0), .@SC);
+			
+			if (Zeny < .@z) {
+				next; mes @npcname$; mes "You don't seems to have enough zeny. Come back with " + zenytostr(.@z) + "z.";
+				close2;
+				cleanVar(0);
+			}
+			
+			next; mes @npcname$; mes "Get ready, I'll start from now"; next;
+			cast_rp();
+			
+			// Recheck des items anti-tricherie
+			.@ok = checkItem(getarg(0), .@SC);
+						
+			// Recheck des zenys
+			if(Zeny < .@z) set .@ok, 0;
+			
+			if(!.@ok) {
+				// Tricherie détectée... On log et on sanctionne.
+				cleanVar(1);
+				logmes "[Reset Tricherie] " + strcharinfo(0) + " a essayé de tricher.";
+				atcommand "@jailfor 48h " + strcharinfo(0);	// Fo pa dékoné !
+				atcommand "@request [NPC Reset] " + strcharinfo(0) + " vient d'être sanctionné pour tricherie au NPC reset.";
+				end;
+			}
+			
+			// Delete des items
+			if(!.@SC) {
+				for(set .@i, 0; .@i < getarraysize(@resetId) && .@ok; set .@i, .@i + 1) {
+					switch(getarg(0)) {
+						case 0: // skill
+							delitem(@resetId[.@i], @resetIdNbSk[.@i]);
+							break;
+						case 1:	// stats
+							delitem(@resetId[.@i], @resetIdNbSt[.@i]);
+							break;
+						case 2:	// both
+							delitem(@resetId[.@i], @resetIdNbTot[.@i]);
+					}
+				}
+			}
+			else {
+				switch(getarg(0)) {
+					case 0: // skill
+						delitem @canaliseurID, @nbCanaSkill;
+						break;
+					case 1:	// stats
+						delitem @canaliseurID, @nbCanaliseur;
+						break;
+					case 2:	// both
+						delitem @canaliseurID, @nbCanaTotal;
+				}
+			}
+			
+			// Delete des zenys
+			set Zeny, Zeny-.@z;
+			
+			switch(getarg(0)) {
+				case 0:	// Skill
+					resetskill;
+					break;
+				case 1:	// Stats
+					resetstatus;
+					set REBIRTHREB, 2;
+					break;
+				case 2:	// Both
+					resetskill;
+					resetstatus;
+					set REBIRTHREB, 2;
+			}
+			
+			specialeffect2 78;
+			next; mes @npcname$; mes "Perfect! It ended well !"; next;
+			mes @npcname$; mes "Come back when you'll need me again.";
+			mes "Bonne journée.";
+			close2;
+			cleanVar(0);
+		}
+	}
+}
+/*
+//==============================================================
+//= Fonctions
+//==============================================================
+
+function	script	Cast_RP	{
+	specialeffect 54;
+	npctalk "Wait a moment, 10 more seconds !";
+	sleep2 5000;
+	npctalk "5";
+	sleep2 1000;
+	npctalk "4";
+	sleep2 1000;
+	npctalk "3";
+	sleep2 1000;
+	npctalk "2";
+	sleep2 1000;
+	npctalk "1";
+	sleep2 1000;
+	return;
+}*/

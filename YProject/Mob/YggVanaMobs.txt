@@ -1,0 +1,149 @@
+// [========================================================]
+// [=============     Yggdrasil - Mobs     	============]
+// [========================================================]
+// [ Version 1                                              ]
+// [========================================================]
+// [ Original script by: Alayne				    ]
+// [========================================================]
+// [ Description:                                           ]
+// [--------------------------------------------------------]
+// [                                                        ]
+// [ - The Yggdrasil Project - Vanaheim Mobs spawn		    ]
+// [========================================================]
+// [ Changelog: (5 last updates)                            ]
+// [--------------------------------------------------------]
+// [                                                        ]
+// [ v0: Creation                      			    ]
+// [                                                        ]
+// [                                                        ]
+// [========================================================]
+// [                                                        ]
+// [========================================================]
+
+//Vanaheim
+
+//Big
+ars_fild13,0,0,0,0	monster	Stalactit Golem	1278,6,60000,30000,0,2,0
+ars_fild13,0,0,0,0	monster	Ancient Mimic	1699,4,60000,30000,0,2,0
+ars_fild13,0,0,0,0	monster	Novus	1715,5,60000,30000,0,2,0
+ars_fild13,0,0,0,0	monster	Permeter	1314,4,60000,30000,0,2,0
+ars_fild13,0,0,0,0	monster	Wild Rose	1261,2,60000,30000,0,2,0
+
+//Normal
+ars_fild13,0,0,0,0	monster	Stalactit Golem	1278,8,0,0,0,0,0
+ars_fild13,0,0,0,0	monster	Ancient Mimic	1699,12,0,0,0,0,0
+ars_fild13,0,0,0,0	monster	Novus	1715,20,0,0,0,0,0
+ars_fild13,0,0,0,0	monster	Permeter	1314,10,0,0,0,0,0
+ars_fild13,0,0,0,0	monster	Wild Rose	1261,14,0,0,0,0,0
+
+//Small
+ars_fild13,0,0,0,0	monster	Stalactit Golem	1278,4,18000,12000,0,1,0
+ars_fild13,0,0,0,0	monster	Ancient Mimic	1699,6,18000,12000,0,1,0
+ars_fild13,0,0,0,0	monster	Novus	1715,12,18000,12000,0,1,0
+ars_fild13,0,0,0,0	monster	Permeter	1314,4,18000,12000,0,1,0
+ars_fild13,0,0,0,0	monster	Wild Rose	1261,5,18000,12000,0,1,0
+
+//Big
+ars_fild45,0,0,0,0	monster	Elder	1377,6,60000,30000,0,2,0
+ars_fild45,0,0,0,0	monster	Death Word	1698,4,60000,30000,0,2,0
+ars_fild45,0,0,0,0	monster	Apocalypse	1365,5,60000,30000,0,2,0
+ars_fild45,0,0,0,0	monster	Waste Stove	1617,2,60000,30000,0,2,0
+ars_fild45,0,0,0,0	monster	Alice	1275,2,60000,30000,0,2,0
+
+//Normal
+ars_fild45,0,0,0,0	monster	Elder	1377,14,0,0,0,0,0
+ars_fild45,0,0,0,0	monster	Death Word	1698,16,0,0,0,0,0
+ars_fild45,0,0,0,0	monster	Apocalypse	1365,20,0,0,0,0,0
+ars_fild45,0,0,0,0	monster	Waste Stove	1617,12,0,0,0,0,0
+ars_fild45,0,0,0,0	monster	Alice	1275,14,0,0,0,0,0
+
+//Small
+ars_fild45,0,0,0,0	monster	Elder	1377,7,18000,12000,0,1,0
+ars_fild45,0,0,0,0	monster	Death Word	1698,8,18000,12000,0,1,0
+ars_fild45,0,0,0,0	monster	Apocalypse	1365,10,18000,12000,0,1,0
+ars_fild45,0,0,0,0	monster	Waste Stove	1617,6,18000,12000,0,1,0
+ars_fild45,0,0,0,0	monster	Alice	1275,7,18000,12000,0,1,0
+
+//Big
+ars_fild36,0,0,0,0	monster	Teddy Bear	1622,6,60000,30000,0,2,0
+ars_fild36,0,0,0,0	monster	Heavy Metaling	1977,4,60000,30000,0,2,0
+ars_fild36,0,0,0,0	monster	Owl Baron	1295,5,60000,30000,0,2,0
+ars_fild36,0,0,0,0	monster	Medusa	1148,2,60000,30000,0,2,0
+ars_fild36,0,0,0,0	monster	Archdam	1668,2,60000,30000,0,2,0
+
+//Normal
+ars_fild36,0,0,0,0	monster	Teddy Bear	1622,8,0,0,0,0,0
+ars_fild36,0,0,0,0	monster	Heavy Metaling	1977,12,0,0,0,0,0
+ars_fild36,0,0,0,0	monster	Owl Baron	1295,20,0,0,0,0,0
+ars_fild36,0,0,0,0	monster	Medusa	1148,10,0,0,0,0,0
+ars_fild36,0,0,0,0	monster	Archdam	1668,14,0,0,0,0,0
+
+//Small
+ars_fild36,0,0,0,0	monster	Teddy Bear	1622,4,18000,12000,0,1,0
+ars_fild36,0,0,0,0	monster	Heavy Metaling	1977,6,18000,12000,0,1,0
+ars_fild36,0,0,0,0	monster	Owl Baron	1295,12,18000,12000,0,1,0
+ars_fild36,0,0,0,0	monster	Medusa	1148,4,18000,12000,0,1,0
+ars_fild36,0,0,0,0	monster	Archdam	1668,5,18000,12000,0,1,0
+
+//Big
+ars_dun02,0,0,0,0	monster	Obsidian	1615,6,60000,30000,0,2,0
+ars_dun02,0,0,0,0	monster	Kraben	1587,4,60000,30000,0,2,0
+ars_dun02,0,0,0,0	monster	Increase Soil	1516,5,60000,30000,0,2,0
+ars_dun02,0,0,0,0	monster	Constant	1738,2,60000,30000,0,2,0
+ars_dun02,0,0,0,0	monster	Breeze	1692,2,60000,30000,0,2,0
+
+//Normal
+ars_dun02,0,0,0,0	monster	Obsidian	1615,8,0,0,0,0,0
+ars_dun02,0,0,0,0	monster	Kraben	1587,12,0,0,0,0,0
+ars_dun02,0,0,0,0	monster	Increase Soil	1516,20,0,0,0,0,0
+ars_dun02,0,0,0,0	monster	Constant	1738,10,0,0,0,0,0
+ars_dun02,0,0,0,0	monster	Breeze	1692,14,0,0,0,0,0
+
+//Small
+ars_dun02,0,0,0,0	monster	Obsidian	1615,4,18000,12000,0,1,0
+ars_dun02,0,0,0,0	monster	Kraben	1587,6,18000,12000,0,1,0
+ars_dun02,0,0,0,0	monster	Increase Soil	1516,12,18000,12000,0,1,0
+ars_dun02,0,0,0,0	monster	Constant	1738,4,18000,12000,0,1,0
+ars_dun02,0,0,0,0	monster	Breeze	1692,5,18000,12000,0,1,0
+
+//Big
+ars_fild33,0,0,0,0	monster	Clock	1269,6,60000,30000,0,2,0
+ars_fild33,0,0,0,0	monster	Seeker	1774,4,60000,30000,0,2,0
+ars_fild33,0,0,0,0	monster	Sleeper	1386,5,60000,30000,0,2,0
+ars_fild33,0,0,0,0	monster	Lava Golem	1366,2,60000,30000,0,2,0
+ars_fild33,0,0,0,0	monster	Venatu	1678,2,60000,30000,0,2,0
+
+//Normal
+ars_fild33,0,0,0,0	monster	Clock	1269,8,0,0,0,0,0
+ars_fild33,0,0,0,0	monster	Seeker	1774,12,0,0,0,0,0
+ars_fild33,0,0,0,0	monster	Sleeper	1386,20,0,0,0,0,0
+ars_fild33,0,0,0,0	monster	Lava Golem	1366,10,0,0,0,0,0
+ars_fild33,0,0,0,0	monster	Venatu	1678,14,0,0,0,0,0
+
+//Small
+ars_fild33,0,0,0,0	monster	Clock	1269,4,18000,12000,0,1,0
+ars_fild33,0,0,0,0	monster	Seeker	1774,6,18000,12000,0,1,0
+ars_fild33,0,0,0,0	monster	Sleeper	1386,12,18000,12000,0,1,0
+ars_fild33,0,0,0,0	monster	Lava Golem	1366,4,18000,12000,0,1,0
+ars_fild33,0,0,0,0	monster	Venatu	1678,5,18000,12000,0,1,0
+
+//Big
+ars_fild49,0,0,0,0	monster	Dimik	1672,6,60000,30000,0,2,0
+ars_fild49,0,0,0,0	monster	Bloody Knight	1268,4,60000,30000,0,2,0
+ars_fild49,0,0,0,0	monster	Ferus	1714,5,60000,30000,0,2,0
+ars_fild49,0,0,0,0	monster	Kasa	1833,2,60000,30000,0,2,0
+ars_fild49,0,0,0,0	monster	Beholder	1633,2,60000,30000,0,2,0
+
+//Normal
+ars_fild49,0,0,0,0	monster	Dimik	1672,8,0,0,0,0,0
+ars_fild49,0,0,0,0	monster	Bloody Knight	1268,12,0,0,0,0,0
+ars_fild49,0,0,0,0	monster	Ferus	1714,20,0,0,0,0,0
+ars_fild49,0,0,0,0	monster	Kasa	1833,6,0,0,0,0,0
+ars_fild49,0,0,0,0	monster	Beholder	1633,14,0,0,0,0,0
+
+//Small
+ars_fild49,0,0,0,0	monster	Dimik	1672,4,18000,12000,0,1,0
+ars_fild49,0,0,0,0	monster	Bloody Knight	1268,6,18000,12000,0,1,0
+ars_fild49,0,0,0,0	monster	Ferus	1714,12,18000,12000,0,1,0
+ars_fild49,0,0,0,0	monster	Kasa	1833,3,18000,12000,0,1,0
+ars_fild49,0,0,0,0	monster	Beholder	1633,5,18000,12000,0,1,0

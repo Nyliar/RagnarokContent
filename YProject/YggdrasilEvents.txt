@@ -1,0 +1,18 @@
+//Almost Poring
+Hyrule,88,142,4	duplicate(almopo)	Almost Poring::almopohyr	909
+//Cubception
+Hyrule,92,142,4	duplicate(Garde Cubeception)	Garde Cubeception::guacubhyr	4_M_CRU_SOLD
+//Fake poring
+Hyrule,105,142,4	duplicate(prtfipo)	Fake Poring::prtfipohyr	909
+//Pirate Maze
+Hyrule,107,148,4	duplicate(prtprimhunt)	Prime Hunter::prtprimhunthyr	106
+//Raid Pirate
+Hyrule,87,148,4	duplicate(prtcostguardhyr)	Coast Guard::prtcostguardhyr	4_M_CRU_SOLD
+//Poring Puncher
+Hyrule,84,134,4	duplicate(ppevent)	Poring Puncher::ppeventhyr	883
+//Survivor
+Hyrule,100,142,4	duplicate(prtsurv)	Survivor::prtsurvhyr	887
+//Poring Summoner
+Hyrule,92,142,4	duplicate(ps)	Poring Summoner::pshyr	909
+//Disguise
+Hyrule,87,147,4	duplicate(prtdis)	Disguise#1::prtdishyr	626

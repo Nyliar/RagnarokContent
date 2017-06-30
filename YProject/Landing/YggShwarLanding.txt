@@ -1,0 +1,383 @@
+// [========================================================]
+// [=============       Yggdrasil Landing        ============]
+// [========================================================]
+// [ Version 1                                              ]
+// [========================================================]
+// [ Original script by: Alayne				    ]
+// [========================================================]
+// [ Description:                                           ]
+// [--------------------------------------------------------]
+// [                                                        ]
+// [ - The Yggdrasil Project Shwarzalfheim Landing			    ]
+// [========================================================]
+// [ Changelog: (5 last updates)                            ]
+// [--------------------------------------------------------]
+// [                                                        ]
+// [ v0: Creation                      			    ]
+// [                                                        ]
+// [                                                        ]
+// [========================================================]
+// [                                                        ]
+// [========================================================]
+
+ars_fild40,270,102,0	script	Landing#26::landing26	4_ENERGY_BLACK,{
+	if (YGGPALIER >= atoi(strnpcinfo(2)))
+	{
+		warp ($yggLabMap$ + strnpcinfo(2)),$yggLabMapCoordinates[2],$yggLabMapCoordinates[3];		
+	}
+	close;
+	
+OnLabMobDead:
+	set .@mobCount, mobcount($yggLabMap$ + "26", strnpcinfo(3) + "::OnLabMobDead");
+	if(.@mobCount == 0)
+	{
+		doevent "mazebg26::OnChangeCleanState";
+	}
+	end;
+	
+
+OnPCLoadMapEvent:
+	switch(rand(0,5))
+	{
+		case 0:
+			hideoffnpc "dwa";
+			break;
+		case 1:
+			hideoffnpc "dwa2";
+			break;
+		case 2:
+			hideoffnpc "dwa3";
+			break;
+		case 3:
+			hideoffnpc "dwa4";
+			break;
+		case 4:
+			hideoffnpc "dwa5";
+			break;
+		case 5:
+			hideoffnpc "dwa6";
+			break;
+	}
+	end;
+	
+Onhideoffnpc:
+	hideoffnpc strnpcinfo(3);
+	initnpctimer;
+	set .activated, 1;
+	viewpoint 1,270,102,1,0xFF0000;
+	addtimer 60000, strnpcinfo(3)+"::OnHideOn";
+	end;
+	
+OnHideOn:
+	hideonnpc strnpcinfo(3);
+	stopnpctimer;
+	set .activated, 0;
+	viewpoint 2,270,102,1,0xFF0000;
+	end;
+	
+OnInit:
+	hideonnpc strnpcinfo(3);
+	end;
+}
+
+ars_fild40,253,118,0	script	Dwarf::dwa	474,{
+	set .@npcname$, "[Dwarf]";
+	mes .@npcname$;
+	mes "";
+	mes "Why are you here?";
+	mes "This is our mine, you have nothing to do here.";
+	mes "Go back from where you came.";
+	if (Zeny >= .requiredZenyCount)
+	{
+		next;
+		mes .@npcname$;
+		mes "OH! You should have tell me you got a gift for me!";
+		mes "I'll take these " + .requiredZenyCount + " Zenies, right?";
+		if (select("...Ok...","No way!") == 1)
+		{
+			set Zeny, Zeny - .requiredZenyCount;
+			mes "Thank you, my friend.";
+			dispbottom "Landing Guardian is now accessible for 1 minutes.";
+			doevent "landing26::Onhideoffnpc";
+		}
+		else
+		{
+			mes "...You're not really nice to me...";
+		}
+		hideonnpc strnpcinfo(3);
+	}
+	close;
+	
+OnInit:
+	set .requiredZenyCount, rand(1000000,50000000);
+	hideonnpc strnpcinfo(3);
+	end;
+}
+
+ars_fild40,290,51,0	duplicate(dwa)	Dwarf::dwa2	474
+ars_fild40,289,99,0	duplicate(dwa)	Dwarf::dwa3	474
+ars_fild40,85,64,0	duplicate(dwa)	Dwarf::dwa4	474
+ars_fild40,159,53,0	duplicate(dwa)	Dwarf::dwa5	474
+ars_fild40,250,80,0	duplicate(dwa)	Dwarf::dwa6	474
+
+ars_fild37,162,20,0	script	Landing#27::landing27	4_ENERGY_BLACK,{
+	if (COUNTROCKMINED >= .countRockNeed && YGGPALIER >= atoi(strnpcinfo(2)))
+	{
+		warp ($yggLabMap$ + strnpcinfo(2)),$yggLabMapCoordinates[2],$yggLabMapCoordinates[3];		
+	}
+	close;
+	
+OnLabMobDead:
+	set .@mobCount, mobcount($yggLabMap$ + "27", strnpcinfo(3) + "::OnLabMobDead");
+	if(.@mobCount == 0)
+	{
+		doevent "mazebg27::OnChangeCleanState";
+	}
+	end;
+	
+Onhideoffnpc:
+	hideoffnpc strnpcinfo(3);
+	initnpctimer;
+	set .activated, 1;
+	viewpoint 1,162,20,1,0xFF0000;
+	addtimer 60000, strnpcinfo(3)+"::OnHideOn";
+	end;
+	
+OnMineRock:
+	set COUNTROCKMINED, COUNTROCKMINED + 1;
+	dispbottom "[Cardinal System] " + COUNTROCKMINED + "/" + .countRockNeed;
+	if (COUNTROCKMINED >= .countRockNeed)
+	{
+		dispbottom "Landing Guardian is now accessible for 1 minutes.";
+		goto Onhideoffnpc;
+	}
+	end;
+	
+OnTimer60000:
+	hideonnpc strnpcinfo(3);
+	stopnpctimer;
+	set .activated, 0;
+	end;
+
+OnHideOn:
+	viewpoint 2,162,20,1,0xFF0000;
+	end;
+	
+OnInit:
+	hideonnpc strnpcinfo(3);
+	set .countRockNeed, 60;
+	end;
+}
+
+ars_fild37,128,46,0	script	Rock::ro1	1907,{
+	if (countitem(.requiredId) >= 1)
+	{
+		delitem .requiredId, 1;
+		if (rand(0,100) < .minPercentLoot)
+		{
+			dispbottom "[Cardinal System] You've find something in the rock.";
+			getitem .itemLootable[rand(0,getarraysize(.itemLootable) - 1)], 1;
+		}
+		doevent "landing27::OnMineRock";
+		hideonnpc strnpcinfo(3);
+		initnpctimer;
+	}
+	else
+	{
+		dispbottom "[Cardinal System] Looks like you gonna need something to mine this...";
+	}
+	end;
+
+OnTimer30000:
+	hideoffnpc strnpcinfo(3);
+	end;
+	
+OnInit:
+	set .requiredId, 7318;
+	setarray .itemLootable[0],1000,1001,999,969;
+	set .minPercentLoot, 1;
+	end;
+}
+
+ars_fild37,45,121,0	duplicate(ro1)	Rock::ro2	1907
+ars_fild37,65,56,0	duplicate(ro1)	Rock::ro3	1907
+ars_fild37,173,42,0	duplicate(ro1)	Rock::ro4	1907
+ars_fild37,89,92,0	duplicate(ro1)	Rock::ro5	1907
+ars_fild37,70,123,0	duplicate(ro1)	Rock::ro6	1907
+ars_fild37,78,52,0	duplicate(ro1)	Rock::ro7	1907
+ars_fild37,137,39,0	duplicate(ro1)	Rock::ro8	1907
+ars_fild37,172,138,0	duplicate(ro1)	Rock::ro9	1907
+ars_fild37,136,181,0	duplicate(ro1)	Rock::ro10	1907
+
+ars_dun20,230,218,0	script	Landing#28::landing28	4_ENERGY_BLACK,{
+	if (countitem(.requiredId) >= .requiredCount && YGGPALIER >= atoi(strnpcinfo(2)))
+	{
+		warp ($yggLabMap$ + strnpcinfo(2)),$yggLabMapCoordinates[2],$yggLabMapCoordinates[3];		
+	}
+	close;
+	
+OnLabMobDead:
+	set .@mobCount, mobcount($yggLabMap$ + "28", strnpcinfo(3) + "::OnLabMobDead");
+	if(.@mobCount == 0)
+	{
+		doevent "mazebg28::OnChangeCleanState";
+	}
+	end;
+
+OnNPCKillEvent:	
+OnPCLoadMapEvent:
+	if (strcharinfo(3) == strnpcinfo(4) 
+		&& YGGPALIER >= atoi(strnpcinfo(2))
+		&& .activated == 0)
+	{
+		if (countitem(.requiredId) >= .requiredCount)
+		{
+			delitem .requiredId, .requiredCount;
+			dispbottom "Landing Guardian is now accessible for 1 minute.";
+			goto Onhideoffnpc;
+		}
+	}
+	end;	
+	
+Onhideoffnpc:
+	hideoffnpc strnpcinfo(3);
+	initnpctimer;
+	set .activated, 1;
+	viewpoint 1,230,218,1,0xFF0000;
+	addtimer 60000, strnpcinfo(3)+"::OnHideOn";
+	end;
+	
+OnTimer60000:
+	hideonnpc strnpcinfo(3);
+	stopnpctimer;
+	set .activated, 0;
+	end;
+
+OnHideOn:
+	viewpoint 2,230,218,1,0xFF0000;
+	end;
+	
+OnInit:
+	hideonnpc strnpcinfo(3);
+	set .requiredId, 969;
+	set .requiredCount, 10;
+	end;
+}
+
+ars_fild38,89,20,0	script	Landing#29::landing29	4_ENERGY_BLACK,{
+	if (WALFEKILL >= .killCount && YGGPALIER >= atoi(strnpcinfo(2)))
+	{
+		warp ($yggLabMap$ + strnpcinfo(2)),$yggLabMapCoordinates[2],$yggLabMapCoordinates[3];		
+	}
+	close;
+	
+OnLabMobDead:
+	set .@mobCount, mobcount($yggLabMap$ + "29", strnpcinfo(3) + "::OnLabMobDead");
+	if(.@mobCount == 0)
+	{
+		doevent "mazebg29::OnChangeCleanState";
+	}
+	end;
+	
+OnNPCKillEvent:
+	if (YGGPALIER >= atoi(strnpcinfo(2))
+		&& strcharinfo(3) == strnpcinfo(4))
+	{
+		for (set .@i,0; .@i < getarraysize(.killedId); set .@i,.@i+1)
+		{
+			if (killedrid == .killedId[.@i])
+			{	
+				set WALFEKILL, WALFEKILL + 1;
+				if (WALFEKILL >= .killCount)
+				{
+					dispbottom "Landing Guardian is now accessible for 1 minute.";
+					goto Onhideoffnpc;
+				}
+			}
+		}
+	}
+	end;
+	
+Onhideoffnpc:
+	hideoffnpc strnpcinfo(3);
+	initnpctimer;
+	set .activated, 1;
+	viewpoint 1,89,20,1,0xFF0000;
+	addtimer 60000, strnpcinfo(3)+"::OnHideOn";
+	end;
+	
+OnTimer60000:
+	hideonnpc strnpcinfo(3);
+	stopnpctimer;
+	set .activated, 0;
+	end;
+
+OnHideOn:
+	viewpoint 2,89,20,1,0xFF0000;
+	end;
+	
+OnInit:
+	hideonnpc strnpcinfo(3);
+	set .killCount, 75;
+	setarray .killedId[0], 1881, 1165, 1498;
+	end;
+}
+
+ars_dun19,103,81,0	script	World#30::landing30	4_ENERGY_BLACK,{
+	if (.activated == 1 && YGGPALIER >= atoi(strnpcinfo(2)))
+	{
+		warp ($yggLabMap$ + strnpcinfo(2)),$yggLabMapCoordinates[6],$yggLabMapCoordinates[7];			
+	}
+	close;
+	
+OnLabMobDead:
+	set .@mobCount, mobcount($yggLabMap$ + "30", strnpcinfo(3) + "::OnLabMobDead");
+	if(.@mobCount == 0)
+	{
+		doevent "mazewg30::OnChangeCleanState";
+	}
+	end;
+	
+OnPCLoadMapEvent:
+	if (mobcount(strnpcinfo(4), strnpcinfo(3)+"::Onhideoffnpc") == 0 
+		&& .activated == 0)
+	{
+		hideonnpc strnpcinfo(3);
+		monster strnpcinfo(4),0,0,strmobinfo(1,.mobId),.mobId,1,strnpcinfo(3)+"::Onhideoffnpc",2,0;	
+	}
+	end;
+	
+OnNPCKillEvent:
+	if (YGGPALIER >= atoi(strnpcinfo(2))
+		&& strcharinfo(3) == strnpcinfo(4))
+	{
+		if(killedrid != .mobId)
+		{
+			if (.activated == 1)
+			{
+				dispbottom "You've killed our friend! Leave this place, now! Or we'll chase you down!";
+				set .activated, 0;
+				hideonnpc strnpcinfo(3);
+			}
+		}
+	}
+	end;
+	
+Onhideoffnpc:
+	hideoffnpc strnpcinfo(3);
+	initnpctimer;
+	dispbottom "Landing Guardian is now accessible for 1 minute.";
+	set .activated, 1;
+	end;
+	
+OnTimer60000:
+	hideonnpc strnpcinfo(3);
+	stopnpctimer;
+	set .activated, 0;
+	end;
+	
+OnInit:
+	hideonnpc strnpcinfo(3);
+	set .mobId, 1884;
+	end;
+}

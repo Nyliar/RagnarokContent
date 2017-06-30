@@ -1,0 +1,145 @@
+// [========================================================]
+// [=============           Yggdrasil           ============]
+// [========================================================]
+// [ Version 1                                              ]
+// [========================================================]
+// [ Original script by: Alayne				    ]
+// [========================================================]
+// [ Description:                                           ]
+// [--------------------------------------------------------]
+// [                                                        ]
+// [ - The Yggdrasil Project YggVillage    ]
+// [========================================================]
+// [ Changelog: (5 last updates)                            ]
+// [--------------------------------------------------------]
+// [                                                        ]
+// [ v0: Creation                      			    ]
+// [                                                        ]
+// [                                                        ]
+// [========================================================]
+// [                                                        ]
+// [========================================================]
+
+ygg_village,11,161,0	script	Ygg Village::yggvill	4_M_BARMUND,{ //654
+	end;
+
+OnPopClone:	
+OnPCDieEvent:	
+	if ($actualRootClone + 1 < .maxCountClone)
+	{
+		set .@pop, 0;
+		for (set .@i,0; .@i<getarraysize($yggdrasilArrayMap$); set .@i,.@i+1)
+		{
+			if (strcharinfo(3) == $yggdrasilArrayMap$[.@i])
+			{
+				set .@pop, 1;
+			}
+		}
+		for (set .@i,0; .@i<getarraysize($townByLandingMap$); set .@i,.@i+1)
+		{
+			if (strcharinfo(3) == $townByLandingMap$[.@i])
+			{
+				set .@pop, 1;
+			}
+		}
+		if (.@pop)
+		{
+			callsub OnPopCloneMob;
+			mapannounce strnpcinfo(4), "[Cardinal System] The Last Guardian let out a thrilling roar.", bc_map;
+		}
+	}
+	end;	
+	
+OnPopCloneMob:
+	set .current_id, getcharid(3);
+	attachrid(.current_id);
+	if (Hp > 1)
+	{
+		clone $yggRootEntrance$,0,0,strnpcinfo(3)+"::OnCloneMobDead", getcharid(0);
+		set $actualRootClone, $actualRootClone + 1;
+	}
+	return;	
+	
+OnCloneMobDead:
+	set $actualRootClone, $actualRootClone - 1;
+OnMvpDead:
+	if ($actualRootClone == 0)
+	{
+		if (mobcount(strnpcinfo(4), strnpcinfo(3) + "::OnYggClosed") == 0 
+			&& mobcount(strnpcinfo(4), "yggrootent::OnGuardianDied") == 0)
+		{
+			//Stop poping, open all doors, enable last fight
+			monster $yggRootEntrance$,0,0,strmobinfo(1,$yggRootGuardianId),$yggRootGuardianId,1,strnpcinfo(3)+"::OnYggClosed",2,0;	
+			mapannounce strnpcinfo(4), "[Cardinal System] The Last Guardian appears. Kill it within 30 minutes, or you'll have to free " + .freedWorldIfFail + " Worlds again.", bc_map;
+			set $yggRootStarted, 1;	
+			callsub OnPopClone;
+		}
+	}
+	end;
+	
+OnTimer1800000:
+	stopnpctimer;
+	//failed
+	killmonsterall strnpcinfo(4);
+	mapannounce strnpcinfo(4), "[Cardinal System] You've failed to kill the Last Guardian in the delayed time. You'll have to free " + .freedWorldIfFail + " Worlds again.", bc_map;
+	callsub OnChangeWorldCount, .freedWorldIfFail;
+	end;
+	
+OnChangeWorldCount:
+	set .@changeValue, getarg(0);
+	query_sql("SELECT `account_id` FROM `char` WHERE `last_map`='" + strnpcinfo(4) + "'", .@account_id);
+	for (set .@i, 0; .@i<getarraysize(.@account_id); set .@i, .@i+1)
+	{
+		attachrid(.@account_id[.@i]);
+		set YGGWORLD, YGGWORLD - .@changeValue;
+		warp $townByLandingMap$[0], $townByLandingX[0], $townByLandingY[0];
+	}
+	end;
+
+OnYggClosed:	
+	stopnpctimer;
+	announce "[Cardinal System] A player, " + strcharinfo(0) + " just completed the Scaled Yggdrasil Raid by killing the Last Guardian.", bc_all;
+	announce "[Cardinal System] Congratulations to him and his team.", bc_all;
+	if (getcharid(1) == 0)
+	{
+		getitem .rewardId, .rewardCount;
+		dispbottom "[Cardinal System] Congratulations, you've completed the Scaled Yggdrasil.";
+		dispbottom "[Cardinal System] You've obtained " + .rewardCount + " " + getitemname(.rewardId) + ".";
+		set STEELLVL, STEELLVL + 1;
+		set STEELKILLCOUNT, 0;
+		dispbottom "[Cardinal System] You've also obtained a complete Steel Soul level.";
+		logmes "[Cardinal System] " + strcharinfo(0) + " obtains " + .rewardCount + " " + .rewardId;
+		//warp to last save map
+		warp $returnTown$, $returnTownX, $returnTownY;
+	}
+	getpartymember getcharid(1), 2;
+	copyarray .@partyAid[0], $@partymemberaid[0], getarraysize($@partymemberaid);
+	for (set .@i,0; .@i < getarraysize(.@partyAid); set .@i, .@i+1)
+	{
+		attachrid(.@partyAid);
+
+		getitem .rewardId, .rewardCount;
+		dispbottom "[Cardinal System] Congratulations, you've completed the Scaled Yggdrasil.";
+		dispbottom "[Cardinal System] You've obtained " + .rewardCount + " " + getitemname(.rewardId) + ".";
+		set STEELLVL, STEELLVL + 1;
+		set STEELKILLCOUNT, 0;
+		dispbottom "[Cardinal System] You've also obtained a complete Steel Soul level.";
+		logmes "[Cardinal System] " + strcharinfo(0) + " obtains " + .rewardCount + " " + .rewardId;
+		//warp to last save map
+		warp $returnTown$, $returnTownX, $returnTownY;
+	}
+	end;
+	
+OnInit:
+	set .mapname$, "ygg_village";
+	killmonsterall .mapname$;
+	set .maxCountClone, 100;
+	set $actualRootClone, 0;
+	set .rewardId, 675;
+	set .rewardCount, 100;
+	set .closeYggAfterWin, 1;
+	set .freedWorldIfFail, 5;
+	set .freedWorldIfSuccess, 2;
+	set $yggRootStarted, 0;
+	end;
+}

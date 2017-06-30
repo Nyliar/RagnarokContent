@@ -1,0 +1,71 @@
+// [========================================================]
+// [=============       Yggdrasil Landing        ============]
+// [========================================================]
+// [ Version 1                                              ]
+// [========================================================]
+// [ Original script by: Alayne				    ]
+// [========================================================]
+// [ Description:                                           ]
+// [--------------------------------------------------------]
+// [                                                        ]
+// [ - The Yggdrasil Project Asgard Landing			    ]
+// [========================================================]
+// [ Changelog: (5 last updates)                            ]
+// [--------------------------------------------------------]
+// [                                                        ]
+// [ v0: Creation                      			    ]
+// [                                                        ]
+// [                                                        ]
+// [========================================================]
+// [                                                        ]
+// [========================================================]
+
+dep_lb,58,132,0	script	Landing#0::landing0	4_ENERGY_BLACK,{ //1905
+	if (TUTORIALKILLCOUNT >= 25 && YGGPALIER >= atoi(strnpcinfo(2)))
+	{
+		warp ($yggLabMap$ + "00"),$yggLabMapCoordinates[0],$yggLabMapCoordinates[1];	
+		donpcevent "mazebg0::OnPopMonster";
+	}
+	close;
+	
+OnLabMobDead:
+	set .@mobCount, mobcount($yggLabMap$ + "00", strnpcinfo(3) + "::OnLabMobDead");
+	if(.@mobCount == 0)
+	{
+		doevent "mazebg0::OnChangeCleanState";
+	}
+	end;
+	
+OnNPCKillEvent:
+	if(strcharinfo(3) == $YggdrasilMapStart$ && FIRSTIN == 1)
+	{
+		set TUTORIALKILLCOUNT, TUTORIALKILLCOUNT + 1;
+		if(TUTORIALKILLCOUNT >= 25)
+		{
+			goto Onhideoffnpc;
+		}
+	}
+	end;	
+	
+Onhideoffnpc:
+	hideoffnpc strnpcinfo(3);
+	initnpctimer;
+	set .activated, 1;
+	viewpoint 1,58,132,1,0xFF0000;
+	addtimer 60000, strnpcinfo(3)+"::OnHideOn";
+	end;
+	
+OnTimer60000:
+	hideonnpc strnpcinfo(3);
+	stopnpctimer;
+	set .activated, 0;
+	end;
+
+OnHideOn:
+	viewpoint 2,58,132,1,0xFF0000;
+	end;
+	
+OnInit:
+	hideonnpc strnpcinfo(3);
+	end;
+}

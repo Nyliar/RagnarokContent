@@ -1,0 +1,42 @@
+// [========================================================]
+// [=============           Yggdrasil           ============]
+// [========================================================]
+// [ Version 1                                              ]
+// [========================================================]
+// [ Original script by: Alayne				    ]
+// [========================================================]
+// [ Description:                                           ]
+// [--------------------------------------------------------]
+// [                                                        ]
+// [ - The Yggdrasil Project Helheim special Warps	    ]
+// [========================================================]
+// [ Changelog: (5 last updates)                            ]
+// [--------------------------------------------------------]
+// [                                                        ]
+// [ v0: Creation                      			    ]
+// [                                                        ]
+// [                                                        ]
+// [========================================================]
+// [                                                        ]
+// [========================================================]
+
+Biarmaland,127,57,5	script	Guardian::helguard	4_MAN_GALTUN1,{ //492
+	set .@npcname$, "[Guardian]";
+	mes .@npcname$;
+	mes "";
+	mes "I'm the Guardian of this path.";
+	mes "You can't go further if you're not strong enough.";
+	if (YGGPALIER >= 35)
+	{
+		if (select("Send me further","I'll stay here") == 1)
+		{
+			mes "Looks like you are.";
+			warp "br_lb",55,85;
+		}
+		else
+		{
+			mes "Sure.";
+		}
+	}
+	close;
+}

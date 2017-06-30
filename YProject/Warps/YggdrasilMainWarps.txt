@@ -1,0 +1,228 @@
+// [========================================================]
+// [=============           Yggdrasil           ============]
+// [========================================================]
+// [ Version 1                                              ]
+// [========================================================]
+// [ Original script by: Alayne				    ]
+// [========================================================]
+// [ Description:                                           ]
+// [--------------------------------------------------------]
+// [                                                        ]
+// [ - The Yggdrasil Project special Warps	    	    ]
+// [========================================================]
+// [ Changelog: (5 last updates)                            ]
+// [--------------------------------------------------------]
+// [                                                        ]
+// [ v0: Creation                      			    ]
+// [                                                        ]
+// [                                                        ]
+// [========================================================]
+// [                                                        ]
+// [========================================================]
+
+dep_lb,42,183,0	script	warp::yggfiwarp	WARPNPC,2,2,{ //45
+	end;
+	
+OnTouch:
+	if (YGGDRASIL == 2 && $yggJob == 1)
+	{
+		mes "[Systeme]";
+		mes "You're entering in " + .firstmapName$;
+		mes "You can choose a job in the following list:";
+		set .@choice, select("Smith","Armorsmith","Tailor","Sorcerer","Alchemist","Cooker");
+		if (.@choice != 255)
+		{
+			setd("YGGJOB" + .@choice, 1);
+		}
+		mes "You can buy job items in every town.";
+	}
+	set YGGDRASIL, 3;
+	set YGGPALIER, 1;
+	warp .firstmapName$, 227, 101;
+	end;
+	
+OnInit:
+	set .firstmapName$, "Hyrule";
+	end;
+}
+
+Hyrule,230,104,0	warp	hyr_sta	2,5,dep_lb,42,179
+
+
+dep_lb,134,186,0	script	Portal::yggport	PORTAL,{ //623
+	set .@npcname$, "[Yggdrasil]";
+	mes .@npcname$;
+	mes " ";
+	mes "Welcome into the Yggdrasil Teleport System.";
+	mes "A teleportation cost is " + .priceCount + " " + getitemname($portalCrystalId) + ".";
+	mes "You can also use the portal by standing near and saying out loud your destination: Teleport plus the seeked destination.";
+	mes "For instance:";
+	mes "Teleport Hyrule";
+	mes "Will bring you to Hyrule.";
+	next;
+	mes .@npcname$;
+	mes "Plus, if you have the correct item, you can use the 'return' command to be warped back to your last save point.";
+	mes "Keep in mind that all destination are not cities. Some places are simply a regroupement point...";
+	mes "Thus, there could be monsters.";
+	next;
+	goto OnTeleport;
+	close;
+	
+OnTeleportAsked:
+	if (countitem($portalCrystalId) >= .priceCount && $hidden_started != 1)
+	{
+		if (YGGPALIER >= getarg(0))
+		{
+			warp getarg(1), getarg(2), getarg(3);	
+			delitem $portalCrystalId, .priceCount;				
+		}
+	}
+	else
+	{
+		mes "Sorry, but you can't use the teleport.";
+		mes "A teleportation cost is " + .priceCount + " " + getitemname($portalCrystalId) + ".";
+	}
+	close;
+
+OnHyruleAsked:
+	callsub OnTeleportAsked, $townByLandingMapLanding[0], $townByLandingMap$[0], $townByLandingX[0], $townByLandingY[0];
+	end;
+
+OnHrylarAsked:
+	callsub OnTeleportAsked, $townByLandingMapLanding[1], $townByLandingMap$[1], $townByLandingX[1], $townByLandingY[1];
+	end;
+
+OnSturlimAsked:
+	callsub OnTeleportAsked, $townByLandingMapLanding[2], $townByLandingMap$[2], $townByLandingX[2], $townByLandingY[2];
+	end;
+
+OnDodsfallAsked:
+	callsub OnTeleportAsked, $townByLandingMapLanding[3], $townByLandingMap$[3], $townByLandingX[3], $townByLandingY[3];
+	end;
+
+OnHeltAsked:
+	callsub OnTeleportAsked, $townByLandingMapLanding[4], $townByLandingMap$[4], $townByLandingX[4], $townByLandingY[4];
+	end;
+
+OnMorkhetAsked:
+	callsub OnTeleportAsked, $townByLandingMapLanding[5], $townByLandingMap$[5], $townByLandingX[5], $townByLandingY[5];
+	end;
+
+OnFordomtAsked:
+	callsub OnTeleportAsked, $townByLandingMapLanding[6], $townByLandingMap$[6], $townByLandingX[6], $townByLandingY[6];
+	end;
+
+OnDagslysAsked:
+	callsub OnTeleportAsked, $townByLandingMapLanding[7], $townByLandingMap$[7], $townByLandingX[7], $townByLandingY[7];
+	end;
+
+OnVarherreAsked:
+	callsub OnTeleportAsked, $townByLandingMapLanding[8], $townByLandingMap$[8], $townByLandingX[8], $townByLandingY[8];
+	end;
+
+OnReturnAsked:
+	if (countitem($returnCrystalId) >= .priceCount && $hidden_started != 1)
+	{
+		charcommand "#load " + strcharinfo(0);		
+		delitem $returnCrystalId, .priceCount;			
+	}
+	else
+	{
+		mes "Sorry, but you can't use the return teleport.";
+		mes "A teleportation cost is " + .priceCount + " " + getitemname($returnCrystalId) + ".";
+		close;
+	}
+	end;
+
+OnTeleport:
+	mes .@npcname$;
+	mes "Please choose your destination:";
+	set .@menu$, "";
+	set .@choiceCount, 0;
+	for (set .@i, 0; .@i < getarraysize($townByLandingMapName$); set .@i, .@i+1)
+	{
+		if (YGGPALIER >= $townByLandingMapLanding[.@i] || ($enableLevelChoice == 1 && YGGMODE == 1))
+		{
+			set .@menu$, .@menu$ + ( .@i ? ":" : "" ) + $townByLandingMapName$[.@i];
+			set .@choiceCount, .@choiceCount + 1;
+		}
+	}
+	if($enableLeaving >= 1)
+	{
+		set .@menu$, .@menu$ + ":Doesn't matter after all...";
+		set .@exitOption, .@choiceCount;
+	}
+	set .@choice, select(.@menu$) - 1;
+	if (.@choice != 254)
+	{
+		if(.@choice == .@exitOption)
+		{
+			next;
+			mes .@npcname$;
+			if($enableLeaving == 2)
+			{
+				warp $returnTown$,$returnTownX,$returnTownY;
+			}
+			else
+			{
+				mes "For each " + getitemname($returnCrystalId) + ", you can be authorized to stay 1 hour out of Scaled Yggdrasil.";
+				mes "Are you interested?";
+				if(select("Yes","No") == 1)
+				{
+					next;
+					mes .@npcname$;
+					mes "Please, input the number of Crystal to use. '0' means as much as possible.";
+					input .@crystCount;
+					if(.@crystCount == 0)
+					{
+						set .@crystCount, countitem($returnCrystalId);
+					}
+					next;
+					mes .@npcname$;
+					mes "Get ready. Remember to save back in main town, or you'll get warped back in Yggdrasil when dying.";
+					delitem $returnCrystalId, .@crystCount;
+					set yggproject_forcedreturndelay, ( gettimetick(2) + ( 3600 * .@crystCount ) );
+					warp $returnTown$,$returnTownX,$returnTownY;					
+				}
+			}
+		}
+		if (countitem($portalCrystalId) >= .priceCount)
+		{
+			warp $townByLandingMap$[.@choice], $townByLandingX[.@choice], $townByLandingY[.@choice];
+			delitem $portalCrystalId, .priceCount;
+		}
+		else
+		{
+			mes "Sorry, but you can't use the teleport.";
+			mes "A teleportation cost is " + .priceCount + " " + getitemname($portalCrystalId) + ".";
+		}
+	}	
+	close;
+	
+OnInit:
+	set .priceCount, 1;
+	set .activateOralTeleport, 1;
+	if (.activateOralTeleport)
+	{
+		defpattern 1, "([^:]+):.*Teleport " + $townByLandingMapName$[0] + ".*", "OnHyruleAsked";
+		activatepset 1;
+		defpattern 2, "([^:]+):.*Teleport " + $townByLandingMapName$[1] + ".*", "OnHrylarAsked";
+		activatepset 2;
+		defpattern 3, "([^:]+):.*Teleport " + $townByLandingMapName$[2] + ".*", "OnSturlimAsked";
+		activatepset 3;
+		defpattern 4, "([^:]+):.*Teleport " + $townByLandingMapName$[3] + ".*", "OnDodsfallAsked";
+		activatepset 4;
+		defpattern 5, "([^:]+):.*Teleport " + $townByLandingMapName$[4] + ".*", "OnHeltAsked";
+		activatepset 5;
+		defpattern 6, "([^:]+):.*Teleport " + $townByLandingMapName$[5] + ".*", "OnMorkhetAsked";
+		activatepset 6;
+		defpattern 7, "([^:]+):.*Teleport " + $townByLandingMapName$[6] + ".*", "OnFordomtAsked";
+		activatepset 7;
+		defpattern 8, "([^:]+):.*Teleport " + $townByLandingMapName$[7] + ".*", "OnDagslysAsked";
+		activatepset 8;
+		defpattern 9, "([^:]+):.*Teleport " + $townByLandingMapName$[8] + ".*", "OnVarherreAsked";
+		activatepset 9;
+	}
+	bindatcmd "return",strnpcinfo(3)+"::OnReturnAsked";
+	end;
+}

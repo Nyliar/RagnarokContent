@@ -1,0 +1,129 @@
+// [========================================================]
+// [=============     Yggdrasil - Vanaheim     ============]
+// [========================================================]
+// [ Version 1                                              ]
+// [========================================================]
+// [ Original script by: Alayne				    ]
+// [========================================================]
+// [ Description:                                           ]
+// [--------------------------------------------------------]
+// [                                                        ]
+// [ - The Vanaheim NPC		    	   	    ]
+// [========================================================]
+// [ Changelog: (5 last updates)                            ]
+// [--------------------------------------------------------]
+// [                                                        ]
+// [ v0: Creation                      			    ]
+// [                                                        ]
+// [                                                        ]
+// [========================================================]
+// [                                                        ]
+// [========================================================]
+
+ars_fild11,126,84,5	script	Baldr::vanba	4_M_REDMAN,{
+	set .@npcname$, "[Baldr]";
+	mes .@npcname$;
+	mes "I'm Baldr. I'm a Vane, and I've been living here since the universe begining.";
+	mes "Odin, my almighty father, requested me to fight alongside with gods in the ragnarok.";
+	mes "And so, ever since, I'm training here for this day.";
+	close;
+}
+
+ars_fild11,197,123,5	script	Frul::vanfr	4_F_GELKA,{
+	set .@npcname$, "[Frul]";
+	mes .@npcname$;
+	mes "...Hello, human.";
+	if (VANQ == 0)
+	{
+		mes "you're here in Vanaheim, Realm of the Rights and Fairs.";
+		mes "Just like the Ase, we're here to make the justice rule the universe.";
+		mes "Most of use are Ase childs, and we're known as secondary gods.";
+		set VANQ, 1;
+	}
+	close;
+}
+
+ars_fild11,70,46,3	script	Srej::vansr	4_F_GELKA,{
+	set .@npcname$, "[Srej]";
+	mes .@npcname$;
+	mes "Don't be silly. The Ase can't be wrong.";
+	mes "The Giants and Demons always tried to make people think we're those who send them there.";
+	mes "They got the place they deserve in the universe, that's all.";
+	mes "And this place is beneath our feets!";
+	close;
+}
+
+ars_fild11,123,117,5	script	Gilra::vangi	4_M_SWORDMAN,{
+	set .@npcname$, "[Gilra]";
+	mes .@npcname$;
+	mes "The Volva has warned us.";
+	mes "The Ragnarok will kill us all.";
+	mes "We got to get prepared.";
+	close;
+}
+
+ars_fild11,139,77,3	script	Freyr::vanfre	4_M_NINJA_RED,{
+	set .@npcname$, "[Freyr]";
+	mes .@npcname$;
+	mes "My name's Freyr, I'm Freya's brother.";
+	mes "Our mother, Skadi, was a Jotun.";
+	mes "And even if they call them monsters...";
+	mes "I'll never be able to call her other than Mother.";
+	close;
+}
+
+ars_fild11,91,74,3	script	Hrund::vanhru	4_M_CRU_SOLD,{
+	set .@npcname$, "[Hrund]";
+	mes .@npcname$;
+	mes "I'm Hrund, god of afterlife and resurrection.";
+	mes "I've already told to Odin that my place isn't here.";
+	mes "I'd like to meet Hel again, maybe she'll accept me as a friend.";
+	mes "And I'll be able to help rule the Dead Realm.";
+	close;
+}
+
+ars_fild11,43,103,3	script	Lodur::vanlo	4_M_THIEF_RUMIN,{
+	set .@npcname$, "[Lodur]";
+	mes .@npcname$;
+	mes "I'm Odin and Honir brothers.";
+	mes "With them, I've killed and ripped off the skin of the Giant, Hymir.";
+	mes "Our goal was to get rid of this filthy race.";
+	mes "But look at this now. They're getting always much numerous on their Realms...";
+	mes "ODIN! Let's go to war again!";
+	close;
+}
+
+ars_fild11,88,88,0	script	Njord::vannjo	4_M_YOUNGKNIGHT,{
+	set .@npcname$, "[Njord]";
+	mes .@npcname$;
+	mes "I'm the God of all seas, Njord.";
+	mes "I'm the one who bring life on earth, no matter what the other says.";
+	mes "I can't believe I'm only known as a secondary god...";
+	mes "Odin, change my place, please...";
+	close;
+}
+
+ars_fild11,200,69,1	script	Nerthus::vanne	4_M_JP_MID,{
+	set .@npcname$, "[Nerthus]";
+	mes .@npcname$;
+	mes "I'm Nerthus, Njord's sister.";
+	mes "I'm the earth fertility Goddess, and I've raised several Ases.";
+	mes "I don't...understand how this castes works. I can't called that differently.";
+	close;
+}
+
+ars_fild11,58,59,2	script	Hnoss::vanhno	4_M_TUFFOLD,{
+	set .@npcname$, "[Hnoss]";
+	mes .@npcname$;
+	mes "I'm Hnoss, one the two Vanes Treasure.";
+	mes "Don't ask me why, our names means treasure, that's all.";
+	close;
+}
+
+ars_fild11,94,49,5	script	Gersimi::vanhge	4_M_REDSWORD,{
+	set .@npcname$, "[Gersimi]";
+	mes .@npcname$;
+	mes "I'm Gersimi, one the two Vanes Treasure.";
+	mes "Don't ask me why, our names means treasure, that's all.";
+	close;
+}

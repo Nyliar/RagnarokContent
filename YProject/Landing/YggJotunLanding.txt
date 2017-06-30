@@ -1,0 +1,295 @@
+// [========================================================]
+// [=============       Yggdrasil Landing        ============]
+// [========================================================]
+// [ Version 1                                              ]
+// [========================================================]
+// [ Original script by: Alayne				    ]
+// [========================================================]
+// [ Description:                                           ]
+// [--------------------------------------------------------]
+// [                                                        ]
+// [ - The Yggdrasil Project Jotunheim Landing			    ]
+// [========================================================]
+// [ Changelog: (5 last updates)                            ]
+// [--------------------------------------------------------]
+// [                                                        ]
+// [ v0: Creation                      			    ]
+// [                                                        ]
+// [                                                        ]
+// [========================================================]
+// [                                                        ]
+// [========================================================]
+
+//Storm Gust autocast survival
+ars_fild07,167,41,0	script	Landing#6::landing6	4_ENERGY_BLUE,{
+	if (YGGPALIER >= atoi(strnpcinfo(2)))
+	{
+		warp ($yggLabMap$ + "06"),$yggLabMapCoordinates[0],$yggLabMapCoordinates[1];		
+	}
+	close;
+	
+OnLabMobDead:
+	set .@mobCount, mobcount($yggLabMap$ + "06", strnpcinfo(3) + "::OnLabMobDead");
+	if(.@mobCount == 0)
+	{
+		doevent "mazebg6::OnChangeCleanState";
+	}
+	end;
+	
+OnNPCKillEvent:
+OnPCLoadMapEvent:
+	if (strcharinfo(3) == strnpcinfo(4) 
+		&& YGGPALIER >= atoi(strnpcinfo(2))
+	&& .activated == 0)
+	{
+		dispbottom "Landing Guardian is now accessible for 1 minute.";
+		dispbottom "If you missed it, you'll have to leave and enter the map again.";
+		viewpoint 1,167,41,1,0xFF0000;
+		addtimer 60000, strnpcinfo(3)+"::OnHideOn";
+		goto Onhideoffnpc;
+	}
+	end;	
+	
+Onhideoffnpc:
+	hideoffnpc strnpcinfo(3);
+	set .activated, 1;
+	initnpctimer;
+	end;
+	
+OnTimer10000:
+	//areamobuseskill "<map name>",<x>,<y>,<range>,<mob id>,<skill id>,<skill level>,<cast time>,<cancelable>,<emotion>,<target type>;
+	setarray .@mobIdArray[0],1883,1515,1206,1317,1319;
+	mapannounce strnpcinfo(4), "Be careful, the storm blow!", bc_map;
+	set .@mobId, .@mobIdArray[rand(0,getarraysize(.@mobIdArray) - 1)];
+	areamobuseskill "ars_fild07",113,120,100,.@mobId,"WZ_STORMGUST",10,0,0,e_gg,3;
+	if (.activated == 1)
+	{	
+		set .count10s, .count10s + 1;
+		if (.count10s == 6)
+		{
+			hideonnpc strnpcinfo(3);
+			set .activated, 0;
+		}
+	}
+	stopnpctimer;
+	initnpctimer;
+	end;
+
+OnHideOn:
+	viewpoint 2,167,41,1,0xFF0000;
+	end;
+	
+OnInit:
+	hideonnpc strnpcinfo(3);
+	set .activated, 0;
+	end;
+}
+
+ars_fild08,105,117,0	script	Landing#7::landing7	4_ENERGY_BLUE,{
+	if (JOTUNKILL == .killCount && YGGPALIER >= atoi(strnpcinfo(2)))
+	{
+		warp ($yggLabMap$ + "07"),$yggLabMapCoordinates[0],$yggLabMapCoordinates[1];		
+	}
+	close;
+	
+OnLabMobDead:
+	set .@mobCount, mobcount($yggLabMap$ + "07", strnpcinfo(3) + "::OnLabMobDead");
+	if(.@mobCount == 0)
+	{
+		doevent "mazebg1::OnChangeCleanState";
+	}
+	end;
+	
+OnNPCKillEvent:
+	mapannounce strnpcinfo(4), "just killed a " + killedrid, bc_map;
+	if (YGGPALIER >= atoi(strnpcinfo(2))
+		&& killedrid == .killedId 
+		&& strcharinfo(3) == strnpcinfo(4))
+	{
+		set JOTUNKILL, JOTUNKILL + 1;
+		mapannounce strnpcinfo(4), "count: " + JOTUNKILL, bc_map;
+		if (JOTUNKILL == .killCount && .activated == 0)
+		{
+			dispbottom "Landing Guardian is now accessible for 1 minute.";
+			viewpoint 1,105,117,1,0xFF0000;
+			addtimer 60000, strnpcinfo(3)+"::OnHideOn";
+			goto Onhideoffnpc;
+		}
+	}
+	end;
+	
+Onhideoffnpc:
+	hideoffnpc strnpcinfo(3);
+	initnpctimer;
+	set .activated, 1;
+	end;
+	
+OnTimer60000:
+	hideonnpc strnpcinfo(3);
+	stopnpctimer;
+	set .activated, 0;
+	end;
+
+OnHideOn:
+	viewpoint 2,105,117,1,0xFF0000;
+	end;
+	
+OnInit:
+	hideonnpc strnpcinfo(3);
+	set .killCount, 150;
+	set .killedId, 1889;
+	end;
+}
+
+ars_fild51,135,169,0	script	Landing#8::landing8	4_ENERGY_BLUE,{
+	if (countitem(.requiredId) >= .requiredCount && YGGPALIER >= atoi(strnpcinfo(2)))
+	{
+		warp ($yggLabMap$ + "08"),$yggLabMapCoordinates[0],$yggLabMapCoordinates[1];		
+	}
+	close;
+	
+OnLabMobDead:
+	set .@mobCount, mobcount($yggLabMap$ + "08", strnpcinfo(3) + "::OnLabMobDead");
+	if(.@mobCount == 0)
+	{
+		doevent "mazebg8::OnChangeCleanState";
+	}
+	end;
+	
+OnNPCKillEvent:
+OnPCLoadMapEvent:
+	if (strcharinfo(3) == strnpcinfo(4) 
+		&& countitem(.requiredId) >= .requiredCount
+		&& YGGPALIER >= atoi(strnpcinfo(2))
+	&& .activated == 0)
+	{
+		dispbottom "Landing Guardian is now accessible for 1 minute.";
+		viewpoint 1,135,169,1,0xFF0000;
+		addtimer 60000, strnpcinfo(3)+"::OnHideOn";
+		goto Onhideoffnpc;
+	}
+	end;
+		
+Onhideoffnpc:
+	hideoffnpc strnpcinfo(3);
+	initnpctimer;
+	set .activated, 1;
+	end;
+	
+OnTimer60000:
+	hideonnpc strnpcinfo(3);
+	stopnpctimer;
+	set .activated, 0;
+	end;
+
+OnHideOn:
+	viewpoint 2,135,169,1,0xFF0000;
+	end;
+	
+OnInit:
+	set .requiredId, 7066;
+	set .requiredCount, 50;
+	hideonnpc strnpcinfo(3);
+	end;
+}
+
+ars_fild52,147,174,0	script	Landing#9::landing9	4_ENERGY_BLUE,{	
+	if (countitem(.requiredBloodId) >= 1 && YGGPALIER >= atoi(strnpcinfo(2)))
+	{
+		mes "Do you wish to spill Jotun blood in the Gauge?";
+		if (select("Yes","No") == 1)
+		{
+			set BLOODGAUGE, BLOODGAUGE + rand(1,10);
+			delitem .requiredBloodId, 1;
+			if (BLOODGAUGE >= .bloodGaugeCount)
+			{
+				close2;
+				warp ($yggLabMap$ + "09"),$yggLabMapCoordinates[0],$yggLabMapCoordinates[1];	
+			}
+			dispbottom "You're current blood gauge is " + BLOODGAUGE + "/" + .bloodGaugeCount + ".";	
+		}
+	}
+	close;
+	
+OnLabMobDead:
+	set .@mobCount, mobcount($yggLabMap$ + "09", strnpcinfo(3) + "::OnLabMobDead");
+	if(.@mobCount == 0)
+	{
+		doevent "mazebg9::OnChangeCleanState";
+	}
+	end;
+	
+OnNPCKillEvent:
+	setarray .@mobArrayBloodLooter[0],1170,1065,1775,1697,1002;
+	if (strcharinfo(3) == strnpcinfo(4) 
+		&& YGGPALIER >= atoi(strnpcinfo(2)))
+	{
+		set .@rand, rand(0,100);
+		if(.@rand <= .bloodLootPercent)
+		{
+			for(set .@i,0; .@i<getarraysize(.@mobArrayBloodLooter); set .@i,.@i+1)
+			{
+				if (killedrid == .@mobArrayBloodLooter[.@i])
+				{
+					getitem .requiredBloodId, 1;
+					viewpoint 1,147,174,1,0xFF0000;
+					addtimer 60000, strnpcinfo(3)+"::OnHideOn";
+				}
+			}
+		}
+	}
+	end;
+	
+OnInit:
+	set .bloodGaugeCount, rand(0,500);
+	set .bloodLootPercent, 25;
+	set .requiredBloodId, 749;
+	end;
+}
+
+ars_dun08,71,111,0	script	World#10::landing10	4_ENERGY_BLUE,{
+	if (countitem(.requiredId) >= .requiredCount && YGGPALIER >= atoi(strnpcinfo(2)))
+	{
+		warp ($yggLabMap$ + strnpcinfo(2)),$yggLabMapCoordinates[6],$yggLabMapCoordinates[7];			
+	}
+	close;
+	
+OnLabMobDead:
+	set .@mobCount, mobcount($yggLabMap$ + "10", strnpcinfo(3) + "::OnLabMobDead");
+	if(.@mobCount == 0)
+	{
+		doevent "mazewg10::OnChangeCleanState";
+	}
+	end;
+	
+OnNPCKillEvent:
+OnPCLoadMapEvent:
+	if (strcharinfo(3) == strnpcinfo(4) 
+		&& countitem(.requiredId) >= .requiredCount
+		&& YGGPALIER >= atoi(strnpcinfo(2))
+		&& .activated == 0)
+	{
+		dispbottom "Landing Guardian is now accessible for 30 seconds.";
+		goto Onhideoffnpc;
+	}
+	end;
+		
+Onhideoffnpc:
+	hideoffnpc strnpcinfo(3);
+	initnpctimer;
+	viewpoint 1,71,111,1,0xFF0000;
+	set .activated, 1;
+	end;
+	
+OnTimer30000:
+	hideonnpc strnpcinfo(3);
+	stopnpctimer;
+	set .activated, 0;
+	end;
+	
+OnInit:
+	hideonnpc strnpcinfo(3);
+	set .requiredId, 7561;
+	set .requiredCount, 100;
+	end;
+}

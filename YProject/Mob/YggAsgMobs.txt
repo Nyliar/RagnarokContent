@@ -1,0 +1,64 @@
+// [========================================================]
+// [=============     Yggdrasil - Mobs     	============]
+// [========================================================]
+// [ Version 1                                              ]
+// [========================================================]
+// [ Original script by: Alayne				    ]
+// [========================================================]
+// [ Description:                                           ]
+// [--------------------------------------------------------]
+// [                                                        ]
+// [ - The Yggdrasil Project - Asgard Mobs spawn		    ]
+// [========================================================]
+// [ Changelog: (5 last updates)                            ]
+// [--------------------------------------------------------]
+// [                                                        ]
+// [ v0: Creation                      			    ]
+// [                                                        ]
+// [                                                        ]
+// [========================================================]
+// [                                                        ]
+// [========================================================]
+
+//Normal
+ars_fild59,0,0,0,0	monster	Bloody Knight	1268,8,0,0,0,0,0
+ars_fild59,0,0,0,0	monster	Dimik	1673,12,0,0,0,0,0
+ars_fild59,0,0,0,0	monster	Gemini	1681,20,0,0,0,0,0
+ars_fild59,0,0,0,0	monster	Kasa	1833,10,0,0,0,0,0
+ars_fild59,0,0,0,0	monster	Mysteltainn	1203,14,0,0,0,0,0
+
+//Normal
+ars_dun39,0,0,0,0	monster	Echio	1770,8,0,0,0,0,0
+ars_dun39,0,0,0,0	monster	Assaulter	1315,12,0,0,0,0,0
+ars_dun39,0,0,0,0	monster	Archdam	1668,20,0,0,0,0,0
+ars_dun39,0,0,0,0	monster	Byorgue	1839,10,0,0,0,0,0
+ars_dun39,0,0,0,0	monster	High Orc	1213,14,0,0,0,0,0
+
+//Normal
+ars_fild61,0,0,0,0	monster	Raydric Archer	1276,8,0,0,0,0,0
+ars_fild61,0,0,0,0	monster	Gremlin	1632,12,0,0,0,0,0
+ars_fild61,0,0,0,0	monster	Gibbet	1503,20,0,0,0,0,0
+ars_fild61,0,0,0,0	monster	Drak Frame	1260,10,0,0,0,0,0
+ars_fild61,0,0,0,0	monster	Hodremlin	1773,14,0,0,0,0,0
+
+//Normal
+ars_fild60,0,0,0,0	monster	Egnigem Cenia	1652,8,0,0,0,0,0
+ars_fild60,0,0,0,0	monster	Wickebine Tres	1653,12,0,0,0,0,0
+ars_fild60,0,0,0,0	monster	Armeyer Dinze	1654,20,0,0,0,0,0
+ars_fild60,0,0,0,0	monster	Errende Ebecce	1655,10,0,0,0,0,0
+ars_fild60,0,0,0,0	monster	Laurell Winder	1657,14,0,0,0,0,0
+
+//Normal
+ars_dun32,0,0,0,0	monster	Banshee	1867,8,0,0,0,0,0
+ars_dun32,0,0,0,0	monster	Necromancer	1870,12,0,0,0,0,0
+ars_dun32,0,0,0,0	monster	Anubis	1098,20,0,0,0,0,0
+ars_dun32,0,0,0,0	monster	Byorgue	1839,10,0,0,0,0,0
+ars_dun32,0,0,0,0	monster	Dead King	1875,14,0,0,0,0,0
+
+//Normal
+ars_fild62,0,0,0,0	monster	Egnigem Cenia	1652,12,0,0,0,0,0
+ars_fild62,0,0,0,0	monster	Laurell Windsor	1657,12,0,0,0,0,0
+ars_fild62,0,0,0,0	monster	Kavach Icarus	1656,12,0,0,0,0,0
+ars_fild62,0,0,0,0	monster	Wickebine Tres	1653,12,0,0,0,0,0
+ars_fild62,0,0,0,0	monster	Errende Ebecce	1655,12,0,0,0,0,0
+ars_fild62,0,0,0,0	monster	Armayer Dinze	1654,12,0,0,0,0,0

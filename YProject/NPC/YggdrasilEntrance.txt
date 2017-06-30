@@ -1,0 +1,167 @@
+// [========================================================]
+// [=============           Yggdrasil           ============]
+// [========================================================]
+// [ Version 1                                              ]
+// [========================================================]
+// [ Original script by: Alayne				    ]
+// [========================================================]
+// [ Description:                                           ]
+// [--------------------------------------------------------]
+// [                                                        ]
+// [ - The Yggdrasil Project Entry			    ]
+// [========================================================]
+// [ Changelog: (5 last updates)                            ]
+// [--------------------------------------------------------]
+// [                                                        ]
+// [ v0: Creation                      			    ]
+// [                                                        ]
+// [                                                        ]
+// [========================================================]
+// [                                                        ]
+// [========================================================]
+
+//lhz_in01,279,114,0	script	Scientist::pyent	87,{
+prontera,140,181,0	script	Scientist::pyent	4_M_SCIENCE,{ //68
+	set .@npcname$, "[Scientist]";
+	mes .@npcname$;
+	cutin "v_jinha01", 2;
+	mes "Welcome, " + strcharinfo(0);
+	mes "You're here at the entrance of Scaled Yggdrasil.";
+	mes "I bet you've never heard about it right?";
+	mes "It's cause it just been discovered.";
+	mes "It's a strange, and dangerous, place.";
+	goto OnMenuSelect;
+	end;
+	
+OnMenuSelect:
+	switch(select("Scaled Yggdrasil?","Enter in Scaled Yggdrasil","I was just passing by..."))
+	{
+		case 1:
+			next;
+			mes .@npcname$;
+			mes "Scaled Yggdrasil is a new place, barely discovered.";
+			mes "We know still very few about it.";
+			mes "The only sure thing is that, when you're in, you can't get out.";
+			mes "Several teams have already entered, but none as returned yet.";
+			mes "There must be some difference but right now, nobody's out.";
+			next;
+			mes .@npcname$;
+			cutin "v_jinha05", 2;
+			mes "Meanwhile, we've been able to communicate.";
+			mes "The Scaled Yggdrasil is a meta-physical representation of Yggdrasil, the World Tree.";
+			mes "It is, just as its model, splitted in 9 worlds. Each world contains 5 Landings.";
+			mes "Each one of them is kept by a Guardian.";
+			mes "Without defeating the Guardians, you can't progress.";
+			next;
+			mes .@npcname$;
+			mes "To pretend being the Master of the Scaled Yggdrasil, you'll have to climb the highest point.";
+			mes "Go throught all the Landings, defeat each and every Guardian.";
+			mes "By defeating the Landings Guardians, you'll be able to compete the World Guardian.";
+			mes "If you defeat the 9 worlds, you'll be able to fight the entire Yggdrasil.";
+			next;
+			mes .@npcname$;
+			cutin "v_jinha01", 2;
+			mes "Keep in mind that inside Yggdrasil, the life is ephemere.";
+			mes "If you die and use the return function, you'll be warped out of Yggdrasil.";
+			next;
+			mes .@npcname$;
+			mes "On top of that, you can't fool the System. If you stay in place, after 5 minutes, you'll be force warped to your save point.";
+			mes "And then, you'll be warped out. If you're out, you can't enter before 3 weeks.";
+			mes "Plus, your Landings will be deleted. You'll have to do it all again.";
+			if (.lvlReduction > 0)
+			{
+				mes "On top of that, you'll lose " + .lvlReduction + " levels.";
+			}
+			next;
+			mes .@npcname$;
+			cutin "v_jinha05", 2;
+			mes "For these reasons, we've decided to forbid the entry.";
+			mes "Only peoples over level " + .minimumLevel + " can enter.";
+			if (.minimumClassTrans)
+			{
+				mes "And only if they are Trans or Extended Classes. Class Masters doesn't exist in Yggdrasil.";
+			}
+			next;
+			mes .@npcname$;
+			cutin "v_jinha01", 2;
+			mes "That's all I know.";
+			mes "You'll have to discover the remaining.";
+			goto OnMenuSelect;
+			break;
+		case 2:
+			goto OnEnterYggdrasil;
+			break;
+		case 3:
+			next;
+			mes .@npcname$;
+			mes "Don't stay here then.";
+			mes "You'll never know...";
+			break;
+	}	
+	close;	
+	
+OnEnterYggdrasil:
+	next;
+	mes .@npcname$;
+	if (.minimumClassTrans == 1 && Upper == 0 || Upper == 2)
+	{
+		mes "Sorry but only transcendent class can enter.";
+		cutin "", 255;
+		close;
+	}
+	if (.minimumLevel > BaseLevel)
+	{
+		mes "Sorry but you have to be at least level " + .minimumLevel + " to enter.";
+		cutin "", 255;
+		close;
+	}
+	.@yggproject_delay = ( yggproject_delay - gettimetick(2) );
+	if( .@yggproject_delay > 0 )
+	{
+		mes "You've been forbidden from entering Scaled Yggdrasil.";
+		mes "You have to wait : ^FF0000"+.@yggproject_delay+" Seconds.^000000";
+		cutin "", 255;
+		close;
+	}
+	if($enableLevelChoice == 1)
+	{
+		mes "First of all, please choose a difficulty mode.";
+		mes "On Easy Mode, any level that may have already been cleared by someone will be available to you too.";
+		mes "But the reward will be greater on Hard Mode, as you'll have to clean all levels by yourself.";
+		set YGGMODE, select("Easy Mode","Hard Mode");
+		next;
+		mes .@npcname$;
+	}
+		
+	cutin "v_jinha05", 2;
+	mes "Looks like you're ready.";
+	mes "Don't forget. No return from Yggdrasil...";
+	mes "Stay aware of the danger.";
+	set YGGDRASIL, 1;
+	set YGGPALIER, 0;
+	set YGGWORLD, 0;
+
+	if (YGGDEATH == 1)
+	{
+		set YGGDEATH, 0;
+		set FIRSTIN, 0;
+	}
+	else
+	{
+		set FIRSTIN, 1;
+	}
+	savepoint $YggdrasilMapStart$,.YggdrasilMapStartX,.YggdrasilMapStartY;
+	warp $YggdrasilMapStart$,.YggdrasilMapStartX,.YggdrasilMapStartY;
+	end;
+	
+OnInit:
+	set .minimumLevel, 70; //define min base lvl to enter in LC
+	set .minimumClassTrans, 0; //define if only trans class and extended can access LC
+	set .lvlReduction, 3;
+	
+	set .pvpve, 1; //define if boss map should be in pvp team mapflag
+	set $YggdrasilMapStart$, "dep_lb";
+	set .YggdrasilMapStartX, 118;
+	set .YggdrasilMapStartY, 32;	
+	end;
+}

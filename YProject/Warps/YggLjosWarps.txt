@@ -1,0 +1,84 @@
+// [========================================================]
+// [=============           Yggdrasil           ============]
+// [========================================================]
+// [ Version 1                                              ]
+// [========================================================]
+// [ Original script by: Alayne				    ]
+// [========================================================]
+// [ Description:                                           ]
+// [--------------------------------------------------------]
+// [                                                        ]
+// [ - The Yggdrasil Project shwaralfheim special Warps	    ]
+// [========================================================]
+// [ Changelog: (5 last updates)                            ]
+// [--------------------------------------------------------]
+// [                                                        ]
+// [ v0: Creation                      			    ]
+// [                                                        ]
+// [                                                        ]
+// [========================================================]
+// [                                                        ]
+// [========================================================]
+
+ars_fild27,160,109,0	script	Guardien::ljosguard	4_M_FAIRYFREAK,{ //619
+	set .@npcname$, "[Guardian]";
+	mes .@npcname$;
+	mes "";
+	mes "I'm the Guardian of this path.";
+	mes "You can't go further if you're not strong enough.";
+	if (YGGPALIER >= 37)
+	{
+		if (select("Send me further","I'll stay here") == 1)
+		{
+			mes "Looks like you are.";
+			warp "ars_fild27",136,320;
+		}
+		else
+		{
+			mes "Sure.";
+		}
+	}
+	close;
+}
+
+ars_fild28,155,234,0	script	Guardien::ljosguard2	4_M_FAIRYFREAK,{
+	set .@npcname$, "[Guardian]";
+	mes .@npcname$;
+	mes "";
+	mes "I'm the Guardian of this path.";
+	mes "You can't go further if you're not strong enough.";
+	if (YGGPALIER >= 38)
+	{
+		if (select("Send me further","I'll stay here") == 1)
+		{
+			mes "Looks like you are.";
+			warp "ars_fild28",162,219;
+		}
+		else
+		{
+			mes "Sure.";
+		}
+	}
+	close;
+}
+
+ars_fild25,251,319,0	script	Guardien::ljosguard3	4_M_FAIRYFREAK,{
+	set .@npcname$, "[Guardian]";
+	mes .@npcname$;
+	mes "";
+	mes "I'm the Guardian of this path.";
+	mes "You can't go further if you're not strong enough.";
+	if (YGGPALIER >= 40)
+	{
+		if (select("Send me further","I'll stay here") == 1)
+		{
+			mes "Looks like you are.";
+			warp "ars_dun65",137,62;
+		}
+		else
+		{
+			mes "Sure.";
+		}
+	}
+	close;
+}
