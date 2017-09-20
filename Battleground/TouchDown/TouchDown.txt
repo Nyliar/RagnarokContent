@@ -1,0 +1,640 @@
+// [========================================================]
+// [============    Battle Arena - Touch Down    ==========]
+// [========================================================]
+// [ Version 1                                              ]
+// [========================================================]
+// [ Original script by: Alayne				    ]
+// [========================================================]
+// [ Description:                                           ]
+// [--------------------------------------------------------]
+// [                                                        ]
+// [ - The Touch Down System				    ]
+// [========================================================]
+// [ Changelog: (5 last updates)                            ]
+// [--------------------------------------------------------]
+// [                                                        ]
+// [ v0: Creation                      			    ]
+// [                                                        ]
+// [                                                        ]
+// [========================================================]
+// [                                                        ]
+// [========================================================]
+
+pvp_n_3-1,93,182,0	script	Red Goal::alatdrg	4_FAIRYDEADLEAF,2,2,{
+	close;
+	
+OnTouch:
+	if(getcharid(3) == $tdWearedId)
+	{
+		set .@red, 0;
+		if (callfunc("CheckTDTeamRedPlayer") == 1)
+		{
+			set .@red, 1;
+		}
+		if(.@red == 0)
+		{
+			//show ball
+			specialeffect 885;	//goal effect
+			mapannounce $touchdownMap$, "TOUCH DOWNNNNN!!!!!!! " + strcharinfo(0) + " grabs " + $pointPerTouchDown + " points for his team!", bc_all, 0x0000FF;
+			set $teamBlueTDScore, $teamBlueTDScore + $pointPerTouchDown;
+      bg_updatescore($touchdownMap$, $teamBlueTDScore, $teamRedTDScore);
+			set $tdWearedId, -1;
+			sleep 5000;
+			donpcevent "alatdb::OnResetBall";
+		}
+	}
+	end;
+}
+
+pvp_n_3-1,94,15,0	script	Blue Goal::alatdbg	4_FAIRYDEADLEAF,2,2,{
+	close;
+	
+OnTouch:
+	if(getcharid(3) == $tdWearedId)
+	{
+		set .@red, 0;
+		if (callfunc("CheckTDTeamRedPlayer") == 1)
+		{
+			set .@red, 1;
+		}
+		if(.@red == 1)
+		{
+			//show ball
+			specialeffect 882;	//goal effect
+			mapannounce $touchdownMap$, "TOUCH DOWNNNNN!!!!!!! " + strcharinfo(0) + " grabs " + $pointPerTouchDown + " points for his team!",  bc_all, 0xFF0000;
+			set $teamRedTDScore, $teamRedTDScore + $pointPerTouchDown;	
+      bg_updatescore($touchdownMap$, $teamBlueTDScore, $teamRedTDScore);
+			set $tdWearedId, -1;
+			sleep 5000;
+			donpcevent "alatdb::OnResetBall";
+		}
+	}
+	end;
+}
+
+pvp_n_3-1,106,100,0	script	Poring Ball::alatdb	4_NECORING,2,2,{
+	close;
+	
+OnTouch:
+	if($tdWearedId == -1)
+	{
+		set $tdWearedId, getcharid(3);
+		set $wearerRed, 0;
+		if (callfunc("CheckTDTeamRedPlayer") == 1)
+		{
+			set $wearerRed, 1;
+		}
+		setnpcdisplay strnpcinfo(3), HIDDEN_WARP_NPC;
+		set .ballVisible, 0;
+	}
+	end; 
+	
+OnBlockStartPoints:
+  set .blocked, 1;
+	setcell($touchdownMap$, 121,182,116,171, cell_walkable, false);
+  setcell($touchdownMap$, 111,16,116,24, cell_walkable, false);
+  return;
+	
+OnUnblockStartPoints:
+  set .blocked, 0;
+	setcell($touchdownMap$, 121,182,116,171, cell_walkable, true);
+	setcell($touchdownMap$, 111,16,116,24, cell_walkable, true);
+	set .ballVisible, 1;
+	return;
+	
+OnResetBall:
+	setnpcdisplay strnpcinfo(3), HIDDEN_WARP_NPC;
+	//reset ball position
+	movenpc(strnpcinfo(3),106,100);
+	//reset players positions
+	bg_warp($@blueTeam, $touchdownMap$, $warpPointBlue[0], $warpPointBlue[1]);
+	bg_warp($@redTeam, $touchdownMap$, $warpPointRed[0], $warpPointRed[1]);
+	//reset wearer id
+	set $tdWearedId, -1;
+	//block starting points
+	callsub OnBlockStartPoints;
+	mapannounce $touchdownMap$, "[Touch Down] Next round start in " + $delayBetweenRounds + " seconds!",  bc_all, 0x00FF00;
+	//special effect timer
+	set .countTimer, 0;
+	initnpctimer;
+	end;
+	
+OnMoveBallToDeadPlace:
+	movenpc(strnpcinfo(3),$deadPlaceX, $deadPlaceY);
+  setnpcdisplay strnpcinfo(3), 4_NECORING;
+	end;
+	
+OnTimer1000:
+	set .countTimer, .countTimer + 1;
+	if(.countTimer == $delayBetweenRounds)
+	{
+		mapannounce $touchdownMap$, "[Touch Down] Round Start!", bc_yellow;
+		callsub OnUnblockStartPoints;
+		setnpcdisplay strnpcinfo(3), 4_NECORING;
+	}
+	else if(.countTimer % 5 == 0 && .blocked == 1)
+	{
+		mapannounce $touchdownMap$, "[Touch Down] Round Start in " + ($delayBetweenRounds - .countTimer) + "s",  bc_all, 0x00FF00;
+	}
+	
+	if(.ballVisible == 1)
+	{
+		specialeffect 432;
+	}
+	else if($tdWearedId != -1)
+	{
+		attachrid($tdWearedId);
+		if($wearerRed == 1)
+		{
+			//red
+			specialeffect2 521;
+		}
+		else
+		{
+			//blue
+			specialeffect2 830;
+		}
+	}
+	setnpctimer 0;
+	end;
+	
+OnInit:
+	npcspeed 0;
+  set .blocked, 0;
+	end;
+}
+
+pvp_n_3-1,99,144,0	script	Touch DownManager::alabatd	HIDDEN_WARP_NPC,2,2,{
+	close;
+
+OnStartTD:
+debugmes "reset!";
+	set $touchdownon, 2;
+	pvpon $touchdownMap$;
+	set $teamRedTDScore, 0;
+	set $teamBlueTDScore, 0;
+	set .countTimer, 0;
+	set $tdWearedId, -1;
+	initnpctimer;
+	donpcevent "alatdb::OnResetBall";
+	end;
+
+OnEndTD:
+	pvpoff $touchdownMap$;
+	if ($teamBlueTDScore == $teamRedTDScore)
+	{
+		announce "[Touch Down] It's a Draw with a score of " + $teamBlueTDScore + " to " + $teamRedTDScore + "! Congratulations everybody!",  bc_all, 0x00FF00;
+		
+		for(set .@i,0; .@i<getarraysize($@tdTeamBlue); set .@i,.@i+1)
+		{
+			if(attachrid($@tdTeamBlue[.@i]))
+			{
+				bg_leave;
+				set .@cnt, TDPOINTS / .rewardCnt[2];
+				if(.@cnt < .rewardMin[2])
+					set .@cnt, .rewardMin[2];
+				getitem 7773, .@cnt;
+				set Zeny, Zeny + $TDEntryPrice * (maxTDMemberCount - 1) / (getarraysize($@tdTeamBlue) + getarraysize($@tdTeamRed));
+			}
+		}
+		for(set .@i,0; .@i<getarraysize($@tdTeamRed); set .@i,.@i+1)
+		{
+			if(attachrid($@tdTeamRed[.@i]))
+			{
+				bg_leave;
+				set .@cnt, TDPOINTS / .rewardCnt[2];
+				if(.@cnt < .rewardMin[2])
+					set .@cnt, .rewardMin[2];
+				getitem 7773, .@cnt;
+				set Zeny, Zeny + $TDEntryPrice * (maxTDMemberCount - 1) / (getarraysize($@tdTeamBlue) + getarraysize($@tdTeamRed));
+			}
+		}
+	}
+	else if ($teamBlueTDScore > $teamRedTDScore)
+	{
+		announce "[Touch Down] Blue Team wins the Touch Down with a score of " + $teamBlueTDScore + " to " + $teamRedTDScore + "! Congratulations!",  bc_all, 0x00FF00;
+		for(set .@i,0; .@i<getarraysize($@tdTeamBlue); set .@i,.@i+1)
+		{
+			if(attachrid($@tdTeamBlue[.@i]))
+			{
+				bg_leave;
+				set .@cnt, TDPOINTS / .rewardCnt[0];
+				if(.@cnt < .rewardMin[0])
+					set .@cnt, .rewardMin[0];
+				getitem 7773, .@cnt;
+				//share zeny price
+				set Zeny, Zeny + $TDEntryPrice * (maxTDMemberCount - 1) / getarraysize($@tdTeamBlue);
+				set TDPOINTS, TDPOINTS + .pointPerVictory;
+				set Zeny, Zeny + TDPOINTS * 10000;
+			}
+		}
+		for(set .@i,0; .@i<getarraysize($@tdTeamRed); set .@i,.@i+1)
+		{
+			if(attachrid($@tdTeamRed[.@i]))
+			{
+				bg_leave;
+				set .@cnt, TDPOINTS / .rewardCnt[1];
+				if(.@cnt < .rewardMin[1])
+					set .@cnt, .rewardMin[1];
+				getitem 7773, .@cnt;
+			}
+		}
+	}
+	else
+	{
+		announce "[Touch Down] Red Team wins the Touch Down with a score of " + $teamRedTDScore + " to " + $teamBlueTDScore + "! Congratulations!",  bc_all, 0x00FF00;
+		for(set .@i,0; .@i<getarraysize($@tdTeamRed); set .@i,.@i+1)
+		{
+			if(attachrid($@tdTeamRed[.@i]))
+			{
+				bg_leave;
+				set .@cnt, TDPOINTS / .rewardCnt[0];
+				if(.@cnt < .rewardMin[0])
+					set .@cnt, .rewardMin[0];
+				getitem 7773, .@cnt;
+				//share zeny price
+				set Zeny, Zeny + $TDEntryPrice * (maxTDMemberCount - 1) / getarraysize($@tdTeamRed);
+				getitem 7773, TDPOINTS / 10;
+				set TDPOINTS, TDPOINTS + .pointPerVictory;
+				set Zeny, Zeny + TDPOINTS * 10000;
+			}
+		}
+		for(set .@i,0; .@i<getarraysize($@tdTeamBlue); set .@i,.@i+1)
+		{
+			if(attachrid($@tdTeamBlue[.@i]))
+			{
+				bg_leave;
+				set .@cnt, TDPOINTS / .rewardCnt[1];
+				if(.@cnt < .rewardMin[1])
+					set .@cnt, .rewardMin[1];
+				getitem 7773, .@cnt;
+			}
+		}
+	}
+	bg_destroy $@redTeam; 
+	bg_destroy $@blueTeam; 
+	set $touchdownon, 0;
+	end;	
+
+OnTimer60000:
+	//every minute, check for members availability
+	set .countTimer, .countTimer + 1;	
+	if (.countTimer == $battleDuration)
+	{
+		goto OnEndTD;
+	}
+	setnpctimer 0;
+	end;
+
+OnPCLoginEvent:
+	set TDPOINTS, 0;
+	end;
+	
+OnPCDieEvent:
+	if (strcharinfo(3) == $touchdownMap$)
+	{
+		if(getcharid(3) == $tdWearedId)
+		{
+			set $tdWearedId, -1;
+			getmapxy(.@map$, $deadPlaceX, $deadPlaceY, UNITTYPE_PC);
+			donpcevent "alatdb::OnMoveBallToDeadPlace";
+		}
+	
+		if (callfunc("CheckTDTeamRedPlayer") == 1)
+		{
+			//killed player was in first team
+			//increase team 2 score
+			set $teamBlueTDScore, $teamBlueTDScore + .pointPerKill;
+			addtimer 5000, strnpcinfo(3) + "::OnHealAfterDeath";
+		}
+		else if (callfunc("CheckTDTeamBluePlayer", 1) == 1)
+		{
+			//killed player was in second team
+			//increase team 1 score
+			set $teamRedTDScore, $teamRedTDScore + .pointPerKill;
+			addtimer 5000, strnpcinfo(3) + "::OnHealAfterDeath";
+		}
+
+		attachrid(killerrid);
+		set TDPOINTS, TDPOINTS + .pointPerKill;
+		dispbottom "[Touch Down] You earn " + .pointPerKill + " points for killing a player. Your current balance is " + TDPOINTS;
+    bg_updatescore($touchdownMap$, $teamBlueTDScore, $teamRedTDScore);
+	}
+	end;
+	
+OnHealAfterDeath:
+	dispbottom "[Valkyrie] You received the War Goddess benediction!";
+	percentheal 100, 100;
+	if(.buffs == 1)
+	{
+		specialeffect2 EF_INCAGILITY; sc_start SC_INC_AGI,240000,10;
+		specialeffect2 EF_BLESSING; sc_start SC_BLESSING,240000,10;
+	}
+	end;
+	
+OnBoardAsked:
+	set .@caller, getcharid(3);
+	dispbottom "!!Touch Down Points Board!!";
+	dispbottom "";
+	dispbottom "Team Red total Points ==> " + $teamRedTDScore;
+	for(set .@i,0; .@i<getarraysize($@tdTeamRed); set .@i,.@i+1)
+	{
+		set .@attached, attachrid($@tdTeamRed[.@i]);
+		if (.@attached == 0)
+		{
+			deletearray $@tdTeamRed[.@i], 1;			
+		}
+		else
+		{
+			set .@message$, "	~" + strcharinfo(0) + ": " + TDPOINTS;
+			if(attachrid(.@caller))
+				dispbottom .@message$;
+		}
+	}
+	
+	dispbottom "";
+	dispbottom "Team Blue total Points ==> " + $teamBlueTDScore;
+	for(set .@i,0; .@i<getarraysize($@tdTeamBlue); set .@i,.@i+1)
+	{
+		set .@attached, attachrid($@tdTeamBlue[.@i]);
+		if (.@attached == 0)
+		{
+			deletearray $@tdTeamBlue[.@i], 1;			
+		}
+		else
+		{
+			set .@message$, "	~" + strcharinfo(0) + ": " + TDPOINTS;
+			if(attachrid(.@caller))
+				dispbottom .@message$;
+		}
+	}
+	end;
+
+OnInit:
+	set $touchdownMap$, "pvp_n_3-1";
+	set $maxTDMemberCount, 8;
+	setarray $TDDuration[0], 5, 10, 15; //in minutes
+	set $TDEntryPrice, 10000;
+	set $touchdownon, 0;
+	set .pointPerKill, 1;
+	set $pointPerTouchDown, 5;
+	set .pointPerVictory, 10;
+	setarray .rewardCnt[0], 10, 20;
+	setarray .rewardMin[0], 5, 1;
+	setarray $@tdTeamBlue[0], 0;
+	setarray $@tdTeamRed[0], 0;
+	setarray $warpPointRed[0], 123, 179;
+	setarray $warpPointBlue[0], 118, 18;
+	set $delayBetweenRounds, 2; //in seconds
+	bindatcmd "tdboard", strnpcinfo(3) + "::OnBoardAsked";
+	set .buffs, 1;
+	end;
+}
+
+pvp_n_3-1	mapflag	battleground	2
+
+prontera,128,160,0	script	Touch Down::alatdent	4_M_CATMAN1,{
+	set .@npcname$, "[Leag]";
+	mes .@npcname$;
+	mes "Hello to you, " + strcharinfo(0);
+	mes "I'm the Touch Down Manager.";
+	mes "When you talk to me, you'll be able to setup or join an existing Touch Down.";
+	next;
+	mes .@npcname$;
+	mes "Here's how a Touch Down works.";
+	mes "First of all, this is a team match.";
+	mes "A general party matching will be made when all players will be registered.";
+	next;
+	mes .@npcname$;
+	mes "Once " + $maxTDMemberCount + " will have join, the team matching will begin, and the match will start.";
+	mes "This is not really an alone fight.";
+	set .@message$, "";
+	for(set .@i,0; .@i<getarraysize($TDDuration); set .@i,.@i+1)
+	{
+		set .@message$, (.@i == 0 ? "" : (.@i == getarraysize($TDDuration) - 1 ? ", or " : ", ")) + $TDDuration[.@i];
+	}
+	mes "Each team will have a duration of " + .@message$ + " minutes to bring as much Poring as possible to the Goal of the other team.";
+	mes "Normal kills gives points, but as long as a Poring to the Goal will brings much more points than killing.";
+	next;
+	mes .@npcname$;
+	mes "So. Are you interested?";
+	if ($touchdownon == 2)
+	{
+		goto OnEnterAgain;
+	}
+	if ($touchdownon == 1)
+	{
+		if(callfunc("CheckTDPlayers") == 1)
+		{
+			next;
+			mes .@npcname$;
+			mes "Be patient please. The Touch Down will start soon.";
+			close;
+		}
+		
+		if (select("Join the currently running Touch Down","No, thanks") == 1)
+		{
+			callsub OnJoin, 1;
+		}
+		else
+		{
+			goto OnLeave;
+		}
+	}
+	else if ($touchdownon == 0)
+	{
+		if (select("Start a new Touch Down","No, thanks") == 1)
+		{
+			callsub OnJoin, 0;
+		}
+		else
+		{
+			goto OnLeave;
+		}
+	}
+	else
+	{
+		next;
+		mes .@npcname$;
+		mes "Sorry, it's too late for this battle. Come back later.";
+	}
+	close;
+
+OnEnterAgain:
+	set .@found1, callfunc("CheckTDTeamRedPlayer");
+	set .@found2, callfunc("CheckTDTeamBluePlayer");
+	set .@found, .@found1 + .@found2;
+	if(.@found >= 1)
+	{
+		mes "Get ready, I'll send you back.";
+		if(.@found1 == 1)
+		{
+			warp $touchdownMap$, $warpPointRed[0], $warpPointRed[1];
+		}
+		else
+		{
+			warp $touchdownMap$, $warpPointBlue[0], $warpPointBlue[1];
+		}
+	}
+	else
+	{
+		mes "You're not part of this Touch Down.";
+		mes "Wait for another to begin, please.";
+	}
+	close;
+
+OnJoin:
+	set .@mode, getarg(0);
+
+	set .@npcname$, "[Leag]";
+	next;
+	mes .@npcname$;
+	mes "Sure!";
+	mes "It'll cost you " + $TDEntryPrice + "z to enter.";
+	if (Zeny < $TDEntryPrice)
+	{
+		next;
+		mes .@npcname$;
+		mes "Sorry, but you lack some money...";
+		close;
+	}
+	if (select("Here you are.","I'll get back") == 1)
+	{
+		next;
+		mes .@npcname$;
+		set Zeny, Zeny - $TDEntryPrice;
+		mes "Allright.";
+		if (.@mode == 0)
+		{
+			next;
+			mes .@npcname$;
+			mes "Now, choose a duration.";
+			set .@menu$, "";
+			for(set .@i,0; .@i<getarraysize($TDDuration); set .@i,.@i+1)
+			{
+				set .@menu$, .@menu$ + (.@i == 0 ? "" : ":") + $TDDuration[.@i] + " minutes";
+			} 
+			set .@duration, select(.@menu$) - 1;
+			next;
+			mes .@npcname$;
+			mes "Allright, let's go for " + $TDDuration[.@duration] + " minutes then.";
+		}
+		next;
+		mes .@npcname$;
+		mes "The team with the highest sum of points once the duration will be ellapsed will win.";
+		mes "The reward will be the total amount paid by all players, divided between the team players.";
+		mes "Also, there's an individual reward according to the number of kill a player may do.";
+		if (.@mode == 0)
+		{
+			deletearray $@TDMembers[0], getarraysize($@TDMembers);
+			set $@TDMembers[0], getcharid(3);
+			
+      bg_destroy $@blueTeam;
+      bg_destroy $@redTeam;
+      bg_updatescore $touchdownMap$, 0, 0;
+      
+      bg_leave;
+			set $touchdownon, 1;
+			set $battleDuration, $TDDuration[.@duration];
+			announce "[Touch Down] " + strcharinfo(0) + " just join the Touch Down. Who will come to fight him?",  bc_all, 0x00FF00;
+		}
+		else
+		{
+      bg_leave;
+			set $@TDMembers[getarraysize($@TDMembers)], getcharid(3);
+			if (getarraysize($@TDMembers) < $maxTDMemberCount)
+			{
+				announce "[Touch Down] " + strcharinfo(0) + " just join the Touch Down. Still " + ($maxTDMemberCount - getarraysize($@TDMembers)) + " fighters needed to begin!",  bc_all, 0x00FF00;
+			}
+			else
+			{
+				//start
+				//build teams
+				set .teamCount, $maxTDMemberCount / 2;
+				//warp first char
+				announce "[Touch Down] The fight begins!", bc_all, 0x00FF00;
+				set .@warped, 0;
+				set $@blueTeam, bg_create_team($touchdownMap$, $warpPointBlue[0], $warpPointBlue[1]);
+				set $@redTeam, bg_create_team($touchdownMap$, $warpPointRed[0], $warpPointRed[1]);
+				for(set .@i,0; .@i<getarraysize($@TDMembers); set .@i,.@i+1)
+				{
+					if (attachrid($@TDMembers[.@i]) == 1)
+					{	
+						set TDPOINTS, 0;
+						getmapxy(.@map$, .@x, .@y, 0);
+						savepoint .@map$, .@x, .@y;
+						if (getarraysize($@tdTeamRed) < .teamCount)
+						{
+							set $@tdTeamRed[getarraysize($@tdTeamRed)], $@TDMembers[.@i];
+							bg_join_team($@redTeam);
+						}
+						else if (getarraysize($@tdTeamBlue) < .teamCount)
+						{
+							set $@tdTeamBlue[getarraysize($@tdTeamBlue)], $@TDMembers[.@i];
+							bg_join_team($@blueTeam);
+						}
+						else
+						{
+							if(rand(0,1))
+							{
+								set $@tdTeamRed[getarraysize($@tdTeamRed)], $@TDMembers[.@i];
+								bg_join_team($@redTeam);
+							}
+							else
+							{
+								set $@tdTeamBlue[getarraysize($@tdTeamBlue)], $@TDMembers[.@i];
+								bg_join_team($@blueTeam);
+							}
+						}
+					}
+				}
+				donpcevent "alabatd::OnStartTD";
+			}
+		}
+	}
+	else
+	{
+		goto OnLeave;
+	}
+	close;
+
+OnLeave:
+	set .@npcname$, "[Leag]";
+	next;
+	mes .@npcname$;
+	mes "Your choice!";
+	close;
+}
+
+function	script	CheckTDTeamRedPlayer	{
+	for(set .@i,0; .@i<getarraysize($@tdTeamRed) && .@found == 0; set .@i,.@i+1)
+	{
+		if($@tdTeamRed[.@i] == getcharid(3))
+		{
+			return 1;
+		}
+	}
+	return 0;
+}
+
+function	script	CheckTDTeamBluePlayer	{
+	for(set .@i,0; .@i<getarraysize($@tdTeamBlue) && .@found == 0; set .@i,.@i+1)
+	{
+		if($@tdTeamBlue[.@i] == getcharid(3))
+		{
+			return 1;
+		}
+	}
+	return 0;
+}
+
+function	script	CheckTDPlayers	{
+	for(set .@i,0; .@i<getarraysize($@TDMembers) && .@found == 0; set .@i,.@i+1)
+	{
+		if($@TDMembers[.@i] == getcharid(3))
+		{
+			return 1;
+		}
+	}
+	return 0;
+}

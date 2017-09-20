@@ -1,0 +1,511 @@
+// [========================================================]
+// [============    Battle Arena - Death Match    ==========]
+// [========================================================]
+// [ Version 1                                              ]
+// [========================================================]
+// [ Original script by: Alayne				    ]
+// [========================================================]
+// [ Description:                                           ]
+// [--------------------------------------------------------]
+// [                                                        ]
+// [ - The Death Match System				    ]
+// [========================================================]
+// [ Changelog: (5 last updates)                            ]
+// [--------------------------------------------------------]
+// [                                                        ]
+// [ v0: Creation                      			    ]
+// [                                                        ]
+// [                                                        ]
+// [========================================================]
+// [                                                        ]
+// [========================================================]
+
+pvp_n_3-5,99,144,0	script	DeathMatchManager::alabadm	HIDDEN_WARP_NPC,2,2,{
+	close;
+
+OnStartDM:
+	set $deathmatchon, 2;
+	set .teamRedScore, 0;
+	set .teamBlueScore, 0;
+	set .countTimer, 0;
+	initnpctimer;
+	end;
+
+OnEndDM:
+	if (.teamBlueScore == .teamRedScore)
+	{
+		announce "[Death Match] It's a Draw with a score of " + .teamBlueScore + " to " + .teamRedScore + "! Congratulations everybody!",bc_all,0xC3FF00;
+		
+		for(set .@i,0; .@i<getarraysize($@dmTeamRed); set .@i,.@i+1)
+		{
+			if(attachrid($@dmTeamRed[.@i]))
+			{
+				bg_leave;
+				set .@cnt, DMPOINTS / .rewardCnt[2];
+				if(.@cnt < .rewardMin[2])
+					set .@cnt, .rewardMin[2];
+				getitem 7773, .@cnt;
+				set Zeny, Zeny + $DMEntryPrice * (maxDMMemberCount - 1) / (getarraysize($@dmTeamRed) + getarraysize($@dmTeamBlue));
+			}
+		}
+		for(set .@i,0; .@i<getarraysize($@dmTeamBlue); set .@i,.@i+1)
+		{
+			if(attachrid($@dmTeamBlue[.@i]))
+			{
+				bg_leave;
+				set .@cnt, DMPOINTS / .rewardCnt[2];
+				if(.@cnt < .rewardMin[2])
+					set .@cnt, .rewardMin[2];
+				getitem 7773, .@cnt;
+				set Zeny, Zeny + $DMEntryPrice * (maxDMMemberCount - 1) / (getarraysize($@dmTeamRed) + getarraysize($@dmTeamBlue));
+			}
+		}
+	}
+	else if (.teamBlueScore > .teamRedScore)
+	{
+		announce "[Death Match] Blue Team wins the Death Match with a score of " + .teamBlueScore + " to " + .teamRedScore + "! Congratulations!",bc_all,0xC3FF00;
+		for(set .@i,0; .@i<getarraysize($@dmTeamBlue); set .@i,.@i+1)
+		{
+			if(attachrid($@dmTeamBlue[.@i]))
+			{
+				bg_leave;
+
+				set .@cnt, DMPOINTS / .rewardCnt[0];
+				if(.@cnt < .rewardMin[0])
+					set .@cnt, .rewardMin[0];
+				getitem 7773, .@cnt;
+				//share zeny price
+				set Zeny, Zeny + $DMEntryPrice * ($maxDMMemberCount  - 1) / getarraysize($@dmTeamRed);
+
+				//share zeny price
+				set DMPOINTS, DMPOINTS + .pointPerVictory;
+				set Zeny, Zeny + DMPOINTS * 10000;
+			}
+		}
+		for(set .@i,0; .@i<getarraysize($@dmTeamRed); set .@i,.@i+1)
+		{
+			if(attachrid($@dmTeamRed[.@i]))
+			{
+				bg_leave;
+
+				set .@cnt, DMPOINTS / .rewardCnt[1];
+				if(.@cnt < .rewardMin[1])
+					set .@cnt, .rewardMin[1];
+				getitem 7773, .@cnt;
+				set Zeny, Zeny + $DMEntryPrice * (maxDMMemberCount - 1) / (getarraysize($@dmTeamRed) + getarraysize($@dmTeamBlue));
+			}
+		}
+	}
+	else
+	{
+		announce "[Death Match] Red Team wins the Death Match with a score of " + .teamRedScore + " to " + .teamBlueScore + "! Congratulations!",bc_all,0xC3FF00;
+		for(set .@i,0; .@i<getarraysize($@dmTeamRed); set .@i,.@i+1)
+		{
+			if(attachrid($@dmTeamRed[.@i]))
+			{
+				bg_leave;
+
+				set .@cnt, DMPOINTS / .rewardCnt[0];
+				if(.@cnt < .rewardMin[0])
+					set .@cnt, .rewardMin[0];
+				getitem 7773, .@cnt;
+				//share zeny price
+				set Zeny, Zeny + $DMEntryPrice * ($maxDMMemberCount  - 1) / getarraysize($@dmTeamRed);
+				set DMPOINTS, DMPOINTS + .pointPerVictory;
+				set Zeny, Zeny + DMPOINTS * 10000;
+			}
+		}
+		for(set .@i,0; .@i<getarraysize($@dmTeamBlue); set .@i,.@i+1)
+		{
+			if(attachrid($@dmTeamBlue[.@i]))
+			{
+				bg_leave;
+
+				set .@cnt, DMPOINTS / .rewardCnt[1];
+				if(.@cnt < .rewardMin[1])
+					set .@cnt, .rewardMin[1];
+				getitem 7773, .@cnt;
+				set Zeny, Zeny + $DMEntryPrice * (maxDMMemberCount - 1) / (getarraysize($@dmTeamRed) + getarraysize($@dmTeamBlue));
+			}
+		}
+	}
+
+	bg_destroy($@blueTeamId);
+	bg_destroy($@redTeamId);
+	set $deathmatchon, 0;
+	end;	
+
+OnTimer60000:
+	//every minute, check for members availability
+	set .countTimer, .countTimer + 1;	
+	if (.countTimer == $battleDuration)
+	{
+		goto OnEndDM;
+	}
+	setnpctimer 0;
+	end;
+
+OnPCDieEvent:
+	if (strcharinfo(3) == $deathMatchMap$)
+	{
+		addtimer 1000, strnpcinfo(3) + "::OnHealAfterDeath";
+		if (callfunc("CheckDMTeamRedPlayer") == 1)
+		{
+			//killed player was in first team
+			//increase team 2 score
+			set .teamBlueScore, .teamBlueScore + .pointPerKill;
+		}
+		else if (callfunc("CheckDMTeamBluePlayer") == 1)
+		{
+			//killed player was in second team
+			//increase team 1 score
+			set .teamRedScore, .teamRedScore + .pointPerKill;
+		}
+
+		if(attachrid(killerrid))
+		{
+			set DMPOINTS, DMPOINTS + .pointPerKill;
+			dispbottom "You've earn " + .pointPerKill + " points. Your current balance is " + DMPOINTS;
+		}
+		bg_updatescore $deathMatchMap$,.teamBlueScore,.teamRedScore;
+	}
+	end;
+	
+OnPCLoginEvent:
+	set DMPOINTS, 0;
+	end;
+	
+OnHealAfterDeath:
+	percentheal 100, 100;
+	if(.buffs == 1)
+	{
+		specialeffect2 EF_INCAGILITY; sc_start SC_INC_AGI,240000,10;
+		specialeffect2 EF_BLESSING; sc_start SC_BLESSING,240000,10;
+	}
+	dispbottom "[Valkyrie] You received the War Goddess benediction!";
+	end;
+	
+OnBoardAsked:
+	if($deathmatchon == 2)
+	{
+		set .@caller, getcharid(3);
+		
+		set .@found1, callfunc("CheckDMTeamRedPlayer");
+		set .@found2, callfunc("CheckDMTeamBluePlayer");
+		set .@found, .@found1 + .@found2;
+		if(.@found >= 1)
+		{
+			dispbottom "!!Death Math Points Board!!";
+			dispbottom "";
+			dispbottom "Red Team total Points ==> " + .teamRedScore;
+			for(set .@i,0; .@i<getarraysize($@dmTeamRed); set .@i,.@i+1)
+			{
+				set .@attached, attachrid($@dmTeamRed[.@i]);
+				if (.@attached == 0)
+				{
+					deletearray $@dmTeamRed[.@i], 1;			
+				}
+				else
+				{
+					set .@message$, "	~" + strcharinfo(0) + ": " + DMPOINTS;
+					if(attachrid(.@caller))
+						dispbottom .@message$;
+				}
+			}
+			
+			dispbottom "";
+			dispbottom "Blue Team total Points ==> " + .teamBlueScore;
+			for(set .@i,0; .@i<getarraysize($@dmTeamBlue); set .@i,.@i+1)
+			{
+				set .@attached, attachrid($@dmTeamBlue[.@i]);
+				if (.@attached == 0)
+				{
+					deletearray $@dmTeamBlue[.@i], 1;			
+				}
+				else
+				{
+					set .@message$, "	~" + strcharinfo(0) + ": " + DMPOINTS;
+					if(attachrid(.@caller))
+						dispbottom .@message$;
+				}
+			}
+		}
+	}
+	end;
+
+OnInit:
+	set $deathMatchMap$, "pvp_n_3-5";
+	set $maxDMMemberCount, 12;
+	setarray $DMDuration[0], 5, 10, 15; //in minutes
+	set $DMEntryPrice, 10000;
+	set $deathmatchon, 0;
+	set .pointPerKill, 10;
+	set .pointPerVictory, 100;
+	setarray .rewardCnt[0], 10, 20;
+	setarray .rewardMin[0], 5, 1;
+	setarray $@dmTeamRed[0], 0;
+	setarray $@dmTeamBlue[0], 0;
+	setarray $warpPointRed[0], 134, 100;
+	setarray $warpPointBlue[0], 64, 100;
+	bindatcmd "dmboard", strnpcinfo(3) + "::OnBoardAsked";
+	set .buffs, 1;
+	end;
+}
+
+pvp_n_3-5	mapflag	battleground	2
+
+prontera,122,166,5	script	Death Match::aladment	4_M_SURA,{
+	set .@npcname$, "[Leag]";
+	mes .@npcname$;
+	mes "Hello to you, " + strcharinfo(0);
+	mes "I'm the Death Match Manager.";
+	mes "When you talk to me, you'll be able to setup or join an existing Death Match.";
+	next;
+	mes .@npcname$;
+	mes "Here's how a Death Match works.";
+	mes "First of all, this is a team match.";
+	mes "A general party matching will be made when all players will be registered.";
+	next;
+	mes .@npcname$;
+	mes "Once " + $maxDMMemberCount + " will have join, the team matching will begin, and the match will start.";
+	mes "This is not really an alone fight.";
+	set .@message$, "";
+	for(set .@i,0; .@i<getarraysize($DMDuration); set .@i,.@i+1)
+	{
+		set .@message$, (.@i == 0 ? "" : (.@i == getarraysize($DMDuration) - 1 ? ", or " : ", ")) + $DMDuration[.@i];
+	}
+	mes "Each team will have a duration of " + .@message$ + " minutes to have more kills than the other team.";
+	mes "Individual kill doesn't matter. It's the sum that does.";
+	mes "On the other hand, you're not prevent from killing or hurting your teammates.";
+	mes "You can only differenciate them from color and name, as a fakename will be applied.";
+	next;
+	mes .@npcname$;
+	if ($deathmatchon == 2)
+	{
+		goto OnEnterAgain;
+	}
+	if ($deathmatchon == 1)
+	{
+		if(callfunc("CheckDMPlayers") == 1)
+		{
+			next;
+			mes .@npcname$;
+			mes "Be patient please. The Death Match will start soon.";
+			close;
+		}
+
+		mes "So. Are you interested?";
+		if (select("Join the currently running Death Match","No, thanks") == 1)
+		{
+			callsub OnJoin, 1;
+		}
+		else
+		{
+			goto OnLeave;
+		}
+	}
+	else if ($deathmatchon == 0)
+	{
+		mes "So. Are you interested?";
+		if (select("Start a new Death Match","No, thanks") == 1)
+		{
+			callsub OnJoin, 0;
+		}
+		else
+		{
+			goto OnLeave;
+		}
+	}
+	else
+	{
+		next;
+		mes .@npcname$;
+		mes "Sorry, it's too late for this battle. Come back later.";
+	}
+	close;
+
+OnEnterAgain:
+	set .@found1, callfunc("CheckDMTeamRedPlayer");
+	set .@found2, callfunc("CheckDMTeamBluePlayer");
+	set .@found, .@found1 + .@found2;
+	if(.@found >= 1)
+	{
+		mes "Get ready, I'll send you back.";
+		if(.@found1 == 1)
+		{
+			warp $deathMatchMap$, $warpPointRed[0], $warpPointRed[1];
+		}
+		else
+		{
+			warp $deathMatchMap$, $warpPointBlue[0], $warpPointBlue[1];
+		}
+	}
+	else
+	{
+		mes "You're not part of this Death Match.";
+		mes "Wait for another to begin, please.";
+	}
+	close;
+
+OnJoin:
+	set .@mode, getarg(0);
+	set .@npcname$, "[Leag]";
+	next;
+	mes .@npcname$;
+	mes "Sure!";
+	mes "It'll cost you " + $DMEntryPrice + "z to enter.";
+	if (Zeny < $DMEntryPrice)
+	{
+		next;
+		mes .@npcname$;
+		mes "Sorry, but you lack some money...";
+		close;
+	}
+	if (select("Here you are.","I'll get back") == 1)
+	{
+		next;
+		mes .@npcname$;
+		set Zeny, Zeny - $DMEntryPrice;
+		mes "Allright.";
+		if (.@mode == 0)
+		{
+			next;
+			mes .@npcname$;
+			mes "Now, choose a duration.";
+			set .@menu$, "";
+			for(set .@i,0; .@i<getarraysize($DMDuration); set .@i,.@i+1)
+			{
+				set .@menu$, .@menu$ + (.@i == 0 ? "" : ":") + $DMDuration[.@i] + " minutes";
+			} 
+			set .@duration, select(.@menu$) - 1;
+			next;
+			mes .@npcname$;
+			mes "Allright, let's go for " + $DMDuration[.@duration] + " minutes then.";
+		}
+		next;
+		mes .@npcname$;
+		mes "The team with the highest sum of points once the duration will be ellapsed will win.";
+		mes "The reward will be the total amount paid by all players, divided between the team players.";
+		mes "Also, there's an individual reward according to the number of kill a player may do.";
+		next;
+		if (.@mode == 0)
+		{
+			deletearray $@DMMembers[0], getarraysize($@DMMembers);
+			set $@DMMembers[0], getcharid(3);
+			
+    	bg_destroy $@redTeamId; 
+    	bg_destroy $@blueTeamId; 
+      bg_leave;
+     
+  		bg_updatescore $deathMatchMap$, 0, 0;
+      
+			set $deathmatchon, 1;
+			set $battleDuration, $DMDuration[.@duration];
+			announce "[Death Match] " + strcharinfo(0) + " just join the Death Match. Who will come to fight him?",bc_all,0xC3FF00;
+		}
+		else
+		{
+      bg_leave;
+			set $@DMMembers[getarraysize($@DMMembers)], getcharid(3);
+			if (getarraysize($@DMMembers) < $maxDMMemberCount)
+			{
+				announce "[Death Match] " + strcharinfo(0) + " just join the Death Match. Still " + ($maxDMMemberCount - getarraysize($@DMMembers)) + " fighters needed to begin!",bc_all,0xC3FF00;
+			}
+			else
+			{
+				//start
+				//build teams
+				set .teamCount, $maxDMMemberCount / 2;
+				//warp first char
+				announce "[Death Match] The fight begins!",bc_all,0xC3FF00;
+				set .@warped, 0;	
+				set $@redTeamId, bg_create_team($deathMatchMap$,$warpPointRed[0],$warpPointRed[1]);
+				set $@blueTeamId, bg_create_team($deathMatchMap$,$warpPointBlue[0],$warpPointBlue[1]);
+				for(set .@i,0; .@i<getarraysize($@DMMembers); set .@i,.@i+1)
+				{
+					if (attachrid($@DMMembers[.@i]) == 1)
+					{
+						getmapxy(.@map$, .@x, .@y, 0);
+						savepoint(.@map$, .@x, .@y);
+
+						set DMPOINTS, 0;
+						if (getarraysize($@dmTeamBlue) < .teamCount)
+						{
+							set $@dmTeamBlue[getarraysize($@dmTeamBlue)], $@DMMembers[.@i];
+							bg_join_team($@blueTeamId);
+							warp $deathMatchMap$, $warpPointBlue[0], $warpPointBlue[1];
+						}
+						else if (getarraysize($@dmTeamRed) < .teamCount)
+						{
+							set $@dmTeamRed[getarraysize($@dmTeamRed)], $@DMMembers[.@i];
+							bg_join_team($@redTeamId);
+							warp $deathMatchMap$, $warpPointRed[0], $warpPointRed[1];
+						}
+						else
+						{
+							if(rand(0,1))
+							{
+								set $@dmTeamRed[getarraysize($@dmTeamRed)], $@DMMembers[.@i];
+								bg_join_team($@redTeamId);
+								warp $deathMatchMap$, $warpPointRed[0], $warpPointRed[1];
+							}
+							else
+							{
+								set $@dmTeamBlue[getarraysize($@dmTeamBlue)], $@DMMembers[.@i];
+								bg_join_team($@blueTeamId);
+								warp $deathMatchMap$, $warpPointBlue[0], $warpPointBlue[1];
+							}
+						}
+					}
+				}
+				donpcevent "alabadm::OnStartDM";
+			}
+		}
+	}
+	else
+	{
+		goto OnLeave;
+	}
+	close;
+
+OnLeave:
+	next;
+	mes .@npcname$;
+	mes "Your choice!";
+	close;
+}
+
+function	script	CheckDMTeamRedPlayer	{
+	set .@found, 0;
+	for(set .@i,0; .@i<getarraysize($@dmTeamRed) && .@found == 0; set .@i,.@i+1)
+	{
+		if($@dmTeamRed[.@i] == getcharid(3))
+		{
+			return 1;
+		}
+	}
+	return 0;
+}
+
+function	script	CheckDMTeamBluePlayer	{
+	set .@found, 0;
+	for(set .@i,0; .@i<getarraysize($@dmTeamBlue) && .@found == 0; set .@i,.@i+1)
+	{
+		if($@dmTeamBlue[.@i] == getcharid(3))
+		{
+			return 1;
+		}
+	}
+	return 0;
+}
+
+function	script	CheckDMPlayers	{
+	for(set .@i,0; .@i<getarraysize($@DMMembers) && .@found == 0; set .@i,.@i+1)
+	{
+		if($@DMMembers[.@i] == getcharid(3))
+		{
+			return 1;
+		}
+	}
+	return 0;
+}
