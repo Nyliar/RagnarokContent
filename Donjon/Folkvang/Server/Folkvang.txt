@@ -1,0 +1,613 @@
+//===== eAthena Script ======================================= 
+//= Fôlkvang
+//===== By: ================================================== 
+//= Alayne
+//===== Current Version: ===================================== 
+//= 1.0
+//===== Compatible With: ===================================== 
+//============================================================ 
+
+br_lb,127,55,4	script	folkvang::folk	HIDDEN_WARP_NPC,{
+	end;
+
+OnInit:
+	set .mapname$, strnpcinfo(4);
+	killmonsterall .mapname$;
+	set .minLvlToClone, 50;
+	set .maxLvlToClone, 175;
+	set .maxCountClone, 9999; //for no limit pop, increase value to high one, like 9999. Default: 100
+	set .actualCountClone, 0;
+	set .limitClonePerPlayer, 0; //determine max how many clone a player can pop
+	set .maxClonePerPlayer, 15;
+	set .multipleSpawn, 1; //0 for 1 clone per death, 1 for 1 clone per 'life': normal, rebirth, third
+
+	//choose reward mode: 0-None, 1-Only basic rewards, 2-Classes rewards
+	set .rewardMode, 1;
+
+	setarray .rewardMobId[0], 608, 7005, 7024, 11703, 11704, 7071;
+	setarray .rewardMobPercent[0], 10, 100, 10, 75, 5, 90;
+	set .fixedRewardId, 610; //Ygg Leaf
+	set .rewardMobCount, 1;
+
+	setarray .rewardMvpId[0], 12103,607,2423,29262,29244,7776;
+	setarray .rewardMvpPercent[0], 100,85,60,74,15,5;
+	set .rewardMvpCount, 3;
+
+	//base minimum percentage for classe loots
+	set .lootClassFixePercent, 10;
+	set .autoRepop, 1; //0 for none, 1 will repop bio monsters matching saved classes
+
+	setarray .rewardClassGltId[0], 1291,1296,1283,1290;
+	setarray .rewardClassSCId[0], 13061,13062,13067;
+	setarray .rewardClassRkId[0], 1415,1469,1181,1185;
+	setarray .rewardClassRgId[0], 1493,1435,1422,1415;
+	setarray .rewardClassAbId[0], 1659,1647,1548,1631;
+	setarray .rewardClassSuId[0], 16017,1817,1534,1526;
+	setarray .rewardClassWarId[0], 1646,1636,2000,2018;
+	setarray .rewardClassSorId[0], 1584,1563,1565,1588;
+	setarray .rewardClassMecId[0], 28101,1377,1387,1384;
+	setarray .rewardClassGenId[0], 16000,16001,16010,16003;
+	setarray .rewardClassRanId[0], 1728,18100,18110,18111;
+	setarray .rewardClassWanId[0], 1985,1975,1983,1980;
+	setarray .rewardClassMinId[0], 1919,1930,1920,1925;
+	setarray .rewardClassKagObId[0], 13049,13308,13314,13313;
+	setarray .rewardClassRebId[0], 13162,13155,13166,13111;
+
+	callsub OnPopCloneMvp; //enable this line to pop mvp
+	if(.autoRepop == 1)
+	{
+		//will ensure the map to be filled after a reboot if entries have been added in database
+		callsub RepopClone;
+	}
+	end;
+	
+RepopClone:
+	set .@query$, "SELECT `class`,`count` FROM `folkvang_clone`";
+	query_sql(.@query$, .@class, .@count);
+	for(set .@i,0; .@i<getarraysize(.@class); set .@i,.@i+1)
+	{
+		switch(.@class[.@i])
+		{
+			case 7:
+			case 13:
+			case 4008:
+			case 4014:
+				//knight
+				//LK
+				set .@mobId, 1634;
+				break;
+			case 8:
+			case 4009:
+				//priest
+				//HP
+				set .@mobId, 1637;
+				break;
+			case 9:
+			case 4010:
+				//wizard
+				//HW
+				set .@mobId, 1639;
+				break;
+			case 10:
+			case 4011:
+				//Blacksmith
+				//White
+				set .@mobId, 1636;
+				break;
+			case 11:
+			case 4012:
+				//hunter
+				//Sniper
+				set .@mobId, 1638;
+				break;
+			case 12:
+			case 4013:
+				//Assassin
+				//AC
+				set .@mobId, 1635;
+				break;
+			case 14:
+			case 21:
+			case 4015:
+			case 4022:
+				//Crusader
+				//Pala
+				set .@mobId, 2221;
+				break;
+			case 15:
+			case 4016:
+				//Monk
+				//Champ
+				set .@mobId, 2224;
+				break;
+			case 16:
+			case 4017:
+				//Sage
+				//Prof
+				set .@mobId, 2223;
+				break;
+			case 17:
+			case 4018:
+				//Rogue
+				//Stalk
+				set .@mobId, 2225;
+				break;
+			case 18:
+			case 4019:
+				//alche
+				//Crea
+				set .@mobId, 2222;
+				break;
+			case 19:
+			case 4020:
+				//Bard
+				//Clown
+				set .@mobId, 2226;
+				break;
+			case 20:
+			case 4021:
+				//Dancer
+				//Gipsy
+				set .@mobId, 2227;
+				break;
+			case 4054:
+			case 4060:
+			case 4080:
+			case 4081:
+				//RK
+				set .@mobId, 3213;
+				break;
+			case 4055:
+			case 4061:
+				//Warlock
+				set .@mobId, 3216;
+				break;
+			case 4056:
+			case 4062:
+			case 4084:
+			case 4085:
+				//Ranger
+				set .@mobId, 3211;
+				break;
+			case 4057:
+			case 4063:
+				//AB
+				set .@mobId, 3215;
+				break;
+			case 4058:
+			case 4064:
+			case 4086:
+			case 4087:
+				//Mechanic
+				set .@mobId, 3212;
+				break;
+			case 4059:
+			case 4065:
+				//Glt
+				set .@mobId, 3214;
+				break;
+			case 4066:
+			case 4073:
+			case 4082:
+			case 4083:
+				//RG
+				set .@mobId, 3240;
+				break;
+			case 4067:
+			case 4074:
+				//Sorce
+				set .@mobId, 3228;
+				break;
+			case 4068:
+			case 4075:
+				//Minstrel
+				set .@mobId, 3231;
+				break;
+			case 4069:
+			case 4076:
+				//Wanderer
+				set .@mobId, 3232;
+				break;
+			case 4070:
+			case 4077:
+				//Sura
+				set .@mobId, 3229;
+				break;
+			case 4071:
+			case 4078:
+				//Genetic
+				set .@mobId, 3227;
+				break;
+			case 4072:
+			case 4079:
+				//Shadow Chaser
+				set .@mobId, 3230;
+				break;
+			default:
+				//baby, ninja, guns and others
+				//spawn a remover
+				set .@mobId, 1682;
+				break;
+		}
+		monster .mapname$, 0, 0, "--ja--", .@mobId, .@count[.@i], strnpcinfo(3)+"::OnSpawnMobDead";
+	}
+	end;
+
+OnCloneMvpDead:
+	//start respawn timer
+	initnpctimer;
+	//reward
+	callsub OnRewardLootAsked,.rewardMvpCount,1;
+	end;
+
+//arguments:
+//0 - reward loot count
+//1 - mob mode (mvp or not)
+
+OnRewardLootAsked:
+	if (.rewardMode >= 1)
+	{
+		set .@lootCount, rand(0,getarg(0));
+		set .@actualCount, 0;
+		for(set .@i,0; .@i<.@lootCount; set .@i,.@i+1)
+		{
+			if (getarg(1) == 0)
+			{
+				//normal monster
+				//basic loot
+				if (getarraysize(.rewardMobPercent) > 0)
+				{
+					set .@randPercent, rand(0,100);
+					do
+					{
+						set .@lootRank, rand(0,getarraysize(.rewardMobPercent));
+						set .@lootPercent, .rewardMobPercent[.@lootRank];	
+					}
+					while(.@lootPercent < .@randPercent);
+					getitem .rewardMobId[.@lootRank], 1;
+				}
+				getitem .fixedRewardId, 1;
+
+				if (.rewardMode == 2)
+				{
+					//classes loot
+					set .@randPercent, rand(0,100);
+					if (.@randPercent < .lootClassFixePercent/10)
+					{
+						callsub OnGetClasseReward;
+					}
+				}
+			}
+			else
+			{
+				//mvp
+				//basic loot
+				set .@randPercent, rand(0,100);
+				do
+				{
+					set .@lootRank, rand(0,getarraysize(.rewardMvpPercent));
+					set .@lootPercent, .rewardMvpPercent[.@lootRank];	
+				}
+				while( .@lootPercent < .@randPercent);
+				getitem .rewardMvpId[.@lootRank], 1;
+
+				if (.rewardMode == 1)
+				{
+					//classes loot
+					set .@randPercent, rand(0,100);
+					if (.@randPercent < .lootClassFixePercent)
+					{
+						callsub OnGetClasseReward;
+					}
+				}
+			}
+		}
+	}
+	return;
+
+OnGetClasseReward:
+	switch(Class)
+	{
+		case 4060:
+			set .@lootRank, rand(0,getarraysize(.rewardClassRkId) - 1);
+			getitem .rewardClassRkId[.@lootRank], 1;
+			break;
+		case 4061:
+			set .@lootRank, rand(0,getarraysize(.rewardClassWarId) - 1);
+			getitem .rewardClassWarId[.@lootRank], 1;
+			break;
+		case 4062:
+			set .@lootRank, rand(0,getarraysize(.rewardClassAbId) - 1);
+			getitem .rewardClassAbId[.@lootRank], 1;
+			break;
+		case 4063:
+			set .@lootRank, rand(0,getarraysize(.rewardClassRanId) - 1);
+			getitem .rewardClassRanId[.@lootRank], 1;
+			break;
+		case 4064:
+			set .@lootRank, rand(0,getarraysize(.rewardClassGltId) - 1);
+			getitem .rewardClassGltId[.@lootRank], 1;
+			break;
+		case 4065:
+			set .@lootRank, rand(0,getarraysize(.rewardClassMecId) - 1);
+			getitem .rewardClassMecId[.@lootRank], 1;
+			break;
+		case 4073:
+			set .@lootRank, rand(0,getarraysize(.rewardClassRgId) - 1);
+			getitem .rewardClassRgId[.@lootRank], 1;
+			break;
+		case 4074:
+			set .@lootRank, rand(0,getarraysize(.rewardClassSorId) - 1);
+			getitem .rewardClassSorId[.@lootRank], 1;
+			break;
+		case 4075:
+			set .@lootRank, rand(0,getarraysize(.rewardClassSuId) - 1);
+			getitem .rewardClassSuId[.@lootRank], 1;
+			break;
+		case 4076:
+			set .@lootRank, rand(0,getarraysize(.rewardClassMinId) - 1);
+			getitem .rewardClassMinId[.@lootRank], 1;
+			break;
+		case 4077:
+			set .@lootRank, rand(0,getarraysize(.rewardClassWanId) - 1);
+			getitem .rewardClassWanId[.@lootRank], 1;
+			break;
+		case 4078:
+			set .@lootRank, rand(0,getarraysize(.rewardClassSCId) - 1);
+			getitem .rewardClassSCId[.@lootRank], 1;
+			break;
+		case 4079:
+			set .@lootRank, rand(0,getarraysize(.rewardClassGenId) - 1);
+			getitem .rewardClassGenId[.@lootRank], 1;
+			break;
+	}
+	return;
+
+OnTimer10800000:
+	//pop another MvP 3 hours later
+	stopnpctimer;
+	goto OnPopCloneMvp;
+	end;
+	
+OnSpawnMobDead:
+	//clear database
+	switch(killedrid)
+	{
+		case 1634:
+			//knight
+			//LK
+			setarray .@classes[0], 7, 13, 4008, 4014;
+			break;
+		case 1637:
+			//priest
+			//HP
+			setarray .@classes[0], 8, 4009;
+			break;
+		case 1639:
+			//wizard
+			//HW
+			setarray .@classes[0], 9, 4010;
+			break;
+		case 1636:
+			//Blacksmith
+			//White
+			setarray .@classes[0], 10, 4011;
+			break;
+		case 1638:
+			//hunter
+			//Sniper
+			setarray .@classes[0], 11, 4012;
+			break;
+		case 1635:
+			//Assassin
+			//AC
+			setarray .@classes[0], 12, 4013;
+			break;
+		case 2221:
+			//Crusader
+			//Pala
+			setarray .@classes[0], 14, 21, 4015, 4022;
+			break;
+		case 2224:
+			//Monk
+			//Champ
+			setarray .@classes[0], 15,4016;
+			break;
+		case 2223:
+			//Sage
+			//Prof
+			setarray .@classes[0], 16,4017;
+			break;
+		case 2225:
+			//Rogue
+			//Stalk
+			setarray .@classes[0], 17,4018;
+			break;
+		case 2222:
+			//alche
+			//Crea
+			setarray .@classes[0], 18,4019;
+			break;
+		case 2226:
+			//Bard
+			//Clown
+			setarray .@classes[0], 19,4020;
+			break;
+		case 2227:
+			//Dancer
+			//Gipsy
+			setarray .@classes[0], 20,4021;
+			break;
+		case 3213:
+			//RK
+			setarray .@classes[0], 4054, 4060, 4080, 4081;
+			break;
+		case 3216:
+			//Warlock
+			setarray .@classes[0], 4055, 4061;
+			break;
+		case 3211:
+			//Ranger
+			setarray .@classes[0], 4056, 4062, 4084, 4085;
+			break;
+		case 3215:
+			//AB
+			setarray .@classes[0], 4057, 4063;
+			break;
+		case 3212:
+			//Mechanic
+			setarray .@classes[0], 4058, 4064, 4086, 4087;
+			break;
+		case 3214:
+			//Glt
+			setarray .@classes[0], 4059, 4065;
+			break;
+		case 3240:
+			//RG
+			setarray .@classes[0], 4066, 4073, 4082, 4083;
+			break;
+		case 3228:
+			//Sorce
+			setarray .@classes[0], 4067, 4074;
+			break;
+		case 3231:
+			//Minstrel
+			setarray .@classes[0], 4068, 4075;
+			break;
+		case 3232:
+			//Wanderer
+			setarray .@classes[0], 4069, 4076;
+			break;
+		case 3229:
+			//Sura
+			setarray .@classes[0], 4070, 4077;
+			break;
+		case 3227:
+			//Genetic
+			setarray .@classes[0], 4071, 4078;
+			break;
+		case 3230:
+			//Shadow Chaser
+			setarray .@classes[0], 4072, 4079;
+			break;
+		default:
+			//baby, ninja, guns and others
+			//spawn a remover
+			setarray .@classes[0], -1;
+			break;
+	}
+	set .@query$, "SELECT `id` FROM `folkvang_clone` WHERE `class` IN (";
+	set .@size, getarraysize(.@classes);
+	for(set .@i,0; .@i<.@size; set .@i,.@i+1)
+	{
+		set .@query$, .@query$ + (.@i == 0 ? "":",") + .@classes[.@i];
+	}
+	set .@query$, .@query$ + ")";
+	query_sql(.@query$, .@ids);
+	
+	if(getarraysize(.@ids) > 0)
+	{
+		//remove first matching element
+		set .@query$, "DELETE FROM `folkvang_clone` WHERE `id`=" + .@ids[0];
+		query_sql(.@query$, .@count);
+	}
+	end;
+	
+OnCloneMobDead:
+	//reward
+	callsub OnRewardLootAsked,.rewardMobCount,0;
+	set .actualCountClone, .actualCountClone - 1;
+	//as we can't know which one has been killed, cleared first base entry
+	set .@query$, "DELETE FROM `folkvang_clone` LIMIT 1";
+	query_sql(.@query$, .@count);
+	set FOLKKILL, FOLKKILL + 1;
+	//doevent "landing35::OnCheckLanding";
+	end;
+
+OnPopCloneMvp:
+	monster .mapname$, 0, 0, "Freyja", 1630, 1, strnpcinfo(3)+"::OnCloneMvpDead";
+	end;
+
+//OnCallPopFunction:	
+OnPCDieEvent:	
+	addtimer 5000, strnpcinfo(3) + "::OnCheckClonePop";
+	end;
+
+OnCheckClonePop:
+	if(Hp <= 0)
+	{			
+		addtimer 5000, strnpcinfo(3) + "::OnCheckClonePop";
+		end;
+	}
+	if (.actualCountClone + 1 < .maxCountClone 
+		&& BaseLevel >= .minLvlToClone && BaseLevel <= .maxLvlToClone 
+		&& .limitClonePerPlayer == 0 || (.limitClonePerPlayer == 1 && COUNTCLONEFOLK < .maxClonePerPlayer))
+	{
+		set COUNTCLONEFOLK, COUNTCLONEFOLK + 1;
+		if (COUNTCLONEFOLK == .maxClonePerPlayer)		
+		{
+			set cloneDelay, gettimetick(2) + 86400;
+		}
+		set .actualCountClone, .actualCountClone + 1;
+		
+		set .@popCount, 1;
+		if (.multipleSpawn == 1)
+		{
+			if(Upper >= 4001)
+			{
+				set .@popCount, 2;
+			}
+			if (Class >= 4054)
+			{
+				set .@popCount, 3;
+			}
+		}
+		for(set .@i,0; .@i<.@popCount; set .@i,.@i+1)
+		{
+			clone .mapname$, 0, 0, strnpcinfo(3)+"::OnCloneMobDead", getcharid(0);
+		}
+		if(.autoRepop == 1)
+		{
+			set .@query$, "SELECT `id` FROM `folkvang_clone`";
+			query_sql(.@query$, .@id);
+			set .@newId, 0;
+			for(set .@i,0; .@i<getarraysize(.@id); set .@i,.@i+1)
+			{
+				if(.@newId < .@id[.@i])
+				{
+					set .@newId, .@id[.@i]; 
+				}
+			}
+			set .@newId, .@newId + 1;
+			
+			set .@query$, "INSERT INTO `folkvang_clone` (`id`,`class`,`count`) VALUES (" + .@newId + "," + Class + "," + .@popCount + ")";
+			query_sql(.@query$, .@count);
+		}	
+	}
+	end;
+
+OnPCLoginEvent:
+	if (cloneDelay > gettimetick(2)) {
+		set COUNTCLONEFOLK, 0;
+	}
+	end;
+
+OnCleanFolk:
+	killmonster .mapname$, "folk::OnCloneMobDead";
+	set .actualCountClone, 0;
+	end;
+	
+OnMinute00:
+	if(gettime(GETTIME_HOUR) == 0)
+	{
+		//set .hour, rand(0,23); //disable this line to prevent cleaning
+	}
+	else
+	{
+		if (.hour == gettime(GETTIME_HOUR))
+		{
+			goto OnCleanFolk;
+		}
+	}
+	end;
+}

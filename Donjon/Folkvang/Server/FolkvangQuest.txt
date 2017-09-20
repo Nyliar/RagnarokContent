@@ -1,0 +1,618 @@
+//===== eAthena Script ======================================= 
+//= Fôlkvang
+//===== By: ================================================== 
+//= Alayne
+//===== Current Version: ===================================== 
+//= 1.0
+//===== Compatible With: ===================================== 
+//============================================================ 
+
+geffen,131,71,4	script	Wandering Priest#0::alwanfo0	4_M_BARYO_MAN,10,10,{ //-1
+	set .@npcname$, "[Yoan]";
+	set .@pcname$, "[" + strcharinfo(0) + "]";
+	
+	getmapxy(.@map$, .@mapX, .@mapY, UNITTYPE_PC);
+	getmapxy(.@mapN$, .@mapNX, .@mapNY, UNITTYPE_NPC);
+	
+	mes .@npcname$;
+	
+	if(.@map$ != .@mapN$ 
+		|| !(((.@mapX - .@mapNX) >= -5 && (.@mapX - .@mapNX) <= 5)
+		&& ((.@mapY - .@mapNY) >= -5 && (.@mapY - .@mapNY) <= 5)))
+	{
+		mes "Sorry, but you're too far. I need to talk to you, alone.";
+		mes "Come a bit closer.";
+		close;
+	}	
+	
+	if(CHITCHATQ == 1)
+	{
+		mes "I told you I'm a bit occupied, didn't I?";
+		mes "Come back later.";
+		if(rand(0,5) < 2)
+		{
+			set CHITCHATQ, 0;
+		}
+		close;
+	}
+	
+	if (SMALLQ == 2)
+	{
+		mes "Hum...Sorry, I need to wait for somebody who accepted to help me...";
+		mes "Come back later.";
+		if(rand(0,5) < 1)
+		{
+			set SMALLQ, 0;
+		}
+		close;
+	}
+	else if (SMALLQ == 1)
+	{
+		mes "Oh, it's you.";
+		mes "Did you find the Holy Water?";
+		if(countitem(523) >= 50)
+		{
+			next;
+			mes .@pcname$;
+			mes "Yes. Here you are.";
+			next;
+			mes .@npcname$;
+			mes "Ho thank you! Thank you very much.";
+			mes "I must go now. My lambs are waiting for me.";
+			mes "Hope to see you soon, helper!";
+			enablenpc strnpcinfo(3);
+			next;
+			mes .@pcname$;
+			mes "What the...";
+			mes "I did all this for nothing?";
+			mes "K'so!";
+			set SMALLQ, 3;
+		}
+		close;
+	}
+	
+	mes "Salutations, " + strcharinfo(0) + ".";
+	next;
+	mes .@pcname$;
+	mes "Salutations, " + (atoi(strnpcinfo(2)) == 0 ? "priest" : "priestess") + "...*";
+	mes "Can I do something for you?";
+	next;
+	mes .@npcname$;
+	switch(rand(1,10))
+	{
+		case 1:
+			//nothing
+			mes "Hum...Nothing actually.";
+			mes "Have a good day!";
+			next;
+			mes .@pcname$;
+			mes "Hu...Yes...You too...";
+			mes "*What a strange " + (atoi(strnpcinfo(2)) == 0 ? "man" : "woman") + "...*";
+			break;
+		case 2:
+		case 3:
+			//chit chat
+			mes "Did you know your aura is brigth clear?";
+			mes "Peoples like you are a delight for the eye of a knowing man.";
+			next;
+			mes .@pcname$;
+			mes "Well...Thanks I guess.";
+			next;
+			mes .@npcname$;
+			mes "Right now, I'm a bit occupied.";
+			mes "But I hope you'll come back to me one day.";
+			mes "I may have things you may want to learn about.";
+			next;
+			mes .@pcname$;
+			mes "Really? Like what?";
+			mes "Some secrets?";
+			next;
+			mes .@npcname$;
+			mes "Kind of. But as I said, I'm a bit occupied now.";
+			mes "See you later, okay?";
+			set CHITCHATQ, 1;
+			break;
+		case 4:
+			//hint
+			mes "Have you ever heard about Folkvang?";
+			next;
+			mes .@pcname$;
+			mes "Folk...vang?";
+			mes "No...No I don't think so.";
+			mes "Should I?";
+			next;
+			mes .@npcname$;
+			mes "Maybe not. Maybe yes.";
+			mes "I don't you're ready for that thought.";
+			mes "Go on your journey.";
+			mes "Maybe you'll learn more one day.";
+			next;
+			mes .@npcname$;
+			mes "It may not be with me.";
+			mes "It may not be tomorrow, nor in a year.";
+			mes "But one day, you'll learn about it.";
+			set FOLKVANGQ, 1;
+			break;
+		case 5:
+			//small quest
+			mes "Can I ask you a small something?";
+			next;
+			mes .@pcname$;
+			mes "Well it depends...I'm a bit busy.";
+			next;
+			mes .@npcname$;
+			mes "It really something tiny.";
+			mes "It should requires only minutes to somebody as strong as you.";
+			next;
+			mes .@pcname$;
+			mes "Well go on, I suppose I can at least listen to your request.";
+			next;
+			mes .@npcname$;
+			mes "Thanks. Actually, I need to refill my Holy Water reserve.";
+			mes "See? Simple. I just need 50 of this little things...";
+			mes "Can you help me?";
+			if(select("Allright, wait me here","No, sorry...") == 1)
+			{
+				next;
+				mes .@pcname$;
+				mes "Allright, wait me here.";
+				mes "I'll be back in no time.";
+				next;
+				mes .@npcname$;
+				mes "I knew I can count on you.";
+				mes "I'll wait here, without moving.";
+				set .smallQ, 1;
+				set SMALLQ, 1;
+			}
+			else
+			{
+				next;
+				mes .@pcname$;
+				mes "No, sorry...";
+				mes "I'm really short on time.";
+				next;
+				mes .@npcname$;
+				mes "Well...I understand...";
+				mes "I'll have to find someone else then...";
+				set SMALLQ, 2;
+			}
+			break;
+		case 6:
+			//nothing
+			mes "Hum...Nothing actually.";
+			mes "I thought you were someone else...";
+			break;
+		case 7:
+		case 8:
+			//chit chat
+			mes "Did I ever see you somewhere?";
+			next;
+			mes .@pcname$;
+			mes "Hum no...I don't think so at least...";
+			next;
+			mes .@npcname$;
+			mes "Are you sure?";
+			mes "I'm almost certain I already see you somewhere else...";
+			mes "Did you ever visit the Black and White Temple?";
+			next;
+			mes .@pcname$;
+			mes "Hum? No. I don't know this place?";
+			mes "Why? Is there some secrets there?";
+			next;
+			mes .@npcname$;
+			mes "Kind of.";
+			mes "But I speak, I speak, and I don't help peoples...";
+			mes "See you later, okay?";
+			set CHITCHATQ, 1;
+			break;
+		case 9:
+			//clue
+			mes "Have you ever heard about Folkvang?";
+			next;
+			mes .@pcname$;
+			if(FOLKVANGQ == 1)
+			{
+				mes "Folkvang, yes.";
+				mes "One time. Long ago.";
+			}
+			else
+			{
+				mes "Folk...vang?";
+				mes "No...No I don't think so.";
+				mes "What's that?";
+			}
+			next;
+			mes .@npcname$;
+			mes "Folkvang, the Forgotten Plains.";
+			mes "It's a cold, frightening place...";
+			mes "A place where lost souls go after dying.";
+			if(FOLKVANGQ == 1)
+			{
+				next;
+				mes .@pcname$;
+				mes "The dead ones? So even dead, we still...stay down there?";
+				next;
+				mes .@npcname$;
+				mes "No, not really.";
+				mes "Once dead, your soul disappear.";
+				mes "Those Souls are just a representation of the regrets a dead one have before leaving.";
+				mes "Actually, they can't really 'die' as long as they're not freed by someone else...";
+				next;
+				mes .@npcname$;
+				mes "That's a really disturbing place...";
+				set FOLKVANGQ, 2;
+			}
+			break;
+		case 10:
+			//start access quest
+			mes "What a nice weather today, isn't it?";
+			if(FOLKVANGQ == 2)
+			{
+				next;
+				mes .@pcname$;
+				mes "Stop trying to fool me, " + (atoi(strnpcinfo(2)) == 0 ? "priest" : "priestess") + ".";
+				mes "I'm sure you know more about this place, this Folkvang, that you'd like to tell me about.";
+				next;
+				mes .@npcname$;
+				mes "I don't know why you're thinking this.";
+				mes "That's not the case.";
+				next;
+				mes .@pcname$;
+				set .@baseChance, 1;
+				if(SMALLQ == 3)
+				{
+					mes "But I even helped you!";
+					mes "Why don't you trust me?";
+					set .@baseChance, 2;
+				}
+				else
+				{
+					mes "I told you to stop fooling me!";
+					mes "I need to know!";
+				}
+				next;
+				mes .@pcname$;
+				mes "Too much of my friends may have joined this place...";
+				mes "I have to go there...";
+				mes "I have to free them...";
+				next;
+				mes .@npcname$;
+				mes "That's not as easy, my child.";
+				mes "Folkvang is a dangerous place.";
+				mes "More than you could ever know.";
+				next;
+				mes .@npcname$;
+				mes "I didn't told you everything, that's true...";
+				mes "The real horror of this place is that those who 'live' there now are just Demons.";
+				mes "They can't remember your face. They can't feel anything.";
+				mes "They're just trying to return to life.";
+				mes "If they kill somebody, they'll be able to regain life.";
+				next;
+				mes .@pcname$;
+				mes "But...They're my friends...I can't let them wander this way...";
+				mes "Please...";
+				next;
+				mes .@npcname$;
+				mes "I shouldn't do that...";
+				mes "I was like you. I lost friends.";
+				mes "I tried to go there, too.";
+				mes "I...Wasn't able to see them again.";
+				mes "Not the way they're now living.";
+				next;
+				mes .@npcname$;
+				mes "Arf...";
+				mes "Go find the Head Priest.";
+				mes "Tell him you come from me.";
+				mes "I can't do anything more.";
+				next;
+				mes .@pcname$;
+				mes "Thank you.";
+				mes "Where can I find him?";
+				next;
+				mes .@npcname$;
+				mes "This man is a riddle...";
+				mes "I don't know exactly.";
+				mes "Everytime we had to find him, we were asked to send a " + getitemname($foRequiredItemId) + " on the Pound, in Rachel.";
+				mes "I don't if it'll work for you, but you can try.";
+				set FOLKVANGQ, 3;
+			}
+			break;
+	}
+	donpcevent "almaqufo::OnInitTimer";
+	close;	
+	
+OnTouch:
+	if("alwanfo" + $folkactiveNpc == strnpcinfo(3))
+	{
+		npctalk "Hey you!";
+		sleep 1000;
+		npctalk "Yes, you! Come here!";
+	}
+	end;
+	
+OnInit:
+	set .smallQ, 0;
+	end;
+}
+
+//Males
+prontera,183,191,0	duplicate(alwanfo0)	Wandering Priest#0::alwanfo1	4_M_BARYO_MAN,10,10
+morocc,169,68,0	duplicate(alwanfo0)	Wandering Priest#0::alwanfo2	4_M_BARYO_MAN,10,10
+payon,161,123,0	duplicate(alwanfo0)	Wandering Priest#0::alwanfo3	4_M_BARYO_MAN,10,10
+alberta,60,240,0	duplicate(alwanfo0)	Wandering Priest#0::alwanfo4	4_M_BARYO_MAN,10,10
+aldebaran,155,100,0	duplicate(alwanfo0)	Wandering Priest#0::alwanfo5	4_M_BARYO_MAN,10,10
+izlude,118,125,0	duplicate(alwanfo0)	Wandering Priest#0::alwanfo6	4_M_BARYO_MAN,10,10
+xmas,160,110,0	duplicate(alwanfo0)	Wandering Priest#0::alwanfo7	4_M_BARYO_MAN,10,10
+comodo,177,161,0	duplicate(alwanfo0)	Wandering Priest#0::alwanfo8	4_M_BARYO_MAN,10,10
+yuno,137,105,0	duplicate(alwanfo0)	Wandering Priest#0::alwanfo9	4_M_BARYO_MAN,10,10
+amatsu,212,102,0	duplicate(alwanfo0)	Wandering Priest#0::alwanfo10	4_M_BARYO_MAN,10,10
+gonryun,149,54,0	duplicate(alwanfo0)	Wandering Priest#0::alwanfo11	4_M_BARYO_MAN,10,10 //4_M_BARYO_MAN, 578
+
+//Females
+umbala,114,132,0	duplicate(alwanfo0)	Wandering Priestess#1::alwanfo12	4_F_MALAYA,10,10 
+niflheim,209,170,0	duplicate(alwanfo0)	Wandering Priestess#1::alwanfo13	4_F_MALAYA,10,10 
+louyang,230,96,0	duplicate(alwanfo0)	Wandering Priestess#1::alwanfo14	4_F_MALAYA,10,10 
+ayothaya,195,178,0	duplicate(alwanfo0)	Wandering Priestess#1::alwanfo15	4_F_MALAYA,10,10 
+einbech,187,122,0	duplicate(alwanfo0)	Wandering Priestess#1::alwanfo16	4_F_MALAYA,10,10 
+einbroch,247,184,0	duplicate(alwanfo0)	Wandering Priestess#1::alwanfo17	4_F_MALAYA,10,10 
+lighthalzen,153,77,0	duplicate(alwanfo0)	Wandering Priestess#1::alwanfo18	4_F_MALAYA,10,10 
+hugel,102,117,0	duplicate(alwanfo0)	Wandering Priestess#1::alwanfo19	4_F_MALAYA,10,10 
+rachel,128,144,0	duplicate(alwanfo0)	Wandering Priestess#1::alwanfo20	4_F_MALAYA,10,10 
+veins,200,133,0	duplicate(alwanfo0)	Wandering Priestess#1::alwanfo21	4_F_MALAYA,10,10 
+moscovia,248,161,0	duplicate(alwanfo0)	Wandering Priestess#1::alwanfo22	4_F_MALAYA,10,10 
+manuk,233,154,0	duplicate(alwanfo0)	Wandering Priestess#1::alwanfo23	4_F_MALAYA,10,10 //4_F_MALAYA 583
+
+geffen,131,71,4	script	main_folk_quest::almaqufo	HIDDEN_WARP_NPC,{ //-1
+	end;
+	
+OnWhisperGlobal:
+	set .debug, 1;
+OnMinute00:
+	//RATHENA
+	if(gettime(DT_HOUR) == 0 || .debug == 1)
+	//HERCULES
+	//if(gettime(GETTIME_HOUR) == 0 || .debug == 1)
+	{
+		goto OnHideOffOnePriest;
+	}
+	end;
+	
+OnInitTimer:
+	initnpctimer;
+	end;
+	
+OnHideOffOnePriest:
+	for(set .@i,0; .@i<=.maxNpcCount; set .@i,.@i+1)
+	{
+		disablenpc "alwanfo" + .@i;
+	}
+	set $folkactiveNpc, rand(0,.maxNpcCount);
+	//activate 1 npc per day, for one hour
+	enablenpc "alwanfo" + $folkactiveNpc;
+	end;
+	
+OnTimer60000:
+	stopnpctimer;
+	disablenpc "alwanfo" + $folkactiveNpc;
+	end;
+	
+OnInit:
+	set .maxNpcCount, 23;
+	set $folkactiveNpc, -1;
+	goto OnHideOffOnePriest;
+}
+
+rachel,253,84,4	script	Pond::alponfo	HIDDEN_WARP_NPC,3,3,{ //-1
+OnTouch:
+	if(FOLKVANGQ == 3 || FOLKVANGQ == 5)
+	{
+		mes "Do you wish to throw a " + getitemname($foRequiredItemId) + " inside the pond?";
+		if(select("Yes","No") == 1)
+		{
+			if (countitem($foRequiredItemId) >= 1)
+			{
+				next;
+				mes "[" + strcharinfo(0) + "]";
+				mes "Something glow.";
+				mes "But I think that's just the coin inside the pond...";
+				delitem $foRequiredItemId, 1;
+				if(FOLKVANGQ == 5)
+				{
+					if(Hp >= MaxHp * 25 / 100)
+					{
+						next;
+						mes "You're not ready to enter there.";
+						close;
+					}
+					//warp to folkvang.
+					warp "br_lb", 90, 47;
+					close;
+				}
+				if(rand(0,5) < 2)
+				{
+					next;
+					mes "[????]";
+					mes "Who are you?";
+					mes "How did you know about the Coin?";
+					next;
+					mes "[" + strcharinfo(0) + "]";
+					mes "I...I'm " + strcharinfo(0) + ".";
+					mes "The Priest told me.";
+					next;
+					mes "[????]";
+					mes "What the...";
+					mes "Gonna beat the sh*t out of his as*!";
+					next;
+					mes "[" + strcharinfo(0) + "]";
+					mes "You...You're the Head Priest?";
+					next;
+					mes "[????]";
+					mes "Who do you think it is?";
+					mes "The Lake Lady?";
+					mes "She's just bitching around sometimes...";
+					mes "Not even really sent by Gods.";
+					next;
+					mes "[" + strcharinfo(0) + "]";
+					mes "You...You're really as...";
+					next;
+					mes "[????]";
+					mes "As you were expecting, I know.";
+					mes "And I must say that I don't care.";
+					mes "I am who I am. Not really to chitchat with those brainless lambs other priests like to take care of.";
+					mes "I'm more important than that.";
+					next;
+					mes "[" + strcharinfo(0) + "]";
+					mes "I guess you're here to keep the gates to Folkvang, right?";
+					next;
+					mes "[????]";
+					mes "Ah yeah...Forgot this idiot told you about this.";
+					mes "Well that's not that I keep the gates.";
+					mes "Actually, everybody can cross, I don't care.";
+					mes "It's just that...";
+					next;
+					mes "[" + strcharinfo(0) + "]";
+					mes "So I can go there already?";
+					next;
+					mes "[????]";
+					mes "...";
+					mes "You know you're a little...How to be polite...";
+					mes "I really dislike being interrupted.";
+					mes "Try that once again, and I'll kick your ass out to Prontera.";
+					if(select("Try that, we'll see","Allright sorry...") == 1)
+					{
+						next;
+						mes "[" + strcharinfo(0) + "]";
+						mes "Just try that, we'll see";
+						next;
+						mes "[????]";
+						mes "Woo oooh what a rebel we got there...";
+					}
+					else
+					{
+						next;
+						mes "[" + strcharinfo(0) + "]";
+						mes "Allright sorry...";
+						next;
+						mes "[????]";
+						mes "So you're a lamb too?";
+					}
+					mes "Well anyway. I'm not the mood for a chit chat now.";
+					next;
+					mes "[" + strcharinfo(0) + "]";
+					mes "What do you think you're doing?";
+					next;
+					mes "[????]";
+					mes "Get lost.";
+					mes "You wanna enter right?";
+					mes "For that, I have to check that you're not a brain dead who came for the Resurrection Item.";
+					next;
+					mes "[" + strcharinfo(0) + "]";
+					mes "What's that?";
+					next;
+					mes "[????]";
+					mes "What? Really?";
+					mes "You came without knowing that?";
+					mes "If you kill a Soul there, you'll earn a resurrection item.";
+					mes "It'll enable anyone to resurrect a friend.";
+					mes "As far as you're fast enough, thought.";
+					next;
+					mes "[" + strcharinfo(0) + "]";
+					mes "But that's brilliant!";
+					next;
+					mes "[????]";
+					mes "It won't bring the deads back.";
+					mes "Just somebody who just died.";
+					mes "Anyway. To let you in, you'll have to answer my riddle.";
+					mes "Ready?";
+					next;
+					mes "[" + strcharinfo(0) + "]";
+					mes "Go on! I'm listening.";
+					next;
+					mes "[????]";
+					mes "Right. Here we go.";
+					next;
+					mes "[????]";
+					mes "^FF0000It's never free to gain wisdom.^000000";
+					mes "^FF0000It's not hurtless to obtain knowledge.^000000";
+					mes "^FF0000As I kept the wisdom source, I ask paiement for both.^000000";
+					mes "^FF0000He may have become the wisdomer of them all, but what was His paiement?^000000";
+					next;
+					mes "[????]";
+					mes "Allright. Come back to me with the answer, and you'll be able to enter.";
+					mes "No need to send another coins. I'm good for a month, I'll sell this one later.";
+					mes "Just say the answer near the pond, after calling my name.";
+					mes "See you soon, dumby.";
+					next;
+					mes "[" + strcharinfo(0) + "]";					
+					mes "Wait! I don't...";
+					mes "*He's gone*";
+					mes "But I don't even know his name...";
+					mes "Looks like I have two riddles to solve...";
+					set FOLKVANGQ, 4;
+				}
+			}
+			else
+			{
+				mes "You don't have the Coin.";
+			}
+		}
+	}
+	else
+	{
+		mes "There's nothing special here.";
+	}
+	close;
+	
+OnMimirCalled:
+	set .@npcname$,	"[Mimir]";
+	mes .@npcname$;
+	mes "Oh, it's you again.";
+	mes "Did you find the answer?";
+	input .@answer$;
+	if (.@answer$ == "An eye" || .@answer$ == "an eye")
+	{
+		next;
+		mes "[" + strcharinfo(0) + "]";
+		mes "I suppose the answer is an eye.";
+		next;
+		mes .@npcname$;
+		mes "Yeah, that's right. That's the price Odin pay me to gain wisdom.";
+		mes "And you, you want to enter on the Forgottens Plains.";
+		mes "What would be your price to know it's location?";
+		next;
+		mes "[" + strcharinfo(0) + "]";
+		mes "I...I can't afford to lose an eye...I'm not a god...";
+		next;
+		mes .@npcname$;
+		mes "Yeah, I noticed that mortal.";
+		mes "Don't worry. This info will be free of paiement to me.";
+		mes "But not of paiement to the dead.";
+		mes "Each time you'll like to enter in Folkvang, you'll have to be 'known' as a dead one too.";
+		mes "Therefor, you won't be able to enter in the Plains if you have more than a quarter of your whole life.";
+		mes "Remember. 10%. No more.";
+		next;
+		mes "[" + strcharinfo(0) + "]";
+		mes "That's a bit dangerous, but I guess I have no other choice, right?";
+		next;
+		mes .@npcname$;
+		mes "Totally right.";
+		mes "Last thing, to open the door, just send another coin here, on the Pond.";
+		mes "It'll open a dimensional door to the Plains.";
+		mes "Deads are greedy bastards, isn't it?";
+		set FOLKVANGQ, 5;
+		next;
+		mes .@npcname$;
+		mes "Oh, and take that.";
+		mes "You deserved it.";
+		//Dead Ring, GI Item
+		getitem 29402, 1;
+	}
+	end;
+	
+OnInit:
+	deletepset 1;
+	defpattern 1,"([^:]+):.*Mimir.*", "OnMimirCalled";
+	activatepset 1;	
+	set $foRequiredItemId, 7517;
+	end;
+}
