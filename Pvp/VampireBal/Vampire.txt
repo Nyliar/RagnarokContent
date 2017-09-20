@@ -1,0 +1,382 @@
+// [========================================================]
+// [============    Battle Arena - Vampires Bal   ==========]
+// [========================================================]
+// [ Version 1                                              ]
+// [========================================================]
+// [ Original script by: Alayne				    ]
+// [========================================================]
+// [ Description:                                           ]
+// [--------------------------------------------------------]
+// [                                                        ]
+// [ - The Vampires Bal System				    ]
+// [========================================================]
+// [ Changelog: (5 last updates)                            ]
+// [--------------------------------------------------------]
+// [                                                        ]
+// [ v0: Creation                      			    ]
+// [                                                        ]
+// [                                                        ]
+// [========================================================]
+// [                                                        ]
+// [========================================================]
+
+pvp_n_3-3	mapflag	loadevent
+
+pvp_n_3-3,50,49,0	script	VBManager::alabavb	HIDDEN_WARP_NPC,2,2,{
+	close;
+
+OnPCLoadMapEvent:
+	if (strcharinfo(3) == $vampireBalMap$)
+	{
+		//finally, check if event should start
+		if (getarraysize($VBMembers) == $maxVBMemberCount && $vampirebalon != 2)
+		{
+			goto StartVB;
+		}
+	}
+	end;
+
+StartVB:
+	pvpon $vampireBalMap$;
+	mapannounce $vampireBalMap$, "[Vampires Bal] The Vampires Bal starts!", bc_all, 0xFF0000;
+	initnpctimer;
+	set $vampirebalon, 2;
+	set .totalCount, 0;
+	for(set .@i,0; .@i<getarraysize($VBMembers); set .@i,.@i+1)
+	{
+		if(attachrid($VBMembers[.@i]))
+		{
+			addtimer 1000 * $VBRoundDuration, strnpcinfo(3) + "::OnTimerEllapsed";
+		}
+	}
+	end;
+
+OnTimer60000:
+	set .totalCount, .totalCount + 1;
+	if (.totalCount == $battleDuration)
+	{
+		callsub OnCheckVictory;
+	}
+	setnpctimer 0;
+	end;
+
+OnCheckVictory:
+	//every minute, check for members
+	set .@winner, -1;
+	set .@highest, 0;
+	for(set .@i,0; .@i<getarraysize($VBMembers); set .@i,.@i+1)
+	{
+		set .@attached, attachrid($VBMembers[.@i]);
+		if (getarraysize($VBMembers[.@i]) == 0 || .@attached == 0)
+		{
+			deletearray $VBMembers[.@i], 1;
+		}
+		else
+		{
+			if(VBPOINTS > .@highest)
+			{
+				set .@highest, VBPOINTS;
+				set .@winner, getcharid(3);
+			}
+		}
+	}
+
+	if(.@winner != -1)
+	{
+		attachrid(.@winner);
+		pvpoff $vampireBalMap$;
+		announce "[Vampires Bal] " + strcharinfo(0) + " just win the Vampires Bal!", bc_all, 0xFF0000;
+		mapannounce $vampireBalMap$, "[Vampires Bal] Congratulations, " + strcharinfo(0) + "!", bc_all, 0xFF0000;
+		mapannounce $vampireBalMap$, "[Vampires Bal] you will now be rewarded.", bc_all, 0xFF0000;
+
+		for(set .@i,0; .@i<getarraysize($VBMembers); set .@i,.@i+1)
+		{
+			if(attachrid($VBMembers[.@i]))
+			{
+				if(getcharid(3) != .@winner)
+				{
+					if(.@cnt < .rewardMin[2])
+						set .@cnt, .rewardMin[2];
+					getitem 7773, .@cnt;
+				}
+				else
+				{
+					set .@cnt, VBOINTS / .rewardCnt[1];
+					if(.@cnt < .rewardMin[1])
+					set .@cnt, .rewardMin[1];
+					getitem 7773, .@cnt;
+					set Zeny, Zeny + $VBEntryPrice * ($maxVBMemberCount - 1);
+					set VBOINTS , VBOINTS + .pointPerVictory;
+					set Zeny, Zeny + VBOINTS * 10000;
+					//callfunc("AddPoints",getcharid(3),.pointPerVictory);
+				}
+			}
+		}
+
+		set $vampirebalon, 0;
+	}
+	else
+	{
+		announce "[Vampires Bal] ends without winner...", bc_all, 0xFF0000;
+		set $vampirebalon, 0;
+	}
+	return;
+	
+OnBoardAsked:
+	set .@caller, getcharid(3);
+	dispbottom "!!Vampires Bal Points Board!!";
+	for(set .@i,0; .@i<getarraysize($VBMembers); set .@i,.@i+1)
+	{
+		set .@attached, attachrid($VBMembers[.@i]);
+		if (.@attached == 0)
+		{
+			deletearray $VBMembers[.@i], 1;
+		}
+		else
+		{
+			set .@message$, "	~" + strcharinfo(0) + ": " + VBPOINTS;
+			if(attachrid(.@caller))
+				dispbottom .@message$;
+		}
+	}
+	end;
+	
+OnPCLoginEvent:
+	set VBPOINTS, 0;
+	end;
+
+OnPCDieEvent:
+	deltimer strnpcinfo(3) + "::OnTimerEllapsed";
+	if (strcharinfo(3) == $vampireBalMap$)
+	{
+		specialeffect2 829;
+		
+		addtimer 1000, strnpcinfo(3) + "::OnHealAfterDeath";
+		
+		set .@sucked, 0;
+		if(VBPOINTS >= .pointPerDeath)
+		{
+			set .@sucked, .pointPerDeath;
+		}
+		else if(VBPOINTS > 0)
+		{
+			set .@sucked, VBPOINTS;
+		}
+		
+		set VBPOINTS, VBPOINTS - .pointPerDeath;
+		dispbottom "You've lost " + .pointPerDeath + " points. Your current balance is " + VBPOINTS;
+		
+		attachrid(killerrid);
+		
+		specialeffect2 812;
+		set VBPOINTS, VBPOINTS + .pointPerKill + .@sucked;
+		percentheal 100, 100;
+		dispbottom "You've earn " + (.pointPerKill + .@sucked) + " points. Your current balance is " + VBPOINTS;
+	}
+	end;
+	
+OnTimerEllapsed:
+	if(Hp > 0 && strcharinfo(3) == $vampireBalMap$ && $vampirebalon == 2)
+	{
+		set VBPOINTS, VBPOINTS + .pointPerSurvival;	
+		dispbottom "You've earned " + .pointPerSurvival + " points for surviving " + $VBRoundDuration + "s. Your current balance is " + VBPOINTS;
+		addtimer 1000 * $VBRoundDuration, strnpcinfo(3) + "::OnTimerEllapsed";
+	}
+	end;
+
+OnHealAfterDeath:
+	charcommand "#load " + strcharinfo(0);
+	dispbottom "[Valkyrie] You received the War Goddess benediction!";
+	percentheal 100, 100;
+	if(.buffs == 1)
+	{
+		specialeffect2 EF_INCAGILITY; sc_start SC_INC_AGI,240000,10;
+		specialeffect2 EF_BLESSING; sc_start SC_BLESSING,240000,10;
+	}
+	end;
+
+OnInit:
+	set $vampireBalMap$, "pvp_n_3-3";
+	set $maxVBMemberCount, 8;
+	set $VBEntryPrice, 5000;
+	setarray $VBDuration[0],5,10,15; //minutes range
+	set $VBRoundDuration, 30; //in seconds
+	set $vampirebalon, 0;
+	set .pointPerKill, 10;
+	set .pointPerDeath, 5;
+	set .pointPerVictory, 100;
+	set .pointPerSurvival, 5;
+	setarray .rewardCnt[0], 10, 20;
+	setarray .rewardMin[0], 5, 1;
+	bindatcmd "vbboard", strnpcinfo(3) + "::OnBoardAsked";
+	set .buffs, 1;
+	end;
+}
+
+prontera,119,166,4	script	Vampires Bal::alavbent	1_M_SIGNART,{
+	set .@npcname$, "[Dracula]";
+	mes .@npcname$;
+	mes "Hello to you, " + strcharinfo(0);
+	mes "I'm the Vampires Bal Manager.";
+	mes "When you talk to me, you'll be able to setup or join an existing Vampires Bal.";
+	next;
+	mes .@npcname$;
+	if ($vampirebalon == 2)
+	{
+		goto OnEnterAgain;
+	}
+	if ($vampirebalon == 1)
+	{
+		if(callfunc("CheckVBPlayers") == 1)
+		{
+			next;
+			mes .@npcname$;
+			mes "Be patient please. The Vampires Bal will start soon.";
+			close;
+		}
+		
+		mes "So. Are you interested?";
+		if (select("Join the currently running Vampires Bal","No, thanks") == 1)
+		{
+			callsub OnJoin, 1;
+		}
+		else
+		{
+			goto OnLeave;
+		}
+	}
+	else if ($vampirebalon == 0)
+	{
+		mes "So. Are you interested?";
+		if (select("Start a new Vampires Bal","No, thanks") == 1)
+		{
+			callsub OnJoin, 0;
+		}
+		else
+		{
+			goto OnLeave;
+		}
+	}
+	else
+	{
+		next;
+		mes .@npcname$;
+		mes "Sorry, it's too late for this battle. Come back later.";
+	}
+	close;
+
+OnJoin:
+	set .@npcname$, "[Dracula]";
+	set .@mode, getarg(0);
+	next;
+	mes .@npcname$;
+	mes "Sure!";
+	mes "It'll cost you " + $VBEntryPrice + "z to enter.";
+	if (Zeny < $VBEntryPrice)
+	{
+		next;
+		mes .@npcname$;
+		mes "Sorry, but you lack some money...";
+		close;
+	}
+	if (select("Here you are.","I'll get back") == 1)
+	{
+		next;
+		mes .@npcname$;
+		set Zeny, Zeny - $VBEntryPrice;
+		mes "Allright.";
+		mes "The Vampires Bal is pretty simple.";
+		mes "You're in a middle of fight of immortals.";
+		mes "As a Guest, you'll have to survive. Each time you'll survive a round of " + $VBRoundDuration + " seconds, you'll earn points.";
+		mes "To survive, hide yourself, or kill others people, as killing them will bring you points and a total heal.";
+		mes "So kill everyone you'll see!";
+		next;
+		mes .@npcname$;
+		mes "The reward will be the total amount paid by all players.";
+		mes "I'll just keep a little part for me.";
+		mes "The fight will starts when " + $maxVBMemberCount + " members will join.";
+		if (.@mode == 0)
+		{
+			next;
+			mes .@npcname$;
+			mes "Now, choose a duration.";
+			set .@message$, "It can last for ";
+			set .@menu$, "";
+			for(set .@i,0; .@i<getarraysize($VBDuration); set .@i,.@i+1)
+			{
+				set .@message$, .@message$ + (.@i == 0 ? "" : (.@i == getarraysize($VBDuration) - 1 ? ", or " : ", ")) + $VBDuration[.@i] + " minutes";
+				set .@menu$, .@menu$ + (.@i == 0 ? "" : ":") + $VBDuration[.@i] + " minutes";
+			} 
+			set .@message$, .@message$ + ".";
+			mes .@message$;
+			mes "What's your choice?";
+			set .@duration, select(.@menu$) - 1;
+			next;
+			mes .@npcname$;
+			mes "Allright, let's go for " + $VBDuration[.@duration] + " minutes then.";
+			next;
+			mes .@npcname$;
+		}
+		mes "Good luck.";
+		next;
+		getmapxy(.@map$, .@x, .@y, 0);
+		savepoint(.@map$, .@x, .@y);
+		set VBPOINTS, 0;
+		warp $vampireBalMap$, 0, 0;
+		if (.@mode == 0)
+		{
+			deletearray $VBMembers[0], getarraysize($VBMembers);
+			set $VBMembers[0], getcharid(3);
+			
+			set $vampirebalon, 1;
+			set $battleDuration, $VBDuration[.@duration];
+			announce "[Vampires Bal] " + strcharinfo(0) + " just join the Vampires Bal. Who will come to fight him?", bc_all, 0xFF0000;
+		}
+		else
+		{
+			set $VBMembers[getarraysize($VBMembers)], getcharid(3);
+			if (getarraysize($VBMembers) < $maxVBMemberCount)
+			{
+				announce "[Vampires Bal] " + strcharinfo(0) + " just join the Vampires Bal. Still " + ($maxVBMemberCount - getarraysize($VBMembers)) + " fighters needed to begin!", bc_all, 0xFF0000;
+			}
+		}
+	}
+	else
+	{
+		goto OnLeave;
+	}
+	close;
+
+OnEnterAgain:
+	set .@found, callfunc("CheckVBPlayers");
+	if(.@found == 1)
+	{
+		mes "Get ready, I'll send you back.";
+		addtimer 1000 * $VBRoundDuration, "alabavb::OnTimerEllapsed";
+		warp $vampireBalMap$, 0, 0;
+	}
+	else
+	{
+		mes "You're not part of this Vampires Bal.";
+		mes "Wait for another to begin, please.";
+	}
+	close;
+
+OnLeave:
+	set .@npcname$, "[Dracula]";
+	next;
+	mes .@npcname$;
+	mes "Your choice!";
+	close;
+}
+
+function	script	CheckVBPlayers	{
+	for(set .@i,0; .@i<getarraysize($VBMembers) && .@found == 0; set .@i,.@i+1)
+	{
+		if($VBMembers[.@i] == getcharid(3))
+		{
+			return 1;
+		}
+	}
+	return 0;
+}

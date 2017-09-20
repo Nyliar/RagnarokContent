@@ -1,0 +1,379 @@
+// [========================================================]
+// [============      Battle Arena - PvPvM        ==========]
+// [========================================================]
+// [ Version 1                                              ]
+// [========================================================]
+// [ Original script by: Alayne				                      ]
+// [========================================================]
+// [ Description:                                           ]
+// [--------------------------------------------------------]
+// [                                                        ]
+// [ - The PvPvM System				                              ]
+// [========================================================]
+// [ Changelog: (5 last updates)                            ]
+// [--------------------------------------------------------]
+// [                                                        ]
+// [ v0: Creation                      			                ]
+// [                                                        ]
+// [                                                        ]
+// [========================================================]
+// [                                                        ]
+// [========================================================]
+pvp_n_3-2	mapflag	loadevent
+
+pvp_n_3-2,50,49,0	script	PvPvMManager::alabapvpvm	HIDDEN_WARP_NPC,2,2,{
+	close;
+
+OnPCLoadMapEvent:
+	if (strcharinfo(3) == $pvPvMMap$)
+	{
+		//finally, check if event should start
+		if (getarraysize($@PVPVMMembers) == $maxPVPVMMemberCount && $pvpvmon != 2)
+		{
+			goto StartPVPVM;
+		}
+	}
+	end;
+
+StartPVPVM:
+	pvpon $pvPvMMap$;
+	mapannounce $pvPvMMap$, "[PvPvM] The PvPvM starts!",bc_all,0x00FFC3;
+	initnpctimer;
+	set $pvpvmon, 2;
+	set .totalCount, 0;
+	goto OnPopMonsters;
+	end;
+	
+OnPopMonsters:
+	if($pvpvmon == 2)
+	{
+		set .pointPerMobKill, rand(0,5);
+		switch(.pointPerMobKill)
+		{
+			case 0:
+				setarray .@monstersIds[0],1002,10,1031,8,1113,5,1836,2,1784,2;
+				break;
+			case 1:
+				setarray .@monstersIds[0],1796,15,1797,10,1774,5,1311,5;
+				break;
+			case 2:
+				setarray .@monstersIds[0],1742,15,1437,5,1687,15,1680,5;
+				break;
+			case 3:
+				setarray .@monstersIds[0],1538,8,1258,5,1392,3,1280,3,1135,5,1455,5;
+				break;
+			case 4:
+				setarray .@monstersIds[0],1283,5,1513,9,1319,4,1515,2,1387,3;
+				break;
+			case 5:
+				setarray .@monstersIds[0],1769,15,1098,10,1507,9,1830,5;
+				break;
+		}
+		for(set .@i,0; .@i<getarraysize(.@monstersIds); set .@i,.@i+2)
+		{
+			monster $pvPvMMap$, 0, 0, "--ja--", .@monstersIds[.@i], .@monstersIds[.@i+1], strnpcinfo(3) + "::OnMonsterDied";
+		}
+	}
+	end;
+	
+OnMonsterDied:
+	set PVPVMPOINTS, PVPVMPOINTS + .pointPerMobKill;
+	if(PVPVMPOINTS % 10 == 0)
+	{
+		dispbottom "You've earn " + .pointPerMobKill+ " points. Your current balance is " + PVPVMPOINTS;
+	}
+	if(mobcount($pvPvMMap$, strnpcinfo(3) + "::OnMonsterDied") == 0)
+	{
+		goto OnPopMonsters;
+	}
+	end;
+
+OnTimer60000:
+	set .totalCount, .totalCount + 1;
+	if (.totalCount == $battleDuration)
+	{
+		callsub OnCheckVictory;
+	}
+
+	setnpctimer 0;
+	end;
+
+OnCheckVictory:
+	//every minute, check for members
+	killmonsterall $pvPvMMap$;
+	set .@winner, -1;
+	set .@highest, 0;
+	for(set .@i,0; .@i<getarraysize($@PVPVMMembers); set .@i,.@i+1)
+	{
+		set .@attached, attachrid($@PVPVMMembers[.@i]);
+		if (getarraysize($@PVPVMMembers[.@i]) == 0 || .@attached == 0)
+		{
+			deletearray $@PVPVMMembers[.@i], 1;
+		}
+		else
+		{
+			if(PVPVMPOINTS > .@highest)
+			{
+				set .@highest, PVPVMPOINTS;
+				set .@winner, getcharid(3);
+			}
+		}
+	}
+
+	if(.@winner != -1)
+	{
+		attachrid(.@winner);
+		announce "[PvPvM] " + strcharinfo(0) + " just win the PvPvM!",bc_all,0x00FFC3;
+		mapannounce $pvPvMMap$, "[PvPvM] Congratulations, " + strcharinfo(0) + "!",bc_all,0x00FFC3;
+		mapannounce $pvPvMMap$, "[PvPvM] you will now be rewarded.",bc_all,0x00FFC3;
+
+		for(set .@i,0; .@i<getarraysize($@PVPVMMembers); set .@i,.@i+1)
+		{
+			if(attachrid($@PVPVMMembers[.@i]))
+			{
+				if(getcharid(3) != .@winner)
+				{
+					if(.@cnt < .rewardMin[2])
+						set .@cnt, .rewardMin[2];
+					getitem 7773, .@cnt;
+				}
+				else
+				{
+					pvpoff $pvPvMMap$;
+					set .@cnt, CPOINTS / .rewardCnt[1];
+					if(.@cnt < .rewardMin[1])
+						set .@cnt, .rewardMin[1];
+					getitem 7773, .@cnt;
+					set Zeny, Zeny + $PVPVMEntryPrice * ($maxPVPVMMemberCount - 1);
+					set PVPVMPOINTS, PVPVMPOINTS + .pointPerVictory;
+					set Zeny, Zeny + PVPVMPOINTS * 10000;
+					//callfunc("AddPoints",getcharid(3),.pointPerVictory);
+				}
+			}
+		}
+
+		set $pvpvmon, 0;
+	}
+	else
+	{
+		announce "[PvPvM] ends without winner...",bc_all,0x00FFC3;
+		set $pvpvmon, 0;
+	}
+	return;
+	
+OnBoardAsked:
+	set .@caller, getcharid(3);
+	dispbottom "!!PvPvM Points Board!!";
+	for(set .@i,0; .@i<getarraysize($@PVPVMMembers); set .@i,.@i+1)
+	{
+		set .@attached, attachrid($@PVPVMMembers[.@i]);
+		if (.@attached == 0)
+		{
+			deletearray $@PVPVMMembers[.@i], 1;
+		}
+		else
+		{
+			set .@message$, "	~" + strcharinfo(0) + ": " + PVPVMPOINTS;
+			if(attachrid(.@caller))
+				dispbottom .@message$;
+		}
+	}
+	end;
+	
+OnPCLoginEvent:
+	set PVPVMPOINTS, 0;
+	end;
+
+OnPCDieEvent:
+	if (strcharinfo(3) == $pvPvMMap$)
+	{
+		addtimer 1000, strnpcinfo(3) + "::OnHealAfterDeath";
+		
+		attachrid(killerrid);
+		
+		set PVPVMPOINTS, PVPVMPOINTS + .pointPerKill;
+		dispbottom "You've earn " + .pointPerKill + " points. Your current balance is " + PVPVMPOINTS;
+	}
+	end;
+
+OnHealAfterDeath:
+  charcommand "#load " + strcharinfo(0);
+	dispbottom "[Valkyrie] You received the War Goddess benediction!";
+	percentheal 100, 100;
+	if(.buffs == 1)
+	{
+		specialeffect2 EF_INCAGILITY; sc_start SC_INC_AGI,240000,10;
+		specialeffect2 EF_BLESSING; sc_start SC_BLESSING,240000,10;
+	}
+	end;
+
+OnInit:
+	set $pvPvMMap$, "pvp_n_3-2";
+	set $maxPVPVMMemberCount, 6;
+	set $PVPVMEntryPrice, 5000;
+	setarray $PVPVMDuration[0],5,10,15; //minutes range
+	set $pvpvmon, 0;
+	set .pointPerKill, 10;
+	set .pointPerVictory, 100;
+	setarray .rewardCnt[0], 10, 20;
+	setarray .rewardMin[0], 5, 1;
+	bindatcmd "pvpvmboard", strnpcinfo(3) + "::OnBoardAsked";
+	set .buffs, 1;
+	end;
+}
+
+prontera,119,166,4	script	PvPvM::alapvpvment	4_M_DSTMAN,{
+	set .@npcname$, "[Irlud]";
+	mes .@npcname$;
+	mes "Hello to you, " + strcharinfo(0);
+	mes "I'm the PvPvM Manager.";
+	mes "When you talk to me, you'll be able to setup or join an existing PvPvM.";
+	next;
+	mes .@npcname$;
+	if ($pvpvmon == 2)
+	{
+		goto OnEnterAgain;
+	}
+	if ($pvpvmon == 1)
+	{
+		mes "So. Are you interested?";
+		if (select("Join the currently running PvPvM","No, thanks") == 1)
+		{
+			callsub OnJoin, 1;
+		}
+		else
+		{
+			goto OnLeave;
+		}
+	}
+	else if ($pvpvmon == 0)
+	{
+		mes "So. Are you interested?";
+		if (select("Start a new PvPvM","No, thanks") == 1)
+		{
+			callsub OnJoin, 0;
+		}
+		else
+		{
+			goto OnLeave;
+		}
+	}
+	else
+	{
+		next;
+		mes .@npcname$;
+		mes "Sorry, it's too late for this battle. Come back later.";
+	}
+	close;
+
+OnJoin:
+	set .@npcname$, "[Irlud]";
+	set .@mode, getarg(0);
+	next;
+	mes .@npcname$;
+	mes "Sure!";
+	mes "It'll cost you " + $PVPVMEntryPrice + "z to enter.";
+	if (Zeny < $PVPVMEntryPrice)
+	{
+		next;
+		mes .@npcname$;
+		mes "Sorry, but you lack some money...";
+		close;
+	}
+	if (select("Here you are.","I'll get back") == 1)
+	{
+		next;
+		mes .@npcname$;
+		set Zeny, Zeny - $PVPVMEntryPrice;
+		mes "Allright.";
+		mes "The PvPvM is pretty simple.";
+		mes "Kill everyone you'll see. The last one standing will win.";
+		next;
+		mes .@npcname$;
+		mes "The reward will be the total amount paid by all players.";
+		mes "I'll just keep a little part for me.";
+		mes "The fight will starts when " + $maxPVPVMMemberCount + " members will join.";
+		if (.@mode == 0)
+		{
+			next;
+			mes .@npcname$;
+			mes "Now, choose a duration.";
+			set .@message$, "It can last for ";
+			set .@menu$, "";
+			for(set .@i,0; .@i<getarraysize($PVPVMDuration); set .@i,.@i+1)
+			{
+				set .@message$, .@message$ + (.@i == 0 ? "" : (.@i == getarraysize($PVPVMDuration) - 1 ? ", or " : ", ")) + $PVPVMDuration[.@i] + " minutes";
+				set .@menu$, .@menu$ + (.@i == 0 ? "" : ":") + $PVPVMDuration[.@i] + " minutes";
+			} 
+			set .@message$, .@message$ + ".";
+			mes .@message$;
+			mes "What's your choice?";
+			set .@duration, select(.@menu$) - 1;
+			next;
+			mes .@npcname$;
+			mes "Allright, let's go for " + $PVPVMDuration[.@duration] + " minutes then.";
+			next;
+			mes .@npcname$;
+		}
+		mes "Good luck.";
+		next;
+		getmapxy(.@map$, .@x, .@y, 0);
+		savepoint(.@map$, .@x, .@y);
+		set PVPVMPOINTS, 0;
+		warp $pvPvMMap$, 0, 0;
+		if (.@mode == 0)
+		{
+			deletearray $@PVPVMMembers[0], getarraysize($@PVPVMMembers);
+			set $@PVPVMMembers[0], getcharid(3);
+			
+			set $pvpvmon, 1;
+			set $battleDuration, $PVPVMDuration[.@choice];
+			announce "[PvPvM] " + strcharinfo(0) + " just join the PvPvM. Who will come to fight him?",bc_all,0x00FFC3;
+		}
+		else
+		{
+			set $@PVPVMMembers[getarraysize($@PVPVMMembers)], getcharid(3);
+			if (getarraysize($@PVPVMMembers) < $maxPVPVMMemberCount)
+			{
+				announce "[PvPvM] " + strcharinfo(0) + " just join the PvPvM. Still " + ($maxPVPVMMemberCount - getarraysize($@PVPVMMembers)) + " fighters needed to begin!",bc_all,0x00FFC3;
+			}
+		}
+	}
+	else
+	{
+		goto OnLeave;
+	}
+	close;
+
+OnEnterAgain:
+	set .@found, callfunc("CheckPVPVMPlayers");
+	if(.@found == 1)
+	{
+		mes "Get ready, I'll send you back.";
+		warp $pvPvMMap$, 0, 0;
+	}
+	else
+	{
+		mes "You're not part of this PvPvM.";
+		mes "Wait for another to begin, please.";
+	}
+	close;
+
+OnLeave:
+	set .@npcname$, "[Irlud]";
+	next;
+	mes .@npcname$;
+	mes "Your choice!";
+	close;
+}
+
+function	script	CheckPVPVMPlayers	{
+	for(set .@i,0; .@i<getarraysize($@PVPVMMembers) && .@found == 0; set .@i,.@i+1)
+	{
+		if($@PVPVMMembers[.@i] == getcharid(3))
+		{
+			return 1;
+		}
+	}
+	return 0;
+}

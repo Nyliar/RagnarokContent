@@ -1,0 +1,393 @@
+// [========================================================]
+// [============    Battle Arena - Ex Machina   ==========]
+// [========================================================]
+// [ Version 1                                              ]
+// [========================================================]
+// [ Original script by: Alayne				    ]
+// [========================================================]
+// [ Description:                                           ]
+// [--------------------------------------------------------]
+// [                                                        ]
+// [ - The Ex Machina System				    ]
+// [========================================================]
+// [ Changelog: (5 last updates)                            ]
+// [--------------------------------------------------------]
+// [                                                        ]
+// [ v0: Creation                      			    ]
+// [                                                        ]
+// [                                                        ]
+// [========================================================]
+// [                                                        ]
+// [========================================================]
+pvp_n_2-3	mapflag	loadevent
+
+pvp_n_2-3,50,49,0	script	BattleRoyalManager::alabade	HIDDEN_WARP_NPC,2,2,{
+	close;
+
+OnPCLoadMapEvent:
+	if (strcharinfo(3) == $deusExMap$)
+	{
+		//finally, check if event should start
+		if (getarraysize($@DEMembers) == $maxDEMemberCount && $deusexon != 2)
+		{
+			goto StartDE;
+		}
+	}
+	end;
+
+StartDE:
+	pvpon $deusExMap$;
+	mapannounce $deusExMap$, "[Ex Machina] The Ex Machina starts!",bc_map,0xFFCE00;
+	initnpctimer;
+	set $deusexon, 2;
+	set .totalCount, 0;
+	set .deusExCount, 0;
+	set .deusExAliveCount, -1;
+	set .deusExTrigger, rand(1,20); //for debug 2, otherwise, 20
+	end;
+
+OnTimer60000:
+	setnpctimer 0;
+	set .totalCount, .totalCount + 1;
+	if (.totalCount == $battleDuration)
+	{
+		callsub OnCheckVictory;
+	}
+	set .deusExCount, .deusExCount + 1;
+	if(.deusExCount >= .deusExTrigger && .deusExAliveCount == -1)
+	{
+		goto OnDeusEx;
+	}
+	if(.deusExAliveCount >= 0)
+	{
+		set .deusExAliveCount, .deusExAliveCount + 1;
+		if(.deusExAliveCount % 3 == 0)
+		{
+			mapannounce $deusExMap$, "[Ex Machina] The God leaved. But he'll come back, you can be sure of that!", bc_map,0xFFCE00;
+	
+			killmonsterall $deusExMap$;
+			set .deusExCount, 0;
+			set .deusExTrigger, rand(0,20);
+			set .deusExAliveCount, -1;
+		}
+	}
+	end;
+	
+OnDeusExKilled:
+	mapannounce $deusExMap$, "[Ex Machina] Congratulations, " + strcharinfo(0) + "! You've kill the Ex Machina", bc_map,0xFFCE00;
+	set DEPOINTS, DEPOINTS + .pointPerDeusKill;
+	dispbottom "You've earn " + .pointPerDeusKill + " points. Your current balance is " + DEPOINTS;
+	set .deusExAliveCount, -1;
+	end;
+	
+OnDeusEx:
+	mapannounce $deusExMap$, "[Ex Machina] Ex Machina Machina! A God comes to Midgard!", bc_map,0xFFCE00;
+	set .deusExId, .deusIds[rand(0,getarraysize(.deusIds) - 1)];
+	do
+	{
+		attachrid($@DEMembers[rand(0,getarraysize($@DEMembers) - 1)]);
+	}while(strcharinfo(3) != $deusExMap$);
+
+	getmapxy(.@map$, .@x, .@y, 0);
+	set .deusExGId, monster($deusExMap$, .@x, .@y, "Ex Machina", .deusExId, 1, strnpcinfo(3) + "::OnDeusExKilled");
+	set .deusExAliveCount, 0;
+	end;
+
+OnCheckVictory:
+	stopnpctimer;
+	killmonsterall $deusExMap$;
+	pvpoff $deusExMap$;
+
+	set .@winner, -1;
+	set .@highest, 0;
+	for(set .@i,0; .@i<getarraysize($@DEMembers); set .@i,.@i+1)
+	{
+		set .@attached, attachrid($@DEMembers[.@i]);
+		if (.@attached == 0)
+		{
+			deletearray $@DEMembers[.@i], 1;
+		}
+		else
+		{
+			if(DEPOINTS > .@highest)
+			{
+				set .@highest, DEPOINTS;
+				set .@winner, getcharid(3);
+			}
+		}
+	}
+
+	if(.@winner != -1)
+	{
+		attachrid(.@winner);
+		announce "[Ex Machina] " + strcharinfo(0) + " just win the Ex Machina!", bc_all,0xFFCE00;
+		mapannounce $deusExMap$, "[Ex Machina] Congratulations, " + strcharinfo(0) + "!", bc_map,0xFFCE00;
+		mapannounce $deusExMap$, "[Ex Machina] you will now be rewarded.", bc_map,0xFFCE00;
+		
+		for(set .@i,0; .@i<getarraysize($@DEMembers); set .@i,.@i+1)
+		{
+			attachrid($@DEMembers[.@i]);
+			if(getcharid(3) != .@winner)
+			{
+				set .@cnt, DEPOINTS / .rewardCnt[1];
+				if(.@cnt < .rewardMin[2])
+					set .@cnt, .rewardMin[1];
+				getitem 7773, .@cnt;
+			}
+			else
+			{
+				set .@cnt, DEPOINTS / .rewardCnt[0];
+				if(.@cnt < .rewardMin[0])
+					set .@cnt, .rewardMin[0];
+				getitem 7773, .@cnt;
+				set DEPOINTS, DEPOINTS + .pointPerVictory;
+				set Zeny, Zeny + DEPOINTS * 10000;
+				set Zeny, Zeny + $DEEntryPrice * ($maxDEMemberCount - 1);
+				//callfunc("AddPoints",getcharid(3),.pointPerVictory);
+			}
+		}
+		
+		set $deusexon, 0;
+	}
+	else
+	{
+		announce "[Ex Machina] ends without winner...", bc_all,0xFFCE00;
+		set $deusexon, 0;
+	}
+	killmonsterall $deusExMap$;
+	return;
+	
+OnBoardAsked:
+	set .@caller, getcharid(3);
+	dispbottom "!!Ex Machina Points Board!!";
+	for(set .@i,0; .@i<getarraysize($@DEMembers); set .@i,.@i+1)
+	{
+		set .@attached, attachrid($@DEMembers[.@i]);
+		if (.@attached == 0)
+		{
+			deletearray $@DEMembers[.@i], 1;
+		}
+		else
+		{
+			set .@message$, "	~" + strcharinfo(0) + ": " + DEPOINTS;
+			if(attachrid(.@caller))
+				dispbottom .@message$;
+		}
+	}
+	end;
+	
+OnPCLoginEvent:
+	set DEPOINTS, 0;
+	end;
+
+OnPCDieEvent:
+	if (strcharinfo(3) == $deusExMap$)
+	{
+		addtimer 1000, strnpcinfo(3) + "::OnHealAfterDeath";
+
+		if(attachrid(killerrid))
+		{
+			set DEPOINTS, DEPOINTS + .pointPerKill;
+			dispbottom "You've earn " + .pointPerKill + " points. Your current balance is " + DEPOINTS;
+		}
+		else
+		{
+			//lose points
+			set DEPOINTS, DEPOINTS - .deusExKill;
+			dispbottom "You've lost " + .deusExKill + " points due to Ex Machina Wrath. Your current balance is " + DEPOINTS;
+		}
+	}
+	end;
+
+OnHealAfterDeath:
+	charcommand "#load " + strcharinfo(0);
+	dispbottom "[Valkyrie] You received the War Goddess benediction!";
+	percentheal 100, 100;
+	if(.buffs == 1)
+	{
+		specialeffect2 EF_INCAGILITY; sc_start SC_INC_AGI,240000,10;
+		specialeffect2 EF_BLESSING; sc_start SC_BLESSING,240000,10;
+	}
+	end;
+
+OnInit:
+	set $deusExMap$, "pvp_n_2-3";
+	set $maxDEMemberCount, 10;
+	set $DEEntryPrice, 15000;
+	setarray $DEDuration[0],5,10,15; //minutes range
+	setarray .deusIds[0],1832,1873,1779,1039,1751,1917;
+	set $deusexon, 0;
+	set .pointPerKill, 10;
+	set .pointPerDeusKill, 250;
+	set .pointPerVictory, 100;
+	set .deusExKill, 100;
+	setarray .rewardCnt[0], 10, 20;
+	setarray .rewardMin[0], 5, 1;
+	bindatcmd "deboard", strnpcinfo(3) + "::OnBoardAsked";
+	set .buffs, 1;
+	end;
+}
+
+prontera,115,164,4	script	Ex Machina::aladeent	2_F_SIGN1,{
+	set .@npcname$, "[Red Woman]";
+	mes .@npcname$;
+	mes "Hello to you, " + strcharinfo(0);
+	mes "I'm the Ex Machina Manager.";
+	mes "When you talk to me, you'll be able to setup or join an existing Ex Machina.";
+	next;
+	mes .@npcname$;
+	if ($deusexon == 2)
+	{
+		goto OnEnterAgain;
+	}
+	if ($deusexon == 1)
+	{
+		if(callfunc("CheckDEPlayers") == 1)
+		{
+			next;
+			mes .@npcname$;
+			mes "Be patient please. The Ex Machina will start soon.";
+			close;
+		}
+
+		mes "So. Are you interested?";
+		if (select("Join the currently running Ex Machina","No, thanks") == 1)
+		{
+			callsub OnJoin, 1;
+		}
+		else
+		{
+			goto OnLeave;
+		}
+	}
+	else if ($deusexon == 0)
+	{
+		mes "So. Are you interested?";
+		if (select("Start a new Ex Machina","No, thanks") == 1)
+		{
+			callsub OnJoin, 0;
+		}
+		else
+		{
+			goto OnLeave;
+		}
+	}
+	else
+	{
+		next;
+		mes .@npcname$;
+		mes "Sorry, it's too late for this battle. Come back later.";
+	}
+	close;
+
+OnJoin:
+	set .@npcname$, "[Red Woman]";
+	set .@mode, getarg(0);
+	next;
+	mes .@npcname$;
+	mes "Sure!";
+	mes "It'll cost you " + $DEEntryPrice + "z to enter.";
+	if (Zeny < $DEEntryPrice)
+	{
+		next;
+		mes .@npcname$;
+		mes "Sorry, but you lack some money...";
+		close;
+	}
+	if (select("Here you are.","I'll get back") == 1)
+	{
+		next;
+		mes .@npcname$;
+		set Zeny, Zeny - $DEEntryPrice;
+		mes "Allright.";
+		mes "The Ex Machina is pretty simple.";
+		mes "Kill everyone you'll see. The last one standing will win.";
+		next;
+		mes .@npcname$;
+		mes "The reward will be the total amount paid by all players.";
+		mes "I'll just keep a little part for me.";
+		mes "The fight will starts when " + $maxDEMemberCount + " members will join.";
+		if (.@mode == 0)
+		{
+			next;
+			mes .@npcname$;
+			mes "Now, choose a duration.";
+			set .@message$, "It can last for ";
+			set .@menu$, "";
+			for(set .@i,0; .@i<getarraysize($DEDuration); set .@i,.@i+1)
+			{
+				set .@message$, .@message$ + (.@i == 0 ? "" : (.@i == getarraysize($DEDuration) - 1 ? ", or " : ", ")) + $DEDuration[.@i] + " minutes";
+				set .@menu$, .@menu$ + (.@i == 0 ? "" : ":") + $DEDuration[.@i] + " minutes";
+			} 
+			set .@message$, .@message$ + ".";
+			mes .@message$;
+			mes "What's your choice?";
+			set .@duration, select(.@menu$) - 1;
+			next;
+			mes .@npcname$;
+			mes "Allright, let's go for " + $DEDuration[.@duration] + " minutes then.";
+			next;
+			mes .@npcname$;
+		}
+		mes "Good luck.";
+		next;
+		getmapxy(.@map$, .@x, .@y, 0);
+		savepoint(.@map$, .@x, .@y);
+		set DEPOINTS, 0;
+		warp $deusExMap$, 0, 0;
+		if (.@mode == 0)
+		{
+			deletearray $@DEMembers[0], getarraysize($@DEMembers);
+			set $@DEMembers[0], getcharid(3);
+			
+			set $deusexon, 1;
+			set $battleDuration, $DEDuration[.@duration];
+			announce "[Ex Machina] " + strcharinfo(0) + " just join the Ex Machina. Who will come to fight him?", bc_all,0xFFCE00;
+		}
+		else
+		{
+			set $@DEMembers[getarraysize($@DEMembers)], getcharid(3);
+			if (getarraysize($@DEMembers) < $maxDEMemberCount)
+			{
+				announce "[Ex Machina] " + strcharinfo(0) + " just join the Ex Machina. Still " + ($maxDEMemberCount - getarraysize($@DEMembers)) + " fighters needed to begin!", bc_all,0xFFCE00;
+			}
+		}
+	}
+	else
+	{
+		goto OnLeave;
+	}
+	close;
+
+OnEnterAgain:
+	set .@found, callfunc("CheckDEPlayers");
+	if(.@found == 1)
+	{
+		mes "Get ready, I'll send you back.";
+		warp $deusExMap$, 0, 0;
+	}
+	else
+	{
+		mes "You're not part of this Ex Machina.";
+		mes "Wait for another to begin, please.";
+	}
+	close;
+
+OnLeave:
+	set .@npcname$, "[Red Woman]";
+	next;
+	mes .@npcname$;
+	mes "Your choice!";
+	close;
+}
+
+function	script	CheckDEPlayers	{
+	for(set .@i,0; .@i<getarraysize($@DEMembers) && .@found == 0; set .@i,.@i+1)
+	{
+		if($@DEMembers[.@i] == getcharid(3))
+		{
+			return 1;
+		}
+	}
+	return 0;
+}

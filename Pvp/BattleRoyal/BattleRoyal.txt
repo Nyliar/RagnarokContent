@@ -1,0 +1,338 @@
+// [========================================================]
+// [============    Battle Arena - Battle Royal   ==========]
+// [========================================================]
+// [ Version 1                                              ]
+// [========================================================]
+// [ Original script by: Alayne				    ]
+// [========================================================]
+// [ Description:                                           ]
+// [--------------------------------------------------------]
+// [                                                        ]
+// [ - The Battle Royal System				    ]
+// [========================================================]
+// [ Changelog: (5 last updates)                            ]
+// [--------------------------------------------------------]
+// [                                                        ]
+// [ v0: Creation                      			    ]
+// [                                                        ]
+// [                                                        ]
+// [========================================================]
+// [                                                        ]
+// [========================================================]
+pvp_n_3-2	mapflag	loadevent
+
+pvp_n_3-2,50,49,0	script	BattleRoyalManager::alababr	HIDDEN_WARP_NPC,2,2,{
+	close;
+
+OnPCLoadMapEvent:
+	if (strcharinfo(3) == $battleRoyalMap$)
+	{
+		//finally, check if event should start
+		if (getarraysize($BRMembers) == $maxBRMemberCount && $battleroyalon != 2)
+		{
+			goto StartBR;
+		}
+	}
+	end;
+
+StartBR:
+	mapannounce $battleRoyalMap$, "[Battle Royal] The Battle Royal starts!", bc_all, 0x00FF00;
+	initnpctimer;
+	set $battleroyalon, 2;
+	set .totalCount, 0;
+  pvpon $battleRoyalMap$;
+	end;
+
+OnTimer60000:
+	set .totalCount, .totalCount + 1;
+	if (.totalCount == $battleDuration)
+	{
+		callsub OnCheckVictory;
+	}
+
+	setnpctimer 0;
+	end;
+
+OnCheckVictory:
+	//every minute, check for members
+  pvpoff $battleRoyalMap$;
+	set .@winner, -1;
+	set .@highest, 0;
+	for(set .@i,0; .@i<getarraysize($BRMembers); set .@i,.@i+1)
+	{
+		set .@attached, attachrid($BRMembers[.@i]);
+		if (getarraysize($BRMembers[.@i]) == 0 || .@attached == 0)
+		{
+			deletearray $BRMembers[.@i], 1;
+		}
+		else
+		{
+			if(BRPOINTS > .@highest)
+			{
+				set .@highest, BRPOINTS;
+				set .@winner, getcharid(3);
+			}
+		}
+	}
+
+	if(.@winner != -1)
+	{
+		attachrid(.@winner);
+		announce "[Battle Royal] " + strcharinfo(0) + " just win the Battle Royal!", bc_all, 0x00FF00;
+		mapannounce $battleRoyalMap$, "[Battle Royal] Congratulations, " + strcharinfo(0) + "!", bc_all, 0x00FF00;
+		mapannounce $battleRoyalMap$, "[Battle Royal] you will now be rewarded.", bc_all, 0x00FF00;
+		
+		for(set .@i,0; .@i<getarraysize($BRMembers); set .@i,.@i+1)
+		{
+			if(getcharid(3) != .@winner)
+			{
+				if(.@cnt < .rewardMin[2])
+					set .@cnt, .rewardMin[2];
+				getitem 7773, .@cnt;
+			}
+			else
+			{
+				set .@cnt, CPOINTS / .rewardCnt[1];
+				if(.@cnt < .rewardMin[1])
+					set .@cnt, .rewardMin[1];
+				getitem 7773, .@cnt;
+				set BRPOINTS, BRPOINTS + .pointPerVictory;
+				set Zeny, Zeny + BRPOINTS * 10000;
+				set Zeny, Zeny + $BREntryPrice * ($maxBRMemberCount - 1);
+				//callfunc("AddPoints",getcharid(3),.pointPerVictory);
+			}
+		}
+		
+		set $battleroyalon, 0;
+	}
+	else
+	{
+		announce "[Battle Royal] ends without winner...", bc_all, 0x00FF00;
+		set $battleroyalon, 0;
+	}
+	return;
+	
+OnBoardAsked:
+	set .@caller, getcharid(3);
+	dispbottom "!!Battle Royal Points Board!!";
+	for(set .@i,0; .@i<getarraysize($BRMembers); set .@i,.@i+1)
+	{
+		set .@attached, attachrid($BRMembers[.@i]);
+		if (.@attached == 0)
+		{
+			deletearray $BRMembers[.@i], 1;
+		}
+		else
+		{
+			set .@message$, "	~" + strcharinfo(0) + ": " + BRPOINTS;
+			if(attachrid(.@caller))
+				dispbottom .@message$;
+		}
+	}
+	end;
+	
+OnPCLoginEvent:
+	set BRPOINTS, 0;
+	end;
+
+OnPCDieEvent:
+	if (strcharinfo(3) == $battleRoyalMap$)
+	{
+		addtimer 1000, strnpcinfo(3) + "::OnHealAfterDeath";
+		
+		attachrid(killerrid);
+		
+		set BRPOINTS, BRPOINTS + .pointPerKill;
+		dispbottom "You've earn " + .pointPerKill + " points. Your current balance is " + BRPOINTS;
+	}
+	end;
+
+OnHealAfterDeath:
+	charcommand "#load " + strcharinfo(0);
+	dispbottom "[Valkyrie] You received the War Goddess benediction!";
+	percentheal 100, 100;
+	if(.buffs == 1)
+	{
+		specialeffect2 EF_INCAGILITY; sc_start SC_INC_AGI,240000,10;
+		specialeffect2 EF_BLESSING; sc_start SC_BLESSING,240000,10;
+	}
+	end;
+
+OnInit:
+	set $battleRoyalMap$, "pvp_n_3-2";
+	set $maxBRMemberCount, 10;
+	set $BREntryPrice, 5000;
+	setarray $BRDuration[0],5,10,15; //minutes range
+	set $battleroyalon, 0;
+	set .pointPerKill, 10;
+	set .pointPerVictory, 100;
+	setarray .rewardCnt[0], 10, 20;
+	setarray .rewardMin[0], 5, 1;
+	bindatcmd "brboard", strnpcinfo(3) + "::OnBoardAsked";
+	set .buffs, 1;
+	end;
+}
+
+prontera,119,166,4	script	Battle Royal::alabrent	4_MAN_GALTUN1,{
+	set .@npcname$, "[Yolanrd]";
+	mes .@npcname$;
+	mes "Hello to you, " + strcharinfo(0);
+	mes "I'm the Battle Royal Manager.";
+	mes "When you talk to me, you'll be able to setup or join an existing Battle Royal.";
+	next;
+	mes .@npcname$;
+	if ($battleroyalon == 2)
+	{
+		goto OnEnterAgain;
+	}
+	if ($battleroyalon == 1)
+	{
+		if(callfunc("CheckBRPlayers") == 1)
+		{
+			next;
+			mes .@npcname$;
+			mes "Be patient please. The Battle Royal will start soon.";
+			close;
+		}
+
+		mes "So. Are you interested?";
+		if (select("Join the currently running Battle Royal","No, thanks") == 1)
+		{
+			callsub OnJoin, 1;
+		}
+		else
+		{
+			goto OnLeave;
+		}
+	}
+	else if ($battleroyalon == 0)
+	{
+		mes "So. Are you interested?";
+		if (select("Start a new Battle Royal","No, thanks") == 1)
+		{
+			callsub OnJoin, 0;
+		}
+		else
+		{
+			goto OnLeave;
+		}
+	}
+	else
+	{
+		next;
+		mes .@npcname$;
+		mes "Sorry, it's too late for this battle. Come back later.";
+	}
+	close;
+
+OnJoin:
+	set .@npcname$, "[Yolanrd]";
+	set .@mode, getarg(0);
+	next;
+	mes .@npcname$;
+	mes "Sure!";
+	mes "It'll cost you " + $BREntryPrice + "z to enter.";
+	if (Zeny < $BREntryPrice)
+	{
+		next;
+		mes .@npcname$;
+		mes "Sorry, but you lack some money...";
+		close;
+	}
+	if (select("Here you are.","I'll get back") == 1)
+	{
+		next;
+		mes .@npcname$;
+		set Zeny, Zeny - $BREntryPrice;
+		mes "Allright.";
+		mes "The Battle Royal is pretty simple.";
+		mes "Kill everyone you'll see. The last one standing will win.";
+		next;
+		mes .@npcname$;
+		mes "The reward will be the total amount paid by all players.";
+		mes "I'll just keep a little part for me.";
+		mes "The fight will starts when " + $maxBRMemberCount + " members will join.";
+		if (.@mode == 0)
+		{
+			next;
+			mes .@npcname$;
+			mes "Now, choose a duration.";
+			set .@message$, "It can last for ";
+			set .@menu$, "";
+			for(set .@i,0; .@i<getarraysize($BRDuration); set .@i,.@i+1)
+			{
+				set .@message$, .@message$ + (.@i == 0 ? "" : (.@i == getarraysize($BRDuration) - 1 ? ", or " : ", ")) + $BRDuration[.@i] + " minutes";
+				set .@menu$, .@menu$ + (.@i == 0 ? "" : ":") + $BRDuration[.@i] + " minutes";
+			} 
+			set .@message$, .@message$ + ".";
+			mes .@message$;
+			mes "What's your choice?";
+			set .@duration, select(.@menu$) - 1;
+			next;
+			mes .@npcname$;
+			mes "Allright, let's go for " + $BRDuration[.@choice] + " minutes then.";
+			next;
+			mes .@npcname$;
+		}
+		mes "Good luck.";
+		next;
+		getmapxy(.@map$, .@x, .@y, 0);
+		savepoint(.@map$, .@x, .@y);
+		set BRPOINTS, 0;
+		warp $battleRoyalMap$, 0, 0;
+		if (.@mode == 0)
+		{
+			deletearray $BRMembers[0], getarraysize($BRMembers);
+			set $BRMembers[0], getcharid(3);
+			
+			set $battleroyalon, 1;
+			set $battleDuration, $BRDuration[.@choice];
+			announce "[Battle Royal] " + strcharinfo(0) + " just join the Battle Royal. Who will come to fight him?", bc_all, 0x00FF00;
+		}
+		else
+		{
+			set $BRMembers[getarraysize($BRMembers)], getcharid(3);
+			if (getarraysize($BRMembers) < $maxBRMemberCount)
+			{
+				announce "[Battle Royal] " + strcharinfo(0) + " just join the Battle Royal. Still " + ($maxBRMemberCount - getarraysize($BRMembers)) + " fighters needed to begin!", bc_all, 0x00FF00;
+			}
+		}
+	}
+	else
+	{
+		goto OnLeave;
+	}
+	close;
+
+OnEnterAgain:
+	set .@found, callfunc("CheckBRPlayers");
+	if(.@found == 1)
+	{
+		mes "Get ready, I'll send you back.";
+		warp $battleRoyalMap$, 0, 0;
+	}
+	else
+	{
+		mes "You're not part of this Battle Royal.";
+		mes "Wait for another to begin, please.";
+	}
+	close;
+
+OnLeave:
+	set .@npcname$, "[Yolanrd]";
+	next;
+	mes .@npcname$;
+	mes "Your choice!";
+	close;
+}
+
+function	script	CheckBRPlayers	{
+	for(set .@i,0; .@i<getarraysize($BRMembers) && .@found == 0; set .@i,.@i+1)
+	{
+		if($BRMembers[.@i] == getcharid(3))
+		{
+			return 1;
+		}
+	}
+	return 0;
+}
