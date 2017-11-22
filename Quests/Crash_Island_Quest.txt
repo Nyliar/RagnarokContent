@@ -1,0 +1,280 @@
+ein_fild01,28,253,5	script	Cave Entrance::alcaen	HIDDEN_NPC,3,3,{
+	end;
+
+OnTouch:
+	set .@npcname$, "[Voice from the Inside]";
+	mes "";
+
+	mes strcharinfo(0) + ": Ohé?!";
+	next;
+	if (CRASH_Q >= 1)
+	{
+		mes strcharinfo(0) + ": Are you there?";
+		next;
+		mes strcharinfo(0) + ": Amaranth send me to help you...";
+		next;
+		mes "...";
+		next;
+		mes "";
+		mes .@npcname$;
+		mes "Enter. And leave the monsters outside.";
+		mes "Enter?";
+		switch(select("Yes","No"))
+		{
+			case 1:
+				set #can_speak, 1;
+				mes "Well enter. But keep the monsters outside...";
+				break;
+			case 2:
+				mes "You prefer staying outside.";
+				break;
+		}
+	}
+	else
+	{
+		mes "You can't hear a thing from here.";
+		set #can_speak, 0;
+	}
+	close;
+}
+
+payon,193,110,5	script	Amaranth::alama	4_F_CAPEGIRL,{
+	set .@npcname$, "[Amaranth]";
+	mes .@npcname$;
+	mes "";
+	mes "Hello to you.";
+	if (CRASH_Q == 0 || CRASH_Q == 1)
+	{
+		mes "Have you ever heard about the Abandonned Cave?";
+		mes "It's a cave near Einbroch.";
+		mes "Some of my friends where part of a trip to find it.";
+		mes "Can you please help them?";
+		switch(select("Yes","No"))
+		{
+			case 1:
+				next;
+				mes .@npcname$;
+				mes "Thanks, Thanks a lot.";
+				mes "I'm sure they're still alive, somewhere around there.";
+				mes "Find them, and tell them I sent you, ok?";	
+				set CRASH_Q, 1;	
+				set #can_speak, 1;
+				break;
+			case 2:
+				mes "I'm so worried...?";
+				break;
+		}
+	}
+	else if (CRASH_Q == 2)
+	{
+		next;
+		mes .@npcname$;
+		mes "You've find them! Finally!";
+		mes "They told you they need help? You have to hunt Mimir?";
+		mes "Who could have know this giant was still alive there...";
+		mes "Mimir is supposed to be a guardian, not a threat...He's protecting the Wisdom Source.";
+		mes "Something must have happened. Can you investigate?";
+		if (select("Yes","No") == 1)
+		{
+			next;
+			mes .@npcname$;
+			mes "Thanks. First of all, you'll have to find something to bring back the Guardian.";
+			mes "Usually, we talk about Nature Essence.";
+			mes "I think 2 should be anough.";
+			mes "You should look around that Cave...";
+			set CRASH_Q, 3;
+		}
+	}
+	close;
+}
+
+cave,142,83,5	script	Mimir Summoner::almiso	4_M_NFDEADMAN2,{
+	set .@npcname$, "[Mimir Summoner]";
+
+	mes .@npcname$;
+	mes "";
+	mes "Niark niark niark";
+	mes "So, you've find me.";
+	mes "I'm here for years. I lived here, around these stupid humans...";
+	mes "I've petted the monsters around there to make them obey to my voice.";
+	next;
+	mes .@npcname$;
+	mes "Nobody can ever defeat me here, nor around here.";
+	mes "And do you know why?";
+	mes "Cause even Mimir, Wisdom Source Guardian, obeys me!";
+	mes "Ma magic corrupted its heart, and now, he's the origin of this island corruption!";
+	if (countitem(7836) >= 1 && countitem(6001) >= 1)
+	{
+		mes "And you bring me something to kill you! AHAHAHAHAHAHAHA!";
+		delitem 6001, 1;
+		delitem 7836, 1;
+		mes "Thank you, as now I'm able to call your doom down here!";
+		mes "HERE COMES....MIMIR!";
+		if (mobcount(strnpcinfo(4), strnpcinfo(3)+"::OnMimirKilled") == 0)
+		{
+			monster strnpcinfo(4),138,78,"Mimir",2251,1,strnpcinfo(3)+"::OnMimirKilled"; 
+		}
+	}
+	else
+		mes "But I'll let you flee. Crawl next to me!";		
+	close;
+
+OnMimirKilled:
+	set CRASH_Q, 4;
+	end;
+}
+
+cave,82,32,5	script	Eliant::alel	1_M_SIGNART,{
+	set .@npcname$, "[Eliant]";
+	mes "";
+
+	mes .@npcname$;
+	mes "...Hi.";
+	mes "Amaranth send you to help us, he?";
+	mes "Humpf! Better now than never, he?";
+	close;
+}
+
+cave,106,47,5	script	Onire::alor	4_F_LGTGRAND,{
+	set .@npcname$, "[Onire]";
+	mes "";
+
+	mes .@npcname$;
+	mes "The Aircraft we were in crashed months ago.";
+	mes "Since then, we're surviving on this awfull island.";
+	mes "Have you seen all this monsters outside? Brrr!";
+	close;
+}
+
+cave,75,46,5	script	Body::albo	4_M_LIEMAN,{
+	mes "He...He won't answer.";
+	close;
+}
+
+ein_fild01,75,292,5	script	Wind Elemental::allseles	HIDDEN_NPC,{
+	set .@npcname$, "[Wind Elemental]";
+	mes "";
+
+	mes .@npcname$;
+	if (CRASH_Q >= 3 && countitem(7836) == 0)
+	{
+		mes "You receive an essence from the Wind Elemental.";
+		getitem 7836, 1;
+	}
+	else
+		mes "Looks like a strange sign...";
+	close;
+}
+
+cave,62,78,5	script	Fire Elemental::allselef	HIDDEN_NPC,{
+	set .@npcname$, "[Fire Elemental]";
+	mes "";
+
+	mes .@npcname$;
+	if (CRASH_Q >= 3 && countitem(6001) == 0)
+	{
+		mes "You receive an essence from the Fire Elemental.";
+		getitem 6001, 1;
+	}
+	else
+		mes "Looks like a strange sign...";
+	close;
+}
+
+cave,97,40,5	script	Gamaran::alagam	4_M_EINOLD,{
+	set .rewardId, 29330;
+	
+	set .@npcname$, "[Gamaran]";
+	mes "";
+
+	mes .@npcname$;
+	mes "Hello, " + strcharinfo(0);
+	if (countitem(12400) >= 1 && CRASH_Q >= 3)
+	{
+		mes "Thanks!!! Thanks to you, we'll be able to leave!";
+		mes "Here's a reward for you. That's all we've been able to save from the crash.";
+		mes "It'll be more usefull to you than us.";
+		getitem .rewardId, 1;
+		delitem 12400, 1;
+		set CRASH_Q, 5;
+	}
+	else
+	{
+		mes "So the Guilde finally decided to send us somebody to help?";
+		if(#can_speak == 0)
+		{
+			mes "Better later than never...";
+			close;
+		}
+		switch(select("Yes","No"))
+		{
+			case 1:
+				next;
+				mes .@npcname$;
+				mes "You want me to believe this? Who are you?";
+				next;
+				warp "ein_fild01", 0, 0;
+				set #can_speak, 0;
+				addtimer 300000, strnpcinfo(3)+"::OnCanEnterAgain";
+				dispbottom "You've been thrown outside. Wait a bit to enter again.";
+				break;
+			case 2:
+				next;
+				mes .@npcname$;
+				mes "I know they'll never do that. They won't recognize their mistakes.";
+				mes "They've send us here, but won't help us to get back...";
+				mes "I also know that they don't have the choice.";
+				mes "If you want to help us, you'll have to help us escape this place.";
+				mes "You can't bring us, but you can find us something to allow us to move freely.";
+				mes "It'll be a good start.";
+				mes "Do you accept?";
+				next;
+				switch(select("Ok, what should I do?", "No, I'm a bit busy."))
+				{
+					case 1:
+						next;
+						mes .@npcname$;
+						mes "Thanks. From the bottom of my heart!";
+						mes "First, give news to Amaranth.";
+						mes "She can explain you.";
+						mes "This place is under Mimir power, and his troops are all around...";
+						mes "If you're able to hunt Mimir, the cave Guardian,";
+						mes "and to bring us some source water, the monsters will avoid us.";
+						mes "It's known to have magic powers, and to repell ignorance.";
+						mes "I'm relying on you.";
+						set CRASH_Q, 2;
+						break;
+					case 2:
+						next;
+						mes .@npcname$;
+						mes "...Come back when you can then.";
+						mes "We really need help.";
+						break;
+				}
+				break;
+		}
+	}
+	close;
+
+OnCanEnterAgain:
+	set #can_speak, 1;
+}
+
+cave,95,47,5	script	Source::alawiso	HIDDEN_NPC,2,2,{
+OnTouch:
+	set .@npcname$, "[Source]";
+	mes .@npcname$;
+	mes "";
+	mes "A really pure water flows inside it...";
+	if (countitem(713) > 1 && CRASH_Q >= 4)
+	{
+		mes "It glows slowly, and strangely...";
+		mes "Do you wish to get some?";
+		if (select("Yes","No") == 1)
+		{
+			delitem 713, 1;
+			getitem 12400, 1;
+		}
+	}
+	close;
+}

@@ -1,0 +1,514 @@
+niflheim,249,174,6	script	Anti Priest::prtantpri	ACADEMY_MASTER,{
+	set .@npcname$, "[Anti Priest]";
+	mes .@npcname$;
+	set .@price, 100;
+	set .rewardId, 29401;
+	setarray .@itemsId[0], 7019, 7020, 7439, 7438, 7563;
+	setarray .@itemsIdCount[0], 2, 2, 25, 30, 200;
+	
+	mes "";
+	mes "Who are you? What do you want? I've got no time for you.";
+	mes "What? Why are all my stuff black?";
+	mes "Cause I'm an Anti-Priest, that's why";
+	if(select("Anti-Priest?","Well...Ok") == 1)
+	{
+		if (APRIEST_Q == 0)
+		{
+			next;
+			mes .@npcname$;
+			mes "An Anti-Priest.";
+			mes "I'm used to not help people, anytime I can.";
+			mes "I'm going to give you my secret.";	
+			mes "You wanna become an Anti-Priest?";
+			mes "For that, you'll need an item. A " + getitemname(.rewardId) + ".";
+			if (BaseLevel >= 175)
+			{
+				next;
+				mes .@npcname$;
+				mes "I can create you one if you want.";
+				mes "But that's pretty rare. And therefor, not cheap.";
+				if(select("Make me one","No, thanks") == 1)
+				{
+					next;
+					mes .@npcname$;
+					set APRIEST_Q, 1;
+					mes "First of all, you'll have to understand that we are everyone ennemy.";
+					mes "Priests help. We're destroying.";
+					mes "That's an unmovable rule. And peoples hate us for that.";
+					mes "Therefor, we need to take people bad resentment, and merge them into a weapon.";
+					mes "That's what make a " + getitemname(.rewardId) + ".";
+					next;
+					mes .@npcname$;
+					mes "All around the world, you'll find grieved peoples.";
+					mes "Talk to them, offer to help them. And bring back their grief with you.";
+					next;
+					mes .@npcname$;
+					mes "I'll wait you here.";
+				}
+			}
+		}
+		else if (APRIEST_Q == 1)
+		{
+			next;
+			mes .@npcname$;
+			mes "Did you 'helped' some peoples?";
+			if(APRIEST_QQ == 2 && APRIEST_QQ2 == 2 && APRIEST_QQ3 == 3)
+			{
+				next;
+				mes .@npcname$;
+				mes "Good. I can feel it. You're to become one of us.";
+				mes "Bring me back those items. I'll give you a " + getitemname(.rewardId) + ".";
+				for (set .@i, 0; .@i < getarraysize(.@itemsId); set .@i, .@i+1)
+				{
+					if (countitem(.@itemsId[.@i]) < .@itemsIdCount[.@i])
+					{
+						mes "	~" + .@itemsIdCount[.@i] + " " + getitemname(.@itemsId[.@i]);
+					}				
+				}
+				next;
+				mes .@npcname$;
+				mes "I'll wait here.";
+				set APRIEST_Q, 2;
+			}
+		}
+		else if (APRIEST_Q == 2)
+		{
+			next;
+			mes .@npcname$;
+			mes "Do you got it all?";
+			for (set .@i, 0; .@i < getarraysize(.@itemsId); set .@i, .@i+1)
+			{
+				if (countitem(.@itemsId[.@i]) < .@itemsIdCount[.@i])
+				{
+					next;
+					mes .@npcname$;
+					mes "Sorry, but you're still lacking items.";
+					mes "Therefor, we need to take people bad resentment, and merge them into a weapon.";
+					mes "That's what make a " + getitemname(.rewardId) + ".";
+					close;
+				}				
+			}
+			next;
+			mes .@npcname$;
+			mes "You got it all. Allright.";
+			mes "Let's start.";
+			for (set .@i, 0; .@i < getarraysize(.@itemsId); set .@i, .@i+1)
+			{
+				delitem .@itemsId[.@i], .@itemsIdCount[.@i];
+			}
+			mes "Here's for you, a " + getitemname(.rewardId) + ".";
+			getitem .rewardId, 1;
+		}
+	}
+	else
+	{
+		next;	
+		mes .@npcname$;
+		mes "...You don't understand!";
+	}
+	close;
+}
+
+aldeba_in,93,114,2	script	Wounded Soldier::alaapws	4_M_JP_GUSTON,{
+	set .@npcname$, "[Wounded Soldier]";
+	mes .@npcname$;
+	set .@pcname$, "[" + strcharinfo(0) + "]";
+	mes "Hum? What do you want?";
+	mes "I'm not in an enough good mood to talk to you...";
+	if (APRIEST_QQ2 == 1)
+	{
+		next;
+		mes .@npcname$;
+		mes "You again? Won't you leave me alone?";
+		if(APRIEST_QQ2_KILL >= .monstersCount[0] && APRIEST_QQ2_KILL2 >= .monstersCount[1])
+		{
+			next;
+			mes .@npcname$;
+			mes "You...You've killed them all?";
+			mes "Really?";
+			mes "You're really strong!";
+			next;
+			mes .@pcname$;
+			mes "Not really. But hey...I wanted to help you.";
+			next;
+			mes .@npcname$;
+			mes "Thanks...Can you make a report for me?";
+			mes "My captain was waiting for these kills to launch an expedition on higher stages.";
+			mes "He's outside, near the entrance of the tower.";
+			set APRIEST_QQ2, 2;
+		}
+	}
+	else if (APRIEST_Q == 1)
+	{
+		next;
+		mes .@pcname$;
+		mes "Maybe I can do something for this bad mood?";
+		next;
+		mes .@npcname$;		
+		mes "Don't you see I've been wounded?";
+		mes "Pretty badly...";
+		mes "We were on a mission.";
+		mes "We had to kill all those monsters inside the Tower.";
+		mes "But...I've been paralysed, and freaking beaten to almost death.";
+		mes "I hate those monsters...";
+		mes "I'll probably never be able to walk again...";
+		next;
+		mes .@npcname$;
+		mes "If only I count kill those Punks and Bathory...They fall over me...";
+		mes "50 of firsts, and at least a hundred of others...";
+		mes "Fuckin' monsters...";
+		addtimer 3600000, strnpcinfo(4) + "::OnTimerElasped";
+		set APRIEST_QQ2, 1;
+	}
+	close;
+	
+OnNPCKillEvent:
+	if(APRIEST_QQ2 == 1)
+	{
+		if(killedrid == .monsterIds[0])
+		{
+			set APRIEST_QQ2_KILL, APRIEST_QQ2_KILL + 1;
+		}
+		else if(killedrid == .monsterIds[1])
+		{
+			set APRIEST_QQ2_KILL2, APRIEST_QQ2_KILL2 + 1;
+		}
+		dispbottom "[Wounded Soldier] Killed " + APRIEST_QQ2_KILL + " Bathories and " + APRIEST_QQ2_KILL2 + " Punk.";
+	}
+	end;
+	
+OnTimerElasped:
+	//time elasped, the quest has been abandonned
+	set APRIEST_QQ2, 2;
+	end;
+	
+OnInit:
+	setarray .monsterIds[0], 1102, 1199;
+	setarray .monstersCount[0], 50, 100;
+	end;
+}
+
+aldebaran,151,140,6	script	Captain::alaapc	4_M_REBELLION,{
+	set .@npcname$, "[Captain]";
+	mes .@npcname$;
+	set .@pcname$, "[" + strcharinfo(0) + "]";
+	mes "Hum? What do you want?";
+	mes "We're preparing an assault other this tower.";
+	if (APRIEST_QQ2 == 2)
+	{
+		next;
+		mes .@pcname$;
+		mes "Your soldier...The wounded one...He send me there.";
+		next;
+		mes .@npcname$;
+		mes "Hum? Why?";
+		if(select("To tell you I've slayed the monsters","Cause he died...") == 1)
+		{
+			next;
+			mes .@npcname$;
+			mes "Really? Good!";
+			mes "We're now ready. Let's start the assault.";
+			mes "Thanks. Here's for your pain.";
+			set Zeny, Zeny + 500000;
+			set APRIEST_QQ2, 3;
+		}
+		else
+		{
+			next;
+			mes .@npcname$;
+			mes "That's...A painfull news...";
+			mes "I'll have to reconsider the whole thing...";
+			mes "Thanks, anyway...";
+		}
+	}
+	close;
+}
+
+pay_arche,84,35,2	script	Weeping Mother::alaapwm	4_F_MALAYA,{
+	set .@npcname$, "[Weeping Mother]";
+	mes .@npcname$;
+	set .@pcname$, "[" + strcharinfo(0) + "]";
+	mes "Please! Please, mister soldier!";
+	mes "Won't you help me? Isn't that your job?";
+	if(APRIEST_QQ3 == 1 || APRIEST_QQ3 == 2)
+	{
+		next;
+		mes .@npcname$;
+		mes "Did you find them?";
+	}
+	else if (APRIEST_QQ3 == 3)
+	{
+		next;
+		mes .@npcname$;
+		mes "Did you find them?";
+		next;
+		mes .@pcname$;		
+		mes "Yes, I've found them...";
+		if(select("They were already dead...","I've send them to the town") == 1)
+		{
+			next;
+			mes .@npcname$;
+			mes "N...No...NOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOO";
+		}
+		else
+		{
+			next;
+			mes .@npcname$;
+			mes "Thank you! Thank you so much!";
+			set APRIEST_QQ3, 4;
+			hideonnpc strnpcinfo(3);
+			initnpctimer;
+		}
+	}
+	else if(APRIEST_Q == 1)
+	{
+		next;
+		mes .@pcname$;
+		mes "What's happening?";
+		next;
+		mes .@npcname$;
+		mes "My childrens...My two childrens have been taken inside the cave...";
+		mes "But this soldier refuse to let me enter to find them...";
+		next;
+		mes .@pcname$;
+		mes "I'll go, don't worry!";
+		next;
+		mes .@npcname$;
+		mes "Really? Thank you!";
+		set APRIEST_QQ3, 1;
+	}
+	close;
+	
+OnTimer180000:
+	hideoffnpc strnpcinfo(3);
+	end;
+}
+
+pay_dun00,174,38,2	script	Lost Child::alaaplc	JP_AIRI,{
+	set .@npcname$, "[Lost Child]";
+	mes .@npcname$;
+	set .@pcname$, "[" + strcharinfo(0) + "]";
+	mes "Mu...Mummy...?";
+	if(APRIEST_QQ3 == 1)
+	{
+		next;
+		mes .@pcname$;
+		mes "You shouldn't be here...";
+		next;
+		mes .@npcname$;
+		mes "I know, but I'm lost...";
+		next;
+		mes .@pcname$;
+		mes "Come with me.";
+		mes "Your mum sent me.";
+		next;
+		mes .@npcname$;
+		mes "But...My brother is further inside the dungeon...";
+		next;
+		mes .@pcname$;
+		mes "We're gonna get him too.";
+		set APRIEST_QQ3, APRIEST_QQ3 + 1;
+		hideonnpc strnpcinfo(3);
+		initnpctimer;
+	}
+	close;
+	
+OnTimer900000:
+	hideoffnpc strnpcinfo(3);
+	end;
+}
+
+pay_dun02,128,210,4	script	Lost Child::alaaplc2	4_M_DEWBOY,{
+	set .@npcname$, "[Lost Child]";
+	mes .@npcname$;
+	set .@pcname$, "[" + strcharinfo(0) + "]";
+	mes "Mu...Mummy...?";
+	if(APRIEST_QQ3 == 2)
+	{
+		next;
+		mes .@pcname$;
+		mes "You shouldn't be here...";
+		next;
+		mes .@npcname$;
+		mes "I know, but I'm lost...";
+		next;
+		mes .@pcname$;
+		mes "Come with me.";
+		mes "Your mum sent me.";
+		next;
+		mes .@npcname$;
+		mes "But...My sister is earlier inside the dungeon...";
+		next;
+		mes .@pcname$;
+		mes "She's allready with me.";
+		set APRIEST_QQ3, APRIEST_QQ3 + 1;
+		hideonnpc strnpcinfo(3);
+		initnpctimer;
+	}
+	close;
+	
+OnTimer900000:
+	hideoffnpc strnpcinfo(3);
+	end;
+}
+
+izlude,157,145,2	script	Illman::alaapim	4_M_DEWOLDMAN,{
+	set .@npcname$, "[Illman]";
+	mes .@npcname$;
+	set .@pcname$, "[" + strcharinfo(0) + "]";
+	mes "Hum? What do you want?";
+	mes "I'm not in an enough good mood to talk to you...";
+	if(APRIEST_QQ == 1)
+	{
+		mes "Did you find it?";
+	}
+	else if (APRIEST_QQ == 2)
+	{
+		mes "Did you find it?";	
+		next;
+		mes .@pcname$;
+		mes "Yes, I've found it.";	
+		next;
+		mes .@npcname$;
+		mes "Perfect, my friend! Give it back to me.";
+		if(select("No, I'll keep it","Here you are") == 1)
+		{
+			next;
+			mes .@npcname$;		
+			mes "You...You lied to me? I was relying on you!";
+		}
+		else
+		{
+			if(countitem($qqItemId) > 0)
+			{
+				delitem $qqItemId, 1;
+				next;
+				mes .@npcname$;
+				mes "Thank you. Really, thank you.";
+				set APRIEST_QQ, 3;
+			}
+			else
+			{
+				next;
+				mes .@npcname$;
+				mes "You...You don't have it...";				
+			}
+		}
+	}
+	else if (APRIEST_Q == 1)
+	{
+		next;
+		mes .@pcname$;
+		mes "Maybe I can do something for this bad mood?";
+		next;
+		mes .@npcname$;
+		mes "Humpf...I don't think so...";
+		next;
+		mes .@pcname$;
+		mes "What does it cost to give it try?";
+		next;
+		mes .@npcname$;
+		mes "Maybe the fact that you'll have to enter into my life?";
+		mes "...";
+		mes "Well allright.";
+		mes "I've been robbed.";
+		mes "Some really precious item (for me at least) were stolen last week.";
+		mes "And it piss me off so badly...";
+		next;
+		mes .@pcname$;
+		mes "What about letting me find it back for you?";
+		next;
+		mes .@npcname$;
+		mes "And why would you do that, hu?";
+		mes "What would you gain by doing it?";
+		next;
+		mes .@pcname$;
+		mes "Nothing, I just want to help.";
+		next;
+		mes .@npcname$;
+		mes "Allright. Well I guess you'll have to look around here then.";
+		mes "If you find something, warn me.";
+		set APRIEST_QQ, 1;
+		addtimer 3600000, strnpcinfo(4) + "::OnTimerElasped";
+	}
+	close;
+	
+OnTimerElasped:
+	//time elasped, the quest has been abandonned
+	set APRIEST_QQ, 2;
+	end;
+	
+OnInit:
+	set $qqItemId, 7267;
+	set $qqItemPrice, 1500000;
+	end;
+}
+
+izlude_in,70,95,2	script	Burglar::alaapimv	4_M_ROKI,{
+	set .@npcname$, "[Illman]";
+	mes .@npcname$;
+	set .@pcname$, "[" + strcharinfo(0) + "]";
+	mes "Hum? What do you want?";
+	if(APRIEST_QQ == 1)
+	{
+		next;
+		mes .@pcname$;
+		mes "Do you know Illman?";
+		next;
+		mes .@npcname$;
+		mes "Illman? Who's it?";
+		next;
+		mes .@pcname$;
+		mes "A man who lived a bit further.";
+		mes "He've been robbed something valuable for him.";
+		next;
+		mes .@npcname$;
+		mes "And? You think that's me?";
+		next;
+		mes .@pcname$;
+		mes "Well...That's your job, no?";
+		next;
+		mes .@npcname$;
+		mes "Well, yep. Totally.";
+		mes "Let's say I have this item you're looking for.";
+		mes "What will you do?";
+		if(select("Take it by force","Pay for it") == 1)
+		{
+			next;
+			mes .@npcname$;
+			mes "He he he. You're funny, hu?";
+			hideonnpc strnpcinfo(3);
+			initnpctimer;
+		}
+		else
+		{
+			next;
+			mes .@npcname$;
+			mes "He he. You know my language, hu?";
+			mes "I'll give it to you for " + $qqItemPrice + "z. 'K?";
+			if(select("Yes","No") == 1)
+			{
+				if(Zeny < $qqItemPrice)
+				{
+					next;
+					mes .@npcname$;
+					mes "You don't have those money, sorry...";
+					mes "I'm not a free worker.";
+					close;
+				}
+				set Zeny, Zeny - $qqItemPrice;
+				getitem $qqItemId, 1;
+				next;
+				mes .@npcname$;
+				mes "Nice to work with you! See you soon!";
+				set APRIEST_QQ, 2;
+			}
+		}
+	}
+	close;
+	
+OnTimer3600000:
+	hideoffnpc strnpcinfo(3);
+	stopnpctimer;
+	end;
+}

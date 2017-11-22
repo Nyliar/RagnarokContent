@@ -1,0 +1,83 @@
+izlude,174,159,1	script	Strange Surgeon::alastrsur	4_M_SCIENCE,{
+	set .@npcname$, "^0000FF[ Surgeon ]^000000";
+	mes .@npcname$;
+	mes "Hello to you, my young friend.";
+	mes "What can I do for you?";
+	switch(select("What kind of surgeon are you?","What does a surgeon do here...?","Can you operate me?"))
+	{
+		case 1:
+			next;
+			mes .@npcname$;		
+			mes "I'm an appearance doctor.";
+			mes "I'm operating those who don't feel right in their own skin.";
+			mes "If you ever feel not straight in your shoes...Come to me, okay?";
+			break;
+		case 2:
+			next;
+			mes .@npcname$;
+			mes "Well long story short, I'm here cause I've lost the place where I was used to operate.";
+			mes "So...right now, I'm working here...";
+			if(SurgeonQ == 2)
+			{
+				next;
+				mes .@npcname$;
+				mes "Wh...What? Really?";
+				mes "A place where I can settle?";
+				mes "You...You're an angel...";
+				mes "Here. Take this, as a reward.";
+				rentitem 29360, 60;				
+				set SurgeonQ, 3;
+				close;
+			}
+			set SurgeonQ, 1;
+			break;
+		case 3:
+			if(#changesex >= 10)
+			{
+				next;
+				mes .@npcname$;
+				mes "Ho! You're a recurrent user of my services, right?";
+				mes "Here's for you. To thank you.";
+				rentitem 29360, 60;
+			}
+			next;
+			mes .@npcname$;
+			mes "Sure. It'll cost " + .price + "z for an operation.";
+			mes "Are you okay with that?";
+			if(select("Yes","No") == 1)
+			{
+				if(Zeny < .price)
+				{
+					next;
+					mes .@npcname$;
+					mes "Sorry, but you lack some money...";
+					close;
+				}
+				set Zeny, Zeny - .price;
+				next;
+				mes .@npcname$;
+				mes "Allright, let's go then!";
+				set #changesex, #changesex+ 1;
+				changesex();
+			}
+			break;
+	}
+	close;
+
+OnInit:
+	set .price, 10000000;
+	end;
+}
+
+prt_in,65,140,4	script	Ladybird::alastrlb	4_F_BRZ_WOMAN,{
+	set .@npcname$, "^0000FF[ Ladybird ]^000000";
+	mes .@npcname$;
+	mes "Hello my young friend.";
+	if (SurgeonQ == 1)
+	{
+		mes "What? You're looking for a place where a surgeon may be able to work?";
+		mes "But...He can come here, without any problems.";
+		set SurgeonQ, 2;
+	}
+	close;
+}

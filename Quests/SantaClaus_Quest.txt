@@ -1,0 +1,118 @@
+xmas_fild01,192,111,4	script	Santa Clause::prtsancla	4_M_SANTA,{  
+    //Start the true script
+	set .rewardId, 29317;
+	
+    cutin .@cutin$,2;
+	set .@npcname$, "[Santa Claus]";
+	mes .@npcname$;
+	mes "Ho!ho!ho";
+	
+	if (.christmasLoot == 0)
+	{
+		if(CHRISTMASQ == 0)
+		{
+			mes "Can you help me, my friend?";
+			mes "My imp started a strike three days ago...Christmas is really near now, and my basket is still empty...";
+			mes "Can you help me get the childrens their gifts?";
+			mes "But you should hurry up...Only 3 hours lefts before I must leave...";
+			set CHRISTMASQ, 1;
+			set .christmasLoot, 1;
+			initnpctimer;
+		}
+		else
+		{
+			mes "Thank you for your help! You've been my savior...";
+			mes "Here's a little gift, a bit earlier than the others but he...You've helped Santa!";
+			switch(.rankReached)
+			{
+				case 0:
+					set Zeny, Zeny + 1000000;
+					break;
+				case 1:
+					set Zeny, Zeny + 1000000;
+					getitem 18533, 1;
+					break;
+				case 2:
+				case 3:
+				case 4:
+					rentitem .rewardId, 60;
+					break;
+			}
+			set CHRISTMASQ, 0;
+		}
+	}
+	else
+	{
+		if(CHRISTMASQ == 1)
+		{
+			mes "Did you bring me back some gifts?";
+			switch (select("Yes","No","I keep them for me!"))
+			{
+				case 1:
+					next;
+					mes .@npcname$;
+					mes "Perfect, thank you my child!";
+					for(set .@i,0; .@i<getarraysize(.giftIds); set .@i,.@i+1)
+					{
+						if (countitem(.giftIds[.@i]) > 0)
+						{
+							set .giftBrought, .giftBrought + countitem(.giftIds[.@i]);
+							if(.giftBrought >= .requiredGifts[.rankReached])
+							{
+								set .rankReached, .rankReached + 1;
+							}
+							delitem .giftIds[.@i], countitem(.giftIds[.@i]);
+						}
+					}
+					break;
+				case 2:
+					next;
+					mes .@npcname$;
+					mes "Please hurry up...Christmas is really soon now...";
+					break;
+				case 3:
+					next;
+					mes .@npcname$;
+					setnpcdisplay("prtsancla",1247);
+					mes "You little...";
+					mes "Give them to me!";
+					next;
+					mes .@npcname$;
+					setnpcdisplay("prtsancla",4_M_SANTA);
+					mes "You said you'd help me...";
+					break;
+			}
+		}
+		else
+		{
+			mes "Sorry my child, but I'm a bit busy right now...";
+			mes "Damn imps...";
+		}
+	}
+	close;
+	
+OnWhisperGlobal:
+OnTimer10800000:
+	stopnpctimer;
+	set .christmasLoot, 0;
+	announce "[Santa Clause] Ho, Ho, Ho! It's time to leave!", bc_blue|bc_all;
+	end;
+	
+OnNPCKillEvent:
+	set .@monster_lvl, getmonsterinfo(killedrid, 1);
+	//higher the monster lvl, higher the chance
+	//1 chance over 4 for a 40 -> 50 lvl monster, 1/6 for 60 -> 70...
+	if (rand(0,100) <= (.@monster_lvl / 10) * 10 && CHRISTMASQ == 1 && .christmasLoot == 1)
+	{
+		getitem .giftIds[rand(0,getarraysize(.giftIds) - 1)], 1;
+	}
+	end;
+	
+OnInit:
+	setarray .requiredGifts[0],50,100,225,375,500;
+	set .GmMenu, 80;
+	set .rankReached, 0;
+	set .giftBrought, 0;
+	setarray .giftIds[0],664,665,666;
+	end;
+}
