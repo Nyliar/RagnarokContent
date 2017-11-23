@@ -1,0 +1,625 @@
+//===== Alayne Scripts =======================================
+//= Poring Realm Instance
+//===== By: ================================================== 
+//= Alayne
+//===== Current Version: ===================================== 
+//=
+//= 1.0 - Creation
+//= 1.1 - Structure modification, pattern apply from Emistry's
+//= 1.2 - Logical mods over stars for hercules support
+//= 1.3 - Current version, handle both emu in one script
+//=
+//===== Compatible With: ===================================== 
+//= rAthena SVN
+//= hercules SVN
+//===== Description: ========================================= 
+//=
+//= An instance based over mobs level
+//=
+//===== Todo Remaining: ======================================
+//
+//===== Additional Comments: =================================
+//
+//
+//============================================================
+
+prontera,145,164,3	script	Poring Master::pormas	4_M_ROYALGUARD,{
+
+OnStart:
+	set .@party_id, getcharid(1);
+	set .@is_leader, ( getcharid(0) == getpartyleader(.@party_id,2) );
+	.@has_instance = PR_INSTANCE_ID >= 0;
+	
+	set .@instance_lap_delay, ( instance_delay_allomsour - gettimetick(2) );
+
+	mes "^0055FF[ "+.instance_name$+" ]^000000";
+	mes "Hello Warrior!";
+	next; 
+	mes "^0055FF[ "+.instance_name$+" ]^000000";
+	mes "I've been sent by Poring King to recruit fighters to help us defeating the Black Poring.";
+	mes "This evil one and his sorcerer started to invade the Poring Kingdom.";
+	next;
+	mes "^0055FF[ "+.instance_name$+" ]^000000";
+	mes "Will you help us?";
+	next;
+	switch( select( 
+		( .@party_id && .@is_leader && !.@has_instance )?"Start " + .instance_name$:"",
+		( .@party_id && .@has_instance )?"Enter " + .instance_name$:"",
+		( .@party_id && .@is_leader && .@has_instance )?"Destroy " + .instance_name$:"",
+		( .@party_id && .@has_instance )?"Look at me! Change me back!":"",
+	"Information"
+		)){
+	case 1:
+		if( .@instance_lap_delay > 0 )
+		{
+			mes "I can't let you in. The Realm is still too unstable. Wait for " + callfunc("__Time2Str", .@instance_lap_delay) + " before coming back.";
+			close;
+		}
+		getpartymember .@party_id,2;
+		if( .min_party_member >= 1 ){
+			set .@origin, getcharid(3);
+			set .@gettimetick, gettimetick(2);
+			for( set .@i, 0; .@i < $@partymembercount; set .@i, .@i+1 )
+				if( attachrid( $@partymemberaid[.@i] ) ){
+					set .@member_count, .@member_count + 1;
+					if( BaseLevel < .base_level[0] || BaseLevel > .base_level[1] ) set .@fail, .@fail|1;
+					if( Zeny < .instance_zeny ) set .@fail, .@fail|2;
+					if( instance_delay_allomsour > .@gettimetick ) set .@fail, .@fail|4;
+					if( .@fail ){
+						set .@name$, strcharinfo(0);
+						break;
+					}
+				}
+			attachrid( .@origin );
+		}
+		
+		if( .@name$ != "" && .@fail ){
+			mes "^FF0000[ Failed ]^000000";
+			mes "^0055FF"+.@name$+"^000000, cannot join right now.";
+			mes " ";
+			mes "^FF0000[ Reason: ]^000000";
+			if( .@fail & 1 ) mes "^777777You must be Level: "+.base_level[0]+" - "+.base_level[1]+"^000000";
+			if( .@fail & 2 ) mes "^777777You need "+ .instance_zeny +" Zeny^000000";
+			if( .@fail & 4 ) mes "^777777You still have cooldown.^000000";
+			break;
+		}
+		if( instance_check_party( .@party_id,.min_party_member ) == 0 ){
+			mes "^0055FF[ "+.instance_name$+" ]^000000";
+			mes "Make or join a party with at least "+.min_party_member+" member and try again.";
+			break;
+		}
+		else{
+			set $instance_lap_level, select( 
+				"^FF0000[ Cooldown - 24 Hours ]^000000 Easy Mode",
+				"^FF0000[ Cooldown - 48 Hours ]^000000 Difficult Mode",
+				"^FF0000[ Cooldown - 72 Hours ]^000000 Extreme Mode"
+			);
+			//HERCULES
+			//set .@instance, instance_create( .instance_name$,.@party_id, IOT_PARTY );
+			//RATHENA
+			set .@instance, instance_create( .instance_name$ );
+			if( .@instance < 0 ) {
+				mes "^0000FF"+.instance_name$+" ^000000- Reservation Failed!";
+				close;
+			}
+			mes "^0055FF[ "+.instance_name$+" ]^000000";
+			mes "^0000FF"+.instance_name$+" ^000000 - Reserved";
+			
+			//HERCULES
+			//for( .@i = 0; .@i < .map_size; .@i++ )
+			//	if( instance_attachmap( $prMap$[.@i], .@instance, 1, "" + (.@i + 1) + "@pore" ) == "" ){
+			//		mes "" + .instance_name$ + " reservation failed.";
+			//		mes "- ^FF0000Reservation Failed!^000000";
+			//		instance_destroy( .@instance );
+			//		close;
+			//	}
+				
+			set .@gettimetick, gettimetick(2);
+			getpartymember .@party_id,2;
+			for( .@i = 0; .@i < $@partymembercount; .@i++ )
+				if( attachrid( $@partymemberaid[.@i] ) ){
+					set instance_delay_allomsour, ( .@gettimetick + ( .instance_delay * .@level ));
+					set Zeny, Zeny - .instance_zeny;
+					PR_INSTANCE_ID = .@instance;
+					dispbottom "["+.instance_name$+"] Paid "+ .instance_zeny +" Zeny and Instance Cooldown Applied.";
+				}
+			attachrid( .@origin );
+			mes "" + .instance_name$ + " has been generated for Party - "+getpartyname( .@party_id );
+			
+			//HERCULES
+			//instance_set_timeout $time_lap_limit[0],$time_lap_limit[1],.@instance; //herc only
+			//instance_attach( .@instance );
+			//instance_init( .@instance );
+			
+			//RATHENA		
+			//init unused npcs
+			next;
+		}
+	case 2:		
+		getmapxy(.@map$, .@x, .@y, UNITTYPE_PC);
+		//HERCULES
+		//savepoint .@map$, .@x, .@y;
+		//if( has_instance( $prMap$[0] ) == "" ){
+		//	mes .instance_name$ + " doesnt exist for Party - "+getpartyname( .@party_id );
+		//}
+		//else{
+		//	warp $prMap$[0],61,15;
+		//	instance_announce $instance_lap, getpartyname(getcharid(1))+"  entered in the "+.instance_name$+"!",bc_map,"0x00ff99";
+		//}
+		
+		//RATHENA
+		save .@map$, .@x, .@y;
+		switch(instance_enter(.instance_name$)) {
+			default:
+				mes "An unknown error has occurred.";
+				close;
+			case 2:
+				mes "The memorial dungeon " + .instance_name$ + " does not exist.";
+				mes "The party leader did not generate the dungeon yet.";
+				close;
+			case 1:
+				mes "You can enter the dungeon after making the party.";
+				close;
+			case 0:
+				instance_announce $instance_lap, strcharinfo(0)+" from party, " +getpartyname( .@party_id )+", is entering the dungeon, "+.instance_name$+".",bc_map,"0x00ff99",FW_NORMAL,12;
+				end;
+		}
+		break;
+	case 3:
+		mes "" + .instance_name$ + " Destroyed.";
+		instance_destroy PR_INSTANCE_ID;
+		getpartymember getcharid(1),2;
+		for( set .@i, 0; .@i < $@partymembercount; set .@i, .@i+1 )
+			if( attachrid( $@partymemberaid[.@i] ) && PR_INSTANCE_ID > 0){
+				set PR_INSTANCE_ID, -1;
+			}
+		break;
+	case 4:
+		mes "^0055FF[ "+.instance_name$+" ]^000000";
+		mes "You should have taken my warning into account.";
+		mes "I'll give you you're appearance back,";
+		mes "but for your stats, you'll have to see a Reset Girl.";
+		undisguise;
+		break;
+	default: 
+		mes "^0055FF[ "+.instance_name$+" ]^000000";
+		mes "Good. Looks like you've understand I'm not like every others...";
+		mes "Prepare yourself for a never encountered adventure.";
+		mes "There's few walk to do, but lots of ordeal to fight.";
+		mes "Keep in mind you'll only have one hour. Over that time, I'll take you back!";
+		break;
+}
+close;
+
+OnPCLoginEvent:
+OnPCLogoutEvent:
+	PR_INSTANCE_ID = -1;
+	end;
+
+OnInit:
+	setarray .base_level,60,250;
+	setarray $time_lap_limit,7200,300;
+	setarray $prMap$,"1@pr","2@pr";
+	set .map_size, getarraysize( $prMap$ );
+	set .min_party_member, 1;
+	set .instance_zeny, 50000;
+	set .instance_delay, 43200;
+	set .instance_name$, "Poring Realm";
+	end;
+}
+
+1@pr,1,1,4	script	poring_realm_main	HIDDEN_WARP_NPC,2,2,{
+function floor_monster;
+function floor_guardian;
+function floor_reward;
+end;
+
+OnChangeParticipants:
+	setarray .@mobIds[0],1002,1031,1113,1242,1836,1784;
+	attachrid($@partymemberaid[0]);	
+	for (set .@i,0; .@i<=$partymembercount; set .@i,.@i+1)
+	{
+		attachrid($@partymemberaid[.@i]);
+
+		// choix d'un id de mob au hasard
+		set .@id, rand(0,5);
+
+		//changement d'apparence
+		disguise .@mobIds[.@id];
+
+		// sauvegarde des stats
+		set .@str, readparam(bStr);
+		set .@int, readparam(bInt);
+		set .@dex, readparam(bDex);
+		set .@luk, readparam(bLuk);
+		set .@vit, readparam(bVit);
+		set .@agi, readparam(bAgi);
+		set .@mhp, MaxHp;
+		set .@msp, MaxSp;
+
+		// stockage des sauvegarde dans une variable
+		set .stats, .@str | (.@int << 8) | (.@dex << 16) ;
+		set .stats2, .@luk | (.@vit << 8) | (.@agi << 16);
+		set .statc, StatusPoint;
+		set .mhp, .@mhp;
+		set .msp, .@msp;
+		set .id, getcharid(0);
+
+		resetstatus;
+		statusup2 bStr,  getmonsterinfo( .@mobIds[.@id], MOB_STR )-1;
+		statusup2 bAgi,  getmonsterinfo( .@mobIds[.@id], MOB_AGI )-1;
+		statusup2 bVit,  getmonsterinfo( .@mobIds[.@id], MOB_VIT )-1;
+		statusup2 bInt,  getmonsterinfo( .@mobIds[.@id], MOB_INT )-1;
+		statusup2 bDex,  getmonsterinfo( .@mobIds[.@id], MOB_DEX )-1;
+		statusup2 bLuk,  getmonsterinfo( .@mobIds[.@id], MOB_LUK )-1;
+		set MaxHp, getmonsterinfo(.@mobIds[.@id],2);
+		set MaxSp, 100;
+		set StatusPoint, 0;
+
+		set stats, .stats;
+		set stats2, .stats2;
+		set statc, .statsc;
+		set mhp, .mhp;
+		set msp, .msp;
+	}
+	end;
+	
+OnPCDieEvent:
+	if (strcharinfo(3) == instance_mapname( $prMap$, $instance_lap ))
+	{
+		undisguise;
+
+		resetstatus;
+		statusup2 bStr,  stats & 255 - 1;
+		statusup2 bInt, (stats >> 8)  & 255 - 1;
+		statusup2 bDex, (stats >> 16) & 255 - 1;
+		statusup2 bLuk, stats2 & 255 - 1;
+		statusup2 bVit, (stats2 >> 8) & 255 - 1;
+		statusup2 bAgi, (stats2 >> 16) & 255 - 1;
+		set StatusPoint, statc;
+		set MaxHp, mhp;
+		set MaxSp, msp;
+	}
+	end;
+
+OnRechangeParticipants:
+	set 'reseted, 0;
+	// Pour la lecture, on ne prend que les 8 premiers bits (avec le & 255) et on décale
+	for (set .@i,0; .@i < $@partymembercount; set .@i,.@i+1)
+	{
+		attachrid($@partymemberaid[.@i]);
+
+		undisguise;
+
+		resetstatus;
+		statusup2 bStr,  stats & 255 - 1;
+		statusup2 bInt, (stats >> 8)  & 255 - 1;
+		statusup2 bDex, (stats >> 16) & 255 - 1;
+		statusup2 bLuk, stats2 & 255 - 1;
+		statusup2 bVit, (stats2 >> 8) & 255 - 1;
+		statusup2 bAgi, (stats2 >> 16) & 255 - 1;
+		set StatusPoint, statc;
+		set MaxHp, mhp;
+		set MaxSp, msp;
+
+		atcommand "@heal";
+	}
+	end;
+	
+OnStartDialog:
+	//freeze players
+	sleep 10000;
+	instance_announce instance_id(), " [ Angelikun III ] Can...Can they hear me?",bc_map,"0x00ff99";
+	sleep 1000;
+	instance_announce instance_id(), " [ Angelikun III ] Hello Humans.",bc_map,"0x00ff99";
+	sleep 1000;
+	instance_announce instance_id(), " [ Angelikun III ] I'm Angelikun, third of the name, King of all Porings.",bc_map,"0x00ff99";
+	sleep 1000;
+	instance_announce instance_id(), " [ Angelikun III ] Today, I'm begging you to help us. Devilikan, the Evil poring, lend an attack against us.",bc_map,"0x00ff99";
+	sleep 1000;
+	instance_announce instance_id(), " [ Angelikun III ] Thanks to the Sorcerer, he've brought a little army, and trapped all the Realm, where you are now.",bc_map,"0x00ff99";
+	sleep 1000;
+	instance_announce instance_id(), " [ Angelikun III ] I can't defeat him...But you can! Please, help us...",bc_map,"0x00ff99";
+	
+	//release them
+	set .@npc_name$, instance_npcname( "poring_realm_main" );
+	donpcevent .@npc_name$ + "::OnFloorSummon";
+
+	set 'bombed, 0;
+	set .stopBombPop, 0;
+	end;
+	
+OnAllBombed:
+	//HERCULES
+	//instance_announce has_instance2($prMap$[0]), "[Devilikan]: Gyahahahahahaha! You take them all!! OUARGH ARF ARF ARF *struggling*",bc_map,"0x00ff99";
+	//RATHENA
+	instance_announce instance_id(), "[Devilikan]: Gyahahahahahaha! You take them all!! OUARGH ARF ARF ARF *struggling*",bc_map,"0x00ff99";
+	end;	
+
+function	floor_monster	{
+	set .@npc_name$, getarg(0);
+	set .@mapName$, 'instance_lap_floor + "@pr";
+	switch( 'instance_lap_floor ){
+		case 1:
+			//poring, poporing, drops, magmaring, stapo, marin
+			setarray .@monster,1002,1031,1113,1836,1784,1242;
+			setarray .@amount,20,10,15,5,5,10;
+			setarray .@coordinates[0],36,82,60,56;
+			setarray $@next_warping_coordinates[0], 199, 178;
+			break;
+		case 2:
+			//slave, poring, bomb poring
+			setarray .@monster,1096,1002,1582,1388,1120,1904,1113,2538;
+			setarray .@amount,5,25,3,5,3,5,5,1;
+			setarray .@event$, "OnNormalDied","OnNormalDied","OnNormalDied","OnNormalDied","OnNormalDied","OnBombKilled","OnBombKilled","OnNormalDied";
+			setarray .@coordinates[0],66,362,351,51;
+			setarray $@next_warping_coordinates[0], 0, 0;
+			break;
+		default:
+			return;
+	}
+	set .@map$, instance_mapname( .@mapName$ );
+	set 'instance_lap_floor_name$, .@level_name$;
+	set .@monster_size, getarraysize( .@monster );
+	for( set .@i, 0; .@i < .@monster_size; set .@i, .@i+1 ){
+		set .@target_amount, ( $instance_lap_level * .@amount[.@i] );
+		set .@mobevent$, "OnNormalDied";
+		if(getarraysize(.@event$) > 0 && getarraysize(.@event$) >= .@i)
+		{
+			set .@mobevent$, .@event$[.@i];
+		}
+		areamonster .@map$,.@coordinates[0],.@coordinates[1],.@coordinates[2],.@coordinates[3],"--ja--",.@monster[.@i],.@target_amount,.@npc_name$+"::"+.@mobevent$;
+	}
+	return;
+}
+
+function	floor_guardian	{
+	set .@npc_name$, getarg(0);
+	set .@map$, 'instance_lap_floor + "@pr";
+	switch(  'instance_lap_floor ){
+		case 1:
+			instance_announce instance_id(), .@npcname$ + "Hurmf...Well done...Now, that's my turn!",bc_map,"0x00ff99";
+			setarray .@monster,1090;
+			setarray .@amount,1;
+			set 'instance_lap_floor_name$, "Sorcerer Lair";
+			break;
+		case 2:
+			instance_announce instance_id(), "[Devilikan]: ...Groumpf! Congratulation, fighters...But you'll know have to fight me, Devilikan, the Evil Poring!",bc_map,"0x00ff99";
+			setarray .@monster,1002, 1502;		
+			setarray .@amount,100,1;
+			setarray .@event$[0],"","OnBossDied";
+			setarray .@name$[0],"Devilikan","Devilikan";
+			set 'instance_lap_floor_name$, "Poring Kingdom";
+			break;
+		default: 
+			return;
+	}
+	set .@map$, instance_mapname( .@map$ );
+	set .@monster_size, getarraysize( .@monster );
+	for( set .@i, 0; .@i < .@monster_size; set.@i, .@i+1 ){
+		set .@target_amount, ( $instance_lap_level * .@amount[.@i] );
+		set .@mobevent$, "OnGuardianDied";
+		if(getarraysize(.@event$) > 0 && getarraysize(.@event$) >= .@i)
+		{
+			set .@mobevent$, .@event$[.@i];
+		}		
+		set .@mobname$, "--ja--";
+		if(getarraysize(.@name$) > 0 && getarraysize(.@name$) >= .@i)
+		{
+			set .@mobname$, .@name$[.@i];
+		}
+		if(.@mobevent$ == "")
+		{
+			monster .@map$,0,0,.@mobname$,.@monster[.@i],.@target_amount;
+		}
+		else
+		{
+			monster .@map$,0,0,.@mobname$,.@monster[.@i],.@target_amount,.@npc_name$+"::"+.@mobevent$;
+		}
+	}
+	return;
+}
+
+function	floor_reward	{
+	set .@party_id, getarg(0);
+	set .@arg_count, getargcount() - 1;
+	
+	set .@reward, getarg(1);
+	set .@item_list_size, getarraysize( .@item_list ) - 2;
+	set .@baseId, getcharid(3);
+	if( .@party_id && .@item_list_size ){
+		getpartymember .@party_id,2;
+		for( .@pt = 0; .@pt < $@partymembercount; .@pt++ ){
+			if( attachrid( $@partymemberaid[.@pt] ) ){
+				if('rewardPRMode == 0)
+				{
+					for( .@item = 0; .@item < .@item_list_size; .@item += 3 )
+						if( rand(100) < .@item_list[.@item+2] )
+							getitem .@item_list[.@item],.@item_list[.@item+1];
+				}
+				else
+				{
+					callfunc("AddPoints", getcharid(3), .@reward * $instance_lap_level);
+				}
+				dispbottom "[ Poring Realm ] : You have gained instance points for defeating "+'instance_lap_floor_name$+".";
+				logmes "[ Poring Realm ] " + strcharinfo(0) + " complete the instance and obtains " + (.@reward * $instance_lap_level) + " points.";
+			}
+		}
+		detachrid;
+	}
+	attachrid .@baseId;
+	return;
+}
+
+OnInstanceInit:
+	set 'instance_lap_floor, 1;
+	set .@mainMapName$, 'instance_lap_floor + "@pr";
+	set .@map$, instance_mapname( .@mainMapName$ );
+	set .@npc_name$, instance_npcname( strnpcinfo(0) );
+
+	set 'floor_lap_reward, 75;
+	set 'final_lap_reward, 250;
+	set 'rewardPRMode, 1;
+	
+	//setcell instance_mapname("1@pi"),100,81,108,81,cell_walkable,0;
+	instance_announce instance_id(), "[ Poring Sorcerer ] Bouahahahaha! Welcome in my game place, Humans!",bc_map,"0x00ff99";
+	sleep 6000;
+	instance_announce instance_id(), "[ Poring Sorcerer ] I'm the Sorcerer! And now, you'll endure what we've all endured!",bc_map,"0x00ff99";
+	donpcevent instance_npcname("poring_realm_main")+"::OnChangeParticipants";
+	instance_announce instance_id(), "[ Poring Sorcerer ] Bouahaha you're perfect. Live, and you'll be changed. Leave, and you'll stay a poring! Bouahahahah",bc_map,"0x00ff99";
+	donpcevent .@npc_name$+"::OnFloorSummon";
+	
+	initnpctimer;
+	end;
+	
+OnTimer1000:
+	set .countTimerRound, .countTimerRound + 1;	
+	//RATHENA delay
+	if (.countTimerRound >= $time_lap_limit[0])
+	{
+		stopnpctimer;
+		mapannounce .@map$,"[ Poring Realm ] : The dimension is collapsing. You should get out now!!",bc_map,0x00FF99;
+		
+		instance_destroy PR_INSTANCE_ID;
+		getpartymember getcharid(1),2;
+		for( set .@i, 0; .@i < $@partymembercount; set .@i, .@i+1 )
+			if( attachrid( $@partymemberaid[.@i] ) && PR_INSTANCE_ID > 0){
+				set PR_INSTANCE_ID, -1;
+			}
+	}
+	end;
+
+OnFloorSummon:
+	sleep 3000;	
+	set .@npc_name$, instance_npcname( strnpcinfo(0) );
+	floor_monster( .@npc_name$ );
+	end;
+	
+OnBossSummon:	
+	sleep 3000;
+	set .@map$, instance_mapname( 'instance_lap_floor + "@pr" );
+	set .@npc_name$, instance_npcname( strnpcinfo(0) );
+	end;
+	
+OnGuardianSummon:
+	sleep 3000;
+	set .@map$, instance_mapname( 'instance_lap_floor + "@pr" );
+	set .@npc_name$, instance_npcname( strnpcinfo(0) );
+	floor_guardian( .@npc_name$ );
+	end;
+
+OnNormalDied: 
+	set .@mapName$, 'instance_lap_floor + "@pr"; 
+	set .@map$, instance_mapname( .@mapName$ );
+
+	set .@npc_name$, instance_npcname( strnpcinfo(0) );
+	set .@mob_dead_num, mobcount( .@map$,.@npc_name$+"::OnNormalDied" );
+	
+	if( .@mob_dead_num < 5 && .@mob_dead_num > 0 || .@mob_dead_num % 5 == 0 ){
+		instance_announce instance_id(),"[ Poring Realm ]: " +.@mob_dead_num+" left remaining.",bc_map,0x00FF99;
+	}
+	if (.@mob_dead_num == 0)
+	{
+		if('instance_lap_floor == 2)
+		{
+			set .stopBombPop, 1;
+		}
+		donpcevent .@npc_name$+"::OnGuardianSummon";
+	}
+	end;
+	
+OnGuardianDied:
+	set .maxFloor, 2;
+	set .@map$, instance_mapname( 'instance_lap_floor + "@pr" );
+	
+	//if there's no more monsters to kill, change level
+	if( mobcount( .@map$,.@npc_name$+"::OnGuardianDied" ) == 0){
+		floor_reward( getcharid(1), 'floor_lap_reward );
+		
+		if('instance_lap_floor == 1)
+		{
+			//change back
+			donpcevent instance_npcname("poring_realm_main")+"::OnRechangeParticipants";
+		}
+		
+		//change level
+		if ('instance_lap_floor <= .maxFloor)
+		{
+			set 'instance_lap_floor, 'instance_lap_floor + 1;
+		}
+
+		//warp to next level
+		set .@map$, instance_mapname( 'instance_lap_floor + "@pr" );
+		getpartymember getcharid(1),2;
+		for( .@pt = 0; .@pt < $@partymembercount; .@pt++ ){
+			if( attachrid( $@partymemberaid[.@pt] ) ){
+				warp .@map$,$@next_warping_coordinates[0], $@next_warping_coordinates[1];
+			}
+		}
+		
+		if('instance_lap_floor == 2)
+		{
+			//start floor 2
+			donpcevent instance_npcname("poring_realm_main")+"::OnStartDialog";
+		}
+	}
+	end;
+	
+OnBossDied:
+	set .@mapName$, 'instance_lap_floor + "@pr";
+	set .@map$, instance_mapname( .@mapName$ );
+	set .@npc_name$, instance_npcname( strnpcinfo(0) );
+
+	if( mobcount( .@map$,.@npc_name$+"::OnBossDied" ) == 0){
+		floor_reward( getcharid(1), 'final_lap_reward );
+		set PORINGREALM, PORINGREALM + 1;
+		instance_announce instance_id(),"[ Poring Realm ] : Thank you, adventurers! We're now ready to reconstruct.",bc_map,0x00FF99;
+		sleep2 30000;
+		instance_destroy PR_INSTANCE_ID;
+		getpartymember getcharid(1),2;
+		for( set .@i, 0; .@i < $@partymembercount; set .@i, .@i+1 )
+			if( attachrid( $@partymemberaid[.@i] ) && PR_INSTANCE_ID > 0){
+				set PR_INSTANCE_ID, -1;
+			}
+	}
+	end;
+	
+OnBombKilled:
+	set .@mapName$, 'instance_lap_floor + "@pr";
+	set .@map$, instance_mapname( .@mapName$ );
+
+	set .@mob_dead_num,mobcount(.@map$,instance_npcname(strnpcinfo(3))+"::OnBombKilled");
+	if (.@mob_dead_num < 1)
+	{
+		if (.stopBombPop == 0)
+		{
+			//repop
+			areamonster .@map$,75,197,217,104,"Bomb Poring",1904,5 * $Level_pi,instance_npcname(strnpcinfo(3))+"::OnBombKilled";
+		}
+	}
+	end;
+}
+
+2@pr,236,264,3	script	bomb Poring::bompo0	1904,2,2,{
+	end;
+
+OnTouch:
+	set 'bombed, 'bombed+1;
+	if ('bombed==10)
+	{
+		donpcevent instance_npcname("poring_realm_main")+"::OnAllBombed";
+	}
+	percentheal rand(-99,99), rand(-99,99);
+	hideonnpc strnpcinfo(3);
+	end;
+}
+
+2@pr,276,319,3	duplicate(bompo0)	BOmb Poring::bompo1	1904,1,1
+2@pr,260,194,3	duplicate(bompo0)	B0mb Poring::bompo2	1904,1,4
+2@pr,89,232,3	duplicate(bompo0)	Bomb P0ring::bompo3	1904,4,2
+2@pr,170,258,3	duplicate(bompo0)	Bomb Por1ng::bompo4	1904,4,2
+2@pr,162,327,3	duplicate(bompo0)	Bomb Porin9::bompo5	1904,2,2
+2@pr,240,246,3	duplicate(bompo0)	Bomb poring::bompo6	1904,1,3
+2@pr,190,135,3	duplicate(bompo0)	BomB Poring::bompo7	1904,3,2
+2@pr,46,172,3	duplicate(bompo0)	Bomb PoRing::bompo8	1904,2,4
+2@pr,303,229,3	duplicate(bompo0)	Bomb PoriNg::bompo9	1904,1,5

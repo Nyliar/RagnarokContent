@@ -1,0 +1,377 @@
+// [========================================================]
+// [=============   Instance - Devil Square   ============]
+// [========================================================]
+// [ Version 1                                              ]
+// [========================================================]
+// [ Original script by: Alayne				    			]
+// [========================================================]
+// [ Description:                                           ]
+// [--------------------------------------------------------]
+// [                                                        ]
+// [ - An instance based over elements		    	   	    ]
+// [                                                        ]
+// [========================================================]
+// [ Changelog: (5 last updates)                            ]
+// [--------------------------------------------------------]
+// [                                                        ]
+// [ v0: Creation                      			   			]
+/*
+	2@ds.gnd#mag_dun01.gnd#
+	2@ds.gat#mag_dun01.gat#
+	2@ds.rsw#mag_dun01.rsw#
+	???????\map\2@ds.bmp#???????\map\mag_dun01.bmp#
+*/
+// [                                                        ]
+// [========================================================]
+// [                                                        ]
+// [========================================================]
+
+prontera,145,167,4	script	Devil Square Guardian::aldevsq	465,{
+OnStart:
+	set .@party_id, getcharid(1);
+	set .@is_leader, ( getcharid(0) == getpartyleader(.@party_id,2) );
+	
+	set .@has_instance, DS_INSTANCE_ID == getcharid(1);
+	
+	set .@instance_ds_delay, ( instance_delay_devsq - gettimetick(2) );
+
+	next; 
+	mes "^0055FF[ "+.instance_name$+" ]^000000";
+	mes "Did you ever heard of Devil Square?";
+	mes "That's a dangerous place where monsters regroups to rule the area.";
+	next;
+	mes "^0055FF[ "+.instance_name$+" ]^000000";
+	mes "Can you go there and see what's happening?";
+	next;
+	switch( select( 
+		( .@party_id && .@is_leader && !.@has_instance )?"Start " + .instance_name$:"",
+		( .@party_id && .@has_instance )?"Enter " + .instance_name$:"",
+		( .@party_id && .@is_leader && .@has_instance )?"Destroy " + .instance_name$:""
+		)){
+	case 1:
+		if( .@instance_ds_delay > 0 )
+		{
+			mes "I can't let you in. The Square is not safe now. Wait for " + callfunc("__Time2Str", .@instance_ds_delay) + " before coming back.";
+			close;
+		}
+		getpartymember .@party_id,2;
+		if( .min_party_member >= 1 ){
+			set .@origin, getcharid(3);
+			set .@gettimetick, gettimetick(2);
+			for( set .@i, 0; .@i < $@partymembercount; set .@i, .@i+1 )
+				if( attachrid( $@partymemberaid[.@i] ) ){
+					set .@member_count, .@member_count + 1;
+					if( BaseLevel < .base_level[0] || BaseLevel > .base_level[1] ) set .@fail, .@fail|1;
+					if( Zeny < .instance_zeny ) set .@fail, .@fail|2;
+					if( instance_delay_devsq > .@gettimetick ) set .@fail, .@fail|4;
+					if( .@fail ){
+						set .@name$, strcharinfo(0);
+						break;
+					}
+				}
+			attachrid( .@origin );
+		}
+		
+		if( .@name$ != "" && .@fail ){
+			mes "^FF0000[ Failed ]^000000";
+			mes "^0055FF"+.@name$+"^000000, cannot join right now.";
+			mes " ";
+			mes "^FF0000[ Reason: ]^000000";
+			if( .@fail & 1 ) mes "^777777You must be Level: "+.base_level[0]+" - "+.base_level[1]+"^000000";
+			if( .@fail & 2 ) mes "^777777You need "+ .instance_zeny +" Zeny^000000";
+			if( .@fail & 4 ) mes "^777777You still have cooldown.^000000";
+			break;
+		}
+		if( instance_check_party( .@party_id,.min_party_member ) == 0 ){
+			mes "^0055FF[ "+.instance_name$+" ]^000000";
+			mes "Make or join a party with at least "+.min_party_member+" member and try again.";
+			break;
+		}
+		else{
+			set $instance_ds_level, select( 
+				"^FF0000[ Cooldown - 24 Hours ]^000000 Easy Mode",
+				"^FF0000[ Cooldown - 48 Hours ]^000000 Difficult Mode",
+				"^FF0000[ Cooldown - 72 Hours ]^000000 Extreme Mode"
+			);
+			//HERCULES
+			//set .@instance, instance_create( .instance_name$,.@party_id, IOT_PARTY );
+			//RATHENA
+			set .@instance, instance_create( .instance_name$ );
+			if( .@instance < 0 ) {
+				mes "^0000FF"+.instance_name$+" ^000000- Reservation Failed!";
+				close;
+			}
+			mes "^0055FF[ "+.instance_name$+" ]^000000";
+			mes "^0000FF"+.instance_name$+" ^000000 - Reserved";
+			
+			//HERCULES
+			//for( .@i = 0; .@i < .map_size; .@i++ )
+			//	if( instance_attachmap( .map$[.@i], .@instance, 1, "" + (.@i + 1) + "@devsq" ) == "" ){
+			//		npctalk "" + .instance_name$ + " reservation failed.";
+			//		mes "- ^FF0000Reservation Failed!^000000";
+			//		instance_destroy( .@instance );
+			//		close;
+			//	}
+				
+			set .@gettimetick, gettimetick(2);
+			getpartymember .@party_id,2;
+			for( .@i = 0; .@i < $@partymembercount; .@i++ )
+				if( attachrid( $@partymemberaid[.@i] ) ){
+					set instance_delay_devsq, ( .@gettimetick + ( .instance_delay * .@level ));
+					set Zeny, Zeny - .instance_zeny;
+					set DS_INSTANCE_ID, .@instance;
+					dispbottom "["+.instance_name$+"] Paid "+ .instance_zeny +" Zeny and Instance Cooldown Applied.";
+				}
+			attachrid( .@origin );
+			npctalk "Devil Square has been generated for Party - "+getpartyname( .@party_id );
+			
+			//HERCULES
+			//instance_set_timeout $time_ds_limit[0],$time_ds_limit[1],.@instance; //herc only
+			//instance_attach( .@instance );
+			//instance_init( .@instance );
+			
+			//RATHENA		
+			//init npcs
+		}
+	case 2:
+		getmapxy(.@map$, .@x, .@y, UNITTYPE_PC);
+		//HERCULES
+		//savepoint .@map$, .@x, .@y;
+		//if( has_instance( .map$[0] ) == "" ){
+		//	mes .instance_name$ + " doesnt exist for Party - "+getpartyname( .@party_id );
+		//}
+		//else{
+		//	warp .map$[0],245,52;
+		//	instance_announce $instance_ds, getpartyname(getcharid(1))+"  entered in the "+.instance_name$+"!",bc_map,"0x00ff99";
+		//}
+		
+		//RATHENA
+		save .@map$, .@x, .@y;
+		switch(instance_enter(.instance_name$)) {
+			default:
+				mes "An unknown error has occurred.";
+				close;
+			case 2:
+				mes "The memorial dungeon " + .instance_name$ + " does not exist.";
+				mes "The party leader did not generate the dungeon yet.";
+				close;
+			case 1:
+				mes "You can enter the dungeon after making the party.";
+				close;
+			case 0:
+				instance_announce $instance_ds, strcharinfo(0)+" from party, " +getpartyname( .@party_id )+", is entering the dungeon, "+.instance_name$+".",bc_map,"0x00ff99",FW_NORMAL,12;
+				end;
+		}
+		break;
+	case 3:
+		instance_destroy( DS_INSTANCE_ID );
+		mes "" + .instance_name$ + " Destroyed.";
+		getpartymember getcharid(1),2;
+		for( set .@i, 0; .@i < $@partymembercount; set .@i, .@i+1 )
+			if( attachrid( $@partymemberaid[.@i] ) && AT_INSTANCE_ID > 0){
+				set DS_INSTANCE_ID, -1;
+			}
+		break;
+}
+close;
+
+OnPCLoginEvent:
+OnPCLogoutEvent:
+	set DS_INSTANCE_ID, -1;
+	end;
+
+OnInit:
+	setarray .base_level,60,250;
+	setarray $time_ds_limit,7200,300;
+	setarray .map$,"2@ds";
+	set .map_size, getarraysize( .map$ );
+	set .min_party_member, 1;
+	set .instance_zeny, 50000;
+	set .instance_delay, 43200;
+	set .instance_name$, "Devil Square";
+	end;
+}
+
+2@ds,1,1,4	script	devil_square_main	HIDDEN_WARP_NPC,2,2,{
+function floor_monster;
+function floor_reward;
+end;
+
+function	floor_monster	{
+	set .@npc_name$, getarg(0);
+	set .@map$, instance_mapname("2@ds", $instance_ds);
+	switch( 'instance_ds_floor ){
+		case 1:
+			setarray .@monster,1735,1736,1668,1745,1198,1388;
+			setarray .@amount,25,15,15,20,4,1;
+			setarray $@next_warping_coordinates[0], 149, 274;
+			setarray $mob_coordinates[0], 252, 54, 179, 113;	
+			break;
+		case 2:
+			setarray .@monster,1781,1870,1700,1701,1702,1703;
+			setarray .@amount,20,30,5,5,5,5;
+			setarray $@next_warping_coordinates[0], 25, 150;	
+			setarray $mob_coordinates[0], 142, 278, 154, 199;
+			break;
+		case 3:
+			setarray .@monster,1670,1671,1672,1673,1637,1918,1919,1920,1921;
+			setarray .@amount,10,10,10,10,6,3,3,3,3;
+			setarray $@next_warping_coordinates[0], 122, 149;	
+			setarray $mob_coordinates[0], 21, 142, 100, 153;
+			break;
+		case 4:
+			setarray .@monster,1957,1958;
+			setarray .@amount,1,11;
+			setarray $@next_warping_coordinates[0], 141, 189;	
+			setarray .@event$[0], "OnGuardianDied","OnNormalDied";
+			setarray $mob_coordinates[0], 169, 169, 129, 129;
+			break;
+		default:
+			return;
+	}
+	
+	set .@monster_size, getarraysize( .@monster );
+
+	for( set .@i, 0; .@i < .@monster_size; set .@i, .@i+1 ){
+		set .@target_amount, ( $instance_ds_level * .@amount[.@i] );
+		set .@mobEvent$, "OnNormalDied";
+		if (getarraysize(.@event$) > .@i)
+		{
+			set .@mobEvent$, .@event$[.@i];
+		}
+		//monster .@map$,0,0,"--ja--",.@monster[.@i],.@target_amount,.@npc_name$+"::"+.@mobEvent$;
+		//for debug
+		areamonster .@map$,$mob_coordinates[0], $mob_coordinates[1],$mob_coordinates[2], $mob_coordinates[3],"--ja--",.@monster[.@i],.@target_amount,.@npc_name$+"::"+.@mobEvent$;
+	}
+	instance_announce instance_id(), "[ Devil Square ] : monsters appeared!!",bc_map,"0x00FF99",FW_NORMAL,12;	
+	return;
+}
+
+function	floor_reward	{
+	set .@party_id, getarg(0);
+	set .@arg_count, getargcount() - 1;
+	
+	switch( 'instance_ds_floor ){
+		// <item id>,<amount>,<rate>,
+		//case 1: 
+		//	setarray .@item_list,
+		//		5546,1,5; 
+		//	break;
+		default: return;
+	}
+
+	set .@reward, getarg(1);
+	set .@item_list_size, getarraysize( .@item_list ) - 2;
+	if( .@party_id && .@item_list_size ){
+		getpartymember .@party_id,2;
+		for( .@pt = 0; .@pt < $@partymembercount; .@pt++ ){
+			if( attachrid( $@partymemberaid[.@pt] ) ){
+				if('rewardDSMode == 0)
+				{
+					for( .@item = 0; .@item < .@item_list_size; .@item += 3 )
+						if( rand(100) < .@item_list[.@item+2] )
+							getitem .@item_list[.@item],.@item_list[.@item+1];
+				}
+				else
+				{
+					callfunc("AddPoints", getcharid(3), .@reward * $instance_ds_level);
+				}
+				
+				dispbottom "[ Devil Square ] : You have gained instance points for defeating floor "+'instance_ds_floor+" in devil square.";
+				logmes "[ Devil Square ] " + strcharinfo(0) + " complete the instance and obtains " + (.@reward * $instance_ds_level) + " points.";
+			}
+		}
+		detachrid;
+	}
+	return;
+}
+
+OnInstanceInit:
+	set .@map$, strnpcinfo(4);
+	
+	set .@npc_name$, instance_npcname( strnpcinfo(0) );
+	//HERCULES
+	//setmapflag .@map$,mf_zone,"Memorial Dungeon";
+	set 'instance_ds_floor, 1;
+	set 'floor_ds_reward, 75;
+	set 'final_ds_reward, 250;
+	set 'rewardDSMode, 0;
+	donpcevent .@npc_name$+"::OnFloorSummon";
+	set .maxFloor, 5;
+	
+	//RATHENA
+	initnpctimer;
+	end;
+	
+OnTimer1000:
+	//RATHENA
+	set .countTimerRound, .countTimerRound + 1;
+	if (.countTimerRound >= $time_ds_limit[0])
+	{
+		stopnpctimer;
+		instance_announce instance_id(), "[ Devil Square ] : The Square is lost... You should get out now!!",bc_map,"0x00FF99",FW_NORMAL,12;	
+		getpartymember getcharid(1),2;
+		for( set .@i, 0; .@i < $@partymembercount; set .@i, .@i+1 )
+			if( attachrid( $@partymemberaid[.@i] ) && AT_INSTANCE_ID > 0){
+				set DS_INSTANCE_ID, -1;
+			}
+	}
+	setnpctimer 0;
+	end;
+
+OnFloorSummon:
+	sleep 3000;
+	set .@map$, strnpcinfo(4);
+	
+	set .@npc_name$, instance_npcname( strnpcinfo(0) );
+	floor_monster( .@npc_name$ );
+	end;
+
+OnGuardianDied:
+	set .@map$, strnpcinfo(4);
+	set .@npc_name$, instance_npcname( strnpcinfo(0) );
+
+	killmonsterall .@map$, .@npc_name$ + "::OnNormalDied";
+	
+	floor_reward( getcharid(1), 'final_ds_reward );
+	instance_announce instance_id(), "[ Devil Square ] : Congratulations. The Square has been purged from all the Demons.",bc_map,"0x00FF99",FW_NORMAL,12;
+	sleep 30000;
+	getpartymember getcharid(1),2;
+	for( set .@i, 0; .@i < $@partymembercount; set .@i, .@i+1 )
+		if( attachrid( $@partymemberaid[.@i] ) && AT_INSTANCE_ID > 0){
+			set DS_INSTANCE_ID, -1;
+		}
+	end;
+
+OnNormalDied: 
+	set .@map$, strnpcinfo(4);
+	set .@npc_name$, instance_npcname( strnpcinfo(0) );
+	
+	//if there's no more monsters to kill, change level
+	if( mobcount( .@map$,.@npc_name$+"::OnNormalDied" ) == 0 ){
+		//change level
+		set 'instance_ds_floor, 'instance_ds_floor + 1;
+		if ('instance_ds_floor != .maxFloor)
+		{
+			instance_announce instance_id(), "[ Devil Square ] Darkness intensifies...", bc_map,"0x00FF99",FW_NORMAL,12;
+			sleep2 5000;
+
+			getpartymember getcharid(1),2;
+			for( .@i = 0; .@i < $@partymembercount; .@i++ )
+				if( attachrid( $@partymemberaid[.@i] ) && strcharinfo(3) == .@map$){
+					warp .@map$, $@next_warping_coordinates[0], $@next_warping_coordinates[1];
+				}
+
+			donpcevent .@npc_name$+"::OnFloorSummon";
+		}
+	}
+	else
+	{
+		set .@killCount, mobcount( .@map$,.@npc_name$+"::OnNormalDied" );
+		if (.@killCount < 5 && .@killCount % 5 == 0)
+		{
+			instance_announce instance_id(), "[ Devil Square ] : There's still " + .@killCount + " monsters.",bc_map,"0x00FF99",FW_NORMAL,12;
+		}
+	}
+	end;
+}

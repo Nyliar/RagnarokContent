@@ -1,0 +1,543 @@
+//===== Alayne Scripts =======================================
+//= Champion Arena Instance
+//===== By: ================================================== 
+//= Alayne
+//===== Current Version: ===================================== 
+//=
+//= 1.0 - Creation
+//= 1.1 - Structure modification, pattern apply from Emistry's
+//= 1.2 - Logical mods over stars for hercules support
+//= 1.3 - Current version, handle both emu in one script
+//=
+//===== Compatible With: ===================================== 
+//= rAthena SVN
+//= hercules SVN
+//===== Description: ========================================= 
+//=
+//= An instance based over mobs level
+//=
+//===== Todo Remaining: ======================================
+//
+//===== Additional Comments: =================================
+//
+//
+//============================================================
+
+prontera,140,167,0	script	Weapon Master::alaweamas	4_F_JPN2,{ //757,{
+
+OnStart:
+	set .@party_id, getcharid(1);
+	set .@is_leader, ( getcharid(0) == getpartyleader(.@party_id,2) );
+	set .@has_instance, AE_INSTANCE_ID >= 0;
+	
+	set .@instance_delay, ( instance_delay_arena - gettimetick(2) );
+
+	mes "^0055FF[ "+.instance_name$+" ]^000000";
+	mes "We're now recruiting people to Champions Arena and eliminate all the monsters that live there. Could you lend us a hand on this ?";
+	mes " ";
+	if( .@instance_delay > 0 )
+	mes "You have to wait : ^FF0000"+.@instance_delay+" Seconds.^000000";
+	next; 
+	mes "^0055FF[ "+.instance_name$+" ]^000000";
+	mes "Hello to you, Fighter!";
+	mes "I'm the Weapon Master.";
+	mes "For years now, I've been chosen to find and train fighters, to get them prepared for the incoming Saint War.";
+	next;
+	mes "^0055FF[ "+.instance_name$+" ]^000000";
+	mes "I've trained some of the greatest heros, such as Astion the High or Bernol the Valorous. I'm pretty sure you heard about them!";
+	mes "They fought bravely, and their names are stills songed nowadays.";
+	next;
+	mes "^0055FF[ "+.instance_name$+" ]^000000";
+	mes "So? Wanna be part of the legend too?";
+	next;
+	switch( select( 
+		( .@party_id && .@is_leader && !.@has_instance )?"Enter Champion Arena":"",
+		( .@party_id && .@has_instance )?"Return Champion Arena":"",
+		( .@party_id && .@is_leader && .@has_instance )?"Destroy Champion Arena":"",
+	"Nevermind."
+		)){
+	case 1:
+		getpartymember .@party_id,2;
+		if( .min_party_member >= 1 ){
+			set .@origin, getcharid(3);
+			set .@gettimetick, gettimetick(2);
+			for( set .@i, 0; .@i < $@partymembercount; set .@i, .@i+1 )
+				if( attachrid( $@partymemberaid[.@i] ) ){
+					set .@member_count, .@member_count + 1;
+					if( BaseLevel < .base_level[0] || BaseLevel > .base_level[1] ) set .@fail, .@fail|1;
+					if( Zeny < .instance_zeny ) set .@fail, .@fail|2;
+					if( instance_delay_arena > .@gettimetick ) set .@fail, .@fail|4;
+					if( .@fail ){
+						set .@name$, strcharinfo(0);
+						break;
+					}
+				}
+			attachrid( .@origin );
+		}
+		
+		if( .@name$ != "" && .@fail ){
+			mes "^FF0000[ Failed ]^000000";
+			mes "^0055FF"+.@name$+"^000000, You cannot join right now.";
+			mes " ";
+			mes "^FF0000[ Reason: ]^000000";
+			if( .@fail & 1 ) mes "^777777You must be Level: "+.base_level[0]+" - "+.base_level[1]+"^000000";
+			if( .@fail & 2 ) mes "^777777You need "+ .instance_zeny +" Zeny^000000";
+			if( .@fail & 4 ) mes "^777777You still have cooldown.^000000";
+			break;
+		}
+		if( !instance_check_party( .@party_id,.min_party_member ) ){
+			mes "^0055FF[ "+.instance_name$+" ]^000000";
+			mes "Make or join a party with at least "+.min_party_member+" member and try again.";
+			break;
+		}
+		else{
+			set $ae_level, select( 
+				"^FF0000[ Cooldown - 2 Hours ]^000000 Easy Mode",
+				"^FF0000[ Cooldown - 4 Hours ]^000000 Difficult Mode",
+				"^FF0000[ Cooldown - 6 Hours ]^000000 Extreme Mode",
+				"^FF0000[ Cooldown - 8 Hours ]^000000 Nightmare Mode"
+			);
+			//HERCULES
+			//set .@instance, instance_create( .instance_name$,.@party_id, IOT_PARTY );
+			//RATHENA
+			set .@instance, instance_create( .instance_name$ );
+			if( .@instance < 0 ) {
+				npctalk "Champion Arena reservation failed.";
+				mes "^0000FF"+.instance_name$+" ^000000- Reservation Failed!";
+				close;
+			}
+			mes "^0055FF[ "+.instance_name$+" ]^000000";
+			mes "^0000FF"+.instance_name$+" ^000000 - Reserved";
+			
+			//HERCULES
+			//for( set .@i, 0; .@i < .map_size; set .@i,.@i+1 )
+			//	if( instance_attachmap( .map$[.@i],.@instance, 1, "" + (.@i + 1) + "@ch" ) == "" ){
+			//		npctalk "Champion Arena reservation failed.";
+			//		mes "- ^FF0000Reservation Failed!^000000";
+			//		instance_destroy( .@instance );
+			//		close;
+			//	}
+			
+			set .@gettimetick, gettimetick(2);
+			getpartymember .@party_id,2;
+			for( set .@i, 0; .@i < $@partymembercount; set .@i, .@i+1 )
+				if( attachrid( $@partymemberaid[.@i] ) ){
+					set instance_delay_arena, ( .@gettimetick + ( .instance_delay * $ae_level ));
+					set Zeny, Zeny - .instance_zeny;
+					dispbottom "["+.instance_name$+"] -"+ .instance_zeny +" Zeny and Instance Cooldown Applied.";
+				}
+			attachrid( .@origin );
+			npctalk "Champion Arena has been generated for Party - "+getpartyname( .@party_id );
+			
+			//HERCULES
+			//instance_set_timeout $time_ae_limit[0],$time_ae_limit[1],.@instance;
+			//instance_init( .@instance );
+			//instance_attach( .@instance );
+			
+			set $instance_ae_id, getcharid(1);
+			
+			//RATHENA
+			//init unused npc
+			//donpcevent instance_npcname("champion_arena")+"::OnInstanceInit";
+		}
+	case 2:
+		//HERCULES
+		//if( has_instance( .map$[0] ) == "" ){
+		//	mes .instance_name$ + " doesnt exist for Party - "+getpartyname( .@party_id );
+		//}
+		//else{
+		//	warp .map$[0],101,107;
+		//	instance_announce instance_id(), getpartyname(getcharid(1))+"  entered in the "+.instance_name$+"!",bc_map,"0x00ff99";
+		//}
+		
+		//RATHENA
+		getmapxy(.@map$, .@x, .@y, UNITTYPE_PC);
+		save .@map$, .@x, .@y;
+		switch(instance_enter(.instance_name$)) {
+			default:
+				mes "An unknown error has occurred.";
+				close;
+			case 2:
+				mes "The memorial dungeon " + .instance_name$ + " does not exist.";
+				mes "The party leader did not generate the dungeon yet.";
+				close;
+			case 1:
+				mes "You can enter the dungeon after making the party.";
+				close;
+			case 0:
+				instance_announce instance_id(), strcharinfo(0)+" from party, " +getpartyname( .@party_id )+", is entering the dungeon, "+.instance_name$+".",bc_map,"0x00ff99",FW_NORMAL,12;
+				end;
+		}
+		break;
+	case 3:
+		instance_destroy( AE_INSTANCE_ID );
+		mes "" + .instance_name$ + " Destroyed.";
+		getpartymember getcharid(1),2;
+		for( set .@i, 0; .@i < $@partymembercount; set .@i, .@i+1 )
+			if( attachrid( $@partymemberaid[.@i] ) && AE_INSTANCE_ID > 0){
+				set AE_INSTANCE_ID, -1;
+			}
+		break;
+	default: 
+		break;
+}
+close;
+
+OnInit:
+	setarray .base_level[0],90,250;
+	setarray $time_ae_limit[0],7200,300;
+	setarray .map$[0],"1@ae";
+	set .map_size, getarraysize( .map$ );
+	set .min_party_member, 1;
+	set .instance_zeny, 100000;
+	set .instance_delay, 7200;
+	set .instance_name$, "Champions Arena";
+	//hideonnpc strnpcinfo(3);
+	end;
+}
+
+1@ae,101,107,4	script	champion_arena	HIDDEN_WARP_NPC,2,2,{
+function summon_normal;
+function summon_normal2;
+function summon_guardian;
+function floor_reward;
+end;
+
+OnInstanceInit:
+	set .@map$, strnpcinfo(4);
+	set .@npc_name$, instance_npcname( strnpcinfo(0) );
+	
+	//apply mapflags
+	//setmapflag .@map$,mf_zone,"Memorial Dungeon";
+	//setmapflag .@map$,mf_nomobloot;
+	//setmapflag .@map$,mf_nomvploot;
+	
+	set 'instance_ca_level, 0;
+	set 'floor_ca_reward, 100;
+	set 'final_ca_reward, 150;
+	summon_normal(.@map$,.@npc_name$+"::OnNormalDied" );
+	set 'invoke_ca_slaves, 0;
+	
+	//RATHENA
+	initnpctimer;
+	end;
+	
+OnTimer1000:
+	set .countTimerRound, .countTimerRound + 1;	
+	//RATHENA delay
+	if (.countTimerRound >= $time_ae_limit[0])
+	{
+		stopnpctimer;
+		instance_announce $ae_instance,"[ Champions Arena ] : The dimension is collapsing. You should get out now!!",bc_map,0x00FF99;
+		
+		instance_destroy( AE_INSTANCE_ID );
+		getpartymember getcharid(1),2;
+		for( set .@i, 0; .@i < $@partymembercount; set .@i, .@i+1 )
+			if( attachrid( $@partymemberaid[.@i] ) && AE_INSTANCE_ID > 0){
+				set AE_INSTANCE_ID, -1;
+			}
+	}
+	end;		
+
+function	summon_normal	{
+	set .@map$, getarg(0);
+	set .@label$, getarg(1);
+	
+	'instance_ca_level++;
+	switch( 'instance_ca_level ){
+		case 1:
+			set 'ae_level_name$, "Lvl 50 Floor";
+			setarray .@coordinate,77,158,122,47;
+			setarray .@monster,1742,1437,1687,1680,1614;
+			setarray .@amount,25,25,25,25,25;
+			break;
+		case 2:
+			set 'ae_level_name$, "Lvl 60 Floor";
+			setarray .@coordinate,77,158,122,47;
+			setarray .@monster,1796,1797,1774,1724,1311;
+			setarray .@amount,30,30,30,30,30;
+			break;
+		case 3:
+			set 'ae_level_name$, "Lvl 70 Floor";
+			setarray .@coordinate,77,158,122,47;
+			setarray .@monster,1752,1740,1447,1198,1295;
+			setarray .@amount,30,45,24,45,15;
+			break;
+		case 4:
+			set 'ae_level_name$, "Lvl 80 Floor";
+			setarray .@coordinate,77,158,122,47;
+			setarray .@monster,1716,1713,1769,1735,1736;
+			setarray .@amount,24,15,30,45,15;
+			break;
+		case 5:
+			set 'ae_level_name$, "Lvl 90 Floor";
+			setarray .@coordinate,77,158,122,47;
+			setarray .@monster,1268,1733,1830,1673,1839;
+			setarray .@amount,15,10,10,24,15;
+			break;
+		case 6:
+			set 'ae_level_name$, "Final Floor";
+			setarray .@coordinate,77,158,122,47;
+			setarray .@monster,2313,2920,2918,2360,2940,2528;
+			setarray .@amount,10,15,15,15,10,5;
+			break;
+		default:
+			mapannounce .@map$, "[ Champion Arena ] : All Floors has been cleared, congratulation. Champions Arena close in 30 seconds.",bc_map,"0x00FF99";
+			sleep 30000;
+			instance_destroy( AE_INSTANCE_ID );
+			getpartymember getcharid(1),2;
+			for( set .@i, 0; .@i < $@partymembercount; set .@i, .@i+1 )
+				if( attachrid( $@partymemberaid[.@i] ) && AE_INSTANCE_ID > 0){
+					set AE_INSTANCE_ID, -1;
+				}
+			return;
+	}
+	set 'instance_ca_level_name$, 'ae_level_name$;
+	set .@monster_size, getarraysize( .@monster );
+	for( set .@i, 0; .@i < .@monster_size; set .@i,.@i+1 ){
+		set .@target_amount, ( $ae_level * .@amount[.@i] );
+		set .@size, 0;
+		if ($ae_level < 2)
+		{
+			set .@size, rand(0,1);
+		}
+		if ($ae_level >= 4)
+		{
+			set .@size, 2;
+		}
+		areamonster .@map$,.@coordinate[0],.@coordinate[1],.@coordinate[2],.@coordinate[3],"--ja--",.@monster[.@i],.@target_amount,.@label$,.@size;
+	}
+	return;
+}
+
+function	summon_normal2	{
+	set .@map$, getarg(0);
+	set .@label$, getarg(1);
+	switch( 'instance_ca_level ){
+		case 1:
+			setarray .@coordinate,77,158,122,47;
+			setarray .@monster,1093,1091,1089,1090;
+			setarray .@amount,20,20,20,20;
+			break;
+		case 2:
+			setarray .@coordinate,77,158,122,47;
+			setarray .@monster,1088,1096,1120;
+			setarray .@amount,30,10,10;
+			break;
+		case 3:
+			setarray .@coordinate,77,158,122,47;
+			setarray .@monster,1290,1096;
+			setarray .@amount,30,20;
+			break;
+		case 4:
+			setarray .@coordinate,77,158,122,47;
+			setarray .@monster,1582;
+			setarray .@amount,20;
+			break;
+		case 5:
+			setarray .@coordinate,77,158,122,47;
+			setarray .@monster,1894,1783;
+			setarray .@amount,20,30;
+			break;
+		case 6:
+			setarray .@coordinate,77,158,122,47;
+			setarray .@monster,1388;
+			setarray .@amount,20;
+			break;
+		case 7:
+			setarray .@coordinate,77,158,122,47;
+			setarray .@monster,1205,1283,1262,1150,1086,1115,1159,1583,1112;
+			setarray .@amount,20,20,10,10,10,10,10,10,10;
+			break;
+		case 8:
+			setarray .@coordinate,77,158,122,47;
+			setarray .@monster,1583,1252,1059,1658,1492,1251,1046,1418,1038,1087,1272,1190,1871;
+			setarray .@amount,5,5,5,5,5,5,5,5,5,5,5,5,5;
+			break;
+		case 9:
+			setarray .@coordinate,77,158,122,47;
+			setarray .@monster,1147,1630,1885,1389,1688,1623,1039,1272,1719,1785,1511,1734,1768,1871;
+			setarray .@amount,5,5,5,5,5,5,5,5,5,5,5,5,5,5;
+			break;
+		case 10:
+			setarray .@coordinate,77,158,122,47;
+			setarray .@monster,1645,1643,2068,1644,1647,1642,1640,1751,1779,1832,1916,1917;
+			setarray .@amount,5,5,1,5,5,5,5,1,1,1,1,1;
+			break;
+		case 11:
+			setarray .@coordinate,77,158,122,47;
+			setarray .@monster,1502;
+			setarray .@amount,20;
+			break;
+		default:
+			mapannounce .@map$,"[ Champion Arena ] : Cleared!! Congratulation!!",bc_map,0x00FF99;
+			return;
+	}
+	set .@monster_size, getarraysize( .@monster );
+	for( set .@i, 0; .@i < .@monster_size; set .@i,.@i+1 ){
+		set .@target_amount, ( $ae_level * .@amount[.@i] );
+		set .@size, 0;
+		if ($ae_level < 2)
+		{
+			set .@size, rand(0,1);
+		}
+		if ($ae_level >= 4)
+		{
+			set .@size, 2;
+		}
+		areamonster .@map$,.@coordinate[0],.@coordinate[1],.@coordinate[2],.@coordinate[3],"--ja--",.@monster[.@i],.@target_amount,.@label$,.@size;
+	}
+	return;
+}
+
+
+function	summon_guardian	{
+	set .@map$, getarg(0);
+	set .@label$, getarg(1);
+	switch( 'instance_ca_level ){
+		case 1:
+			setarray .@coordinate,77,158,122,47;
+			setarray .@monster,1289;
+			setarray .@amount,1;
+			break;
+		case 2:
+			setarray .@coordinate,77,158,122,47;
+			setarray .@monster,1115,1086;
+			setarray .@amount,1,1;
+			break;
+		case 3:
+			setarray .@coordinate,77,158,122,47;
+			setarray .@monster,1251,1252,1307;
+			setarray .@amount,1,1;
+			break;
+		case 4:
+			setarray .@coordinate,77,158,122,47;
+			setarray .@monster,1768,1272,1039,1157;		
+			setarray .@amount,1,1,1,1;
+			break;             
+			case 5:                
+			setarray .@coordinate,77,158,122,47;
+			setarray .@monster,1373,1046,1779,1813,1312;
+			setarray .@amount,1,1,1,1,1;
+			break;
+		case 6:
+			setarray .@coordinate,77,158,122,47;
+			setarray .@monster,1832,1583,2087,2107,1190,1492;
+			setarray .@amount,1,1,1,1,1;
+			break;
+		default: 
+			mapannounce .@map$,"[ Champion Arena ] : Cleared!! Congratulation!!",bc_map,0x00FF99;
+			return;
+	}
+	set .@monster_size, getarraysize( .@monster );
+	for( set .@i, 0; .@i < .@monster_size; set .@i,.@i+1 ){
+		set .@target_amount, ( $ae_level * .@amount[.@i] );
+		set .@size, 0;
+		if ($ae_level < 2)
+		{
+			set .@size, rand(0,1);
+		}
+		if ($ae_level >= 4)
+		{
+			set .@size, 2;
+		}
+		areamonster .@map$,.@coordinate[0],.@coordinate[1],.@coordinate[2],.@coordinate[3],"--ja--",.@monster[.@i],.@target_amount,.@label$,.@size;
+	}
+	return;
+}
+
+function	floor_reward	{
+	set .@party_id, getarg(0);
+	set .@arg_count, getargcount() - 1;
+	set .@reward, getarg(1);
+	if( .@party_id ){
+		getpartymember .@party_id,2;
+		for( set .@pt, 0; .@pt < $@partymembercount; set .@pt,.@pt + 1 ){
+			if( attachrid( $@partymemberaid[.@pt] ) ){
+				callfunc("AddPoints", getcharid(3), .@reward * 'instance_ca_level * $ae_level);
+				dispbottom "[ Champion Arena ] : You have gained instance points for defeating "+'instance_ca_level_name$+".";
+				logmes "[ChampionArena] " + strcharinfo(0) + " complete the instance and obtains " + (.@reward * 'instance_ca_level * $ae_level) + " points.";
+			}
+		}
+		detachrid;
+	}
+	return;
+}
+
+OnNormalDied:
+	set .@map$, strnpcinfo(4);
+	set .@npc_name$, instance_npcname( strnpcinfo(0) );
+	set .@mob_dead_num, mobcount(.@map$,.@npc_name$+"::OnNormalDied" );
+	if( !.@mob_dead_num ){
+		detachrid;
+		sleep 3000;
+		if ('invoke_ca_slaves== 1)
+		{
+			mapannounce instance_mapname(.@map$),"[ Champion Arena ] : Slaves of '"+'instance_ca_level_name$+"' has appeared.",bc_map,0x00FF99;
+			sleep 3000;
+			summon_normal2(.@map$,.@npc_name$+"::OnNormalDied2" );
+		}
+		else
+		{
+			mapannounce .@map$,"[ Champion Arena ] : Guardian of '"+'instance_ca_level_name$+"' has appeared.",bc_map,0x00FF99;
+			sleep 3000;
+			summon_guardian(.@map$,.@npc_name$+"::OnGuardianDied" );
+		}
+	}
+	else if( .@mob_dead_num < 5 || .@mob_dead_num % 5== 0 ){
+		mapannounce .@map$,"[ Champion Arena ] : "+'instance_ca_level_name$+" : "+.@mob_dead_num+" left remaining.",bc_map,0x00FF99;
+	}
+	end;
+	
+OnNormalDied2:
+	set .@map$, strnpcinfo(4);
+	set .@npc_name$, instance_npcname( strnpcinfo(0) );
+	set .@mob_dead_num, mobcount(.@map$,.@npc_name$+"::OnNormalDied2" );
+	if( !.@mob_dead_num ){
+		detachrid;
+		sleep 3000;
+		mapannounce .@map$,"[ Champion Arena ] : Guardian of '"+'instance_ca_level_name$+"' has appeared.",bc_map,0x00FF99;
+		sleep 3000;
+		summon_guardian(.@map$,.@npc_name$+"::OnGuardianDied" );
+	}
+	else if( .@mob_dead_num < 5 || .@mob_dead_num % 5== 0 ){
+		mapannounce .@map$,"[ Champion Arena ] : "+'instance_ca_level_name$+" : "+.@mob_dead_num+" left remaining.",bc_map,0x00FF99;
+	}
+	end;
+	
+OnGuardianDied:
+	set .@map$, strnpcinfo(4);
+	set .@npc_name$, instance_npcname( strnpcinfo(0) );
+	set .@mob_dead_num, mobcount(.@map$,.@npc_name$+"::OnGuardianDied" );
+	set .@party_id, getcharid(1);
+	
+	if( !.@mob_dead_num ){
+		sleep 3000;
+		mapannounce .@map$,"[ Champion Arena ] : Guardian of '"+'instance_ca_level_name$+"' has been killed.",bc_map,0x00FF99;
+		
+		if ('instance_ca_level < 7)
+			floor_reward( .@party_id, 'floor_ca_reward );
+		else
+		{
+			if( .@party_id ){
+				getpartymember .@party_id,2;
+				for( set .@pt, 0; .@pt < $@partymembercount; set .@pt,.@pt+1 ){
+					if( attachrid( $@partymemberaid[.@pt] ) ){
+						set #CHAMPIONARENA, #CHAMPIONARENA + 1;
+						dispbottom "[ Astral Temple ] : You have gained instance points for defeating "+$instance_at_floor_name$+".";
+						logmes "[AstralTemple] " + strcharinfo(0) + " complete the instance and obtains " + (.@reward * $at_level) + " points.";
+					}
+				}
+				detachrid;
+			}
+
+			floor_reward( .@party_id, 'final_ca_reward );
+		}
+		sleep 5000;
+		summon_normal(.@map$,.@npc_name$+"::OnNormalDied" );
+	}
+	else if( .@mob_dead_num < 5 || .@mob_dead_num % 5== 0 ){
+		mapannounce .@map$,"[ Champion Arena ] : "+'instance_ca_level_name$+" Guardian : "+.@mob_dead_num+" left",bc_map,0x00FF99;
+	}
+	end;
+}

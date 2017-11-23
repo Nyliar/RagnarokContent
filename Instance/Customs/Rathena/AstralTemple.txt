@@ -1,0 +1,811 @@
+//===== Alayne Scripts =======================================
+//= Astral Temple Instance
+//===== By: ================================================== 
+//= Alayne
+//===== Current Version: ===================================== 
+//=
+//= 1.0 - Creation
+//= 1.1 - Structure modification, pattern apply by Emistry
+//= 1.2 - Logical mods over stars for hercules support
+//= 1.3 - Current version, handle both emu in one script
+//=
+//===== Compatible With: ===================================== 
+//= rAthena SVN
+//= hercules SVN
+//===== Description: ========================================= 
+//=
+//= An instance based over Saint Seya - Battle of Sanctuary
+//= and Zodiacs hats
+//=
+//===== Todo Remaining: ======================================
+//
+//===== Additional Comments: =================================
+//
+//
+//============================================================
+
+1@zod,119,154,5	warp	astral_portal#1	2,2,1@zod,292,42
+1@zod,279,154,5	warp	astral_portal#2	2,2,1@zod,292,202
+1@zod,279,313,5	warp	astral_portal#3	2,2,1@zod,132,202
+1@zod,119,312,5	warp	astral_portal#4	2,2,2@zod,92,18
+
+2@zod,79,125,5	warp	astral_portal#5	2,2,2@zod,92,178
+2@zod,79,288,5	warp	astral_portal#6	2,2,2@zod,252,18
+2@zod,240,128,5	warp	astral_portal#7	2,2,2@zod,252,178
+2@zod,240,288,5	warp	astral_portal#8	2,2,3@zod,92,19
+
+3@zod,79,125,5	warp	astral_portal#9	2,2,3@zod,92,178
+3@zod,79,288,5	warp	astral_portal#10	2,2,3@zod,252,18
+3@zod,240,128,5	warp	astral_portal#11	2,2,3@zod,252,178
+3@zod,240,288,5	warp	astral_portal#12	2,2,4@zod,116,88
+
+prontera,140,173,6	script	Temple Guardian::alatemgua	4_M_NFDEADMAN2,{
+	
+OnStart:
+	set .@party_id, getcharid(1);
+	set .@is_leader, ( getcharid(0) == getpartyleader(.@party_id,2) );
+	set .@has_instance, AT_INSTANCE_ID > 0;
+	
+	set .@at_instance_delay, ( instance_delay_astral - gettimetick(2) );
+
+	mes "^0055FF[ "+.instance_name$+" ]^000000";
+	mes "We're now recruiting people to Astral Temple and eliminate all the Horde there. Could you lend us a hand on this ?";
+	mes " ";
+	next; 
+	mes "^0055FF[ "+.instance_name$+" ]^000000";
+	mes "Hello, Adventurer.";
+	mes "We are the Astral Temple Guardian.";
+	mes "We're protecting this place since the first age.";
+	mes "But since a few times, the Horde take control.";
+	next;
+	mes "^0055FF[ "+.instance_name$+" ]^000000";
+	mes "Do you want to help the Stars?";
+	next;
+	switch( select( 
+		( .@party_id && .@is_leader && !.@has_instance )?"Start Astral Temple":"",
+		( .@party_id && .@has_instance )?"Enter Astral Temple":"",
+		( .@party_id && .@is_leader && .@has_instance )?"Destroy Astral Temple":"",
+	"Information"
+		)){
+		case 1:
+			if( .@at_instance_delay > 0 )
+			{
+				mes "You have to wait : ^FF0000"+.@at_instance_delay+" Seconds.^000000";
+				close;
+			}
+			getpartymember .@party_id,2;
+			if( .min_party_member >= 1 ){
+				set .@origin, getcharid(3);
+				set .@gettimetick, gettimetick(2);
+				for( set .@i, 0; .@i < $@partymembercount; set .@i,.@i+1 )
+					if( attachrid( $@partymemberaid[.@i] ) ){
+						set .@member_count, .@member_count + 1;
+						if( BaseLevel < .base_level[0] || BaseLevel > .base_level[1] ) set .@fail, .@fail|1;
+						if( Zeny < .instance_zeny ) set .@fail, .@fail|2;
+						if( instance_delay_astral > .@gettimetick ) set .@fail, .@fail|4;
+						if( .@fail ){
+							set .@name$, strcharinfo(0);
+							break;
+						}
+					}
+				attachrid( .@origin );
+			}
+			
+			if( .@name$ != "" && .@fail ){
+				mes "^FF0000[ Failed ]^000000";
+				mes "^0055FF"+.@name$+"^000000, You cannot join right now.";
+				mes " ";
+				mes "^FF0000[ Reason: ]^000000";
+				if( .@fail & 1 ) mes "^777777You must be Level: "+.base_level[0]+" - "+.base_level[1]+"^000000";
+				if( .@fail & 2 ) mes "^777777You need "+ .instance_zeny +" Zeny^000000";
+				if( .@fail & 4 ) mes "^777777You still have cooldown.^000000";
+				break;
+			}
+			if( !instance_check_party( .@party_id,.min_party_member ) ){
+				mes "^0055FF[ "+.instance_name$+" ]^000000";
+				mes "Make or join a party with at least "+.min_party_member+" member and try again.";
+				break;
+			}
+			else{
+				set $at_level, select( 
+					"^FF0000[ Cooldown - 24 Hours ]^000000 Easy Mode",
+					"^FF0000[ Cooldown - 48 Hours ]^000000 Difficult Mode",
+					"^FF0000[ Cooldown - 72 Hours ]^000000 Extreme Mode",
+					"^FF0000[ Cooldown - 96 Hours ]^000000 Apocalypse Mode"
+				);
+				//HERCULES
+				//set .@instance, instance_create( .instance_name$,.@party_id, IOT_PARTY );
+				//RATHENA
+				set .@instance, instance_create( .instance_name$ );
+				
+				if( .@instance < 0 ) {
+					mes "Astral Temple reservation failed.";
+					mes "^0000FF"+.instance_name$+" ^000000- Reservation Failed!";
+					close;
+				}
+				mes "^0055FF[ "+.instance_name$+" ]^000000";
+				mes "^0000FF"+.instance_name$+" ^000000 - Reserved";
+				
+				//HERCULES
+				//for( set .@i, 0; .@i < .map_size; set .@i,.@i+1 )
+				//{
+				//	set .@map$, (.@i + 1) + "@at";
+				//	if( instance_attachmap( .map$[.@i],.@instance, 1, .@map$  ) == "" ){
+				//		setmapflag .map$[.@i],mf_zone,"Memorial Dungeon";
+				//		setmapflag .map$[.@i],mf_nomobloot;
+				//		setmapflag .map$[.@i],mf_nomvploot;
+				//		npctalk "Astral Temple reservation failed.";
+				//		mes "- ^FF0000Reservation Failed!^000000";
+				//		instance_destroy( .@instance );
+				//		close;
+				//	}
+				//}
+				
+				set .@gettimetick, gettimetick(2);
+				getpartymember .@party_id,2;
+				for( set .@i, 0; .@i < $@partymembercount; set .@i,.@i+1 )
+					if( attachrid( $@partymemberaid[.@i] ) ){
+						set instance_delay_astral, ( .@gettimetick + ( .instance_delay * $at_level ));
+						set Zeny, Zeny - .instance_zeny;
+						set AT_INSTANCE_ID, .@instance;
+						dispbottom "["+.instance_name$+"] Paid "+ .instance_zeny +" Zeny and Instance Cooldown Applied.";
+					}
+				attachrid( .@origin );
+				mes "Astral Temple has been generated for Party - "+getpartyname( .@party_id );
+				//HERCULES
+				//instance_set_timeout $time_at_limit[0],$time_at_limit[1],.@instance;
+				//instance_attach( .@instance );
+				//instance_init( .@instance );
+				
+				//RATHENA
+				//init unused npc
+				//donpcevent instance_npcname("astral_temple_main")+"::OnInstanceInit";
+			}
+		case 2:
+			//HERCULES
+			//if( has_instance( .map$[0] ) == "" ){
+			//RATHENA
+			if( AT_INSTANCE_ID <= 0 ){
+				mes "Astral Temple doesnt exist for Party - "+getpartyname( .@party_id );
+			}
+			else{
+				instance_announce instance_id(),strcharinfo(0)+" from party, " +getpartyname( .@party_id )+", is entering the dungeon, "+.instance_name$+".",bc_map,"0x00FF99",FW_NORMAL,12;
+				//HERCULES
+				//if( has_instance( .map$[0] ) == "" ){
+				//	mes .instance_name$ + " doesnt exist for Party - "+getpartyname( .@party_id );
+				//}
+				//else{
+				//	warp .map$[0],132,42;
+				//	instance_announce instance_id(), getpartyname(getcharid(1))+"  entered in the "+.instance_name$+"!",bc_map,"0x00ff99";
+				//}
+		
+				//RATHENA
+				getmapxy(.@map$, .@x, .@y, UNITTYPE_PC);
+				save .@map$, .@x, .@y;
+				switch(instance_enter(.instance_name$)) {
+					default:
+						mes "An unknown error has occurred.";
+						close;
+					case 2:
+						mes "The memorial dungeon " + .instance_name$ + " does not exist.";
+						mes "The party leader did not generate the dungeon yet.";
+						close;
+					case 1:
+						mes "You can enter the dungeon after making the party.";
+						close;
+					case 0:
+						instance_announce instance_id(), strcharinfo(0)+" from party, " +getpartyname( .@party_id )+", is entering the dungeon, "+.instance_name$+".",bc_map,"0x00ff99",FW_NORMAL,12;
+						end;
+				}
+			}
+			break;
+		case 3:
+			mes "Astral Temple Destroyed.";
+			getpartymember getcharid(1),2;
+			for( set .@i, 0; .@i < $@partymembercount; set .@i, .@i+1 )
+				if( attachrid( $@partymemberaid[.@i] ) && AT_INSTANCE_ID > 0){
+					set AT_INSTANCE_ID, -1;
+				}
+			instance_destroy instance_id();
+			break;
+		default: 
+			mes "^0055FF[ "+.instance_name$+" ]^000000";
+			mes "The Temple exist since the beginning. Just as the celestial sky, it's divided in 12 Houses";
+			next;
+			mes "^0055FF[ "+.instance_name$+" ]^000000";
+			mes "That's where the Celestial Beast live. We protect them.";
+			next;
+			mes "^0055FF[ "+.instance_name$+" ]^000000";
+			mes "Temple is one. Everything comes from here, and get back to it.";
+			next;
+			mes "^0055FF[ "+.instance_name$+" ]^000000";
+			mes "The Temple was attacked by the Horde.";
+			next;
+			if( select( "What Happened?","Cancel" ) == 1 ){
+				mes "^0055FF[ "+.instance_name$+" ]^000000";
+				mes "The Horde, guided by Loki and his children, Fenrir, Duneyrr and Nydhogg.";
+				next;
+				mes "^0055FF[ "+.instance_name$+" ]^000000";
+				mes "The Horde has captured the Beast, and take control of each House.";
+				next;
+				mes "^0055FF[ "+.instance_name$+" ]^000000";
+				mes "To fight the Horde's Master, you'll have to free all houses.";
+				next;
+				mes "^0055FF[ "+.instance_name$+" ]^000000";
+				mes "For this, you'll have to activate all the stars which draw the Beast Seal.";
+				next;
+				mes "^0055FF[ "+.instance_name$+" ]^000000";
+				mes "Each Seal represents the House where you are.";
+				next;
+				mes "^0055FF[ "+.instance_name$+" ]^000000";
+				mes "Once done, the Guardian will come.";
+				next;
+				mes "^0055FF[ "+.instance_name$+" ]^000000";
+				mes "Free the Beast, and fight against the Horde Master.";
+			}
+			break;
+		}
+close;
+
+OnPCLogoutEvent:
+OnPCLoginEvent:
+	set AT_INSTANCE_ID, -1;
+	end;
+
+OnInit:
+	setarray .base_level,60,250;
+	setarray $time_at_limit,7200,300;
+	setarray .map$,"1@zod","2@zod","3@zod","4@zod";
+	set .map_size, getarraysize( .map$ );
+	set .min_party_member, 1;
+	set .instance_zeny, 50000;
+	set .instance_delay, 43200;
+	set .instance_name$, "Astral Temple";
+	end;
+}
+
+1@zod,1,1,4	script	astral_temple_main	HIDDEN_WARP_NPC,2,2,{
+function floor_monster;
+function floor_guardian;
+function floor_reward;
+end;
+
+OnBossDied:
+	set .@party_id, getcharid(1);
+	getpartymember .@party_id,2;
+	for( set .@pt, 0; .@pt < $@partymembercount; set .@pt,.@pt+1 ){
+		if( attachrid( $@partymemberaid[.@pt] ) ){
+			set #CELESTIALBEAST, #CELESTIALBEAST + 1;
+			dispbottom "[ Astral Temple ] : You have gained instance points for defeating "+'at_instance_floor_name$+".";
+			logmes "[AstralTemple] " + strcharinfo(0) + " complete the instance and obtains " + (.@reward * $at_level) + " points.";
+		}
+	}
+	floor_reward( .@party_id, 'final_at_reward );
+	end;
+
+function	floor_monster	{
+	set .@npc_name$, getarg(0);
+	switch( 'at_instance_floor ){
+		case 1:
+			set 'at_level_name$, "Aries";
+			set .@map$, "1@zod";
+			setarray .@coordinate,109,67,127,117;
+			setarray .@monster,1372,1101;
+			setarray .@amount,25,25;
+			break;
+		case 2:
+			set 'at_level_name$, "Taurus";
+			set .@map$, "1@zod";
+			setarray .@coordinate,269,67,288,117;
+			setarray .@monster,1149,1310,1292,1999;
+			setarray .@amount,25,10,10,30;
+			break;
+		case 3:
+			set 'at_level_name$, "Gemini";
+			set .@map$, "1@zod";
+			setarray .@coordinate,269,226,288,275;
+			setarray .@monster,1370,1681,1580,1307;
+			setarray .@amount,25,7,20,5;
+			break;
+		case 4:
+			set 'at_level_name$, "Cancer";
+			set .@map$, "1@zod";
+			setarray .@coordinate,109,226,128,275;
+			setarray .@monster,1423,1691,1302,1484;
+			setarray .@amount,8,15,25,30;
+			break;
+		case 5:
+			set 'at_level_name$, "Leo";
+			set .@map$, "2@zod";
+			setarray .@coordinate,68,43,88,92;
+			setarray .@monster,1456,1524,1115,1106,1259,1515;
+			setarray .@amount,7,20,5,7,5,5;
+			break;
+		case 6:
+			set 'at_level_name$, "Virgo";
+			set .@map$, "2@zod";
+			setarray .@coordinate,68,203,92,253;
+			setarray .@monster,1416,1102,1552,1631,1444,1482;
+			setarray .@amount,5,12,5,10,6,7;
+			break;
+		case 7:
+			set 'at_level_name$, "Libra";
+			set .@map$, "2@zod";
+			setarray .@coordinate,227,42,249,94;
+			setarray .@monster,1200,1522,1783;
+			setarray .@amount,7,25,20;
+			break;
+		case 8:
+			set 'at_level_name$, "Scorpio";
+			set .@map$, "2@zod";
+			setarray .@coordinate,227,203,251,253;
+			setarray .@monster,1387,1592,1618,1304,1321,1382;
+			setarray .@amount,25,12,9,9,15,8;
+			break;
+		case 9:
+			set 'at_level_name$, "Sagittarrius";
+			set .@map$, "3@zod";
+			setarray .@coordinate,68,43,89,91;
+			setarray .@monster,1189,1253,1638,1216,1282,1061,1379,1262;
+			setarray .@amount,25,12,8,12,20,8,5,7;
+			break;
+		case 10:
+			set 'at_level_name$, "Aquarius";
+			set .@map$, "3@zod";
+			setarray .@coordinate,71,202,89,252;
+			setarray .@monster,1777,1376,1962,1778;
+			setarray .@amount,7,15,7,5;
+			break;
+		case 11:
+			set 'at_level_name$, "Capricon";
+			set .@map$, "3@zod";
+			setarray .@coordinate,230,43,251,96;
+			setarray .@monster,1757,1609,1563;
+			setarray .@amount,25,30,25;
+			break;
+		case 12:
+			set 'at_level_name$, "Pisces";
+			set .@map$, "3@zod";
+			setarray .@coordinate,230,203,251,256;
+			setarray .@monster,1451,1264;
+			setarray .@amount,35,30;
+			break;
+		default:
+			return;
+	}
+	set .@map$, instance_mapname( .@map$ );
+	set 'at_instance_floor_name$, 'at_level_name$;
+	set .@monster_size, getarraysize( .@monster );
+	for( set .@i, 0; .@i < .@monster_size; set .@i,.@i+1 ){
+		set .@target_amount, ( $at_level * .@amount[.@i] );
+		set .@size, 0;
+		if ($at_level < 2)
+		{
+			set .@size, rand(0,1);
+		}
+		if ($at_level >= 4)
+		{
+			set .@size, 2;
+		}
+		areamonster .@map$,.@coordinate[0],.@coordinate[1],.@coordinate[2],.@coordinate[3],"--ja--",.@monster[.@i],.@target_amount,.@npc_name$+"::OnNormalDied",.@size;
+	}
+	instance_announce instance_id(),"[ Astral Temple ] : "+'at_instance_floor_name$+"'s minions appeared!!",bc_map,0x00FF99;
+	return;
+}
+
+function	floor_guardian	{
+	set .@npc_name$, getarg(0);
+	switch( 'at_instance_floor ){
+		case 1:
+			set .@map$, "1@zod";
+			setarray .@coordinate,119,128,119,128;
+			setarray .@monster,1039;
+			setarray .@amount,1;
+			break;
+		case 2:
+			set .@map$, "1@zod";
+			setarray .@coordinate,279,128,279,128;
+			setarray .@monster,1389;
+			setarray .@amount,1;
+			break;
+		case 3:
+			set .@map$, "1@zod";
+			setarray .@coordinate,279,289,279,289;
+			setarray .@monster,1087,1190;
+			setarray .@amount,1,1;
+			break;
+		case 4:
+			set .@map$, "1@zod";
+			setarray .@coordinate,119,289,119,289;
+			setarray .@monster,1734;
+			setarray .@amount,1;
+			break;
+		case 5:
+			set .@map$, "2@zod";
+			setarray .@coordinate,79,105,79,105;
+			setarray .@monster,1150;
+			setarray .@amount,1;
+			break;
+		case 6:
+			set .@map$, "2@zod";
+			setarray .@coordinate,79,265,79,265;
+			setarray .@monster,1891;
+			setarray .@amount,1;
+			break;
+		case 7:
+			set .@map$, "2@zod";
+			setarray .@coordinate,239,105,239,105;
+			setarray .@monster,1511;
+			setarray .@amount,1;
+			break;
+		case 8:
+			set .@map$, "2@zod";
+			setarray .@coordinate,239,265,239,265;
+			setarray .@monster,1492;
+			setarray .@amount,1;
+			break;
+		case 9:
+			set .@map$, "3@zod";
+			setarray .@coordinate,79,105,79,105;
+			setarray .@monster,1809;
+			setarray .@amount,1;
+			break;
+		case 10:
+			set .@map$, "3@zod";
+			setarray .@coordinate,79,265,79,265;
+			setarray .@monster,1779;
+			setarray .@amount,1;
+			break;
+		case 11:
+			set .@map$, "3@zod";
+			setarray .@coordinate,239,105,239,105;
+			setarray .@monster,1373;
+			setarray .@amount,1;
+			break;
+		case 12:
+			set .@map$, "3@zod";
+			setarray .@coordinate,239,264,239,264;
+			setarray .@monster,2068;
+			setarray .@amount,1;
+			break;
+		default: 
+			return;
+	}
+	set .@map$, instance_mapname( .@map$ );
+	set .@monster_size, getarraysize( .@monster );
+	for( set .@i, 0; .@i < .@monster_size; set .@i,.@i+1 ){
+		set .@target_amount, ( $at_level * .@amount[.@i] );
+		set .@size, 0;
+		if ($at_level < 2)
+		{
+			set .@size, rand(0,1);
+		}
+		if ($at_level >= 4)
+		{
+			set .@size, 2;
+		}
+		areamonster .@map$,.@coordinate[0],.@coordinate[1],.@coordinate[2],.@coordinate[3],"--ja--",.@monster[.@i],.@target_amount,.@npc_name$+"::OnGuardianDied",.@size;
+	}
+	instance_announce instance_id(),"[ Astral Temple ] : Guardian '"+'at_instance_floor_name$+"' has been awakened!!",bc_map,0x00FF99;
+	return;
+}
+
+function	floor_reward	{
+	set .@party_id, getarg(0);
+	set .@arg_count, getargcount() - 1;
+	
+	switch( 'at_instance_floor ){
+		// <item id>,<amount>,<rate>,
+		case 1: 
+			setarray .@item_list,
+				
+				5545,1,5,	//
+				5546,1,5; 
+			break;
+		case 2:
+			setarray .@item_list,
+				5549,1,5,
+				5550,1,5;
+			break;
+		case 3:
+			setarray .@item_list,
+				5569,1,5,
+				5570,1,5;
+			break;
+		case 4:
+			setarray .@item_list,
+				5581,1,5,
+				5582,1,5;
+			break;
+		case 5:
+			setarray .@item_list,
+				5589,1,5,
+				5588,1,5;
+			break;
+		case 6:
+			setarray .@item_list,
+				5599,1,5,
+				5598,1,5;
+			break;
+		case 7:
+			setarray .@item_list,
+				5663,1,5,
+				5662,1,5;
+			break;
+		case 8:
+			setarray .@item_list,
+				5677,1,5,
+				5676,1,5,
+			break;
+		case 9:
+			setarray .@item_list,
+				// <item id>,<amount>,<rate>,
+				5739,1,5,	//
+				5740,1,5;	// 
+			break;
+		case 10:
+			setarray .@item_list,
+				5512,1,5,
+				5513,1,5;
+			break;
+		case 11:
+			setarray .@item_list,
+				5745,1,5,
+				5744,1,5;
+			break;
+		case 12:
+			setarray .@item_list,
+				5545,1,5,
+				5546,1,5;
+			break;
+		default: return;
+	}
+
+	set .@reward, getarg(1);
+	set .@item_list_size, getarraysize( .@item_list ) - 2;
+	if( .@party_id && .@item_list_size ){
+		getpartymember .@party_id,2;
+		for( set .@pt, 0; .@pt < $@partymembercount; set .@pt,.@pt+1 ){
+			if( attachrid( $@partymemberaid[.@pt] ) ){
+				for( set .@item, 0; .@item < .@item_list_size; set .@item, .@item + 3 )
+					if( rand(100) < .@item_list[.@item+2] )
+						getitem .@item_list[.@item],.@item_list[.@item+1];
+				callfunc ("AddPoints", getcharid(3), .@reward * $at_level );
+				dispbottom "[ Astral Temple ] : You have gained instance points for defeating "+'at_instance_floor_name$+".";
+				logmes "[AstralTemple] " + strcharinfo(0) + " complete the instance and obtains " + (.@reward * $at_level) + " points.";
+			}
+		}
+		detachrid;
+	}
+	return;
+}
+
+OnInstanceInit:
+	set .@map$, strnpcinfo(4);
+	set .@npc_name$, instance_npcname( strnpcinfo(0) );
+	set 'at_instance_floor, 0;
+	setarray 'at_instance_floor_summon[0],2,4,5,4,8,8,3,6,8,8,4,2;
+	setarray 'at_instance_firstId[0],0,2,6,11,15,23,31,34,40,48,56,60;
+	set 'floor_at_reward, 75;
+	set 'final_at_reward, 250;
+	for( set .@i, 1; .@i <= 12; set .@i,.@i+1 )
+		disablenpc instance_npcname( "astral_portal#"+.@i );
+	donpcevent .@npc_name$+"::OnFloorSummon";
+	
+	//RATHENA
+	initnpctimer;
+	end;
+	
+OnTimer1000:
+	set .countTimerRound, .countTimerRound + 1;	
+	//RATHENA delay
+	if (.countTimerRound >= $time_at_limit[0])
+	{
+		stopnpctimer;
+		instance_announce instance_id(),"[ Astral Temple ] : The dimension is collapsing. You should get out now!!",bc_map,0x00FF99;
+
+		getpartymember getcharid(1),2;
+		for( set .@i, 0; .@i < $@partymembercount; set .@i, .@i+1 )
+			if( attachrid( $@partymemberaid[.@i] ) && AT_INSTANCE_ID > 0){
+				set AT_INSTANCE_ID, -1;
+			}
+		instance_destroy instance_id();
+	}
+	end;
+
+OnFloorSummon:
+	set .@map$, strnpcinfo(4);
+	set .@npc_name$, instance_npcname( strnpcinfo(0) );
+	set 'at_instance_sum_count, 'at_instance_floor_summon['at_instance_floor];
+	set 'at_instance_floor, 'at_instance_floor + 1;
+	floor_monster ( .@npc_name$ );
+
+	if( 'at_instance_floor < 12 ){
+		for( set .@i, 0; .@i < 'at_instance_sum_count; set .@i,.@i+1 )
+			enablenpc instance_npcname( "Star#"+( ( 'at_instance_firstId['at_instance_floor] ) + .@i ) );
+	}
+	else if( 'at_instance_floor == 12 ){
+		donpcevent instance_npcname( "astral_main_boss" )+"::OnEnable";
+	}
+	end;
+	
+OnGuardianSummon:
+	set .@map$, strnpcinfo(4);
+	set .@npc_name$, instance_npcname( strnpcinfo(0) );
+	floor_guardian ( .@npc_name$ );
+	end;
+
+OnNormalDied:
+	set .@map$, strnpcinfo(4);
+	set .@npc_name$, instance_npcname( strnpcinfo(0) );
+	set .@mob_dead_num, mobcount(.@map$,.@npc_name$+"::OnNormalDied" );
+	if( .@mob_dead_num < 5 || .@mob_dead_num % 5== 0 ){
+		instance_announce instance_id(),"[ Astral Temple ] : "+.@mob_dead_num+" left remaining.",bc_map,0x00FF99;
+	}
+	end;
+
+OnGuardianDied:
+	set .@map$, strnpcinfo(4);
+	set .@npc_name$, instance_npcname( strnpcinfo(0) );
+	
+	if( !mobcount( .@map$,.@npc_name$+"::OnGuardianDied" ) ){
+		enablenpc instance_npcname( "astral_portal#"+'at_instance_floor );
+		floor_reward ( getcharid(1), 'floor_at_reward );
+		donpcevent .@npc_name$+"::OnFloorSummon";
+	}
+	end;
+}
+
+1@zod,1,1,4	script	Star	HIDDEN_WARP_NPC,2,2,{
+end;
+
+OnTouch:
+	set .@map$, strnpcinfo(4);
+	if( getpartyleader( getcharid(1),2 ) != getcharid(0) ){
+		npctalk "Only Hero leader can activate the Star to awaken the Guardian!!";
+	}
+	else if( 'at_instance_sum_count ){
+		disablenpc instance_npcname( strnpcinfo(0) );
+		'at_instance_sum_count--;
+		if( !'at_instance_sum_count ){
+			donpcevent instance_npcname( "astral_temple_main" )+"::OnGuardianSummon";
+		}
+		else{
+			npctalk "Good, find the remaining Star and activate it!!";
+		}
+	}
+	end;
+}
+
+//Aries
+1@zod,114,69,4	duplicate(Star)	Star#0	1914,2,2
+1@zod,125,101,4	duplicate(Star)	Star#1	1914,2,2
+//Taurus
+1@zod,273,74,4	duplicate(Star)	Star#2	1914,2,2
+1@zod,287,80,4	duplicate(Star)	Star#3	1914,2,2
+1@zod,285,100,4	duplicate(Star)	Star#4	1914,2,2
+1@zod,273,110,4	duplicate(Star)	Star#5	1914,2,2
+//Gemini
+1@zod,286,230,4	duplicate(Star)	Star#6	1914,2,2
+1@zod,274,239,4	duplicate(Star)	Star#7	1914,2,2
+1@zod,276,250,4	duplicate(Star)	Star#8	1914,2,2
+1@zod,287,263,4	duplicate(Star)	Star#9	1914,2,2
+1@zod,286,278,4	duplicate(Star)	Star#10	1914,2,2
+//Cancer
+1@zod,115,235,4	duplicate(Star)	Star#11	1914,2,2
+1@zod,124,240,4	duplicate(Star)	Star#12	1914,2,2
+1@zod,114,254,4	duplicate(Star)	Star#13	1914,2,2
+1@zod,125,271,4	duplicate(Star)	Star#14	1914,2,2
+//Leo
+2@zod,84,92,4	duplicate(Star)	Star#15	1914,2,2
+2@zod,82,84,4	duplicate(Star)	Star#16	1914,2,2
+2@zod,77,64,4	duplicate(Star)	Star#17	1914,2,2
+2@zod,81,63,4	duplicate(Star)	Star#18	1914,2,2
+2@zod,84,69,4	duplicate(Star)	Star#19	1914,2,2
+2@zod,87,62,4	duplicate(Star)	Star#20	1914,2,2
+2@zod,83,55,4	duplicate(Star)	Star#21	1914,2,2
+2@zod,78,48,4	duplicate(Star)	Star#22	1914,2,2
+//Virgo
+2@zod,71,197,4	duplicate(Star)	Star#23	1914,2,2
+2@zod,72,214,4	duplicate(Star)	Star#24	1914,2,2
+2@zod,71,231,4	duplicate(Star)	Star#25	1914,2,2
+2@zod,83,227,4	duplicate(Star)	Star#26	1914,2,2
+2@zod,87,234,4	duplicate(Star)	Star#27	1914,2,2
+2@zod,74,243,4	duplicate(Star)	Star#28	1914,2,2
+2@zod,73,253,4	duplicate(Star)	Star#29	1914,2,2
+2@zod,87,255,4	duplicate(Star)	Star#30	1914,2,2
+//Libra
+2@zod,234,47,4	duplicate(Star)	Star#31	1914,2,2
+2@zod,245,58,4	duplicate(Star)	Star#32	1914,2,2
+2@zod,235,69,4	duplicate(Star)	Star#33	1914,2,2
+//Scorpio
+2@zod,243,197,4	duplicate(Star)	Star#34	1914,2,2
+2@zod,246,205,4	duplicate(Star)	Star#35	1914,2,2
+2@zod,233,212,4	duplicate(Star)	Star#36	1914,2,2
+2@zod,235,224,4	duplicate(Star)	Star#37	1914,2,2
+2@zod,247,241,4	duplicate(Star)	Star#38	1914,2,2
+2@zod,240,256,4	duplicate(Star)	Star#39	1914,2,2
+//Sagittarius
+3@zod,86,87,4	duplicate(Star)	Star#40	1914,2,2
+3@zod,80,94,4	duplicate(Star)	Star#41	1914,2,2
+3@zod,75,85,4	duplicate(Star)	Star#42	1914,2,2
+3@zod,80,77,4	duplicate(Star)	Star#43	1914,2,2
+3@zod,87,56,4	duplicate(Star)	Star#44	1914,2,2
+3@zod,74,54,4	duplicate(Star)	Star#45	1914,2,2
+3@zod,80,53,4	duplicate(Star)	Star#46	1914,2,2
+3@zod,80,41,4	duplicate(Star)	Star#47	1914,2,2
+//Aquarius
+3@zod,72,204,4	duplicate(Star)	Star#48	1914,2,2
+3@zod,86,215,4	duplicate(Star)	Star#49	1914,2,2
+3@zod,73,221,4	duplicate(Star)	Star#50	1914,2,2
+3@zod,87,233,4	duplicate(Star)	Star#51	1914,2,2
+3@zod,73,246,4	duplicate(Star)	Star#52	1914,2,2
+3@zod,72,260,4	duplicate(Star)	Star#53	1914,2,2
+3@zod,86,259,4	duplicate(Star)	Star#54	1914,2,2
+3@zod,95,271,4	duplicate(Star)	Star#55	1914,2,2
+//Capricorn
+3@zod,255,33,4	duplicate(Star)	Star#56	1914,2,2
+3@zod,230,35,4	duplicate(Star)	Star#57	1914,2,2
+3@zod,244,57,4	duplicate(Star)	Star#58	1914,2,2
+3@zod,235,82,4	duplicate(Star)	Star#59	1914,2,2
+//Pisces
+3@zod,244,209,4	duplicate(Star)	Star#60	1914,2,2
+3@zod,237,236,4	duplicate(Star)	Star#61	1914,2,2
+
+4@zod,115,88,4	script	astral_main_boss	HIDDEN_WARP_NPC,{
+end;
+
+OnEnable:
+	set .@map$, strnpcinfo(4);
+	set .@npc_name$, instance_npcname( strnpcinfo(0) );
+	instance_announce instance_id(),"[ Astral Temple ] : Here come the Master of Astral Temple!!",bc_map,0x00FF99;
+	set 'at_instance_floor_name$, "Horde's Master";
+	sleep2 5000;
+	monster .@map$,75,63,"--ja--",1708,1,.@npc_name$+"::OnBossDie";
+	initnpctimer;
+	end;
+	
+OnTimer180000:
+	stopnpctimer;
+	set .@npc_name$, instance_npcname( strnpcinfo(0) );
+	set 'atDead, 0;
+	set 'atCount, 0;
+	setarray $@servant[0],1039,1389,1272,1087,1190,1734,1991,1891,1511,1492,1809,1779,1873,2068;
+	set 'at_instance_at_servant, rand(0,13);
+	instance_announce instance_id(),"[ Astral Temple ] : Careful, he summoned his servant!!!",bc_map,0x00FF99;
+
+	if ('at_instance_at_servant >= 0 && 'at_instance_at_servant < 13)
+	{
+		areamonster .@map$,51,39,99,87,"--ja--",getelementofarray($@servant,'at_instance_at_servant),1,.@npc_name$+"::OnServantDie";
+	}
+	else
+	{
+		monster .@map$,75,63,"--ja--",1252,3,.@npc_name$+"::OnServantDie";
+		monster .@map$,75,63,"--ja--",1785,1,.@npc_name$+"::OnServantDie";
+		monster .@map$,75,63,"--ja--",1046,1,.@npc_name$+"::OnServantDie";
+	}
+	end;
+	
+OnServantDie:
+	set .@map$, strnpcinfo(4);
+	set .@npc_name$, instance_npcname( strnpcinfo(0), instance_id() );
+	if( !mobcount( .@map$,.@npc_name$+"::OnServantDie" ) ){
+		instance_announce instance_id(),"[ Astral Temple ] : Stay Alert, it's not finished yet!!",bc_map,0x00FF99;
+	}
+	end;
+	
+OnBossDie:
+	set .@map$, strnpcinfo(4);
+	set .@npc_name$, instance_npcname( strnpcinfo(0), instance_id() );
+	instance_announce instance_id(), "[ Astral Temple ] : Temple Purification completed, Congratulation. Astral Temple will close soon.",bc_map,"0x00FF99";
+	donpcevent "astral_temple_main::OnBossDied";
+	sleep2 15000;
+
+	getpartymember getcharid(1),2;
+	for( set .@i, 0; .@i < $@partymembercount; set .@i, .@i+1 )
+		if( attachrid( $@partymemberaid[.@i] ) && AT_INSTANCE_ID > 0){
+			set AT_INSTANCE_ID, -1;
+		}
+	instance_destroy instance_id();
+	end;
+}

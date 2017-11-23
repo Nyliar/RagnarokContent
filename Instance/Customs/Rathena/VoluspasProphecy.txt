@@ -1,0 +1,693 @@
+//===== Alayne Scripts =======================================
+//= Maker Mansion Instance
+//===== By: ================================================== 
+//= Alayne
+//===== Current Version: ===================================== 
+//=
+//= 1.0 - Creation
+//= 1.1 - Structure modification, pattern apply from Emistry's
+//= 1.2 - Logical mods over stars for hercules support
+//= 1.3 - Current version, handle both emu in one script
+//=
+//===== Compatible With: ===================================== 
+//= rAthena SVN
+//= hercules SVN
+//===== Description: ========================================= 
+//=
+//= An instance based over mobs level
+//=
+//===== Todo Remaining: ======================================
+//
+//===== Additional Comments: =================================
+//
+//
+//============================================================
+
+prontera,145,173,4	script	Volva::alvopr	4_F_RUSGREEN,{
+
+OnStart:
+	set .@party_id, getcharid(1);
+	set .@is_leader, ( getcharid(0) == getpartyleader(.@party_id,2) );
+	set .@has_instance, VP_INSTANCE_ID >= 0;
+	
+	set .@instance_vp_delay, ( instance_delay_volpro - gettimetick(2) );
+
+	mes "^0055FF[ "+.instance_name$+" ]^000000";
+	mes "...Leave me...I don't belong to this place...";
+	mes " ";
+	if( .@instance_vp_delay > 0 )
+	{
+		mes "I can't let you in. The copy created by my rage is too strong now. Wait " + callfunc("__Time2Str", .@instance_vp_delay) + " before coming back.";
+		close;
+	}
+	next; 
+	mes "^0055FF[ "+.instance_name$+" ]^000000";
+	mes "I was a free Volva long ago. Do you know what's a Volva?";
+	mes "We're shaman. Mediums. Reading Past and Future.";
+	mes "Odin's call me back from the death to use me.";
+	mes "From my hate, a ghost was raised. Now, it threatened anything around here...";
+	next;
+	mes "^0055FF[ "+.instance_name$+" ]^000000";
+	mes "Can you go there and calm it?";
+	next;
+	switch( select( 
+		( .@party_id && .@is_leader && !.@has_instance )?"Start " + .instance_name$:"",
+		( .@party_id && .@has_instance )?"Enter " + .instance_name$:"",
+		( .@party_id && .@is_leader && .@has_instance )?"Destroy " + .instance_name$:"",
+	"Information"
+		)){
+	case 1:
+		getpartymember .@party_id,2;
+		if( .min_party_member >= 1 ){
+			set .@origin, getcharid(3);
+			set .@gettimetick, gettimetick(2);
+			for( set .@i, 0; .@i < $@partymembercount; set .@i, .@i+1 )
+				if( attachrid( $@partymemberaid[.@i] ) ){
+					set .@member_count, .@member_count + 1;
+					if( BaseLevel < .base_level[0] || BaseLevel > .base_level[1] ) set .@fail, .@fail|1;
+					if( Zeny < .instance_zeny ) set .@fail, .@fail|2;
+					if( instance_delay_volpro > .@gettimetick ) set .@fail, .@fail|4;
+					if( .@fail ){
+						set .@name$, strcharinfo(0);
+						break;
+					}
+				}
+			attachrid( .@origin );
+		}
+		
+		if( .@name$ != "" && .@fail ){
+			mes "^FF0000[ Failed ]^000000";
+			mes "^0055FF"+.@name$+"^000000, cannot join right now.";
+			mes " ";
+			mes "^FF0000[ Reason: ]^000000";
+			if( .@fail & 1 ) mes "^777777You must be Level: "+.base_level[0]+" - "+.base_level[1]+"^000000";
+			if( .@fail & 2 ) mes "^777777You need "+ .instance_zeny +" Zeny^000000";
+			if( .@fail & 4 ) mes "^777777You still have cooldown.^000000";
+			break;
+		}
+		if( instance_check_party( .@party_id,.min_party_member ) == 0 ){
+			mes "^0055FF[ "+.instance_name$+" ]^000000";
+			mes "Make or join a party with at least "+.min_party_member+" member and try again.";
+			break;
+		}
+		else{
+			set $instance_vp_level, select( 
+				"^FF0000[ Cooldown - 24 Hours ]^000000 Easy Mode",
+				"^FF0000[ Cooldown - 48 Hours ]^000000 Difficult Mode",
+				"^FF0000[ Cooldown - 72 Hours ]^000000 Extreme Mode",
+				"^FF0000[ Cooldown - 96 Hours ]^000000 Apocalypse Mode"
+			);
+			//HERCULES
+			//set .@instance, instance_create( .instance_name$,.@party_id, IOT_PARTY );
+			//RATHENA
+			set .@instance, instance_create( .instance_name$ );
+			if( .@instance < 0 ) {
+				mes "^0000FF"+.instance_name$+" ^000000- Reservation Failed!";
+				close;
+			}
+			mes "^0055FF[ "+.instance_name$+" ]^000000";
+			mes "^0000FF"+.instance_name$+" ^000000 - Reserved";
+			
+			//HERCULES
+			//for( .@i = 0; .@i < .map_size; .@i++ )
+			//	if( instance_attachmap( .map$[.@i], .@instance, 1, "" + (.@i + 1) + "@volpro" ) == "" ){
+			//		npctalk "" + .instance_name$ + " reservation failed.";
+			//		mes "- ^FF0000Reservation Failed!^000000";
+			//		instance_destroy( .@instance );
+			//		close;
+			//	}
+				
+			set .@gettimetick, gettimetick(2);
+			getpartymember .@party_id,2;
+			for( .@i = 0; .@i < $@partymembercount; .@i++ )
+				if( attachrid( $@partymemberaid[.@i] ) ){
+					set instance_delay_volpro, ( .@gettimetick + ( .instance_delay * .@level ));
+					set Zeny, Zeny - .instance_zeny;
+					VP_INSTANCE_ID = .@instance;
+					dispbottom "["+.instance_name$+"] Paid "+ .instance_zeny +" Zeny and Instance Cooldown Applied.";
+				}
+			attachrid( .@origin );
+			npctalk "" + .instance_name$ + " has been generated for Party - "+getpartyname( .@party_id );
+			
+			
+			//HERCULES
+			//instance_set_timeout $time_vp_limit[0],$time_vp_limit[1],.@instance; //herc only
+			//instance_attach( .@instance );
+			//instance_init( .@instance );
+			
+			//RATHENA		
+			//disable unused npcs for now
+		}
+	case 2:
+		getmapxy(.@map$, .@x, .@y, UNITTYPE_PC);
+		//HERCULES
+		//savepoint .@map$, .@x, .@y;
+		//if( has_instance( .map$[0] ) == "" ){
+		//	mes .instance_name$ + " doesnt exist for Party - "+getpartyname( .@party_id );
+		//}
+		//else{
+		//	warp .map$[0],216,58;
+		//	instance_announce $instance_vp, getpartyname(getcharid(1))+"  entered in the "+.instance_name$+"!",bc_map,"0x00ff99";
+		//}
+		
+		//RATHENA
+		save .@map$, .@x, .@y;
+		switch(instance_enter(.instance_name$)) {
+			default:
+				mes "An unknown error has occurred.";
+				close;
+			case 2:
+				mes "The memorial dungeon " + .instance_name$ + " does not exist.";
+				mes "The party leader did not generate the dungeon yet.";
+				close;
+			case 1:
+				mes "You can enter the dungeon after making the party.";
+				close;
+			case 0:
+				instance_announce $instance_vp, strcharinfo(0)+" from party, " +getpartyname( .@party_id )+", is entering the dungeon, "+.instance_name$+".",bc_map,"0x00ff99",FW_NORMAL,12;
+				end;
+		}
+		break;
+	case 3:
+		mes "" + .instance_name$ + " Destroyed.";
+		instance_destroy VP_INSTANCE_ID;
+		getpartymember getcharid(1),2;
+		for( set .@i, 0; .@i < $@partymembercount; set .@i, .@i+1 )
+			if( attachrid( $@partymemberaid[.@i] ) && VP_INSTANCE_ID > 0){
+				set VP_INSTANCE_ID, -1;
+			}
+		break;
+	default: 
+		mes "^0055FF[ "+.instance_name$+" ]^000000";
+		mes "I was a free Volva long ago. Do you know what's a Volva?";
+		mes "We're shaman. Mediums. Reading Past and Future.";
+		mes "Odin's call me back from the death to use me. But I didn't feared him anymore.";
+		next;
+		mes "^0055FF[ "+.instance_name$+" ]^000000";
+		mes "While he asked me for the Knowledge, I showed him everything, past and future, what was about to arrive.";
+		mes "All his beloved death, and even his own. And from Wisdom, he also learnt fear.";
+		next;
+		mes "^0055FF[ "+.instance_name$+" ]^000000";
+		mes "But that wasn't enough. I lived long enough, and don't want to come back. So I hated him, like never before.";
+		mes "From my hate, a ghost was raised. Now, it threatened anything around here...";
+		break;
+}
+close;
+
+OnPCLoginEvent:
+OnPCLogoutEvent:
+	VP_INSTANCE_ID = -1;
+	end;
+
+OnInit:
+	setarray .base_level,60,250;
+	setarray $time_vp_limit,7200,300;
+	setarray .map$,"1@vp";
+	set .map_size, getarraysize( .map$ );
+	set .min_party_member, 1;
+	set .instance_zeny, 50000;
+	set .instance_delay, 43200;
+	set .instance_name$, "Voluspa Prophecy";
+	end;
+}
+
+
+1@vp,154,111,4	script	Revenge Seed	4_MAL_BUDIDAI,{
+function invok_past;
+function invok_present;
+function invok_future;
+function floor_monster;
+function floor_reward;
+
+set .@npcname$, "[VoluspaGhost]";
+mes .@npcname$;
+mes "Who are you...What are you doing here?";
+set .@npc_name$, instance_npcname(strnpcinfo(0));
+set .@mob_dead_num, mobcount( strnpcinfo(4),.@npc_name$+"::OnNormalDied" );
+set .@mob_dead_num, .@mob_dead_num + mobcount( strnpcinfo(4),.@npc_name$+"::OnGuardianDied" );
+if(.@mob_dead_num != 0)
+{
+	mes "Go away. You don't have to talk to me right now.";
+	close;
+}
+mes "You want a reading? Pay the price.";
+if(select("Pay","What's the price?") == 1)
+{
+	set .@baseLeech, 10 * 'instance_vp_floor;
+	getpartymember getcharid(1);
+	copyarray .@partymemberaid, $@partymemberaid, $@partymembercount;
+	set .@maxCountLeech, $@partymembercount;
+	set .@countLeech, 0;
+	while(.@countLeech <= 0 || .@countLeech > .@maxCountLeech)
+	{
+		next;
+		mes .@npcname$;
+		mes "How many of yours will pay the Price?";
+		input .@countLeech;
+	}
+	set .@appliedLeech, 0;
+	for(set .@i, 0; .@i<getarraysize(.@partymemberaid) && .@appliedLeech < .@countLeech; set .@i,.@i+1)
+	{
+		set .@ranked, rand(0,getarraysize(.@partymemberaid));
+		if(attachrid(.@partymemberaid[.@ranked]))
+		{
+			percentheal (0 - .@baseLeech) / .@countLeech, (0 - .@baseLeech) / .@countLeech;
+			set .@appliedLeech, .@appliedLeech + 1;
+		}
+		deletearray .@partymemberaid[.@ranked], 1;
+	}
+	
+	switch('instance_vp_floor)
+	{
+		case 1:
+			instance_announce $instance_vp, "[ VoluspaProphecy ] : I read in blood....", bc_map|bc_red;
+			break;
+		case 2:
+			instance_announce $instance_vp, "[ VoluspaProphecy ] : M...Mooreee....", bc_map|bc_red;
+			break;
+		case 3:
+			instance_announce $instance_vp, "[ VoluspaProphecy ] : Give me more....", bc_map|bc_red;
+			break;
+		case 4:
+			instance_announce $instance_vp, "[ VoluspaProphecy ] : Still not enough....", bc_map|bc_red;
+			break;
+		case 5:
+			instance_announce $instance_vp, "[ VoluspaProphecy ] : M...Mooreee...Give me MORE!", bc_map|bc_red;
+			break;
+		case 6:
+			instance_announce $instance_vp, "[ VoluspaProphecy ] : M...Mooreee....", bc_map|bc_red;
+			break;
+	}
+	set .@npc_name$, instance_npcname( strnpcinfo(0) );
+	doevent .@npc_name$+"::OnFloorSummon";
+}
+else
+{
+	next;
+	mes .@npcname$;
+	mes "You need to have faith.";
+}
+close;
+
+function	invok_past	{
+	attachrid(getarg(0));
+	getpartymember getcharid(1);
+	copyarray .@partymemberaid[0], $@partymemberaid[0], $@partymembercount;
+	for(set .@i, 0; .@i<getarraysize(.@partymemberaid); set .@i,.@i+1)
+	{
+		if(attachrid(.@partymemberaid))
+		{
+			switch(BaseClass)
+			{
+				case Job_Swordman:
+					setarray .monster[getarraysize(.monster)],1652;
+					break;
+				case Job_Mage:
+					setarray .monster[getarraysize(.monster)],1657;
+					break;
+				case Job_Archer:
+					setarray .monster[getarraysize(.monster)],1656;
+					break;
+				case Job_Acolyte:
+					setarray .monster[getarraysize(.monster)],1655;
+					break;
+				case Job_Merchant:
+					setarray .monster[getarraysize(.monster)],1654;
+					break;
+				case Job_Thief:
+					setarray .monster[getarraysize(.monster)],1653;
+					break;
+			}
+		}
+	}
+	return;
+}
+
+function	invok_present	{
+	attachrid(getarg(0));
+	set .@amount, getarg(1);
+	set .@npc_name$, instance_npcname( strnpcinfo(0) );
+	getpartymember getcharid(1);
+	copyarray .@partymemberaid, $@partymemberaid, $@partymembercount;
+	for(set .@i, 0; .@i<getarraysize(.@partymemberaid); set .@i,.@i+1)
+	{
+		if(attachrid(.@partymemberaid))
+		{
+			getmapxy(.@mappop$, .@mapx, .@mapy, UNITTYPE_PC);
+			for(set .@j, 0; .@j<.@amount; set .@j,.@j+1)
+			{
+				clone .@mappop$, .@mapx, .@mapy, .@npc_name$+"::OnNormalDied", getcharid(0);
+			}
+		}
+	}
+	return;
+}
+
+function	invok_future	{
+	getpartymember getcharid(1);
+	attachrid(getarg(0));
+	copyarray .@partymemberaid, $@partymemberaid, $@partymembercount;
+	for(set .@i, 0; .@i<getarraysize(.@partymemberaid); set .@i,.@i+1)
+	{
+		if(attachrid(.@partymemberaid))
+		{
+			switch(Class)
+			{
+				case Job_Knight:
+				case Job_Knight2:
+				case Job_Lord_Knight:
+				case Job_Lord_Knight2:
+				case Job_Rune_Knight:
+				case Job_Rune_Knight2:
+				case Job_Rune_Knight_T:
+				case Job_Rune_Knight_T2:
+					setarray .monster[getarraysize(.monster)],1634;
+					break;
+				case Job_Crusader:
+				case Job_Crusader2:
+				case Job_Paladin:
+				case Job_Paladin2:
+				case Job_Royal_Guard:
+				case Job_Royal_Guard2:
+				case Job_Royal_Guard_T:
+				case Job_Royal_Guard_T2:
+					setarray .monster[getarraysize(.monster)],2221;
+					break;
+				case Job_Wizard:
+				case Job_High_Wizard:
+				case Job_Warlock:
+				case Job_Warlock_T:
+					setarray .monster[getarraysize(.monster)],1639;
+					break;
+				case Job_Sage:
+				case Job_Professor:
+				case Job_Sorcerer:
+				case Job_Sorcerer_T:
+					setarray .monster[getarraysize(.monster)],2223;
+					break;
+				case Job_Hunter:
+				case Job_Sniper:
+				case Job_Ranger:
+				case Job_Ranger_T:
+				case Job_Ranger2:
+				case Job_Ranger_T2:
+					setarray .monster[getarraysize(.monster)],1638;
+					break;
+				case Job_Bard:
+				case Job_Clown:
+				case Job_Minstrel:
+				case Job_Minstrel_T:
+					setarray .monster[getarraysize(.monster)],2226;
+					break;
+				case Job_Dancer:
+				case Job_Gypsy:
+				case Job_Wanderer:
+				case Job_Wanderer_T:
+					setarray .monster[getarraysize(.monster)],2227;
+					break;
+				case Job_Monk:
+				case Job_Champion:
+				case Job_Sura:
+				case Job_Sura_T:
+					setarray .monster[getarraysize(.monster)],2224;
+					break;
+				case Job_Priest:
+				case Job_High_Priest:
+				case Job_Arch_Bishop:
+				case Job_Arch_Bishop_T:
+					setarray .monster[getarraysize(.monster)],1637;
+					break;
+				case Job_Blacksmith:
+				case Job_Whitesmith:
+				case Job_Mechanic:
+				case Job_Mechanic_T:
+				case Job_Mechanic2:
+				case Job_Mechanic_T2:
+					setarray .monster[getarraysize(.monster)],1636;
+					break;
+				case Job_Alchemist:
+				case Job_Creator:
+				case Job_Genetic:
+				case Job_Genetic_T:
+					setarray .monster[getarraysize(.monster)],2222;
+					break;
+				case Job_Rogue:
+				case Job_Stalker:
+				case Job_Shadow_Chaser:
+				case Job_Shadow_Chaser_T:
+					setarray .monster[getarraysize(.monster)],2225;
+					break;
+				case Job_Assassin:
+				case Job_Assassin_Cross:
+				case Job_Guillotine_Cross:
+				case Job_Guillotine_Cross_T:
+					setarray .monster[getarraysize(.monster)],1635;
+					break;
+			}
+		}
+	}
+	return;
+}
+
+function	floor_monster	{
+	set .@npc_name$, getarg(0);
+	set .@map$, strnpcinfo(4);
+	switch( 'instance_vp_floor ){
+		case 0:
+			setarray .monster,2004,2002,1263;			
+			setarray .@amount,15,25,30;		
+			setarray .@coordinate,208,127,221,58;
+			set .@event$, .@npc_name$+"::OnGhostDied";
+			set 'instance_vp_floor_name$, "Monster Time";
+			break;
+		case 1:
+			deletearray .monster[0], getarraysize(.monster);
+			invok_past(getcharid(3));
+			set .@amount, 20 * $instance_vp_level;
+			setarray .@coordinate,173,100,136,123;
+			set .@event$, .@npc_name$+"::OnNormalDied";
+			set .@message$, "See...See the Past you've already encountered. All thoses monsters killed.";
+			set 'instance_vp_floor_name$, "Past Time";
+			break;
+		case 2:
+			deletearray .monster[0], getarraysize(.monster);
+			invok_present(getcharid(3), .maxCloneAmount * $instance_vp_level);
+			set .@message$, "Feel...Feel the Present. Feel the choices that are offered to you to progress.";
+			set 'instance_vp_floor_name$, "Present Time";
+			break;
+		case 3:
+			deletearray .monster[0], getarraysize(.monster);
+			invok_future(getcharid(3));
+			set .@amount, 5 * $instance_vp_level;
+			setarray .@coordinate,173,100,136,123;
+			set .@event$, .@npc_name$+"::OnNormalDied";
+			set .@message$, "Fear...Fear the Future, unknown cause not encountered yet...";
+			set 'instance_vp_floor_name$, "Future Time";
+			break;
+		case 4:
+			deletearray .monster[0], getarraysize(.monster);
+			invok_past(getcharid(3));
+			set .@amount, 20 * $instance_vp_level;
+			setarray .@coordinate,173,100,136,123;
+			set .monster_size, getarraysize( .monster );
+			for( set .@i, 0; .@i < .monster_size; set .@i, .@i+1 ){
+				set .@target_amount, ( $instance_vp_level * .@amount[.@i] );
+				areamonster .@map$,.@coordinate[0],.@coordinate[1],.@coordinate[2],.@coordinate[3],"--ja--",.monster[.@i],.@target_amount,.@npc_name$+"::OnNormalDied";
+			}
+			deletearray .monster[0], getarraysize(.monster);
+			invok_present(getcharid(3),.maxCloneAmount * $instance_vp_level);
+			deletearray .monster[0], getarraysize(.monster);			
+			invok_future(getcharid(3));
+			set .@amount, 2 * $instance_vp_level;
+			set .@event$, .@npc_name$+"::OnNormalDied";
+			set .@message$, "Conceil...Conceil all those in one general path...";
+			set 'instance_vp_floor_name$, "Condensed Time";
+			break;
+		case 5:
+			//Leak, Kraken, Dracula, Phreeoni, Maya P
+			setarray .monster,2156,2202,1389,1159,1289;
+			set .@amount,1;
+			setarray .@coordinate,173,100,136,123;
+			set .@event$, .@npc_name$+"::OnGuardianDied";
+			set .@message$, "Forget...Forget, cause there's no redemption...";
+			set 'instance_vp_floor_name$, "MvP Time";
+			break;
+		default:
+			return;
+	}
+	set .monster_size, getarraysize( .monster );
+	for( set .@i, 0; .@i < .monster_size; set .@i, .@i+1 ){
+		set .@target_amount, ( $instance_vp_level * .@amount );
+		areamonster .@map$,.@coordinate[0],.@coordinate[1],.@coordinate[2],.@coordinate[3],"--ja--",.monster[.@i],.@target_amount,.@event$;
+	}
+	instance_announce $instance_vp,"[ VoluspaProphecy ] : " + .@message$,bc_map,0x00FF99;
+	return;
+}
+
+function	floor_reward	{
+	set .@party_id, getarg(0);
+	set .@arg_count, getargcount() - 1;
+	
+	//switch( 'instance_vp_floor ){
+		// <item id>,<amount>,<rate>,
+		//case 1: 
+		//	setarray .@item_list,
+		//		5546,1,5; 
+		//	break;
+		//default: return;
+	//}
+
+	set .@reward, getarg(1);
+	set .@item_list_size, getarraysize( .@item_list ) - 2;
+	set .@originId, getcharid(3);
+	if( .@party_id && .@item_list_size ){
+		getpartymember .@party_id,2;
+		for( .@pt = 0; .@pt < $@partymembercount; .@pt++ ){
+			if( attachrid( $@partymemberaid[.@pt] ) ){
+				if('rewardMode == 0)
+				{
+					for( .@item = 0; .@item < .@item_list_size; .@item += 3 )
+						if( rand(100) < .@item_list[.@item+2] )
+							getitem .@item_list[.@item],.@item_list[.@item+1];
+				}
+				else
+				{
+					callfunc("AddPoints", getcharid(3), .@reward * $instance_vp_level);
+				}
+				
+				dispbottom "[ Voluspa Prophecy ] : You have gained instance points for defeating "+'instance_vp_floor_name$+".";
+				logmes "[ Voluspa Prophecy ] " + strcharinfo(0) + " complete the instance and obtains " + (.@reward * $instance_vp_level) + " points.";
+			}
+		}
+		detachrid;
+	}
+	attachrid(.@originId);
+	return;
+}
+
+OnInstanceInit:
+	set 'instance_vp_floor, 0;
+	set 'rewardMode, 1;
+	set .@map$, strnpcinfo(4);
+	set .@npc_name$, instance_npcname( strnpcinfo(0) );
+	
+	hideoffnpc .@npc_name$;
+	
+	set 'floor_vp_reward, 75;
+	set 'final_vp_reward, 250;
+	set .maxFloor, 5;
+	set .maxCloneAmount, 5;
+	set .bossMonsterId, 2476;
+	floor_monster(.@npc_name$ );
+	
+	//RATHENA
+	initnpctimer;
+	end;
+	
+OnTimer1000:
+	set .countTimerRound, .countTimerRound + 1;	
+	//RATHENA delay
+	if (.countTimerRound >= $time_vp_limit[0])
+	{
+		stopnpctimer;
+		instance_announce $instance_vp,"[ Voluspa Prophecy ] : The dimension is collapsing. You should get out now!!",bc_map,0x00FF99;
+		
+		instance_destroy VP_INSTANCE_ID;
+		getpartymember getcharid(1),2;
+		for( set .@i, 0; .@i < $@partymembercount; set .@i, .@i+1 )
+			if( attachrid( $@partymemberaid[.@i] ) && VP_INSTANCE_ID > 0){
+				set VP_INSTANCE_ID, -1;
+			}
+	}
+	end;
+
+OnFloorSummon:
+	set .@npc_name$, instance_npcname( strnpcinfo(0) );
+	floor_monster( .@npc_name$ );
+	end;
+	
+OnBossSummon:	
+	set .@map$, strnpcinfo(4);
+	set .@npc_name$, instance_npcname( strnpcinfo(0) );
+	hideonnpc .@npc_name$;
+	set .@bossId, monster(.@map$,154,111,"Voluspa",.bossMonsterId,1,.@npc_name$+"::OnBossDied",2);
+	unitskilluseid .@bossId,679,10; //679 NPC_VAMPIRE_GIFT
+	set 'instance_vp_floor_name$, "Voluspa Time";
+	end;
+
+OnNormalDied: 
+	set .@map$, strnpcinfo(4);
+	
+	set .@npc_name$, instance_npcname( strnpcinfo(0) );
+	set .@mob_dead_num, mobcount( .@map$,.@npc_name$+"::OnNormalDied" );
+		
+	if( .@mob_dead_num < 5 || .@mob_dead_num % 5 == 0 ){
+		instance_announce $instance_vp,"[ Voluspa Prophecy ] : " + $instance_level_name$ + ": " +.@mob_dead_num+" left remaining.",bc_map,0x00FF99;
+		if (.@mob_dead_num == 0)
+		{
+			set 'instance_vp_floor, 'instance_vp_floor + 1;
+			floor_reward( getcharid(1), 'floor_vp_reward );
+		}
+	}
+	end;
+	
+OnGuardianDied:
+	set .@map$, strnpcinfo(4);
+	set .@npc_name$, instance_npcname( strnpcinfo(0) );
+	
+	floor_reward( getcharid(1), 'floor_vp_reward );
+		
+	//if there's no more monsters to kill, change level
+	if( mobcount( .@map$,.@npc_name$+"::OnGuardianDied" ) == 0){
+		instance_announce $instance_vp,"[ VoluspaProphecy ] : GIVE! ME! MORE!!!!",bc_map,0x00FF99;
+		doevent .@npc_name$+"::OnBossSummon";
+	}
+	end;
+
+OnGhostDied:
+	set .@map$, strnpcinfo(4);
+	
+	set .@npc_name$, instance_npcname( strnpcinfo(0) );
+	set .@mob_dead_num, mobcount( .@map$,.@npc_name$+"::OnGhostDied" );
+		
+	if( .@mob_dead_num < 5 || .@mob_dead_num % 5 == 0 ){
+		instance_announce $instance_vp,"[ Voluspa Prophecy ] " + $instance_level_name$ + ": " +.@mob_dead_num+" left remaining.",bc_map,0x00FF99;
+		if (.@mob_dead_num == 0)
+		{
+			set 'instance_vp_floor, 'instance_vp_floor + 1;
+			floor_reward( getcharid(1), 'floor_vp_reward );
+		}
+	}
+	end;
+	
+OnBossDied:
+	set .@map$, strnpcinfo(4);
+	set .@npc_name$, instance_npcname( strnpcinfo(0) );
+
+	if( mobcount( .@map$,.@npc_name$+"::OnBossDied" ) == 0){
+		floor_reward( getcharid(1), 'final_vp_reward );
+		set #VOLUSPAPROPHECY, #VOLUSPAPROPHECY + 1;
+		instance_announce $instance_vp,"[ VoluspaProphecy ] Thank you...Thank you, childrens...",bc_map,0x00FF99;
+		sleep2 15000;
+		
+		instance_destroy VP_INSTANCE_ID;
+		getpartymember getcharid(1),2;
+		for( set .@i, 0; .@i < $@partymembercount; set .@i, .@i+1 )
+			if( attachrid( $@partymemberaid[.@i] ) && VP_INSTANCE_ID > 0){
+				set VP_INSTANCE_ID, -1;
+			}
+	}
+	end;
+}
+
+1@vp,216,126,4	script	warp::vpwarp	WARPNPC,1,1,{
+	end;
+
+OnTouch:
+	set .@npc_name$, instance_npcname( "Revenge Seed", $instance_vp );
+	set .@map$, strnpcinfo(4);
+	if( mobcount( .@map$,.@npc_name$+"::OnGhostDied" ) == 0){
+		warp strnpcinfo(4), 156, 60;
+	}
+	end;
+}

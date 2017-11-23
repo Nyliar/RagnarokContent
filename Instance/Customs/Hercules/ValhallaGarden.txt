@@ -1,0 +1,1585 @@
+//===== Alayne Scripts =======================================
+//= Valhalla Garden Instance
+//===== By: ================================================== 
+//= Alayne
+//===== Current Version: ===================================== 
+//=
+//= 1.0 - Creation
+//= 1.1 - Structure modification, pattern apply from Emistry's
+//= 1.2 - Logical mods over stars for hercules support
+//= 1.3 - Current version, handle both emu in one script
+//=
+//===== Compatible With: ===================================== 
+//= rAthena SVN
+//= hercules SVN
+//===== Description: ========================================= 
+//=
+//= An instance based over mobs level
+//=
+//===== Todo Remaining: ======================================
+//
+//===== Additional Comments: =================================
+//
+//
+//============================================================
+
+prontera,145,170,3	script	Garden Watcher::vg	2109,{
+
+OnStart:
+	.@party_id = getcharid(1);
+	.@is_leader = ( getcharid(0) == getpartyleader(.@party_id,2) );
+	.@has_instance = VG_INSTANCE_ID >= 0;
+	
+	.@instance_delay = ( instance_delay_valhalla - gettimetick(2) );
+
+	mes "^0055FF[ "+.instance_name$+" ]^000000";
+	mes "We're now recruiting people to Valhalla Garden and eliminate all the Doomed Army there. Could you lend us a hand on this ?";
+	mes " ";
+	next; 
+	mes "^0055FF[ "+.instance_name$+" ]^000000";
+	mes "*Stand*";
+	mes "";
+	mes "*.....*";
+	mes "";
+	mes "You're about to enter in the Gardens, the realm of goods and brave.";
+	mes "Who are you to hope entering?";
+	next;
+	switch( select( 
+		( .@party_id && .@is_leader && !.@has_instance )?"Start " + .instance_name$:"",
+		( .@party_id && .@has_instance )?"Enter " + .instance_name$:"",
+		( .@party_id && .@is_leader && .@has_instance )?"Destroy " + .instance_name$:"",
+		"Information"
+		)){
+	case 1:
+		if( .@instance_delay > 0 )
+		{
+			mes "You have to wait : ^FF0000"+.@instance_delay+" Seconds.^000000";
+			close;
+		}
+		getpartymember .@party_id,2;
+		if( .min_party_member >= 1 ){
+			.@origin = getcharid(3);
+			.@gettimetick = gettimetick(2);
+			for( .@i = 0; .@i < $@partymembercount; .@i++ )
+				if( attachrid( $@partymemberaid[.@i] ) ){
+					.@member_count++;
+					if( BaseLevel < .base_level[0] || BaseLevel > .base_level[1] ) .@fail = .@fail|1;
+					if( Zeny < .instance_zeny ) .@fail = .@fail|2;
+					if( instance_delay_valhalla > .@gettimetick ) .@fail = .@fail|4;
+					if( .@fail ){
+						.@name$ = strcharinfo(0);
+						break;
+					}
+				}
+			attachrid( .@origin );
+		}
+		if( .@name$ != "" && .@fail ){
+			mes "^FF0000[ Failed ]^000000";
+			mes "^0055FF"+.@name$+"^000000, You cannot join right now.";
+			mes " ";
+			mes "^FF0000[ Reason: ]^000000";
+			if( .@fail & 1 ) mes "^777777You must be Level: "+.base_level[0]+" - "+.base_level[1]+"^000000";
+			if( .@fail & 2 ) mes "^777777You need "+ .instance_zeny +" Zeny^000000";
+			if( .@fail & 4 ) mes "^777777You still have cooldown.^000000";
+			break;
+		}
+		if( !instance_check_party( .@party_id,.min_party_member ) ){
+			mes "^0055FF[ "+.instance_name$+" ]^000000";
+			mes "Make or join a party with at least "+.min_party_member+" member and try again.";
+			break;
+		}
+		else{
+			$vg_level = select( 
+				"^FF0000[ Cooldown - 24 Hours ]^000000 Easy Mode",
+				"^FF0000[ Cooldown - 48 Hours ]^000000 Difficult Mode",
+				"^FF0000[ Cooldown - 72 Hours ]^000000 Extreme Mode"
+			);
+			//HERCULES
+			.@instance = instance_create( .instance_name$,.@party_id, IOT_PARTY );
+			//RATHENA
+			//.@instance = instance_create( .instance_name$ );
+			if( .@instance < 0 ) {
+				mes "^0000FF"+.instance_name$+" ^000000- Reservation Failed!";
+				close;
+			}
+			mes "^0055FF[ "+.instance_name$+" ]^000000";
+			mes "^0000FF"+.instance_name$+" ^000000 - Reserved";
+			//HERCULES
+			for( .@i = 0; .@i < .map_size; .@i++ )
+			{
+				if( instance_attachmap( .map$[.@i],.@instance, 1, "" + (.@i + 1 ) + "@vg" ) == "" ){
+					mes "- ^FF0000Reservation Failed!^000000";
+					instance_destroy( .@instance );
+					close;
+				}
+			}
+			
+			.@gettimetick = gettimetick(2);
+			getpartymember .@party_id,2;
+			for( .@i = 0; .@i < $@partymembercount; .@i++ )
+				if( attachrid( $@partymemberaid[.@i] ) ){
+					instance_delay_valhalla = ( .@gettimetick + ( .instance_delay * $vg_level ));
+					Zeny -= .instance_zeny;
+					VG_INSTANCE_ID = .@instance;
+					dispbottom "["+.instance_name$+"] Paid "+ .instance_zeny +" Zeny and Instance Cooldown Applied.";
+				}
+			attachrid( .@origin );
+			npctalk .instance_name$ + " has been generated for Party - "+getpartyname( .@party_id );
+			
+			//HERCULES
+			instance_set_timeout $time_vg_limit[0],$time_vg_limit[1],.@instance;
+			instance_attach( .@instance );
+			instance_init( .@instance );
+	
+			//RATHENA
+			//disable unused npc
+			next;
+		}
+	case 2:
+		getmapxy(.@map$, .@x, .@y, UNITTYPE_PC);
+		//HERCULES
+		savepoint .@map$, .@x, .@y;
+		if( VG_INSTANCE_ID < 0 ){
+			mes .instance_name$ + " doesnt exist for Party - "+getpartyname( .@party_id );
+		}
+		else{
+			warp .map$[0],180,161; //64,147
+			instance_announce $instance_vg, getpartyname(getcharid(1))+"  entered in the "+.instance_name$+"!",bc_map,"0x00ff99";
+		}
+		
+		//RATHENA
+		//save .@map$, .@x, .@y;
+		//switch(instance_enter(.instance_name$)) {
+		//	default:
+		//		mes "An unknown error has occurred.";
+		//		close;
+		//	case 2:
+		//		mes "The memorial dungeon " + .instance_name$ + " does not exist.";
+		//		mes "The party leader did not generate the dungeon yet.";
+		//		close;
+		//	case 1:
+		//		mes "You can enter the dungeon after making the party.";
+		//		close;
+		//	case 0:
+		//		instance_announce $instance_vg, strcharinfo(0)+" from party, " +getpartyname( .@party_id )+", is entering the dungeon, "+.instance_name$+".",bc_map,"0x00ff99",FW_NORMAL,12;
+		//		end;
+		//}
+		break;
+	case 3:
+		mes "Valhalla Garden Destroyed.";
+		instance_destroy VG_INSTANCE_ID;
+		getpartymember getcharid(1),2;
+		for( set .@i, 0; .@i < $@partymembercount; set .@i, .@i+1 )
+			if( attachrid( $@partymemberaid[.@i] ) && VG_INSTANCE_ID > 0){
+				set VG_INSTANCE_ID, -1;
+			}
+		break;
+	default: 
+		mes "^0055FF[ "+.instance_name$+" ]^000000";
+		mes .@npcname$;
+			mes "The universe is splitted in 9.";
+			next;
+			mes .@npcname$;
+			mes "Valhalla is the last place where goes men, gods and ases after they die.";
+			next;
+			mes .@npcname$;
+			mes "It's the Suprem Reward.";
+			next;
+			mes .@npcname$;
+			mes "But the Giants and Doomed armies has taken, and ruined the Gardens.";
+		break;
+}
+close;
+
+OnPCLoginEvent:
+OnPCLogoutEvent:
+	VG_INSTANCE_ID = -1;
+	end;
+
+OnInit:
+	setarray .base_level,70,250;
+	setarray $time_vg_limit,7200,300;
+	setarray .map$,"1@gard","2@gard","3@gard","4@gard","5@gard";
+	.map_size = getarraysize( .map$ );
+	.min_party_member = 1;
+	.instance_zeny = 100000;
+	.instance_delay = 7200;
+	.instance_name$ = "Valhalla Garden";
+	end;
+}
+
+// Valhalla Garden manager
+2@gard,1,2,0	script	ins_val_1F	HIDDEN_WARP_NPC,{
+	end;
+
+OnInstanceInit:
+	setarray 'Chest_gard,0; //fill to use chest as reward for boss kill
+	sleep2 15000;
+	instance_announce instance_id(), "First, you'll have to defeat Jotunheim. Killing its King should be enough.",bc_map,"0x00ff99";
+	sleep2 1000;
+	instance_announce instance_id(), "But to reach the King, you'll have to defeat his armies.",bc_map,"0x00ff99";
+	sleep2 1000;
+	//debug
+	//monster instance_mapname("2@gard"),117,100,"Ice Army Warriors",1776,25 * $vg_level,instance_npcname("ins_val_1F")+"::OnMyMobDead";
+	monster instance_mapname("2@gard"),0,0,"Ice Army Warriors",1776,25 * $vg_level,instance_npcname("ins_val_1F")+"::OnMyMobDead";
+	set 'countwave,1;
+	enablenpc instance_npcname("warpJotun");
+	
+	//RATHENA
+	initnpctimer;
+	end;
+	
+OnTimer1000:
+	set .countTimerRound, .countTimerRound + 1;	
+	//RATHENA delay
+	if (.countTimerRound >= $time_vg_limit[0])
+	{
+		stopnpctimer;
+		mapannounce .@map$,"[ Valhalla Garden ] : The dimension is collapsing. You should get out now!!",bc_map,0x00FF99;
+		
+		instance_destroy VG_INSTANCE_ID;
+		getpartymember getcharid(1),2;
+		for( set .@i, 0; .@i < $@partymembercount; set .@i, .@i+1 )
+			if( attachrid( $@partymemberaid[.@i] ) && VG_INSTANCE_ID > 0){
+				set VG_INSTANCE_ID, -1;
+			}
+	}
+	end;	
+
+OnMyMobDead:
+	set .@map$, instance_mapname("2@gard");
+	set .@mob_dead_num,mobcount(.@map$,instance_npcname("ins_val_1F")+"::OnMyMobDead");
+
+	if ('countwave == 1)
+	{
+		if (.@mob_dead_num < 1)
+		{
+			instance_announce instance_id(), "Get ready, here comes the mage and archer!",bc_map,"0x00ff99";
+			sleep2 6000;
+			set 'countwave,2;
+			//debug
+			monster instance_mapname("2@gard"),117,100,"Ice Army Mages",1775,25 * $vg_level,instance_npcname("ins_val_1F")+"::OnMyMobDead";
+			monster instance_mapname("2@gard"),117,100,"Ice Army Archers",1778,25 * $vg_level,instance_npcname("ins_val_1F")+"::OnMyMobDead";
+			//monster instance_mapname("2@gard"),0,0,"Ice Army Mages",1775,25 * $vg_level,instance_npcname("ins_val_1F")+"::OnMyMobDead";
+			//monster instance_mapname("2@gard"),0,0,"Ice Army Archers",1778,25 * $vg_level,instance_npcname("ins_val_1F")+"::OnMyMobDead";
+			end;
+		}
+		end;
+	}
+	else if ('countwave == 2)
+	{
+		if (.@mob_dead_num < 1)
+		{
+			instance_announce instance_id(), "Get ready, here comes the regular",bc_map,"0x00ff99";
+			sleep2 4500;
+			set 'countwave, 3;
+			//debug
+			monster instance_mapname("2@gard"),117,100,"Army Members#1",1594,25 * $vg_level,instance_npcname("ins_val_1F")+"::OnMyMobDead";
+			monster instance_mapname("2@gard"),117,100,"Army Members#2",1606,25 * $vg_level,instance_npcname("ins_val_1F")+"::OnMyMobDead";
+			//monster instance_mapname("2@gard"),0,0,"Army Members#1",1594,25 * $vg_level,instance_npcname("ins_val_1F")+"::OnMyMobDead";
+			//monster instance_mapname("2@gard"),0,0,"Army Members#2",1606,25 * $vg_level,instance_npcname("ins_val_1F")+"::OnMyMobDead";
+			end;
+		}
+		end;
+	}
+	else if ('countwave == 3)
+	{
+		if (.@mob_dead_num < 1)
+		{
+			instance_announce instance_id(), "Get ready, here come the soldiers",bc_map,"0x00ff99";
+			sleep2 3000;
+			set 'countwave, 4;
+			//debug
+			monster instance_mapname("2@gard"),117,100,"Ice Army Members",1777,25 * $vg_level,instance_npcname("ins_val_1F")+"::OnMyMobDead";
+			//monster instance_mapname("2@gard"),0,0,"Ice Army Members",1777,25 * $vg_level,instance_npcname("ins_val_1F")+"::OnMyMobDead";
+			end;
+		}
+		end;
+	}
+	else if ('countwave == 4)
+	{
+		if (.@mob_dead_num < 1)
+		{
+			instance_announce instance_id(), "Get ready, here comes the King Guard",bc_map,"0x00ff99";
+			sleep2 1500;
+			set 'countwave, 5;
+			//debug
+			monster instance_mapname("2@gard"),117,100,"King Guard",1889,15 * $vg_level,instance_npcname("ins_val_1F")+"::OnMyMobDead";
+			//monster instance_mapname("2@gard"),0,0,"King Guard",1889,15 * $vg_level,instance_npcname("ins_val_1F")+"::OnMyMobDead";
+			end;
+		}
+		end;
+	}
+	else if ('countwave == 5)
+	{
+		if (.@mob_dead_num < 1)
+		{
+			instance_announce instance_id(), "The Jotuns King appears.",bc_map,"0x00ff99";
+			//Ktullanux
+			monster instance_mapname("2@gard"),120,225,"Giant King",1779,1,instance_npcname("ins_val_1F")+"::OnGuardianDead";
+			end;
+		}
+		end;
+	}
+	
+OnGuardianDead:
+	enablenpc instance_npcname("toMuspelheim");
+	if ($Reward_gard == 1)
+	{
+		monster instance_mapname("2@gard"),120,225,"Frozen Chest",'Chest_gard[0],1 * $vg_level;
+	}	
+	else
+	{
+		getpartymember getcharid(1),2;
+		copyarray .@partymemberaid, $@partymemberaid, $@partymembercount;
+		detachrid;
+		for ( set .@i, 0; .@i < $@partymembercount; set .@i, .@i +1 ) {
+			if (attachrid(.@partymemberaid[.@i]))
+			{
+				callfunc("AddPoints", getcharid(3), 50 * $vg_level);
+			}
+			detachrid;
+		}
+	}
+	end;
+}
+
+2@gard,120,225,0	script	Hrym::toMuspelheim	1779,{
+	mes "I must admit my defeat...";
+	mes "Ready to go to Muspelheim?";
+	switch(select("Let's go:No, please wait"))
+	{
+		case 1:
+			if (getpartyleader(getcharid(1),2) == getcharid(0))
+			{
+				mes "May you freeze to death...";
+				instance_warpall "1@gard",147,156;
+				enablenpc instance_npcname("ins_val_garden_2F");
+				donpcevent instance_npcname("ins_val_garden_2F")+"::OnEnable";
+				close;
+			}
+			else
+			{
+				mes "Only your chief can ask me something.";
+				close;
+			}
+			break;
+		case 2:
+			mes "Allright, I'll wait.";
+			close;
+	}
+
+OnInstanceInit:
+	disablenpc instance_npcname("toMuspelheim");
+	end;
+}
+
+
+3@gard,1,2,0	script	ins_val_garden_2F	HIDDEN_WARP_NPC,{
+	end;
+
+OnInstanceInit:
+	disablenpc instance_npcname("ins_val_garden_2F");
+	end;
+
+OnEnable:
+	enablenpc instance_npcname("warpMuspel");
+	sleep2 15000;
+	instance_announce instance_id(), "You're now in Muspelheim, Realm of the Fire Giants.",bc_map,"0x00ff99";
+	sleep2 1000;
+	instance_announce instance_id(), "You'll have to activate three Impacts to bring the King out.",bc_map,"0x00ff99";
+	sleep2 1000;
+	instance_announce instance_id(), "Each Impact will have its own defender.",bc_map,"0x00ff99";
+	sleep2 1000;
+	instance_announce instance_id(), "And you can't activate the 2nd without the first, the 3rd without the 2nd!",bc_map,"0x00ff99";
+	sleep2 1000;
+	enablenpc instance_npcname("val_garden_2F_Impact1");
+	set 'activeImpact1, 0;
+	set 'activeImpact3, 0;
+	set 'activeImpact2, 0;
+	monster instance_mapname("3@gard"),0,0,"Muspelheimer",1367,10 * $vg_level;
+	monster instance_mapname("3@gard"),0,0,"Muspelheimer",1211,10 * $vg_level;
+	monster instance_mapname("3@gard"),0,0,"Muspelheimer",1033,10 * $vg_level;
+	monster instance_mapname("3@gard"),0,0,"Muspelheimer",2788,3 * $vg_level;
+	monster instance_mapname("3@gard"),0,0,"Muspelheimer",2837,3 * $vg_level;
+	monster instance_mapname("3@gard"),0,0,"Muspelheimer",1381,10 * $vg_level;
+	monster instance_mapname("3@gard"),0,0,"Muspelheimer",2071,10 * $vg_level;
+	monster instance_mapname("3@gard"),0,0,"Muspelheimer",1318,10 * $vg_level;
+	set 'end,0;
+	end;
+	
+OnGuardianDead:
+	killmonsterall instance_mapname("2@gard");
+	enablenpc instance_npcname("toHelheim");
+	if ($Reward_gard == 1)
+	{
+		monster instance_mapname("3@gard"),180,137,"Burnt Chest",'Chest_gard[0],1 * $vg_level;
+	}	
+	else
+	{
+		getpartymember getcharid(1),2;
+		copyarray .@partymemberaid, $@partymemberaid, $@partymembercount;
+		detachrid;
+		for ( set .@i, 0; .@i < $@partymembercount; set .@i, .@i +1 ) {
+			if (attachrid(.@partymemberaid[.@i]))
+				callfunc("AddPoints", getcharid(3), 50 * $vg_level);
+			detachrid;
+		}
+	}
+
+	end;
+}
+
+3@gard,82,210,0	script	Impact::val_garden_2F_Impact1	PORTAL,2,2,{
+	end;
+
+OnTouch:
+	if ('activeImpact1 == 0)
+	{
+		set 'activeImpact1, getcharid(0);
+		sc_start SC_CRYSTALIZE,15000,0;
+		enablenpc instance_npcname("val_garden_2F_Impact2");
+		instance_announce instance_id(), "The First Impact has been activated. Protect the Bringer!",bc_map,"0x00ff99";
+		//pop monsters
+		//while third Impact isn't activated, spawn 5 monster per 30s
+		areamonster instance_mapname("3@gard"),72,219,95,196,"Muspelheimer",1318,5 * $vg_level;
+		sleep2 15000;
+		donpcevent instance_npcname("val_garden_2F_Impact1")+"::OnInvok";
+	}
+
+OnInvok:
+	if ('end == 0 && 'activeImpact1 != 0)
+	{
+		areamonster instance_mapname("3@gard"),72,219,95,196,"Muspelheimer",1318,5 * $vg_level;
+		sleep2 15000;
+		donpcevent instance_npcname("val_garden_2F_Impact1")+"::OnInvok";
+	}
+
+OnEnd:
+	disablenpc instance_npcname("val_garden_2F_Impact1");
+	end;
+}
+
+3@gard,308,190,0	script	Impact::val_garden_2F_Impact2	PORTAL,2,2,{
+	end;
+
+OnTouch:
+	if ('activeImpact2 == 0 && 'activeImpact1 != 0)
+	{
+		set 'activeImpact2, getcharid(0);
+		sc_start SC_CRYSTALIZE,15000,0;
+		enablenpc instance_npcname("val_garden_2F_Impact3");
+		instance_announce instance_id(), "The Second Impact has been activated. Protect the Bringer!",bc_map,"0x00ff99";
+		//pop monsters
+		//while third Impact isn't activated, spawn 3 monster per 10s
+		areamonster instance_mapname("3@gard"),299,198,319,177,"Muspelheimer",1652,3 * $vg_level;
+		sleep2 30000;
+		donpcevent instance_npcname("val_garden_2F_Impact2")+"::OnInvok";
+		donpcevent instance_npcname("val_garden_2F_Impact1")+"::OnEnd";
+	}
+	end;
+
+OnInvok:
+	if ('end == 0 && 'activeImpact2 != 0)
+	{
+		areamonster instance_mapname("3@gard"),299,198,319,177,"Muspelheimer",1652,3 * $vg_level;
+		sleep2 30000;
+		donpcevent instance_npcname("val_garden_2F_Impact2")+"::OnInvok";
+	}
+
+OnEnd:
+	disablenpc instance_npcname("val_garden_2F_Impact2");
+	end;
+}
+
+3@gard,199,304,0	script	Impact::val_garden_2F_Impact3	PORTAL,2,2,{
+	end;
+
+OnTouch:
+	if ( 'activeImpact3 == 0 && 'activeImpact2 != 0 )
+	{
+		set 'end,1;
+		instance_announce instance_id(), "All Impacts have been activated. Here comes the King.",bc_map,"0x00ff99";
+
+		disablenpc instance_npcname("val_garden_2F_Impact3");
+
+		set 'activeImpact1, 0;
+		set 'activeImpact2, 0;
+		set 'activeImpact3, 0;
+		killmonsterall instance_mapname("2@gard");
+		donpcevent instance_npcname("val_garden_2F_Impact2")+"::OnEnd";
+		sleep2 5000;
+		//Detardeurus
+		monster instance_mapname("3@gard"),208,176,"Muspelheim Ruler",1719,1,instance_npcname("ins_val_garden_2F")+"::OnGuardianDead";
+	}
+	end;
+}
+
+3@gard,208,176,0	script	Sturt::toHelheim	1719,{
+	mes "You wanna go in Helheim?";
+	switch(select("Let's go:No, wait a bit more"))
+	{
+		case 1:
+			if (getpartyleader(getcharid(1),2) == getcharid(0))
+			{
+				mes "May you brun alive.";
+				instance_warpall "1@gard",101,58;
+				enablenpc instance_npcname("ins_val_garden_3F");
+				donpcevent instance_npcname("ins_val_garden_3F")+"::OnEnable";
+			}
+			else
+			{
+				mes "Only your chief can ask me something.";
+			}
+			break;
+		case 2:
+			mes "Farewell.";
+			break;
+	}
+	close;
+
+OnInstanceInit:
+	disablenpc instance_npcname("toHelheim");
+	end;
+}
+
+4@gard,1,2,0	script	ins_val_garden_3F	HIDDEN_WARP_NPC,{
+	end;
+
+OnInstanceInit:
+	disablenpc instance_npcname("ins_val_garden_3F");
+	end;
+
+OnEnable:
+	enablenpc instance_npcname("warpHel");
+	set 'soul, 0;
+	sleep2 15000;
+	instance_announce instance_id(), "You're now in Helheim, the Deads Kingdom.",bc_map,"0x00ff99";
+	sleep2 1000;
+	instance_announce instance_id(), "You'll be able to fight the King only by finding the good combination.",bc_map,"0x00ff99";
+	sleep2 1000;
+	instance_announce instance_id(), "Talking to the good Soul will make you go forward,",bc_map,"0x00ff99";
+	sleep2 1000;
+	instance_announce instance_id(), "talking to the wrong one will make you one.",bc_map,"0x00ff99";
+	sleep2 1000;
+	set 'code,rand(1,8);
+	set 'soul, 0;
+	enablenpc instance_npcname("Soul1");
+	enablenpc instance_npcname("Soul2");
+	enablenpc instance_npcname("Soul3");
+	enablenpc instance_npcname("Soul4");
+	enablenpc instance_npcname("Soul5");
+	enablenpc instance_npcname("Soul6");
+	enablenpc instance_npcname("Soul7");
+	enablenpc instance_npcname("Soul8");
+	enablenpc instance_npcname("Soul9");
+	end;
+	
+OnAllFound:
+	atcommand "@raisemap";
+	instance_announce instance_id(), "Well done. Here comes the Master of Disappeared...",bc_map,"0x00ff99";
+	//FBH
+	monster instance_mapname("1@gard"),102,209,"Disappeared Master",1768,1,instance_npcname("ins_val_garden_3F")+"::OnGuardianDead";
+	end;
+
+OnGuardianDead:
+	enablenpc instance_npcname("toNiflheim");
+	if ($Reward_gard == 1)
+	{
+		monster instance_mapname("1@gard"),101,205,"Howling Chest",'Chest_gard[0],1 * $vg_level;
+	}	
+	else
+	{
+		getpartymember getcharid(1),2;
+		copyarray .@partymemberaid, $@partymemberaid, $@partymembercount;
+		detachrid;
+		for ( set .@i, 0; .@i < $@partymembercount; set .@i, .@i +1 ) {
+			if (attachrid(.@partymemberaid[.@i]))
+				callfunc("AddPoints", getcharid(3), 50 * $vg_level);
+			detachrid;
+		}
+	}
+
+	end;
+}
+
+1@gard,97,189,0	script	Soul1	4_NFWISP,{
+	switch('code)
+	{
+		case 1:
+			if ('soul == 0)
+			{
+				set 'soul, 1;
+				mes "The next one is my opposite.";
+				close;
+			}
+			else
+			{
+				charcommand "#nuke " + strcharinfo(0) + " " + strcharinfo(0); 
+				end;
+			}
+			break;
+		case 2:
+			charcommand "#nuke " + strcharinfo(0) + " " + strcharinfo(0); 
+			end;
+		case 3:
+			charcommand "#nuke " + strcharinfo(0) + " " + strcharinfo(0); 
+			end;
+		case 4:
+			if ('soul == 0)
+			{
+				set 'soul, 1;
+				mes "Next one is on North.";
+				close;
+			}
+			else 
+			{
+				charcommand "#nuke " + strcharinfo(0) + " " + strcharinfo(0);
+				end;		
+			}
+			break;
+		case 5:
+			if ('soul == 2)
+			{
+				set 'soul, 3;
+				mes "Next one is above.";
+				close;
+			}
+			else 
+			{
+				charcommand "#nuke " + strcharinfo(0) + " " + strcharinfo(0);
+				end;
+			}
+			break;
+		case 6:
+			charcommand "#nuke " + strcharinfo(0) + " " + strcharinfo(0);
+			end;		
+		case 7:
+			if ('soul == 1)
+			{
+				set 'soul, 2;
+				mes "Next one is next to me.";
+				close;
+			}
+			else
+			{
+				charcommand "#nuke " + strcharinfo(0) + " " + strcharinfo(0);
+				end;
+			}
+			break;
+		case 8:
+			if ('soul == 3)
+			{
+				set 'soul, 4;
+				mes "I'm the last one";
+				donpcevent instance_npcname("ins_val_garden_3F")+"::OnAllFound";
+				close;
+			}
+			else
+			{
+				charcommand "#nuke " + strcharinfo(0) + " " + strcharinfo(0);
+				end;
+			}
+			break;
+	}
+	end;
+}
+
+1@gard,97,194,0	script	Soul2	4_NFWISP,{
+	switch('code)
+	{
+		case 1:
+			charcommand "#nuke " + strcharinfo(0) + " " + strcharinfo(0); 
+			end;
+		case 2:
+			if ('soul == 3)
+			{
+				set 'soul, 4;
+				mes "I'm the last one!";
+				donpcevent instance_npcname("ins_val_garden_3F")+"::OnAllFound";
+				close;
+			}
+			else 
+			{
+				charcommand "#nuke " + strcharinfo(0) + " " + strcharinfo(0); 
+				end;
+			}
+		case 3:
+			charcommand "#nuke " + strcharinfo(0) + " " + strcharinfo(0); 
+			end;
+		case 4:
+			charcommand "#nuke " + strcharinfo(0) + " " + strcharinfo(0);
+			end;		
+		case 5:
+			if ('soul == 0)
+			{
+				set 'soul, 1;
+				mes "Next one is on North";
+				close;
+			}
+			else 
+			{
+				charcommand "#nuke " + strcharinfo(0) + " " + strcharinfo(0);
+				end;
+			}
+		case 6:
+			if ('soul == 1)
+			{
+				set 'soul, 2;
+				mes "Next one is somewhere North East.";
+				close;
+			}
+			else 
+			{
+				charcommand "#nuke " + strcharinfo(0) + " " + strcharinfo(0);
+				end;		
+			}
+		case 7:
+			if ('soul == 2)
+			{
+				set 'soul, 3;
+				mes "Next one is the last";
+				close;
+			}
+			else 
+			{
+				charcommand "#nuke " + strcharinfo(0) + " " + strcharinfo(0);
+				end;
+			}
+		case 8:
+			charcommand "#nuke " + strcharinfo(0) + " " + strcharinfo(0);
+			end;
+	}
+	end;
+}
+
+1@gard,97,199,0	script	Soul3	4_NFWISP,{
+	switch('code)
+	{
+		case 1:
+			if ('soul == 2)
+			{
+				set 'soul, 3;
+				mes "Next is me by two.";
+				close;
+			}
+			else 
+			{
+				charcommand "#nuke " + strcharinfo(0) + " " + strcharinfo(0); 
+				end;
+			}
+		case 2:
+			charcommand "#nuke " + strcharinfo(0) + " " + strcharinfo(0); 
+			end;
+		case 3:
+			if ('soul == 1)
+			{
+				set 'soul, 2;
+				mes "Next is half of me plus one.";
+				close;
+			}
+			else 
+			{
+				charcommand "#nuke " + strcharinfo(0) + " " + strcharinfo(0); 
+				end;
+			}
+		case 4:
+			charcommand "#nuke " + strcharinfo(0) + " " + strcharinfo(0);
+			end;		
+		case 5:
+			charcommand "#nuke " + strcharinfo(0) + " " + strcharinfo(0);
+			end;
+		case 6:
+			if ('soul == 3)
+			{
+				set 'soul, 4;
+				mes "";
+				donpcevent instance_npcname("ins_val_garden_3F")+"::OnAllFound";
+				close;
+			}
+			else 
+			{
+				charcommand "#nuke " + strcharinfo(0) + " " + strcharinfo(0);
+				end;		
+			}
+		case 7:
+			charcommand "#nuke " + strcharinfo(0) + " " + strcharinfo(0);
+			end;
+		case 8:
+			if ('soul == 0)
+			{
+				set 'soul, 1;
+				mes "Next is North East East";
+				close;
+			}
+			else
+			{
+				charcommand "#nuke " + strcharinfo(0) + " " + strcharinfo(0);
+				end;
+			}
+	}
+	end;
+}
+
+1@gard,102,189,0	script	Soul4	4_NFWISP,{
+	switch('code)
+	{
+		case 1:
+			charcommand "#nuke " + strcharinfo(0) + " " + strcharinfo(0); 
+			end;
+		case 2:
+			if ('soul == 2)
+			{
+				set 'soul, 3;
+				mes "NExt is my half.";
+				close;
+			}
+			else
+			{
+				charcommand "#nuke " + strcharinfo(0) + " " + strcharinfo(0); 
+				end;
+			}
+		case 3:
+			charcommand "#nuke " + strcharinfo(0) + " " + strcharinfo(0); 
+			end;
+		case 4:
+			if ('soul == 1)
+			{
+				set 'soul, 2;
+				mes "Next is me plus my half.";
+				close;
+			}
+			else
+			{
+				charcommand "#nuke " + strcharinfo(0) + " " + strcharinfo(0);
+				end;		
+			}
+		case 5:
+			if ('soul == 3)
+			{
+				set 'soul, 4;
+				mes "I'm the last one!";
+				donpcevent instance_npcname("ins_val_garden_3F")+"::OnAllFound";
+				close;
+			}
+			else 
+			{
+				charcommand "#nuke " + strcharinfo(0) + " " + strcharinfo(0);
+				end;
+			}
+		case 6:
+			if ('soul == 0)
+			{
+				set 'soul, 1;
+				mes "Next is South East";
+				close;
+			}
+			else 
+			{
+				charcommand "#nuke " + strcharinfo(0) + " " + strcharinfo(0);
+				end;		
+			}
+		case 7:
+			charcommand "#nuke " + strcharinfo(0) + " " + strcharinfo(0);
+			end;
+		case 8:
+			charcommand "#nuke " + strcharinfo(0) + " " + strcharinfo(0);
+			end;
+	}
+	end;
+}
+
+1@gard,102,194,0	script	Soul5	4_NFWISP,{
+	switch('code)
+	{
+		case 1:
+			charcommand "#nuke " + strcharinfo(0) + " " + strcharinfo(0); 
+			end;
+		case 2:
+			if ('soul == 1)
+			{
+				set 'soul, 2;
+				mes "Next is on my left.";
+				close;
+			}
+			else 
+			{
+				charcommand "#nuke " + strcharinfo(0) + " " + strcharinfo(0); 
+				end;
+			}
+		case 3:
+			if ('soul == 2)
+			{
+				set 'soul, 3;
+				mes "Next is above me.";
+				close;
+			}
+			else 
+			{
+				charcommand "#nuke " + strcharinfo(0) + " " + strcharinfo(0); 
+				end;
+			}
+		case 4:
+			charcommand "#nuke " + strcharinfo(0) + " " + strcharinfo(0);
+			end;		
+		case 5:
+			charcommand "#nuke " + strcharinfo(0) + " " + strcharinfo(0);
+			end;
+		case 6:
+			charcommand "#nuke " + strcharinfo(0) + " " + strcharinfo(0);
+			end;		
+		case 7:
+			if ('soul == 0)
+			{
+				set 'soul, 1;
+				mes "Next is before me.";
+				close;
+			}
+			else 
+			{
+				charcommand "#nuke " + strcharinfo(0) + " " + strcharinfo(0);
+				end;
+			}
+		case 8:
+			charcommand "#nuke " + strcharinfo(0) + " " + strcharinfo(0);
+			end;
+	}
+	end;
+}
+
+1@gard,102,199,0	script	Soul6	4_NFWISP,{
+	switch('code)
+	{
+		case 1:
+			if ('soul == 3)
+			{
+				set 'soul, 4;
+				mes "I'm the last one!";
+				donpcevent instance_npcname("ins_val_garden_3F")+"::OnAllFound";
+				close;
+			}
+			else 
+			{
+				charcommand "#nuke " + strcharinfo(0) + " " + strcharinfo(0); 
+				end;
+			}
+		case 2:
+			charcommand "#nuke " + strcharinfo(0) + " " + strcharinfo(0); 
+			end;
+		case 3:
+			if ('soul == 0)
+			{
+				set 'soul, 1;
+				mes "Next is my half.";
+				close;
+			}
+			else 
+			{
+				charcommand "#nuke " + strcharinfo(0) + " " + strcharinfo(0); 
+				end;
+			}
+		case 4:
+			if ('soul == 2)
+			{
+				set 'soul, 3;
+				mes "Next is higher than me.";
+				close;
+			}
+			else 
+			{
+				charcommand "#nuke " + strcharinfo(0) + " " + strcharinfo(0);
+				end;
+			}		
+		case 5:
+			charcommand "#nuke " + strcharinfo(0) + " " + strcharinfo(0);
+			end;
+		case 6:
+			charcommand "#nuke " + strcharinfo(0) + " " + strcharinfo(0);
+			end;		
+		case 7:
+			charcommand "#nuke " + strcharinfo(0) + " " + strcharinfo(0);
+			end;
+		case 8:
+			if ('soul == 1)
+			{
+				set 'soul, 2;
+				mes "Next one is the last";
+				close;
+			}
+			else 
+			{
+				charcommand "#nuke " + strcharinfo(0) + " " + strcharinfo(0);
+				end;
+			}
+	}
+	end;
+}
+
+1@gard,108,189,0	script	Soul7	4_NFWISP,{
+	switch('code)
+	{
+		case 1:
+			charcommand "#nuke " + strcharinfo(0) + " " + strcharinfo(0); 
+			end;
+		case 2:
+			charcommand "#nuke " + strcharinfo(0) + " " + strcharinfo(0); 
+			end;
+		case 3:
+			charcommand "#nuke " + strcharinfo(0) + " " + strcharinfo(0); 
+			end;
+		case 4:
+			if ('soul == 3)
+			{
+				set 'soul, 4;
+				mes "I'm the last one";
+				donpcevent instance_npcname("ins_val_garden_3F")+"::OnAllFound";
+				close;
+			}
+			else
+			{
+				charcommand "#nuke " + strcharinfo(0) + " " + strcharinfo(0);
+				end;
+			}		
+		case 5:
+			charcommand "#nuke " + strcharinfo(0) + " " + strcharinfo(0);
+			end;
+		case 6:
+			if ('soul == 2)
+			{
+				set 'soul, 3;
+				mes "Next is under me.";
+				close;
+			}
+			else 
+			{
+				charcommand "#nuke " + strcharinfo(0) + " " + strcharinfo(0);
+				end;
+			}		
+		case 7:
+			charcommand "#nuke " + strcharinfo(0) + " " + strcharinfo(0);
+			end;
+		case 8:
+			charcommand "#nuke " + strcharinfo(0) + " " + strcharinfo(0);
+			end;
+	}
+	end;
+}
+
+1@gard,108,194,0	script	Soul8	4_NFWISP,{
+	switch('code)
+	{
+		case 1:
+			charcommand "#nuke " + strcharinfo(0) + " " + strcharinfo(0); 
+			end;
+		case 2:
+			if ('soul == 0)
+			{
+				set 'soul, 1;
+				mes "Next is under me.";
+				close;
+			}
+			else
+			{
+				charcommand "#nuke " + strcharinfo(0) + " " + strcharinfo(0); 
+				end;
+			}
+		case 3:
+			if ('soul == 3)
+			{
+				set 'soul, 4;
+				mes "I'm the last one!";
+				donpcevent instance_npcname("ins_val_garden_3F")+"::OnAllFound";
+				close;
+			}
+			else
+			{
+				charcommand "#nuke " + strcharinfo(0) + " " + strcharinfo(0); 
+				end;
+			}
+		case 4:
+			charcommand "#nuke " + strcharinfo(0) + " " + strcharinfo(0);
+			end;		
+		case 5:
+			if ('soul == 1)
+			{
+				set 'soul, 2;
+				mes "Next is at the begining.";
+				close;
+			}
+			else
+			{
+				charcommand "#nuke " + strcharinfo(0) + " " + strcharinfo(0);
+				end;
+			}
+		case 6:
+			charcommand "#nuke " + strcharinfo(0) + " " + strcharinfo(0);
+			end;		
+		case 7:
+			charcommand "#nuke " + strcharinfo(0) + " " + strcharinfo(0);
+			end;
+		case 8:
+			if ('soul == 2)
+			{
+				set 'soul, 3;
+				mes "Next is at the begining.";
+				close;
+			}
+			else
+			{
+				charcommand "#nuke " + strcharinfo(0) + " " + strcharinfo(0);
+				end;
+			}
+
+	}
+	end;
+}
+
+1@gard,108,199,0	script	Soul9	4_NFWISP,{
+	switch('code)
+	{
+		case 1:
+			if ('soul == 1)
+			{
+				set 'soul, 2;
+				mes "Next is three me.";
+				close;
+			}
+			else 
+			{
+				charcommand "#nuke " + strcharinfo(0) + " " + strcharinfo(0); 
+				end;
+			}
+		case 2:
+			charcommand "#nuke " + strcharinfo(0) + " " + strcharinfo(0); 
+			end;
+		case 3:
+			charcommand "#nuke " + strcharinfo(0) + " " + strcharinfo(0); 
+			end;
+		case 4:
+			charcommand "#nuke " + strcharinfo(0) + " " + strcharinfo(0);
+			end;		
+		case 5:
+			charcommand "#nuke " + strcharinfo(0) + " " + strcharinfo(0);
+			end;
+		case 6:
+			charcommand "#nuke " + strcharinfo(0) + " " + strcharinfo(0);
+			end;		
+		case 7:
+			if ('soul == 3)
+			{
+				set 'soul, 4;
+				mes "I'm the last one!";
+				donpcevent instance_npcname("ins_val_garden_3F")+"::OnAllFound";
+				close;
+			}
+			else 
+			{
+				charcommand "#nuke " + strcharinfo(0) + " " + strcharinfo(0);
+				end;
+			}
+		case 8:
+			charcommand "#nuke " + strcharinfo(0) + " " + strcharinfo(0);
+			end;
+	}
+	end;
+}
+
+1@gard,102,209,0	script	Hel::toNiflheim	1768,{
+	mes "Ready to go in Niflheim?";
+	switch(select("Let's go:Please wait a bit"))
+	{
+		case 1:
+			if (getpartyleader(getcharid(1),2) == getcharid(0))
+			{
+				mes "I'll wait for you...";
+				instance_warpall "1@gard",102,16;
+				enablenpc instance_npcname("ins_val_garden_4F");
+				donpcevent instance_npcname("ins_val_garden_4F")+"::OnEnable";
+			}
+			else
+			{
+				mes "Only your chief can talk to me.";
+			}
+			break;
+		case 2:
+			mes "Perfect, I'll wait.";
+			break;
+	}
+	close;
+
+OnInstanceInit:
+	disablenpc instance_npcname("toNiflheim");
+	end;
+}
+
+5@gard,1,2,0	script	ins_val_garden_4F	HIDDEN_WARP_NPC,{
+	end;
+
+OnInstanceInit:
+	disablenpc instance_npcname("ins_val_garden_4F");
+	end;
+
+OnEnable:
+	disablenpc instance_npcname("warpHel");
+	enablenpc instance_npcname("warpNifl");
+	set .@dead,0;
+	sleep2 15000;
+	instance_announce instance_id(), "You're now entering in Niflheim, Doomed Souls Realm",bc_map,"0x00ff99";
+	sleep2 1000;
+	instance_announce instance_id(), "Your goal is simple: survive.",bc_map,"0x00ff99";
+	sleep2 1000;
+	monster instance_mapname("4@gard"),0,0,"Doomed Souls#1",1507,10 * $vg_level,instance_npcname("ins_val_garden_4F")+"::OnMyMobDead";
+	monster instance_mapname("4@gard"),0,0,"Doomed Souls#2",1268,10 * $vg_level,instance_npcname("ins_val_garden_4F")+"::OnMyMobDead";
+	monster instance_mapname("4@gard"),0,0,"Doomed Souls#3",1504,10 * $vg_level,instance_npcname("ins_val_garden_4F")+"::OnMyMobDead";
+	monster instance_mapname("4@gard"),0,0,"Doomed Souls#4",1219,10 * $vg_level,instance_npcname("ins_val_garden_4F")+"::OnMyMobDead";
+	end;
+	
+OnPCDieEvent:
+	if (strcharinfo(3) == instance_mapname("4@gard"))
+	{
+		set .@dead, .@dead+1;
+		set .@user_count,getmapusers(instance_mapname("4@gard"));
+
+		if ((.@mob_dead_num < 1) || (.@user_count==@dead+1))
+		{
+			killmonsterall "4@gard";
+			donpcevent instance_npcname("ins_val_garden_4F")+"::OnAllKilled";
+		}
+	}
+	end;
+	
+OnAllKilled:
+	instance_announce instance_id(), "Well done. Here comes the King!",bc_map,"0x00ff99";
+	atcommand "@raisemap";
+	sleep2 5000;
+	//Nacht Sieger
+	monster instance_mapname("4@gard"),135,131,"Dead King",1956,1,instance_npcname("ins_val_garden_4F")+"::OnGuardianDead";
+	end;
+
+OnMyMobDead:
+	set .@map$, instance_mapname("4@gard");
+	set .@mob_dead_num,mobcount(.@map$,instance_npcname("ins_val_garden_4F")+"::OnMyMobDead");
+	set .@user_count,getmapusers(instance_mapname("4@gard"));
+
+	if (.@mob_dead_num < 1)
+	{
+		donpcevent instance_npcname("ins_val_garden_4F")+"::OnAllKilled";
+		end;
+	}
+	end;
+	
+OnGuardianDead:
+	enablenpc instance_npcname("toValhalla");
+
+	if ($Reward_gard == 1)
+	{
+		monster instance_mapname("4@gard"),135,128,"Freed Chest",'Chest_gard[0],1 * $vg_level;
+	}	
+	else
+	{
+		getpartymember getcharid(1),2;
+		copyarray .@partymemberaid, $@partymemberaid, $@partymembercount;
+		detachrid;
+		for ( set .@i, 0; .@i < $@partymembercount; set .@i, .@i +1 ) {
+			if (attachrid(.@partymemberaid[.@i]))
+				callfunc("AddPoints", getcharid(3), 50 * $vg_level);
+			detachrid;
+		}
+	}
+
+	end;
+}
+
+4@gard,135,131,0	script	Loki::toValhalla	1956,{
+	mes "Wanna go to the Gardens?";
+	switch(select("Let's go.:Wait a bit more please"))
+	{
+		case 1:
+			if (getpartyleader(getcharid(1),2) == getcharid(0))
+			{
+				mes "May you come here quickly...";
+				instance_warpall "5@gard",163,81;
+				enablenpc instance_npcname("ins_val_garden_5F");
+				donpcevent instance_npcname("ins_val_garden_5F")+"::OnEnable";
+			}
+			else
+			{
+				mes "Only your chief can ask.";
+			}
+			break;
+		case 2:
+			mes "Allright.";
+			break;
+	}
+	close;
+
+OnInstanceInit:
+	disablenpc instance_npcname("toValhalla");
+	end;
+}
+
+5@gard,1,2,0	script	ins_val_garden_5F	HIDDEN_WARP_NPC,{
+	end;
+
+OnInstanceInit:
+	disablenpc instance_npcname("ins_val_garden_5F");
+	end;
+
+OnEnable:
+	enablenpc instance_npcname("ins_val_garden_5F");
+	sleep2 6000;
+	instance_announce instance_id(), "Welcome to the Gardens. Find the Guardians to reach the last step.",bc_map,"0x00ff99";
+	monster instance_mapname("5@gard"),0,0,"Hill Wind",1680,25 * $vg_level;
+	monster instance_mapname("5@gard"),0,0,"Breeze",1692,25 * $vg_level;
+	monster instance_mapname("5@gard"),0,0,"Skogul",1761,25 * $vg_level;
+	monster instance_mapname("5@gard"),0,0,"Lava",1366,25 * $vg_level;
+
+	areamonster instance_mapname("5@gard"),161,160,149,175,"Hill Wind",1680,8 * $vg_level;
+	areamonster instance_mapname("5@gard"),327,114,295,92,"Breeze",1692,8 * $vg_level;
+	areamonster instance_mapname("5@gard"),16,104,54,82,"Skogul",1761,8 * $vg_level;
+	areamonster instance_mapname("5@gard"),221,48,251,81,"Lava",1366,8 * $vg_level;
+	enablenpc instance_npcname("skogul");
+	enablenpc instance_npcname("hillwind");
+	enablenpc instance_npcname("breeze");
+	enablenpc instance_npcname("lava");
+	set 'found, 0;
+	end;
+
+OnAllFound:
+	disablenpc instance_npcname("skogul");
+	disablenpc instance_npcname("hillwind");
+	disablenpc instance_npcname("breeze");
+	disablenpc instance_npcname("lava");
+	enablenpc instance_npcname("warpBoss");
+	killmonsterall instance_mapname("5@gard");
+	instance_announce instance_id(), "Get ready for fighting!",bc_map,"0x00ff99";
+	sleep2 15000;
+	//Hatii
+	monster instance_mapname("5@gard"),246,106,"Ice Destructor",1252,1,instance_npcname("ins_val_garden_5F")+"::OnGuardianDead";
+	set 'count, 0;
+	end;
+
+OnGuardianDead:
+	set 'count, 'count+1;
+	instance_announce instance_id(), "Get ready for fighting!",bc_map,"0x00ff99";
+	
+	switch('count)
+	{
+		case 1:
+			instance_announce instance_id(), "The air become warmer!",bc_map,"0x00ff99";
+			sleep2 5000;
+			//Ifrit
+			monster instance_mapname("5@gard"),246,106,"Fire Destructor",1832,1,instance_npcname("ins_val_garden_5F")+"::OnGuardianDead";
+			break;
+		case 2:
+			instance_announce instance_id(), "A violent wind starts blowing!",bc_map,"0x00ff99";
+			sleep2 5000;
+			//Samurai Specter
+			monster instance_mapname("5@gard"),246,106,"Wind Destructor",1492,1,instance_npcname("ins_val_garden_5F")+"::OnGuardianDead";
+			break;
+		case 3:
+			instance_announce instance_id(), "The ground is shaking",bc_map,"0x00ff99";
+			sleep2 5000;
+			//Vesper
+			monster instance_mapname("5@gard"),246,106,"Earth Destructor",1685,1,instance_npcname("ins_val_garden_5F")+"::OnGuardianDead";
+			break;
+		case 4:
+			instance_announce instance_id(), "The protectors think you're invaders...",bc_map,"0x00ff99";
+			sleep2 5000;
+			//VR
+			monster instance_mapname("5@gard"),246,106,"Garden Protector",2109,1,instance_npcname("ins_val_garden_5F")+"::OnGuardianDead";
+			break;
+		case 5:
+			instance_announce instance_id(), "Congratulation. You freed the Gardens!",bc_map,"0x00ff99";
+			//pop des coffres
+			if ($Reward_gard == 1)
+			{
+				areamonster instance_mapname("5@gard"),253,113,235,97,"Trésor du Valhalla",'Chest_gard[1],3 * $vg_level,instance_npcname("ins_val_garden_5F")+"::OnChestDead";
+			}	
+			else
+			{
+				instance_announce instance_id(), "You'll soon be warped in capitale.",bc_map,"0x00ff99";
+				getpartymember getcharid(1),2;
+				copyarray .@partymemberaid, $@partymemberaid, $@partymembercount;
+				detachrid;
+				for ( set .@i, 0; .@i < $@partymembercount; set .@i, .@i +1 ) {
+					if (attachrid(.@partymemberaid[.@i]))
+					{
+						callfunc("AddPoints", getcharid(3), 250 * $vg_level);
+						set #VALHALLAGARDEN, #VALHALLAGARDEN + 1;
+						logmes "[Valhalla Garden] " + strcharinfo(0) + " complete the instance and obtains " + (5 * $vg_level) + " points.";	
+						warp "Save",0,0;
+					}
+				}
+				
+				sleep2 15000;
+				
+				instance_destroy VG_INSTANCE_ID;
+				getpartymember getcharid(1),2;
+				for( set .@i, 0; .@i < $@partymembercount; set .@i, .@i+1 )
+					if( attachrid( $@partymemberaid[.@i] ) && VG_INSTANCE_ID > 0){
+						set VG_INSTANCE_ID, -1;
+					}
+			}
+	}
+	end;
+	
+OnChestDead:
+	set .@map$, instance_mapname("5@gard");
+	set .@mob_dead_num,mobcount(.@map$,instance_npcname("ins_val_garden_5F")+"::OnChestDead");
+	if (.@mob_dead_num == 0)
+	{
+		instance_announce instance_id(), "You'll soon be warped in capitale.",bc_map,"0x00ff99";
+		sleep2 30000;
+		for ( set .@i, 0; .@i < $@partymembercount; set .@i, .@i +1 ) {
+			if (attachrid(.@partymemberaid[.@i]))
+			{
+				callfunc("AddPoints", getcharid(3), 250 * $vg_level);
+				logmes "[Valhalla Garden] " + strcharinfo(0) + " complete the instance and obtains " + (5 * $vg_level) + " points.";	
+				warp "Save",0,0;
+			}
+			detachrid;
+		}
+		
+		instance_destroy VG_INSTANCE_ID;
+		getpartymember getcharid(1),2;
+		for( set .@i, 0; .@i < $@partymembercount; set .@i, .@i+1 )
+			if( attachrid( $@partymemberaid[.@i] ) && VG_INSTANCE_ID > 0){
+				set VG_INSTANCE_ID, -1;
+			}
+	}
+	end;
+}
+
+5@gard,38,94,0	script	Skogul::skogul	1752,{
+	disablenpc instance_npcname("skogul");
+	instance_announce instance_id(), "You still have to find Lava, Breeze and Hill Wind...",bc_map,"0x00ff99";
+	set 'found, 'found+1;
+	set .@count, 4-'found;
+	instance_announce instance_id(), "Find " + .@count + " more Guardians...",bc_map,"0x00ff99";
+	if (4-'found > 0)
+	{
+		end;
+	}
+	else
+	{
+		instance_announce instance_id(), "All guardians have been found. Destructors are coming!",bc_map,"0x00ff99";
+		donpcevent instance_npcname("ins_val_garden_5F")+"::OnAllFound";
+		end;
+	}
+}
+
+5@gard,313,103,0	script	Breeze::breeze	1692,{
+	disablenpc instance_npcname("breeze");
+	instance_announce instance_id(), "You still have to find Skogul, Lava and Hill Wind...",bc_map,"0x00ff99";
+	set 'found, 'found+1;
+	set .@count, 4-'found;
+	instance_announce instance_id(), "Find " + .@count + " more Guardians...",bc_map,"0x00ff99";
+	if (4-'found > 0)
+	{
+		end;
+	}
+	else
+	{
+		instance_announce instance_id(), "All guardians have been found. Destructors are coming!",bc_map,"0x00ff99";
+		donpcevent instance_npcname("ins_val_garden_5F")+"::OnAllFound";
+		end;
+	}
+}
+
+5@gard,156,167,0	script	Hill Wind::hillwind	1629,{
+	disablenpc instance_npcname("hillwind");
+	instance_announce instance_id(), "You still have to find Lava, Breeze and Skogul...",bc_map,"0x00ff99";
+	set 'found, 'found+1;
+	set .@count, 4-'found;
+	instance_announce instance_id(), "Find " + .@count + " more Guardians...",bc_map,"0x00ff99";
+	if (4-'found > 0)
+	{
+		end;
+	}
+	else
+	{
+		instance_announce instance_id(), "All guardians have been found. Destructors are coming!",bc_map,"0x00ff99";
+		donpcevent instance_npcname("ins_val_garden_5F")+"::OnAllFound";
+		end;
+	}
+}
+
+5@gard,246,61,0	script	Lava::lava	1366,{
+	disablenpc instance_npcname("lava");
+	instance_announce instance_id(), "You still have to find Skogul, Breeze and Hill Wind...",bc_map,"0x00ff99";
+	set 'found, 'found+1;
+	set .@count, 4-'found;
+	instance_announce instance_id(), "Find " + .@count + " more Guardians...",bc_map,"0x00ff99";
+	if (4-'found > 0)
+	{
+		end;
+	}
+	else
+	{
+		instance_announce instance_id(), "All guardians have been found. Destructors are coming!",bc_map,"0x00ff99";
+		donpcevent instance_npcname("ins_val_garden_5F")+"::OnAllFound";
+		end;
+	}
+}
+
+5@gard,81,102,0	script	warpBoss	WARPNPC,2,2,{
+	end;
+
+OnInstanceInit:
+	disablenpc instance_npcname("warpBoss");
+	end;
+
+OnTouch:
+	warp instance_mapname("5@gard"),8,59;
+	end;
+}
+
+1@gard,61,88,0	script	warpJotun	WARPNPC,2,2,{
+	end;
+
+OnInstanceInit:
+	disablenpc instance_npcname("warpJotun");
+	end;
+
+OnTouch:											
+	// enable first floor
+	warp instance_mapname("2@gard"),120,77;
+	end;
+}
+
+1@gard,132,93,0	script	warpMuspel	WARPNPC,2,2,{
+	end;
+
+OnInstanceInit:
+	disablenpc instance_npcname("warpMuspel");
+	end;
+
+OnTouch:
+	warp instance_mapname("3@gard"),180,115;
+	end;
+}
+
+1@gard,102,16,0	script	warpHel	WARPNPC,2,2,{
+	end;
+
+OnInstanceInit:
+	disablenpc instance_npcname("warpHel");
+	end;
+
+OnTouch:
+	warp instance_mapname("1@gard"),102,176;
+	end;
+}
+
+1@gard,101,58,0	script	warpNifl	WARPNPC,2,2,{
+	end;
+
+OnInstanceInit:
+	disablenpc instance_npcname("warpNifl");
+	end;
+
+OnTouch:
+	warp instance_mapname("4@gard"),142,214;
+	end;
+}

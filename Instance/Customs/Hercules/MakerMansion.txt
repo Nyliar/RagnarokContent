@@ -1,0 +1,761 @@
+//===== Alayne Scripts =======================================
+//= Maker Mansion Instance
+//===== By: ================================================== 
+//= Alayne
+//===== Current Version: ===================================== 
+//=
+//= 1.0 - Creation
+//= 1.1 - Structure modification, pattern apply from Emistry's
+//= 1.2 - Logical mods over stars for hercules support
+//= 1.3 - Current version, handle both emu in one script
+//=
+//===== Compatible With: ===================================== 
+//= rAthena SVN
+//= hercules SVN
+//===== Description: ========================================= 
+//=
+//= An instance based over mobs level
+//=
+//===== Todo Remaining: ======================================
+//
+//===== Additional Comments: =================================
+//
+//
+//============================================================
+
+prontera,145,161,3	script	Noas Ark Buttler::mmbut	1_M_JOBTESTER,{
+
+OnStart:
+	.@party_id = getcharid(1); 
+	.@is_leader = ( getcharid(0) == getpartyleader(.@party_id,2) );
+	set .@has_instance, TM_INSTANCE_ID > 0;
+	
+	.@tm_instance_delay = ( instance_delay_mm - gettimetick(2) );
+
+	mes "^0055FF[ "+.instance_name$+" ]^000000";
+	mes "Welcome here, little Master. Do you know where you are ?";
+	if( $instance_delay > 0 )
+	mes "You have to wait : ^FF0000"+$instance_delay+" Seconds.^000000";
+	next; 
+	mes "^0055FF[ "+.instance_name$+" ]^000000";
+	mes "This is the Noas Ark.";
+	mes "I'm here to ensure that nobody will enter to perturb the Master of this place and his family.";
+	mes "Cause the Maker and the Noas have lots of ennemies, you know?";
+	if(MAKERQ < 8 && .questRequired == 1)
+	{
+		next; 
+		mes "^0055FF[ "+.instance_name$+" ]^000000";
+		mes "I'm sorry, little human, but the Maker didn't invite you here.";
+		mes "I can't let you in.";
+	}
+	next;
+	switch( select( 
+		( .@party_id && .@is_leader && !.@has_instance )?"Start Noas Ark":"",
+		( .@party_id && .@has_instance )?"Enter Noas Ark":"",
+		( .@party_id && .@is_leader && .@has_instance )?"Destroy Noas Ark":"",
+	"Informations"
+		)){
+	case 1:
+		if( .@tm_instance_delay > 0 )
+		{
+			mes "I can't let you in. The Ark is still under construction. Wait for " + callfunc("__Time2Str", .@tm_instance_delay) + " before coming back.";
+			close;
+		}
+		getpartymember .@party_id,2;
+		if( .min_party_member >= 1 ){
+			.@origin = getcharid(3);
+			.@gettimetick = gettimetick(2);
+			for( .@i = 0; .@i < $@partymembercount; .@i++ )
+				if( attachrid( $@partymemberaid[.@i] ) ){
+					.@member_count++;
+					if( BaseLevel < .base_level[0] || BaseLevel > .base_level[1] ) .@fail = .@fail|1;
+					if( Zeny < .instance_zeny ) .@fail = .@fail|2;
+					if( instance_delay_mm > .@gettimetick ) .@fail = .@fail|4;
+					if( .@fail ){
+						.@name$ = strcharinfo(0);
+						break;
+					}
+			
+				}
+			attachrid( .@origin );
+		}
+		if( .@name$ != "" && .@fail ){
+			mes "^FF0000[ Failed ]^000000";
+			mes "^0055FF"+.@name$+"^000000, You cannot join right now.";
+			mes " ";
+			mes "^FF0000[ Reason: ]^000000";
+			if( .@fail & 1 ) mes "^777777You must be Level: "+.base_level[0]+" - "+.base_level[1]+"^000000";
+			if( .@fail & 2 ) mes "^777777You need "+ .instance_zeny +" Zeny^000000";
+			if( .@fail & 4 ) mes "^777777You still have cooldown.^000000";
+			break;
+		}
+		if( !instance_check_party( .@party_id,.min_party_member ) ){
+			mes "^0055FF[ "+.instance_name$+" ]^000000";
+			mes "Make or join a party with at least "+.min_party_member+" member and try again.";
+			break;
+		}
+		else{
+			$mm_instance_level = select( 
+				"^FF0000[ Cooldown - 24 Hours ]^000000 Easy Mode",
+				"^FF0000[ Cooldown - 48 Hours ]^000000 Difficult Mode",
+				"^FF0000[ Cooldown - 72 Hours ]^000000 Extreme Mode",
+				"^FF0000[ Cooldown - 96 Hours ]^000000 Apocalypse Mode"
+			);
+			//HERCULES
+			.@instance = instance_create( .instance_name$,.@party_id,IOT_PARTY );
+			//RATHENA
+			//.@instance = instance_create( .instance_name$ );
+			
+			if( .@instance < 0 ) {
+				npctalk "Noas Ark reservation failed.";
+				mes "^0000FF"+.instance_name$+" ^000000- Reservation Failed!";
+				close;
+			}
+			mes "^0000FF"+.instance_name$+" ^000000 - Reserved";
+			
+			//HERCULES
+			for( .@i = 0; .@i < .map_size; .@i++ )
+				if( instance_attachmap( .map$[.@i],$mm_instance, 1, "" + (.@i + 1) + "@mmansion" ) == "" ){
+					npctalk "Noas Ark reservation failed.";
+					mes "- ^FF0000Reservation Failed!^000000";
+					instance_destroy( .@instance );
+					close;
+				}
+			
+			.@gettimetick = gettimetick(2);
+			getpartymember .@party_id,2;
+			for( .@i = 0; .@i < $@partymembercount; .@i++ )
+				if( attachrid( $@partymemberaid[.@i] ) ){
+					instance_delay_mm = ( .@gettimetick + ( .instance_delay * .@level ) );
+					Zeny -= .instance_zeny;
+					set TM_INSTANCE_ID, .@instance;
+					dispbottom "["+.instance_name$+"] Paid "+ .instance_zeny +" Zeny and Instance Cooldown Applied.";
+				}
+			attachrid( .@origin );
+			npctalk "Noas Ark has been generated for Party - "+getpartyname( .@party_id );
+
+			//HERCULES
+			instance_set_timeout $time_mm_limit[0],$time_mm_limit[1],.@instance;
+			instance_attach( .@instance );
+			instance_init( .@instance );
+			
+			//RATHENA
+			//unused npc
+		}
+	case 2:
+		getmapxy(.@map$, .@x, .@y, UNITTYPE_PC);
+		//HERCULES
+		savepoint .@map$, .@x, .@y;
+		if( TM_INSTANCE_ID < 0 ){
+			mes .instance_name$ + " doesnt exist for Party - "+getpartyname( .@party_id );
+		}
+		else{
+			warp .map$[0],346,26;
+			instance_announce $mm_instance, getpartyname(getcharid(1))+"  entered in the "+.instance_name$+"!",bc_map,"0x00ff99";
+		}
+		
+		//RATHENA
+		//save .@map$, .@x, .@y;
+		//switch(instance_enter(.instance_name$)) {
+		//	default:
+		//		mes "An unknown error has occurred.";
+		//		close;
+		//	case 2:
+		//		mes "The memorial dungeon " + .instance_name$ + " does not exist.";
+		//		mes "The party leader did not generate the dungeon yet.";
+		//		close;
+		//	case 1:
+		//		mes "You can enter the dungeon after making the party.";
+		//		close;
+		//	case 0:
+		//		instance_announce $mm_instance, strcharinfo(0)+" from party, " +getpartyname( .@party_id )+", is entering the dungeon, "+.instance_name$+".",bc_map,"0x00ff99",FW_NORMAL,12;
+		//		end;
+		//}
+		break;
+	case 3:
+		instance_destroy( TM_INSTANCE_ID );
+		mes "" + .instance_name$ + " Destroyed.";
+		getpartymember getcharid(1),2;
+		for( set .@i, 0; .@i < $@partymembercount; set .@i, .@i+1 )
+			if( attachrid( $@partymemberaid[.@i] ) && TM_INSTANCE_ID > 0){
+				set TM_INSTANCE_ID, -1;
+			}
+		break;
+	default: 
+		mes "^0055FF[ "+.instance_name$+" ]^000000";
+		mes "You're here next to the Noas Ark entrance.";
+		mes "This is the place where live the Maker and his family, the Noas.";
+		mes "If you've never encountered him, the Maker travel around the world to raise dead people.";
+		mes "But by doing so, he cause the death of those who call back the dead.";
+		mes "Lots of peoples hold a huge grief to the Maker because of that.";
+		next;
+		mes "^0055FF[ "+.instance_name$+" ]^000000";
+		mes "Therefor, my master, the Maker, authorize any grieved people to come here and fight him.";
+		mes "As long as they bring Innocence with them, those items known as " + getitemname('innocenceId) + ".";
+		mes "You can bring any amount of those, but they'll destroy them, one by one.";
+		mes "If they'll find the Precious Heart, one innocence amongst the others, all will be destroyed.";
+		mes "Then, you'll loose any chance of sealing them, and therefor, you're last to succeed.";
+		break;
+}
+close;
+
+OnPCLoginEvent:
+OnPCLogoutEvent:
+	set TM_INSTANCE_ID, -1;
+	end;
+
+OnInit:
+	setarray .base_level,90,255;
+	setarray $time_mm_limit,7200,300;
+	setarray .map$,"que_qaru05";
+	.map_size = getarraysize( .map$ );
+	.min_party_member = 1;
+	.instance_zeny = 750000;
+	.instance_delay = 7200;
+	.instance_name$ = "Noas Ark";
+	set .questRequired, 0;
+	end;
+}
+
+que_qaru05,178,63,4	script	noas_ark	HIDDEN_WARP_NPC,2,2,{
+end;
+
+OnInstanceInit:
+	set 'innocenceId, 6624;
+	setarray 'akumaId[0], 2472, 2254, 2474, 2473;
+	//Randgris, Pyuriel, Fallen, Khiel, Maya, Doppel, Lost Dragon, Stormy, Drake, Dark Lord, Atroce, Dahyeon
+	deletearray 'noeId[0], getarraysize('noeId);
+	setarray 'noeId[0], 2109, 2249, 1871, 1734, 1147, 1046, 2131, 1251, 1112, 1272, 1785, 2253;
+	setarray 'noeName$[0],"Noa's Judgement","Noa's Pleasure","Noa's Envy","Noa's Voracity","Noa's Bound","Noa's Colour","Noa's Might","Noa's Dream","Noa's Misery","Noa's Wrath","Noa's Desire","Noa's Wisdom";
+	
+	.@map$ = strnpcinfo(4);
+	//HERCULES
+	setmapflag .@map$,mf_zone,"Memorial Dungeon";
+	'mm_boss_id = monster( .@map$,252,330,"The Maker",2255,1,instance_npcname( strnpcinfo(0), $mm_instance )+"::OnMakerDefeated" );
+	//RATHENA
+	//monster( .@map$,252,330,"The Maker",2255,1,instance_npcname( strnpcinfo(0), $mm_instance )+"::OnMakerDefeated" );
+	//'mm_boss_id = $@mobId[0];
+	unitskilluseid 'mm_boss_id,"NPC_INVINCIBLE",1;	
+	'mm_floor_reward = 50;
+	'mm_final_reward = 150;
+	set 'baseNoeCount, getarraysize('noeId);
+	set 'SealedNoeCount, 0;
+	set .akumaFromDeath, 0;
+	set 'noe_delay, 0;
+
+	set 'instance_team_id, -1;
+
+	setarray 'noeActive[0], 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1;
+	setarray 'noeAlive[0], 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0;
+	hideonnpc instance_npcname("The Maker", $mm_instance);
+	callsub OnRepopAkumas;
+	goto OnRepopNoe;
+	
+	//RATHENA
+	initnpctimer;
+	end;
+	
+OnPCDieEvent:
+	if(strcharinfo(3) == instance_mapname(strnpcinfo(4), $mm_instance))
+	{
+		set .akumaFromDeath, .akumaFromDeath + 1;
+	}
+	end;	
+	
+OnRepopAkumas:
+	.@map$ = strnpcinfo(4);
+	set .@neededRed, 'baseNoeCount - mobcount(.@map$, instance_npcname( strnpcinfo(0), $mm_instance )+"::OnNoeDied");
+	if(.countPopAkuma <= 1)
+	{
+		set .@basePop, 50;
+		set .@neededPop, (.@basePop + 25 * .countPopAkuma) - mobcount(.@map$, instance_npcname( strnpcinfo(0), $mm_instance )+"::OnBaseDied");
+		set .@neededPop, .@neededPop - .@neededRed;
+		if(.@neededPop < 0)
+		{
+			set .@neededPop, 0;
+		}	
+		monster( .@map$,0,0,"Akuma",2469,.@neededPop,instance_npcname( strnpcinfo(0), $mm_instance )+"::OnBaseDied" );
+		monster( .@map$,0,0,"Akuma",2468,.@neededPop,instance_npcname( strnpcinfo(0), $mm_instance )+"::OnBaseDied" );
+	}
+	if(.countPopAkuma < 2)
+	{
+		set .@basePop, 25;
+		set .@neededPop, (.@basePop + 25 * .countPopAkuma) - mobcount(.@map$, instance_npcname( strnpcinfo(0), $mm_instance )+"::OnAkumaDied");
+		set .@neededPop, .@neededPop - .@neededRed;
+		if(.@neededPop < 0)
+		{
+			set .@neededPop, 0;
+		}	
+		monster( .@map$,0,0,"Akuma",'akumaId[0],.@neededPop,instance_npcname( strnpcinfo(0), $mm_instance )+"::OnAkumaDied" );
+	}
+	if(.countPopAkuma < 4)
+	{
+		set .@basePop, 15;
+		set .@neededPop, (.@basePop + 15 * .countPopAkuma) - mobcount(.@map$, instance_npcname( strnpcinfo(0), $mm_instance )+"::OnAkuma2Died");
+		set .@neededPop, .@neededPop - .@neededRed;
+		if(.@neededPop < 0)
+		{
+			set .@neededPop, 0;
+		}	
+		monster( .@map$,0,0,"Akuma",'akumaId[1],.@neededPop,instance_npcname( strnpcinfo(0), $mm_instance )+"::OnAkuma2Died" );
+	}
+	if(.countPopAkuma < 10)
+	{
+		set .@basePop, 8;
+		set .@neededPop, (.@basePop + 8 * .countPopAkuma) - mobcount(.@map$, instance_npcname( strnpcinfo(0), $mm_instance )+"::OnAkuma3Died");
+		set .@neededPop, .@neededPop - .@neededRed;
+		if(.@neededPop < 0)
+		{
+			set .@neededPop, 0;
+		}
+		monster( .@map$,0,0,"Akuma",'akumaId[2],.@neededPop,instance_npcname( strnpcinfo(0), $mm_instance )+"::OnAkuma3Died" );
+	}
+	if(.akumaFromDeath > 0)
+	{
+		set .@basePop, 1;
+		set .@neededPop, (.@basePop + 1 * .akumaFromDeath) - mobcount(.@map$, instance_npcname( strnpcinfo(0), $mm_instance )+"::OnAkuma4Died");	
+		monster( .@map$,0,0,"Akuma",'akumaId[3],.@neededPop,instance_npcname( strnpcinfo(0), $mm_instance )+"::OnAkuma4Died" );	
+	}
+	return;
+	
+OnBaseDied:
+OnAkumaDied:
+OnAkuma2Died:
+OnAkuma3Died:
+OnAkuma4Died:
+	set 'instance_team_id, getcharid(1);
+	.@map$ = strnpcinfo(4);
+	set .@mobcount, mobcount(.@map$, instance_npcname( strnpcinfo(0), $mm_instance )+"::OnAkumaDied");
+	set .@mobcount, .@mobcount + mobcount(.@map$, instance_npcname( strnpcinfo(0), $mm_instance )+"::OnAkuma2Died");
+	set .@mobcount, .@mobcount + mobcount(.@map$, instance_npcname( strnpcinfo(0), $mm_instance )+"::OnAkuma3Died");
+	set .@mobcount, .@mobcount + mobcount(.@map$, instance_npcname( strnpcinfo(0), $mm_instance )+"::OnAkuma4Died");
+	
+	if(.questRequired == 0 && rand(0,100) <= 50)
+	{	
+		getitem 'innocenceId, 1;
+	}
+	end;
+	
+OnRepopNoe:
+	.@map$ = strnpcinfo(4);	
+	if('SealedNoeCount < 'baseNoeCount)
+	{
+		for(set .@i,0; .@i<getarraysize('noeId); set .@i,.@i+1)
+		{
+			if('noeActive[.@i] == 1)
+			{
+				if('noeAlive[.@i] == 0)
+				{
+					//noa killed, but not sealed on repop
+					//HERCULES
+					set .@GID, monster(.@map$,0,0,'noeName$[.@i],'noeId[.@i],1,instance_npcname( strnpcinfo(0), $mm_instance )+"::OnNoeDied" + .@i );
+					//RATHENA
+					//monster(.@map$,0,0,'noeName$[.@i],'noeId[.@i],1,instance_npcname( strnpcinfo(0), $mm_instance )+"::OnNoeDied" + .@i );
+					//set .@GID, $@mobId[0];
+					setd("$noeGID" + .@i, .@GID);	
+					set 'noeAlive[.@i], 1;
+				}	
+			}
+		}
+	}
+	initnpctimer;
+	end;
+
+OnTimer1000:
+	stopnpctimer;
+	set .countTimerRound, .countTimerRound + 1;	
+	//RATHENA delay
+	if (.countTimerRound >= $time_mm_limit[0])
+	{
+		stopnpctimer;
+		mapannounce .@map$,"[ Noas Ark ] : The dimension is collapsing. You should get out now!!",bc_map,0x00FF99;
+		instance_destroy( TM_INSTANCE_ID );
+		getpartymember getcharid(1),2;
+		for( set .@i, 0; .@i < $@partymembercount; set .@i, .@i+1 )
+			if( attachrid( $@partymemberaid[.@i] ) && TM_INSTANCE_ID > 0){
+				set TM_INSTANCE_ID, -1;
+			}
+	}
+	else if(.countTimerRound % 60 == 0 && 'instance_team_id != -1)
+	{
+		//every minutes destroy innocence
+		getpartymember 'instance_team_id,2;
+		set .@victimDesignated, rand(0,$@partymembercount-1);
+		for( .@pt = 0; .@pt < $@partymembercount; .@pt++ ){
+			if( attachrid( $@partymemberaid[.@pt] ) && strcharinfo(3) == strnpcinfo(4) ){
+				if(.@pt == 0)
+				{
+					set .@originId, getcharid(3);
+				}
+				if(countitem('innocenceId) > 0)
+				{
+					dispbottom "[The Maker] Damn Innocence...I'll destroy you all.";
+					delitem 'innocenceId, 1;
+					if(rand(0,countitem('innocenceId)) == 1)
+					{
+						dispbottom "[The Maker] Hehehehe! Your Precious Heart! It's mine!";
+						delitem 'innocenceId, countitem('innocenceId);
+					}
+				}
+			}
+		}
+		detachrid;
+
+		for(set .@i,0; .@i<getarraysize('noeId); set .@i,.@i+1)
+		{
+			if('noeActive[.@i] == 1 && 'noeAlive[.@i] == 1)
+			{
+				unitskilluseid getd("$noeGid" + .@i),"NPC_INVINCIBLEOFF",1;	
+			}
+		}
+
+		attachrid(.@originId);
+		if('noe_delay != 0 && 'noe_delay < gettimetick(2) && 'SealedNoeCount < 'baseNoeCount)
+		{
+			//if a noe has been killed, the current time is after the delay, and the SealedNoeCount is inferior to max count
+			set .@map$, strnpcinfo(4);
+			mapannounce .@map$, "[The Maker]How dare you? My Family won't die this easily, little Humans!", bc_map|bc_red;
+			goto OnRepopNoe;
+		}
+		else
+		{
+			set .@map$, strnpcinfo(4);
+			//move random target to maker
+			getmapxy(.@movemap$, .@moveX, .@moveY, UNITTYPE_NPC);
+			mapannounce .@map$, "[The Maker] Puppet, puppet! Come to your master!", bc_map|bc_red;
+			attachrid( .@victimDesignated );
+			if(.@map$ == strcharinfo(3))
+			{
+				if(countitem('innocenceId) > 0 && rand(0,100) > 33)
+				{
+					mapannounce .@map$, "[The Maker] INNOCENCEEEEE! ALWAYS IN MY WAY!", bc_map|bc_red;
+					delitem 'innocenceId, 1;
+				}
+				else
+				{
+					warp .@movemap$, 252, 330;
+				}
+			}
+		}
+		callsub OnRepopAkumas;
+	}
+	initnpctimer;
+	end;	
+	
+OnMakerWeakened:
+	instance_announce instance_id(), "[The Maker] NOOOOOOOOOOOO! My childs...I'll kill you! I'll kill you all! The joke is over! Come here, I'll break you!!", bc_map, 0xFF0000;
+	unitskilluseid 'mm_boss_id,"NPC_INVINCIBLEOFF",1;	
+	end;
+	
+OnNoeDied0:
+	set 'noeAlive[0], 0;
+	goto OnNoeDied;
+	end;
+OnNoeDied1:
+	set 'noeAlive[1], 0;
+	goto OnNoeDied;
+	end;
+OnNoeDied2:
+	set 'noeAlive[2], 0;
+	goto OnNoeDied;
+	end;
+OnNoeDied3:
+	set 'noeAlive[3], 0;
+	goto OnNoeDied;
+	end;
+OnNoeDied4:
+	set 'noeAlive[4], 0;
+	goto OnNoeDied;
+	end;
+OnNoeDied5:
+	set 'noeAlive[5], 0;
+	goto OnNoeDied;
+	end;
+OnNoeDied6:
+	set 'noeAlive[6], 0;
+	goto OnNoeDied;
+	end;
+OnNoeDied7:
+	set 'noeAlive[7], 0;
+	goto OnNoeDied;
+	end;
+OnNoeDied8:
+	set 'noeAlive[8], 0;
+	goto OnNoeDied;
+	end;
+OnNoeDied9:
+	set 'noeAlive[9], 0;
+	goto OnNoeDied;
+	end;
+OnNoeDied10:
+	set 'noeAlive[10], 0;
+	goto OnNoeDied;
+	end;
+OnNoeDied11:
+	set 'noeAlive[11], 0;
+	goto OnNoeDied;
+	end;
+OnNoeDied12:
+	set 'noeAlive[12], 0;
+	goto OnNoeDied;
+	end;
+OnNoeDied:
+	set 'noe_delay, gettimetick(2) + 30; //180; //3 minute delay, change to 30 for debug
+	.@map$ = strnpcinfo(4);
+	mapannounce .@map$, "[ Noas Ark ] A Noe has been defeated. Hurry up, use an Innocence to seal him! Insert it inside the Factory",bc_map,0x00FF99;
+OnNoePowerUp:	
+	for(set .@i,0; .@i<getarraysize('noeId); set .@i,.@i+1)
+	{
+		if('noeActive[.@i] == 1 && 'noeAlive[.@i] == 1)
+		{
+			unitskilluseid getd("$noeGID" + .@i),"NPC_INVINCIBLE",1;	
+			unitskilluseid getd("$noeGID" + .@i),"NPC_POWERUP",1;	
+			switch(.@i)
+			{
+				case 0:
+					//"Noa's Judgement"
+					unitskilluseid getd("$noeGID" + .@i),"NPC_INVINCIBLE",1;
+					unitskilluseid getd("$noeGID" + .@i),"NPC_HELLJUDGEMENT",10;	
+					break;
+				case 1:
+					//"Noa's Pleasure"
+					unitskilluseid getd("$noeGID" + .@i),"NPC_INVINCIBLE",1;
+					unitskilluseid getd("$noeGID" + .@i),"WM_VOICEOFSIREN",5;	
+					break;
+				case 2:
+					//"Noa's Envy"
+					unitskilluseid getd("$noeGID" + .@i),"NPC_INVINCIBLE",1;
+					unitskilluseid getd("$noeGID" + .@i),"NPC_WIDESOULDRAIN",10;	
+					break;
+				case 3:
+					//"Noa's Voracity"
+					unitskilluseid getd("$noeGID" + .@i),"NPC_INVINCIBLE",1;
+					unitskilluseid getd("$noeGID" + .@i),"NPC_VAMPIRE_GIFT",10;	
+					break;
+				case 4:
+					//"Noa's Bound"
+					unitskilluseid getd("$noeGID" + .@i),"NPC_INVINCIBLE",1;
+					unitskilluseid getd("$noeGID" + .@i),"RG_CLOSECONFINE",1;	
+					break;
+				case 5:
+					//"Noa's Colour"
+					unitskilluseid getd("$noeGID" + .@i),"NPC_INVINCIBLE",1;
+					unitskilluseid getd("$noeGID" + .@i),"NPC_WIDESTONE",5;	
+					break;
+				case 6:
+					//"Noa's Might"
+					unitskilluseid getd("$noeGID" + .@i),"NPC_INVINCIBLE",1;	
+					unitskilluseid getd("$noeGID" + .@i),"NPC_EXPULSION",1;
+					break;
+				case 7:
+					//"Noa's Dream"
+					unitskilluseid getd("$noeGID" + .@i),"NPC_INVINCIBLE",1;
+					unitskilluseid getd("$noeGID" + .@i),"NPC_WIDESLEEP",5;	
+					break;
+				case 8:
+					//"Noa's Misery"
+					unitskilluseid getd("$noeGID" + .@i),"NPC_INVINCIBLE",1;
+					unitskilluseid getd("$noeGID" + .@i),"NPC_ANTIMAGIC",5;	
+					break;
+				case 9:
+					//"Noa's Wrath"
+					unitskilluseid getd("$noeGID" + .@i),"NPC_INVINCIBLE",1;
+					unitskilluseid getd("$noeGID" + .@i),"NPC_EARTHQUAKE",10;	
+					break;
+				case 10:
+					//"Noa's Desire"
+					unitskilluseid getd("$noeGID" + .@i),"NPC_INVINCIBLE",1;	
+					unitskilluseid getd("$noeGID" + .@i),"NPC_WIDEHELLDIGNITY",5;
+					break;
+				case 11:
+					//"Noa's Wisdom"
+					unitskilluseid getd("$noeGID" + .@i),"NPC_INVINCIBLE",1;
+					unitskilluseid getd("$noeGID" + .@i),"NPC_ANTIMAGIC",5;	
+					break;
+			}
+		}
+	}
+	mapannounce .@map$, "[ Noas Ark ] Noas Madness touches the remaining Noe. They'll be invicible while you don't seal the defeated one...",bc_map,0x00FF99;
+	end;
+	
+OnMakerDefeated:
+	stopnpctimer;
+	.@map$ = strnpcinfo(4);
+	killmonsterall .@map$;
+	mapannounce .@map$, "[ Noas Ark ] The Maker has been defeated. Destroy the Crystal is inserted himself into to seal him definitely with the Innocence!",bc_map,0x00FF99;
+	
+	getmapxy(.@crymap$, .@cryx, .@cryy, UNITTYPE_NPC, instance_npcname( "The Maker", $mm_instance ));
+	monster( .@crymap$,.@cryx,.@cryy,"The Maker",1914,1,instance_npcname( strnpcinfo(0), $mm_instance )+"::OnCrystalBroke" );
+	end;
+	
+OnCrystalBroke:
+	if(rand(0,100) <= 5)
+	{
+		//in case the player doesn't have anymore innocence
+		getitem 'innocenceId, 1;
+	}
+	hideoffnpc instance_npcname("The Maker", $mm_instance);
+	end;	
+}
+
+que_qaru05,251,340,4	script	The Maker	4_M_FROZEN_KN,{
+	set .@npcname$, "[The Maker]";
+	mes .@npcname$;
+	mes "You can't really defeat me...";
+	mes "I'll be the one to win in the end...";
+	hideonnpc instance_npcname( strnpcinfo(0), $mm_instance );
+	if(countitem('innocenceId) > 0)
+	{
+		mes "But I have to admit that...This fight is...Your victory...";
+		close2;
+		//specialeffect
+		goto OnMakerSealed;
+	}
+	else
+	{
+		mes "And you don't have those bloody crystals...You'll never kill me...";
+		//specialeffect
+		getmapxy(.@crymap$, .@cryx, .@cryy, UNITTYPE_NPC, instance_npcname( "The Maker", $mm_instance ));
+		monster( .@crymap$,.@cryx,.@cryy,"The Maker",1914,1,instance_npcname( strnpcinfo(0), $mm_instance )+"::OnCrystalBroke" );
+	}
+	close;
+	
+OnMakerSealed:
+	.@reward = 'mm_final_reward;
+	getpartymember getcharid(1),2;
+	set .@originId, getcharid(3);
+	for( .@pt = 0; .@pt < $@partymembercount; .@pt++ ){
+		if( attachrid( $@partymemberaid[.@pt] ) ){
+			callfunc("AddPoints", getcharid(3), .@reward);
+			logmes "[Noas Ark] " + strcharinfo(0) + " complete the instance and obtains " + (.@reward) + " points.";	
+			dispbottom "[ Noas Ark ] You have gained instance points for defeating the Noas Ark instance.";
+			set MAKERMANSION, MAKERMANSION + 1;
+		}
+	}
+	detachrid;
+	attachrid(.@originId);
+	mapannounce .@map$, "[ Noas Ark ] Close in 30 seconds.",bc_map,"0x00FF99";
+	sleep2 30000;
+	instance_destroy( TM_INSTANCE_ID );
+	getpartymember getcharid(1),2;
+	for( set .@i, 0; .@i < $@partymembercount; set .@i, .@i+1 )
+		if( attachrid( $@partymemberaid[.@i] ) && TM_INSTANCE_ID > 0){
+			set TM_INSTANCE_ID, -1;
+		}
+	close;
+}	
+
+que_qaru05,72,271,4	script	Akuma Factory::makeraf	4_F_KIMI,{
+	if(countitem('innocenceId) > 0)
+	{
+		//check for Noas alive
+		set .@map$, strnpcinfo(4);
+		if('SealedNoeCount != 'baseNoeCount)
+		{
+			if('noe_delay != 0 && 'noe_delay > gettimetick(2) && 'SealedNoeCount < 'baseNoeCount)
+			{
+				mes "Insert an Innocence?";
+				if(select("Yes","No") == 1)
+				{
+					delitem 'innocenceId, 1;
+					for(set .@i,0; .@i<getarraysize('noeId); set .@i,.@i+1)
+					{
+						if('noeActive[.@i] == 1)
+						{
+							if('noeAlive[.@i] == 0)
+							{
+								set 'noeActive[.@i], 0;
+							}
+							else
+							{
+								unitskilluseid getd("$noeGID" + .@i),"NPC_INVINCIBLEOFF",1;	
+							}
+						}
+					}
+					set 'noe_delay, 0;
+					callsub OnNoasealed;
+					set 'SealedNoeCount, 'SealedNoeCount + 1;
+					if('SealedNoeCount >= 'baseNoeCount)
+					{
+						donpcevent instance_npcname("noas_ark", $mm_instance) + "::OnMakerWeakened";
+					}
+					else
+					{
+						instance_announce instance_id(), "[ The Maker ] My poor child! How can you do that to him?", bc_map, 0xFF0000;
+					}
+				}
+			}
+			else if('noe_delay != 0)
+			{
+				mes "The delay has been passed.";
+				close;
+			}
+			else
+			{
+				mes "Seal a Noe before coming to me.";
+				close;
+			}
+		}
+	}
+	end;
+	
+OnNoasealed:
+	set .@originId, getcharid(3);
+	.@reward = 'mm_floor_reward;
+	getpartymember getcharid(1),2;
+	for( .@pt = 0; .@pt < $@partymembercount; .@pt++ ){
+		if( attachrid( $@partymemberaid[.@pt] ) ){
+			callfunc("AddPoints", getcharid(3), .@reward);
+			logmes "[Noas Ark] " + strcharinfo(0) + " sealed a Noe and obtained " + (.@reward) + " points.";	
+			dispbottom "[ Noas Ark ] You have gained instance points for defeating a Noe in Noas Ark.";
+		}
+	}
+	detachrid;
+	attachrid(.@originId);
+	return;
+}
+	
+que_qaru05,345,81,4	script	warp::nawarp	WARPNPC,1,1,{
+	end;
+
+OnTouch:
+	set .@map$, strnpcinfo(4);
+	warp strnpcinfo(4), 275, 298;
+	end;
+}
+
+que_qaru05,129,103,4	script	warp::nawarp1	WARPNPC,1,1,{
+	end;
+
+OnTouch:
+	set .@map$, strnpcinfo(4);
+	warp strnpcinfo(4), 149, 109;
+	end;
+}
+
+que_qaru05,149,105,4	script	warp::nawarp2	WARPNPC,1,1,{
+	end;
+
+OnTouch:
+	set .@map$, strnpcinfo(4);
+	warp strnpcinfo(4), 125, 103;
+	end;
+}
+
+que_qaru05,114,164,4	script	warp::nawarp3	WARPNPC,1,1,{
+	end;
+
+OnTouch:
+	set .@map$, strnpcinfo(4);
+	warp strnpcinfo(4), 136, 171;
+	end;
+}
+
+que_qaru05,132,171,4	script	warp::nawarp4	WARPNPC,1,1,{
+	end;
+
+OnTouch:
+	set .@map$, strnpcinfo(4);
+	warp strnpcinfo(4), 114, 160;
+	end;
+}
