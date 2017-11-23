@@ -1,0 +1,12 @@
+//RATHENA
+6960,Sky_Fortress_Key,Sky Fortress Key,3,600,,10,,,,,,,,,,,,,{},{},{}
+
+//HERCULES
+{
+	Id: 6960
+	AegisName: "Sky_Fortress_Key"
+	Name: "Sky Fortress Key"
+	Buy: 0
+	Weight: 10
+	BuyingStore: true
+},

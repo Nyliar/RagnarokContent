@@ -1,0 +1,9 @@
+//HERCULES
+{
+	Id: 6942
+	AegisName: "Will_Master"
+	Name: "Will Master"
+	Buy: 0
+	Weight: 10
+	BuyingStore: true
+},

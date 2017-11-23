@@ -1,0 +1,459 @@
+[1938] = {
+		unidentifiedDisplayName = "Musical Instrument",
+		unidentifiedResourceName  = "????",
+		unidentifiedDescriptionName = {
+			"Unknown Item, can be identified by using a ^6666CCMagnifier^000000.",
+		},
+		identifiedDisplayName = "Ordinal Violin",
+		identifiedResourceName = "???????",
+		identifiedDescriptionName = {
+			"Violin with red light radiance.",				"^888888-------------------------^000000","DEX +20,STR +20,Atk +20%",				"30% Damage to Boss Monsters","^888888-------------------------^000000","30% Damage to Demi-Human","^888888-------------------------^000000","Refine +7 - Increase stats based on build.","Class: ^6A5ACDMusical Instrument^000000","Attack: ^D80000200^000000","Weight: ^0EAA0B80^000000","Level Requirement: ^0EAA0B70^000000","Jobs: ^6A5ACDBard^000000"},slotCount=4,ClassNum=13},
+[1994] = {
+		unidentifiedDisplayName = "Whip",
+		unidentifiedResourceName  = "??",
+		unidentifiedDescriptionName = {
+			"Unknown Item, can be identified by using a ^6666CCMagnifier^000000.",
+		},
+		identifiedDisplayName = "Ordinal Whip",
+		identifiedResourceName = "?????",
+		identifiedDescriptionName = {
+		"Whip with red light radiance.",								"^888888-------------------------^000000","STR +20,Dex +20,Atk +20%",			"30% Damage to Boss Monsters","^888888-------------------------^000000","30% Damage to Demi-Human","^888888-------------------------^000000","Refine +7 - Increase stats based on build.","Class: ^6A5ACDWhip^000000","Attack: ^D80000200^000000","Weight: ^0EAA0B80^000000","Level Requirement: ^0EAA0B70^000000","Jobs: ^6A5ACDDancer^000000"},slotCount=4,ClassNum=14},
+[2024] = {
+		unidentifiedDisplayName = "Two-Handed Staff",
+		unidentifiedResourceName  = "??",
+		unidentifiedDescriptionName = {
+			"Unknown Item, can be identified by using a ^6666CCMagnifier^000000.",
+		},
+		identifiedDisplayName = "Ordinal Staff",
+		identifiedResourceName = "??????",
+		identifiedDescriptionName = {
+			"One-handed staff with red light radiance.",				"^888888-------------------------^000000","INT +20,Vit +20,MAtk +50%","^888888-------------------------^000000","30% Damage to Demi-Human","^888888-------------------------^000000","Refine +7 - Increase stats based on build.","Class: ^6A5ACDOne-Handed staff^000000","Attack: ^D80000100^000000","Weight: ^0EAA0B100^000000","Weapon Level: ^0EAA0B3^000000","Level Requirement: ^0EAA0B70^000000","Jobs: ^6A5ACDMage and Soul Linker^000000"},slotCount=4,ClassNum=23},
+[13126] = {
+		unidentifiedDisplayName = "Revolver",
+		unidentifiedResourceName  = "????",
+		unidentifiedDescriptionName = {
+			"Unknown Item, can be identified by using a ^6666CCMagnifier^000000.",
+		},
+		identifiedDisplayName = "Ordinal Handgun",
+		identifiedResourceName = "????",
+		identifiedDescriptionName = {
+			"Pistol with red light radiance barrel.",			"^888888-------------------------^000000","DEX +20,STR +20,Atk +20%",			"30% Damage to Boss Monsters","^888888-------------------------^000000","30% Damage to Demi-Human","^888888-------------------------^000000","Refine +7 - Increase stats based on build.","Class: ^6A5ACDRevolver^000000","Attack: ^D80000100^000000","Weight: ^0EAA0B100^000000","Level Requirement: ^0EAA0B70^000000","Jobs: ^6A5ACDGunslinger^000000"},slotCount=4,ClassNum=17},
+[13323] = {
+		unidentifiedDisplayName = "Huuma Shuriken",
+		unidentifiedResourceName  = "??_??",
+		unidentifiedDescriptionName = {
+			"Unknown Item, can be identified by using a ^6666CCMagnifier^000000.",
+		},
+		identifiedDisplayName = "Ordinal Ninja Tool",
+		identifiedResourceName = "??_??",
+		identifiedDescriptionName = {
+		"Kunai with red light radiance blade.",					"^888888-------------------------^000000","INT +20,Vit +20,MAtk +50%","^888888-------------------------^000000","30% Damage to Demi-Human","^888888-------------------------^000000","Refine +7 - Increase stats based on build.","Class: ^6A5ACDHuuma Shuriken^000000","Attack: ^D80000200^000000","Weight: ^0EAA0B100^000000","Level Requirement: ^0EAA0B70^000000","Jobs: ^6A5ACDNinja^000000"},slotCount=4,ClassNum=22},
+[16038] = {
+		unidentifiedDisplayName = "Mace",
+		unidentifiedResourceName  = "???",
+		unidentifiedDescriptionName = {
+			"Unknown Item, can be identified by using a ^6666CCMagnifier^000000.",
+		},
+		identifiedDisplayName = "Ordinal Mace",
+		identifiedResourceName = "?????",
+		identifiedDescriptionName = {
+		"Mace with red light radiance.",								"^888888-------------------------^000000","STR +20,Int +20,Atk/MAtk +20%",			"30% Damage to Boss Monsters","^888888-------------------------^000000","30% Damage to Demi-Human","^888888-------------------------^000000","Refine +7 - Increase stats based on build.","Class: ^6A5ACDMace^000000","Attack: ^D80000200^000000","Weight: ^0EAA0B80^000000","Level Requirement: ^0EAA0B70^000000","Jobs: ^6A5ACDNovice, Swordman, Merchant and Acolyte^000000"},slotCount=4,ClassNum=8},
+[18128] = {
+		unidentifiedDisplayName = "Bow",
+		unidentifiedResourceName  = "??",
+		unidentifiedDescriptionName = {
+			"Unknown Item, can be identified by using a ^6666CCMagnifier^000000.",
+		},
+		identifiedDisplayName = "Ordinal Bow",
+		identifiedResourceName = "????",
+		identifiedDescriptionName = {
+		"Bow with red light radiance.",									"^888888-------------------------^000000","DEX +30,STR +20,Atk +20%",			"30% Damage to Boss Monsters","^888888-------------------------^000000","30% Damage to Demi-Human","^888888-------------------------^000000","Refine +7 - Increase stats based on build.","Class: ^6A5ACDBow^000000","Attack: ^D80000120^000000","Weight: ^0EAA0B120^000000","Level Requirement: ^0EAA0B70^000000","Jobs: ^6A5ACDArcher, Thief and Rogue^000000"},slotCount=4,ClassNum=11},
+[21014] = {
+		unidentifiedDisplayName = "Two-Handed Sword",
+		unidentifiedResourceName  = "??",
+		unidentifiedDescriptionName = {
+			"Unknown Item, can be identified by using a ^6666CCMagnifier^000000.",
+		},
+		identifiedDisplayName = "Infinity Two-Handed Sword",
+		identifiedResourceName = "????",
+		identifiedDescriptionName = {
+			"This weapon contains a strange energy.",
+			"I feel that one of its benefits were sealed with a high cost.",
+			"Class:^6666CC Two-Handed Sword^000000",
+			"Attack:^CC0000 230^000000",
+			"Weight:^009900 50^000000",
+			"Weapon Level:^009900 4^000000",
+			"Level Requirement:^009900 100^000000",
+			"Jobs:^6666CC Rune Knight and Royal Guard^000000",
+		},
+		slotCount = 1,
+		ClassNum = 3
+	},
+	[28105] = {
+		unidentifiedDisplayName = "Two-Handed Axe",
+		unidentifiedResourceName  = "??",
+		unidentifiedDescriptionName = {
+			"Unknown Item, can be identified by using a ^6666CCMagnifier^000000.",
+		},
+		identifiedDisplayName = "Infinity Two-handed Axe",
+		identifiedResourceName = "???????",
+		identifiedDescriptionName = {
+			"This weapon contains a strange energy.",
+			"I feel that one of its benefits were sealed with a high cost.",
+			"Class:^6666CC Two-Handed Axe^000000",
+			"Attack:^CC0000 265^000000",
+			"Weight:^009900 50^000000",
+			"Weapon Level:^009900 4^000000",
+			"Level Requirement:^009900 100^000000",
+			"Jobs:^6666CC Swordman and Merchant^000000",
+		},
+		slotCount = 1,
+		ClassNum = 7
+	},
+	[28703] = {
+		unidentifiedDisplayName = "Dagger",
+		unidentifiedResourceName  = "???",
+		unidentifiedDescriptionName = {
+			"Unknown Item, can be identified by using a ^6666CCMagnifier^000000.",
+		},
+		identifiedDisplayName = "Ordinal Dagger",
+		identifiedResourceName = "??????",
+		identifiedDescriptionName = {
+		"Dagger with red light radiance blade.",				"^888888-------------------------^000000","STR +20,Vit +20,Atk +20%",			"30% Damage to Boss Monsters","^888888-------------------------^000000","30% Damage to Demi-Human","^888888-------------------------^000000","Refine +7 - Increase stats based on build.","Class: ^6A5ACDDagger^000000","Attack: ^D80000150^000000","Weight: ^0EAA0B55^000000","Level Requirement: ^0EAA0B70^000000","Jobs: ^6A5ACDNovice, Swordman, Mage, Archer, Merchant, Thief, Ninja and Soul Linker^000000"},slotCount=4,ClassNum=1},
+[4642] = {
+		unidentifiedDisplayName = "Infinite Toad Card",
+		unidentifiedResourceName  = "??????",
+		unidentifiedDescriptionName = {
+		},
+		identifiedDisplayName = "Infinite Toad Card",
+		identifiedResourceName = "??????",
+		identifiedDescriptionName = {
+			"Perfect dodge +2.",
+			"Refined to +7, Perfect dodge +2.",
+			"Refined to +9, Perfect dodge +3.",
+			"-------------------------",
+			"Class:^6666CC Card^000000",
+			"Compound on:^6666CC Shoes^000000",
+			"Weight:^009900 1^000000",
+		},
+		slotCount = 0,
+		ClassNum = 0
+	},
+	[4643] = {
+		unidentifiedDisplayName = "Infinite Vagabond Wolf Card",
+		unidentifiedResourceName  = "??????",
+		unidentifiedDescriptionName = {
+		},
+		identifiedDisplayName = "Infinite Vagabond Wolf Card",
+		identifiedResourceName = "??????",
+		identifiedDescriptionName = {
+			"ATK +10.",
+			"Refined to +7, ATK +10.",
+			"Refined to +9, ATK +15.",
+			"-------------------------",
+			"Class:^6666CC Card^000000",
+			"Compound on:^6666CC Shoes^000000",
+			"Weight:^009900 1^000000",
+		},
+		slotCount = 0,
+		ClassNum = 0
+	},
+	[4644] = {
+		unidentifiedDisplayName = "Infinite Vocal Card",
+		unidentifiedResourceName  = "??????",
+		unidentifiedDescriptionName = {
+		},
+		identifiedDisplayName = "Infinite Vocal Card",
+		identifiedResourceName = "??????",
+		identifiedDescriptionName = {
+			"MDEF +5.",
+			"Refine level +7: MDEF +10.",
+			"Refine level +9: MDEF +15.",
+			"-------------------------",
+			"Class:^6666CC Card^000000",
+			"Compound on:^6666CC Shoes^000000",
+			"Weight:^009900 1^000000",
+		},
+		slotCount = 0,
+		ClassNum = 0
+	},
+	[4645] = {
+		unidentifiedDisplayName = "Infinite Eclipse Card",
+		unidentifiedResourceName  = "??????",
+		unidentifiedDescriptionName = {
+		},
+		identifiedDisplayName = "Infinite Eclipse Card",
+		identifiedResourceName = "??????",
+		identifiedDescriptionName = {
+			"MaxHP +300.",
+			"Refined to +7, MaxHP +300.",
+			"Refined to +9, MaxHP +400.",
+			"-------------------------",
+			"Class:^6666CC Card^000000",
+			"Compound on:^6666CC Shoes^000000",
+			"Weight:^009900 1^000000",
+		},
+		slotCount = 0,
+		ClassNum = 0
+	},
+	[4646] = {
+		unidentifiedDisplayName = "Infinite Chimera Card",
+		unidentifiedResourceName  = "??????",
+		unidentifiedDescriptionName = {
+		},
+		identifiedDisplayName = "Infinite Chimera Card",
+		identifiedResourceName = "??????",
+		identifiedDescriptionName = {
+			"MaxHP +8%",
+			"MaxSP +4%",
+			"When equipped with shoes compounded with one of Infinite Toad Card, Infinite Wandering Wolf Card, Infinite Eclipse or Infinite Vocal Card, ATK +10% and MATK +10%.",
+			"-------------------------",
+			"Class:^6666CC Card^000000",
+			"Compound on:^008C99 Garment^000000",
+			"Weight:^009900 1^000000",
+		},
+		slotCount = 0,
+		ClassNum = 0
+	},
+	[4647] = {
+		unidentifiedDisplayName = "Infinite Osiris Card",
+		unidentifiedResourceName  = "??????",
+		unidentifiedDescriptionName = {
+		},
+		identifiedDisplayName = "Infinite Osiris Card",
+		identifiedResourceName = "??????",
+		identifiedDescriptionName = {
+			"When killing monster with melee physical attack, recover HP by 300.",
+			"-------------------------",
+			"Class:^6666CC Card^000000",
+			"Compound on:^B40088 Accessory^000000",
+			"Weight:^009900 1^000000",
+		},
+		slotCount = 0,
+		ClassNum = 0
+	},
+	[4648] = {
+		unidentifiedDisplayName = "Infinite Eddga Card",
+		unidentifiedResourceName  = "??????",
+		unidentifiedDescriptionName = {
+		},
+		identifiedDisplayName = "Infinite Eddga Card",
+		identifiedResourceName = "??????",
+		identifiedDescriptionName = {
+			"50% chance to auto cast Level 10 Provoke on enemy when attacked by physical attack.",
+			"-------------------------",
+			"Class:^6666CC Card^000000",
+			"Compound on:^6666CC Shoes^000000",
+			"Weight:^009900 1^000000",
+		},
+		slotCount = 0,
+		ClassNum = 0
+	},
+	[4649] = {
+		unidentifiedDisplayName = "Infinite Phreeoni Card",
+		unidentifiedResourceName  = "??????",
+		unidentifiedDescriptionName = {
+		},
+		identifiedDisplayName = "Infinite Phreeoni Card",
+		identifiedResourceName = "??????",
+		identifiedDescriptionName = {
+			"CRIT +100",
+			"-------------------------",
+			"Class:^6666CC Card^000000",
+			"Compound on:^FF0000 Weapon^000000",
+			"Weight:^009900 1^000000",
+		},
+		slotCount = 0,
+		ClassNum = 0
+	},
+	[4650] = {
+		unidentifiedDisplayName = "Infinite Orc Hero Card",
+		unidentifiedResourceName  = "??????",
+		unidentifiedDescriptionName = {
+		},
+		identifiedDisplayName = "Infinite Orc Hero Card",
+		identifiedResourceName = "??????",
+		identifiedDescriptionName = {
+			"When magically attacked, give 100% chance to ^663399Stun^000000 the attacker.",
+			"VIT +3",
+			"-------------------------",
+			"Class:^6666CC Card^000000",
+			"Compound on:^7102EF Headgear^000000",
+			"Weight:^009900 1^000000",
+		},
+		slotCount = 0,
+		ClassNum = 0
+	},
+	[4651] = {
+		unidentifiedDisplayName = "Infinite Tao Gunka Card",
+		unidentifiedResourceName  = "??????",
+		unidentifiedDescriptionName = {
+		},
+		identifiedDisplayName = "Infinite Tao Gunka Card",
+		identifiedResourceName = "??????",
+		identifiedDescriptionName = {
+			"MaxHP +10,000",
+			"AGI -10",
+			"-------------------------",
+			"Class:^6666CC Card^000000",
+			"Compound on:^00C33C Armor^000000",
+			"Weight:^009900 1^000000",
+		},
+		slotCount = 0,
+		ClassNum = 0
+	},
+	[24150] = {
+		unidentifiedDisplayName = "Shadow Accessory",
+		unidentifiedResourceName  = "??????",
+		unidentifiedDescriptionName = {
+			"Unknown Item, can be identified by using a ^6666CCMagnifier^000000.",
+		},
+		identifiedDisplayName = "Infinity Shadow Earring",
+		identifiedResourceName = "??????",
+		identifiedDescriptionName = {
+			"A sacred earring which is believed to protect it's wearer.",
+			"It also draws the wearer's potential abilities.",
+			"Reduces damage taken from Small, Medium, and Large type monsters by 1%.",
+			"Refined to +7 or more additional reduces damage from Small, Medium, and Large type monsters by 1%.",
+			"Refined to +9 or more additional reduces damage from Small, Medium, and Large type monsters by 1%.",
+			"[^000088+ Infinity Shadow Pendant^000000]",
+			"ATK +1%.",
+			"If the amount of the entire set of refine is equal or superior 15, does delete weapon size monster penalty.",
+			"Class:^6666CC Shadow Equipment^000000",
+			"Location:^6666CC Earring^000000",
+			"Weight:^009900 0^000000",
+			"Level Requirement:^009900 1^000000",
+			"Jobs:^6666CC All classes^000000",
+		},
+		slotCount = 0,
+		ClassNum = 0
+	},
+	[24151] = {
+		unidentifiedDisplayName = "Shadow Accessory",
+		unidentifiedResourceName  = "??????",
+		unidentifiedDescriptionName = {
+			"Unknown Item, can be identified by using a ^6666CCMagnifier^000000.",
+		},
+		identifiedDisplayName = "Infinity Shadow Pendant",
+		identifiedResourceName = "??????",
+		identifiedDescriptionName = {
+			"A sacred necklace which is believed to protect its wearer.",
+			"It also draws the wearer's potential abilities.",
+			"Reduces damage taken from Small, Medium, and Large type monsters by 1%.",
+			"Refined to +7 or more additional reduces damage from Small, Medium, and Large type monsters by 1%.",
+			"Refined to +9 or more additional reduces damage from Small, Medium, and Large type monsters by 1%.",
+			"[^000088+ Infinity Shadow Earring^000000]",
+			"ATK +1%.",
+			"If the amount of the entire set of refine is equal or superior 15, does delete weapon size monster penalty.",
+			"Class:^6666CC Shadow Equipment^000000",
+			"Location:^6666CC Pendant^000000",
+			"Weight:^009900 0^000000",
+			"Level Requirement:^009900 1^000000",
+			"Jobs:^6666CC All classes^000000",
+		},
+		slotCount = 0,
+		ClassNum = 0
+	},
+	[15141] = {
+		unidentifiedDisplayName = "Armor",
+		unidentifiedResourceName  = "??",
+		unidentifiedDescriptionName = {
+			"Unknown Item, can be identified by using a ^6666CCMagnifier^000000.",
+		},
+		identifiedDisplayName = "Ancient Armor of Rift",
+		identifiedResourceName = "?????",
+		identifiedDescriptionName = {
+			"An armor obtained from infinite space that emanating strange aura.",
+			"MaxHP +1000",
+			"MaxSP -100",
+			"Refined to +7, MaxHP +400.",
+			"Refined to +9, MaxHP +600.",
+			"[+^0000FFAncient Decoration of Rift^000000]",
+			"MaxSP +100",
+			"Uninterruptable skill cast.",
+			"[^0000FFRift Armor Set^000000]",
+			"^3CB371Ancient Armor of Rift^000000",
+			"^3CB371Ancient Decoration of Rift^000000",
+			"^3CB371Manteau of Rift^000000",
+			"^3CB371Shoes of Rift^000000",
+			"MaxHP +1000",
+			"Increase healing rate from skills by 5%,",
+			"and additional healing received increase depend on total sum of refine set. (up to +30 total refine level)",
+			"Class:^6666CC Armor^000000",
+			"Defense:^0000FF 30^000000",
+			"Weight:^009900 50^000000",
+			"Level Requirement:^009900 100^000000",
+			"Jobs:^6666CC All classes^000000",
+		},
+		slotCount = 1,
+		ClassNum = 0
+	},
+	[19033] = {
+		unidentifiedDisplayName = "Hairband",
+		unidentifiedResourceName  = "?",
+		unidentifiedDescriptionName = {
+			"Unknown Item, can be identified by using a ^6666CCMagnifier^000000.",
+		},
+		identifiedDisplayName = "Ancient Decoration of Rift",
+		identifiedResourceName = "?????",
+		identifiedDescriptionName = {
+			"An armor obtained from infinite space that emanating strange aura.",
+			"MaxHP +1000",
+			"Refined to +7, MaxHP +400.",
+			"Refined to +9, MaxHP +600.",
+			"Class:^6666CC Headgear^000000",
+			"Defense:^0000FF 2^000000",
+			"Location:^6666CC Upper^000000",
+			"Weight:^009900 20^000000",
+			"Level Requirement:^009900 100^000000",
+			"Jobs:^6666CC All classes^000000",
+		},
+		slotCount = 1,
+		ClassNum = 376
+	},
+	[20779] = {
+		unidentifiedDisplayName = "Garment",
+		unidentifiedResourceName  = "??",
+		unidentifiedDescriptionName = {
+			"Unknown Item, can be identified by using a ^6666CCMagnifier^000000.",
+		},
+		identifiedDisplayName = "Rift Manteau",
+		identifiedResourceName = "?????",
+		identifiedDescriptionName = {
+			"An armor obtained from infinite space that emanating strange aura.",
+			"MaxHP +300",
+			"MaxSP -50",
+			"Refined to +7, MaxHP +400.",
+			"Refined to +9, MaxHP +600.",
+			"Class:^6666CC Garment^000000",
+			"Defense:^0000FF 16^000000",
+			"Weight:^009900 50^000000",
+			"Level Requirement:^009900 100^000000",
+			"Jobs:^6666CC All classes^000000",
+		},
+		slotCount = 1,
+		ClassNum = 0
+	},
+	[22075] = {
+		unidentifiedDisplayName = "Shoes",
+		unidentifiedResourceName  = "??",
+		unidentifiedDescriptionName = {
+			"Unknown Item, can be identified by using a ^6666CCMagnifier^000000.",
+		},
+		identifiedDisplayName = "Shoes of Rift",
+		identifiedResourceName = "???",
+		identifiedDescriptionName = {
+			"An armor obtained from infinite space that emanating strange aura.",
+			"MaxHP +300",
+			"MaxSP -50",
+			"Refined to +7, MaxHP +400.",
+			"Refined to +9, MaxHP +600.",
+			"Class:^6666CC Footgear^000000",
+			"Defense:^0000FF 12^000000",
+			"Weight:^009900 25^000000",
+			"Level Requirement:^009900 100^000000",
+			"Jobs:^6666CC All classes^000000",
+		},
+		slotCount = 1,
+		ClassNum = 0
+	},

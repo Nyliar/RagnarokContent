@@ -1,0 +1,2 @@
+//RATHENA
+22537,prize-of-hero,Prise of Hero,2,50,,50,,,,,0xFFFFFFFF,63,2,,,,,,{ monster "this",-1,-1,"--ja--",-1-MOBG_Branch_Of_Dead_Tree,1,""; },{},{}

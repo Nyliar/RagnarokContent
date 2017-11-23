@@ -1,0 +1,2383 @@
+//RATHENA
+3384,MIN_PORING,Infinite Poring,Infinite Poring,100,25000,1,27,20,1,8,9,2,5,6,1,1,0,6,5,10,12,1,3,21,0x83,400,1872,672,480,0,0,0,0,0,0,0,909,7000,1202,100,938,400,512,1000,713,1500,512,150,619,20,0,0,0,0,4001,1
+3385,MIN_LUNATIC,Infinite Lunatic,Infinite Lunatic,100,25000,1,36,27,1,11,12,18,0,10,3,3,0,8,5,10,12,0,2,60,0x81,200,1456,456,336,0,0,0,0,0,0,0,705,6500,949,1000,2262,4,0,0,601,500,515,1100,622,20,0,0,0,0,4006,1
+3386,MIN_FABRE,Infinite Fabre,Infinite Fabre,100,25000,1,54,41,1,12,15,24,0,12,5,5,5,12,5,10,12,0,4,22,0x2000081,400,1672,672,480,0,0,0,0,0,0,0,914,6500,949,500,1502,80,721,5,511,700,705,1000,1501,200,0,0,0,0,4002,1
+3387,MIN_PICKY,Infinite Picky,Infinite Picky,100,25000,1,63,47,1,18,19,21,3,14,9,10,0,10,3,10,12,0,2,23,0x81,200,988,288,168,0,0,0,0,0,0,0,916,9000,949,700,2302,150,507,550,519,300,715,50,0,0,0,0,0,0,4008,1
+3389,MIN_WILOW,Infinite Willow,Infinite Willow,100,25000,1,63,47,1,13,18,38,2,13,3,8,5,12,5,10,12,1,3,22,0x81,200,1672,672,432,0,0,0,0,0,0,0,902,9000,1019,100,907,1500,516,700,1068,3500,1067,2000,1066,1000,0,0,0,0,4010,1
+3390,MIN_SPORE,Infinite Spore,Infinite Spore,100,25000,1,117,87,1,25,33,12,10,15,5,10,0,12,0,10,12,1,3,21,0x81,200,1872,672,288,0,0,0,0,0,0,0,921,9000,507,800,510,50,743,10,2220,40,7033,5,578,600,0,0,0,0,4022,1
+3391,MIN_POPORING,Infinite Poporing,Infinite Poporing,100,25000,1,198,224,1,74,94,36,17,17,26,20,18,36,5,10,12,1,3,25,0x83,300,1672,672,480,0,0,0,0,0,0,0,938,5500,910,1500,511,500,514,200,512,5,1207,5,512,250,0,0,0,0,4033,1
+3392,MIN_SMOKIE,Infinite Smokie,Infinite Smokie,100,25000,1,180,203,1,70,81,26,0,16,34,16,5,27,5,10,12,0,2,22,0x91,200,1576,576,420,0,0,0,0,0,0,0,945,5500,919,5500,516,800,2213,1,754,2,912,5,729,2,0,0,0,0,4044,1
+3393,MIN_DOKEBI,Infinite Dokebi,Infinite Dokebi,100,25000,1,675,759,1,317,347,85,20,52,56,35,20,60,25,10,12,0,6,27,0x2000091,250,1156,456,384,0,0,0,0,0,0,0,1021,9000,757,150,1517,2,1613,1,969,1,1501,300,1005,5,0,0,0,0,4098,1
+3394,MIN_BIGFOOT,Infinite Bigfoot,Infinite Bigfoot,100,25000,1,180,203,1,50,62,55,7,18,4,7,0,12,0,10,12,2,2,22,0x91,300,1260,192,192,0,0,0,0,0,0,0,948,9000,2289,5,919,5000,740,80,516,1500,518,450,756,43,0,0,0,0,4074,1
+3395,MIN_WORM_TAIL,Infinite WormTail,Infinite WormTail,100,25000,1,117,87,1,22,27,16,0,10,6,14,5,12,35,10,12,1,3,22,0x91,200,1048,48,192,0,0,0,0,0,0,0,993,60,1011,25,906,5500,1408,30,508,70,721,5,10015,100,0,0,0,0,4034,1
+3396,MIN_WOLF,Infinite Wolf,Infinite Wolf,100,25000,1,342,386,1,80,91,55,3,27,24,30,15,33,5,10,12,1,2,22,0x1089,200,1054,504,432,0,0,0,0,0,0,0,1011,20,920,9000,2308,10,517,650,528,1050,919,5500,578,600,0,0,0,0,4029,1
+3397,MIN_SNAKE,Infinite Boa,Infinite Boa,100,25000,1,117,87,1,23,28,9,8,10,8,18,10,14,15,10,12,1,2,22,0x81,200,1576,576,576,0,0,0,0,0,0,0,926,9000,1117,15,507,900,1011,35,937,800,954,1,578,600,0,0,0,0,4037,1
+3398,MIN_ANACONDAQ,Infinite Anacondaq,Infinite Anacondaq,100,25000,1,1602,1202,1,388,443,92,0,79,46,28,43,56,25,10,12,1,2,25,0x91,200,1576,576,576,0,0,0,0,0,0,0,6247,200,937,9000,0,0,926,1500,936,200,508,150,756,50,0,0,0,0,4062,1
+3399,MIN_MARIN,Infinite Marin,Infinite Marin,100,25000,1,282,317,1,69,83,32,8,24,5,10,5,30,15,10,12,1,3,41,0x83,400,1872,672,480,0,0,0,0,0,0,0,910,3200,938,1500,700,100,720,40,510,75,529,350,5035,1,0,0,0,0,4196,1
+3400,MIN_MUKA,Infinite Muka,Infinite Muka,100,25000,1,144,162,1,66,75,28,0,18,9,28,5,43,5,10,12,2,3,22,0x81,300,1960,960,384,0,0,0,0,0,0,0,993,70,952,9000,713,2000,511,400,507,1000,1451,50,1002,250,0,0,0,0,4036,1
+3401,MIN_PECOPECO,Infinite Peco,Infinite Peco,100,25000,1,162,183,1,76,83,48,0,21,10,13,5,28,5,10,12,2,2,23,0x1089,200,1564,864,576,0,0,0,0,0,0,0,925,9000,2402,20,508,200,507,900,1604,100,0,0,582,1000,0,0,0,0,4031,1
+3402,MIN_DENIRO,Infinite Deniro,Infinite Deniro,100,25000,1,207,233,1,45,61,52,16,15,16,30,10,23,15,10,12,0,4,22,0x2001081,150,1288,288,576,0,0,0,0,0,0,0,955,9000,910,3000,938,1200,990,50,1001,8,1002,450,757,34,0,0,0,0,4043,1
+3403,MIN_PIERE,Infinite Piere,Infinite Piere,100,25000,1,216,243,1,47,67,57,16,19,19,36,8,27,15,10,12,0,4,22,0x2001081,200,1288,288,576,0,0,0,0,0,0,0,955,9000,910,1100,938,600,992,30,1001,5,1002,400,757,31,0,0,0,0,4043,1
+3404,MIN_ANDRE,Infinite Andre,Infinite Andre,100,25000,1,216,243,1,51,72,55,16,11,20,40,10,24,10,10,12,0,4,22,0x2001081,300,1288,288,384,0,0,0,0,0,0,0,955,9000,910,1000,938,500,993,50,1001,4,1002,350,757,28,0,0,0,0,4043,1
+3405,MIN_GOLEM,Infinite Golem,Infinite Golem,100,25000,1,540,608,1,198,223,190,12,70,27,67,5,31,5,10,12,2,0,60,0x91,300,1608,816,396,0,0,0,0,0,0,0,999,150,953,9000,912,220,757,70,2146,5,715,200,998,350,0,0,0,0,4072,1
+3406,MIN_SCORPION,Infinite Scorpion,Infinite Scorpion,100,25000,1,108,81,1,33,40,16,5,12,15,10,5,19,5,10,12,0,4,23,0x2003091,200,1564,864,576,0,0,0,0,0,0,0,990,70,904,5500,757,57,943,210,7041,100,508,200,625,20,0,0,0,0,4068,1
+3407,MIN_CHONCHON,Infinite Chonchon,Infinite Chonchon,100,25000,1,45,36,1,11,14,27,0,13,4,4,0,8,5,10,12,0,4,24,0x2000081,200,1076,576,480,0,0,0,0,0,0,0,998,50,935,6500,909,1500,1205,55,601,100,742,5,1002,150,0,0,0,0,4009,1
+3408,MIN_METALLER,Infinite Metaller,Infinite Metaller,100,25000,1,450,507,1,187,228,72,12,52,24,10,0,47,31,10,12,1,4,23,0x200108B,200,1708,1008,540,0,0,0,0,0,0,0,990,60,940,6500,911,400,757,49,707,20,935,3000,1914,10,0,0,0,0,4057,1
+3409,MIN_SAND_MAN,Infinite Sandman,Infinite Sandman,100,25000,1,626,705,1,156,212,126,24,44,8,55,15,31,25,10,12,1,0,62,0x3885,250,1672,720,288,0,0,0,0,0,0,0,997,35,1056,5335,757,118,7043,350,1001,200,1257,1,1622,5,0,0,0,0,4101,1
+3410,MIN_RAGGLER,Infinite Raggler,Infinite Raggler,100,25000,1,369,414,1,72,111,56,10,30,42,38,15,54,27,10,12,0,2,24,0x3695,200,1000,900,384,0,0,0,0,0,0,0,7053,3000,916,5000,645,200,514,200,992,90,2225,7,756,32,0,0,0,0,4186,1
+3411,MIN_DRAGON_TAIL,Infinite Dragon Tail,Infinite Dragon Tail,100,25000,1,1264,1422,1,182,217,63,25,61,65,35,40,52,20,10,12,1,4,44,0x2003695,175,862,534,312,0,0,0,0,0,0,0,7064,4413,1096,400,943,800,2207,8,2226,2,601,300,602,150,0,0,0,0,4178,1
+3412,MIN_GREEN_IGUANA,Infinite Green Iguana,Infinite Green Iguana,100,25000,1,486,548,1,139,174,96,18,58,42,22,5,45,17,10,12,1,2,42,0x83,200,1152,1152,480,0,0,0,0,0,0,0,521,1500,903,1000,520,1000,511,1000,528,2000,606,10,6264,500,0,0,0,0,4377,1
+3413,MIN_SEE_OTTER,Infinite Sea Otter,Infinite Sea Otter,100,25000,1,428,480,1,83,125,31,18,32,26,33,26,41,28,10,12,1,2,61,0x3885,190,1132,583,532,0,0,0,0,0,0,0,722,150,965,5500,7065,4365,725,50,726,50,746,650,7053,1200,0,0,0,0,4326,1
+3414,MIN_GALAPAGO,Infinite Galapago,Infinite Galapago,100,25000,1,342,386,1,68,103,70,16,30,28,29,18,30,16,10,12,0,2,22,0x108B,165,1430,1080,1080,0,0,0,0,0,0,0,7053,5335,6263,500,508,3500,606,100,6264,500,5111,1,582,1000,0,0,0,0,4152,1
+3415,MIN_FUR_SEAL,Infinite Seal,Infinite Seal,100,25000,1,360,405,1,87,127,42,16,37,40,30,39,35,19,10,12,1,2,21,0x3885,200,1612,622,583,0,0,0,0,0,0,0,912,4365,510,250,2310,5,7053,1200,1452,1,525,200,746,120,0,0,0,0,4312,1
+3416,MIN_ALLIGATOR,Infinite Alligator,Infinite Alligator,100,25000,1,486,548,1,150,187,62,30,47,48,24,15,36,26,10,12,1,2,21,0x91,200,1100,900,480,0,0,0,0,0,0,0,912,1000,1099,600,7003,2000,608,50,0,0,0,0,756,129,0,0,0,0,4252,1
+3417,MIN_MEGALODON,Infinite Megalodon,Infinite Megalodon,100,25000,1,342,386,1,117,149,52,28,35,24,30,28,29,15,10,12,1,1,29,0x81,200,2492,792,432,0,0,0,0,0,0,0,959,5500,932,1500,510,80,717,120,719,10,603,2,624,20,0,0,0,0,4067,1
+3418,MIN_TRI_JOINT,Infinite Tri Joint,Infinite Tri Joint,100,25000,1,347,297,1,278,306,22,5,1,33,24,10,55,20,10,12,0,4,22,0x2003695,200,860,660,624,0,0,0,0,0,0,0,7053,100,943,380,606,200,993,160,1001,140,0,0,757,106,0,0,0,0,4308,1
+3419,MIN_MEGALITH,Infinite Megalith,Infinite Megalith,100,25000,1,594,669,9,116,146,66,18,57,14,35,10,90,3,10,12,2,0,80,0x84,200,1332,1332,672,0,0,0,0,0,0,0,912,100,7049,1000,617,1,0,0,0,0,985,61,757,207,0,0,0,0,4200,1
+3420,MIN_DRYAD,Infinite Dryad,Infinite Dryad,100,25000,1,837,939,3,266,301,153,8,54,14,40,35,67,10,10,12,1,3,82,0x3885,170,950,2520,576,0,0,0,0,0,0,0,7197,5335,7198,1000,7188,3000,6265,500,1964,1,7939,100,7100,3000,0,0,0,0,4177,1
+3421,MIN_TOAD,Infinite Toad,Infinite Toad,100,900000,1,162,183,1,70,89,24,6,32,19,27,10,24,5,10,12,1,5,21,0x6203695,200,1236,336,432,0,0,0,0,0,0,0,2244,50,518,2000,729,1000,7938,500,970,100,971,100,5125,1000,6905,10000,0,0,4642,1
+3422,MIN_VAGABOND_WOLF,Infinite Vagabond Wolf,Infinite Vagabond Wolf,100,900000,1422,2601,1,399,445,60,102,51,72,63,55,29,90,15,10,12,1,2,22,0x6203695,150,1048,648,432,0,0,0,0,0,0,0,2248,200,920,8000,728,1500,1148,100,2521,1000,7938,500,626,50,6905,10000,0,0,4643,1
+3423,MIN_VOCAL,Infinite Vocal,Infinite Vocal,100,900000,1,99,79,1,71,82,77,26,77,26,26,30,53,40,10,12,1,4,22,0x2003695,200,1080,648,480,0,0,0,0,0,0,0,2247,50,940,8000,721,1000,752,1500,2420,1000,7938,500,1917,10,6905,10000,0,0,4644,1
+3424,MIN_ECLIPSE,Infinite Eclipse,Infinite Eclipse,100,900000,207,233,1,60,80,50,20,20,28,35,17,27,5,5,10,12,1,2,60,0x6203695,200,1456,456,336,0,0,0,0,0,0,0,2250,200,507,8000,727,1200,7938,500,706,30,622,50,2355,1000,6905,10000,0,0,4645,1
+3425,MIN_CHIMERA,Infinite Chimera,Infinite Chimera,100,900000,1,5168,4698,1,980,1128,159,10,1,38,110,88,83,85,10,12,2,2,63,0x6203695,200,772,672,360,0,0,0,0,0,0,0,7054,5335,1048,2500,568,1000,1306,1,7295,1500,1364,1,984,160,6905,10000,0,0,4646,1
+3426,MIN_EDDGA,Infinite Eddga,Infinite Eddga,100,1850000,1000000,198000,148500,1,866,1342,166,70,92,80,103,66,90,85,10,12,2,2,23,0x6283695,300,872,1344,432,99000,1029,5000,1030,1000,994,3000,1133,150,2268,250,518,10000,1258,500,1030,250,985,2300,13046,100,6905,10000,0,0,4648,1
+3427,MIN_OSIRIS,Infinite Osiris,Infinite Osiris,100,2850000,2000000,245520,200880,1,1580,2483,172,164,97,99,86,131,145,67,10,12,1,1,89,0x6283695,100,1072,672,384,122760,603,4000,608,3000,751,500,617,2000,1232,150,2235,200,1255,600,1009,1000,5053,150,1285,100,6905,10000,0,0,4647,1
+3428,MIN_PHREEONI,Infinite Phreeoni,Infinite Phreeoni,100,4750000,4000000,116000,180000,1,630,1597,269,98,88,70,112,87,102,71,10,12,2,2,60,0x6283695,200,1020,1020,288,58000,1008,500,730,1000,1000,4000,1015,9700,1223,500,1236,150,1014,5000,2288,300,985,2900,13047,100,6905,10000,0,0,4649,1
+3429,MIN_ORK_HERO,Infinite Orc Hero,Infinite Orc Hero,100,6650000,6000000,106920,97200,1,662,1103,197,70,97,82,107,71,144,43,10,12,2,7,42,0x6283695,150,1678,780,648,53460,725,2000,607,1500,999,5000,968,9700,10018,500,1366,150,2106,250,1124,1000,985,4559,1387,100,6905,10000,0,0,4650,1
+3430,MIN_TAO_GUNKA,Infinite Tao Gunka,Infinite Tao Gunka,100,8550000,8000000,900000,720000,2,2890,4150,404,143,135,175,98,110,199,66,10,12,2,6,60,0x6283695,150,1020,288,144,450000,984,6000,617,3000,505,6000,7300,4850,7067,4850,728,1000,2296,400,504,3000,12738,200,2231,5,6905,10000,0,0,4651,1
+
+//HERCULES
+{
+	Id: 3384
+	SpriteName: "MIN_PORING"
+	Name: "Infinite Poring"
+	Lv: 100
+	Hp: 25000
+	Sp: 1
+	Exp: 36
+	JExp: 20
+	AttackRange: 1
+	Attack: [8, 1]
+	Def: 2
+	Mdef: 5
+	Stats: {
+		Str: 6
+		Agi: 1
+		Vit: 1
+		Int: 0
+		Dex: 6
+		Luk: 5
+	}
+	ViewRange: 10
+	ChaseRange: 12
+	Size: "Size_Medium"
+	Race: "RC_Plant"
+	Element: ("Ele_Water", 1)
+	Mode: {
+		CanMove: true
+		Looter: true
+		CanAttack: true
+	}
+	MoveSpeed: 400
+	AttackDelay: 1872
+	AttackMotion: 672
+	DamageMotion: 480
+	MvpExp: 0
+	Drops: {
+		Jellopy: 7000
+		Knife_: 100
+		Sticky_Mucus: 400
+		Apple: 1000
+		Empty_Bottle: 1500
+		Apple: 150
+		Unripe_Apple: 20
+		Poring_Card: 1
+	}
+},
+{
+	Id: 3385
+	SpriteName: "MIN_LUNATIC"
+	Name: "Infinite Lunatic"
+	Lv: 100
+	Hp: 25000
+	Sp: 1
+	Exp: 36
+	JExp: 27
+	AttackRange: 1
+	Attack: [11, 1]
+	Def: 18
+	Mdef: 0
+	Stats: {
+		Str: 10
+		Agi: 3
+		Vit: 3
+		Int: 0
+		Dex: 8
+		Luk: 5
+	}
+	ViewRange: 10
+	ChaseRange: 12
+	Size: "Size_Small"
+	Race: "RC_Brute"
+	Element: ("Ele_Neutral", 3)
+	Mode: {
+		CanMove: true
+		CanAttack: true
+	}
+	MoveSpeed: 200
+	AttackDelay: 1456
+	AttackMotion: 456
+	DamageMotion: 336
+	MvpExp: 0
+	Drops: {
+		Clover: 6500
+		Feather: 1000
+		Pierrot_Nose: 4
+		Apple: 2000
+		Red_Herb: 600
+		Carrot: 1100
+		Rainbow_Carrot: 20
+		Lunatic_Card: 1
+	}
+},
+{
+	Id: 3386
+	SpriteName: "MIN_FABRE"
+	Name: "Infinite Fabre"
+	Lv: 100
+	Hp: 25000
+	Sp: 1
+	Exp: 54
+	JExp: 41
+	AttackRange: 1
+	Attack: [12, 3]
+	Def: 24
+	Mdef: 0
+	Stats: {
+		Str: 12
+		Agi: 5
+		Vit: 5
+		Int: 5
+		Dex: 12
+		Luk: 5
+	}
+	ViewRange: 10
+	ChaseRange: 12
+	Size: "Size_Small"
+	Race: "RC_Insect"
+	Element: ("Ele_Earth", 1)
+	Mode: {
+		CanMove: true
+		CanAttack: true
+		Detector: true
+	}
+	MoveSpeed: 400
+	AttackDelay: 1672
+	AttackMotion: 672
+	DamageMotion: 480
+	MvpExp: 0
+	Drops: {
+		Fluff: 6500
+		Feather: 500
+		Club_: 80
+		Azure_Jewel: 5
+		Green_Herb: 700
+		Clover: 1000
+		Club: 200
+		Fabre_Card: 1
+	}
+},
+{
+	Id: 3387
+	SpriteName: "MIN_PICKY"
+	Name: "Infinite Picky"
+	Lv: 100
+	Hp: 25000
+	Sp: 1
+	Exp: 63
+	JExp: 47
+	AttackRange: 1
+	Attack: [18, 1]
+	Def: 21
+	Mdef: 3
+	Stats: {
+		Str: 14
+		Agi: 9
+		Vit: 10
+		Int: 0
+		Dex: 10
+		Luk: 3
+	}
+	ViewRange: 10
+	ChaseRange: 12
+	Size: "Size_Small"
+	Race: "RC_Brute"
+	Element: ("Ele_Fire", 1)
+	Mode: {
+		CanMove: true
+		CanAttack: true
+	}
+	MoveSpeed: 200
+	AttackDelay: 988
+	AttackMotion: 288
+	DamageMotion: 168
+	MvpExp: 0
+	Drops: {
+		Feather_Of_Birds: 9000
+		Feather: 700
+		Cotton_Shirt_: 150
+		Red_Herb: 550
+		Milk: 300
+		Yellow_Gemstone: 50
+		Picky_Card: 1
+	}
+},
+3388,MIN_CONDOR,Infinite Condor,Infinite Condor,100,25000,1,81,60,1,14,20,7,5,14,7,6,0,13,5,10,12,1,2,24,0x1081,150,1148,648,480,0,0,0,0,0,0,0,917,9000,1702,150,715,80,1750,5500,517,400,916,2000,582,600,0,0,0,0,4015,1
+{
+	Id: 3388
+	SpriteName: "MIN_CONDOR"
+	Name: "Infinite Condor"
+	Lv: 100
+	Hp: 25000
+	Sp: 1
+	Exp: 81
+	JExp: 60
+	AttackRange: 1
+	Attack: [14, 6]
+	Def: 7
+	Mdef: 5
+	Stats: {
+		Str: 14
+		Agi: 7
+		Vit: 6
+		Int: 0
+		Dex: 13
+		Luk: 5
+	}
+	ViewRange: 10
+	ChaseRange: 12
+	Size: "Size_Medium"
+	Race: "RC_Brute"
+	Element: ("Ele_Wind", 1)
+	Mode: {
+		CanMove: true
+		CanAttack: true
+		ChangeTargetMelee: true
+	}
+	MoveSpeed: 150
+	AttackDelay: 1148
+	AttackMotion: 648
+	DamageMotion: 480
+	MvpExp: 0
+	Drops: {
+		Talon: 9000
+		Bow_: 150
+		Yellow_Gemstone: 80
+		Arrow: 5500
+		Meat: 400
+		Feather_Of_Birds: 2000
+		Orange: 600
+		Condor_Card: 1
+	}
+},
+{
+	Id: 3389
+	SpriteName: "MIN_WILOW"
+	Name: "Infinite Willow"
+	Lv: 100
+	Hp: 25000
+	Sp: 1
+	Exp: 63
+	JExp: 47
+	AttackRange: 1
+	Attack: [13, 5]
+	Def: 38
+	Mdef: 2
+	Stats: {
+		Str: 13
+		Agi: 3
+		Vit: 8
+		Int: 5
+		Dex: 12
+		Luk: 5
+	}
+	ViewRange: 10
+	ChaseRange: 12
+	Size: "Size_Medium"
+	Race: "RC_Plant"
+	Element: ("Ele_Earth", 1)
+	Mode: {
+		CanMove: true
+		CanAttack: true
+	}
+	MoveSpeed: 200
+	AttackDelay: 1672
+	AttackMotion: 672
+	DamageMotion: 432
+	MvpExp: 0
+	Drops: {
+		Tree_Root: 9000
+		Wooden_Block: 100
+		Resin: 1500
+		Sweet_Potato: 700
+		Tree_Of_Archer_3: 3500
+		Tree_Of_Archer_2: 2000
+		Tree_Of_Archer_1: 1000
+		Wilow_Card: 1
+	}
+},
+{
+	Id: 3390
+	SpriteName: "MIN_SPORE"
+	Name: "Infinite Spore"
+	Lv: 100
+	Hp: 25000
+	Sp: 1
+	Exp: 117
+	JExp: 87
+	AttackRange: 1
+	Attack: [25, 8]
+	Def: 12
+	Mdef: 10
+	Stats: {
+		Str: 15
+		Agi: 5
+		Vit: 10
+		Int: 0
+		Dex: 12
+		Luk: 0
+	}
+	ViewRange: 10
+	ChaseRange: 12
+	Size: "Size_Medium"
+	Race: "RC_Plant"
+	Element: ("Ele_Water", 1)
+	Mode: {
+		CanMove: true
+		CanAttack: true
+	}
+	MoveSpeed: 200
+	AttackDelay: 1872
+	AttackMotion: 672
+	DamageMotion: 288
+	MvpExp: 0
+	Drops: {
+		Mushroom_Spore: 9000
+		Red_Herb: 800
+		Blue_Herb: 50
+		Spore_Doll: 10
+		Hat: 40
+		Poison_Spore: 5
+		Strawberry: 600
+		Spore_Card: 1
+	}
+},
+{
+	Id: 3391
+	SpriteName: "MIN_POPORING"
+	Name: "Infinite Poporing"
+	Lv: 100
+	Hp: 25000
+	Sp: 1
+	Exp: 198
+	JExp: 224
+	AttackRange: 1
+	Attack: [74, 20]
+	Def: 36
+	Mdef: 17
+	Stats: {
+		Str: 17
+		Agi: 26
+		Vit: 20
+		Int: 18
+		Dex: 36
+		Luk: 5
+	}
+	ViewRange: 10
+	ChaseRange: 12
+	Size: "Size_Medium"
+	Race: "RC_Plant"
+	Element: ("Ele_Poison", 1)
+	Mode: {
+		CanMove: true
+		Looter: true
+		CanAttack: true
+	}
+	MoveSpeed: 300
+	AttackDelay: 1672
+	AttackMotion: 672
+	DamageMotion: 480
+	MvpExp: 0
+	Drops: {
+		Sticky_Mucus: 5500
+		Garlet: 1500
+		Green_Herb: 500
+		Grape: 200
+		Apple: 5
+		Main_Gauche: 5
+		Apple: 250
+		Poporing_Card: 1
+	}
+},
+{
+	Id: 3392
+	SpriteName: "MIN_SMOKIE"
+	Name: "Infinite Smokie"
+	Lv: 100
+	Hp: 25000
+	Sp: 1
+	Exp: 180
+	JExp: 203
+	AttackRange: 1
+	Attack: [70, 11]
+	Def: 26
+	Mdef: 0
+	Stats: {
+		Str: 16
+		Agi: 34
+		Vit: 16
+		Int: 5
+		Dex: 27
+		Luk: 5
+	}
+	ViewRange: 10
+	ChaseRange: 12
+	Size: "Size_Small"
+	Race: "RC_Brute"
+	Element: ("Ele_Earth", 1)
+	Mode: {
+		CanMove: true
+		CastSensorIdle: true
+		CanAttack: true
+	}
+	MoveSpeed: 200
+	AttackDelay: 1576
+	AttackMotion: 576
+	DamageMotion: 420
+	MvpExp: 0
+	Drops: {
+		Raccoon_Leaf: 5500
+		Animals_Skin: 5500
+		Sweet_Potato: 800
+		Cat_Hairband: 1
+		Raccoondog_Doll: 2
+		Zargon: 5
+		Bluish_Green_Jewel: 2
+		Smokie_Card: 1
+	}
+},
+{
+	Id: 3393
+	SpriteName: "MIN_DOKEBI"
+	Name: "Infinite Dokebi"
+	Lv: 100
+	Hp: 25000
+	Sp: 1
+	Exp: 708
+	JExp: 759
+	AttackRange: 1
+	Attack: [333, 30]
+	Def: 85
+	Mdef: 20
+	Stats: {
+		Str: 52
+		Agi: 56
+		Vit: 35
+		Int: 20
+		Dex: 66
+		Luk: 25
+	}
+	ViewRange: 10
+	ChaseRange: 12
+	Size: "Size_Small"
+	Race: "RC_Demon"
+	Element: ("Ele_Dark", 1)
+	Mode: {
+		CanMove: true
+		CastSensorIdle: true
+		CanAttack: true
+		Detector: true
+	}
+	MoveSpeed: 250
+	AttackDelay: 1156
+	AttackMotion: 456
+	DamageMotion: 384
+	MvpExp: 0
+	Drops: {
+		Dokkaebi_Horn: 9000
+		Elunium_Stone: 150
+		Sword_Mace_: 2
+		Mighty_Staff: 1
+		Gold: 1
+		Horn_Protector: 10
+		Hammer_Of_Blacksmith: 5
+		Dokebi_Card: 1
+	}
+},
+{
+	Id: 3394
+	SpriteName: "MIN_BIGFOOT"
+	Name: "Infinite Bigfoot"
+	Lv: 100
+	Hp: 25000
+	Sp: 1
+	Exp: 180
+	JExp: 203
+	AttackRange: 1
+	Attack: [50, 12]
+	Def: 55
+	Mdef: 7
+	Stats: {
+		Str: 18
+		Agi: 4
+		Vit: 7
+		Int: 0
+		Dex: 12
+		Luk: 0
+	}
+	ViewRange: 10
+	ChaseRange: 12
+	Size: "Size_Large"
+	Race: "RC_Brute"
+	Element: ("Ele_Earth", 1)
+	Mode: {
+		CanMove: true
+		CastSensorIdle: true
+		CanAttack: true
+	}
+	MoveSpeed: 300
+	AttackDelay: 1260
+	AttackMotion: 192
+	DamageMotion: 192
+	MvpExp: 0
+	Drops: {
+		Bears_Foot: 9000
+		Poo_Poo_Hat: 5
+		Animals_Skin: 5000
+		Stuffed_Doll: 80
+		Sweet_Potato: 1500
+		Honey: 450
+		Oridecon_Stone: 43
+		BigFoot_Card: 1
+	}
+},
+{
+	Id: 3395
+	SpriteName: "MIN_WORM_TAIL"
+	Name: "Infinite Wormtail"
+	Lv: 100
+	Hp: 25000
+	Sp: 1
+	Exp: 117
+	JExp: 87
+	AttackRange: 1
+	Attack: [22, 5]
+	Def: 16
+	Mdef: 0
+	Stats: {
+		Str: 10
+		Agi: 6
+		Vit: 14
+		Int: 5
+		Dex: 12
+		Luk: 35
+	}
+	ViewRange: 10
+	ChaseRange: 12
+	Size: "Size_Medium"
+	Race: "RC_Plant"
+	Element: ("Ele_Earth", 1)
+	Mode: {
+		CanMove: true
+		CastSensorIdle: true
+		CanAttack: true
+	}
+	MoveSpeed: 200
+	AttackDelay: 1048
+	AttackMotion: 48
+	DamageMotion: 192
+	MvpExp: 0
+	Drops: {
+		Yellow_Live: 60
+		Emveretarcon: 25
+		Pointed_Scale: 5500
+		Pike_: 30
+		Yellow_Herb: 70
+		Azure_Jewel: 5
+		Green_Lace: 100
+		Worm_Tail_Card: 1
+	}
+},
+{
+	Id: 3396
+	SpriteName: "MIN_WOLF"
+	Name: "Infinite Wolf"
+	Lv: 100
+	Hp: 25000
+	Sp: 1
+	Exp: 342
+	JExp: 386
+	AttackRange: 1
+	Attack: [80, 11]
+	Def: 55
+	Mdef: 3
+	Stats: {
+		Str: 27
+		Agi: 24
+		Vit: 30
+		Int: 15
+		Dex: 33
+		Luk: 5
+	}
+	ViewRange: 10
+	ChaseRange: 12
+	Size: "Size_Medium"
+	Race: "RC_Brute"
+	Element: ("Ele_Earth", 1)
+	Mode: {
+		CanMove: true
+		Assist: true
+		CanAttack: true
+		ChangeTargetMelee: true
+	}
+	MoveSpeed: 200
+	AttackDelay: 1054
+	AttackMotion: 504
+	DamageMotion: 432
+	MvpExp: 0
+	Drops: {
+		Emveretarcon: 20
+		Claw_Of_Wolves: 9000
+		Mantle_: 10
+		Meat: 650
+		Monsters_Feed: 1050
+		Animals_Skin: 5500
+		Strawberry: 600
+		Wolf_Card: 1
+	}
+},
+{
+	Id: 3397
+	SpriteName: "MIN_SNAKE"
+	Name: "Infinite Snake"
+	JName: "Infinite Boa"
+	Lv: 100
+	Hp: 25000
+	Sp: 1
+	Exp: 117
+	JExp: 87
+	AttackRange: 1
+	Attack: [23, 5]
+	Def: 9
+	Mdef: 8
+	Stats: {
+		Str: 10
+		Agi: 8
+		Vit: 18
+		Int: 10
+		Dex: 14
+		Luk: 15
+	}
+	ViewRange: 10
+	ChaseRange: 12
+	Size: "Size_Medium"
+	Race: "RC_Brute"
+	Element: ("Ele_Earth", 1)
+	Mode: {
+		CanMove: true
+		CanAttack: true
+	}
+	MoveSpeed: 200
+	AttackDelay: 1576
+	AttackMotion: 576
+	DamageMotion: 576
+	MvpExp: 0
+	Drops: {
+		Scale_Of_Snakes: 9000
+		Katana_: 15
+		Red_Herb: 900
+		Emveretarcon: 35
+		Posionous_Canine: 800
+		Shining_Scales: 1
+		Strawberry: 600
+		Snake_Card: 1
+	}
+},
+{
+	Id: 3398
+	SpriteName: "MIN_ANACONDAQ"
+	Name: "Infinite Anacondaq"
+	Lv: 100
+	Hp: 25000
+	Sp: 1
+	Exp: 1922
+	JExp: 1202
+	AttackRange: 1
+	Attack: [504, 55]
+	Def: 92
+	Mdef: 0
+	Stats: {
+		Str: 79
+		Agi: 46
+		Vit: 28
+		Int: 43
+		Dex: 67
+		Luk: 25
+	}
+	ViewRange: 10
+	ChaseRange: 12
+	Size: "Size_Medium"
+	Race: "RC_Brute"
+	Element: ("Ele_Poison", 1)
+	Mode: {
+		CanMove: true
+		CastSensorIdle: true
+		CanAttack: true
+	}
+	MoveSpeed: 200
+	AttackDelay: 1576
+	AttackMotion: 576
+	DamageMotion: 576
+	MvpExp: 0
+	Drops: {
+		White_Powder: 200
+		Posionous_Canine: 9000
+		Glaive_: 10
+		Scale_Of_Snakes: 1500
+		Scales_Shell: 200
+		Yellow_Herb: 150
+		Oridecon_Stone: 50
+		Anacondaq_Card: 1
+	}
+},
+{
+	Id: 3399
+	SpriteName: "MIN_MARIN"
+	Name: "Infinite Marin"
+	Lv: 100
+	Hp: 25000
+	Sp: 0
+	Exp: 59
+	JExp: 40
+	AttackRange: 1
+	Attack: [39, 43]
+	Def: 0
+	Mdef: 10
+	Stats: {
+		Str: 1
+		Agi: 10
+		Vit: 10
+		Int: 5
+		Dex: 35
+		Luk: 15
+	}
+	ViewRange: 10
+	ChaseRange: 12
+	Size: "Size_Medium"
+	Race: "RC_Plant"
+	Element: ("Ele_Water", 2)
+	Mode: {
+		CanMove: true
+		Looter: true
+		CanAttack: true
+	}
+	MoveSpeed: 400
+	AttackDelay: 1872
+	AttackMotion: 672
+	DamageMotion: 480
+	MvpExp: 0
+	Drops: {
+		Garlet: 3200
+		Sticky_Mucus: 1500
+		Cold_Scroll_2_1: 100
+		Skyblue_Jewel: 40
+		Ube_Jam: 75
+		Candy: 350
+		Poring_Hat: 1
+		Marin_Card: 1
+	}
+},
+{
+	Id: 3400
+	SpriteName: "MIN_MUKA"
+	Name: "Infinite Muka"
+	Lv: 100
+	Hp: 25000
+	Sp: 1
+	Exp: 144
+	JExp: 162
+	AttackRange: 1
+	Attack: [66, 9]
+	Def: 28
+	Mdef: 0
+	Stats: {
+		Str: 18
+		Agi: 9
+		Vit: 28
+		Int: 5
+		Dex: 43
+		Luk: 5
+	}
+	ViewRange: 10
+	ChaseRange: 12
+	Size: "Size_Large"
+	Race: "RC_Plant"
+	Element: ("Ele_Earth", 1)
+	Mode: {
+		CanMove: true
+		CanAttack: true
+	}
+	MoveSpeed: 300
+	AttackDelay: 1960
+	AttackMotion: 960
+	DamageMotion: 384
+	MvpExp: 0
+	Drops: {
+		Yellow_Live: 70
+		Cactus_Needle: 9000
+		Empty_Bottle: 2000
+		Green_Herb: 400
+		Red_Herb: 1000
+		Guisarme: 50
+		Iron_Ore: 250
+		Muka_Card: 1
+	}
+},
+{
+	Id: 3401
+	SpriteName: "MIN_PECOPECO"
+	Name: "Infinite Peco"
+	Lv: 100
+	Hp: 25000
+	Sp: 0
+	Exp: 159
+	JExp: 36
+	AttackRange: 1
+	Attack: [50, 64]
+	Def: 0
+	Mdef: 0
+	Stats: {
+		Str: 1
+		Agi: 13
+		Vit: 13
+		Int: 25
+		Dex: 27
+		Luk: 9
+	}
+	ViewRange: 10
+	ChaseRange: 12
+	Size: "Size_Large"
+	Race: "RC_Brute"
+	Element: ("Ele_Fire", 1)
+	Mode: {
+		CanMove: true
+		CanAttack: true
+	}
+	MoveSpeed: 200
+	AttackDelay: 1564
+	AttackMotion: 864
+	DamageMotion: 576
+	MvpExp: 0
+	Drops: {
+		Bill_Of_Birds: 6000
+		Sandals_: 20
+		Yellow_Herb: 55
+		Red_Herb: 950
+		Wand: 100
+		Orange: 1000
+		Pecopeco_Card: 1
+	}
+},
+{
+	Id: 3402
+	SpriteName: "MIN_DENIRO"
+	Name: "Infinite Deniro"
+	Lv: 100
+	Hp: 25000
+	Sp: 1
+	Exp: 207
+	JExp: 233
+	AttackRange: 1
+	Attack: [45, 16]
+	Def: 52
+	Mdef: 16
+	Stats: {
+		Str: 15
+		Agi: 16
+		Vit: 30
+		Int: 10
+		Dex: 23
+		Luk: 15
+	}
+	ViewRange: 10
+	ChaseRange: 12
+	Size: "Size_Small"
+	Race: "RC_Insect"
+	Element: ("Ele_Earth", 1)
+	Mode: {
+		CanMove: true
+		CanAttack: true
+		Detector: true
+		ChangeTargetMelee: true
+	}
+	MoveSpeed: 150
+	AttackDelay: 1288
+	AttackMotion: 288
+	DamageMotion: 576
+	MvpExp: 0
+	Drops: {
+		Worm_Peelings: 9000
+		Garlet: 3000
+		Sticky_Mucus: 1200
+		Boody_Red: 50
+		Sparkling_Dust: 8
+		Iron_Ore: 450
+		Elunium_Stone: 34
+		Andre_Card: 1
+	}
+},
+{
+	Id: 3403
+	SpriteName: "MIN_PIERE"
+	Name: "Infinite Piere"
+	Lv: 100
+	Hp: 25000
+	Sp: 1
+	Exp: 216
+	JExp: 243
+	AttackRange: 1
+	Attack: [47, 20]
+	Def: 57
+	Mdef: 16
+	Stats: {
+		Str: 19
+		Agi: 19
+		Vit: 36
+		Int: 8
+		Dex: 27
+		Luk: 15
+	}
+	ViewRange: 10
+	ChaseRange: 12
+	Size: "Size_Small"
+	Race: "RC_Insect"
+	Element: ("Ele_Earth", 1)
+	Mode: {
+		CanMove: true
+		CanAttack: true
+		Detector: true
+		ChangeTargetMelee: true
+	}
+	MoveSpeed: 200
+	AttackDelay: 1288
+	AttackMotion: 288
+	DamageMotion: 576
+	MvpExp: 0
+	Drops: {
+		Worm_Peelings: 9000
+		Garlet: 1100
+		Sticky_Mucus: 600
+		Wind_Of_Verdure: 30
+		Sparkling_Dust: 5
+		Iron_Ore: 400
+		Elunium_Stone: 31
+		Andre_Card: 1
+	}
+},
+{
+	Id: 3404
+	SpriteName: "MIN_ANDRE"
+	Name: "Infinite Andre"
+	Lv: 100
+	Hp: 25000
+	Sp: 1
+	Exp: 216
+	JExp: 243
+	AttackRange: 1
+	Attack: [51, 21]
+	Def: 55
+	Mdef: 16
+	Stats: {
+		Str: 11
+		Agi: 20
+		Vit: 40
+		Int: 10
+		Dex: 24
+		Luk: 10
+	}
+	ViewRange: 10
+	ChaseRange: 12
+	Size: "Size_Small"
+	Race: "RC_Insect"
+	Element: ("Ele_Earth", 1)
+	Mode: {
+		CanMove: true
+		CanAttack: true
+		Detector: true
+		ChangeTargetMelee: true
+	}
+	MoveSpeed: 300
+	AttackDelay: 1288
+	AttackMotion: 288
+	DamageMotion: 384
+	MvpExp: 0
+	Drops: {
+		Worm_Peelings: 9000
+		Garlet: 1000
+		Sticky_Mucus: 500
+		Yellow_Live: 50
+		Sparkling_Dust: 4
+		Iron_Ore: 350
+		Elunium_Stone: 28
+		Andre_Card: 1
+	}
+},
+{
+	Id: 3405
+	SpriteName: "MIN_GOLEM"
+	Name: "Infinite Golem"
+	Lv: 100
+	Hp: 25000
+	Sp: 1
+	Exp: 566
+	JExp: 608
+	AttackRange: 1
+	Attack: [208, 25]
+	Def: 190
+	Mdef: 12
+	Stats: {
+		Str: 70
+		Agi: 27
+		Vit: 67
+		Int: 5
+		Dex: 34
+		Luk: 5
+	}
+	ViewRange: 10
+	ChaseRange: 12
+	Size: "Size_Large"
+	Race: "RC_Formless"
+	Element: ("Ele_Neutral", 3)
+	Mode: {
+		CanMove: true
+		CastSensorIdle: true
+		CanAttack: true
+	}
+	MoveSpeed: 300
+	AttackDelay: 1608
+	AttackMotion: 816
+	DamageMotion: 396
+	MvpExp: 0
+	Drops: {
+		Steel: 150
+		Stone_Heart: 9000
+		Zargon: 220
+		Elunium_Stone: 70
+		Siver_Guard: 5
+		Yellow_Gemstone: 200
+		Iron: 350
+		Golem_Card: 1
+	}
+},
+{
+	Id: 3406
+	SpriteName: "MIN_SCORPION"
+	Name: "Infinite Scorpion"
+	Lv: 100
+	Hp: 25000
+	Sp: 1
+	Exp: 108
+	JExp: 81
+	AttackRange: 1
+	Attack: [33, 7]
+	Def: 16
+	Mdef: 5
+	Stats: {
+		Str: 12
+		Agi: 15
+		Vit: 10
+		Int: 5
+		Dex: 19
+		Luk: 5
+	}
+	ViewRange: 10
+	ChaseRange: 12
+	Size: "Size_Small"
+	Race: "RC_Insect"
+	Element: ("Ele_Fire", 1)
+	Mode: {
+		CanMove: true
+		CastSensorIdle: true
+		CanAttack: true
+		Detector: true
+		ChangeTargetMelee: true
+		ChangeTargetChase: true
+	}
+	MoveSpeed: 200
+	AttackDelay: 1564
+	AttackMotion: 864
+	DamageMotion: 576
+	MvpExp: 0
+	Drops: {
+		Boody_Red: 70
+		Scorpions_Tail: 5500
+		Elunium_Stone: 57
+		Solid_Shell: 210
+		Fine_Grit: 100
+		Yellow_Herb: 200
+		Lusty_Iron: 20
+		Scorpion_Card: 1
+	}
+},
+{
+	Id: 3407
+	SpriteName: "MIN_CHONCHON"
+	Name: "Infinite Chonchon"
+	Lv: 100
+	Hp: 25000
+	Sp: 1
+	Exp: 45
+	JExp: 36
+	AttackRange: 1
+	Attack: [11, 3]
+	Def: 27
+	Mdef: 0
+	Stats: {
+		Str: 13
+		Agi: 4
+		Vit: 4
+		Int: 0
+		Dex: 8
+		Luk: 5
+	}
+	ViewRange: 10
+	ChaseRange: 12
+	Size: "Size_Small"
+	Race: "RC_Insect"
+	Element: ("Ele_Wind", 1)
+	Mode: {
+		CanMove: true
+		CanAttack: true
+		Detector: true
+	}
+	MoveSpeed: 200
+	AttackDelay: 1076
+	AttackMotion: 576
+	DamageMotion: 480
+	MvpExp: 0
+	Drops: {
+		Iron: 50
+		Shell: 6500
+		Jellopy: 1500
+		Cutter_: 55
+		Wing_Of_Fly: 100
+		Chonchon_Doll: 5
+		Iron_Ore: 150
+		Chonchon_Card: 1
+	}
+},
+{
+	Id: 3408
+	SpriteName: "MIN_METALLER"
+	Name: "Infinite Metaller"
+	Lv: 100
+	Hp: 25000
+	Sp: 1
+	Exp: 472
+	JExp: 507
+	AttackRange: 1
+	Attack: [196, 41]
+	Def: 72
+	Mdef: 12
+	Stats: {
+		Str: 52
+		Agi: 24
+		Vit: 10
+		Int: 0
+		Dex: 52
+		Luk: 31
+	}
+	ViewRange: 10
+	ChaseRange: 12
+	Size: "Size_Medium"
+	Race: "RC_Insect"
+	Element: ("Ele_Fire", 1)
+	Mode: {
+		CanMove: true
+		Looter: true
+		Assist: true
+		CanAttack: true
+		Detector: true
+		ChangeTargetMelee: true
+	}
+	MoveSpeed: 200
+	AttackDelay: 1708
+	AttackMotion: 1008
+	DamageMotion: 540
+	MvpExp: 0
+	Drops: {
+		Boody_Red: 60
+		Grasshoppers_Leg: 6500
+		Scell: 400
+		Elunium_Stone: 49
+		Singing_Plant: 20
+		Shell: 3000
+		Guitar_Of_Passion: 10
+		Metaller_Card: 1
+	}
+},
+{
+	Id: 3409
+	SpriteName: "MIN_SAND_MAN"
+	Name: "Infinite Sandman"
+	Lv: 100
+	Hp: 25000
+	Sp: 1
+	Exp: 656
+	JExp: 705
+	AttackRange: 1
+	Attack: [164, 56]
+	Def: 126
+	Mdef: 24
+	Stats: {
+		Str: 44
+		Agi: 8
+		Vit: 55
+		Int: 15
+		Dex: 34
+		Luk: 25
+	}
+	ViewRange: 10
+	ChaseRange: 12
+	Size: "Size_Medium"
+	Race: "RC_Formless"
+	Element: ("Ele_Earth", 3)
+	Mode: {
+		CanMove: true
+		Aggressive: true
+		CanAttack: true
+		Angry: true
+		ChangeTargetMelee: true
+		ChangeTargetChase: true
+	}
+	MoveSpeed: 250
+	AttackDelay: 1672
+	AttackMotion: 720
+	DamageMotion: 288
+	MvpExp: 0
+	Drops: {
+		Great_Nature: 35
+		Grit: 5335
+		Elunium_Stone: 118
+		Fine_Sand: 350
+		Sparkling_Dust: 200
+		Katar_Of_Thornbush: 1
+		Hypnotists_Staff_: 5
+		Sand_Man_Card: 1
+	}
+},
+{
+	Id: 3410
+	SpriteName: "MIN_RAGGLER"
+	Name: "Infinite Raggler"
+	Lv: 100
+	Hp: 25000
+	Sp: 1
+	Exp: 369
+	JExp: 414
+	AttackRange: 1
+	Attack: [72, 39]
+	Def: 56
+	Mdef: 10
+	Stats: {
+		Str: 30
+		Agi: 42
+		Vit: 38
+		Int: 15
+		Dex: 54
+		Luk: 27
+	}
+	ViewRange: 10
+	ChaseRange: 12
+	Size: "Size_Small"
+	Race: "RC_Brute"
+	Element: ("Ele_Wind", 1)
+	Mode: {
+		CanMove: true
+		Aggressive: true
+		CastSensorIdle: true
+		CanAttack: true
+		CastSensorChase: true
+		ChangeChase: true
+		ChangeTargetMelee: true
+		ChangeTargetChase: true
+	}
+	MoveSpeed: 200
+	AttackDelay: 1000
+	AttackMotion: 900
+	DamageMotion: 384
+	MvpExp: 0
+	Drops: {
+		Cyfar: 3000
+		Feather_Of_Birds: 5000
+		Center_Potion: 200
+		Grape: 200
+		Wind_Of_Verdure: 90
+		Goggle_: 7
+		Oridecon_Stone: 32
+		Raggler_Card: 1
+	}
+},
+{
+	Id: 3411
+	SpriteName: "MIN_DRAGON_TAIL"
+	Name: "Infinite Dragon Tail"
+	Lv: 100
+	Hp: 25000
+	Sp: 1
+	Exp: 1390
+	JExp: 1422
+	AttackRange: 1
+	Attack: [200, 35]
+	Def: 63
+	Mdef: 25
+	Stats: {
+		Str: 61
+		Agi: 65
+		Vit: 35
+		Int: 40
+		Dex: 62
+		Luk: 20
+	}
+	ViewRange: 10
+	ChaseRange: 12
+	Size: "Size_Medium"
+	Race: "RC_Insect"
+	Element: ("Ele_Wind", 2)
+	Mode: {
+		CanMove: true
+		Aggressive: true
+		CastSensorIdle: true
+		CanAttack: true
+		Detector: true
+		CastSensorChase: true
+		ChangeChase: true
+		ChangeTargetMelee: true
+		ChangeTargetChase: true
+	}
+	MoveSpeed: 175
+	AttackDelay: 862
+	AttackMotion: 534
+	DamageMotion: 312
+	MvpExp: 0
+	Drops: {
+		Dragon_Fly_Wing: 4413
+		Round_Shell: 400
+		Solid_Shell: 800
+		Fancy_Flower: 8
+		Cap: 2
+		Wing_Of_Fly: 300
+		Wing_Of_Butterfly: 150
+		Dragon_Tail_Card: 1
+	}
+},
+{
+	Id: 3412
+	SpriteName: "MIN_GREEN_IGUANA"
+	Name: "Infinite Green Iguana"
+	JName: "Infinite Grove"
+	Lv: 100
+	Hp: 25000
+	Sp: 1
+	Exp: 510
+	JExp: 548
+	AttackRange: 1
+	Attack: [146, 35]
+	Def: 96
+	Mdef: 18
+	Stats: {
+		Str: 58
+		Agi: 42
+		Vit: 22
+		Int: 5
+		Dex: 50
+		Luk: 17
+	}
+	ViewRange: 10
+	ChaseRange: 12
+	Size: "Size_Medium"
+	Race: "RC_Brute"
+	Element: ("Ele_Earth", 2)
+	Mode: {
+		CanMove: true
+		Looter: true
+		CanAttack: true
+	}
+	MoveSpeed: 200
+	AttackDelay: 1152
+	AttackMotion: 1152
+	DamageMotion: 480
+	MvpExp: 0
+	Drops: {
+		Leaflet_Of_Aloe: 1500
+		Reptile_Tongue: 1000
+		Leaflet_Of_Hinal: 1000
+		Green_Herb: 1000
+		Monsters_Feed: 2000
+		Aloebera: 10
+		Melon: 500
+		Green_Iguana_Card: 1
+	}
+},
+{
+	Id: 3413
+	SpriteName: "MIN_SEE_OTTER"
+	Name: "Infinite Sea Otter"
+	Lv: 100
+	Hp: 25000
+	Sp: 1
+	Exp: 428
+	JExp: 480
+	AttackRange: 1
+	Attack: [83, 42]
+	Def: 31
+	Mdef: 18
+	Stats: {
+		Str: 32
+		Agi: 26
+		Vit: 33
+		Int: 26
+		Dex: 41
+		Luk: 28
+	}
+	ViewRange: 10
+	ChaseRange: 12
+	Size: "Size_Medium"
+	Race: "RC_Brute"
+	Element: ("Ele_Water", 3)
+	Mode: {
+		CanMove: true
+		Aggressive: true
+		CanAttack: true
+		Angry: true
+		ChangeTargetMelee: true
+		ChangeTargetChase: true
+	}
+	MoveSpeed: 190
+	AttackDelay: 1132
+	AttackMotion: 583
+	DamageMotion: 532
+	MvpExp: 0
+	Drops: {
+		Scarlet_Jewel: 150
+		Clam_Shell: 5500
+		Sea_Otter_Leather: 4365
+		Red_Jewel: 50
+		Blue_Jewel: 50
+		Glass_Bead: 650
+		Cyfar: 1200
+		See_Otter_Card: 1
+	}
+},
+{
+	Id: 3414
+	SpriteName: "MIN_GALAPAGO"
+	Name: "Infinite Galapago"
+	Lv: 100
+	Hp: 25000
+	Sp: 1
+	Exp: 342
+	JExp: 386
+	AttackRange: 1
+	Attack: [68, 35]
+	Def: 70
+	Mdef: 16
+	Stats: {
+		Str: 30
+		Agi: 28
+		Vit: 29
+		Int: 18
+		Dex: 30
+		Luk: 16
+	}
+	ViewRange: 10
+	ChaseRange: 12
+	Size: "Size_Small"
+	Race: "RC_Brute"
+	Element: ("Ele_Earth", 1)
+	Mode: {
+		CanMove: true
+		Looter: true
+		Assist: true
+		CanAttack: true
+		ChangeTargetMelee: true
+	}
+	MoveSpeed: 165
+	AttackDelay: 1430
+	AttackMotion: 1080
+	DamageMotion: 1080
+	MvpExp: 0
+	Drops: {
+		Cyfar: 5335
+		Coconut_Fruit: 300
+		Yellow_Herb: 3500
+		Aloebera: 100
+		Melon: 300
+		Galapago_Cap: 1
+		Orange: 1000
+		Galapago_Card: 1
+	}
+},
+{
+	Id: 3415
+	SpriteName: "MIN_FUR_SEAL"
+	Name: "Infinite Fur Seal"
+	JName: "Infinite Seal"
+	Lv: 100
+	Hp: 25000
+	Sp: 1
+	Exp: 360
+	JExp: 405
+	AttackRange: 1
+	Attack: [87, 40]
+	Def: 42
+	Mdef: 16
+	Stats: {
+		Str: 37
+		Agi: 40
+		Vit: 30
+		Int: 39
+		Dex: 35
+		Luk: 19
+	}
+	ViewRange: 10
+	ChaseRange: 12
+	Size: "Size_Medium"
+	Race: "RC_Brute"
+	Element: ("Ele_Water", 1)
+	Mode: {
+		CanMove: true
+		Aggressive: true
+		CanAttack: true
+		Angry: true
+		ChangeTargetMelee: true
+		ChangeTargetChase: true
+	}
+	MoveSpeed: 200
+	AttackDelay: 1612
+	AttackMotion: 622
+	DamageMotion: 583
+	MvpExp: 0
+	Drops: {
+		Zargon: 4365
+		Blue_Herb: 250
+		Coat_: 5
+		Cyfar: 1200
+		Guisarme_: 1
+		Panacea: 200
+		Glass_Bead: 120
+		Fur_Seal_Card: 1
+	}
+},
+{
+	Id: 3416
+	SpriteName: "MIN_ALLIGATOR"
+	Name: "Infinite Alligator"
+	Lv: 100
+	Hp: 25000
+	Sp: 1
+	Exp: 510
+	JExp: 548
+	AttackRange: 1
+	Attack: [158, 37]
+	Def: 62
+	Mdef: 30
+	Stats: {
+		Str: 47
+		Agi: 48
+		Vit: 24
+		Int: 15
+		Dex: 40
+		Luk: 26
+	}
+	ViewRange: 10
+	ChaseRange: 12
+	Size: "Size_Medium"
+	Race: "RC_Brute"
+	Element: ("Ele_Water", 1)
+	Mode: {
+		CanMove: true
+		CastSensorIdle: true
+		CanAttack: true
+	}
+	MoveSpeed: 200
+	AttackDelay: 1100
+	AttackMotion: 900
+	DamageMotion: 480
+	MvpExp: 0
+	Drops: {
+		Zargon: 1000
+		Worn_Out_Prison_Uniform: 600
+		Anolian_Skin: 2000
+		Seed_Of_Yggdrasil: 50
+		Oridecon_Stone: 129
+		Alligator_Card: 1
+	}
+},
+{
+	Id: 3417
+	SpriteName: "MIN_MEGALODON"
+	Name: "Infinite Megalodon"
+	Lv: 100
+	Hp: 25000
+	Sp: 1
+	Exp: 342
+	JExp: 386
+	AttackRange: 1
+	Attack: [117, 32]
+	Def: 52
+	Mdef: 28
+	Stats: {
+		Str: 35
+		Agi: 24
+		Vit: 30
+		Int: 28
+		Dex: 29
+		Luk: 15
+	}
+	ViewRange: 10
+	ChaseRange: 12
+	Size: "Size_Medium"
+	Race: "RC_Undead"
+	Element: ("Ele_Undead", 1)
+	Mode: {
+		CanMove: true
+		CanAttack: true
+	}
+	MoveSpeed: 200
+	AttackDelay: 2492
+	AttackMotion: 792
+	DamageMotion: 432
+	MvpExp: 0
+	Drops: {
+		Rotten_Scale: 5500
+		Skel_Bone: 1500
+		Blue_Herb: 80
+		Blue_Gemstone: 120
+		Violet_Jewel: 10
+		Old_Blue_Box: 2
+		Rotten_Fish: 20
+		Megalodon_Card: 1
+	}
+},
+{
+	Id: 3418
+	SpriteName: "MIN_TRI_JOINT"
+	Name: "Infinite Tri Joint"
+	Lv: 100
+	Hp: 25000
+	Sp: 0
+	Exp: 364
+	JExp: 297
+	AttackRange: 1
+	Attack: [292, 28]
+	Def: 22
+	Mdef: 5
+	Stats: {
+		Str: 1
+		Agi: 33
+		Vit: 24
+		Int: 10
+		Dex: 61
+		Luk: 20
+	}
+	ViewRange: 10
+	ChaseRange: 12
+	Size: "Size_Small"
+	Race: "RC_Insect"
+	Element: ("Ele_Earth", 1)
+	Mode: {
+		CanMove: true
+		Aggressive: true
+		CastSensorIdle: true
+		CanAttack: true
+		Detector: true
+		CastSensorChase: true
+		ChangeChase: true
+		ChangeTargetMelee: true
+		ChangeTargetChase: true
+	}
+	MoveSpeed: 200
+	AttackDelay: 860
+	AttackMotion: 660
+	DamageMotion: 624
+	MvpExp: 0
+	Drops: {
+		Cyfar: 100
+		Solid_Shell: 380
+		Aloebera: 200
+		Yellow_Live: 160
+		Sparkling_Dust: 140
+		Elunium_Stone: 106
+		Tri_Joint_Card: 1
+	}
+},
+{
+	Id: 3419
+	SpriteName: "MIN_MEGALITH"
+	Name: "Infinite Megalith"
+	Lv: 100
+	Hp: 25000
+	Sp: 1
+	Exp: 624
+	JExp: 669
+	AttackRange: 9
+	Attack: [122, 30]
+	Def: 66
+	Mdef: 18
+	Stats: {
+		Str: 57
+		Agi: 14
+		Vit: 35
+		Int: 10
+		Dex: 99
+		Luk: 3
+	}
+	ViewRange: 10
+	ChaseRange: 12
+	Size: "Size_Large"
+	Race: "RC_Formless"
+	Element: ("Ele_Neutral", 4)
+	Mode: {
+		Aggressive: true
+		CanAttack: true
+	}
+	MoveSpeed: 200
+	AttackDelay: 1332
+	AttackMotion: 1332
+	DamageMotion: 672
+	MvpExp: 0
+	Drops: {
+		Zargon: 100
+		Stone: 1000
+		Old_Violet_Box: 1
+		Elunium: 61
+		Elunium_Stone: 207
+		Megalith_Card: 1
+	}
+},
+{
+	Id: 3420
+	SpriteName: "MIN_DRYAD"
+	Name: "Infinite Dryad"
+	Lv: 100
+	Hp: 25000
+	Sp: 1
+	Exp: 878
+	JExp: 939
+	AttackRange: 3
+	Attack: [279, 35]
+	Def: 153
+	Mdef: 8
+	Stats: {
+		Str: 54
+		Agi: 14
+		Vit: 40
+		Int: 35
+		Dex: 74
+		Luk: 10
+	}
+	ViewRange: 10
+	ChaseRange: 12
+	Size: "Size_Medium"
+	Race: "RC_Plant"
+	Element: ("Ele_Earth", 4)
+	Mode: {
+		CanMove: true
+		Aggressive: true
+		CanAttack: true
+		Angry: true
+		ChangeTargetMelee: true
+		ChangeTargetChase: true
+	}
+	MoveSpeed: 170
+	AttackDelay: 950
+	AttackMotion: 2520
+	DamageMotion: 576
+	MvpExp: 0
+	Drops: {
+		Tough_Vines: 5335
+		Great_Leaf: 1000
+		Browny_Root: 3000
+		Pineapple: 300
+		Chemeti: 1
+		Centimental_Leaf: 10
+		Sharp_Leaf: 3000
+		Dryad_Card: 1
+	}
+},
+{
+	Id: 3421
+	SpriteName: "MIN_TOAD"
+	Name: "Infinite Toad"
+	Lv: 100
+	Hp: 900000
+	Sp: 1
+	Exp: 162
+	JExp: 183
+	AttackRange: 1
+	Attack: [70, 19]
+	Def: 24
+	Mdef: 6
+	Stats: {
+		Str: 32
+		Agi: 19
+		Vit: 27
+		Int: 10
+		Dex: 24
+		Luk: 5
+	}
+	ViewRange: 10
+	ChaseRange: 12
+	Size: "Size_Medium"
+	Race: "RC_Fish"
+	Element: ("Ele_Water", 1)
+	Mode: {
+		CanMove: true
+		Aggressive: true
+		CastSensorIdle: true
+		Boss: true
+		CanAttack: true
+		Detector: true
+		CastSensorChase: true
+		ChangeChase: true
+		ChangeTargetMelee: true
+		ChangeTargetChase: true
+	}
+	MoveSpeed: 200
+	AttackDelay: 1236
+	AttackMotion: 336
+	DamageMotion: 432
+	MvpExp: 0
+	Drops: {
+		Big_Sis_Ribbon: 50
+		Honey: 2000
+		Bluish_Green_Jewel: 1000
+		Light_Granule: 500
+		Alchol: 100
+		Detrimindexta: 100
+		Kiss_Of_Angel: 1000
+		Min_Toad_Card: 1
+	}
+},
+{
+	Id: 3422
+	SpriteName: "MIN_VAGABOND_WOLF"
+	Name: "Infinite Vagabond Wolf"
+	Lv: 100
+	Hp: 900000
+	Sp: 1
+	Exp: 1706
+	JExp: 2601
+	AttackRange: 1
+	Attack: [519, 46]
+	Def: 102
+	Mdef: 51
+	Stats: {
+		Str: 72
+		Agi: 63
+		Vit: 55
+		Int: 29
+		Dex: 108
+		Luk: 15
+	}
+	ViewRange: 10
+	ChaseRange: 12
+	Size: "Size_Medium"
+	Race: "RC_Brute"
+	Element: ("Ele_Earth", 1)
+	Mode: {
+		CanMove: true
+		Aggressive: true
+		CastSensorIdle: true
+		Boss: true
+		CanAttack: true
+		Detector: true
+		CastSensorChase: true
+		ChangeChase: true
+		ChangeTargetMelee: true
+		ChangeTargetChase: true
+	}
+	MoveSpeed: 150
+	AttackDelay: 1048
+	AttackMotion: 648
+	DamageMotion: 432
+	MvpExp: 0
+	Drops: {
+		Western_Grace: 200
+		Claw_Of_Wolves: 8000
+		Golden_Jewel: 1500
+		Star_Dust_Blade: 100
+		Angels_Warmth: 1000
+		Light_Granule: 500
+		Monster_Juice: 50
+		Min_Vagabond_Wolf_Card: 1
+	}
+},
+{
+	Id: 3423
+	SpriteName: "MIN_VOCAL"
+	Name: "Infinite Vocal"
+	Lv: 100
+	Hp: 900000
+	Sp: 1
+	Exp: 99
+	JExp: 79
+	AttackRange: 1
+	Attack: [71, 11]
+	Def: 77
+	Mdef: 26
+	Stats: {
+		Str: 77
+		Agi: 26
+		Vit: 26
+		Int: 30
+		Dex: 53
+		Luk: 40
+	}
+	ViewRange: 10
+	ChaseRange: 12
+	Size: "Size_Medium"
+	Race: "RC_Insect"
+	Element: ("Ele_Earth", 1)
+	Mode: {
+		CanMove: true
+		Aggressive: true
+		CastSensorIdle: true
+		CanAttack: true
+		Detector: true
+		CastSensorChase: true
+		ChangeChase: true
+		ChangeTargetMelee: true
+		ChangeTargetChase: true
+	}
+	MoveSpeed: 200
+	AttackDelay: 1080
+	AttackMotion: 648
+	DamageMotion: 480
+	MvpExp: 0
+	Drops: {
+		Oldmans_Romance: 50
+		Grasshoppers_Leg: 8000
+		Azure_Jewel: 1000
+		Grasshopper_Doll: 1500
+		Angels_Arrival: 1000
+		Light_Granule: 500
+		Guitar_Of_Gentle_Breeze: 10
+		Min_Vocal_Card: 1
+	}
+},
+{
+	Id: 3424
+	SpriteName: "MIN_ECLIPSE"
+	Name: "Infinite Eclipse"
+	Lv: 100
+	Hp: 900000
+	Sp: 1
+	Exp: 207
+	JExp: 233
+	AttackRange: 1
+	Attack: [60, 20]
+	Def: 50
+	Mdef: 20
+	Stats: {
+		Str: 20
+		Agi: 28
+		Vit: 35
+		Int: 17
+		Dex: 27
+		Luk: 55
+	}
+	ViewRange: 10
+	ChaseRange: 12
+	Size: "Size_Medium"
+	Race: "RC_Brute"
+	Element: ("Ele_Neutral", 3)
+	Mode: {
+		CanMove: true
+		Aggressive: true
+		CastSensorIdle: true
+		Boss: true
+		CanAttack: true
+		Detector: true
+		CastSensorChase: true
+		ChangeChase: true
+		ChangeTargetMelee: true
+		ChangeTargetChase: true
+	}
+	MoveSpeed: 200
+	AttackDelay: 1456
+	AttackMotion: 456
+	DamageMotion: 336
+	MvpExp: 0
+	Drops: {
+		Fillet: 200
+		Red_Herb: 8000
+		White_Jewel: 1200
+		Light_Granule: 500
+		Four_Leaf_Clover: 30
+		Rainbow_Carrot: 50
+		Angels_Protection: 1000
+		Min_Eclipse_Card: 1
+	}
+},
+{
+	Id: 3425
+	SpriteName: "MIN_CHIMERA"
+	Name: "Infinite Chimera"
+	Lv: 100
+	Hp: 900000
+	Sp: 1
+	Exp: 5426
+	JExp: 4698
+	AttackRange: 1
+	Attack: [1029, 148]
+	Def: 159
+	Mdef: 10
+	Stats: {
+		Str: 1
+		Agi: 38
+		Vit: 110
+		Int: 88
+		Dex: 91
+		Luk: 85
+	}
+	ViewRange: 10
+	ChaseRange: 12
+	Size: "Size_Large"
+	Race: "RC_Brute"
+	Element: ("Ele_Fire", 3)
+	Mode: {
+		CanMove: true
+		Aggressive: true
+		CastSensorIdle: true
+		Boss: true
+		CanAttack: true
+		Detector: true
+		CastSensorChase: true
+		ChangeChase: true
+		ChangeTargetMelee: true
+		ChangeTargetChase: true
+	}
+	MoveSpeed: 200
+	AttackDelay: 772
+	AttackMotion: 672
+	DamageMotion: 360
+	MvpExp: 0
+	Drops: {
+		Brigan: 5335
+		Slender_Snake: 2500
+		Lemon: 1000
+		War_Axe: 1
+		Citrine: 1500
+		Great_Axe: 1
+		Oridecon: 160
+		Min_Chimera_Card: 1
+	}
+},
+{
+	Id: 3426
+	SpriteName: "MIN_EDDGA"
+	Name: "Infinite Eddga"
+	Lv: 100
+	Hp: 1850000
+	Sp: 1000000
+	Exp: 198000
+	JExp: 148500
+	AttackRange: 1
+	Attack: [1509, 776]
+	Def: 166
+	Mdef: 70
+	Stats: {
+		Str: 92
+		Agi: 80
+		Vit: 103
+		Int: 66
+		Dex: 139
+		Luk: 85
+	}
+	ViewRange: 10
+	ChaseRange: 12
+	Size: "Size_Large"
+	Race: "RC_Brute"
+	Element: ("Ele_Fire", 1)
+	Mode: {
+		CanMove: true
+		Aggressive: true
+		CastSensorIdle: true
+		Boss: true
+		CanAttack: true
+		Detector: true
+		CastSensorChase: true
+		ChangeChase: true
+		ChangeTargetMelee: true
+		ChangeTargetChase: true
+	}
+	MoveSpeed: 300
+	AttackDelay: 872
+	AttackMotion: 1344
+	DamageMotion: 432
+	MvpExp: 99000
+	MvpDrops: {
+		Tigers_Skin: 5000
+		Tiger_Footskin: 1000
+		Flame_Heart: 3000
+	}
+	Drops: {
+		Fire_Brand: 150
+		Smoking_Pipe: 250
+		Honey: 10000
+		Katar_Of_Raging_Blaze: 500
+		Tiger_Footskin: 800
+		Elunium: 2400
+		Krieg: 200
+		Min_Eddga_Card: 1
+	}
+},
+{
+	Id: 3427
+	SpriteName: "MIN_OSIRIS"
+	Name: "Infinite Osiris"
+	Lv: 100
+	Hp: 2850000
+	Sp: 2000000
+	Exp: 245520
+	JExp: 200880
+	AttackRange: 1
+	Attack: [1980, 1503]
+	Def: 172
+	Mdef: 164
+	Stats: {
+		Str: 97
+		Agi: 99
+		Vit: 86
+		Int: 131
+		Dex: 165
+		Luk: 67
+	}
+	ViewRange: 10
+	ChaseRange: 12
+	Size: "Size_Medium"
+	Race: "RC_Undead"
+	Element: ("Ele_Undead", 4)
+	Mode: {
+		CanMove: true
+		Aggressive: true
+		CastSensorIdle: true
+		Boss: true
+		CanAttack: true
+		Detector: true
+		CastSensorChase: true
+		ChangeChase: true
+		ChangeTargetMelee: true
+		ChangeTargetChase: true
+	}
+	MoveSpeed: 100
+	AttackDelay: 1072
+	AttackMotion: 672
+	DamageMotion: 384
+	MvpExp: 122760
+	MvpDrops: {
+		Old_Blue_Box: 4000
+		Seed_Of_Yggdrasil: 3000
+		Osiris_Doll: 500
+	}
+	Drops: {
+		Old_Violet_Box: 2000
+		Assasin_Dagger: 150
+		Crown: 200
+		Jamadhar_: 600
+		Sacred_Marks: 1000
+		Spinx_Helm: 150
+		Cakram: 100
+		Min_Osiris_Card: 1
+	}
+},
+{
+	Id: 3428
+	SpriteName: "MIN_PHREEONI"
+	Name: "Infinite Phreeoni"
+	Lv: 100
+	Hp: 4750000
+	Sp: 4000000
+	Exp: 116000
+	JExp: 180000
+	AttackRange: 1
+	Attack: [693, 967]
+	Def: 269
+	Mdef: 98
+	Stats: {
+		Str: 88
+		Agi: 70
+		Vit: 112
+		Int: 87
+		Dex: 122
+		Luk: 71
+	}
+	ViewRange: 10
+	ChaseRange: 12
+	Size: "Size_Large"
+	Race: "RC_Brute"
+	Element: ("Ele_Neutral", 3)
+	Mode: {
+		CanMove: true
+		Aggressive: true
+		CastSensorIdle: true
+		Boss: true
+		CanAttack: true
+		Detector: true
+		CastSensorChase: true
+		ChangeChase: true
+		ChangeTargetMelee: true
+		ChangeTargetChase: true
+	}
+	MoveSpeed: 200
+	AttackDelay: 1020
+	AttackMotion: 1020
+	DamageMotion: 288
+	MvpExp: 58000
+	MvpDrops: {
+		Frozen_Heart: 500
+		Crystal_Jewel: 1000
+		Star_Crumb: 4000
+	}
+	Drops: {
+		Thin_N_Long_Tongue: 9700
+		Forturn_Sword: 500
+		Sucsamad: 150
+		Jaws_Of_Ant: 5000
+		Mr_Scream: 300
+		Elunium: 2900
+		Weihna: 100
+		Min_Phreeoni_Card: 1
+	}
+},
+{
+	Id: 3429
+	SpriteName: "MIN_ORK_HERO"
+	Name: "Infinite Orc Hero"
+	Lv: 100
+	Hp: 6650000
+	Sp: 6000000
+	Exp: 106920
+	JExp: 97200
+	AttackRange: 1
+	Attack: [662, 441]
+	Def: 197
+	Mdef: 70
+	Stats: {
+		Str: 97
+		Agi: 82
+		Vit: 107
+		Int: 71
+		Dex: 144
+		Luk: 43
+	}
+	ViewRange: 10
+	ChaseRange: 12
+	Size: "Size_Large"
+	Race: "RC_DemiHuman"
+	Element: ("Ele_Earth", 2)
+	Mode: {
+		CanMove: true
+		Aggressive: true
+		CastSensorIdle: true
+		Boss: true
+		CanAttack: true
+		Detector: true
+		CastSensorChase: true
+		ChangeChase: true
+		ChangeTargetMelee: true
+		ChangeTargetChase: true
+	}
+	MoveSpeed: 150
+	AttackDelay: 1678
+	AttackMotion: 780
+	DamageMotion: 648
+	MvpExp: 53460
+	MvpDrops: {
+		Red_Jewel: 2000
+		Yggdrasilberry: 1500
+		Steel: 5000
+	}
+	Drops: {
+		Voucher_Of_Orcish_Hero: 9700
+		Monkey_Circlet: 500
+		Right_Epsilon: 150
+		Shield_: 250
+		Orcish_Sword: 1000
+		Elunium: 4559
+		Giant_Axe: 100
+		Min_Orc_Hero_Card: 1
+	}
+},
+{
+	Id: 3430
+	SpriteName: "MIN_TAO_GUNKA"
+	Name: "Infinite Tao Gunka"
+	Lv: 100
+	Hp: 8550000
+	Sp: 8000000
+	Exp: 900000
+	JExp: 720000
+	AttackRange: 2
+	Attack: [3757, 1260]
+	Def: 404
+	Mdef: 143
+	Stats: {
+		Str: 135
+		Agi: 175
+		Vit: 98
+		Int: 110
+		Dex: 239
+		Luk: 66
+	}
+	ViewRange: 10
+	ChaseRange: 12
+	Size: "Size_Large"
+	Race: "RC_Demon"
+	Element: ("Ele_Neutral", 3)
+	Mode: {
+		CanMove: true
+		Aggressive: true
+		CastSensorIdle: true
+		Boss: true
+		CanAttack: true
+		Detector: true
+		CastSensorChase: true
+		ChangeChase: true
+		ChangeTargetMelee: true
+		ChangeTargetChase: true
+	}
+	MoveSpeed: 150
+	AttackDelay: 1020
+	AttackMotion: 288
+	DamageMotion: 144
+	MvpExp: 450000
+	MvpDrops: {
+		Oridecon: 6000
+		Old_Violet_Box: 3000
+		Blue_Potion: 6000
+	}
+	Drops: {
+		Gemstone: 4850
+		Stone_Piece: 4850
+		Golden_Jewel: 1000
+		Binoculars: 400
+		White_Potion: 3000
+		Runstone_Rare: 200
+		Gemmed_Sallet_: 5
+		Min_Tao_Gunka_Card: 1
+	}
+},
+

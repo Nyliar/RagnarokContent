@@ -1,0 +1,14 @@
+//RATHENA
+9318,0,3000,1,0,0,0,0,0,0,0,0,0,0,0,0,0,"Pursuing Hiding Morroc"
+
+//HERCULES
+{
+	Id: 9318
+	Name: "Pursuing Hiding Morroc"
+	Targets: (
+	{
+		MobId: 3000
+		Count: 1
+	}
+ )
+},

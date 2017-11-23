@@ -1,0 +1,7 @@
+62500#Defeat Morocc#SG_FEEL#QUE_NOIMAGE#
+Help Loki and Nyddhog to defeat Morocc.#
+#
+
+62501#Aweakens Morocc#SG_FEEL#QUE_NOIMAGE#
+Defeat the monsters protecting Morocc, Brinararea and Muspelskoll.#
+#

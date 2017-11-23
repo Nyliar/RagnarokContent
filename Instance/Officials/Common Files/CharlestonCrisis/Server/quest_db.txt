@@ -1,0 +1,39 @@
+//RATHENA
+
+13184,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,"Charleston Factory"
+13185,72000,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,"Charleston Factory - Hold"
+13186,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,"Charleston Factory - Complete"
+13187,0,3125,50,0,0,0,0,0,0,0,0,0,0,0,0,0,"Deal with the Staff"
+13188,72000,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,"Deal with the Staff - Hold"
+
+
+//HERCULES
+{
+	Id: 13184
+	Name: "Charleston Factory"
+  	TimeLimit: 18000
+},
+{
+	Id: 13185
+	Name: "Charleston Factory - Hold"
+  	TimeLimit: 72000
+},
+{
+	Id: 13186
+	Name: "Charleston Factory - Complete"
+  	TimeLimit: 18000
+},
+{
+	Id: 13187
+	Name: "Deal with the Staff"
+	Targets: (
+	{
+		MobId: 3125
+		Count: 50
+	},
+},
+{
+	Id: 13188
+	Name: "Deal with the Staff - Hold"
+  	TimeLimit: 72000
+},

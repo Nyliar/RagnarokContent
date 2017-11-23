@@ -1,0 +1,366 @@
+//RATHENA
+
+3175,E1_ROTAR_ZAIRO,Aero Assaillant,Aero Assaillant,113,15900,1,51820,36420,10,1914,2360,95,34,100,180,39,67,223,130,10,12,1,0,20,0x6203885,500,1500,500,1000,0,0,0,0,0,0,0,22046,5,7126,250,2312,1,601,500,912,200,910,200,0,0,0,0,0,0,0,0
+3176,E1_BEHOLDER,Ground Assaillant,Ground Assaillant,118,20313,1,77820,38000,1,1351,2446,76,25,90,181,62,37,122,60,10,12,1,0,20,0x6203885,500,1500,500,1000,0,0,0,0,0,0,0,22046,50,576,500,605,50,996,50,985,1,603,1,0,0,0,0,0,0,0,0
+3177,E1_GREMLIN,Aero Assaillant 2 ,Aero Assaillant 2,118,20313,1,80180,47800,6,1230,1670,76,25,60,89,42,223,158,93,10,12,1,0,20,0x6203885,500,1500,500,1000,0,0,0,0,0,0,0,20743,5,7340,500,938,500,719,50,603,1,0,0,0,0,0,0,0,0,0,0
+3178,E1_ACIDUS,Dragon Muggler 2,Dragon Muggler 2,130,48430,1,121760,67840,2,1018,1655,109,90,121,126,67,80,255,92,10,12,1,0,20,0x6203885,500,1500,500,1000,0,0,0,0,0,0,0,15116,50,7938,100,1035,500,7448,200,0,0,0,0,0,0,0,0,0,0,0,0
+3179,E1_ACIDUS_,Dragon Muggler,Dragon Muggler,130,40718,1,120440,69840,2,1500,3500,98,47,176,255,155,132,209,95,10,12,1,0,20,0x6203885,500,1500,500,1000,0,0,0,0,0,0,0,20743,50,1035,500,1036,500,7446,200,0,0,0,0,0,0,0,0,0,0,0,0
+3180,E1_G_S_NYDHOG,Great Dragon,Great Dragon,117,300000,1,200000,100000,2,5000,10000,60,60,199,134,62,236,218,34,10,12,1,0,20,0x6203885,500,1500,500,1000,0,0,0,0,0,0,0,15116,50,6091,500,7444,1,985,10,0,0,0,0,0,0,0,0,0,0,0,0
+3181,E1_FELOCK,Captain Felock,Captain Felock,130,3000000,1,10000000,5000000,7,2500,7500,101,90,255,184,156,72,250,60,10,12,1,0,20,0x6203885,500,1500,500,1000,0,0,0,0,0,0,0,15117,100,20744,100,22047,100,12082,3000,12072,3000,12077,3000,12092,3000,0,0,0,0,0,0
+
+
+//HERCULES
+
+
+{
+	Id: 3175
+	SpriteName: "E1_ROTAR_ZAIRO"
+	Name: "Aero Assaillant"
+	Lv: 113
+	Hp: 15900
+	Sp: 1
+	Exp: 51820
+	JExp: 36420
+	AttackRange: 10
+	Attack: [1914, 2360]
+	Def: 95
+	Mdef: 34
+	Stats: {
+		Str: 100
+		Agi: 180
+		Vit: 39
+		Int: 67
+		Dex: 223
+		Luk: 130
+	}
+	ViewRange: 10
+	ChaseRange: 12
+	Size: "Size_Small"
+	Race: "RC_Formless"
+	Element: ("Ele_Neutral", 1)
+	Mode: {
+		CanMove: true
+		Aggressive: true
+		CastSensorIdle: true
+		CanAttack: true
+		Detector: true
+		CastSensorChase: true
+		ChangeChase: true
+		ChangeTargetMelee: true
+		ChangeTargetChase: true
+	}
+	MoveSpeed: 500
+	AttackDelay: 1500
+	AttackMotion: 500
+	DamageMotion: 1000
+	MvpExp: 0
+	Drops: {
+		Airship_Boots: 50
+		Large_Jellopy: 250
+		Padded_Armor: 1
+    Wing_Of_Fly: 500
+    Zargon: 200
+    Garlet: 200
+	}
+},
+{
+	Id: 3176
+	SpriteName: "E1_BEHOLDER"
+	Name: "Ground Assaillant"
+	Lv: 118
+	Hp: 20313
+	Sp: 1
+	Exp: 77820
+	JExp: 38000
+	AttackRange: 1
+	Attack: [1351, 2446]
+	Def: 76
+	Mdef: 25
+	Stats: {
+		Str: 90
+		Agi: 181
+		Vit: 62
+		Int: 37
+		Dex: 122
+		Luk: 60
+	}
+	ViewRange: 10
+	ChaseRange: 12
+	Size: "Size_Small"
+	Race: "RC_Formless"
+	Element: ("Ele_Neutral", 1)
+	Mode: {
+		CanMove: true
+		Aggressive: true
+		CastSensorIdle: true
+		CanAttack: true
+		Detector: true
+		CastSensorChase: true
+		ChangeChase: true
+		ChangeTargetMelee: true
+		ChangeTargetChase: true
+	}
+	MoveSpeed: 500
+	AttackDelay: 1500
+	AttackMotion: 500
+	DamageMotion: 1000
+	MvpExp: 0
+	Drops: {
+		Airship_Cape: 50
+		Will_Of_Darkness: 500
+		Sticky_Mucus: 500
+    Amethyst: 50
+    Old_Blue_Box: 1
+	}
+},
+{
+	Id: 3177
+	SpriteName: "E1_GREMLIN"
+	Name: "Aero Assaillant 2"
+	Lv: 118
+	Hp: 20313
+	Sp: 1
+	Exp: 80180
+	JExp: 47800
+	AttackRange: 6
+	Attack: [1230, 1655]
+	Def: 76
+	Mdef: 25
+	Stats: {
+		Str: 60
+		Agi: 89
+		Vit: 42
+		Int: 223
+		Dex: 158
+		Luk: 93
+	}
+	ViewRange: 10
+	ChaseRange: 12
+	Size: "Size_Small"
+	Race: "RC_Formless"
+	Element: ("Ele_Neutral", 1)
+	Mode: {
+		CanMove: true
+		Aggressive: true
+		CastSensorIdle: true
+		CanAttack: true
+		Detector: true
+		CastSensorChase: true
+		ChangeChase: true
+		ChangeTargetMelee: true
+		ChangeTargetChase: true
+	}
+	MoveSpeed: 500
+	AttackDelay: 1500
+	AttackMotion: 500
+	DamageMotion: 1000
+	MvpExp: 0
+	Drops: {
+		Airship_Boots: 50
+		Prickly_Fruit: 500
+		Anodyne: 50
+    Rough_Wind: 50
+    Elunium: 1
+    Old_Blue_Box: 1
+	}
+},
+{
+	Id: 3178
+	SpriteName: "E1_ACIDUS"
+	Name: "Dragon Muggler 2"
+	Lv: 130
+	Hp: 48430
+	Sp: 1
+	Exp: 121760
+	JExp: 67840
+	AttackRange: 2
+	Attack: [1018, 1655]
+	Def: 109
+	Mdef: 90
+	Stats: {
+		Str: 121
+		Agi: 126
+		Vit: 67
+		Int: 80
+		Dex: 255
+		Luk: 92
+	}
+	ViewRange: 10
+	ChaseRange: 12
+	Size: "Size_Small"
+	Race: "RC_Formless"
+	Element: ("Ele_Neutral", 1)
+	Mode: {
+		CanMove: true
+		Aggressive: true
+		CastSensorIdle: true
+		CanAttack: true
+		Detector: true
+		CastSensorChase: true
+		ChangeChase: true
+		ChangeTargetMelee: true
+		ChangeTargetChase: true
+	}
+	MoveSpeed: 500
+	AttackDelay: 1500
+	AttackMotion: 500
+	DamageMotion: 1000
+	MvpExp: 0
+	Drops: {
+		Airship_Armor: 50
+		Dragon_Canine: 500
+		Light_Granule: 100
+    Dragonball_Yellow: 200
+	}
+},
+{
+	Id: 3179
+	SpriteName: "E1_ACIDUS_"
+	Name: "Dragon Muggler"
+	Lv: 117
+	Hp: 40718
+	Sp: 1
+	Exp: 121760
+	JExp: 67840
+	AttackRange: 2
+	Attack: [1500, 3500]
+	Def: 98
+	Mdef: 47
+	Stats: {
+		Str: 176
+		Agi: 255
+		Vit: 155
+		Int: 132
+		Dex: 209
+		Luk: 95
+	}
+	ViewRange: 10
+	ChaseRange: 12
+	Size: "Size_Small"
+	Race: "RC_Formless"
+	Element: ("Ele_Neutral", 1)
+	Mode: {
+		CanMove: true
+		Aggressive: true
+		CastSensorIdle: true
+		CanAttack: true
+		Detector: true
+		CastSensorChase: true
+		ChangeChase: true
+		ChangeTargetMelee: true
+		ChangeTargetChase: true
+	}
+	MoveSpeed: 500
+	AttackDelay: 1500
+	AttackMotion: 500
+	DamageMotion: 1000
+	MvpExp: 0
+	Drops: {
+		Airship_Cape: 50
+		Dragon_Canine: 500
+		Dragon_Scale: 500
+    Dragonball_Blue: 200
+	}
+},
+{
+	Id: 3180
+	SpriteName: "E1_G_S_NYDHOG"
+	Name: "Great Dragon"
+	Lv: 117
+	Hp: 300000
+	Sp: 1
+	Exp: 200000
+	JExp: 100000
+	AttackRange: 2
+	Attack: [5000, 10000]
+	Def: 60
+	Mdef: 60
+	Stats: {
+		Str: 199
+		Agi: 134
+		Vit: 62
+		Int: 236
+		Dex: 218
+		Luk: 34
+	}
+	ViewRange: 10
+	ChaseRange: 12
+	Size: "Size_Small"
+	Race: "RC_Formless"
+	Element: ("Ele_Neutral", 1)
+	Mode: {
+		CanMove: true
+		Aggressive: true
+		CastSensorIdle: true
+		CanAttack: true
+		Detector: true
+		CastSensorChase: true
+		ChangeChase: true
+		ChangeTargetMelee: true
+		ChangeTargetChase: true
+	}
+	MoveSpeed: 500
+	AttackDelay: 1500
+	AttackMotion: 500
+	DamageMotion: 1000
+	MvpExp: 0
+	Drops: {
+		Airship_Armor: 50
+		Dark_Red_Scale: 500
+		Treasure_Box: 1
+    Elunium: 10
+	}
+},
+{
+	Id: 3181
+	SpriteName: "E1_FELOCK"
+	Name: "Captain Felock"
+	Lv: 130
+	Hp: 3000000
+	Sp: 1
+	Exp: 10000000
+	JExp: 50000000
+	AttackRange: 7
+	Attack: [2500, 7500]
+	Def: 101
+	Mdef: 90
+	Stats: {
+		Str: 255
+		Agi: 184
+		Vit: 156
+		Int: 72
+		Dex: 250
+		Luk: 60
+	}
+	ViewRange: 10
+	ChaseRange: 12
+	Size: "Size_Small"
+	Race: "RC_Formless"
+	Element: ("Ele_Neutral", 1)
+	Mode: {
+		CanMove: true
+		Aggressive: true
+		CastSensorIdle: true
+		CanAttack: true
+		Detector: true
+		CastSensorChase: true
+		ChangeChase: true
+		ChangeTargetMelee: true
+		ChangeTargetChase: true
+	}
+	MoveSpeed: 500
+	AttackDelay: 1500
+	AttackMotion: 500
+	DamageMotion: 1000
+	MvpExp: 0
+	Drops: {
+		Felock_Armor: 100
+		Felock_Cape: 100
+		Felock_Boots: 100
+    Vit_Dish07: 3000
+    Str_Dish07: 3000
+    Agi_Dish07: 3000
+    Int_Dish07: 3000
+    Dex_Dish07: 3000    
+	}
+},

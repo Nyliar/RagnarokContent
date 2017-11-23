@@ -1,0 +1,31 @@
+//RATHENA
+13994,82800,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,"Devil's Tower Time Limit"
+13995,0,2938,6,0,0,0,0,0,0,0,0,0,0,0,0,0,"Break the Magic Seals causing illness"
+13996,0,2942,1,0,0,0,0,0,0,0,0,0,0,0,0,0,"Hunt the Evil Fanatic"
+
+//HERCULES
+{
+	Id: 13994
+	Name: "Devil's Tower Time Limit"
+  TimeLimit: 82800
+},
+{
+	Id: 13995
+	Name: "Break the Magic Seals causing illness"
+	Targets: (
+	{
+		MobId: 2938
+		Count: 6
+	}
+ )
+},
+{
+	Id: 13996
+	Name: "Hunt the Evil Fanatic"
+	Targets: (
+	{
+		MobId: 2942
+		Count: 1
+	}
+ )
+},

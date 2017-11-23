@@ -1,0 +1,9 @@
+3180,GreatDragon@FIREBALL,chase,17,5,10000,0,30000,yes,target,always,0,,,,,,6,
+3180,GreatDragon@FIREBALL,attack,17,5,10000,0,30000,yes,target,always,0,,,,,,6,
+
+3181,CaptainFelock@DOUBLESTRAFF,chase,46,10,2000,0,30000,yes,target,always,0,,,,,,6,
+3181,CaptainFelock@DOUBLESTRAFF,attack,46,10,2000,0,30000,yes,target,always,0,,,,,,6,
+3181,CaptainFelock@NPC_COMBOATTACK,chase,171,5,2000,2500,30000,yes,target,always,0,,,,,,6,
+3181,CaptainFelock@NPC_COMBOATTACK,attack,171,5,2000,2500,30000,yes,target,always,0,,,,,,6,
+3181,CaptainFelock@ARROWREPEL,chase,148,1,500,1500,5000,yes,target,always,0,,,,,,6,
+3181,CaptainFelock@ARROWREPEL,attack,148,1,500,1500,5000,yes,target,always,0,,,,,,6,

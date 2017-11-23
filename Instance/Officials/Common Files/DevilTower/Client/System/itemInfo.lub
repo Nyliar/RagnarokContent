@@ -1,0 +1,14 @@
+
+	[35055] = {
+		unidentifiedDisplayName = "Empty Box",
+		unidentifiedResourceName  = "??????",
+		unidentifiedDescriptionName = {
+		},
+		identifiedDisplayName = "Empty Box",
+		identifiedResourceName = "??????",
+		identifiedDescriptionName = {
+			"A first-aid kit emptied box.",
+		},
+		slotCount = 0,
+		ClassNum = 0
+	},

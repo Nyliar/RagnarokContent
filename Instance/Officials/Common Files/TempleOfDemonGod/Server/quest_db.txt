@@ -1,0 +1,27 @@
+//RATHENA
+62500,0,3097,1,0,0,0,0,0,0,0,0,0,0,0,0,0,"Defeat Morocc"
+62501,0,3091,1,3092,1,0,0,0,0,0,0,0,0,0,0,0,"Aweakens Morocc"
+
+//HERCULES
+{
+	Id: 62500
+	Name: "Defeat Morocc"
+	Targets: (
+	{
+		MobId: 3097
+		Count: 1
+	}
+ )
+},
+{
+	Id: 62501
+	Name: "Aweakens Morocc"
+	Targets: (
+	{
+		MobId: 3091
+		Count: 1
+		MobId: 3092
+		Count: 1
+	}
+ )
+},

@@ -1,0 +1,539 @@
+//RATHENA
+3190,MM_SARAH,Sarah Irene,Sarah Irene,160,100000000,80000000,10000000,5000000,12,3065,4090,276,255,43,161,6,188,255,136,10,12,1,3,21,0x84,400,1872,672,480,0,0,0,0,0,0,0,15121,1000,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,4610,1
+3191,MM_M_GIGAN1,Medium Gigantes,Medium Gigantes,160,6653400,1,2264000,1240000,2,4635,4755,64,112,156,151,30,62,265,21,10,12,2,0,47,0x6203695,400,1872,672,480,0,0,0,0,0,0,0,15121,100,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
+3192,MM_M_GIGAN2,Gigantes,Gigantes,160,9870000,1,2264000,1240000,2,5217,5128,89,175,212,138,43,21,227,15,10,12,0,0,47,0x6203695,400,1872,672,480,0,0,0,0,0,0,0,15121,100,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
+3193,MM_M_GIGAN3,Gigantes,Gigantes,160,1126300,1,2246000,1203000,2,3967,4132,113,155,121,125,45,35,271,15,10,12,0,0,47,0x6203695,400,1872,672,480,0,0,0,0,0,0,0,6803,10000,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
+3194,MM_L_GIGAN1,Gigantes,Gigantes,160,2482000,1,2040000,1020000,2,4172,4254,55,177,135,135,12,72,220,91,10,12,2,0,47,0x6203695,400,1872,672,480,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
+3195,MM_L_GIGAN2,Gigantes,Gigantes,160,2784175,1,2003480,1003480,2,3641,3757,71,140,102,119,18,45,275,71,10,12,2,0,47,0x6203695,400,1872,672,480,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
+3196,MM_L_GIGAN3,Gigantes,Gigantes,160,12063464,1,2060480,1040240,2,8957,9018,48,190,203,141,1,66,355,103,10,12,2,0,47,0x6203695,400,1872,672,480,0,0,0,0,0,0,0,6803,10000,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
+3197,MM_M_GARGOYLE,Gargoyle,Gargoyle,150,256780,1,1,1,9,506,659,124,43,147,110,66,57,191,70,10,12,1,7,64,0x6203695,400,1872,672,480,0,0,0,0,0,0,912,1940,1039,250,1746,3,2619,1,1769,1000,757,119,0,0,0,0,0,0,0,0,0
+3198,MM_M_GALION,Red Galion,Red Galion,150,293165,1,1,1,1,1005,1482,166,71,133,142,71,45,166,45,10,12,0,7,44,0x6203695,400,1872,672,480,0,0,0,0,0,0,0,7564,1500,919,1500,996,5,2531,3,0,0,0,0,0,0,0,0,0,0,0,0
+3199,MM_M_MUTANT_DRAGON,Mutant Dragon,Mutant Dragon,150,324891,1,1,1,4,1176,1274,185,86,175,161,66,68,201,35,10,12,2,7,43,0x6203695,400,1872,672,480,0,0,0,0,0,0,0,7054,2425,1035,250,1036,250,930,250,1559,50,7296,750,2527,25,0,0,0,0,0,0
+3200,MM_M_CHIMERA,Chimera,Chimera,150,301158,1,1,1,1,1029,1177,199,10,166,175,110,88,188,85,10,12,2,0,63,0x6203695,400,1872,672,480,0,0,0,0,0,0,0,7054,2668,1048,1250,568,500,1306,1,1295,750,1364,1,984,80,0,0,0,0,0,0
+
+//HERCULES
+
+{
+	Id: 3190
+	SpriteName: "MM_SARAH"
+	Name: "Sarah Irene"
+	Lv: 160
+	Hp: 100000000
+	Sp: 80000000
+	Exp: 10000000
+	JExp: 5000000
+	AttackRange: 12
+	Attack: [3065,4090]
+	Def: 276
+	Mdef: 255
+	Stats: {
+		Str: 43
+		Agi: 161
+		Vit: 6
+		Int: 188
+		Dex: 255
+		Luk: 136
+	}
+	ViewRange: 10
+	ChaseRange: 12
+	Size: "Size_Small"
+	Race: "RC_Formless"
+	Element: ("Ele_Neutral", 3)
+	Mode: {
+		CanMove: true
+		Aggressive: true
+		CastSensorIdle: true
+		CanAttack: true
+		Detector: true
+		CastSensorChase: true
+		ChangeChase: true
+		ChangeTargetMelee: true
+		ChangeTargetChase: true
+		Plant: true
+	}
+	MoveSpeed: 500
+	AttackDelay: 1500
+	AttackMotion: 500
+	DamageMotion: 1000
+	MvpExp: 0
+	Drops: {
+     Sarah_Combat_Robe: 1000
+	}
+},
+{
+	Id: 3191
+	SpriteName: "MM_M_GIGAN1"
+	Name: "Medium Gigantes"
+	Lv: 160
+	Hp: 6653400
+	Sp: 1
+	Exp: 2264000
+	JExp: 1240000
+	AttackRange: 2
+	Attack: [4635,4755]
+	Def: 64
+	Mdef: 112
+	Stats: {
+		Str: 156
+		Agi: 151
+		Vit: 30
+		Int: 62
+		Dex: 265
+		Luk: 21
+	}
+	ViewRange: 10
+	ChaseRange: 12
+	Size: "Size_Medium"
+	Race: "RC_Demon"
+	Element: ("Ele_Dark", 2)
+	Mode: {
+		CanMove: true
+		Aggressive: true
+		CastSensorIdle: true
+		CanAttack: true
+		Detector: true
+		CastSensorChase: true
+		ChangeChase: true
+		ChangeTargetMelee: true
+		ChangeTargetChase: true
+	}
+	MoveSpeed: 500
+	AttackDelay: 1500
+	AttackMotion: 500
+	DamageMotion: 1000
+	MvpExp: 0
+	Drops: {
+     Sarah_Combat_Robe: 100
+	}
+},
+{
+	Id: 3192
+	SpriteName: "MM_M_GIGAN2"
+	Name: "Gigantes"
+	Lv: 160
+	Hp: 9870000
+	Sp: 1
+	Exp: 2264000
+	JExp: 1240000
+	AttackRange: 2
+	Attack: [5217,5128]
+	Def: 89
+	Mdef: 175
+	Stats: {
+		Str: 212
+		Agi: 138
+		Vit: 43
+		Int: 21
+		Dex: 227
+		Luk: 15
+	}
+	ViewRange: 10
+	ChaseRange: 12
+	Size: "Size_Medium"
+	Race: "RC_Demon"
+	Element: ("Ele_Dark", 2)
+	Mode: {
+		CanMove: true
+		Aggressive: true
+		CastSensorIdle: true
+		CanAttack: true
+		Detector: true
+		CastSensorChase: true
+		ChangeChase: true
+		ChangeTargetMelee: true
+		ChangeTargetChase: true
+	}
+	MoveSpeed: 500
+	AttackDelay: 1500
+	AttackMotion: 500
+	DamageMotion: 1000
+	MvpExp: 0
+	Drops: {
+     Sarah_Combat_Robe: 100
+	}
+},
+{
+	Id: 3193
+	SpriteName: "MM_M_GIGAN3"
+	Name: "Gigantes"
+	Lv: 160
+	Hp: 1126300
+	Sp: 1
+	Exp: 2246000
+	JExp: 1203000
+	AttackRange: 2
+	Attack: [3967,4132]
+	Def: 113
+	Mdef: 155
+	Stats: {
+		Str: 121
+		Agi: 125
+		Vit: 45
+		Int: 35
+		Dex: 271
+		Luk: 15
+	}
+	ViewRange: 10
+	ChaseRange: 12
+	Size: "Size_Medium"
+	Race: "RC_Demon"
+	Element: ("Ele_Dark", 2)
+	Mode: {
+		CanMove: true
+		Aggressive: true
+		CastSensorIdle: true
+		CanAttack: true
+		Detector: true
+		CastSensorChase: true
+		ChangeChase: true
+		ChangeTargetMelee: true
+		ChangeTargetChase: true
+	}
+	MoveSpeed: 500
+	AttackDelay: 1500
+	AttackMotion: 500
+	DamageMotion: 1000
+	MvpExp: 0
+	Drops: {
+	}
+},
+{
+	Id: 3194
+	SpriteName: "MM_M_GIGAN4"
+	Name: "Gigantes"
+	Lv: 160
+	Hp: 2482000
+	Sp: 1
+	Exp: 2040000
+	JExp: 1020000
+	AttackRange: 2
+	Attack: [4172,4254]
+	Def: 55
+	Mdef: 177
+	Stats: {
+		Str: 135
+		Agi: 135
+		Vit: 12
+		Int: 72
+		Dex: 220
+		Luk: 91
+	}
+	ViewRange: 10
+	ChaseRange: 12
+	Size: "Size_Medium"
+	Race: "RC_Demon"
+	Element: ("Ele_Dark", 2)
+	Mode: {
+		CanMove: true
+		Aggressive: true
+		CastSensorIdle: true
+		CanAttack: true
+		Detector: true
+		CastSensorChase: true
+		ChangeChase: true
+		ChangeTargetMelee: true
+		ChangeTargetChase: true
+	}
+	MoveSpeed: 500
+	AttackDelay: 1500
+	AttackMotion: 500
+	DamageMotion: 1000
+	MvpExp: 0
+	Drops: {
+	}
+},
+{
+	Id: 3195
+	SpriteName: "MM_M_GIGAN5"
+	Name: "Gigantes"
+	Lv: 160
+	Hp: 2784175
+	Sp: 1
+	Exp: 2003480
+	JExp: 1003480
+	AttackRange: 2
+	Attack: [3641,3757]
+	Def: 71
+	Mdef: 140
+	Stats: {
+		Str: 102
+		Agi: 119
+		Vit: 18
+		Int: 45
+		Dex: 275
+		Luk: 71
+	}
+	ViewRange: 10
+	ChaseRange: 12
+	Size: "Size_Large"
+	Race: "RC_Demon"
+	Element: ("Ele_Dark", 2)
+	Mode: {
+		CanMove: true
+		Aggressive: true
+		CastSensorIdle: true
+		CanAttack: true
+		Detector: true
+		CastSensorChase: true
+		ChangeChase: true
+		ChangeTargetMelee: true
+		ChangeTargetChase: true
+	}
+	MoveSpeed: 500
+	AttackDelay: 1500
+	AttackMotion: 500
+	DamageMotion: 1000
+	MvpExp: 0
+	Drops: {
+	}
+},
+{
+	Id: 3196
+	SpriteName: "MM_M_GIGAN6"
+	Name: "Gigantes"
+	Lv: 160
+	Hp: 12063464
+	Sp: 1
+	Exp: 2060480
+	JExp: 1040240
+	AttackRange: 2
+	Attack: [8957,9018]
+	Def: 48
+	Mdef: 190
+	Stats: {
+		Str: 203
+		Agi: 141
+		Vit: 1
+		Int: 66
+		Dex: 355
+		Luk: 103
+	}
+	ViewRange: 10
+	ChaseRange: 12
+	Size: "Size_Large"
+	Race: "RC_Demon"
+	Element: ("Ele_Dark", 2)
+	Mode: {
+		CanMove: true
+		Aggressive: true
+		CastSensorIdle: true
+		CanAttack: true
+		Detector: true
+		CastSensorChase: true
+		ChangeChase: true
+		ChangeTargetMelee: true
+		ChangeTargetChase: true
+	}
+	MoveSpeed: 500
+	AttackDelay: 1500
+	AttackMotion: 500
+	DamageMotion: 1000
+	MvpExp: 0
+	Drops: {
+   Fragments_Of_Gigan: 10000
+	}
+},
+{
+	Id: 3197
+	SpriteName: "MM_M_GARGOYLE"
+	Name: "Gargoyle"
+	Lv: 150
+	Hp: 256780
+	Sp: 1
+	Exp: 1
+	JExp: 1
+	AttackRange: 9
+	Attack: [506,659]
+	Def: 124
+	Mdef: 48
+	Stats: {
+		Str: 147
+		Agi: 110
+		Vit: 66
+		Int: 57
+		Dex: 191
+		Luk: 70
+	}
+	ViewRange: 10
+	ChaseRange: 12
+	Size: "Size_Medium"
+	Race: "RC_Demon"
+	Element: ("Ele_Wind", 3)
+	Mode: {
+		CanMove: true
+		Aggressive: true
+		CastSensorIdle: true
+		CanAttack: true
+		Detector: true
+		CastSensorChase: true
+		ChangeChase: true
+		ChangeTargetMelee: true
+		ChangeTargetChase: true
+	}
+	MoveSpeed: 500
+	AttackDelay: 1500
+	AttackMotion: 500
+	DamageMotion: 1000
+	MvpExp: 0
+	Drops: {
+   Zargon: 1940
+   Petite_DiablOfs_Wing: 250
+   Elven_Bow: 3
+   Thimble_Of_Archer: 1
+   Silence_Arrow: 1000
+   Elunium_Stone: 119
+	}
+},
+{
+	Id: 3198
+	SpriteName: "MM_M_GALION"
+	Name: "Red Galion"
+	Lv: 150
+	Hp: 293165
+	Sp: 1
+	Exp: 1
+	JExp: 1
+	AttackRange: 1
+	Attack: [1005,1482]
+	Def: 166
+	Mdef: 71
+	Stats: {
+		Str: 133
+		Agi: 142
+		Vit: 71
+		Int: 45
+		Dex: 166
+		Luk: 45
+	}
+	ViewRange: 10
+	ChaseRange: 12
+	Size: "Size_Medium"
+	Race: "RC_Brute"
+	Element: ("Ele_Wind", 2)
+	Mode: {
+		CanMove: true
+		Aggressive: true
+		CastSensorIdle: true
+		CanAttack: true
+		Detector: true
+		CastSensorChase: true
+		ChangeChase: true
+		ChangeTargetMelee: true
+		ChangeTargetChase: true
+	}
+	MoveSpeed: 500
+	AttackDelay: 1500
+	AttackMotion: 500
+	DamageMotion: 1000
+	MvpExp: 0
+	Drops: {
+   Rotten_Meat: 1500
+   Animals_Skin: 1500
+   Rough_Wind: 5
+   Ulfhedinn: 3
+	}
+},
+{
+	Id: 3199
+	SpriteName: "MM_M_MUTANT_DRAGON"
+	Name: "Mutant Dragon"
+	Lv: 150
+	Hp: 324891
+	Sp: 1
+	Exp: 1
+	JExp: 1
+	AttackRange: 4
+	Attack: [1176,1274]
+	Def: 185
+	Mdef: 86
+	Stats: {
+		Str: 175
+		Agi: 161
+		Vit: 66
+		Int: 68
+		Dex: 201
+		Luk: 35
+	}
+	ViewRange: 10
+	ChaseRange: 12
+	Size: "Size_Large"
+	Race: "RC_Dragon"
+	Element: ("Ele_Fire", 2)
+	Mode: {
+		CanMove: true
+		Aggressive: true
+		CastSensorIdle: true
+		CanAttack: true
+		Detector: true
+		CastSensorChase: true
+		ChangeChase: true
+		ChangeTargetMelee: true
+		ChangeTargetChase: true
+	}
+	MoveSpeed: 500
+	AttackDelay: 1500
+	AttackMotion: 500
+	DamageMotion: 1000
+	MvpExp: 0
+	Drops: {
+		Brigan: 4850
+		Dragon_Canine: 500
+		Dragon_Scale: 500
+		Rotten_Bandage: 500
+		Legacy_Of_Dragon: 100
+		Pyroxene: 1500
+		Dragon_Breath: 50
+	}
+},
+{
+	Id: 3200
+	SpriteName: "MM_M_CHIMERA"
+	Name: "Chimera"
+	Lv: 150
+	Hp: 301158
+	Sp: 1
+	Exp: 1
+	JExp: 1
+	AttackRange: 1
+	Attack: [1029,1177]
+	Def: 199
+	Mdef: 10
+	Stats: {
+		Str: 166
+		Agi: 175
+		Vit: 110
+		Int: 88
+		Dex: 188
+		Luk: 85
+	}
+	ViewRange: 10
+	ChaseRange: 12
+	Size: "Size_Large"
+	Race: "RC_Brute"
+	Element: ("Ele_Fire", 3)
+	Mode: {
+		CanMove: true
+		Aggressive: true
+		CastSensorIdle: true
+		CanAttack: true
+		Detector: true
+		CastSensorChase: true
+		ChangeChase: true
+		ChangeTargetMelee: true
+		ChangeTargetChase: true
+	}
+	MoveSpeed: 500
+	AttackDelay: 1500
+	AttackMotion: 500
+	DamageMotion: 1000
+	MvpExp: 0
+	Drops: {
+		Brigan: 5335
+		Slender_Snake: 2500
+		Lemon: 1000
+		War_Axe: 1
+		Citrine: 1500
+		Great_Axe: 1
+		Oridecon: 160
+	}
+},

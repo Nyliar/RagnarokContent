@@ -1,0 +1,17 @@
+
+2@new.gnd#1@new.gnd#
+2@new.gat#1@new.gat#
+2@new.rsw#1@new.rsw#
+유저인터페이스\map\2@new.bmp#유저인터페이스\map\1@new.bmp#
+3@new.gnd#1@new.gnd#
+3@new.gat#1@new.gat#
+3@new.rsw#1@new.rsw#
+유저인터페이스\map\3@new.bmp#유저인터페이스\map\1@new.bmp#
+4@new.gnd#1@new.gnd#
+4@new.gat#1@new.gat#
+4@new.rsw#1@new.rsw#
+유저인터페이스\map\4@new.bmp#유저인터페이스\map\1@new.bmp#
+5@new.gnd#1@new.gnd#
+5@new.gat#1@new.gat#
+5@new.rsw#1@new.rsw#
+유저인터페이스\map\5@new.bmp#유저인터페이스\map\1@new.bmp#

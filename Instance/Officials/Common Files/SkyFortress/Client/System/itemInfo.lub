@@ -1,0 +1,15 @@
+[6960] = {
+		unidentifiedDisplayName = "Sky Fortress Key",
+		unidentifiedResourceName  = "기만의열쇠",
+		unidentifiedDescriptionName = {
+		},
+		identifiedDisplayName = "Sky Fortress Key",
+		identifiedResourceName = "기만의열쇠",
+		identifiedDescriptionName = {
+			"A key used to enter fortress somewhere in the sky.",
+			"^FFFFFF_^000000",
+			"Weight:^009900 1^000000",
+		},
+		slotCount = 0,
+		ClassNum = 0
+	},

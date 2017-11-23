@@ -1,0 +1,347 @@
+//RATHENA
+
+3122,CHARLESTON1,Charleston 1,Charleston 1,140,2614000,1,3680400,2106400,1,3210,3905,123,68,189,78,81,51,108,56,10,12,2,2,22,0x6203885,500,1500,500,1000,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
+3123,CHARLESTON2,Charleston 2,Charleston 2,140,2614000,1,3680400,2106400,1,3210,3905,123,68,189,78,81,51,108,56,10,12,2,2,22,0x6203885,500,1500,500,1000,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
+3124,CHARLESTON3,Charleston 3,Charleston 3,145,23671401,1,3680400,2106400,1,1500,2500,200,90,208,106,205,206,228,105,10,12,2,7,20,0x6203885,500,1500,500,1000,0,0,0,0,0,0,0,16031,200,28101,200,16033,100,21011,200,22043,400,22044,200,6752,5000,0,0,0,0,0,0
+3125,STEP,Step,Step,130,55403,1,308800,239200,1,871,1566,101,58,117,127,55,61,116,60,10,12,1,7,20,0x6203885,500,1500,500,1000,0,0,0,0,0,0,0,6751,1000,998,150,6213,400,0,0,0,0,0,0,0,0,0,0,0,0,0,0
+3126,ROCK_STEP,Lockstep,Lockstep,131,71056,1,360900,220900,1,1100,1425,85,59,99,95,70,124,155,80,10,12,1,6,40,0x6203885,500,1500,500,1000,0,0,0,0,0,0,0,6750,500,999,350,7319,500,0,0,0,0,0,0,0,0,0,0,0,0,0,0
+3127,KICK_STEP,Hallway 1 Security Device,Hallway 1 Security Device,132,73644,1,360700,220500,7,1151,1369,80,50,99,92,72,122,161,76,10,12,0,7,20,0x6203885,500,1500,500,1000,0,0,0,0,0,0,0,6750,400,999,250,7319,300,0,0,0,0,0,0,0,0,0,0,0,0,27012,1
+3128,KICK_AND_KICK,Security Robot,Security Robot,133,68018,1,372900,203200,1,1484,1642,98,54,164,116,66,59,141,58,10,12,1,7,20,0x6203885,500,1500,500,1000,0,0,0,0,0,0,0,6751,500,998,100,0,0,0,0,0,0,0,0,0,0,0,0,0,0,27013,1
+
+//HERCULES
+
+{
+	Id: 3122
+	SpriteName: "CHARLESTON1"
+	Name: "Charleston 1"
+	Lv: 140
+	Hp: 2614000
+	Sp: 1
+	Exp: 3680400
+	JExp: 2106400
+	AttackRange: 3
+	Attack: [3210,3905]
+	Def: 123
+	Mdef: 68
+	Stats: {
+		Str: 189
+		Agi: 78
+		Vit: 81
+		Int: 51
+		Dex: 108
+		Luk: 56
+	}
+	ViewRange: 10
+	ChaseRange: 12
+	Size: "Size_Large"
+	Race: "RC_Demon"
+	Element: ("Ele_Earth", 1)
+	Mode: {
+		CanMove: true
+		Aggressive: true
+		CastSensorIdle: true
+		CanAttack: true
+		Detector: true
+		CastSensorChase: true
+		ChangeChase: true
+		ChangeTargetMelee: true
+		ChangeTargetChase: true
+	}
+	MoveSpeed: 500
+	AttackDelay: 1500
+	AttackMotion: 500
+	DamageMotion: 1000
+	MvpExp: 0
+	Drops: {  
+	}
+},
+{
+	Id: 3123
+	SpriteName: "CHARLESTON2"
+	Name: "Charleston 2"
+	Lv: 140
+	Hp: 2614000
+	Sp: 1
+	Exp: 3680400
+	JExp: 2106400
+	AttackRange: 3
+	Attack: [3210,3905]
+	Def: 123
+	Mdef: 68
+	Stats: {
+		Str: 189
+		Agi: 78
+		Vit: 81
+		Int: 51
+		Dex: 108
+		Luk: 56
+	}
+	ViewRange: 10
+	ChaseRange: 12
+	Size: "Size_Large"
+	Race: "RC_Demon"
+	Element: ("Ele_Earth", 1)
+	Mode: {
+		CanMove: true
+		Aggressive: true
+		CastSensorIdle: true
+		CanAttack: true
+		Detector: true
+		CastSensorChase: true
+		ChangeChase: true
+		ChangeTargetMelee: true
+		ChangeTargetChase: true
+	}
+	MoveSpeed: 500
+	AttackDelay: 1500
+	AttackMotion: 500
+	DamageMotion: 1000
+	MvpExp: 0
+	Drops: {  
+	}
+},
+{
+	Id: 3124
+	SpriteName: "CHARLESTON3"
+	Name: "Charleston 3"
+	Lv: 145
+	Hp: 23671401
+	Sp: 1
+	Exp: 3680400
+	JExp: 2106400
+	AttackRange: 3
+	Attack: [1500,2500]
+	Def: 200
+	Mdef: 90
+	Stats: {
+		Str: 208
+		Agi: 106
+		Vit: 205
+		Int: 206
+		Dex: 228
+		Luk: 115
+	}
+	ViewRange: 10
+	ChaseRange: 12
+	Size: "Size_Large"
+	Race: "RC_Demon"
+	Element: ("Ele_Neutral", 3)
+	Mode: {
+		CanMove: true
+		Aggressive: true
+		CastSensorIdle: true
+		CanAttack: true
+		Detector: true
+		CastSensorChase: true
+		ChangeChase: true
+		ChangeTargetMelee: true
+		ChangeTargetChase: true
+	}
+	MoveSpeed: 500
+	AttackDelay: 1500
+	AttackMotion: 500
+	DamageMotion: 1000
+	MvpExp: 0
+	Drops: {  
+		Pile_Bunker_P: 200,
+		Axe_Tornado: 200,
+		Robots_Mechanical_Arm: 100,
+		Gigantic_Blade: 200,
+		Supplement_Part_Agi: 400,
+		Reinforced_Parts_Booster: 400,
+		Charleston_Parts: 5000
+	}
+},
+{
+	Id: 3125
+	SpriteName: "STEP"
+	Name: "Step"
+	Lv: 130
+	Hp: 55403
+	Sp: 1
+	Exp: 308800
+	JExp: 239200
+	AttackRange: 1
+	Attack: [871,1566]
+	Def: 101
+	Mdef: 58
+	Stats: {
+		Str: 117
+		Agi: 127
+		Vit: 55
+		Int: 61
+		Dex: 116
+		Luk: 60
+	}
+	ViewRange: 10
+	ChaseRange: 12
+	Size: "Size_Small"
+	Race: "RC_Demon"
+	Element: ("Ele_Neutral", 1)
+	Mode: {
+		CanMove: true
+		Aggressive: true
+		CastSensorIdle: true
+		CanAttack: true
+		Detector: true
+		CastSensorChase: true
+		ChangeChase: true
+		ChangeTargetMelee: true
+		ChangeTargetChase: true
+	}
+	MoveSpeed: 500
+	AttackDelay: 1500
+	AttackMotion: 500
+	DamageMotion: 1000
+	MvpExp: 0
+	Drops: {  
+		Crushed_Can_Iron_Plate: 1000,
+		Iron: 150,
+		Explosive_Powder: 400
+	}
+},
+{
+	Id: 3126
+	SpriteName: "ROCK_STEP"
+	Name: "Lock Step"
+	Lv: 131
+	Hp: 71506
+	Sp: 1
+	Exp: 360900
+	JExp: 220900
+	AttackRange: 2
+	Attack: [1100, 1425]
+	Def: 85
+	Mdef: 59
+	Stats: {
+		Str: 99
+		Agi: 95
+		Vit: 70
+		Int: 124
+		Dex: 155
+		Luk: 80
+	}
+	ViewRange: 10
+	ChaseRange: 12
+	Size: "Size_Medium"
+	Race: "RC_Demon"
+	Element: ("Ele_Neutral", 2)
+	Mode: {
+		CanMove: true
+		Aggressive: true
+		CastSensorIdle: true
+		CanAttack: true
+		Detector: true
+		CastSensorChase: true
+		ChangeChase: true
+		ChangeTargetMelee: true
+		ChangeTargetChase: true
+	}
+	MoveSpeed: 500
+	AttackDelay: 1500
+	AttackMotion: 500
+	DamageMotion: 1000
+	MvpExp: 0
+	Drops: {  
+		Failed_Engine: 500,
+		Steel: 350,
+		Old_Steel_Plate: 500
+	}
+},
+{
+	Id: 3127
+	SpriteName: "KICK_STEP"
+	Name: "Hallway 1 Security Devi"
+	Lv: 132
+	Hp: 73644
+	Sp: 1
+	Exp: 360700
+	JExp: 220500
+	AttackRange: 7
+	Attack: [1151, 1369]
+	Def: 80
+	Mdef: 50
+	Stats: {
+		Str: 99
+		Agi: 92
+		Vit: 72
+		Int: 122
+		Dex: 161
+		Luk: 76
+	}
+	ViewRange: 10
+	ChaseRange: 12
+	Size: "Size_Medium"
+	Race: "RC_Demon"
+	Element: ("Ele_Neutral", 2)
+	Mode: {
+		CanMove: true
+		Aggressive: true
+		CastSensorIdle: true
+		CanAttack: true
+		Detector: true
+		CastSensorChase: true
+		ChangeChase: true
+		ChangeTargetMelee: true
+		ChangeTargetChase: true
+	}
+	MoveSpeed: 500
+	AttackDelay: 1500
+	AttackMotion: 500
+	DamageMotion: 1000
+	MvpExp: 0
+	Drops: {  
+		Failed_Engine: 500,
+		Steel: 350,
+		Old_Steel_Plate: 500,
+		Kick_Step_Card: 1
+	}
+},
+{
+	Id: 3128
+	SpriteName: "KICK_AND_KICK "
+	Name: "Security Robot"
+	Lv: 133
+	Hp: 68018
+	Sp: 1
+	Exp: 372900
+	JExp: 203200
+	AttackRange: 1
+	Attack: [1484, 1642]
+	Def: 98
+	Mdef: 54
+	Stats: {
+		Str: 164
+		Agi: 116
+		Vit: 66
+		Int: 59
+		Dex: 141
+		Luk: 58
+	}
+	ViewRange: 10
+	ChaseRange: 12
+	Size: "Size_Medium"
+	Race: "RC_Demon"
+	Element: ("Ele_Neutral", 2)
+	Mode: {
+		CanMove: true
+		Aggressive: true
+		CastSensorIdle: true
+		CanAttack: true
+		Detector: true
+		CastSensorChase: true
+		ChangeChase: true
+		ChangeTargetMelee: true
+		ChangeTargetChase: true
+	}
+	MoveSpeed: 500
+	AttackDelay: 1500
+	AttackMotion: 500
+	DamageMotion: 1000
+	MvpExp: 0
+	Drops: {  
+		Crushed_Can_Iron_Plate: 500,
+		Iron: 100,
+		Kick_&_Kick_Card: 1
+	}
+},

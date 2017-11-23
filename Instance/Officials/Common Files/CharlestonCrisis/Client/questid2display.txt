@@ -1,0 +1,19 @@
+13184#Charleston Factory#SG_FEEL#QUE_NOIMAGE#
+Enter Charleston Factory.#
+#
+
+13185#Charleston Factory - Hold#SG_FEEL#QUE_NOIMAGE#
+You have used the mechanic device.#
+#
+
+13186#Charleston Factory - Complete#SG_FEEL#QUE_NOIMAGE#
+#
+#
+
+13187#Deal with the Staff#SG_FEEL#QUE_NOIMAGE#
+Take care of the Factory Staff.#
+#
+
+13188#Deal with the Staff - Hold#SG_FEEL#QUE_NOIMAGE#
+#
+#

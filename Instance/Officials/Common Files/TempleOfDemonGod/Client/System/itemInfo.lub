@@ -1,0 +1,44 @@
+[6713] = {
+		unidentifiedDisplayName = "Soul of Ahat",
+		unidentifiedResourceName  = "불꽃얼음",
+		unidentifiedDescriptionName = {
+		},
+		identifiedDisplayName = "Soul of Ahat",
+		identifiedResourceName = "불꽃얼음",
+		identifiedDescriptionName = {
+			"Dark tribe Ahat's soul created by Morocc.",
+			"You need this to open the true gate of the war against Dark lord.",
+			"Weight:^009900 0^000000",
+		},
+		slotCount = 0,
+		ClassNum = 0
+	},
+	[6714] = {
+		unidentifiedDisplayName = "Soul of Shnaim",
+		unidentifiedResourceName  = "황혼의노을",
+		unidentifiedDescriptionName = {
+		},
+		identifiedDisplayName = "Soul of Shnaim",
+		identifiedResourceName = "황혼의노을",
+		identifiedDescriptionName = {
+			"Dark tribe Shnaim's soul created by Morocc.",
+			"You need this to open the true gate of the war against Dark lord.",
+			"Weight:^009900 0^000000",
+		},
+		slotCount = 0,
+		ClassNum = 0
+	},
+	[22567] = {
+		unidentifiedDisplayName = "Squad Prize",
+		unidentifiedResourceName  = "햇빛의상자",
+		unidentifiedDescriptionName = {
+		},
+		identifiedDisplayName = "Squad Prize",
+		identifiedResourceName = "햇빛의상자",
+		identifiedDescriptionName = {
+			"A prize box for Morocc adventure troops.",
+			"Weight:^009900 10^000000",
+		},
+		slotCount = 0,
+		ClassNum = 0
+	},

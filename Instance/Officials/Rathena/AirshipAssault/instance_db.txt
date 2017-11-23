@@ -1,0 +1,1 @@
+26,Airship Assault,7200,300,1@air1,244,28,1@air2

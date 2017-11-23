@@ -1,0 +1,278 @@
+//===== Alayne Scripts =======================================
+//= Poring Village Item quests
+//===== By: ================================================== 
+//= Alayne
+//===== Current Version: ===================================== 
+//= 1.0
+//===== Compatible With: ===================================== 
+//= rAthena SVN
+//= hercules SVN
+//===== Description: ========================================= 
+//= The official instance Poring Village stuff transcription
+//===== Todo Remaining: ======================================
+// 
+//===== Additional Comments: =================================
+//
+//
+//============================================================
+
+prt_fild05,154,239,3	script	Poring Stuff::alaaspr	4_F_JP_RINNE,{
+	if(.enchantingId != -1)
+	{
+		mes "[Poring Stuff]";
+		mes "Wait a bit please, I'm stucked with someone else.";
+		close;
+	}
+	disable_items;
+	mes "[Poring Stuff]";
+	if (countitem(.reqId) >= .reqCountEnchant) {
+		mes "I've been studying ways to enhance Poring stuff to maximize its capability.";
+		next;
+		mes "[Poring Stuff]";
+		mes "Enchanting is an awesome skill that infuses a mysterious status powers into the armor's hidden socket.";
+		next;
+		mes "[Poring Stuff]";
+		mes "I'm able to put some kind of bonus stuff on an piece of stuff representing Porings that you may wear.";
+		next;
+		set .@typeChoice, select("Buy a Hat","Enchant Poring Hat.");
+		switch(.@typeChoice) {
+		case 1:
+			goto S_BuyHat;
+			break;
+		case 2:
+			.@menu$ = "";
+			for(.@i = 0; .@i<getarraysize(.itemList); ++.@i)
+			{
+				if(getequipid(EQI_HEAD_TOP) == .itemList[.@i])
+				{
+					set .@realItems[getarraysize(.@realItems)], .itemList[.@i];
+					.@menu$ += getitemname(.itemList[.@i])+":";
+				}
+			}
+			break;
+		}
+		if(getarraysize(.@realItems) == 0)
+		{
+			next;
+			mes "[Poring Stuff]";
+			mes "You have to wear it to allow me to enchant it.";
+			close;
+		}
+	
+		callsub S_EnchantArmor, .@realItems[select(.@menu$)-1], .@typeChoice;
+		end;
+	}
+	mes "Do you know you can enchant Poring's piece of stuff?";
+	next;
+	mes "[Poring Stuff]";
+	mes "If by any chance, you would want to enchant one, bring me " + .reqCountEnchant + " " + getitemname(.reqId) + ", and we'll see what we can do.";
+	close;
+	
+S_BuyHat:
+	next;
+	mes "[Poring Stuff]";
+	mes "So you want to buy an item?";
+	mes "It'll cost you " + .reqCountBuy + " " + getitemname(.reqId) + " for an item.";
+	for(.@i = 0; .@i<getarraysize(.itemList); ++.@i)
+	{
+		.@menu$ += getitemname(.itemList[.@i])+":";
+	}
+	set .@selectItem, select(.@menu$) - 1;
+	next;
+	mes "[Poring Stuff]";
+	mes "So you've choosed a " + getitemname(.itemList[.@selectItem]) + ", hu?";
+	if(select("Yes","No") == 1)
+	{
+		if(countitem(.reqId) >= .reqCountBuy)
+		{
+			next;
+			mes "[Poring Stuff]";
+			mes "Allright. Here you are then.";
+			delitem .reqId, .reqCountBuy;
+			getitem .itemList[.@selectItem], 1;
+			next;
+			mes "[Poring Stuff]";
+			mes "See you soon.";
+		}
+		else
+		{
+			next;
+			mes "[Poring Stuff]";
+			mes "As I told you, I need " + .reqCountBuy + " " + getitemname(.reqId) + ". I'll wait here.";
+		}
+	}
+	else
+	{
+		next;
+		mes "[Poring Stuff]";
+		mes "Really?";
+		mes "Let's do it again then.";
+		goto S_BuyEarring;
+	}
+	close;
+	
+S_EnchantArmor:
+	.@itemid = getarg(0);
+	.@typeChoice = getarg(1);
+	next;
+	mes "[Poring Stuff]";
+	mes "First and most importantly.";
+	mes "^ff5555Existing Refine Level of the Armor";
+	mes "and Cards will be GONE.^000000";
+	mes "Do you still want to try an Enchant?";
+	next;
+	if(select("Hmm... Let me think it over.", "Go ahead.") == 1) {
+		mes "[Poring Stuff]";
+		mes "Well, I can't blame you. Safety first, eh?";
+		mes "Now you have a nice day.";
+		close;
+	}
+
+	if(countitem(.@itemId) > 1)
+	{
+		next;
+		mes "[Poring Stuff]";
+		mes "Sorry but you have to have only one item on your equipement window.";
+		mes "Otherwise, the enchant may mix things up...";
+		close;
+	}
+
+	mes "[Poring Stuff]";
+	mes "Quite of an adventurer huh? Well, shall we?";
+	mes "You should now choose the kind of enchant you want.";
+	set .@enchantChoice, select("HP/SP and Stats");
+
+	if (countitem(.reqId) < .reqCountEnchant) {
+		mes "[Poring Stuff]";
+		mes "Sorry, but you don't have enough zeny.";
+		close;
+	}
+	
+	//find good slot
+	set .@slot, -1;
+	if(getequipid(EQI_HEAD_TOP) == .@itemid)
+	{
+		set .@cSlot, getequipcardid(EQI_HEAD_TOP, 2);
+		if(.@cSlot != 0)
+		{
+			set .@slot3Id, .@cSlot;
+			set .@cSlot, getequipcardid(EQI_HEAD_TOP, 3);
+			if(.@cSlot == 0)
+			{
+				set .@slot, 3;
+			}
+		}
+		else
+		{
+			set .@slot, 2;
+		}
+	}
+
+	if(.@slot == -1)
+	{
+		next;
+		mes "[Poring Stuff]";
+		mes "Your item is allready enchanted twice...I can't work with that.";
+		close;
+	}
+	
+	//enchant
+	set .enchantingId, getcharid(3);
+	progressbar "ffff00",7;
+	delitem .reqId, .reqCountEnchant;
+	delitem .@itemid,1;
+	
+	switch(.@enchantChoice)
+	{
+		case 1:
+			if(.@slot == 2)
+			{
+				switch(rand(1, 7))
+				{
+					case 1:
+						set .@addpart, 4700;
+						break;
+					case 2:
+						set .@addpart, 4710;
+						break;
+					case 3:
+						set .@addpart, 4720;
+						break;
+					case 4:
+						set .@addpart, 4730;
+						break;
+					case 5:
+						set .@addpart, 4740;
+						break;
+					case 6:
+						set .@addpart, 4750;
+						break;
+					case 7:
+						specialeffect 155;
+						next;
+						mes "[Poring Stuff]";
+						mes "Well that's too bad.";
+						mes "The requested equipment has failed to enchant, I'm sorry...";
+						set .enchantingId, -1;
+						close;
+				}
+			}
+			else
+			{
+				switch(rand(1, 10))
+				{
+					case 1:
+						set .@addpart, 4795;
+						break;
+					case 2:
+						set .@addpart, 4796;
+						break;
+					case 3:
+						set .@addpart, 4928;
+						break;
+					case 4:
+						set .@addpart, 4870;
+						break;
+					case 5:
+						set .@addpart, 4800;
+						break;
+					case 6:
+						set .@addpart, 4861;
+						break;
+					case 7:
+						set .@addpart, 4862;
+						break;
+					default:
+						specialeffect 155;
+						next;
+						mes "[Poring Stuff]";
+						mes "Well that's too bad.";
+						mes "The requested equipment has failed to enchant, I'm sorry...";
+						//break item
+						set .enchantingId, -1;
+						close;
+				}
+			}
+			break;
+	}
+	
+	if(.@slot == 2)
+	{
+		getitem2 .@itemid, 1, 1, 0, 0, 0, 0, .@addpart, 0;
+	}
+	else if(.@slot == 3)
+	{
+		getitem2 .@itemid, 1, 1, 0, 0, 0, 0, .@slot3Id, .@addpart;
+	}
+	specialeffect 154;
+	set .enchantingId, -1;
+	close;
+	
+OnInit:
+	set .enchantingId, -1;
+	set .reqId, 7539;
+	set .reqCountEnchant, 4;
+	set .reqCountBuy, 1;
+	setarray .itemList[0],5035,5255,18748,18785;
+	end;
+}

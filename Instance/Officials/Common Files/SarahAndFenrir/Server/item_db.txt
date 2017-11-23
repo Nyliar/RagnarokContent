@@ -1,0 +1,22 @@
+//HERCULES
+
+{
+	Id: 15121
+	AegisName: "Sarah_Combat_Robe"
+	Name: "Sarah Combat Robe"
+	Type: 5
+	Buy: 10
+	Weight: 2200
+	Def: 35
+	Loc: 16
+	EquipLv: 45
+	Script: <" /*TODO: Confirm the real rate and additional MAtk*/ .@r = getrefine(); autobonus "{ bonus bMatk,20; }",100,(10+((.@r) ? .@r*8 : 0))*1000,BF_MAGIC; ">
+},
+{
+	Id: 6803
+	AegisName: "Fragments_Of_Gigan"
+	Name: "Fragments Of Gigan"
+	Buy: 0
+	Weight: 10
+	BuyingStore: true
+},

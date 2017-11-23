@@ -1,0 +1,294 @@
+//RATHENA
+3445,P_ARCHER_SKELETON,Enchanted Archer Skeleton,Enchanted Archer Skeleton,114,10000,1,3199,4104,10,701,901,93,51,126,57,55,69,112,15,10,12,0,6,69,0x3695,500,1500,500,1000,0,0,0,0,0,0,0,6942,10000,7005,10000,12013,500,0,0,0,0,0,0,0,0,0,0,0,0,4633,1
+3446,P_SKELETON,Enchanted Skeleton,Enchanted Skeleton,114,10000,1,3199,4104,1,701,901,93,51,126,57,55,69,112,15,10,12,0,6,69,0x3695,500,1500,500,1000,0,0,0,0,0,0,0,6942,10000,7005,10000,0,0,0,0,0,0,0,0,0,0,0,0,0,0,4446,1
+3447,P_SOLDIER_SKELETON,Enhanced Soldier Skeleton,Enhanced Soldier Skeleton,114,10000,1,3199,4104,1,701,901,93,51,126,57,55,69,112,15,10,12,0,6,69,0x3695,500,1500,500,1000,0,0,0,0,0,0,0,6942,10000,7005,10000,0,0,0,0,0,0,0,0,0,0,0,0,0,0,4634,1
+3448,P_AMDARAIS,Renovated Amdarias,Renovated Amdarias,99,1000000,1,74288,77950,2,8860,10022,32,66,140,159,30,109,300,90,10,12,0,6,69,0x6203885,500,1500,500,1000,0,0,0,0,0,0,0,6942,10000,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,4635,1
+3449,G_P_AMDARAIS,Enhanced Amdarias,Enhanced Amdarias,98,66666,1,74288,77950,2,8860,10022,32,66,140,159,30,109,300,90,10,12,0,6,69,0x6203885,500,1500,500,1000,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
+3450,BIJOU,Bijou,Bijou,115,1000000,1,1501561,1274220,2,2710,4120,494,123,116,123,154,99,217,98,10,12,2,2,63,0x6203885,500,1500,500,1000,0,0,0,0,0,0,0,6941,10000,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,4636,1
+
+//HERCULES
+
+{
+	Id: 3445
+	SpriteName: "P_ARCHER_SKELETON"
+	Name: "Enchanted Archer Skeleton"
+	Lv: 114
+	Hp: 10000
+	Sp: 1
+	Exp: 3199
+	JExp: 4104
+	AttackRange: 10
+	Attack: [700,901]
+	Def: 93
+	Mdef: 51
+	Stats: {
+		Str: 126
+		Agi: 57
+		Vit: 55
+		Int: 69
+		Dex: 112
+		Luk: 15
+	}
+	ViewRange: 10
+	ChaseRange: 12
+	Size: "Size_Medium"
+	Race: "RC_Undead"
+	Element: ("Ele_Undead", 3)
+	Mode: {
+		CanMove: true
+		Aggressive: true
+		CastSensorIdle: true
+		CanAttack: true
+		Detector: true
+		CastSensorChase: true
+		ChangeChase: true
+		ChangeTargetMelee: true
+		ChangeTargetChase: true
+	}
+	MoveSpeed: 500
+	AttackDelay: 1500
+	AttackMotion: 500
+	DamageMotion: 1000
+	MvpExp: 0
+	Drops: {
+     Will_Master: 500  
+     Skull: 10000
+     Shadow_Arrow_Container: 200
+     P_Archer_Skeleton_Card: 1
+	}
+},
+{
+	Id: 3446
+	SpriteName: "P_SKELETON"
+	Name: "Enchanted Skeleton"
+	Lv: 114
+	Hp: 10000
+	Sp: 1
+	Exp: 3199
+	JExp: 4104
+	AttackRange: 1
+	Attack: [700,901]
+	Def: 93
+	Mdef: 51
+	Stats: {
+		Str: 126
+		Agi: 57
+		Vit: 55
+		Int: 69
+		Dex: 112
+		Luk: 15
+	}
+	ViewRange: 10
+	ChaseRange: 12
+	Size: "Size_Medium"
+	Race: "RC_Undead"
+	Element: ("Ele_Undead", 3)
+	Mode: {
+		CanMove: true
+		Aggressive: true
+		CastSensorIdle: true
+		CanAttack: true
+		Detector: true
+		CastSensorChase: true
+		ChangeChase: true
+		ChangeTargetMelee: true
+		ChangeTargetChase: true
+	}
+	MoveSpeed: 500
+	AttackDelay: 1500
+	AttackMotion: 500
+	DamageMotion: 1000
+	MvpExp: 0
+	Drops: {
+     Will_Master: 500  
+     Skull: 10000
+     P_Skeleton_Card: 1
+	}
+},
+{
+	Id: 3447
+	SpriteName: "P_SOLDIER_SKELETON"
+	Name: "Enchanted Soldier Skeleton"
+	Lv: 114
+	Hp: 10000
+	Sp: 1
+	Exp: 3199
+	JExp: 4104
+	AttackRange: 1
+	Attack: [700,901]
+	Def: 93
+	Mdef: 51
+	Stats: {
+		Str: 126
+		Agi: 57
+		Vit: 55
+		Int: 69
+		Dex: 112
+		Luk: 15
+	}
+	ViewRange: 10
+	ChaseRange: 12
+	Size: "Size_Medium"
+	Race: "RC_Undead"
+	Element: ("Ele_Undead", 3)
+	Mode: {
+		CanMove: true
+		Aggressive: true
+		CastSensorIdle: true
+		CanAttack: true
+		Detector: true
+		CastSensorChase: true
+		ChangeChase: true
+		ChangeTargetMelee: true
+		ChangeTargetChase: true
+	}
+	MoveSpeed: 500
+	AttackDelay: 1500
+	AttackMotion: 500
+	DamageMotion: 1000
+	MvpExp: 0
+	Drops: {
+     Will_Master: 500  
+     Skull: 10000
+     P_Soldier_Skeleton_Card: 1
+	}
+},
+{
+	Id: 3448
+	SpriteName: "P_AMDARAIS"
+	Name: "Renovated Amdarias"
+	Lv: 99
+	Hp: 1000000
+	Sp: 1
+	Exp: 74288
+	JExp: 77950
+	AttackRange: 2
+	Attack: [8860,10022]
+	Def: 32
+	Mdef: 66
+	Stats: {
+		Str: 140
+		Agi: 159
+		Vit: 30
+		Int: 109
+		Dex: 300
+		Luk: 90
+	}
+	ViewRange: 10
+	ChaseRange: 12
+	Size: "Size_Large"
+	Race: "RC_Undead"
+	Element: ("Ele_Undead", 1)
+	Mode: {
+		CanMove: true
+		Aggressive: true
+		CastSensorIdle: true
+		CanAttack: true
+		Detector: true
+		CastSensorChase: true
+		ChangeChase: true
+		ChangeTargetMelee: true
+		ChangeTargetChase: true
+	}
+	MoveSpeed: 500
+	AttackDelay: 1500
+	AttackMotion: 500
+	DamageMotion: 1000
+	MvpExp: 0
+	Drops: {
+     Will_Master: 500  
+     P_Amdarais_Card: 1
+	}
+},
+{
+	Id: 3449
+	SpriteName: "G_P_AMDARAIS"
+	Name: "Enhanced Amdarias"
+	Lv: 99
+	Hp: 66666
+	Sp: 1
+	Exp: 74288
+	JExp: 77950
+	AttackRange: 2
+	Attack: [8860,10022]
+	Def: 32
+	Mdef: 66
+	Stats: {
+		Str: 140
+		Agi: 159
+		Vit: 30
+		Int: 109
+		Dex: 300
+		Luk: 90
+	}
+	ViewRange: 10
+	ChaseRange: 12
+	Size: "Size_Large"
+	Race: "RC_Undead"
+	Element: ("Ele_Undead", 1)
+	Mode: {
+		CanMove: true
+		Aggressive: true
+		CastSensorIdle: true
+		CanAttack: true
+		Detector: true
+		CastSensorChase: true
+		ChangeChase: true
+		ChangeTargetMelee: true
+		ChangeTargetChase: true
+	}
+	MoveSpeed: 500
+	AttackDelay: 1500
+	AttackMotion: 500
+	DamageMotion: 1000
+	MvpExp: 0
+	Drops: {
+	}
+},
+{
+	Id: 3450
+	SpriteName: "BIJOU"
+	Name: "Bijou"
+	Lv: 115
+	Hp: 1000000
+	Sp: 1
+	Exp: 1501561
+	JExp: 1274220
+	AttackRange: 2
+	Attack: [2710,4120]
+	Def: 494
+	Mdef: 123
+	Stats: {
+		Str: 116
+		Agi: 123
+		Vit: 154
+		Int: 99
+		Dex: 217
+		Luk: 98
+	}
+	ViewRange: 10
+	ChaseRange: 12
+	Size: "Size_Large"
+	Race: "RC_Undead"
+	Element: ("Ele_Undead", 4)
+	Mode: {
+		CanMove: true
+		Aggressive: true
+		CastSensorIdle: true
+		CanAttack: true
+		Detector: true
+		CastSensorChase: true
+		ChangeChase: true
+		ChangeTargetMelee: true
+		ChangeTargetChase: true
+	}
+	MoveSpeed: 500
+	AttackDelay: 1500
+	AttackMotion: 500
+	DamageMotion: 1000
+	MvpExp: 0
+	Drops: {
+     Fragments_Valkyrie_Power: 500
+     Bijou_Card: 1
+   }
+},

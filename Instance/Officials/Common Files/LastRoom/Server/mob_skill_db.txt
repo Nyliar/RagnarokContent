@@ -1,0 +1,7 @@
+//Last Room
+3254,T_W_O@WIDESTONE,chase,666,5,10000,500,20000,no,self,myhpltmaxrate,80,,,,,,,
+3254,T_W_O@WIDESTONE,attack,666,5,10000,500,20000,no,self,myhpltmaxrate,80,,,,,,,
+3254,T_W_O@NPC_WIDESOULDRAIN,attack,680,7,1000,500,5000,no,self,myhpltmaxrate,50,,,,,,42,
+3254,T_W_O@NPC_CRITICALWOUND,attack,673,3,10000,0,5000,yes,target,always,0,,,,,,,
+3254,T_W_O@NPC_CRITICALWOUND,idle,673,3,5000,0,5000,yes,target,always,0,,,,,,,
+3254,T_W_O@NPC_CRITICALWOUND,chase,673,3,5000,0,5000,yes,target,always,0,,,,,,,

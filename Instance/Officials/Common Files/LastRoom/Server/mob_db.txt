@@ -1,0 +1,201 @@
+//RATHENA
+3251,GC109,Machine Component GC109,Machine Component GC109,149,217650,1,0,0,3,2678,3935,121,71,60,132,45,35,155,15,10,12,1,6,67,0x6203885,500,1500,500,1000,0,0,0,0,0,0,0,7512,1000,7507,1500,7319,2000,0,0,0,0,0,0,0,0,0,0,0,0,27018,1
+3252,DR815,Machine Component DR815,Machine Component DR815,153,245670,1,0,0,3,3315,4076,143,45,88,98,88,21,116,22,10,12,1,6,67,0x6203885,500,1500,500,1000,0,0,0,0,0,0,0,7512,1000,7507,1500,7319,2000,0,0,0,0,0,0,0,0,0,0,0,0,27019,1
+3253,SYS_MSG,System Message,System Message,160,100,1,0,0,1,1,2,276,99,0,0,0,188,0,0,10,12,1,6,67,0x170005,500,1500,500,1000,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
+3254,T_W_O,T_W_O,T_W_O,165,48000000,1,0,0,3,3955,4151,158,134,90,141,7,87,267,70,10,12,2,6,67,0x6203885,500,1500,500,1000,0,6832,5000,617,5000,617,5000,22699,3000,1531,500,7319,2000,0,0,0,0,0,0,0,0,0,0,0,0,27020,1
+
+//HERCULES
+
+{
+	Id: 3251
+	SpriteName: "GC109"
+	Name: "Machine Component GC109"
+	Lv: 149
+	Hp: 217650
+	Sp: 1
+	Exp: 0
+	JExp: 0
+	AttackRange: 3
+	Attack: [2678,3935]
+	Def: 121
+	Mdef: 71
+	Stats: {
+		Str: 60
+		Agi: 132
+		Vit: 45
+		Int: 35
+		Dex: 155
+		Luk: 15
+	}
+	ViewRange: 10
+	ChaseRange: 12
+	Size: "Size_Small"
+	Race: "RC_Formless"
+	Element: ("Ele_Dark", 2)
+	Mode: {
+		CanMove: true
+		Aggressive: true
+		CastSensorIdle: true
+		CanAttack: true
+		Detector: true
+		CastSensorChase: true
+		ChangeChase: true
+		ChangeTargetMelee: true
+		ChangeTargetChase: true
+	}
+	MoveSpeed: 500
+	AttackDelay: 1500
+	AttackMotion: 500
+	DamageMotion: 1000
+	MvpExp: 0
+	Drops: {  
+     Burnt_Parts: 1000
+     Sturdy_Iron_Piece: 1500
+     Old_Steel_Plate: 2000
+     GC109_Card: 1
+	}
+},
+{
+	Id: 3252
+	SpriteName: "DR815"
+	Name: "Machine Component DR815"
+	Lv: 153
+	Hp: 245670
+	Sp: 1
+	Exp: 0
+	JExp: 0
+	AttackRange: 3
+	Attack: [3315,4076]
+	Def: 143
+	Mdef: 45
+	Stats: {
+		Str: 88
+		Agi: 98
+		Vit: 88
+		Int: 21
+		Dex: 116
+		Luk: 22
+	}
+	ViewRange: 10
+	ChaseRange: 12
+	Size: "Size_Medium"
+	Race: "RC_Formless"
+	Element: ("Ele_Dark", 1)
+	Mode: {
+		CanMove: true
+		Aggressive: true
+		CastSensorIdle: true
+		CanAttack: true
+		Detector: true
+		CastSensorChase: true
+		ChangeChase: true
+		ChangeTargetMelee: true
+		ChangeTargetChase: true
+	}
+	MoveSpeed: 500
+	AttackDelay: 1500
+	AttackMotion: 500
+	DamageMotion: 1000
+	MvpExp: 0
+	Drops: {  
+     Burnt_Parts: 1000
+     Sturdy_Iron_Piece: 1500
+     Old_Steel_Plate: 2000
+     DR815_Card: 1
+	}
+},
+{
+	Id: 3253
+	SpriteName: "SYS_MSG"
+	Name: "System Message"
+	Lv: 160
+	Hp: 100
+	Sp: 1
+	Exp: 0
+	JExp: 0
+	AttackRange: 1
+	Attack: [1,2]
+	Def: 276
+	Mdef: 99
+	Stats: {
+		Str: 0
+		Agi: 0
+		Vit: 0
+		Int: 188
+		Dex: 0
+		Luk: 0
+	}
+	ViewRange: 10
+	ChaseRange: 12
+	Size: "Size_Medium"
+	Race: "RC_Formless"
+	Element: ("Ele_Dark", 1)
+	Mode: {
+		CanMove: true
+		Aggressive: true
+		CastSensorIdle: true
+		CanAttack: true
+		Detector: true
+		CastSensorChase: true
+		ChangeChase: true
+		ChangeTargetMelee: true
+		ChangeTargetChase: true
+    Plant: true
+	}
+	MoveSpeed: 500
+	AttackDelay: 1500
+	AttackMotion: 500
+	DamageMotion: 1000
+	MvpExp: 0
+	Drops: {  
+	}
+},
+{
+	Id: 3254
+	SpriteName: "T_W_O"
+	Name: "T_W_O"
+	Lv: 165
+	Hp: 48000000
+	Sp: 1
+	Exp: 0
+	JExp: 0
+	AttackRange: 3
+	Attack: [3955,4151]
+	Def: 158
+	Mdef: 134
+	Stats: {
+		Str: 90
+		Agi: 141
+		Vit: 7
+		Int: 87
+		Dex: 267
+		Luk: 70
+	}
+	ViewRange: 10
+	ChaseRange: 12
+	Size: "Size_Large"
+	Race: "RC_Demon"
+	Element: ("Ele_Dark", 3)
+	Mode: {
+		CanMove: true
+		Aggressive: true
+		CastSensorIdle: true
+		CanAttack: true
+		Detector: true
+		CastSensorChase: true
+		ChangeChase: true
+		ChangeTargetMelee: true
+		ChangeTargetChase: true
+	}
+	MoveSpeed: 500
+	AttackDelay: 1500
+	AttackMotion: 500
+	DamageMotion: 1000
+	MvpExp: 0
+	Drops: {  
+     Test_Reagent: 3000
+     Spanner: 500
+     Old_Steel_Plate: 2000
+     T_W_O_Card: 1
+	}
+},

@@ -1,0 +1,70 @@
+//RATHENA 
+
+6750,Failed_Engine,Failed Engine,3,10,,10,,,,,,,,,,,,,{},{},{}
+6751,Crushed_Can_Iron_Plate,Crushed Can Iron Plate,3,10,,10,,,,,,,,,,,,,{},{},{}
+6752,Charleston_Parts,Charleston Parts,3,10,,10,,,,,,,,,,,,,{},{},{}
+27012,Kick_Step_Card,Kick Step Card,6,20,,10,,,,,0xFFFFFFFF,63,2,16,,,,,{ bonus bMaxHPrate,8; if((eaclass()&EAJ_THIRDMASK) == EAJ_MECHANIC){ bonus bLongAtkDef,30; } },{},{}
+27013,Kick_&_Kick_Card,Kick & Kick Card,6,20,,10,,,,,0xFFFFFFFF,63,2,2,,,,,{ bonus2 bSkillAtk,"NC_VULCANARM",10+((getrefine()>=10)*20); },{},{}
+
+//HERCULES
+{
+	Id: 6750
+	AegisName: "Failed_Engine"
+	Name: "Failed Engine"
+	Buy: 0
+	Weight: 1
+	BuyingStore: true
+},
+{
+	Id: 6751
+	AegisName: "Crushed_Can_Iron_Plate"
+	Name: "Dented Iron Plate"
+	Buy: 0
+	Weight: 1
+	BuyingStore: true
+},
+{
+	Id: 6752
+	AegisName: "Charleston_Parts"
+	Name: "Charleston Parts"
+	Buy: 0
+	Weight: 1
+	BuyingStore: true
+},
+{
+	Id: 27012
+	AegisName: "Kick_Step_Card"
+	Name: "Kick Step Card"
+	Type: 6
+	Buy: 20
+	Weight: 10
+	Loc: 136
+	Script: <" bonus bMaxHPrate,8; if((eaclass()&EAJ_THIRDMASK) == EAJ_MECHANIC){ bonus bLongAtkDef,30; ">
+},
+{
+	Id: 27013
+	AegisName: "Kick_&_Kick_Card"
+	Name: "Kick & Kick Card"
+	Type: 6
+	Buy: 20
+	Weight: 10
+	Loc: 136
+	Script: <" bonus2 bSkillAtk,"NC_VULCANARM",10+((getrefine()>=10)*20); ">
+},
+{
+	Id: 16033
+	AegisName: "Robots_Mechanical_Arm"
+	Name: "Robot's Mechanical Arm"
+	Type: 4
+	Buy: 30000
+	Weight: 3000
+	Atk: 195
+	Range: 2
+	Loc: 2
+	WeaponLv: 4
+	View: 8
+	Script: <"
+		bonus bUnbreakableWeapon,1; 
+		bonus bCritical,20;
+	">
+},

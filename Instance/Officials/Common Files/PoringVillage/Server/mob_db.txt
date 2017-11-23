@@ -1,0 +1,55 @@
+//RATHENA
+2538,E_KING_PORING,King Poring,King Poring,10,1000,1,5000,5000,1,100,200,10,10,10,10,10,10,10,10,10,12,2,0,20,0x6203695,100,1500,500,1000,0,0,0,0,0,0,0,7654,10000,2345,2,2347,2,2351,2,2349,2,18785,1,19587,1,6646,5,0,0,0,0
+
+//HERCULES
+{
+	Id: 2538
+	SpriteName: "E_KING_PORING"
+	Name: "King Poring"
+	Lv: 10
+	Hp: 1000
+	Sp: 1
+	Exp: 5000
+	JExp: 5000
+	AttackRange: 1
+	Attack: [100,200]
+	Def: 10
+	Mdef: 10
+	Stats: {
+		Str: 10
+		Agi: 10
+		Vit: 10
+		Int: 10
+		Dex: 10
+		Luk: 10
+	}
+	ViewRange: 10
+	ChaseRange: "Size_Large"
+	Race: "RC_Plant"
+	Element: ("Ele_Water",1)
+	Mode: {
+		CanMove: true
+		Aggressive: true
+		CastSensorIdle: true
+		CanAttack: true
+		Detector: true
+		CastSensorChase: true
+		ChangeChase: true
+		ChangeTargetMelee: true
+		ChangeTargetChase: true
+	}
+	MoveSpeed: 500
+	AttackDelay: 1500
+	AttackMotion: 500
+	DamageMotion: 1000
+	MvpExp: 0
+	Drops: {
+		Flame_Sprits_Armor_: 2
+		Water_Sprits_Armor_: 2
+		Wind_Sprits_Armor_: 2
+		Earth_Sprits_Armor_: 2
+		King_Poring_Hat: 10
+		C_King_Poring_Hat: 10
+		Poring_Coin: 5
+	}
+},

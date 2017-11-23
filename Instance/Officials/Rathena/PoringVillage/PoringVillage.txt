@@ -1,0 +1,389 @@
+prt_fild05,141,236,3	script	Village Guard::alapvvg	4_ANGELING,{
+OnStart:
+	set .@npcname$, "[Village Guard]";
+	set .@party_id, getcharid(1);
+	set .@porv_leader, ( getcharid(0) == getpartyleader(.@party_id,2) );
+
+	//RATHENA
+	set .@has_instance, PV_INSTANCE_ID > 0;
+	//HERCULES
+	//set .@has_instance, has_instance(.map$[0], instance_id());	
+
+	set .@instance_delay, ( instance_delay_porvil - gettimetick(2) );
+
+	mes .@npcname$;
+	mes "What are doing here?";
+	mes "This is the entrance of the Poring Village. Who are you?";
+	mes "Well anyway. I can't let you enter. The King has gone mad...";
+	next;		
+	switch( select( 
+		(( .@party_id && .@porv_leader && !.@has_instance )?"Create " + .instance_name$:""),
+		(( .@party_id && .@has_instance )?"Enter " + .instance_name$:""),
+		(( .@party_id && .@porv_leader && .@has_instance )?"Destroy " + .instance_name$:""),
+	"Nevermind."
+		)){
+	case 1:
+		if( .@instance_delay > 0 )
+		{
+			mes "You have to wait : ^FF0000"+.@instance_delay+" Seconds.^000000";
+			//close;
+		}
+		getpartymember .@party_id,2;
+		if( .min_party_member >= 1 ){
+			set .@origin, getcharid(3);
+			set .@gettimetick, gettimetick(2);
+			for( set .@i, 0; .@i < $@partymembercount; set .@i, .@i+1 )
+				if( attachrid( $@partymemberaid[.@i] ) ){
+					set .@member_count, .@member_count + 1;
+					if( BaseLevel < .base_level[0] || BaseLevel > .base_level[1] ) set .@fail, .@fail|1;
+					if( Zeny < .instance_zeny ) set .@fail, .@fail|2;
+					if( instance_delay_porvil > .@gettimetick ) set .@fail, .@fail|4;
+					if( .@fail ){
+						set .@name$, strcharinfo(0);
+						break;
+					}
+				}
+			attachrid( .@origin );
+		}
+		
+		//clean any previously remaining instance
+		if(PV_INSTANCE_ID > 0)
+		{
+			getpartymember getcharid(1),2;
+			for( set .@i, 0; .@i < $@partymembercount; set .@i, .@i+1 )
+				if( attachrid( $@partymemberaid[.@i] ) && PV_INSTANCE_ID > 0){
+					set PV_INSTANCE_ID, -1;
+				}
+			instance_destroy instance_id();
+		}
+		
+		if( .@name$ != "" && .@fail ){
+			mes "^FF0000[ Failed ]^000000";
+			mes "^0055FF"+.@name$+"^000000, You cannot join right now.";
+			mes " ";
+			mes "^FF0000[ Reason: ]^000000";
+			if( .@fail & 1 ) mes "^777777You must be Level: "+.base_level[0]+" - "+.base_level[1]+"^000000";
+			if( .@fail & 2 ) mes "^777777You need "+ .instance_zeny +" Zeny^000000";
+			if( .@fail & 4 ) mes "^777777You still have cooldown.^000000";
+			break;
+		}
+		
+		getpartymember getcharid(1),0;
+		if (instance_check_party(.@party_id, .min_party_member, .base_level[0], .base_level[1]) == 0) {
+			mes "^0055FF[ "+.instance_name$+" ]^000000";
+			mes "Make or join a party with at least "+.min_party_member+" member and try again, with level between " +.base_level[0] + " and " + .base_level[1] + ".";
+		}
+		else{			
+			//RATHENA			
+			set .@instance, instance_create( .instance_name$ );
+			//HERCULES
+			//set .@instancee, instance_create( .instance_name$, .@party_id, IOT_PARTY ); 
+			if( .@instance < 0 ) {
+				npctalk .instance_name$ + " reservation failed.";
+				mes "^0000FF"+ .instance_name$ +" ^000000 - Reservation Failed!";
+				close;
+			}
+			mes "^0055FF[ "+.instance_name$+" ]^000000";
+			mes "^0000FF"+.instance_name$+" ^000000 - Reserved";
+			set .@gettimetick, gettimetick(2);
+			getpartymember .@party_id,2;
+			for( set .@i, 0; .@i < $@partymembercount; set .@i, .@i+1 )
+				if( attachrid( $@partymemberaid[.@i] ) ){
+					set instance_delay_porvil, ( .@gettimetick + ( .instance_delay ));
+					set Zeny, Zeny - .instance_zeny;
+					set PV_INSTANCE_ID, .@instance;
+					dispbottom "["+.instance_name$+"] -"+ .instance_zeny +" Zeny and Instance Cooldown Applied.";
+				}
+			attachrid( .@origin );
+			npctalk .instance_name$ + " has been generated for Party - " + getpartyname( .@party_id );
+
+			//HERCULES
+			//for( set .@i, 0; .@i < getarraysize(.map$); set .@i,.@i+1 )
+			//{
+			//	if( instance_attachmap( .map$[.@i],.@instance ) == "" ){
+			//		setmapflag .map$[.@i],mf_zone,"Memorial Dungeon";
+			//		npctalk .instance_name$ + " reservation failed due to map attach failure.";
+			//		mes "- ^FF0000Reservation Failed!^000000";
+			//		instance_destroy( instance_id() );
+			//		close;
+			//	}
+			//}
+			//instance_set_timeout .instance_delay,300,.@instance;
+			//instance_init(.@instance);
+
+ 		}
+	case 2:
+		if( PV_INSTANCE_ID <= 0 ){
+			mes .instance_name$ + " doesn't exist for Party - "+getpartyname( .@party_id );
+		}
+		else{
+			//RATHENA
+			switch(instance_enter(.instance_name$)) {
+				default:
+					mes "An unknown error has occurred.";
+					close;
+				case 2:
+					mes "The memorial dungeon " + .instance_name$ + " does not exist.";
+					mes "The party leader did not generate the dungeon yet.";
+					close;
+				case 1:
+					mes "You can enter the dungeon after making the party.";
+					close;
+				case 0:
+					mapannounce .map$[0], strcharinfo(0)+" from party, " +getpartyname( .@party_id )+", lr entering the dungeon, "+.instance_name$+".",bc_map,"0x00ff99",FW_NORMAL,12;
+					end;
+			}
+
+			//HERCULES
+			//if( has_instance( .map$[0] ) == "" ){
+			//	mes .instance_name$ + " doesnt exist for Party - "+getpartyname( .@party_id );
+			//}
+			//else{
+			//	warp .map$[0],102,24;
+			//	instance_announce instance_id(), getpartyname(getcharid(1))+"  entered in the "+.instance_name$+"!",bc_map,"0x00ff99";
+			//}
+		}
+		break;
+
+	case 3:
+		mes .instance_name$ + " Destroyed.";			
+		getpartymember getcharid(1),2;
+		for( set .@i, 0; .@i < $@partymembercount; set .@i, .@i+1 )
+			if( attachrid( $@partymemberaid[.@i] ) && PV_INSTANCE_ID > 0){
+				set PV_INSTANCE_ID, -1;
+			}
+		instance_destroy instance_id();
+		break;
+	default: 
+		break;
+}
+close;
+
+OnPCLoginEvent:
+OnPCLogoutEvent:
+	set PV_INSTANCE_ID, -1;
+	end;
+
+OnInit:
+	setarray .base_level[0], 30, 60;
+	setarray .map$[0],"1@begi";
+	set .map_size, getarraysize( .map$ );
+	set .min_party_member, 1;
+	set .instance_zeny, 0;
+	set .instance_delay, 7200;
+	set $porv_timer_delay, 3600; //1 hour to clean the instance
+	set .instance_name$, "Poring Village";
+	end;
+}
+
+1@begi,101,107,4	script	poring_village	HIDDEN_WARP_NPC,2,2,{
+function summon_normal;
+function summon_guardian;
+end;
+
+OnInstanceInit:
+	set .@map$, strnpcinfo(4);
+	set .@npc_name$, instance_npcname( strnpcinfo(0) );
+	
+	//apply mapflags
+	
+	set 'instance_porv_level, 0;
+	
+	set .timerCount, 0;
+	initnpctimer;
+
+	summon_normal (.@map$, .@npc_name$, 1);
+	end;
+
+function	summon_normal	{
+	set .@map$, getarg(0);
+	set .@npcname$, getarg(1);
+	set .@increaseFloor, getarg(2);
+	
+	if(.@increaseFloor == 1)
+	{
+		'instance_porv_level++;
+	}
+	
+	switch( 'instance_porv_level ){
+		case 1:
+			set .@clabel$, .@npcname$ + "::OnNormalDied";
+			//poring, drops, poporing
+			areamonster .@map$,149,39,185,35,"--ja--",1002,10,.@clabel$;
+			areamonster .@map$,149,39,185,35,"--ja--",1113,10,.@clabel$;
+			areamonster .@map$,187,57,87,68,"--ja--",1002,15,.@clabel$;
+			areamonster .@map$,187,57,87,68,"--ja--",1031,10,.@clabel$;
+			areamonster .@map$,75,50,19,93,"--ja--",1002,15,.@clabel$;
+			areamonster .@map$,75,50,19,93,"--ja--",1113,15,.@clabel$;
+			areamonster .@map$,75,50,19,93,"--ja--",1031,10,.@clabel$;
+			break;
+		case 2:
+			set .@clabel$, .@npcname$ + "::OnNormalDied";
+			//drops, marin, poporing
+			areamonster .@map$,148,106,219,109,"--ja--",1113,10,.@clabel$;
+			areamonster .@map$,148,106,219,109,"--ja--",1242,10,.@clabel$;
+			areamonster .@map$,219,109,194,146,"--ja--",1242,15,.@clabel$;
+			areamonster .@map$,219,109,194,146,"--ja--",1031,10,.@clabel$;
+			areamonster .@map$,172,155,62,141,"--ja--",1113,15,.@clabel$;
+			areamonster .@map$,172,155,62,141,"--ja--",1242,15,.@clabel$;
+			areamonster .@map$,172,155,62,141,"--ja--",1031,10,.@clabel$;
+			break;
+		case 3:
+			set .@clabel$, .@npcname$ + "::OnNormalDied";
+			//poring, drops, marin, poporing
+			areamonster .@map$,46,185,113,203,"--ja--",1002,5,.@clabel$;
+			areamonster .@map$,46,185,113,203,"--ja--",1113,7,.@clabel$;
+			areamonster .@map$,46,185,113,203,"--ja--",1242,8,.@clabel$;
+			areamonster .@map$,46,185,113,203,"--ja--",1031,10,.@clabel$;
+			break;
+	}
+	return;
+}
+
+function	summon_guardian	{
+	set .@map$, getarg(0);
+	set .@label$, getarg(1);
+			
+	switch( 'instance_porv_level ){
+		case 1:
+			//Big Poring
+			setarray .@monster,1002;
+			setarray .@coordinate,100, 117, 135, 94;
+			break;
+		case 2:
+			//Big Mastering
+			setarray .@monster,1090;
+			setarray .@coordinate,30, 171, 60, 141;
+			break;
+		case 3:
+			//King Poring
+			setarray .@monster,2538;
+			setarray .@coordinate,157,207,198,183;
+			break;
+	}
+	set .@monster_size, getarraysize( .@monster );
+	for( set .@i, 0; .@i < .@monster_size; set .@i,.@i+1 ){
+		areamonster .@map$,.@coordinate[0],.@coordinate[1],.@coordinate[2],.@coordinate[3],"--ja--",.@monster[.@i],1,.@label$,2;
+	}
+	return;
+}
+
+OnNormalDied:
+	set .@map$, strnpcinfo(4);
+	set .@npc_name$, instance_npcname( strnpcinfo(0) );
+	set .@mob_dead_num, mobcount(.@map$,.@npc_name$+"::OnNormalDied" );
+	if( .@mob_dead_num == 0 ){
+		sleep2 500;
+
+		if('instance_porv_level == 3)
+		{
+			instance_announce instance_id(), "[King Poring] What is it? Who are you?", bc_map, 0xFF0000;
+			sleep2 1500;
+			instance_announce instance_id(), "[King Poring] What are you doing here?", bc_map, 0xFF0000;
+			sleep2 1500;
+			instance_announce instance_id(), "[King Poring] You have no right to be here! I'll smash you to death!", bc_map, 0xFF0000;
+			sleep2 1500;
+		}
+		summon_guardian( .@map$, .@npc_name$ + "::OnGuardianDied" );
+	}
+	end;
+	
+OnGuardianDied:
+	set .@map$, strnpcinfo(4);
+	set .@npc_name$, instance_npcname( strnpcinfo(0) );
+	set .@mob_dead_num, mobcount(.@map$,.@npc_name$+"::OnGuardianDied" );
+	
+	if( !.@mob_dead_num ){	
+		sleep2 500;
+
+		if('instance_porv_level == 3)
+		{
+			instance_announce instance_id(), "[King Poring] Thank you adventurer...I don't know what...Why would I...?", bc_map, 0xFF0000;
+			sleep2 1500;
+			instance_announce instance_id(), "[King Poring] Anyway...Thanks for your help?!", bc_map, 0xFF0000;
+			sleep2 1500;
+			instance_announce instance_id(), "[King Poring] You'll be the Porings friends till the end!", bc_map, 0xFF0000;
+			enablenpc instance_npcname( "alapovivig", instance_id() );
+			sleep2 25000;		
+			getpartymember getcharid(1),2;
+			for( set .@i, 0; .@i < $@partymembercount; set .@i, .@i+1 )
+				if( attachrid( $@partymemberaid[.@i] ) && PV_INSTANCE_ID > 0){
+					set PV_INSTANCE_ID, -1;
+				}
+			instance_destroy instance_id();
+			end;
+		}
+		
+		sleep 500;
+		summon_normal( .@map$,.@npc_name$, 1 );
+	}
+	end;
+	
+OnTimer10000:
+	stopnpctimer;
+	//each 10s, increase timer
+	set .timerCount, .timerCount + 10;
+	if(.timerCount == $porv_timer_delay)
+	{
+		instance_announce instance_id(), "[ Poring Village ] The King lost his mind! I have to get you out of there!", bc_map, 0x00FF00;
+		sleep 5000;
+		getpartymember getcharid(1),2;
+		for( set .@i, 0; .@i < $@partymembercount; set .@i, .@i+1 )
+			if( attachrid( $@partymemberaid[.@i] ) && PV_INSTANCE_ID > 0){
+				set PV_INSTANCE_ID, -1;
+			}
+		instance_destroy instance_id();
+		stopnpctimer;
+	}
+	initnpctimer;
+	end;
+}
+
+1@begi,146,35,5	script	Barricade::alapovibar	4_ROPEPILE,2,2,{
+	end;
+
+OnTouch:
+	if('porvTalking == 0)
+	{
+		set 'porvTalking, 1;
+		instance_announce instance_id(), "[Poring Guard] Get ready. I'll drop this barricade we've set up.", bc_map, 0x00FF00;
+		sleep2 1500;
+		instance_announce instance_id(), "[Poring Guard] Once in, you'll only have to go straigth to encounter the King.", bc_map, 0x00FF00;
+		sleep2 1500;
+		specialeffect 90;
+		disablenpc instance_npcname( "alapovibar", instance_id() );
+		disablenpc instance_npcname( "alapovibar2", instance_id() );
+		disablenpc instance_npcname( "alapovibar3", instance_id() );
+		disablenpc instance_npcname( "alapovibar4", instance_id() );
+		disablenpc instance_npcname( "alapovibar5", instance_id() );
+		disablenpc instance_npcname( "alapovibar6", instance_id() );
+		setcell instance_mapname( "1@begi", instance_id() ),145,35,145,41,cell_walkable,1;
+	}
+	end;
+
+OnInstanceInit:
+OnEnable:
+	setcell instance_mapname( "1@begi", instance_id() ),145,35,145,41,cell_walkable,0;
+	set 'porvTalking, 0;
+	enablenpc strnpcinfo(3);
+	end;
+}
+
+1@begi,146,35,5	script	Village Guard::alapovivig	4_ANGELING,{
+	mes "[Village Guard]";
+	mes "Thank you for your help!";
+	mes "I'm gonna send you back.";
+	warp "prt_fild05", 144, 238;
+	close;
+
+OnInstanceInit:
+OnEnable:
+	disablenpc strnpcinfo(3);
+	end;
+}
+
+1@begi,146,36,5	duplicate(alapovibar)	Barricade::alapovibar2	4_ROPEPILE
+1@begi,146,37,5	duplicate(alapovibar)	Barricade::alapovibar3	4_ROPEPILE
+1@begi,146,38,5	duplicate(alapovibar)	Barricade::alapovibar4	4_ROPEPILE
+1@begi,146,39,5	duplicate(alapovibar)	Barricade::alapovibar5	4_ROPEPILE
+1@begi,146,40,5	duplicate(alapovibar)	Barricade::alapovibar6	4_ROPEPILE

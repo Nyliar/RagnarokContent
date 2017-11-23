@@ -1,0 +1,11 @@
+12072,Str_Dish07,Whole Roast,0,40000,,1000,,,,,0xFFFFFFFF,63,2,,,,,,{ sc_start SC_STRFOOD,1200000,7; percentheal 10,4; },{},{}
+12077,Int_Dish07,Special Royal Jelly Herbal Tea,0,40000,,800,,,,,0xFFFFFFFF,63,2,,,,,,{ sc_start SC_INTFOOD,1200000,7; percentheal 4,10; },{},{}
+12082,Vit_Dish07,Sumptuous Feast,0,40000,,400,,,,,0xFFFFFFFF,63,2,,,,,,{ sc_start SC_VITFOOD,1200000,7; percentheal 16,0; },{},{}
+12092,Dex_Dish07,Soul Haunted Bread,0,40000,,800,,,,,0xFFFFFFFF,63,2,,,,,,{ sc_start SC_DEXFOOD,1200000,7; percentheal 5,7; },{},{}
+15116,Armor_Of_Airship,Armor Of Airship,4,10,,700,,100,,0,0xFFFFFFFF,63,2,16,,125,1,,{ bonus bMaxHP,1000; bonus bMaxSP,100; bonus bMdef,10; bonus bAllStats,1; },{},{}
+15117,Tarlock's_Armor,Tarlock's Armor,4,10,,750,,70,,0,0xFFFFFFFF,63,2,16,,125,1,,{ bonus bMaxHP,500; bonus bMaxSP,50; bonus bMdef,10; bonus bAllStats,1; .@r = getrefine(); if(.@r>=7) { bonus bMaxHP,500; bonus bMaxSP,50; } if(.@r>=9) { bonus bMaxHP,200; bonus bMaxSP,20; } if(.@r>=12) { bonus bMaxHP,300; bonus bMaxSP,30; } },{},{}
+20743,Cloak_Of_Airship,Cloak Of Airship,4,10,,0,,25,,1,0xFFFFFFFF,63,2,4,,125,0,,{ bonus2 bSubEle,Ele_Neutral,10; bonus bFlee,20; bonus bVariableCastrate,-20; },{},{}
+20744,Tarlock's_Cloak,Tarlock's Cloak,4,10,,400,,12,,1,0xFFFFFFFF,63,2,4,,125,1,,{ bonus2 bSubEle,Ele_Neutral,10; bonus bFlee,20; bonus bVariableCastrate,-10; .@r = getrefine(); if(.@r>=7) { bonus bVariableCastrate,-10; } if(.@r>=9) { bonus bVariableCastrate,-10;} if(.@r>=12) { bonus bVariableCastrate,-5; } },{},{}
+22046,Boots_Of_Airship,Boots Of Airship,4,10,,0,,26,,0,0xFFFFFFFF,63,2,64,,125,1,,{ bonus bAgi,1; bonus bSpeedRate,10; },{},{}
+22047,Tarlock's_Boots,Tarlock's Boots,4,10,,250,,13,,0,0xFFFFFFFF,63,2,64,,125,1,,{ bonus bAgi,1; .@r = getrefine(); bonus bAspdRate,5; if(.@r>=7) { bonus bAgi,1; bonus bAspdRate,5; } if(.@r>=9) { bonus bAgi,1; bonus bAspdRate,5; } if(.@r>=12) { bonus bAspd,1; } },{},{}
+

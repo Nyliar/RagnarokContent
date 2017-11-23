@@ -1,0 +1,1617 @@
+//===== Alayne Scripts =======================================
+//= Room of Consciousness Instance
+//===== By: ================================================== 
+//= Alayne
+//===== Current Version: ===================================== 
+//= 1.0
+//===== Compatible With: ===================================== 
+//= rAthena SVN
+//= hercules SVN
+//===== Description: ========================================= 
+//= The official instance Room of Consciousness transcription
+//===== Todo Remaining: ======================================
+//
+//===== Additional Comments: =================================
+//
+//
+//============================================================
+
+prt_lib_q,92,84,1	script	Nillem::alarocn3	4_M_JOB_WIZARD,{
+//prontera,145,185,1	script	Nillem::alarocn3	4_M_JOB_WIZARD,{
+	set .@npcname$, "[Nillem]";
+	mes .@npcname$;
+	if(rocQ == 0)
+	{
+		mes "Oh, we did it!";
+		mes "I don't know when, but it is the ^FF0000Past Memories of the Royal Family^000000!";
+		npctalk "Ah! I'm a genius!";
+		next;
+		mes .@npcname$;
+		mes "However, I have to give it a twist to get to the place we want to go.";
+		mes "Can I? Ahahah of course I can.";
+		mes "It's the first for me to do it. But let me twist the dimension like...that...!";
+		mes "Connect the spaces by force! Well, let's see what has happened there.";
+		next;
+		mes .@npcname$;
+		mes "Are you ready? Talk to me when you'll be, okay?";
+		set rocQ, 1;
+	}
+	else
+	{	
+		mes "Hm is it too difficult for you to force the connection?";
+		mes "Then let's go and take a look at what happened in the Room of Consciousness.";
+		mes "Since I am connecting the twisted time and space once more by force, I may have to use my full powers to connect.";
+		mes "Please, come alive and well...";
+
+		next;
+		
+		set .@party_id, getcharid(1);
+		set .@roc_leader, ( getcharid(0) == getpartyleader(.@party_id,2) );
+		
+		//RATHENA
+		set .@has_instance, ROC_INSTANCE_ID > 0;
+		//HERCULES
+		//set .@has_instance, has_instance(.map$[0], instance_id());
+
+		set .@instance_delay, ( instance_delay_consciousness - gettimetick(2) );
+			
+		switch( select( 
+			(( .@party_id && .@roc_leader && !.@has_instance )?"Create " + .instance_name$:""),
+			(( .@party_id && .@roc_leader && .@has_instance )?"Destroy " + .instance_name$:""),
+		"Nevermind."
+			)){
+			case 1:
+				if( .@instance_delay > 0 )
+				{
+					mes "You have to wait : ^FF0000"+.@instance_delay+" Seconds.^000000";
+					close;
+				}
+				getpartymember .@party_id,2;
+				if( .min_party_member >= 1 ){
+					set .@origin, getcharid(3);
+					set .@gettimetick, gettimetick(2);
+					for( set .@i, 0; .@i < $@partymembercount; set .@i, .@i+1 )
+						if( attachrid( $@partymemberaid[.@i] ) ){
+							set .@member_count, .@member_count + 1;
+							if( BaseLevel < .base_level[0] || BaseLevel > .base_level[1] ) set .@fail, .@fail|1;
+							if( Zeny < .instance_zeny ) set .@fail, .@fail|2;
+							if( instance_delay_consciousness > .@gettimetick ) set .@fail, .@fail|4;
+							if( .@fail ){
+								set .@name$, strcharinfo(0);
+								break;
+							}
+						}
+					attachrid( .@origin );
+				}
+				
+				//clean any previously remaining instance
+				if(ROC_INSTANCE_ID > 0)
+				{			
+					getpartymember getcharid(1),2;
+					for( set .@i, 0; .@i < $@partymembercount; set .@i, .@i+1 )
+						if( attachrid( $@partymemberaid[.@i] ) && ROC_INSTANCE_ID > 0){
+							set ROC_INSTANCE_ID, -1;
+						}
+					instance_destroy instance_id();
+				}
+				
+				if( .@name$ != "" && .@fail ){
+					mes "^FF0000[ Failed ]^000000";
+					mes "^0055FF"+.@name$+"^000000, You cannot join right now.";
+					mes " ";
+					mes "^FF0000[ Reason: ]^000000";
+					if( .@fail & 1 ) mes "^777777You must be Level: "+.base_level[0]+" - "+.base_level[1]+"^000000";
+					if( .@fail & 2 ) mes "^777777You need "+ .instance_zeny +" Zeny^000000";
+					if( .@fail & 4 ) mes "^777777You still have cooldown.^000000";
+					break;
+				}
+				
+				getpartymember getcharid(1),0;
+				if (instance_check_party(.@party_id, .min_party_member, .base_level[0], .base_level[1]) == 0) {
+					mes "^0055FF[ "+.instance_name$+" ]^000000";
+					mes "Make or join a party with at least "+.min_party_member+" member and try again, with level between " +.base_level[0] + " and " + .base_level[1] + ".";
+				}
+				else{
+					//RATHENA
+					set .@instance, instance_create( .instance_name$ );
+					//HERCULES
+					//set .@instance, instance_create(.instance_name$, .@party_id, IOT_PARTY);
+					if( .@instance < 0 ) {
+						npctalk .instance_name$ + " reservation failed.";
+						mes "^0000FF"+ .instance_name$ +" ^000000 - Reservation Failed!";
+						close;
+					}
+					mes "^0055FF[ "+.instance_name$+" ]^000000";
+					mes "^0000FF"+.instance_name$+" ^000000 - Reserved";
+					set .@gettimetick, gettimetick(2);
+					getpartymember .@party_id,2;
+					for( set .@i, 0; .@i < $@partymembercount; set .@i, .@i+1 )
+						if( attachrid( $@partymemberaid[.@i] ) ){
+							set instance_delay_consciousness, ( .@gettimetick + ( .instance_delay ));
+							set Zeny, Zeny - .instance_zeny;
+							set ROC_INSTANCE_ID, .@instance;
+							dispbottom "["+.instance_name$+"] -"+ .instance_zeny +" Zeny and Instance Cooldown Applied.";
+						}
+					attachrid( .@origin );
+					npctalk .instance_name$ + " has been generated for Party - " + getpartyname( .@party_id );
+					
+					//HERCULES
+					//for( set .@i, 0; .@i < getarraysize(.map$); set .@i,.@i+1 )
+					//{
+					//	if( instance_attachmap( .map$[.@i],.@instance ) == "" ){
+					//		setmapflag .map$[.@i],mf_zone,"Memorial Dungeon";
+					//		npctalk "Devil's Tower reservation failed due to map attach failure.";
+					//		mes "- ^FF0000Reservation Failed!^000000";
+					//		instance_destroy( .@instance );
+					//		close;
+					//	}
+					//}
+					//instance_set_timeout .instance_delay,300,.@instance;
+					//instance_init(.@instance);
+					
+					next;
+					mes "^0055FF[ "+.instance_name$+" ]^000000";
+					mes "Go to the Portal, to enter inside the " + .instance_name$;
+				}
+				break;
+			case 2:
+				mes .instance_name$ + " Destroyed.";
+				getpartymember getcharid(1),2;
+				for( set .@i, 0; .@i < $@partymembercount; set .@i, .@i+1 )
+					if( attachrid( $@partymemberaid[.@i] ) && ROC_INSTANCE_ID > 0){
+						set ROC_INSTANCE_ID, -1;
+					}
+				instance_destroy instance_id();
+				break;
+			default: 
+				break;
+		}
+	}
+	close;
+
+OnPCLoginEvent:
+OnPCLogoutEvent:
+	set ROC_INSTANCE_ID, -1;
+	end;	
+	
+OnInit:
+	setarray .base_level[0], 100, 175;
+	setarray .map$[0],"1@mir";
+	set .map_size, getarraysize( .map$ );
+	set .min_party_member, 1;
+	set .instance_zeny, 0;
+	set .instance_delay, 7200;
+	set $roc_timer_delay, 3600; //1 hour to clean the instance
+	set .instance_name$, "Room of Consciousness";
+	end;
+}
+
+prt_lib_q,88,90,3	script	Dimensional Device::alarocdd	PORTAL,{
+//prontera,150,183,3	script	Dimensional Device::alarocdd	PORTAL,{
+
+	if( ROC_INSTANCE_ID <= 0 ){
+		mes .instance_name$ + " doesn't exist for Party - "+getpartyname( .@party_id );
+    close;
+	}
+	else{
+		//RATHENA
+		getmapxy(.@map$, .@x, .@y, UNITTYPE_PC);
+		save .@map$, .@x, .@y;
+		switch(instance_enter(.instance_name$)) {
+			default:
+				mes "An unknown error has occurred.";
+				close;
+			case 2:
+				mes "The memorial dungeon " + .instance_name$ + " does not exist.";
+				mes "The party leader did not generate the dungeon yet.";
+				close;
+			case 1:
+				mes "You can enter the dungeon after making the party.";
+				close;
+			case 0:
+				instance_announce instance_id(), strcharinfo(0)+" from party, " +getpartyname( .@party_id )+", is entering the dungeon, "+.instance_name$+".",bc_map,"0x00ff99",FW_NORMAL,12;
+				end;
+		}
+		
+		//HERCULES
+		//if( has_instance( .map$[0] ) == "" ){
+		//	mes .instance_name$ + " doesnt exist for Party - "+getpartyname( .@party_id );
+		//}
+		//else{
+		//	warp .map$[0],101,8;
+		//	instance_announce instance_id(), getpartyname(getcharid(1))+"  entered in the "+.instance_name$+"!",bc_map,"0x00ff99";
+		//}
+	}
+	end;
+
+OnInit:
+	setarray .map$[0],"1@mir";
+	set .instance_name$, "Room of Consciousness";
+	end;
+}
+
+1@mir,101,107,4	script	room_of_consciousness	HIDDEN_WARP_NPC,2,2,{
+function summon_normal;
+function summon_guardian;
+end;
+
+OnInstanceInit:
+	set .@map$, strnpcinfo(4);
+	set .@npc_name$, instance_npcname( strnpcinfo(0), instance_id() );
+	
+	//apply mapflags
+	setmapflag .@map$,mf_nomobloot;
+	setmapflag .@map$,mf_nomvploot;
+	
+	set 'instance_roc_level, 0;
+	set 'max_roc_level, 3;
+
+	set .summonSkill, -1;	
+	set .timerCount, 0;
+	initnpctimer;
+	
+	end;
+
+function	summon_normal	{
+	set .@map$, getarg(0);
+	set .@label$, getarg(1) + "::OnNormalDied";
+	
+	'instance_roc_level++;
+	setarray .@coordinate,77,158,122,47;
+	
+	switch( 'instance_roc_level ){
+		case 1:
+			//monsters
+			setarray .@monster,3445,3445,3445,3445,3446,3447;
+			setarray .@amount,1,1,1,1,5,2;
+			setarray .@coordX[0], 80, 80, 94, 94, 108, 108, 112, 112, 123, 84; //2 x for each mob to define an area
+			setarray .@coordY[0], 75, 75, 55, 55, 55, 55, 71, 71, 83, 56; //2 x for each mob to define an area
+			break;
+		default:
+			mapannounce .@map$, "[ Room of Consciousness ] : All Floors has been cleared, congratulation. Champions Arena close in 30 seconds.",bc_map,"0x00FF99";
+			sleep2 15000;
+			getpartymember getcharid(1),2;
+			for( set .@i, 0; .@i < $@partymembercount; set .@i, .@i+1 )
+				if( attachrid( $@partymemberaid[.@i] ) && ROC_INSTANCE_ID > 0){
+					set ROC_INSTANCE_ID, -1;
+				}
+			instance_destroy instance_id();
+			return;
+	}
+	set .@monster_size, getarraysize( .@monster );
+	for( set .@i, 0; .@i < .@monster_size; set .@i,.@i+1 ){
+		set .@target_amount, ( .@amount[.@i] );
+		set .@size, 0;
+		if(getarraysize(.@coordX) > 0)
+		{
+			set .@coordinate[0], .@coordX[.@i * 2];
+			set .@coordinate[1], .@coordY[.@i * 2];
+			set .@coordinate[2], .@coordX[.@i * 2 + 1];
+			set .@coordinate[3], .@coordY[.@i * 2 + 1];
+		}
+		areamonster .@map$,.@coordinate[0],.@coordinate[1],.@coordinate[2],.@coordinate[3],"--ja--",.@monster[.@i],.@target_amount,.@label$,.@size;
+	}
+	return;
+}
+
+function	summon_guardian	{
+	set .@map$, getarg(0);
+	set .@label$, getarg(1);
+			
+	switch( 'instance_roc_level ){
+		case 2:
+			//renovated amdarias
+			setarray .@monster,3448;
+			break;
+		case 3:
+			//real bijou
+			setarray .@monster,3450;
+			break;
+		default: 
+			mapannounce .@map$,"[ Room of Consciousness ] : Cleared!! Congratulation!!",bc_map,0x00FF99;
+			return;
+	}
+	set .@monster_size, getarraysize( .@monster );
+	for( set .@i, 0; .@i < .@monster_size; set .@i,.@i+1 ){
+		set .@target_amount, 1;
+		//RATHENA
+		monster .@map$,102,95,"--ja--",.@monster[.@i],.@target_amount,.@label$;
+		set 'rocBossId, $@mobid[0];
+		//HERCULES
+		//set 'rocBossId, monster(.@map$,102,95,"--ja--",.@monster[.@i],.@target_amount,.@label$);
+	}
+	return;
+}
+
+OnNormalDied:
+	set .@map$, strnpcinfo(4);
+	set .@npc_name$, instance_npcname( strnpcinfo(0), instance_id() );
+	set .@mob_dead_num, mobcount(.@map$,.@npc_name$+"::OnNormalDied" );
+	if( !.@mob_dead_num ){
+		sleep2 1500;
+		if ('instance_roc_level == 1)
+		{
+			enablenpc instance_npcname( "alafen2", instance_id() );
+			enablenpc instance_npcname( "alaroci2", instance_id() );
+			enablenpc instance_npcname( "alarocb", instance_id() );
+			donpcevent instance_npcname( "alafen2", instance_id() ) + "::OnTalkAgain";
+		}
+	}
+	end;
+	
+OnGuardianDied:
+	set .@map$, strnpcinfo(4);
+	set .@npc_name$, instance_npcname( strnpcinfo(0), instance_id() );
+	set .@mob_dead_num, mobcount(.@map$,.@npc_name$+"::OnGuardianDied" );
+	set .@party_id, getcharid(1);
+	
+	if( !.@mob_dead_num ){
+		sleep2 1500;
+
+		set .summonSkill, -1;		
+
+		if ('instance_roc_level == 2)
+		{
+			disablenpc instance_npcname( "alafen3", instance_id() );
+			disablenpc instance_npcname( "alafen4", instance_id() );
+			disablenpc instance_npcname( "alafen5", instance_id() );
+			disablenpc instance_npcname( "alaroci3", instance_id() );
+			disablenpc instance_npcname( "alaroci4", instance_id() );
+			disablenpc instance_npcname( "alaroci5", instance_id() );
+			donpcevent instance_npcname( "alafen2", instance_id() ) + "::OnTalkAgain";
+		}
+		if ('instance_roc_level == 'max_roc_level)
+		{
+			disablenpc instance_npcname( "alafen3", instance_id() );
+			disablenpc instance_npcname( "alafen4", instance_id() );
+			disablenpc instance_npcname( "alafen5", instance_id() );
+			disablenpc instance_npcname( "alaroci3", instance_id() );
+			disablenpc instance_npcname( "alaroci4", instance_id() );
+			disablenpc instance_npcname( "alaroci5", instance_id() );
+			donpcevent instance_npcname( "alafen2", instance_id() ) + "::OnTalkAgain";			
+		}
+	}
+	end;
+	
+OnTimer10000:
+	stopnpctimer;
+	//each 10s, increase timer
+	set .timerCount, .timerCount + 10;
+	if(.timerCount == $roc_timer_delay)
+	{
+		instance_announce instance_id(), "[ Room of Consciousness ] The Dimension collapse! I have to get you out of there!", bc_map, 0xFF0000;
+		sleep2 15000;
+		getpartymember getcharid(1),2;
+		for( set .@i, 0; .@i < $@partymembercount; set .@i, .@i+1 )
+			if( attachrid( $@partymemberaid[.@i] ) && ROC_INSTANCE_ID > 0){
+				set ROC_INSTANCE_ID, -1;
+			}
+		instance_destroy instance_id();
+		stopnpctimer;
+	}
+	if(.summonSkill >= 0)
+	{
+		set .summonSkill, .summonSkill + 1;
+		if(.summonSkill == 3 && .summoned == 0)
+		{
+			set .summoned, 1;
+			set .@rand, rand(3,5);
+			enablenpc instance_npcname( "alafen" + .@rand, instance_id() );
+			enablenpc instance_npcname( "alaroci" + .@rand, instance_id() );
+			instance_announce instance_id(), "[Fenris] Lure it to us! We'll cast a skill over it!", bc_map, 0x0000FF;
+		}
+	}
+	initnpctimer;
+	end;
+
+OnSkillCasted:
+	set .summoned, 0;
+	set .summonSkill, 0;
+	end;
+	
+OnFirstFloorOn:
+	set .@map$, strnpcinfo(4);
+	set .@npc_name$, instance_npcname( strnpcinfo(0), instance_id() );
+	summon_normal( .@map$, .@npc_name$ );
+	end;
+	
+OnSecondFloorOn:
+	'instance_roc_level++;
+	set .@map$, strnpcinfo(4);
+	set .@npc_name$, instance_npcname( strnpcinfo(0), instance_id() );
+	summon_guardian( .@map$, .@npc_name$ + "::OnGuardianDied" );
+	set .summonSkill, 0;
+	set .summoned, 0;
+	end;
+	
+OnThirdFloorOn:
+	'instance_roc_level++;
+	set .@map$, strnpcinfo(4);
+	set .@npc_name$, instance_npcname( strnpcinfo(0), instance_id() );
+	summon_guardian( .@map$, .@npc_name$ + "::OnGuardianDied" );
+	set .summonSkill, 0;
+	set .summoned, 0;
+	end;
+}
+
+1@mir,99,43,0	script	Fenris::alafen	4_F_FENRIR,5,5,{
+	end;
+	
+OnTouch:
+	if(.talking == 0)
+	{
+		set 'rocTalkingId, getcharid(3);
+		set .talking, 1;
+		cutin "fenrir_a", 2;
+		npctalk "Sealed in the underground of Prontera Castle.";
+		instance_announce instance_id(), "[Fenris] Sealed in the underground of Prontera Castle.", bc_map, 0xFFFFFF;
+		sleep2 1500;
+		npctalk "I didn't expected it to be this huge.";
+		instance_announce instance_id(), "[Fenris] I didn't expected it to be this huge.", bc_map, 0xFFFFFF;
+		sleep2 1500;	
+		donpcevent instance_npcname( "alaroci", instance_id() ) + "::OnTalk";
+	}
+	end;
+		
+OnTalk:	
+	attachrid('rocTalkingId);	
+	cutin "fenrir_a", 2;
+	npctalk "I don't know. Let's investigate.";
+	instance_announce instance_id(), "[Fenris] I don't know. Let's investigate.", bc_map, 0xFFFFFF;
+	sleep2 1500;
+
+	cutin "", 255;
+	
+	enablenpc instance_npcname( "alafen2", instance_id() );
+	enablenpc instance_npcname( "alaroci2", instance_id() );
+	
+	disablenpc instance_npcname( "alafen", instance_id() );
+	disablenpc instance_npcname( "alaroci", instance_id() );
+	end;
+	
+OnInstanceInit:
+	enablenpc strnpcinfo(3);
+	end;
+OnInit:
+	disablenpc strnpcinfo(3);
+	set .talking, 0;
+	end;
+}
+
+1@mir,96,47,5	script	Iris::alaroci	4_F_IRIS,{
+	//nothing, used for dialog display
+	end;
+	
+OnTalk:
+	attachrid('rocTalkingId);	
+	cutin "h_iris01", 2;
+	npctalk "What on earth is inside there?";
+	instance_announce instance_id(), "[Iris] What on earth is inside there?", bc_map, 0xFFFFFF;
+	sleep2 1500;
+	donpcevent instance_npcname( "alafen", instance_id() ) + "::OnTalk";
+	end;
+	
+OnInstanceInit:
+	enablenpc strnpcinfo(3);
+	end;
+OnInit:
+	disablenpc strnpcinfo(3);
+	end;
+}
+
+1@mir,100,91,0	script	Fenris::alafen2	4_F_FENRIR,5,5,{
+	end;
+	
+OnTouch:
+	if(.talking == 0)
+	{
+		set 'rocTalkingId, getcharid(3);
+		set .talking, 1;
+		if('instance_roc_level == 0)
+		{
+			donpcevent instance_npcname( "alaroci2", instance_id() ) + "::OnTalk";
+		}
+		else if('instance_roc_level == 1)
+		{
+			donpcevent instance_npcname( "alarocb", instance_id() ) + "::OnTalk4";
+		}
+		else if('instance_roc_level == 2)
+		{
+			donpcevent instance_npcname( "alarocb", instance_id() ) + "::OnTalk7";
+		}
+		else if('instance_roc_level == 'max_roc_level)
+		{
+			donpcevent instance_npcname( "alaroci2", instance_id() ) + "::OnBijouDeath";		
+		}
+	}
+	end;
+	
+OnTalkAgain:
+	set .talking, 0;
+	if('instance_roc_level == 1)
+	{
+		movenpc strnpcinfo(3), 100, 81;
+		donpcevent instance_npcname( "alaroci2", instance_id() ) + "::OnMove";
+		donpcevent instance_npcname( "alarocb", instance_id() ) + "::OnMove";
+	}
+	else if('instance_roc_level == 2)
+	{
+		movenpc strnpcinfo(3), 100, 91;
+		donpcevent instance_npcname( "alaroci2", instance_id() ) + "::OnMove";
+		donpcevent instance_npcname( "alarocb", instance_id() ) + "::OnMove";
+	}
+
+	enablenpc instance_npcname( "alafen2", instance_id() );
+	enablenpc instance_npcname( "alaroci2", instance_id() );
+	enablenpc instance_npcname( "alarocb", instance_id() );
+	end;
+	
+OnTalk:	
+	attachrid('rocTalkingId);	
+	cutin "fenrir_a", 2;
+	npctalk "Yes...Ymir's heart.";
+	instance_announce instance_id(), "[Fenris] Yes...Ymir's heart.", bc_map, 0xFFFFFF;
+	sleep2 1500;
+	npctalk "*rumbling*";
+	instance_announce instance_id(), "[Fenris] *rumbling*", bc_map, 0xFFFFFF;
+	sleep2 1500;
+	donpcevent instance_npcname( "alaroci2", instance_id() ) + "::OnTalk2";
+	end;
+		
+OnTalk2:		
+	attachrid('rocTalkingId);	
+	cutin "fenrir_a", 2;
+	npctalk "*Grunts* They must  be attacking this place, too.";
+	instance_announce instance_id(), "[Fenris] *Grunts* They must  be attacking this place, too.", bc_map, 0xFFFFFF;
+	sleep2 1500;
+		
+	enablenpc instance_npcname( "alarocb", instance_id() );
+	donpcevent instance_npcname( "alarocb", instance_id() ) + "::OnTalk";
+	end;
+
+OnTalk3:		
+	attachrid('rocTalkingId);	
+	cutin "fenrir_a", 2;
+	npctalk "!!";
+	sleep2 1500;
+	npctalk "You've got to be kidding me!";
+	instance_announce instance_id(), "[Fenris] You've got to be kidding me!", bc_map, 0xFFFFFF;
+	sleep2 1500;
+	donpcevent instance_npcname( "alarocb", instance_id() ) + "::OnTalk2";
+	end;
+	
+OnTalk4:	
+	attachrid('rocTalkingId);	
+	cutin "fenrir_b", 2;
+	npctalk "*Grunts* When did all the legionnaires get there?";
+	instance_announce instance_id(), "[Fenris] *Grunts* When did all the legionnaires get there?", bc_map, 0xFFFFFF;
+	sleep2 1500;
+
+	cutin "", 255;
+	
+	disablenpc instance_npcname( "alafen2", instance_id() );
+	disablenpc instance_npcname( "alaroci2", instance_id() );
+	disablenpc instance_npcname( "alarocb", instance_id() );
+	
+	donpcevent instance_npcname( "room_of_consciousness", instance_id() ) + "::OnFirstFloorOn";
+	end;
+	
+OnTalk5:		
+	attachrid('rocTalkingId);	
+	cutin "fenrir_b", 2;
+	npctalk "*Groans* No Valkyrie's subordinates ever disappointed me in a fight, and neither will you.";
+	instance_announce instance_id(), "[Fenris] *Groans* No Valkyrie's subordinates ever disappointed me in a fight, and neither will you.", bc_map, 0xFFFFFF;
+	sleep2 1500;
+	npctalk "Ymir's Heart is a powerfull source of energy. What will you use it for?";
+	instance_announce instance_id(), "[Fenris] Ymir's Heart is a powerfull source of energy. What will you use it for?", bc_map, 0xFFFFFF;
+	sleep2 1500;
+	donpcevent instance_npcname( "alarocb", instance_id() ) + "::OnTalk6";
+	end;
+	
+OnTalk6:		
+	attachrid('rocTalkingId);	
+	cutin "fenrir_b", 2;
+	npctalk "You're not going to use it for any good, I'm sure of it.";
+	instance_announce instance_id(), "[Fenris] You're not going to use it for any good, I'm sure of it.", bc_map, 0xFFFFFF;
+	sleep2 1500;
+	npctalk "Guys, I'm gonna stop Bijou from taking Ymir's Heart. You'll have to deal with that huge monster.";
+	instance_announce instance_id(), "[Fenris] Guys, I'm gonna stop Bijou from taking Ymir's Heart. You'll have to deal with that huge monster.", bc_map, 0xFFFFFF;
+	sleep2 1500;
+
+	cutin "", 255;
+
+	disablenpc instance_npcname( "alafen2", instance_id() );
+	disablenpc instance_npcname( "alaroci2", instance_id() );
+	disablenpc instance_npcname( "alarocb", instance_id() );
+	disablenpc instance_npcname( "alarocra", instance_id() );
+	
+	donpcevent instance_npcname( "room_of_consciousness", instance_id() ) + "::OnSecondFloorOn";
+	end;
+	
+OnTalk7:		
+	attachrid('rocTalkingId);	
+	//specialeffect frost
+	setnpcdisplay strnpcinfo(3), 4_M_FROZEN;
+	cutin "fenrir_b", 2;
+	npctalk "*Groans*";
+	instance_announce instance_id(), "[Fenris] *Groans*", bc_map, 0xFFFFFF;
+	sleep2 1500;
+	donpcevent instance_npcname( "alarocb", instance_id() ) + "::OnTalk8";
+	end;
+	
+OnTalk8:		
+	attachrid('rocTalkingId);	
+	//specialeffect frost
+	cutin "fenrir_a", 2;
+	npctalk "I...Iris";
+	instance_announce instance_id(), "[Fenris] I...Iris", bc_map, 0xFFFFFF;
+	sleep2 1500;
+	enablenpc instance_npcname( "alarocsa", instance_id() );
+	donpcevent instance_npcname( "alarocsa", instance_id() ) + "::OnTalk";
+	end;
+	
+OnTalk9:		
+	attachrid('rocTalkingId);	
+	setnpcdisplay strnpcinfo(3), 4_F_FENRIR;
+	cutin "fenrir_a", 2;
+	npctalk "The time is right! Frost Diver!";
+	instance_announce instance_id(), "[Fenris] The time is right! Frost Diver!", bc_map, 0xFFFFFF;
+	sleep2 1500;
+	//frost diver over B
+	specialeffect 27, AREA, instance_npcname( "alarocb", instance_id() );
+	donpcevent instance_npcname( "alarocb" ) + "::OnTalk16";
+	end;
+	
+OnTalk10:		
+	attachrid('rocTalkingId);	
+	cutin "fenrir_a", 2;
+	npctalk "This magic...";
+	instance_announce instance_id(), "[Fenris] This magic...", bc_map, 0xFFFFFF;
+	sleep2 1500;
+	npctalk "This must be a high level as I expected. It's pretty tough to cast...";
+	instance_announce instance_id(), "[Fenris] This must be a high level as I expected. It's pretty tough to cast...", bc_map, 0xFFFFFF;
+	sleep2 1500;
+	donpcevent instance_npcname( "alarocb", instance_id() ) + "::OnTalk17";
+	end;
+	
+OnTalk11:		
+	attachrid('rocTalkingId);	
+	cutin "fenrir_a", 2;
+	npctalk "Iris! This is a healing potion. Drink it and you'll come to your senses.";
+	instance_announce instance_id(), "[Fenris] Iris! This is a healing potion. Drink it and you'll come to your senses.", bc_map, 0xFFFFFF;
+	sleep2 1500;
+	donpcevent instance_npcname( "alaroci2", instance_id() ) + "::OnTalk5";
+	end;
+	
+OnTalk12:		
+	attachrid('rocTalkingId);	
+	cutin "fenrir_a", 2;
+	npctalk "Oh, are you awake now?";
+	instance_announce instance_id(), "[Fenris] Oh, are you awake now?", bc_map, 0xFFFFFF;
+	sleep2 1500;
+	donpcevent instance_npcname( "alaroci2", instance_id() ) + "::OnTalk6";
+	end;
+	
+OnTalk13:		
+	attachrid('rocTalkingId);	
+	cutin "fenrir_a", 2;
+	npctalk "You're up!";
+	instance_announce instance_id(), "[Fenris] You're up!", bc_map, 0xFFFFFF;
+	sleep2 1500;
+	npctalk "I'm so relieved";
+	instance_announce instance_id(), "[Fenris] I'm so relieved", bc_map, 0xFFFFFF;
+	sleep2 1500;
+	donpcevent instance_npcname( "alaroci2", instance_id() ) + "::OnTalk7";
+	end;
+	
+OnTalk14:		
+	attachrid('rocTalkingId);	
+	cutin "fenrir_b", 2;
+	npctalk "Be careful! She's about to attack!";
+	instance_announce instance_id(), "[Fenris] Be careful! She's about to attack!", bc_map, 0xFFFFFF;
+	sleep2 1500;
+
+	cutin "", 255;
+	
+	disablenpc instance_npcname( "alafen2", instance_id() );
+	disablenpc instance_npcname( "alaroci2", instance_id() );
+	disablenpc instance_npcname( "alarocb", instance_id() );
+	donpcevent instance_npcname( "room_of_consciousness", instance_id() ) + "::OnThirdFloorOn";
+	end;
+	
+OnTalk15:
+	attachrid('rocTalkingId);			
+	cutin "fenrir_b", 2;
+	npctalk "Iris! No! Stop it!";
+	instance_announce instance_id(), "[Fenris] Iris! No! Stop it!", bc_map, 0xFFFFFF;
+	sleep2 1500;
+	donpcevent instance_npcname( "alarocb", instance_id() ) + "::OnTalk20";
+	end;
+	
+OnTalk16:		
+	attachrid('rocTalkingId);	
+	disablenpc instance_npcname( "alarocsa", instance_id() );
+	
+	cutin "fenrir_a", 2;
+	npctalk "*Grunt* This Valkyrie destroyed the ceiling! We need to escape, now!";
+	instance_announce instance_id(), "[Fenris] *Grunt* This Valkyrie destroyed the ceiling! We need to escape, now!", bc_map, 0xFFFFFF;
+	
+	cutin "", 255;
+	
+	getpartymember getcharid(1),2;
+	for( set .@i, 0; .@i < $@partymembercount; set .@i, .@i+1 )
+		if( attachrid( $@partymemberaid[.@i] ) && strcharinfo(3) == strnpcinfo(4) ){
+			getitem 6919, 30;
+		}
+
+	sleep2 10000;
+	getpartymember getcharid(1),2;
+	for( set .@i, 0; .@i < $@partymembercount; set .@i, .@i+1 )
+		if( attachrid( $@partymemberaid[.@i] ) && ROC_INSTANCE_ID > 0){
+			set ROC_INSTANCE_ID, -1;
+		}
+	instance_destroy instance_id();
+	end;
+	
+OnInit:
+OnInstanceInit:
+	disablenpc strnpcinfo(3);
+	set .talking, 0;
+	end;
+}
+
+1@mir,104,92,1	script	Iris::alaroci2	4_F_IRIS,5,5,{
+	//nothing, used for dialog display
+	end;
+
+OnMove:
+	if('instance_roc_level == 1)
+	{
+		movenpc strnpcinfo(3), 98, 84, 0;
+	}
+	else if('instance_roc_level == 2)
+	{
+		movenpc strnpcinfo(3), 104, 92, 1;
+	}
+	end;
+
+OnBijouDeath:
+	attachrid('rocTalkingId);	
+	cutin "h_iris01", 2;
+	npctalk "*Grunts*";
+	instance_announce instance_id(), "*Grunts*", bc_map, 0xFFFFFF;
+	donpcevent instance_npcname( "alarocb", instance_id() ) + "::OnTalk19";
+	end;
+	
+OnTalk:
+	attachrid('rocTalkingId);	
+	cutin "h_iris01", 2;
+	npctalk "This...This must be...Ymir's heart.";
+	instance_announce instance_id(), "[Iris] This...This must be...Ymir's heart.", bc_map, 0xFFFFFF;
+	sleep2 1500;	
+	donpcevent instance_npcname( "alafen2", instance_id() ) + "::OnTalk";
+	end;
+	
+OnTalk2:
+	attachrid('rocTalkingId);	
+	cutin "h_iris01", 2;
+	npctalk "Why is this place shaking?";
+	instance_announce instance_id(), "[Iris] Why is this place shaking?", bc_map, 0xFFFFFF;
+	sleep2 1500;
+	donpcevent instance_npcname( "alafen2", instance_id() ) + "::OnTalk2";
+	end;	
+	
+OnTalk3:
+	attachrid('rocTalkingId);	
+	cutin "h_iris01", 2;
+	npctalk "What? How dare you! Okay, now! Bring it on!";
+	instance_announce instance_id(), "[Iris] What? How dare you! Okay, now! Bring it on!", bc_map, 0xFFFFFF;
+	sleep2 1500;
+	donpcevent instance_npcname( "alarocb", instance_id() ) + "::OnTalk3";
+	end;	
+	
+OnTalk4:
+	attachrid('rocTalkingId);	
+	cutin "h_iris01", 2;
+	npctalk "What? What's up with that monster?";
+	instance_announce instance_id(), "[Iris] What? What's up with that monster?", bc_map, 0xFFFFFF;
+	sleep2 1500;
+	donpcevent instance_npcname( "alarocb", instance_id() ) + "::OnTalk5";
+	end;	
+	
+OnTalk5:
+	attachrid('rocTalkingId);	
+	cutin "h_iris01", 2;
+	npctalk "*Muffled Sound*";
+	instance_announce instance_id(), "[Iris] *Muffled Sound*", bc_map, 0xFFFFFF;
+	sleep2 1500;
+	donpcevent instance_npcname( "alafen2", instance_id() ) + "::OnTalk12";
+	end;	
+	
+OnTalk6:
+	attachrid('rocTalkingId);	
+	cutin "h_iris01", 2;
+	npctalk "Ummm...*Vomitting sound*";
+	instance_announce instance_id(), "[Iris] Ummm...*Vomitting sound*", bc_map, 0xFFFFFF;
+	sleep2 1500;
+	npctalk "Yuck! This is bitter";
+	instance_announce instance_id(), "[Iris] Yuck! This is bitter", bc_map, 0xFFFFFF;
+	sleep2 1500;
+	npctalk "What the heck is this?";
+	instance_announce instance_id(), "[Iris] What the heck is this?", bc_map, 0xFFFFFF;
+	sleep2 1500;
+	npctalk "What did you gave me?";
+	instance_announce instance_id(), "[Iris] What did you gave me?", bc_map, 0xFFFFFF;
+	sleep2 1500;
+	donpcevent instance_npcname( "alafen2", instance_id() ) + "::OnTalk13";
+	end;
+	
+OnTalk7:
+	attachrid('rocTalkingId);	
+	cutin "h_iris01", 2;
+	npctalk "*Sighs* By the way, Fenrir!";
+	instance_announce instance_id(), "[Iris] *Sighs* By the way, Fenrir!", bc_map, 0xFFFFFF;
+	sleep2 1500;
+	npctalk "What's about Ymir's Heart?";
+	instance_announce instance_id(), "[Iris] What's about Ymir's Heart?", bc_map, 0xFFFFFF;
+	sleep2 1500;
+	donpcevent instance_npcname( "alarocb", instance_id() ) + "::OnTalk18";
+	end;	
+	
+OnTalk8:
+	attachrid('rocTalkingId);	
+	cutin "h_iris01", 2;
+	npctalk "Did she saves me?";
+	instance_announce instance_id(), "[Iris] Did she saves me?", bc_map, 0xFFFFFF;
+	sleep2 1500;
+	npctalk "Thank you...Sarah.";
+	instance_announce instance_id(), "[Iris] Thank you...Sarah.", bc_map, 0xFFFFFF;
+	sleep2 1500;
+	npctalk "It's Sarah, is it?";
+	instance_announce instance_id(), "[Iris] It's Sarah, is it?", bc_map, 0xFFFFFF;
+	sleep2 1500;
+	npctalk "Peoples says we were parted when we were little.";
+	instance_announce instance_id(), "[Iris] Peoples says we were parted when we were little.", bc_map, 0xFFFFFF;
+	sleep2 1500;
+	npctalk "So what's your plan, hu?";
+	instance_announce instance_id(), "[Iris] So what's your plan, hu?", bc_map, 0xFFFFFF;
+	sleep2 1500;
+	npctalk "But don't think it'll change anything! I won't change my mind.";
+	instance_announce instance_id(), "[Iris] But don't think it'll change anything! I won't change my mind.", bc_map, 0xFFFFFF;
+	sleep2 1500;
+	npctalk "I won't forgive you! I hate you for what you did.";
+	instance_announce instance_id(), "[Iris] I won't forgive you! I hate you for what you did.", bc_map, 0xFFFFFF;
+	sleep2 1500;
+	npctalk "Mom, Dad. Everyone from our town. I'll avenge them!";
+	instance_announce instance_id(), "[Iris] Mom, Dad. Everyone from our town. I'll avenge them!", bc_map, 0xFFFFFF;
+	sleep2 1500;
+	donpcevent instance_npcname( "alarocsa", instance_id() ) + "::OnTalk10";
+	end;	
+	
+OnInit:
+OnInstanceInit:
+	disablenpc strnpcinfo(3);
+	set .talking, 0;
+	end;
+}
+
+1@mir,98,98,5	script	Sarah::alarocsa	4_F_SARAH,5,5,{
+	//nothing, used for dialog display
+	end;
+	
+OnTalk:
+	attachrid('rocTalkingId);	
+	cutin "sarah_hero3", 2;
+	npctalk " ...";
+	instance_announce instance_id(), "[Sarah] ...", bc_map, 0xFFFFFF;
+	sleep2 1500;
+	donpcevent instance_npcname( "alarocb", instance_id() ) + "::OnTalk9";
+	end;	
+
+OnTalk2:
+	attachrid('rocTalkingId);	
+	cutin "sarah_hero3", 2;
+	npctalk "So this is it...";
+	instance_announce instance_id(), "[Sarah] So this is it...", bc_map, 0xFFFFFF;
+	sleep2 1500;
+	npctalk "This is the underground of Prontera castle.";
+	instance_announce instance_id(), "[Sarah] This is the underground of Prontera castle.", bc_map, 0xFFFFFF;
+	sleep2 1500;
+	npctalk "The place where the first Ymir's Heart is sealed";
+	instance_announce instance_id(), "[Sarah] The place where the first Ymir's Heart is sealed", bc_map, 0xFFFFFF;
+	sleep2 1500;
+	npctalk "And that must be...";
+	instance_announce instance_id(), "[Sarah] And that must be...", bc_map, 0xFFFFFF;
+	sleep2 1500;
+	npctalk "Ymir's Heart";
+	instance_announce instance_id(), "[Sarah] Ymir's Heart", bc_map, 0xFFFFFF;
+	sleep2 1500;
+	donpcevent instance_npcname( "alarocb", instance_id() ) + "::OnTalk10";
+	end;	
+
+OnTalk3:
+	attachrid('rocTalkingId);	
+	cutin "sarah_hero3", 2;
+	npctalk "What do you think you're doing here, Bijou?";
+	instance_announce instance_id(), "[Sarah] What do you think you're doing here, Bijou?", bc_map, 0xFFFFFF;
+	sleep2 1500;
+	donpcevent instance_npcname( "alarocb", instance_id() ) + "::OnTalk11";
+	end;	
+	
+OnTalk4:
+	attachrid('rocTalkingId);	
+	cutin "sarah_hero3", 2;
+	npctalk "That's not a good enough answer Bijou.";
+	instance_announce instance_id(), "[Sarah] That's not a good enough answer Bijou.", bc_map, 0xFFFFFF;
+	sleep2 1500;
+	npctalk "My question was: What are you still doing down there, completely goofing off? ";
+	instance_announce instance_id(), "[Sarah] My question was: What are you still doing down there, completely goofing off? ", bc_map, 0xFFFFFF;
+	sleep2 1500;
+	npctalk "And why didn't you break the seal over Ymir's Heart yet?";
+	instance_announce instance_id(), "[Sarah] And why didn't you break the seal over Ymir's Heart yet?", bc_map, 0xFFFFFF;
+	sleep2 1500;
+	donpcevent instance_npcname( "alarocb", instance_id() ) + "::OnTalk12";
+	end;
+	
+OnTalk5:
+	attachrid('rocTalkingId);	
+	cutin "sarah_hero3", 2;
+	npctalk "You must out of your mind, Bijou....Himmelmez is not here to protect you.";
+	instance_announce instance_id(), "[Sarah] You must out of your mind, Bijou....Himmelmez is not here to protect you.", bc_map, 0xFFFFFF;
+	sleep2 1500;
+	donpcevent instance_npcname( "alarocb", instance_id() ) + "::OnTalk13";
+	end;
+	
+OnTalk6:
+	attachrid('rocTalkingId);	
+	cutin "sarah_hero3", 2;
+	npctalk "You'd better keep your mouth shut!";
+	instance_announce instance_id(), "[Sarah] You'd better keep your mouth shut!", bc_map, 0xFFFFFF;
+	sleep2 1500;
+	donpcevent instance_npcname( "alarocb", instance_id() ) + "::OnTalk14";
+	end;
+	
+OnTalk7:
+	attachrid('rocTalkingId);	
+	cutin "sarah_hero3", 2;
+	npctalk "I can certainly do without a subordinates that wastes time with this kind of silly task.";
+	instance_announce instance_id(), "[Sarah] I can certainly do without a subordinates that wastes time with this kind of silly task.", bc_map, 0xFFFFFF;
+	sleep2 1500;
+	npctalk "I'll be taking Ymir's Heart myself.";
+	instance_announce instance_id(), "[Sarah] I'll be taking Ymir's Heart myself.", bc_map, 0xFFFFFF;
+	sleep2 1500;
+	donpcevent instance_npcname( "alarocb", instance_id() ) + "::OnTalk15";
+	end;
+	
+OnTalk8:
+	attachrid('rocTalkingId);	
+	cutin "sarah_hero3", 2;
+	npctalk "Is that all you want to say?";
+	instance_announce instance_id(), "[Sarah] Is that all you want to say?", bc_map, 0xFFFFFF;
+	sleep2 1500;
+	npctalk "Don't worry, I'll let Himmelmez know about your contribution.";
+	instance_announce instance_id(), "[Sarah] Don't worry, I'll let Himmelmez know about your contribution.", bc_map, 0xFFFFFF;
+	sleep2 1500;
+	npctalk "Don't blame me, Bijou.";
+	instance_announce instance_id(), "[Sarah] Don't blame me, Bijou.", bc_map, 0xFFFFFF;
+	sleep2 1500;
+	donpcevent instance_npcname( "alarocb", instance_id() ) + "::OnTalk21";
+	end;
+	
+OnTalk9:
+	attachrid('rocTalkingId);	
+	disablenpc instance_npcname( "alarocb" );
+	cutin "sarah_hero3", 2;
+	npctalk "Your soul has been set free, Bijou.";
+	instance_announce instance_id(), "[Sarah] Your soul has been set free, Bijou.", bc_map, 0xFFFFFF;
+	sleep2 1500;
+	donpcevent instance_npcname( "alaroci2", instance_id() ) + "::OnTalk8";
+	end;
+	
+OnTalk10:
+	attachrid('rocTalkingId);	
+	cutin "sarah_hero3", 2;
+	npctalk "Stop talking! Don't be a drama queen. You're not the only victim!";
+	instance_announce instance_id(), "[Sarah] Stop talking! Don't be a drama queen. You're not the only victim!", bc_map, 0xFFFFFF;
+	sleep2 1500;
+	npctalk "They only paid for their sins. The crime they committed 12 years ago by killing my mother!";
+	instance_announce instance_id(), "[Sarah] They only paid for their sins. The crime they committed 12 years ago by killing my mother!", bc_map, 0xFFFFFF;
+	sleep2 1500;
+	npctalk "Do you want the truth? Those beloved you're always talking about...";
+	instance_announce instance_id(), "[Sarah] Do you want the truth? Those beloved you're always talking about...", bc_map, 0xFFFFFF;
+	sleep2 1500;
+	npctalk "Even the great elder, all those in our town...They were...";
+	instance_announce instance_id(), "[Sarah] Even the great elder, all those in our town...They were...", bc_map, 0xFFFFFF;
+	sleep2 1500;
+	npctalk "Stop that. Ymir's heart comes first.";
+	instance_announce instance_id(), "[Sarah] Stop that. Ymir's heart comes first.", bc_map, 0xFFFFFF;
+	sleep2 1500;
+	npctalk "Mark my words. I didn't save you. I'll let you die soon.";
+	instance_announce instance_id(), "[Sarah] Mark my words. I didn't save you. I'll let you die soon.", bc_map, 0xFFFFFF;
+	sleep2 1500;
+	npctalk "We'll meet again, and this time, I'll make sure you won't see the light again.";
+	instance_announce instance_id(), "[Sarah] We'll meet again, and this time, I'll make sure you won't see the light again.", bc_map, 0xFFFFFF;
+	sleep2 1500;
+	npctalk "So do me a favor. Don't get yourself killed Iris. I'll wait for this day to come.";
+	instance_announce instance_id(), "[Sarah] So do me a favor. Don't get yourself killed Iris. I'll wait for this day to come.", bc_map, 0xFFFFFF;
+	sleep2 1500;
+	donpcevent instance_npcname( "alafen2", instance_id() ) + "::OnTalk16";
+	end;
+	
+OnInstanceInit:
+OnInit:
+	disablenpc strnpcinfo(3);
+	end;
+}
+
+1@mir,101,95,4	script	Amdarias::alarocra	3448,{
+	//nothing, used for dialog display
+	end;
+	
+OnUnhide:
+	specialeffect 514;
+	end;
+	
+OnInstanceInit:
+OnInit:
+	disablenpc strnpcinfo(3);
+	end;
+}
+
+1@mir,103,97,3	script	Bijou::alarocb	4_F_BIJOU,5,5,{
+	//nothing, used for dialog display
+	end;
+
+OnMove:
+	if('instance_roc_level == 1)
+	{
+		movenpc strnpcinfo(3), 103,87;
+	}
+	else if('instance_roc_level == 2)
+	{
+		movenpc strnpcinfo(3), 103,97;
+	}
+	end;
+	
+OnTalk:	
+	attachrid('rocTalkingId);	
+	cutin "bijou_01", 2;
+	npctalk "*Grins* Delighted to see you all";
+	instance_announce instance_id(), "[Bijou] *Grins* Delighted to see you all", bc_map, 0xFF0000;
+	sleep2 1500;
+	donpcevent instance_npcname( "alafen2", instance_id() ) + "::OnTalk3";
+	end;
+	
+OnTalk2:
+	attachrid('rocTalkingId);	
+	cutin "bijou_02", 2;
+	npctalk "From this moment on, we, the Immortal Legion, will take over for Lord Valkyrie Himmelmez";
+	instance_announce instance_id(), "[Bijou] From this moment on, we, the Immortal Legion, will take over for Lord Valkyrie Himmelmez", bc_map, 0xFF0000;
+	sleep2 1500;
+	donpcevent instance_npcname( "alaroci2", instance_id() ) + "::OnTalk3";
+	end;
+	
+OnTalk3:
+	attachrid('rocTalkingId);	
+	cutin "bijou_01", 2;
+	npctalk "*Grins* Do I look like I have time to deal with a petty thing like you, Human?";
+	instance_announce instance_id(), "[Bijou] *Grins* Do I look like I have time to deal with a petty thing like you, Human?", bc_map, 0xFF0000;
+	sleep2 1500;
+	npctalk "But, out of pure mercy, I'll let you get a taste of the fearful power of the Immortal Legion.";
+	instance_announce instance_id(), "[Bijou] But, out of pure mercy, I'll let you get a taste of the fearful power of the Immortal Legion.", bc_map, 0xFF0000;
+	sleep2 1500;	
+	donpcevent instance_npcname( "alafen2", instance_id() ) + "::OnTalk4";
+	end;
+	
+OnTalk4:
+	attachrid('rocTalkingId);	
+	cutin "bijou_01", 2;
+	npctalk "*Chuckles* You're not that bad for humans, you know?";
+	instance_announce instance_id(), "[Bijou] *Chuckles* You're not that bad for humans, you know?", bc_map, 0xFF0000;
+	sleep2 1500;
+	npctalk "But do you really think you can escape me? Wake up, my underlings!";
+	instance_announce instance_id(), "[Bijou] But do you really think you can escape me? Wake up, my underlings!", bc_map, 0xFF0000;
+	sleep2 1500;	
+	
+	enablenpc instance_npcname( "alarocra", instance_id() );
+	donpcevent instance_npcname( "alarocra", instance_id() ) + "::OnUnhide";
+	donpcevent instance_npcname( "alaroci2", instance_id() ) + "::OnTalk4";
+	end;
+	
+OnTalk5:
+	attachrid('rocTalkingId);	
+	cutin "bijou_02", 2;
+	npctalk "Oh? I'll let you go with a little secret before I go.";
+	instance_announce instance_id(), "[Bijou] Oh? I'll let you go with a small info before I leave.", bc_map, 0xFF0000;
+	sleep2 1500;
+	npctalk "I'm Bijou, adjudant to Lord Valkyrie Himmelmez.";
+	instance_announce instance_id(), "[Bijou] I'm Bijou, adjudant to Lord Valkyrie Himmelmez.", bc_map, 0xFF0000;
+	sleep2 1500;	
+	donpcevent instance_npcname( "alafen2", instance_id() ) + "::OnTalk5";
+	end;
+	
+OnTalk6:
+	attachrid('rocTalkingId);	
+	cutin "bijou_02", 2;
+	npctalk "You don't need to know. You're going to be wiped out soon anyway!";
+	instance_announce instance_id(), "[Bijou] You don't need to know. You're going to be wiped out soon anyway!", bc_map, 0xFF0000;
+	sleep2 1500;
+	donpcevent instance_npcname( "alafen2", instance_id() ) + "::OnTalk6";
+	end;
+	
+OnTalk7:
+	attachrid('rocTalkingId);	
+	cutin "bijou_01", 2;
+	npctalk "*Chuckles* I'll give you a teste of despair";
+	instance_announce instance_id(), "[Bijou] *Chuckles* I'll give you a teste of despair", bc_map, 0xFF0000;
+	sleep2 1500;
+	npctalk "Frost Diver!";
+	instance_announce instance_id(), "[Bijou] Frost Diver!", bc_map, 0xFF0000;
+	sleep2 1500;
+	//frost diver over fen2
+	specialeffect 27, AREA, instance_npcname( "alafen2" );
+	
+	donpcevent instance_npcname( "alafen2", instance_id() ) + "::OnTalk7";
+	end;
+	
+OnTalk8:
+	attachrid('rocTalkingId);	
+	cutin "bijou_02", 2;
+	npctalk "How is that? Paitnful he?";
+	instance_announce instance_id(), "[Bijou] How is that? Paitnful he?", bc_map, 0xFF0000;
+	sleep2 1500;
+	npctalk "You must be paralized now.";
+	instance_announce instance_id(), "[Bijou] You must be paralized now.", bc_map, 0xFF0000;
+	sleep2 1500;
+	npctalk "But don't expect me to kill you just now";
+	instance_announce instance_id(), "[Bijou] But don't expect me to kill you just now", bc_map, 0xFF0000;
+	sleep2 1500;
+	npctalk "I should take care of this annoying cleric gal first";
+	instance_announce instance_id(), "[Bijou] I should take care of this annoying cleric gal first", bc_map, 0xFF0000;
+	sleep2 1500;
+	
+	donpcevent instance_npcname( "alafen2", instance_id() ) + "::OnTalk8";
+	end;
+	
+OnTalk9:
+	attachrid('rocTalkingId);	
+	cutin "bijou_03", 2;
+	npctalk " Sarah...?";
+	instance_announce instance_id(), "[Bijou] Sarah...?", bc_map, 0xFF0000;
+	sleep2 1500;
+	
+	donpcevent instance_npcname( "alarocsa", instance_id() ) + "::OnTalk2";
+	end;
+	
+OnTalk10:
+	attachrid('rocTalkingId);	
+	cutin "bijou_02", 2;
+	npctalk "What brought you all the way down here?";
+	instance_announce instance_id(), "[Bijou] What brought you all the way down here?", bc_map, 0xFF0000;
+	sleep2 1500;
+	npctalk "Sarah Irene.";
+	instance_announce instance_id(), "[Bijou] Sarah Irene.", bc_map, 0xFF0000;
+	sleep2 1500;
+	npctalk "I didn't expected to see you there.";
+	instance_announce instance_id(), "[Bijou] I didn't expected to see you there.", bc_map, 0xFF0000;
+	sleep2 1500;
+	
+	donpcevent instance_npcname( "alarocsa", instance_id() ) + "::OnTalk3";
+	end;
+	
+OnTalk11:
+	attachrid('rocTalkingId);	
+	cutin "bijou_02", 2;
+	npctalk "I was just in the middle of taking care of these annoying bugs.";
+	instance_announce instance_id(), "[Bijou] I was just in the middle of taking care of these annoying bugs.", bc_map, 0xFF0000;
+	sleep2 1500;
+	
+	donpcevent instance_npcname( "alarocsa", instance_id() ) + "::OnTalk4";
+	end;
+	
+OnTalk12:
+	attachrid('rocTalkingId);	
+	cutin "bijou_02", 2;
+	npctalk "Well that's uh...I did break the first seal...";
+	instance_announce instance_id(), "[Bijou] Well that's uh...I did break the first seal...", bc_map, 0xFF0000;
+	sleep2 1500;
+	npctalk "This place will be cleaned up in no time. There's nothing for you to worry about, Sarah.";
+	instance_announce instance_id(), "[Bijou] This place will be cleaned up in no time. There's nothing for you to worry about, Sarah.", bc_map, 0xFF0000;
+	sleep2 1500;
+	npctalk "Trust me, and consider it done. ";
+	instance_announce instance_id(), "[Bijou] Trust me, and consider it done. ", bc_map, 0xFF0000;
+	sleep2 1500;
+	npctalk "Please, consider yourself a proud Valkyrie.";
+	instance_announce instance_id(), "[Bijou] Please, consider yourself a proud Valkyrie.", bc_map, 0xFF0000;
+	sleep2 1500;
+	npctalk "(*Scoff* What an uptight, pathetic Valkyrie she is...";
+	instance_announce instance_id(), "[Bijou] (*Scoff* What an uptight, pathetic Valkyrie she is...", bc_map, 0xFF0000;
+	sleep2 1500;
+	npctalk "I can't believe a Greenhorn like her is treated the same as Himmelmez, it's so unfair!)";
+	instance_announce instance_id(), "[Bijou] I can't believe a Greenhorn like her is treated the same as Himmelmez, it's so unfair!)", bc_map, 0xFF0000;
+	sleep2 1500;
+	
+	donpcevent instance_npcname( "alarocsa", instance_id() ) + "::OnTalk5";
+	end;
+	
+OnTalk13:
+	attachrid('rocTalkingId);	
+	cutin "bijou_03", 2;
+	npctalk "*Gasp*...My breath!";
+	instance_announce instance_id(), "[Bijou] *Gasp*...My breath!", bc_map, 0xFF0000;
+	sleep2 1500;
+	
+	donpcevent instance_npcname( "alarocsa", instance_id() ) + "::OnTalk6";
+	end;
+	
+OnTalk14:
+	attachrid('rocTalkingId);	
+	cutin "bijou_03", 2;
+	npctalk "*Coughs*";
+	instance_announce instance_id(), "[Bijou] *Coughs*", bc_map, 0xFF0000;
+	sleep2 1500;
+	npctalk "*Keep coughing*";
+	instance_announce instance_id(), "[Bijou] *Keep coughing*", bc_map, 0xFF0000;
+	sleep2 1500;
+	
+	donpcevent instance_npcname( "alarocsa", instance_id() ) + "::OnTalk7";
+	end;
+	
+OnTalk15:
+	attachrid('rocTalkingId);	
+	disablenpc instance_npcname( "alarocsa", instance_id() );
+	cutin "bijou_03", 2;
+	npctalk "(She is Valkyrie, indeed. Oh, what can you do about it?)";
+	instance_announce instance_id(), "[Bijou] (She is Valkyrie, indeed. Oh, what can you do about it?)", bc_map, 0xFF0000;
+	sleep2 1500;
+	
+	donpcevent instance_npcname( "alafen2", instance_id() ) + "::OnTalk9";
+	end;
+	
+OnTalk16:
+	attachrid('rocTalkingId);	
+	//specialeffect frsot
+	specialeffect 28;
+	cutin "bijou_02", 2;
+	npctalk "what did you say?!";
+	instance_announce instance_id(), "[Bijou] what did you say?!", bc_map, 0xFF0000;
+	sleep2 1500;
+	//unfrost
+	npctalk "Whoa! Close call!";
+	instance_announce instance_id(), "[Bijou] Whoa! Close call!", bc_map, 0xFF0000;
+	sleep2 1500;
+	npctalk "How could this happen?";
+	instance_announce instance_id(), "[Bijou] How could this happen?", bc_map, 0xFF0000;
+	sleep2 1500;
+	
+	donpcevent instance_npcname( "alafen2", instance_id() ) + "::OnTalk10";
+	end;
+	
+OnTalk17:
+	attachrid('rocTalkingId);	
+	cutin "bijou_02", 2;
+	npctalk "(What is this?! Did she just master the magic I used on her?)";
+	instance_announce instance_id(), "[Bijou] (What is this?! Did she just master the magic I used on her?)", bc_map, 0xFF0000;
+	sleep2 1500;
+	
+	donpcevent instance_npcname( "alafen2", instance_id() ) + "::OnTalk11";
+	end;	
+	
+OnTalk18:
+	attachrid('rocTalkingId);	
+	cutin "bijou_02", 2;
+	npctalk "(...Fenrir? I was so worried about Ymir's Heart that I totally forgot about her.";
+	instance_announce instance_id(), "[Bijou] (...Fenrir? I was so worried about Ymir's Heart that I totally forgot about her.", bc_map, 0xFF0000;
+	sleep2 1500;
+	npctalk "If my guess is right, she must be...)";
+	instance_announce instance_id(), "[Bijou] If my guess is right, she must be...)", bc_map, 0xFF0000;
+	sleep2 1500;
+	npctalk "*Exhales* I see. That's right. ";
+	instance_announce instance_id(), "[Bijou] *Exhales* I see. That's right. ", bc_map, 0xFF0000;
+	sleep2 1500;
+	npctalk "That beast's blood flows through your body. That was the answer!";
+	instance_announce instance_id(), "[Bijou] That beast's blood flows through your body. That was the answer!", bc_map, 0xFF0000;
+	sleep2 1500;
+	npctalk "Then, let me serve you the right way! *Chuckles*";
+	instance_announce instance_id(), "[Bijou] Then, let me serve you the right way! *Chuckles*", bc_map, 0xFF0000;
+	sleep2 1500;
+	npctalk "I didn't expect to see the hero from a thousand years ago.";
+	instance_announce instance_id(), "[Bijou] I didn't expect to see the hero from a thousand years ago.", bc_map, 0xFF0000;
+	sleep2 1500;
+	npctalk "Die!";
+	instance_announce instance_id(), "[Bijou] Die!", bc_map, 0xFF0000;
+	sleep2 1500;
+	
+	donpcevent instance_npcname( "alafen2", instance_id() ) + "::OnTalk14";
+	end;	
+	
+OnTalk19:
+	attachrid('rocTalkingId);	
+	cutin "bijou_02", 2;
+	npctalk "*Evil laughter* Die!";
+	instance_announce instance_id(), "[Bijou] *Evil laughter* Die!", bc_map, 0xFF0000;
+	sleep2 1500;
+	npctalk "Cleric deserve to die!";
+	instance_announce instance_id(), "[Bijou] Cleric deserve to die!", bc_map, 0xFF0000;
+	sleep2 1500;
+	
+	donpcevent instance_npcname( "alafen2", instance_id() ) + "::OnTalk15";
+	end;	
+	
+OnTalk20:
+	attachrid('rocTalkingId);	
+	cutin "bijou_01", 2;
+	npctalk "*Chuckles* Oh! So you're looking for a partner, is it?";
+	instance_announce instance_id(), "[Bijou] *Chuckles* Oh! So you're looking for a partner, is it?", bc_map, 0xFF0000;
+	sleep2 1500;
+	npctalk "But I think it's a bit too late!";
+	instance_announce instance_id(), "[Bijou] But I think it's a bit too late!", bc_map, 0xFF0000;
+	sleep2 1500;
+	//specialeffect on Iris
+	specialeffect 795, AREA, instance_npcname( "alaroci2" );
+	npctalk "Hugh...That..That knife in my stomach...Sarah? How it it...?";
+	instance_announce instance_id(), "[Bijou] Hugh...That..That knife in my stomach...Sarah? How it it...?", bc_map, 0xFF0000;
+	sleep2 1500;
+	cutin "bijou_death", 2;
+	enablenpc instance_npcname( "alarocsa", instance_id() );
+	donpcevent instance_npcname( "alarocsa", instance_id() ) + "::OnTalk8";
+	end;	
+	
+OnTalk21:
+	attachrid('rocTalkingId);	
+	cutin "bijou_death", 2;
+	npctalk "Why...Tell me why!";
+	instance_announce instance_id(), "[Bijou] Why...Tell me why!", bc_map, 0xFF0000;
+	sleep2 1500;
+	npctalk "Is it cause...That little girl is your...Sister?";
+	instance_announce instance_id(), "[Bijou] Is it cause...That little girl is your...Sister?", bc_map, 0xFF0000;
+	sleep2 1500;
+	npctalk "Is it? Tell me...Sarah?!";
+	instance_announce instance_id(), "[Bijou] Is it? Tell me...Sarah?!", bc_map, 0xFF0000;
+	sleep2 1500;
+	npctalk "*Groans*";
+	instance_announce instance_id(), "[Bijou] *Groans*", bc_map, 0xFF0000;
+	sleep2 1500;
+	
+	donpcevent instance_npcname( "alarocsa", instance_id() ) + "::OnTalk9";
+	end;	
+	
+OnInstanceInit:
+OnInit:
+	disablenpc strnpcinfo(3);
+	end;
+}
+
+1@mir,96,74,5	script	Fenris::alafen3	4_F_FENRIR,3,3,{
+	end;
+
+OnTouch:
+	getmapxy(.@map$, .@x, .@y, 1, strnpcinfo(3));
+	//RATHENA
+	getunitdata('rocBossId, .@rocBossData);
+	set 'rocTalkingId, getcharid(3);
+	if(.@rocBossData[6] >= .@x - 10 && .@rowBossData[6] <= .@x + 10
+		&& .@rocBossData[7] >= .@y - 10 && .@rocBossData[7] <= .@y + 10)
+	{
+	//HERCULES
+	//getmapxy(.@mmap$, .@mx, .@my, UNITTYPE_MOB, 'rocBossId);
+	//if(.@mx >= .@x - 10 && .@mx <= .@x + 10 && .@my >= .@y - 10 && .@my <= .@y + 10)
+	//{
+		npctalk "Good work! Now it's up to you Iris!";
+		instance_announce instance_id(), "[Fenris] Good work! Now it's up to you Iris!", bc_map, 0x0000FF;
+		donpcevent instance_npcname( "alaroci3", instance_id() ) + "::OnTalk";
+	}
+	end;
+
+OnTalk:
+	attachrid('rocTalkingId);	
+	npctalk "Then this is my turn! Spirited Yell!";
+	instance_announce instance_id(), "[Fenris] Then this is my turn! Spirited Yell!", bc_map, 0x0000FF;
+	specialeffect 721;
+	instance_announce instance_id(), "Graaarrrgghhh!!!", bc_map, 0xFF0000;
+	unittalk 'rocBossId,"Graaarrrgghhh!!!";
+	//RATHENA
+	getunitdata('rocBossId, .@rocBossData);
+	if(.@rocBossData[2] > .@rocBossData[3] * 10 / 100)
+	//HERCULES
+	//set .@hp, getunitdata('rocBossId, UDT_HP);
+	//set .@mhp, getunitdata('rocBossId, UDT_MAXHP);
+	//if(.@hp > .@mhp * 10 / 100)
+	{
+		//RATHENA
+		setunitdata 'rocBossId, 2, .@rocBossData[2] - .@rocBossData[3] * 10 / 100;
+		//HERCULES
+		//setunitdata 'rocBossId, UDT_HP, .@hp - .@mhp * 10 / 100;
+		donpcevent instance_npcname( "room_of_consciousness" ) + "::OnSkillCasted";
+	}
+	disablenpc strnpcinfo(3);
+	disablenpc instance_npcname( "alaroci3", instance_id() );
+	end;
+
+OnInit:
+OnInstanceInit:
+	disablenpc strnpcinfo(3);
+	end;
+}
+
+1@mir,99,77,5	script	Iris::alaroci3	4_F_IRIS,{
+	end;
+
+OnTalk:
+	attachrid('rocTalkingId);	
+	npctalk "Allright let me do it! What I, Iris, want is...";
+	instance_announce instance_id(), "[Iris] Allright let me do it! What I, Iris, want is...", bc_map, 0x0000FF;
+	sleep 2500;
+	npctalk "Mabi Amulet! Go!";
+	instance_announce instance_id(), "[Iris] Mabi Amulet! Go!", bc_map, 0x0000FF;
+	sleep2 1500;
+	npctalk "It worked!";
+	instance_announce instance_id(), "[Iris] It worked!", bc_map, 0x0000FF;
+	specialeffect 261;
+	instance_announce instance_id(), "Graaarrrgghhh!!!", bc_map, 0xFF0000;
+	unittalk 'rocBossId,"Graaarrrgghhh!!!";
+	sleep2 1500;
+	donpcevent instance_npcname( "alafen3", instance_id() ) + "::OnTalk";
+	end;
+
+OnInit:
+OnInstanceInit:
+	disablenpc strnpcinfo(3);
+	end;
+}
+
+1@mir,107,76,4	script	Fenris::alafen4	4_F_FENRIR,3,3,{
+	end;
+
+OnTouch:
+	getmapxy(.@map$, .@x, .@y, 1, strnpcinfo(3));
+	//RATHENA
+	getunitdata('rocBossId, .@rocBossData);
+	set 'rocTalkingId, getcharid(3);
+	if(.@rocBossData[6] >= .@x - 10 && .@rowBossData[6] <= .@x + 10
+		&& .@rocBossData[7] >= .@y - 10 && .@rocBossData[7] <= .@y + 10)
+	{
+	//HERCULES
+	//getmapxy(.@mmap$, .@mx, .@my, UNITTYPE_MOB, 'rocBossId);
+	//if(.@mx >= .@x - 10 && .@mx <= .@x + 10 && .@my >= .@y - 10 && .@my <= .@y + 10)
+	//{
+		npctalk "Good work! Now it's up to you Iris!";
+		instance_announce instance_id(), "[Fenris] Good work! Now it's up to you Iris!", bc_map, 0x0000FF;
+		donpcevent instance_npcname( "alaroci4", instance_id() ) + "::OnTalk";
+	}
+	end;
+
+OnTalk:
+	attachrid('rocTalkingId);	
+	npctalk "Then this is my turn! Spirited Yell!";
+	instance_announce instance_id(), "[Fenris] Then this is my turn! Spirited Yell!", bc_map, 0x0000FF;
+	specialeffect 721;
+	instance_announce instance_id(), "Graaarrrgghhh!!!", bc_map, 0xFF0000;
+	unittalk 'rocBossId,"Graaarrrgghhh!!!";
+	//RATHENA
+	getunitdata('rocBossId, .@rocBossData);
+	if(.@rocBossData[2] > .@rocBossData[3] * 10 / 100)
+	//HERCULES
+	//set .@hp, getunitdata('rocBossId, UDT_HP);
+	//set .@mhp, getunitdata('rocBossId, UDT_MAXHP);
+	//if(.@hp > .@mhp * 10 / 100)
+	{
+		//RATHENA
+		setunitdata 'rocBossId, 2, .@rocBossData[2] - .@rocBossData[3] * 10 / 100;
+		//HERCULES
+		//setunitdata 'rocBossId, UDT_HP, .@hp - .@mhp * 10 / 100;
+		donpcevent instance_npcname( "room_of_consciousness" ) + "::OnSkillCasted";
+	}
+	disablenpc strnpcinfo(3);
+	disablenpc instance_npcname( "alaroci4", instance_id() );
+	end;
+
+OnInit:
+OnInstanceInit:
+	disablenpc strnpcinfo(3);
+	end;
+}
+
+1@mir,109,73,4	script	Iris::alaroci4	4_F_IRIS,{
+	end;
+
+OnTalk:
+	attachrid('rocTalkingId);	
+	npctalk "Allright let me do it! What I, Iris, want is...";
+	instance_announce instance_id(), "[Iris] Allright let me do it! What I, Iris, want is...", bc_map, 0x0000FF;
+	sleep 2500;
+	npctalk "Mabi Amulet! Go!";
+	instance_announce instance_id(), "[Iris] Mabi Amulet! Go!", bc_map, 0x0000FF;
+	sleep2 1500;
+	npctalk "It worked!";
+	instance_announce instance_id(), "[Iris] It worked!", bc_map, 0x0000FF;
+	specialeffect 261;
+	instance_announce instance_id(), "Graaarrrgghhh!!!", bc_map, 0xFF0000;
+	unittalk 'rocBossId,"Graaarrrgghhh!!!";
+	sleep2 1500;
+	donpcevent instance_npcname( "alafen4", instance_id() ) + "::OnTalk";
+	end;
+
+OnInit:
+OnInstanceInit:
+	disablenpc strnpcinfo(3);
+	end;
+}
+
+1@mir,100,64,0	script	Fenris::alafen5	4_F_FENRIR,3,3,{
+	end;
+
+OnTouch:
+	getmapxy(.@map$, .@x, .@y, 1, strnpcinfo(3));
+	//RATHENA
+	getunitdata('rocBossId, .@rocBossData);
+	set 'rocTalkingId, getcharid(3);
+	if(.@rocBossData[6] >= .@x - 10 && .@rowBossData[6] <= .@x + 10
+		&& .@rocBossData[7] >= .@y - 10 && .@rocBossData[7] <= .@y + 10)
+	{
+	//HERCULES
+	//getmapxy(.@mmap$, .@mx, .@my, UNITTYPE_MOB, 'rocBossId);
+	//if(.@mx >= .@x - 10 && .@mx <= .@x + 10 && .@my >= .@y - 10 && .@my <= .@y + 10)
+	//{
+		npctalk "Good work! Now it's up to you Iris!";
+		instance_announce instance_id(), "[Fenris] Good work! Now it's up to you Iris!", bc_map, 0x0000FF;
+		donpcevent instance_npcname( "alaroci5", instance_id() ) + "::OnTalk";
+	}
+	end;
+
+OnTalk:
+	attachrid('rocTalkingId);	
+	npctalk "Then this is my turn! Spirited Yell!";
+	instance_announce instance_id(), "[Fenris] Then this is my turn! Spirited Yell!", bc_map, 0x0000FF;
+	specialeffect 721;
+	instance_announce instance_id(), "Graaarrrgghhh!!!", bc_map, 0xFF0000;
+	unittalk 'rocBossId,"Graaarrrgghhh!!!";
+	//RATHENA
+	getunitdata('rocBossId, .@rocBossData);
+	if(.@rocBossData[2] > .@rocBossData[3] * 10 / 100)
+	//HERCULES
+	//set .@hp, getunitdata('rocBossId, UDT_HP);
+	//set .@mhp, getunitdata('rocBossId, UDT_MAXHP);
+	//if(.@hp > .@mhp * 10 / 100)
+	{
+		//RATHENA
+		setunitdata 'rocBossId, 2, .@rocBossData[2] - .@rocBossData[3] * 10 / 100;
+		//HERCULES
+		//setunitdata 'rocBossId, UDT_HP, .@hp - .@mhp * 10 / 100;
+		donpcevent instance_npcname( "room_of_consciousness" ) + "::OnSkillCasted";
+	}
+	disablenpc strnpcinfo(3);
+	disablenpc instance_npcname( "alaroci5", instance_id() );
+	end;
+
+OnInit:
+OnInstanceInit:
+	disablenpc strnpcinfo(3);
+	end;
+}
+
+1@mir,103,64,1	script	Iris::alaroci5	4_F_IRIS,{
+	end;
+
+OnTalk:
+	attachrid('rocTalkingId);	
+	npctalk "Allright let me do it! What I, Iris, want is...";
+	instance_announce instance_id(), "[Iris] Allright let me do it! What I, Iris, want is...", bc_map, 0x0000FF;
+	sleep 2500;
+	npctalk "Mabi Amulet! Go!";
+	instance_announce instance_id(), "[Iris] Mabi Amulet! Go!", bc_map, 0x0000FF;
+	sleep2 1500;
+	npctalk "It worked!";
+	instance_announce instance_id(), "[Iris] It worked!", bc_map, 0x0000FF;
+	specialeffect 261;
+	instance_announce instance_id(), "Graaarrrgghhh!!!", bc_map, 0xFF0000;
+	unittalk 'rocBossId,"Graaarrrgghhh!!!";
+	sleep2 1500;
+	donpcevent instance_npcname( "alafen5", instance_id() ) + "::OnTalk";
+	end;
+
+OnInit:
+OnInstanceInit:
+	disablenpc strnpcinfo(3);
+	end;
+}

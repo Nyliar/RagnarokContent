@@ -1,0 +1,39 @@
+//HERCULES
+{
+	Id: 27018
+	AegisName: "GC109_Card"
+	Name: "GC109 Card"
+	Type: 6
+	Buy: 20
+	Weight: 10
+	Loc: 136
+	Script: <" bonus bDelayrate,-(1+(BaseLevel>=90)+(BaseLevel>=120)); ">
+},
+{
+	Id: 27019
+	AegisName: "DR815_Card"
+	Name: "DR815 Card"
+	Type: 6
+	Buy: 20
+	Weight: 10
+	Loc: 136
+	Script: <" bonus bHit,1+(BaseLevel>=90)+(BaseLevel>=120); ">
+},
+{
+	Id: 27020
+	AegisName: "T_W_O_Card"
+	Name: "T_W_O Card"
+	Type: 6
+	Buy: 20
+	Weight: 10
+	Loc: 136
+	Script: <" bonus2 bAddClass,Class_All,10; bonus3 bAutoSpell,"NPC_WIDESOULDRAIN",2,50+((getrefine()/3)*10); ">
+},
+{
+	Id: 22269
+	AegisName: "Test_Reagent"
+	Name: "Test Reagent"
+	Buy: 0
+	Weight: 10
+	BuyingStore: true
+},

@@ -1,0 +1,244 @@
+prontera,148,193,5	script	Instance Master::alaofinsmas	4_M_REKENBER,{
+	set .@npcname$, "^0055FF[ Instance Master ]^000000";
+	mes .@npcname$;
+	mes "Hello to you.";
+	mes "I'm the Instance Master.";
+	mes "By talking to me, you can try any of the known instances.";
+	mes "So, do you want to take a little challenge?";
+	if(select("Yes please","No, not yet...") == 1)
+	{
+		next;
+		mes .@npcname$;
+		mes "Okay. What are you we about to enter then?";
+		switch(select("Eclage","Decisive Battle","Fantasmagorica","Memory Record","Banquet For Heroes","Others","What are my statistics?","I'll come back later"))
+		{
+			case 1:
+				goto OnEclage;
+				break;
+			case 2:
+				goto OnDecisiveBattle;
+				break;
+			case 3:
+				goto OnFantasmagorica;
+				break;
+			case 4:
+				goto OnMemoryRecord;
+				break;
+			case 5:
+				goto OnBanquetForHeroes;
+				break;
+			case 6:
+				goto OnOthers;
+				break;
+			case 7:
+				goto OnStatistics;
+				break;
+			default:
+				next;
+				mes .@npcname$;			
+				mes "Humpf...Not the way you'll become stronger, you know...";
+				break;
+		}
+	}
+	close;
+	
+OnStatistics:
+	next;
+	mes .@npcname$;
+	mes "Your statistics? Of course.";
+	mes "Wait a bit.";
+	next;
+	mes .@npcname$;
+	mes "So you've started:";
+	mes "Devil Tower: " + #DEVILTOWER + " times";
+	mes "Morse Cave: " + #MORSECAVE + " times";
+	mes "Temple of Demon God: " + #TEMPLEDEMONGOD + " times";
+	mes "Charleston's Factory: " + #CHARLESTONC + " times";
+	mes "Sarah and Fenrir: " + #SARAFENRIR + " times";
+	mes "Airship Assault: " + #AIRSHIPA + " times";
+	mes "Infinite Space: " + #INFISPACE + " times";
+	mes "Last Room: " + #LASTROOM + " times";
+	mes "Room of Consciousness: " + #ROOMOFCONSC + " times";
+	mes "Endless Cellar: " + #CELLAR + " times";
+	mes "Poring Village: " + #PORVILLAGE + " times";
+	set .@total, .@total + #LASTROOM + #DEVILTOWER + #MORSECAVE + #TEMPLEDEMONGOD + #CHARLESTONC + #SARAFENRIR + #AIRSHIPA + #INFISPACE + #ROOMOFCONSC + #CELLAR + #PORVILLAGE;
+	next;
+	mes .@npcname$;
+	mes "Overall, you've started " + .@total + " instances.";
+	close;
+	
+OnEclage:	
+	next;
+	mes .@npcname$;
+	mes "Now, choose the instance you want to start.";
+	switch(select("Devil's Tower"))
+	{
+		case 1:
+			next;
+			mes .@npcname$;
+			mes "Look for someone looking like this.";
+			setnpcdisplay strnpcinfo(3), 4_F_NOVICE;
+			next;
+			set #DEVILTOWER, #DEVILTOWER + 1;
+			mes "Wait a bit. You'll be there soon.";
+			warp "dali",94,143;
+			setnpcdisplay strnpcinfo(3), 4_M_REKENBER;
+			break;
+	}
+	close;
+	
+OnDecisiveBattle:
+	next;
+	mes .@npcname$;
+	mes "Now, choose the instance you want to start.";
+	switch(select("Morse's Cave","Temple of Demon God"))
+	{
+		case 1:
+			next;
+			mes .@npcname$;
+			mes "Look for someone looking like this.";
+			setnpcdisplay strnpcinfo(3), 4_M_CATMAN2;
+			next;
+			set #MORSECAVE, #MORSECAVE + 1;
+			mes "Wait a bit. You'll be there soon.";
+			warp "moro_cav",61,69;
+			setnpcdisplay strnpcinfo(3), 4_M_REKENBER;
+			break;
+		case 2:
+			next;
+			mes .@npcname$;
+			mes "Look for someone looking like this.";
+			setnpcdisplay strnpcinfo(3), 4_M_KNIGHT_GOLD;
+			next;
+			set #TEMPLEDEMONGOD, #TEMPLEDEMONGOD + 1;
+			mes "Wait a bit. You'll be there soon.";
+			warp "moro_cav",42,69;
+			setnpcdisplay strnpcinfo(3), 4_M_REKENBER;
+			break;		
+	}
+	close;
+	
+OnFantasmagorica:
+	next;
+	mes .@npcname$;
+	mes "Now, choose the instance you want to start.";
+	switch(select("Charleston's Factory","Sarah and Fenrir","Airship Assault"))
+	{
+		case 1:
+			next;
+			mes .@npcname$;
+			mes "Look for someone looking like this.";
+			setnpcdisplay strnpcinfo(3), 4_F_CHARLESTON02;
+			next;
+			set #CHARLESTONC, #CHARLESTONC + 1;
+			mes "Wait a bit. You'll be there soon.";
+			warp "verus04",78,118;
+			setnpcdisplay strnpcinfo(3), 4_M_REKENBER;
+			break;	
+		case 2:
+			next;
+			mes .@npcname$;
+			mes "Look for someone looking like this.";
+			setnpcdisplay strnpcinfo(3), 4_M_DOCTOR;
+			next;
+			set #SARAFENRIR, #SARAFENRIR + 1;
+			mes "Wait a bit. You'll be there soon.";
+			warp "dali02",95,143;
+			setnpcdisplay strnpcinfo(3), 4_M_REKENBER;
+			break;	
+		case 3:
+			next;
+			mes .@npcname$;
+			mes "Look for someone looking like this.";
+			setnpcdisplay strnpcinfo(3), 4_M_DST_MASTER;
+			next;
+			set #AIRSHIPA, #AIRSHIPA + 1;
+			mes "Wait a bit. You'll be there soon.";
+			warp "dali02",137,82;
+			setnpcdisplay strnpcinfo(3), 4_M_REKENBER;
+			break;	
+	}
+	close;
+	
+OnMemoryRecord:
+	next;
+	mes .@npcname$;
+	mes "Now, choose the instance you want to start.";
+	switch(select("Infinite Space","Last Room"))
+	{
+		case 1:
+			next;
+			mes .@npcname$;
+			mes "Look for someone looking like this.";
+			setnpcdisplay strnpcinfo(3), 4_M_ATEIL;
+			next;
+			set #INFISPACE, #INFISPACE + 1;
+			mes "Wait a bit. You'll be there soon.";
+			warp "cmd_fild07",53,273;
+			setnpcdisplay strnpcinfo(3), 4_M_REKENBER;
+			break;	
+		case 2:
+			next;
+			mes .@npcname$;
+			mes "Look for someone looking like this.";
+			setnpcdisplay strnpcinfo(3), 4_M_BIRMAN;
+			next;
+			set #LASTROOM, #LASTROOM + 1;
+			mes "Wait a bit. You'll be there soon.";
+			warp "un_myst",158,38;
+			setnpcdisplay strnpcinfo(3), 4_M_REKENBER;
+			break;
+	}
+	close;
+	
+OnBanquetForHeroes:
+	next;
+	mes .@npcname$;
+	mes "Now, choose the instance you want to start.";
+	switch(select("Room of Consciousness"))
+	{
+		case 1:
+			next;
+			mes .@npcname$;
+			mes "Look for someone looking like this.";
+			setnpcdisplay strnpcinfo(3), 4_M_JOB_WIZARD;
+			next;
+			set #ROOMOFCONSC, #ROOMOFCONSC + 1;
+			mes "Wait a bit. You'll be there soon.";
+			warp "prt_lib_q",90,80;
+			setnpcdisplay strnpcinfo(3), 4_M_REKENBER;
+			break;
+	}
+	close;
+	
+OnOthers:
+	next;
+	mes .@npcname$;
+	mes "Now, choose the instance you want to start.";
+	switch(select("Endless Cellar", "Poring Village"))
+	{
+		case 1:
+			next;
+			mes .@npcname$;
+			mes "Look for someone looking like this.";
+			setnpcdisplay strnpcinfo(3), 2_MONEMUS;
+			next;
+			set #CELLAR, #CELLAR + 1;
+			mes "Wait a bit. You'll be there soon.";
+			warp "e_tower",76,85;
+			setnpcdisplay strnpcinfo(3), 4_M_REKENBER;
+			break;
+		case 2:
+			next;
+			mes .@npcname$;
+			mes "Look for someone looking like this.";
+			setnpcdisplay strnpcinfo(3), 4_ANGELING;
+			next;
+			set #PORVILLAGE, #PORVILLAGE + 1;
+			mes "Wait a bit. You'll be there soon.";
+			warp "prt_fild05",141,236;
+			setnpcdisplay strnpcinfo(3), 4_M_REKENBER;
+			break;
+	}
+	close;		
+}

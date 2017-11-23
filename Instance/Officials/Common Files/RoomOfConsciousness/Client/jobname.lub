@@ -1,0 +1,7 @@
+[jobtbl.JT_BIJOU] = "BIJOU",
+  [jobtbl.JT_P_AMDARAIS] = "P_AMDARAIS",
+  [jobtbl.JT_G_P_AMDARAIS] = "G_P_AMDARAIS",
+  [jobtbl.JT_P_SOLDIER_SKELETON] = "P_SOLDIER_SKELETON",
+  [jobtbl.JT_P_ARCHER_SKELETON] = "P_ARCHER_SKELETON",
+  [jobtbl.JT_P_SKELETON] = "P_SKELETON",
+  [jobtbl.JT_4_F_BIJOU] = "4_F_BIJOU",

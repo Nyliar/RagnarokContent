@@ -1,0 +1,21 @@
+//RATHENA
+7641,Medical_Cure_Box,Medical Cure Box,3,10,,0,,,,,,,,,,,,,{},{},{}
+25055,Medical_Cure_Box,Empty Box,3,10,,0,,,,,,,,,,,,,{},{},{}
+
+//HERCULES
+{
+	Id: 7641
+	AegisName: "Medical_Cure_Box"
+	Name: "Medical Cure Box"
+	Buy: 0
+	Weight: 10
+	BuyingStore: true
+},
+{
+	Id: 25055
+	AegisName: "Medical_Cure_Box"
+	Name: "Empty Box"
+	Buy: 0
+	Weight: 10
+	BuyingStore: true
+},

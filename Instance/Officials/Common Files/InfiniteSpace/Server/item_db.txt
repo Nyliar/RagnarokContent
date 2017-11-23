@@ -1,0 +1,510 @@
+//RATHENA
+
+1938,Infinity_Violin,Infinity Violin,5,10,,500,150,,2,1,0x00080000,56,1,2,4,100,1,13,{},{},{}
+1994,Infinity_Whip,Infinity Whip,5,10,,500,150,,2,1,0x00080000,56,0,2,4,100,1,14,{},{},{}
+2024,Infinity_Two-handed_Stick,Infinity Two-handed Stick,5,10,,500,30:170,,,1,0x810200,56,2,34,4,100,1,23,{},{},{}
+13126,Infinity_Pistol,Infinity Pistol,5,10,,500,175,,7,1,0x40000000,63,2,34,4,100,0,17,{},{},{}
+13323,Infinity_Shuriken,Infinity Shuriken,5,0,,500,150:40,,1,1,0x20000000,63,2,34,4,100,1,22,{},{},{}
+16038,Infinity_Mace,Infinity Mace,5,10,,500,155,,1,1,0x0004C780,56,2,2,4,100,1,8,{},{},{}
+18128,Infinity_Bow,Infinity Bow,5,20,,500,160,,5,1,0x00020800,56,2,34,4,100,1,11,{},{},{}
+21014,Infinity_Two-Handed_Sword,Infinity Two-Handed Sword,5,20,,500,230,,1,1,0x00004082,56,2,34,4,100,1,3,{},{},{}
+28105,Infinity_Axe,Infinity Axe,5,10,,500,265,,1,1,0x000444A2,56,2,34,4,100,1,7,{},{},{}
+28703,Infinity_Dagger,Infinity Dagger,5,10,,500,125:100,,1,1,0x028F5EEF,56,2,2,4,100,1,1,{},{},{}
+
+6905,Broken_Magic_Stone,Broken Magic Stone,3,10,,0,,,,,,,,,,,,,{},{},{}
+
+4642,Min_Toad_Card,Infinite Toad Card,6,20,,10,,,,,,,,64,,,,,{ .@r = getrefine(); if(.@r>6){ .@b+=2; if(.@r>8).@b+=3; } bonus bFlee2,2+.@b; },{},{}
+4643,Min_Vagabond_Wolf_Card,Infinite Vagabond Wolf Card,6,20,,10,,,,,,,,64,,,,,{ .@r = getrefine(); if(.@r>6){ .@b+=10; if(.@r>8).@b+=15; } bonus bAtk,10+.@b; },{},{}
+4644,Min_Vocal_Card,Infinite Vocal Card,6,20,,10,,,,,,,,64,,,,,{ .@r = getrefine(); if(.@r>6){ .@b+=10; if(.@r>8) .@b+=15; } bonus bMdef,5+.@b; },{},{}
+4645,Min_Eclipse_Card,Infinite Eclipse Card,6,20,,10,,,,,,,,64,,,,,{ .@r = getrefine(); if(.@r>6){ .@b+=300; if(.@r>8).@b+=400; } bonus bMaxHP,300+.@b; },{},{}
+4646,Min_Chimera_Card,Infinite Chimera Card,6,20,,10,,,,,,,,4,,,,,{ bonus bMaxHPrate,8; bonus bMaxSPrate,4; },{},{}
+4647,Min_Osiris_Card,Infinite Osiris Card,6,20,,10,,,,,,,,136,,,,,{ bonus bHPGainValue,300; },{},{}
+4648,Min_Eddga_Card,Infinite Eddga Card,6,20,,10,,,,,,,,64,,,,,{ bonus4 bAutoSpellWhenHit,"SM_PROVOKE",10,500,1; },{},{}
+4649,Min_Phreeoni_Card,Infinite Phreeoni Card,6,20,,10,,,,,,,,2,,,,,{ bonus bCritical,100; },{},{}
+4650,Min_Orc_Hero_Card,Infinite Orc Hero Card,6,20,,10,,,,,,,,769,,,,,{ bonus bVit,3; bonus3 bAddEffWhenHit,Eff_Stun,10000,ATF_MAGIC; },{},{}
+4651,Min_Tao_Gunka_Card,Infinite Tao Gunka Card,6,20,,10,,,,,,,,16,,,,,{ bonus bMaxHP,10000; bonus bAgi,-10; },{},{}
+
+24150,S_Infinity_Earring,Infinity Shadow Earring,12,0,,0,,,,0,0xFFFFFFFF,63,2,1048576,,1,1,,{ .@r = getrefine(); bonus2 bSubSize,Size_All,1+((.@r >= 9) ? 2 : (.@r >= 7) ? 1 : 0); },{},{}
+24151,S_Infinity_Pendant,Infinity Shadow Pendant,12,0,,0,,,,0,0xFFFFFFFF,63,2,2097152,,1,1,,{ .@r = getrefine(); bonus2 bSubSize,Size_All,1+((.@r >= 9) ? 2 : (.@r >= 7) ? 1 : 0); },{},{}
+
+15141,Rift_Ancient_Armor,Rift Ancient Armor,4,10,,500,,30,,1,0xFFFFFFFF,63,2,16,,100,1,,{ .@r = getrefine(); bonus bMaxHP,(.@r >= 9 ? 1500 : .@r >= 7 ? 900 : 500); bonus bMaxSP,-100; },{},{}
+19033,Rift_Ancient_Decoration,Rift Ancient Decoration,4,20,,200,,2,,1,0xFFFFFFFF,63,2,256,,100,1,376,{ .@r = getrefine(); bonus bMaxHP,1000+(.@r >= 9 ? 1000 : .@r >=7 ? 400 : 0); },{},{}
+20779,Rift_Manteau,Rift Manteau,4,20,,500,,16,,1,0xFFFFFFFF,63,2,4,,100,1,,{ .@r = getrefine(); bonus bMaxHP,(.@r >= 9 ? 1300 : .@r >= 7 ? 700 : 300); bonus bMaxSP,-50; },{},{}
+22075,Rift_Shoes,Rift Shoes,4,20,,250,,12,,1,0xFFFFFFFF,63,2,64,,100,1,,{ .@r = getrefine(); bonus bMaxHP,(.@r >= 9 ? 1300 : .@r >= 7 ? 700 : 300); bonus bMaxSP,-50; },{},{}
+
+//HERCULES 
+{
+	Id: 1938
+	AegisName: "Infinity_Violin"
+	Name: "Infinity Violin"
+	Type: "IT_WEAPON"
+	Buy: 20
+	Weight: 500
+	Atk: 150
+	Range: 1
+	Slots: 1
+	Job: {
+		Bard: true
+	}
+	Upper: ["ITEMUPPER_THIRD", "ITEMUPPER_THIRDUPPER", "ITEMUPPER_THIRDBABY"]
+	Gender: "SEX_MALE"
+	Loc: "EQP_WEAPON"
+	WeaponLv: 4
+	EquipLv: 100
+	Subtype: "W_MUSICAL"
+	Trade: {
+		nodrop: true
+		notrade: true
+		nocart: true
+		nogstorage: true
+		nomail: true
+		noauction: true
+	}
+},
+{
+	Id: 1994
+	AegisName: "Infinity_Wire"
+	Name: "Infinity Wire"
+	Type: "IT_WEAPON"
+	Buy: 20
+	Atk: 100
+	Range: 2
+	Slots: 1
+	Job: {
+		Bard: true
+	}
+	Upper: ["ITEMUPPER_THIRD", "ITEMUPPER_THIRDUPPER", "ITEMUPPER_THIRDBABY"]
+	Loc: "EQP_WEAPON"
+	WeaponLv: 4
+	EquipLv: 100
+	Subtype: "W_WHIP"
+	Trade: {
+		nodrop: true
+		notrade: true
+		nocart: true
+		nogstorage: true
+		nomail: true
+		noauction: true
+	}
+},
+{
+	Id: 2024
+	AegisName: "Infinity_Staff"
+	Name: "Infinity Staff"
+	Type: "IT_WEAPON"
+	Buy: 20
+	Weight: 500
+	Atk: 30
+	Matk: 170
+	Slots: 1
+	Job: {
+		Wizard: true
+		Sage: true
+		Soul_Linker: true
+	}
+	Upper: ["ITEMUPPER_THIRD", "ITEMUPPER_THIRDUPPER", "ITEMUPPER_THIRDBABY"]
+	Loc: "EQP_ARMS"
+	WeaponLv: 4
+	EquipLv: 100
+	Subtype: "W_2HSTAFF"
+	Trade: {
+		nodrop: true
+		notrade: true
+		nocart: true
+		nogstorage: true
+		nomail: true
+		noauction: true
+	}
+},
+{
+	Id: 13126
+	AegisName: "Infinity_Pistol"
+	Name: "SInfinity Pistol"
+	Type: "IT_WEAPON"
+	Buy: 50
+	Weight: 500
+	Atk: 170
+	Range: 7
+	Slots: 1
+	Job: {
+		Gunslinger: true
+	}
+	Upper: "ITEMUPPER_NORMAL"
+	Loc: "EQP_ARMS"
+	WeaponLv: 4
+	EquipLv: 100
+	Subtype: "W_REVOLVER"
+	Trade: {
+		nodrop: true
+		notrade: true
+		nocart: true
+		nostorage: true
+		nogstorage: true
+		nomail: true
+		noauction: true
+	}
+	Script: <"">
+},
+{
+	Id: 13323
+	AegisName: "Infinity_Shuriken"
+	Name: "Infinity Shuriken"
+	Type: "IT_WEAPON"
+	Buy: 0
+	Weight: 500
+	Atk: 150
+	Matk: 40
+	Range: 1
+	Slots: 1
+	Job: {
+		Ninja: true
+		Kagerou: true
+	}
+	Upper: "ITEMUPPER_NORMAL"
+	Loc: "EQP_ARMS"
+	WeaponLv: 4
+	EquipLv: 100
+	Subtype: "W_HUUMA"
+	Script: <"">
+},
+{
+	Id: 16038
+	AegisName: "Infinity_Mace"
+	Name: "Infinity Mace"
+	Type: "IT_WEAPON"
+	Buy: 10
+	Weight: 500
+	Atk: 155
+	Range: 1
+	Slots: 1
+	Job: {
+		Swordsman: true
+		Acolyte: true
+		Merchant: true
+		Knight: true
+		Priest: true
+		Blacksmith: true
+		Crusader: true
+		Monk: true
+		Alchemist: true
+	}
+	Upper: ["ITEMUPPER_UPPER", "ITEMUPPER_THIRD", "ITEMUPPER_THIRDUPPER", "ITEMUPPER_THIRDBABY"]
+	Loc: "EQP_WEAPON"
+	WeaponLv: 4
+	EquipLv: 100
+	Subtype: "W_MACE"
+	Script: <"">
+},
+{
+	Id: 18128
+	AegisName: "Infinity_Bow"
+	Name: "Infinity Bow"
+	Type: "IT_WEAPON"
+	Buy: 20
+	Weight: 500
+	Atk: 160
+	Range: 5
+	Slots: 1
+	Job: {
+		Archer: true
+		Thief: true
+		Hunter: true
+		Rogue: true
+		Bard: true
+	}
+	Loc: "EQP_ARMS"
+	WeaponLv: 4
+	EquipLv: 100
+	Subtype: "W_BOW"
+	Script: <"">
+},
+{
+	Id: 21014
+	AegisName: "Infinity_Two-Handed_Sword"
+	Name: "Infinity Two-Handed Sword"
+	Type: "IT_WEAPON"
+	Buy: 20
+	Weight: 500
+	Atk: 230
+	Range: 1
+	Slots: 1
+	Job: {
+		Swordsman: true
+		Knight: true
+		Crusader: true
+	}
+	Loc: "EQP_ARMS"
+	WeaponLv: 4
+	EquipLv: 100
+	Subtype: "W_2HSWORD"
+	Script: <"">
+},
+{
+	Id: 28105
+	AegisName: "Infinity_Axe"
+	Name: "Infinity Axe"
+	Type: "IT_WEAPON"
+	Buy: 10
+	Weight: 500
+	Atk: 265
+	Range: 1
+	Slots: 1
+	Job: {
+		Swordsman: true
+		Merchant: true
+		Knight: true
+		Blacksmith: true
+		Crusader: true
+		Alchemist: true
+	}
+	Upper: ["ITEMUPPER_THIRD", "ITEMUPPER_THIRDUPPER", "ITEMUPPER_THIRDBABY"]
+	Loc: "EQP_ARMS"
+	WeaponLv: 4
+	EquipLv: 100
+	Subtype: "W_2HAXE"
+	Script: <"">
+},
+{
+	Id: 28703
+	AegisName: "Infinity_Dagger"
+	Name: "Infinity Dagger"
+	Type: "IT_WEAPON"
+	Buy: 20
+	Weight: 500
+	Atk: 125
+	Matk: 100
+	Range: 1
+	Slots: 1
+	Job: {
+		Novice: true
+		Swordsman: true
+		Magician: true
+		Archer: true
+		Merchant: true
+		Thief: true
+		Knight: true
+		Wizard: true
+		Blacksmith: true
+		Hunter: true
+		Assassin: true
+		Crusader: true
+		Sage: true
+		Rogue: true
+		Alchemist: true
+		Bard: true
+		Soul_Linker: true
+		Ninja: true
+		Kagerou: true
+	}
+	Loc: "EQP_WEAPON"
+	WeaponLv: 4
+	EquipLv: 100
+	Subtype: "W_DAGGER"
+	Trade: {
+		nodrop: true
+		notrade: true
+		nocart: true
+		nogstorage: true
+		nomail: true
+		noauction: true
+	}
+},
+
+{
+	Id: 6905
+	AegisName: "Broken_Magic_Stone"
+	Name: "Broken Magic Stone"
+	Buy: 10
+	Weight: 0
+	BuyingStore: true
+},
+
+{
+	Id: 4642
+	AegisName: "Min_Toad_Card"
+	Name: "Infinite Toad Card"
+	Type: "IT_CARD"
+	Buy: 20
+	Weight: 10
+	Loc: "EQP_SHOES"
+	Script: <"
+		bonus bFlee2,2;
+		if (getrefine() > 6) bonus bFlee2,2;
+		if (getrefine() > 8) bonus bFlee2,3;
+	">
+},
+{
+	Id: 4643
+	AegisName: "Min_Vagabond_Wolf_Card"
+	Name: "Infinite Vagabond Wolf Card"
+	Type: "IT_CARD"
+	Buy: 20
+	Weight: 10
+	Loc: "EQP_SHOES"
+	Script: <"
+		bonus bAtk,10;
+		if (getrefine() > 6) bonus bAtk,10;
+		if (getrefine() > 8) bonus bAtk,15;
+	">
+},
+{
+	Id: 4644
+	AegisName: "Min_Vocal_Card"
+	Name: "Infinite Vocal Card"
+	Type: "IT_CARD"
+	Buy: 20
+	Weight: 10
+	Loc: "EQP_SHOES"
+	Script: <"
+		bonus bMdef,5;
+		if (getrefine() > 6) bonus bMdef,10;
+		if (getrefine() > 8) bonus bMdef,15;
+	">
+},
+{
+	Id: 4645
+	AegisName: "Min_Eclipse_Card"
+	Name: "Infinite Eclipse Card"
+	Type: "IT_CARD"
+	Buy: 20
+	Weight: 10
+	Loc: "EQP_SHOES"
+	Script: <"
+		bonus bMaxHP,300;
+		if (getrefine() > 6) bonus bMaxHP,300;
+		if (getrefine() > 8) bonus bMaxHP,400;
+	">
+},
+{
+	Id: 4646
+	AegisName: "Min_Chimera_Card"
+	Name: "Infinite Chimera Card"
+	Type: "IT_CARD"
+	Buy: 20
+	Weight: 10
+	Loc: "EQP_GARMENT"
+	Script: <"
+		bonus bMaxHPrate,8; bonus bMaxSPrate,4;
+	">
+},
+{
+	Id: 4647
+	AegisName: "Min_Osiris_Card"
+	Name: "Infinite_Osiris_Card"
+	Type: "IT_CARD"
+	Buy: 20
+	Weight: 10
+	Loc: "EQP_ACC"
+	Script: <" bonus bHPGainValue,300; ">
+},
+{
+	Id: 4648
+	AegisName: "Min_Eddga_Card"
+	Name: "Infinite_Eddga_Card"
+	Type: "IT_CARD"
+	Buy: 20
+	Weight: 10
+	Loc: "EQP_SHOES"
+	Script: <" bonus3 bAutoSpellWhenHit,SM_PROVOKE,10,500; ">
+},
+{
+	Id: 4649
+	AegisName: "Min_Phreeoni_Card"
+	Name: "Infinite Phreeoni Card"
+	Type: "IT_CARD"
+	Buy: 20
+	Weight: 10
+	Loc: "EQP_WEAPON"
+	Script: <" bonus bCritical,100; ">
+},
+{
+	Id: 4650
+	AegisName: "Min_Ork_Hero_Card"
+	Name: "Infinite Orc Hero Card"
+	Type: "IT_CARD"
+	Buy: 20
+	Weight: 10
+	Loc: ["EQP_HEAD_LOW", "EQP_HEAD_TOP", "EQP_HEAD_MID"]
+	Script: <"
+		bonus bVit,3;
+		bonus3 bAddEffWhenHit,Eff_Stun,10000,BF_MAGIC; /* NOTE: Works only on monsters, going to test further in Official servers if also works on players. [Frost] */
+	">
+},
+{
+	Id: 4651
+	AegisName: "Min_Tao_Gunka_Card"
+	Name: "Infinite Tao Gunka Card"
+	Type: "IT_CARD"
+	Buy: 20
+	Weight: 10
+	Loc: "EQP_ARMOR"
+	Script: <"
+		bonus bMaxHP,10000;
+		bonus bAgi,-10;
+	">
+},
+
+{
+	Id: 15141
+	AegisName: "Rift_Ancient_Armor"
+	Name: "Rift Ancient Armor"
+	Type: "IT_ARMOR"
+	Buy: 10
+	Weight: 500
+	Def: 30
+	Job: {
+		Swordsman: true
+		Merchant: true
+		Thief: true
+		Knight: true
+		Blacksmith: true
+		Assassin: true
+		Crusader: true
+		Rogue: true
+		Alchemist: true
+	}
+	Loc: "EQP_ARMOR"
+	Script: <" .@r = getrefine(); bonus bMaxHP,(.@r >= 9 ? 1500 : .@r >= 7 ? 900 : 500); bonus bMaxSP,-100; ">
+},
+{
+	Id: 19033
+	AegisName: "Rift_Ancient_Decoration"
+	Name: "Rift Ancient Decoration"
+	Type: "IT_ARMOR"
+	Buy: 20
+	Weight: 200
+	Def: 2
+	Slot: 1
+	Job: {
+		All: true
+		Novice: false
+	}
+	Loc: "EQP_HEAD_TOP"
+	ViewSprite: 376
+	Script: <" .@r = getrefine(); bonus bMaxHP,1000+(.@r >= 9 ? 1000 : .@r >=7 ? 400 : 0); ">
+},
+{
+	Id: 20779
+	AegisName: "Rift_Manteau"
+	Name: "Rift Manteau"
+	Type: "IT_ARMOR"
+	Buy: 20
+	Weight: 500
+	Def: 16
+	Slots: 1
+	Loc: "EQP_GARMENT"
+	EquipLv: 100
+	Script: <" .@r = getrefine(); bonus bMaxHP,(.@r >= 9 ? 1300 : .@r >= 7 ? 700 : 300); bonus bMaxSP,-50;		bonus bShortWeaponDamageReturn, 5 + (getequiprefinerycnt(EQI_GARMENT) * 2); ">
+},
+{
+	Id: 22075
+	AegisName: "Rift_Shoes"
+	Name: "Rift Shoes"
+	Type: "IT_ARMOR"
+	Buy: 20
+	Weight: 250
+	Def: 12
+	Slot: 1
+	Loc: "EQP_SHOES"
+	Script: <" .@r = getrefine(); bonus bMaxHP,(.@r >= 9 ? 1300 : .@r >= 7 ? 700 : 300); bonus bMaxSP,-50; ">
+},
