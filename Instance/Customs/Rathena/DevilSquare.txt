@@ -34,8 +34,7 @@ OnStart:
 	set .@has_instance, DS_INSTANCE_ID > 0;
 	
 	set .@instance_ds_delay, ( instance_delay_devsq - gettimetick(2) );
-
-	next; 
+	
 	mes "^0055FF[ "+.instance_name$+" ]^000000";
 	mes "Did you ever heard of Devil Square?";
 	mes "That's a dangerous place where monsters regroups to rule the area.";
