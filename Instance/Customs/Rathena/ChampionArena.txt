@@ -28,7 +28,7 @@ prontera,140,167,0	script	Weapon Master::alaweamas	4_F_JPN2,{ //757,{
 OnStart:
 	set .@party_id, getcharid(1);
 	set .@is_leader, ( getcharid(0) == getpartyleader(.@party_id,2) );
-	set .@has_instance, AE_INSTANCE_ID >= 0;
+	set .@has_instance, AE_INSTANCE_ID > 0;
 	
 	set .@instance_delay, ( instance_delay_arena - gettimetick(2) );
 
