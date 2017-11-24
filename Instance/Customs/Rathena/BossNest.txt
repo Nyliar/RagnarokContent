@@ -28,7 +28,7 @@ prontera,140,170,6	script	Nest Guardian::alanegua	4_MAN_GALTUN,{
 OnStart:
 	.@party_id = getcharid(1);
 	.@is_leader = ( getcharid(0) == getpartyleader(.@party_id,2) );
-	.@has_instance = BN_INSTANCE_ID >= 0;
+	.@has_instance = BN_INSTANCE_ID > 0;
 	
 	.@bnest_instance_delay = ( instance_delay_bnest - gettimetick(2) );
 
