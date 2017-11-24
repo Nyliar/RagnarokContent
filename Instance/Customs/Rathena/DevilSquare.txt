@@ -31,7 +31,7 @@ OnStart:
 	set .@party_id, getcharid(1);
 	set .@is_leader, ( getcharid(0) == getpartyleader(.@party_id,2) );
 	
-	set .@has_instance, DS_INSTANCE_ID == getcharid(1);
+	set .@has_instance, DS_INSTANCE_ID > 0;
 	
 	set .@instance_ds_delay, ( instance_delay_devsq - gettimetick(2) );
 
