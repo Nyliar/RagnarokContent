@@ -28,7 +28,7 @@ prontera,145,173,4	script	Volva::alvopr	4_F_RUSGREEN,{
 OnStart:
 	set .@party_id, getcharid(1);
 	set .@is_leader, ( getcharid(0) == getpartyleader(.@party_id,2) );
-	set .@has_instance, VP_INSTANCE_ID >= 0;
+	set .@has_instance, VP_INSTANCE_ID > 0;
 	
 	set .@instance_vp_delay, ( instance_delay_volpro - gettimetick(2) );
 
