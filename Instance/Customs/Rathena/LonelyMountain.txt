@@ -28,7 +28,7 @@ prontera,140,164,0	script	Lonely Mountain Guardian::lmigua	8W_SOLDIER,{
 OnStart:
 	.@party_id = getcharid(1);
 	.@is_leader = ( getcharid(0) == getpartyleader(.@party_id,2) );
-	.@has_instance = LMI_INSTANCE_ID >= 0;
+	.@has_instance = LMI_INSTANCE_ID > 0;
 	
 	.@lmi_instance_delay = ( instance_delay_mh - gettimetick(2) );
 
