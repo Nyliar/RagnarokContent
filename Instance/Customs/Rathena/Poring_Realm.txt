@@ -28,7 +28,7 @@ prontera,145,164,3	script	Poring Master::pormas	4_M_ROYALGUARD,{
 OnStart:
 	set .@party_id, getcharid(1);
 	set .@is_leader, ( getcharid(0) == getpartyleader(.@party_id,2) );
-	.@has_instance = PR_INSTANCE_ID >= 0;
+	.@has_instance = PR_INSTANCE_ID > 0;
 	
 	set .@instance_lap_delay, ( instance_delay_allomsour - gettimetick(2) );
 
@@ -284,7 +284,7 @@ OnPCDieEvent:
 
 OnRechangeParticipants:
 	set 'reseted, 0;
-	// Pour la lecture, on ne prend que les 8 premiers bits (avec le & 255) et on décale
+	// Pour la lecture, on ne prend que les 8 premiers bits (avec le & 255) et on dÃ©cale
 	for (set .@i,0; .@i < $@partymembercount; set .@i,.@i+1)
 	{
 		attachrid($@partymemberaid[.@i]);
