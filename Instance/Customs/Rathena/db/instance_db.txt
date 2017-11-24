@@ -1,15 +1,9 @@
-32,Allomancy Source,7200,300,1@as,132,93,2@as,3@as,4@as,5@as,6@as,7@as,8@as
 33,Astral Temple,7200,300,1@zod,132,42,2@zod,3@zod,4@zod
-34,Black & White Temple,7200,300,1@bawt,88,69
 35,Boss Nest,7200,300,1@bnest,23,155
 36,Champions Arena,7200,300,1@ae,101,107
 37,Devil Square,7200,300,2@ds,150,149
-38,Fury Dimension,7200,300,1@fd,125,74,2@fd,3@fd,4@fd,5@fd,6@fd,7@fd
 39,Lonely Mountain,7200,300,1@lmi,293,161
 40,Maker Mansion,7200,300,1@mm,346,26
-41,Dangerous Area,7200,300,1@mh,62,243
-42,MvP Elite Ladder,7200,300,1@me,216,58
-43,Mysterious Cave,7200,300,1@mc,132,42
 44,Poring Realm,7200,300,1@pr,61,15,2@pr
 45,Valhalla Garden,7200,300,1@gard,64,147,2@gard,3@gard,4@gard,5@gard
 46,Voluspa Prophecy,7200,300,1@vp,216,58
