@@ -1,0 +1,109 @@
+
+  [30406] = {
+    unidentifiedDisplayName = "Pill",
+    unidentifiedResourceName = "??",
+    unidentifiedDescriptionName = {
+        "The commonest shard"
+    },
+    identifiedDisplayName = "Novice Pill",
+    identifiedResourceName = "??",
+    identifiedDescriptionName = {
+		"A small pill. You can feel some power in it, but not that much...",
+		"^ffffff_^000000",
+		"^ff0000Consummable^000000",
+		"^ffffff_^000000",
+		"Weight :^777777 25^000000",
+    },
+    slotCount = 0,
+    ClassNum = 3
+  },
+  [30407] = {
+    unidentifiedDisplayName = "Pill",
+    unidentifiedResourceName = "??",
+    unidentifiedDescriptionName = {
+        "The commonest shard"
+    },
+    identifiedDisplayName = "Apprentice Pill",
+    identifiedResourceName = "??",
+    identifiedDescriptionName = {
+		"A small pill. You can feel some power in it, a bit stronger than novice's one...",
+		"^ffffff_^000000",
+		"^ff0000Consummable^000000",
+		"^ffffff_^000000",
+		"Weight :^777777 25^000000",
+    },
+    slotCount = 0,
+    ClassNum = 3
+  },
+  [30408] = {
+    unidentifiedDisplayName = "Pill",
+    unidentifiedResourceName = "??",
+    unidentifiedDescriptionName = {
+        "The commonest shard"
+    },
+    identifiedDisplayName = "Advanced Pill",
+    identifiedResourceName = "??",
+    identifiedDescriptionName = {
+		"A small pill. You can feel some power in it, not that much, but allready noticeable...",
+		"^ffffff_^000000",
+		"^ff0000Consummable^000000",
+		"^ffffff_^000000",
+		"Weight :^777777 25^000000",
+    },
+    slotCount = 0,
+    ClassNum = 3
+  },
+  [30409] = {
+    unidentifiedDisplayName = "Pill",
+    unidentifiedResourceName = "???",
+    unidentifiedDescriptionName = {
+        "The commonest shard"
+    },
+    identifiedDisplayName = "Expert Pill",
+    identifiedResourceName = "???",
+    identifiedDescriptionName = {
+		"A small pill. You can feel some power in it, like if some powerfull energy was flowing...",
+		"^ffffff_^000000",
+		"^ff0000Consummable^000000",
+		"^ffffff_^000000",
+		"Weight :^777777 25^000000",
+    },
+    slotCount = 0,
+    ClassNum = 3
+  },
+  [30410] = {
+    unidentifiedDisplayName = "Pill",
+    unidentifiedResourceName = "???",
+    unidentifiedDescriptionName = {
+        "The commonest shard"
+    },
+    identifiedDisplayName = "High Grade Pill",
+    identifiedResourceName = "???",
+    identifiedDescriptionName = {
+		"A small pill. You can feel some power in it, it flows strongly from it...",
+		"^ffffff_^000000",
+		"^ff0000Consummable^000000",
+		"^ffffff_^000000",
+		"Weight :^777777 25^000000",
+    },
+    slotCount = 0,
+    ClassNum = 3
+  },
+  [30411] = {
+    unidentifiedDisplayName = "Pill",
+    unidentifiedResourceName = "???",
+    unidentifiedDescriptionName = {
+        "The highest shard"
+    },
+    identifiedDisplayName = "Master Pill",
+    identifiedResourceName = "???",
+    identifiedDescriptionName = {
+		"A small pill. You can feel some power in it, strong, powerfull...",
+		"^ffffff_^000000",
+		"^ff0000Consummable^000000",
+		"^ffffff_^000000",
+		"Weight :^777777 25^000000",
+    },
+    slotCount = 0,
+    ClassNum = 3
+  },

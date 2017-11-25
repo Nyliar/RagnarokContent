@@ -1,0 +1,129 @@
+//===== Alayne Scripts =======================================
+//= Pill Oven script
+//===== By: ================================================== 
+//= Alayne
+//===== Current Version: ===================================== 
+//=
+//= 1.0 - Creation
+//=
+//===== Compatible With: ===================================== 
+//= rAthena SVN
+//= hercules SVN
+//===== Description: ========================================= 
+//=
+//= Added "@pill" command. Enabling pill use
+//=
+//===== Todo Remaining: ======================================
+//
+//===== Additional Comments: =================================
+//
+//
+//============================================================
+
+-	script	GMCom::alagmcom	-1,{ //-1
+	end;
+	
+OnProducePill:
+	mes "[Spiritual Oven]";
+	mes "Please, select a pill to produce.";
+	.@menu$ = "";
+	for( .@i = 0; .@i<getarraysize(.pillTypeId); .@i++)
+	{
+		.@menu$ += (.@i == 0 ? "" : ":") + getitemname(.pillTypeId[.@i]);
+	}
+	.@choice = select(.@menu$) - 1;
+	
+	next;
+	mes "[Spiritual Oven]";
+	mes "For this pill, you'll be required to provide:";
+	.@startRank = .pillComponentFirstRank[.@choice];
+	.@ok = 1;
+	for( .@i = 0; .@i<.pillComponentCnt[.@choice] * 2; .@i+=2)
+	{
+		mes "	^FF0000~ " + .pillProduceHerbs[.@startRank + .@i + 1] + " " + getitemname(.pillProduceHerbs[.@startRank + .@i]) + "^000000";
+		if(countitem(.pillProduceHerbs[.@startRank + .@i]) < .pillProduceHerbs[.@startRank + .@i + 1])
+		{
+			.@ok = 0;
+		}
+	}
+	
+	if(.@ok == 1)
+	{
+		next;
+		mes "[Spiritual Oven]";
+		mes "Do you wish to produce the pill?";
+		if(select("Yes","No") == 1)
+		{
+			.@startRank = .pillComponentFirstRank[.@choice];
+			for( .@i = 0; .@i<.pillComponentCnt[.@choice]; .@i+=2)
+			{
+				delitem .pillProduceHerbs[.@startRank + .@i], .pillProduceHerbs[.@startRank + .@i + 1];
+			}
+			getitem .pillTypeId[.@choice], 1;
+		}
+	}
+	close;
+	
+OnCheckPillEffect:
+	getmapxy(.@map$, .@x, .@y, UNITTYPE_PC);
+	if(.@map$ == CHAKRAMAP$ && .@x == CHAKRAX && .@y == CHAKRAY && CHAKRAPILLOFF > gettimetick(2))
+	{
+		CHAKRACOUNT++;
+		//continue, still idle	
+		addtimer 6000 - (1000 * CHAKRAPILL), strnpcinfo(3) + "::OnCheckPillEffect";
+	}
+	else
+	{
+		//char moved, stop and get bonus
+		.@totalTick = gettimetick(2) - CHAKRAPILLON;
+		
+		.@bexp = .@totalTick * .pillTypeBRate[CHAKRAPILL];
+		.@jexp = .@totalTick * .pillTypeJRate[CHAKRAPILL];
+		getexp(.@bexp, .@jexp);
+		message strcharinfo(0), "[Chakra Pill] You've earned [" + .@bexp + "/" + .@jexp + "] thanks to your pill.";
+		specialeffect2 944;
+
+		CHAKRADELAY = gettimetick(2) + 3600 * (CHAKRAPILL + 1);
+	}
+	end;
+
+OnInit:
+	bindatcmd "power",strnpcinfo(3)+"::OnPowerAsked";
+	bindatcmd "effect",strnpcinfo(3)+"::OnEffectTest";
+	bindatcmd "pill",strnpcinfo(3)+"::OnProducePill";
+	
+	.maxEffectId = 967;
+	setarray .forbiddenEffect[0],243,19,156,157,167,168,933;
+	//nice ones
+	//14,39,40,52, 83, 87, 225, 236, 237, 238
+	//cast 60, 61, 98, 280
+	//117, 118, 358, 381, 387, 394, 403, 410, 420, 571, 573
+	//622, 650, 687, 688, 689, 729, 796, 883, 896, 897, 903
+	//912, 930, 944
+	
+	setarray .pillTypeId[0],30406,30407,30408,30409,30410,30411;
+	setarray .pillTypeBRate[0],50,100,250,600,1300,3000;
+	setarray .pillTypeJRate[0],50,100,250,500,1000,2000;
+	setarray .pillComponentCnt[0],1,2,3,4,5,6; //number of item to go through to produce pill
+	setarray .pillComponentFirstRank[0],0,0,0,0,0,0; //first item rank in pillProduceHerbs array
+	setarray .pillProduceHerbs[0],507,100,508,100,510,100,511,100,509,100,508,100;
+	end;
+}
+
+function	script	OnStartAfkPill	{
+	if(CHAKRADELAY >= gettimetick(2))
+	{
+		message strcharinfo(0), "You can't use another pill yet.";
+		getitem 30406 + getarg(0), 1;
+		close;
+	}
+	sit;
+	getmapxy(CHAKRAMAP$, CHAKRAX, CHAKRAY, UNITTYPE_PC);
+	CHAKRACOUNT = 0;
+	CHAKRAPILL = getarg(0);
+	CHAKRAPILLON = gettimetick(2);
+	CHAKRAPILLOFF = gettimetick(2) + 60 * (6 - CHAKRAPILL); //1 min effect per pill lvl
+	addtimer 6000 - (CHAKRAPILL * 1000), "alagmcom::OnCheckPillEffect";
+	specialeffect2 61;
+	end;
+}

@@ -1,0 +1,6 @@
+30406,Gold_Pill_1,Novice Pill,0,0,,10,,,,,0xFFFFFFFF,63,2,,,,,,{ callfunc "OnStartAfkPill", 0; },{},{}
+30407,Gold_Pill_1,Apprentice Pill,0,0,,10,,,,,0xFFFFFFFF,63,2,,,,,,{ callfunc "OnStartAfkPill", 1; },{},{}
+30408,Gold_Pill_1,Advanced Pill,0,0,,10,,,,,0xFFFFFFFF,63,2,,,,,,{ callfunc "OnStartAfkPill", 2; },{},{}
+30409,Gold_Pill_1,Expert Pill,0,0,,10,,,,,0xFFFFFFFF,63,2,,,,,,{ callfunc "OnStartAfkPill", 3; },{},{}
+30410,Gold_Pill_1,High Grade Pill,0,0,,10,,,,,0xFFFFFFFF,63,2,,,,,,{ callfunc "OnStartAfkPill", 4; },{},{}
+30411,Gold_Pill_1,Master Pill,0,0,,10,,,,,0xFFFFFFFF,63,2,,,,,,{ callfunc "OnStartAfkPill", 5; },{},{}
