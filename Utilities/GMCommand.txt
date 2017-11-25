@@ -1,0 +1,161 @@
+//===== Alayne Scripts =======================================
+//= GM Commands script
+//===== By: ================================================== 
+//= Alayne
+//===== Current Version: ===================================== 
+//=
+//= 1.0 - Creation
+//= 1.1 - Added effect command
+//=
+//===== Compatible With: ===================================== 
+//= rAthena SVN
+//= hercules SVN
+//===== Description: ========================================= 
+//=
+//= Added "@power" commands, cloning the char on each class 
+//= with all skills
+//= Added "@effect" command, enabling effect check
+//=
+//===== Todo Remaining: ======================================
+//
+//===== Additional Comments: =================================
+//
+//
+//============================================================
+
+-	script	GMCom::alagmcom	-1,{ //-1
+	end;
+
+OnCloneDead:
+	end;
+
+OnPowerAsked:
+	getmapxy(.@map$, .@mapx, .@mapy, UNITTYPE_PC);
+	set .@baseJob, Class;
+	atcommand "@job 4060";
+	atcommand "@jlvl 70";
+	atcommand "@allskills";	
+	atcommand "@clone " + strcharinfo(0);
+	atcommand "@job 4061";
+	atcommand "@jlvl 70";
+	atcommand "@allskills";
+	atcommand "@clone " + strcharinfo(0);
+	atcommand "@job 4062";
+	atcommand "@jlvl 70";
+	atcommand "@allskills";
+	atcommand "@clone " + strcharinfo(0);
+	atcommand "@job 4063";
+	atcommand "@jlvl 70";
+	atcommand "@allskills";
+	atcommand "@clone " + strcharinfo(0);
+	atcommand "@job 4064";
+	atcommand "@jlvl 70";
+	atcommand "@allskills";
+	atcommand "@clone " + strcharinfo(0);
+	atcommand "@job 4065";
+	atcommand "@jlvl 70";
+	atcommand "@allskills";
+	atcommand "@clone " + strcharinfo(0);
+	atcommand "@job 4073";
+	atcommand "@jlvl 70";
+	atcommand "@allskills";
+	atcommand "@clone " + strcharinfo(0);
+	atcommand "@job 4074";
+	atcommand "@jlvl 70";
+	atcommand "@allskills";
+	atcommand "@clone " + strcharinfo(0);
+	atcommand "@job 4075";
+	atcommand "@jlvl 70";
+	atcommand "@allskills";
+	atcommand "@clone " + strcharinfo(0);
+	atcommand "@job 4077";
+	atcommand "@jlvl 70";
+	atcommand "@allskills";
+	atcommand "@clone " + strcharinfo(0);
+	atcommand "@job 4079";
+	atcommand "@jlvl 70";
+	atcommand "@allskills";
+	atcommand "@clone " + strcharinfo(0);
+	atcommand "@job 4080";
+	atcommand "@jlvl 70";
+	atcommand "@allskills";
+	atcommand "@clone " + strcharinfo(0);
+	jobchange .@baseJob;
+	atcommand "@jlvl 70";
+	atcommand "@allskills";
+	end;
+	
+OnEffectTest:
+	mes "[GM Menu]";
+	mes "Please, select an option.";
+	if(select("Display effect","Browse effect") == 1)
+	{
+		next;
+		mes "Enter effect id.";
+		input .@effect;
+		if(.@effect < .maxEffectId)
+		{
+			if(callsub(OnCheckEffect, .@effect) == 1)
+			{
+				specialeffect2 .@effect;
+			}
+			else
+			{
+				mes "This effect is knowingly bugged.";
+			}
+		}
+		else
+		{
+			mes "Effect out of range.";
+		}
+	}
+	else
+	{
+		mes "Start at rank?";
+		input .@start;
+		freeloop 1;
+		for( .@i = .@start; .@i<.maxEffectId; .@i++)
+		{
+			mes "Effect " + .@i;
+			if(callsub(OnCheckEffect, .@i) == 1)
+			{
+				specialeffect2 .@i;
+			}
+			else
+			{
+				mes "This effect is knowingly bugged.";
+			}
+			next;
+		}
+		freeloop 0;	
+	}
+	end;
+	
+OnCheckEffect:
+	freeloop 1;
+	for( .@i = 0; .@i<getarraysize(.forbiddenEffect); .@i++)
+	{
+		if(.forbiddenEffect[.@i] == getarg(0))
+		{
+			freeloop 0;
+			return 0;
+		}
+	}
+	freeloop 0;
+	return 1;
+	
+OnInit:
+	bindatcmd "power",strnpcinfo(3)+"::OnPowerAsked";
+	bindatcmd "effect",strnpcinfo(3)+"::OnEffectTest";
+	
+	.maxEffectId = 967;
+	setarray .forbiddenEffect[0],243,19,156,157,167,168,933;
+	//nice ones
+	//14,39,40,52, 83, 87, 225, 236, 237, 238
+	//cast 60, 61, 98, 280
+	//117, 118, 358, 381, 387, 394, 403, 410, 420, 571, 573
+	//622, 650, 687, 688, 689, 729, 796, 883, 896, 897, 903
+	//912, 930, 944
+	
+	end;
+}

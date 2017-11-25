@@ -1,0 +1,31 @@
+-	script	Currency System::cursys	-1,{
+				
+	OnMakeCoin:
+		set .@coin, #CASHPOINTS / .pointPerCoin;
+		set #CASHPOINTS , #CASHPOINTS - .@coin * .pointPerCoin;
+		getitem .coinId, .@coin;
+		dispbottom "[ Currency ] you just transform points to " + .@coin + " shards.";
+		end;
+		
+	OnMakeAZeny:
+		set .@coinCnt, countitem(.coinId);
+		if(#CASHPOINTS + .@coinCnt * .pointPerCoin > .capPoints)
+		{
+			set .@coinCnt, .capPoints - #CASHPOINTS / .pointPerCoin;
+		}
+		delitem .coinId, .@coinCnt;
+		set .@amt, .@coinCnt * .pointPerCoin;
+		set #CASHPOINTS, #CASHPOINTS + .@amt;
+		dispbottom "[ Currency ] you just gained " + .@amt + " points.";
+		end;
+		
+	OnInit:
+		bindatcmd "makecoin",strnpcinfo(3)+"::OnMakeCoin";
+		bindatcmd "makecash",strnpcinfo(3)+"::OnMakeAZeny";
+		
+		set .pointPerCoin, 1;
+		
+		set .coinId, $shardIds[0];
+		set .capPoints, 1000000000;
+		end;
+}

@@ -1,0 +1,143 @@
+//=== Nom du NPC ===================================================
+//			= Atcommand automatique					
+//=== Créé Par =====================================================
+// 			= Lyyn
+//			= Updated by Alayne
+//=== Version ======================================================
+//			= 1.1								
+//=== Description ==================================================	
+// 			= Auto start some configured settings / commands
+//=== Commentaire ==================================================
+//			= Autoloot noask showexp
+
+
+-	script	Settings	-1,{
+	
+	end;
+	
+	OnInit:
+		bindatcmd "settings", strnpcinfo(3) + "::OnAtcommand";
+		set .gmlvl, 80;		// Level minimum 80
+		end;
+	
+	OnAtcommand:
+		mes "[Configuration auto]";
+		mes "Hello " + strcharinfo(0) + ".";
+		mes "What do you wanna change ?";
+		next;
+		
+		while(1) {
+			switch(
+				select(
+					"@autoloot [" + ((auto_settings & 1 << 0) ? "^00FF00ON^000000" : "^FF0000OFF^000000") + "]",
+					"@showexp [" + ((auto_settings & 1 << 1) ? "^00FF00ON^000000" : "^FF0000OFF^000000") + "]",
+					"@noks [" + ((auto_settings & 1 << 2) ? "^00FF00ON^000000" : "^FF0000OFF^000000") + "]",
+					"@noask [" + ((auto_settings & 1 << 3) ? "^00FF00ON^000000" : "^FF0000OFF^000000") + "]",
+					"@hominfo [" + ((auto_settings & 1 << 4) ? "^00FF00ON^000000" : "^FF0000OFF^000000") + "]",
+					((getgmlevel() >= .gmlvl) ? "@speed 0 [" + ((auto_settings & 1 << 5) ? "^00FF00ON^000000" : "^FF0000OFF^000000" ) + "]" : ""),
+					((getgmlevel() >= .gmlvl) ? "@monsterignore [" + ((auto_settings & 1 << 6) ? "^00FF00ON^000000" : "^FF0000OFF^000000" ) + "]" : ""),
+					((getgmlevel() >= .gmlvl) ? "@costume [" + ((auto_settings & 1 << 7) ? "^00FF00ON^000000" : "^FF0000OFF^000000" ) + "]" : ""),
+					"Leave"
+				)
+			)
+			{
+				case 1:
+					// Autoloot
+					if(auto_settings & 1 << 0) {
+						set auto_settings, auto_settings^1 << 0;	// Désactiver l'autoloot (mettre le 1er bit à 0)
+					}
+					else {
+						set auto_settings, auto_settings|1 << 0;	// Activer l'autoloot (mettre le 1er bit à 1)
+					}
+					break;
+					
+				case 2:
+					// Showexp
+					if(auto_settings & 1 << 1) {
+						set auto_settings, auto_settings^1 << 1;
+					}
+					else {
+						set auto_settings, auto_settings|1 << 1;
+					}
+					break;
+
+				case 3:
+					// No KS
+					if(auto_settings & 1 << 2) {
+						set auto_settings, auto_settings^1 << 2;
+					}
+					else {
+						set auto_settings, auto_settings|1 << 2;
+					}
+					break;
+					
+				case 4:
+					// No Ask
+					if(auto_settings & 1 << 3) {
+						set auto_settings, auto_settings^1 << 3;
+					}
+					else {
+						set auto_settings, auto_settings|1 << 3;
+					}
+					break;
+				
+				case 5:
+					// Hominfo
+					if(auto_settings & 1 << 4) {
+						set auto_settings, auto_settings^1 << 4;
+					}
+					else {
+						set auto_settings, auto_settings|1 << 4;
+					}
+					break;
+				
+				case 6:
+					// Speed 0
+					if(auto_settings & 1 << 5) {
+						set auto_settings, auto_settings^1 << 5;
+					}
+					else {
+						set auto_settings, auto_settings|1 << 5;
+					}
+					break;
+					
+				case 7:
+					// monsterignore
+					if(auto_settings & 1 << 6) {
+						set auto_settings, auto_settings^1 << 6;
+					}
+					else {
+						set auto_settings, auto_settings|1 << 6;
+					}
+					break;
+				
+				case 8:
+					// costume
+					if(auto_settings & 1 << 7) {
+						set auto_settings, auto_settings^1 << 7;
+					}
+					else {
+						set auto_settings, auto_settings|1 << 7;
+					}
+					break;
+				
+				case 9:
+					close;
+			}
+		}
+	
+	OnPCLoginEvent:
+		if(!auto_settings) end;		// Pas de conf.
+		else {
+			if(auto_settings & 1 << 0) atcommand "@autoloot";
+			if(auto_settings & 1 << 1) atcommand "@showexp";
+			if(auto_settings & 1 << 2) atcommand "@noks";
+			if(auto_settings & 1 << 3) atcommand "@noask";
+			if(auto_settings & 1 << 4) atcommand "@hominfo";
+			// GM
+			if(auto_settings & 1 << 5 && getgmlevel() >= .gmlvl) atcommand "@speed 0";
+			if(auto_settings & 1 << 6 && getgmlevel() >= .gmlvl) atcommand "@monsterignore";
+			if(auto_settings & 1 << 7 && getgmlevel() >= .gmlvl) atcommand "@costume";
+		}
+		end;
+}

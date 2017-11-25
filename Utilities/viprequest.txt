@@ -1,0 +1,305 @@
+prontera,147,185,4	script	VIP Service	1_F_ORIENT_01,{	
+
+	set @header$,"[^0000FF VIP Service ^000000]";
+	mes @header$;
+	mes "Welcome to VIP service.";
+	
+	if(VIP_PACKAGE > 0) {
+		next;
+		mes @header$;
+		mes "Thanks for using our VIP Service.";
+		if(VIP_delay != -1 && gettimetick(2) < VIP_delay) {
+			//week or month, on general tick time
+			set .@last,(VIP_delay - gettimetick(2));
+			set .@days,.@last / 60 / 60 / 24;
+			set .@hours,(.@last - .@days * 24 * 60 * 60) / 60 / 60 % 60;
+			set .@minutes,(.@last - .@days * 24 * 60 * 60 - .@hours * 60 * 60) / 60 % 60;
+			set .@seconds,(.@last - .@days * 24 * 60 * 60 - .@hours * 60 * 60 - .@minutes * 60) % 60;
+			mes "You have: ";
+			if(.@days == 0) {
+				mes "^FF0000"+.@hours+" hours "+.@minutes+" minutes "+.@seconds+" seconds^000000";
+			} else {
+				mes "^FF0000"+.@days+" days "+.@hours+" hours "+.@minutes+" minutes "+.@seconds+" seconds^000000";
+			}
+			mes "in your VIP service remaining.";
+		}
+	}
+	
+	mes "What can I do for you?";
+	
+OnPopupMenu:	
+	switch(select("Information","Purchase VIP","Claim Bonuses","Daily Quests","Daily Quest Shop","Exclusive Shop","Cancel")) {
+		case 1:
+			next;
+			mes @header$;
+			mes "VIP service are divided in 4 packages.";
+			mes "Each one will last for 7 days, starting right after the activation.";
+			mes "It'll enable a certain amount of specific addons, such as special buffs,";
+			mes "or special shops, only available to VIP players.";
+			break;
+		case 2:
+			next;
+			mes @header$;
+			if(VIP_delay) {
+				mes "Your package is still available at this moment.";
+				mes "By buying a new one, you'll be charge as if you don't have one, and it'll replace your current one.";
+				if(select("Okay","Oh, no then, thanks") == 2)
+				{
+					close;
+				}
+				else
+				{
+					next;
+					mes @header$;
+				}
+			}
+			mes "What kind of package do you want to buy?";
+			set .@menu$, "";
+			for(set .@i,0; .@i<getarraysize(.PackageName$); set .@i,.@i+1) {
+				set .@menu$, .@menu$ + (.@i == 0 ? "" : ":") + .PackageName$[.@i];
+			}
+			set .@choice, select(.@menu$) - 1;
+			switch(.@choice) {
+				case 0:
+					next;
+					mes @header$;
+					mes "Here's the options this package will grant:";
+					mes "- Free Buffs NPC";
+					mes "- Gain +" + .PackageExpBonus[0] + "% EXP";
+					mes "- " + .PackageActivityBonus[0] + " Bonus Activity Points Daily";
+					mes "- " + .PackageCreditsBonus[0] + "x Credits Daily";
+					break;
+				case 1:
+					next;
+					mes @header$;
+					mes "Here's the options this package will grant:";
+					mes "- Free Buffs NPC";
+					mes "- Free Soul Link NPC";
+					mes "- Gain +" + .PackageExpBonus[1] + "% EXP";
+					mes "- Can do VIP Daily Quest";
+					mes "- " + .PackageActivityBonus[1] + " Bonus Activity Points Daily";
+					mes "- " + .PackageCreditsBonus[1] + "x Credits Daily";
+					break;
+				case 2:
+					next;
+					mes @header$;
+					mes "Here's the options this package will grant:";
+					mes "- Free Buffs NPC";
+					mes "- Free Soul Link NPC";
+					mes "- Gain +" + .PackageExpBonus[2] + "% EXP";
+					mes "- Can do VIP Daily Quest";
+					mes "- " + .PackageActivityBonus[2] + " Bonus Activity Points Daily";
+					mes "- " + .PackageCreditsBonus[2] + "x Credits Daily";
+					mes "- Access to VIP's Daily Reward";
+					mes "- Access to VIP Shop";
+					break;
+				case 3:
+					next;
+					mes @header$;
+					mes "- Free Buffs NPC";
+					mes "- Free Soul Link NPC";
+					mes "- Gain +" + .PackageExpBonus[3] + "% EXP";
+					mes "- Can do VIP Daily Quest";
+					mes "- " + .PackageActivityBonus[3] + " Bonus Activity Points Daily";
+					mes "- " + .PackageCreditsBonus[3] + "x Credits Daily";
+					mes "- Access to VIP's Daily Reward";
+					mes "- Access to VIP Shop";
+					break;
+				case 4:
+					next;
+					mes @header$;
+					mes "Here's the options this package will grant:";
+					mes "- Free Buffs NPC";
+					mes "- Free Soul Link NPC";
+					mes "- Gain +" + .PackageExpBonus[4] + "% EXP";
+					mes "- Can do VIP Daily Quest";
+					mes "- " + .PackageActivityBonus[4] + " Bonus Activity Points Daily";
+					mes "- " + .PackageCreditsBonus[4] + "x Credits Daily";
+					mes "- Access to VIP's Daily Reward";
+					mes "- Access to VIP Shop";
+					break;
+			}
+			if(.@choice != 254) {
+				next;
+				mes @header$;
+				mes "You're about to buy a " + .PackageName$[.@choice] + ", can you confirm?";
+				if(select("Yes","No") == 1) {
+					next;
+					mes @header$;
+					mes "There's two options to buy a package. Which one will you use?";
+					switch(select("Activity Points",getitemname(.PriceItemId))) {
+						case 1:
+							next;
+							mes @header$;
+							mes "For the selected package, you'll be required " + .PackPricePointsCount[.@choice] + " Points. Agreed?";
+							if(select("Yes","No") == 1) {
+								if(#ACTIVITYPOINTS >= .PackPricePointsCount[.@choice]) {
+									set #ACTIVITYPOINTS, #ACTIVITYPOINTS - .PackPricePointsCount[.@choice];
+									set VIP_PACKAGE, .@choice;
+									set VIP_delay, gettimetick(2) + .VipDuration;
+									mes "Your package is now active. Thanks for your trust in our service.";
+								} else {
+									next;
+									mes @header$;
+									mes "Sorry, but you're lacking Points.";
+									close;
+								}
+							}
+							break;
+						case 2:
+							next;
+							mes @header$;
+							mes "For the selected package, you'll be required " + .PackPriceItemCount[.@choice] + " " + getitemname(.PriceItemId) + ". Agreed?";if(select("Yes","No") == 1) {
+								if(countitem(.PriceItemId) >= .PackPriceItemCount[.@choice]) {
+									delitem .PriceItemId, .PackPriceItemCount[.@choice];
+									set VIP_PACKAGE, .@choice;
+									set VIP_delay, gettimetick(2) + .VipDuration;
+									mes "Your package is now active. Thanks for your trust in our service.";
+								} else {
+									next;
+									mes @header$;
+									mes "Sorry, but you're lacking some items.";
+									close;
+								}
+							}
+							break;
+					}
+				} else {
+					next;
+					mes @header$;
+					mes "As you wish. Have a good day.";
+					close;
+				}
+			}
+			break;
+		case 3:
+			next;
+			mes @header$;
+			mes "Let me check, please.";
+			if(VIP_PACKAGE > 0 ) {
+				if(VIP_CLAIM >= gettimetick(2)) {
+					set #ACTIVITYPOINTS, #ACTIVITYPOINTS + .PackageActivityBonus[VIP_PACKAGE];
+					getitem .CreditItemId, .PackageCreditsBonus[VIP_PACKAGE];
+					set VIP_CLAIM, gettimetick(2) + ((24 - gettime(GETTIME_HOUR)) * 3600 - (60 - gettime(GETTIME_MINUTE)) * 60 - (60 - gettime(GETTIME_SECOND)));
+				} else {
+					next;
+					mes @header$;
+					mes "Sorry, but you've allready claimed your bonuses for today.";
+					close;
+				}
+			} else {
+				next;
+				mes @header$;
+				mes "Sorry, but you're not an active VIP. Please buy a package first.";
+				close;
+			}
+			break;
+		case 4:
+			next;
+			mes @header$;
+			mes "Sorry, this option is disable at this moment.";
+			goto OnPopupMenu;
+		case 5:
+			goto DailyQuestShop;
+			break;
+		case 6:
+			goto ExclusiveShop;
+			break;
+		case 7:
+			next;
+			mes @header$;
+			mes "As you wish. Have a good day.";
+			break;
+	}
+	close;
+	
+OnNPCKillEvent:
+	if(VIP_PACKAGE > 0) {
+		set .@bRates, getbattleflag("base_exp_rate");
+		set .@jRates, getbattleflag("job_exp_rate");
+		set .@bExp, (getmonsterinfo(killedrid, MOB_BASEEXP) / .ServerRates[0]) * .PackageExpBonus[VIP_PACKAGE] / 100;
+		set .@jExp, (getmonsterinfo(killedrid, MOB_JOBEXP) / .ServerRates[1]) * .PackageExpBonus[VIP_PACKAGE] / 100;
+		getexp .@bExp, .@jExp;
+	}
+	end;
+	
+DailyQuestShop:
+	if(VIP_PACKAGE >= 1) {
+		close2;
+		openshop("DailyQuestShop");	
+	} else {
+		next;
+		mes @header$;
+		mes "Sorry, but you're not an active VIP. Please buy a package first.";
+	}
+	close;
+	
+ExclusiveShop:
+	if(VIP_PACKAGE >= 2) {
+		close2;
+		openshop("ExclusiveShop");	
+	} else {
+		next;
+		mes @header$;
+		mes "Sorry, but you're not an active VIP. Please buy a package first.";
+	}
+	close;
+	
+OnAtcommand:
+	mes "[VIP Service]";
+	mes "Do you wish to change the Buffs you'll get from Healer?";
+	set VIP_BUFFS_OFF, select("VIP Soul Link Buff on","VIP Soul Link Buff Buffs off") - 1;
+	if(VIP_BUFFS_OFF == 0)
+	{
+		dispbottom "VIP Soul Link Buff enabled";
+	}
+	else if(VIP_BUFFS_OFF == 1)
+	{
+		dispbottom "VIP Soul Link Buff disabled";
+	}
+	close;
+	
+OnInit:
+	setarray .PackageName$[0], "Copper Package","Bronze Package","Silver Package","Gold Package","Platinum Package";
+	setarray .PackageActivityBonus[0], 10, 20, 30, 40, 50;
+	setarray .PackageCreditsBonus[0], 10, 25, 50, 100, 200;
+	setarray .PackageExpBonus[0], 25, 50, 75, 75, 75;
+	set .PriceItemId, 512;
+	set .CreditItemId, 513;
+	setarray .PackPriceItemCount[0], 10, 20, 30, 40, 50;
+	setarray .PackPricePointsCount[0], 100, 200, 300, 400, 500;
+	setarray .ServerRates[0], 8000, 8000;
+	set .VipDuration, 604800;
+	bindatcmd("vipbuff", strnpcinfo(3)+"::OnAtcommand");
+	end;
+}
+
+-	trader	ExclusiveShop	-1,{
+	
+OnInit:
+	sellitem Red_Potion;
+	sellitem Orange_Potion;
+	sellitem Yellow_Potion;
+	end;
+}
+
+-	trader	DailyQuestShop	-1,{
+	
+OnInit:
+	set .ShopID, 671; // Current: Poring Coin
+	tradertype(NST_CUSTOM);
+	sellitem Blue_Potion,1;
+	sellitem White_Potion,2;
+	end;
+
+OnCountFunds:
+	setcurrency(countitem( .ShopID ));
+	end;
+
+OnPayFunds:
+	if( countitem( .ShopID ) < @price )
+		end;
+	delitem .ShopID,@price;
+	purchaseok();
+	end;
+}

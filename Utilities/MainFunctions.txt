@@ -1,0 +1,10 @@
+function	script	AddPoints	{
+	set .@accountID, getarg(0);
+	set .@amount, getarg(1);
+ 
+	//set #ACHIEVEPOINTS, #ACHIEVEPOINTS + .@amount;
+	getitem $shardIds[0], .@amount;
+  	message rid2name(.@accountID), "You just won " + .@amount + " Shard" + (.@amount > 1 ? "s" : "") + " !";
+
+	return;
+}

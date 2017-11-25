@@ -1,0 +1,561 @@
+prontera,173,183,5	script	Forge::alafo	4_TRACE,2,2,{
+
+	set .@npcname$, "[Forge]";
+	mes .@npcname$;
+	mes "A fire was used to burn like hell here.";
+	switch(select("Normal Refine","Repair","Zeny melting","Change shards to higher","Throw Garbage"))
+	{
+		case 1:
+			goto OnNormalForge;
+			break;
+		case 2:
+			goto OnRepair;
+			break;
+		case 3:
+			goto OnZenyMelt;
+			break;
+		case 4:
+			goto OnChange;
+			break;
+		case 5:
+			goto OnGarbage;
+			break;
+	}
+	close;
+
+OnChange:
+	set .@countItem, countitem(.shardIds[0]) / 100;
+	getitem .shardIds[1], .@countItem;
+	delitem .shardIds[0], .@countItem * 100;
+	set .@countItem, countitem(.shardIds[1]) / 10;
+	getitem .shardIds[2], .@countItem;
+	delitem .shardIds[1], .@countItem * 10;
+	specialeffect 962;
+	end;
+	
+OnGarbage:
+	next;
+	mes "[Forge]";
+	if(.cleaning == 1)
+	{
+		mes "Somebody's allready using this. Please wait.";
+		close;
+	}
+	mes "The fire in this place can be strong enough to destroy all your garbage piece.";
+	mes "By doing so, it'll clean all your misc items.";
+	mes "Be sure to only have misc items you want to destroy.";
+	if(select("Let's go","No way!") == 1)
+	{
+		set .cleaning, 1;
+		getinventorylist();
+		set .@count, 0;
+		for(set .@i,0; .@i<@inventorylist_count; set .@i, .@i+1)
+		{
+			set .@id, @inventorylist_id[.@i];
+			if(getiteminfo(.@id, 2) == 3)
+			{
+				set .@iCount, countitem(.@i);
+				set .@count, .@count + .@iCount;
+				delitem .@id, .@iCount;
+			}
+		}
+		if(.@count > .minDeleteToGetRadar)
+		{
+			next;
+			mes "[Forge]";
+			mes "The items melted in something else...";
+			if(countitem($radarId) == 0)
+			{
+				getitem $radarId, 1;
+			}
+			else
+			{
+				set .@gCount, .@count / 25;
+				getitem .shardIds[1], .@gCount;
+			}
+		}
+	}
+	close;
+	
+OnZenyMelt:
+	specialeffect 138;
+	.@shardzenies = 1000;
+	next;
+	mes "[Forge]";
+	mes "You can melt your common shards to zenies here.";
+	mes "Do you want to melt some?";
+	if(select("Yes","No") == 1)
+	{
+		next;
+		mes "[Forge]";
+		mes "Please enter the number of shards to melt.";
+		mes "'0' means as much as possible.";
+		input .@count;
+		if (.@count == 0)
+		{
+			set .@count, countitem(.shardIds[0]);
+		}
+		if(.@count > countitem(.shardIds[0]))
+		{
+			next;
+			mes "[Forge]";
+			mes "You don't have those items.";
+			specialeffect 962;
+			close;
+		}
+		delitem .shardIds[0], .@count;
+		set Zeny, Zeny + .@count * .@shardzenies;
+	}
+	specialeffect 962;
+	close;
+	
+OnRepair:
+	specialeffect 138;
+	.@repairprice = 5000;
+	next;
+	mes "[Forge]";
+	mes "Do you want";
+	mes "to repair any items?";
+	next;
+	switch(select("Actually, I do have some items...", "None at the moment.")) {
+	case 1:
+		.@checkitem = 1;
+		while (1) {
+			if (getbrokenid(.@checkitem) == 0) {
+				break;
+			}
+			++.@checkitem;
+		}
+		--.@checkitem;
+		if (!.@checkitem) {
+			mes "[Forge]";
+			mes "No items are damaged.";
+			specialeffect 962;
+			close;
+		}
+		mes "[Forge]";
+		mes "Out of all your items,";
+		mes "" + .@checkitem + " are damaged.";
+		mes "Would you like to repair?";
+		next;
+		.@totalcost = .@repairprice*.@checkitem;
+		mes "[Forge]";
+		mes "Each repair costs " + .@repairprice + " Zeny. So to repair all your damaged items would cost " + .@totalcost + " Zeny! Would you like to repair the items?";
+		next;
+		switch(select("Yes", "No")) {
+		case 1:
+			if (Zeny < .@totalcost) {
+				mes "[Forge]";
+				mes "You're lacking money.";
+				specialeffect 962;
+				close;
+			}
+			.@checkitem2 = 1;
+			while (1) {
+				if (getbrokenid(.@checkitem2) == 0) {
+					break;
+				}
+				++.@checkitem2;
+			}
+			--.@checkitem2;
+			if (.@checkitem == .@checkitem2) {
+				Zeny -= .@totalcost;
+				while (.@checkitem) {
+					repair(.@checkitem);
+					--.@checkitem;
+				}
+				mes "[Forge]";
+				mes "Everyting's done.";
+				specialeffect 962;
+				close;
+			}
+			else {
+				mes "[Forge]";
+				mes "You don't have any items to repair.";
+				specialeffect 962;
+				close;
+			}
+		case 2:
+			specialeffect 962;
+			close;
+		}
+	case 2:
+		specialeffect 962;
+		close;
+	}
+	specialeffect 962;
+	close;
+	
+OnNormalForge:	
+	specialeffect 138;
+	disable_items;
+	.@features = 1;
+	next;
+	mes "[Forge]";
+	mes "You can refine here all kinds of weapons, armor and equipment.";
+	next;
+
+	setarray .@position$[1], "Head","Body","Left hand","Right hand","Robe","Shoes","Accessory 1","Accessory 2","Head 2","Head 3";
+	.@menu$ = "";
+	for(.@i = 1; .@i <= 10; ++.@i) {
+		if(getequipisequiped(.@i)) {
+			.@menu$ += .@position$[.@i] + "-" + "[" + getequipname(.@i) + "]";
+			.@equipped = 1;
+		}
+		.@menu$ += ":";
+	}
+	if (.@equipped == 0) {
+		mes "[Forge]";
+		mes "You don't have any item to refine...";
+		specialeffect 962;
+		close;
+	}
+	.@part = select(.@menu$);
+
+	if(!getequipisequiped(.@part)) { //custom check
+		mes "[Forge]";
+		mes "You're not wearing anything there that can refined.";
+		specialeffect 962;
+		close;
+	}
+	//Check if the item is refinable...
+	if(!getequipisenableref(.@part)) {
+		mes "[Forge]";
+		mes "This item can't be refine at all";
+		specialeffect 962;
+		close;
+	}
+	//Check to see if the items is already +10
+	if(getequiprefinerycnt(.@part) >= 10) {
+		mes "[Forge]";
+		mes "This can't be refine any more.";
+		specialeffect 962;
+		close;
+	}
+	.@refineitemid = getequipid(.@part); // save id of the item
+	.@refinerycnt = getequiprefinerycnt(.@part); //save refinery count
+	switch(getequipweaponlv(.@part)){
+	case 0: 	//Refine Armor
+		.@material = 985;
+		.@safe = 4;
+		break;
+	case 1: 	//Refine Level 1 Weapon
+		.@material = 1010;
+		.@safe = 7;
+		break;
+	case 2: 	//Refine Level 2 Weapon
+		.@material = 1011;
+		.@safe = 6;
+		break;
+	case 3: 	//Refine Level 3 Weapon
+		.@material = 984;
+		.@safe = 5;
+		break;
+	case 4: 	//Refine Level 4 Weapon
+		.@material = 984;
+		.@safe = 4;
+		break;
+	case 5: 	//Refine other stuff?
+		.@material = 985;
+		.@safe = 4;
+		break;
+	}
+	if(.@features != 1) {
+		mes "[Forge]";
+		mes "To refine this you'll need";
+		mes "one ^003366"+getitemname(.@material)+"^000000";
+		mes "Do you really wish to continue?";
+		next;
+		if(select("Yes", "No") == 2){
+			specialeffect 962;
+			close;
+		}
+		if(getequippercentrefinery(.@part) < 100) {
+			mes "[Forge]";
+			mes "There's a risk it could";
+			switch(.@material) {
+			case 985:
+				mes "be destroyed! That means that ^FF0000this equipment^000000, and ^FF0000any cards^000000 or special properties added to this armor, ^FF0000will be gone^000000.";
+				break;
+			default:
+				mes "be destroyed, and you'd ^FF0000lose the weapon^000000, any ^FF0000cards in the weapon^000000,";
+				mes "or any added special properties.";
+				break;
+			}
+			next;
+			mes "[Forge]";
+			mes "You really have a chance to";
+			mes "^FF0000lose this weapon^000000 forever.";
+			mes "Do you still want to refine?";
+			next;
+			if(select("Yes", "No") == 2){
+				specialeffect 962;
+				close;
+			}
+		}
+		if(countitem(.@material) < 1) {
+			mes "[Forge]";
+			mes "You don't seem to have";
+			mes "enough "+getitemname(.@material)+"...";
+			mes "Go get some more.";
+			specialeffect 962;
+			close;
+		}
+		delitem .@material,1;
+
+		//custom checks
+		if(getequipisequiped(.@part) == 0) { // hacker has removed the item (not changed, why?)
+			mes "[Forge]";
+			mes "You don't have any Items on...";
+			specialeffect 962;
+			close;
+		}
+		if(getequiprefinerycnt(.@part) != .@refinerycnt || getequipid(.@part) != .@refineitemid) { // hacker has changed the item
+			mes "[Forge]";
+			mes "Wait a second...You switched the item...";
+			specialeffect 962;
+			close;
+		}
+
+		if(getequippercentrefinery(.@part) <= rand(100)) {
+			failedrefitem .@part;
+			mes "[Forge]";
+			emotion (!rand(5))?e_cash:e_omg;
+			.@lose = rand(1,3);
+			if (.@lose == 1) {
+				mes "Sorry, it fails";
+			} else if(.@lose == 2) {
+				mes "Nooooooo!";
+				mes "It broke!";
+			} else {
+				mes "Crap!";
+			}
+			close;
+		}
+		mes "[Forge]";
+		successrefitem .@part;
+		emotion e_heh;
+		.@win = rand(1,3);
+		if (.@win == 1) {
+			mes "Perfect!";
+		} else if(.@win == 2) {
+			mes "Success...!";
+		} else {
+			mes "Everything worked fine.";
+		}
+		specialeffect 962;
+		close;
+	}
+
+//- New Refining Functions -
+	if(getequiprefinerycnt(.@part) < .@safe) {
+		mes "[Forge]";
+		mes "This can be refined to the safe limit or a desired number of times. It's your choice.";
+		next;
+		.@menu2 = select("To the safe limit.","I'll decide how many times.","I've changed my mind...");
+	} else
+		.@menu2 = 2;
+	switch(.@menu2){
+	case 1:
+		.@refinecnt = .@safe - getequiprefinerycnt(.@part);
+		break;
+	case 2:
+		next;
+		mes "[Forge]";
+		mes "How many times would you like to refine your item?";
+		next;
+		input .@refinecnt;
+		.@refinecheck = .@refinecnt + getequiprefinerycnt(.@part);
+		if (.@refinecnt < 1 || .@refinecheck > 10) {
+			mes "[Forge]";
+			mes "This can't be refine that many times.";
+			specialeffect 962;
+			close;
+		}
+		if(.@refinecheck > .@safe) {
+			.@refinecheck -= .@safe;
+			mes "[Forge]";
+			mes "This will try to refine the equipment " + .@refinecheck + " times past the safe limit. Your equipment may be destroyed... is that ok?";
+			next;
+			if(select("Yes...","No...") == 2){
+			}
+		}
+		break;
+	case 3:
+		specialeffect 962;
+		close;
+	}
+	mes "[Forge]";
+	mes "That will cost you " + .@refinecnt + " " + getitemname(.@material) + ". Is that ok?";
+	next;
+	if(select("Yes","No...") == 2){
+		specialeffect 962;
+		close;
+	}
+	if(countitem(.@material) < .@refinecnt) {
+		mes "[Forge]";
+		mes "Is that all you got? You're lacking items.";
+		specialeffect 962;
+		close;
+	}
+	delitem .@material,.@refinecnt;
+	while(.@refinecnt){
+		if (getequipisequiped(.@part) == 0) {
+			mes "[Forge]";
+			mes "Look here... you don't have any items on...";
+			specialeffect 962;
+			close;
+		}
+		if (getequipid(.@part) != .@refineitemid || (.@menu2 == 1 && getequippercentrefinery(.@part) < 100)) {
+			mes "[Forge]";
+			mes "Clang... You changed the item...";
+			specialeffect 962;
+			close;
+		}
+		mes "Clang, clang!!!";
+		if(.@menu2 == 2 && getequippercentrefinery(.@part) <= rand(100)) {
+			failedrefitem .@part;
+			emotion e_omg;
+			mes "[Forge]";
+			mes "It failed...";
+			--.@refinecnt;
+			if(.@refinecnt == 0) close;
+			mes "Here's the unused materials back...";
+			getitem .@material,.@refinecnt;
+			specialeffect 962;
+			close;
+		}
+		successrefitem .@part;
+		emotion e_no1;
+		--.@refinecnt;
+		next;
+	}
+	mes "[Forge]";
+	mes "All finished...";
+	specialeffect 962;
+	close;	
+
+OnAdvancedForge:
+	specialeffect 138;
+	disable_items;
+	next;
+	mes "[Forge]";
+	setarray .@position$[1], "Head","Body","Left hand","Right hand","Robe","Shoes","Accessory 1","Accessory 2","Head 2","Head 3";
+	.@menu$ = "";
+	for(.@i = 1; .@i<=10; ++.@i) {
+		if (getequipisequiped(.@i)) {
+			.@menu$ += .@position$[.@i] + "-" + "[" + getequipname(.@i) + "]";
+			.@equipped = 1;
+		}
+		.@menu$ += ":";
+	}
+	if (.@equipped == 0) {
+		mes "[Forge]";
+		mes "No item can be refined...";
+		specialeffect 962;
+		close;
+	}
+	.@part = select(.@menu$);
+
+	next;
+	if (!getequipisequiped(.@part)) //custom check
+		mes "[Forge]";
+		mes "You don't wear anything.";
+		specialeffect 962;
+		close;
+	if (!getequipisenableref(.@part)) {
+		mes "[Forge]";
+		mes "You can't refine this thing.";
+		specialeffect 962;
+		close;
+	}
+	if (getequiprefinerycnt(.@part) >= 10) {
+		mes "[Forge]";
+		mes "No work can be done over this part anymore.";
+		specialeffect 962;
+		close;
+	}
+
+	// Make sure you have the neccessary items and Zeny to refine your items
+	// Determines chance of failure and verifies that you want to continue.
+	switch(getequipweaponlv(.@part)) {
+		case 1: callsub S_RefineValidate,1,7620,50,.@part; break;
+		case 2: callsub S_RefineValidate,2,7620,200,.@part; break;
+		case 3: callsub S_RefineValidate,3,7620,5000,.@part; break;
+		case 4: callsub S_RefineValidate,4,7620,20000,.@part; break;
+		default: callsub S_RefineValidate,0,7619,2000,.@part; break;
+	}
+
+	mes "[Forge]";
+	mes "Clang! Clang! Clang!";
+	if (getequippercentrefinery(.@part) > rand(100) || getequippercentrefinery(.@part) > rand(100)) {
+		successrefitem .@part;
+		next;
+		emotion e_no1;
+		mes "[Forge]";
+		mes "It's done.";
+		specialeffect 962;
+		close;
+	}
+	failedrefitem .@part;
+	next;
+	emotion (!rand(5))?e_cash:e_omg;
+	mes "[Forge]";
+	mes "Uuuuuuuuuummmmmph!!!";
+	mes "It broke...";
+	specialeffect 962;
+	close;
+
+S_RefineValidate:
+	next;
+	mes "[Forge]";
+	if (getarg(0))
+		mes "You want to refine a level " + getarg(0) + " weapon?";
+	mes "To refine that, you'll need to have one ^ff9999" + getitemname(getarg(1)) + "^000000 and " + getarg(2) + " zeny.";
+	mes "Would you like to continue?";
+	next;
+	if(select("Yes", "No") == 1) {
+		if (getequippercentrefinery(getarg(3)) < 100) {
+			if (getarg(0)) {
+				mes "[Forge]";
+				mes "Wow!!";
+				mes "This weapon may break if refine again...";
+				mes "If it breaks, you can't use it anymore!";
+				mes "All the cards in it and the properties ^ff0000will be lost^000000!";
+				mes "Are you sure you still want to continue?";
+				next;
+				if(select("Yes", "No") == 2) {
+					specialeffect 962;
+					close;
+				}
+			} else {
+				mes "[Forge]";
+				mes "This armor may break if refine again...";
+				mes "If it breaks, you can't use it anymore!";
+				mes "All the cards in it and the properties ^ff0000will be lost^000000!";
+				mes "Are you sure you still want to continue?";
+				next;
+				if(select("Yes", "No") == 2) {
+					specialeffect 962;
+					close;
+				}
+			}
+		}
+		if (countitem(getarg(1)) > 0 && Zeny > getarg(2)) {
+			delitem getarg(1),1;
+			Zeny -= getarg(2);
+			return;
+		}
+		mes "[Forge]";
+		mes "Some items are lacking. Forge cancelled.";
+		specialeffect 962;
+		close;
+	}
+	specialeffect 962;
+	close;
+	
+OnInit:
+	set .minDeleteToGetRadar, 50;
+	setarray .shardIds[0], 29455, 29456, 29457, 512;
+	end;
+}
