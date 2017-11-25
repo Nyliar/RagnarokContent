@@ -1,0 +1,267 @@
+//===== eAthena Script =======================================
+//= Mini-jeux basique pour Rose Of Sharon
+//===== Par: =================================================
+//= Hiero
+//===== Version du Script: ===================================
+//= 1.0 Obtimisation du code, corrections diverses
+//= 0.5 Ajout du monstre Bonus
+//= 0.4 Mis en place du système de récompence
+//= 0.2 Ajout d'un "Cubeception Count"
+//= 0.3 Ajout d'un killmonsterall
+//= 0.1 Commencement du script
+//===== Compatible Avec: =====================================
+//= eAthena TxT & SQL
+//===== Commentaires =========================================
+//
+//= Script automatique de l'event "Chercher le Cubeception".
+//= Actif toutes les deux heures à partir 00h00.
+prontera,163,292,3	script	Cubeception Guard	413,{
+	set .@GMLevel,60;	// GM level required to access NPC.
+	set .@npcname$, "[Cubceptionnist]";
+
+	mes .@npcname$;
+
+	if (getgmlevel()>=.@GMLevel) {
+		if ($@Cubeception_Actif == 0) {
+			mes "Event status: [^FF0000OFF^000000]";
+			mes "Do you wanna activate it ?";
+			next;
+			switch( select ("Yes:No") )
+			{
+				case 1:
+					mes .@npcname$;
+					set $@Cubeception_Actif,2;
+					mes "Allright, let's go !";
+					close2;
+					doevent "prtcub::OnGmSet";
+					end;
+
+				case 2:
+					mes .@npcname$;
+					mes "Farewell then.";
+					close;
+			}
+		}
+	}
+
+	if ($@Cubeception_Actif == 1) {
+		mes "The event \"Find the Cubeception\" is currently on.";
+		mes "Do you want to be part of it ?"; next;
+		switch (select("Yes:No:See the rules")) {
+		case 1:
+			mes .@npcname$; mes "Perfect. Good luck !";
+			set $@event_cubeception_tabI,$@event_cubeception_tabI+1;
+			set $event_cubreception_playerInGame$[$@event_cubeception_tabI],strcharinfo(0);
+			close2;
+			$eventcubUsersAId[getarraysize(.eventUsersAId)] = getcharid(3);
+			warp .eventMap$,0,0;
+			end;
+
+		case 2:
+			mes .@npcname$;
+      mes "Come see me again if you wanna be part of it.";
+      mes "See you soon!";
+			close;
+
+		case 3:
+			mes .@npcname$;
+      mes "The principe is quite simple. Players are warped in a town full of Cubeceptions.";
+      mes "You'll simply have to find the good one.";
+      next;
+	  mes .@npcname$;
+      mes "Sometimes, Bonus Monsters will appears. If you kill one, a random bonus or malus will be applied !";
+		close;
+
+		}
+	} else {
+		mes "The event isn't active.";
+		switch (select("See the rules:Leave")) {
+		case 1:
+			mes .@npcname$;
+      mes "The principe is quite simple. Players are warped in a town full of Cubeceptions.";
+      mes "You'll simply have to find the good one.";
+      next;
+      mes .@npcname$;
+      mes "Sometimes, Bonus Monsters will appears. If you kill one, a random bonus or malus will be applied !";
+      close;
+
+		case 2:
+			next; mes .@npcname$; mes "Come see me again when the event will be on.";
+      mes "A bientôt !";
+			close;
+		}
+	}
+
+	OnInit:
+		set $event_cubreception_playerInGame$,0;
+		set $@event_cubeception_tabI,0;
+		set .eventMap$, "geffen";
+		setarray $eventcubUsersAId[0],0;
+		end;
+}
+
+-	script	LancementCubeception::prtcub	-1,{
+
+	OnWhisperGlobal:
+OnClock1200:
+	OnStartCubeception:
+	OnGmSet:
+
+		if ($@Cubeception_Actif == 1 ) {
+			end; // Si par hasard, le Cubeception n'est pas tué lors de 1er lancement de l'event, le script ne sera pas réactivé une 2eme fois.
+		} else {
+			announce "The event \"Find the Cubeception\" will start in 3 minutes on the map '" + .eventMap$ + "'!",bc_all | bc_blue;
+			announce "Talk to the Cubceptionnist, near the Reset House (Nord East) of Prontera Village !",bc_all | bc_blue;
+			killmonsterall .eventMap$;
+			set $@Cubeception_Actif, 1; // Event actif si la variable $@Cubeception_Actif = 1
+			set .monster_countCubeception, 99; //Nombre de mauvais Cubeception sur la map
+			set .monster_eventCubeception, 1; // Nombre de bon Cubeception sur la map
+			set .monster_bonusCubeception, 5; // Nombre de monstre Bonus sur la map
+			sleep 60000;
+			announce "The event \"Find the Cubeception\" will start in 2 minutes !",bc_all | bc_blue;
+			sleep 60000;
+			announce "The event \"Find the Cubeception\" will start in 1 minutes !",bc_all | bc_blue;
+			sleep 5900;
+			announce "The event \"Find the Cubeception\" starts!",bc_all | bc_blue;
+			initnpctimer;
+			monster .eventMap$,0,0,"Cubeception",rand(1395,1398),.monster_countCubeception,"prtcub::OnThisMobDeath";
+			monster .eventMap$,0,0,"Cubeception",rand(1395,1398),.monster_eventCubeception,"prtcub::OnThisMobDeath2";
+			monster .eventMap$,0,0,"Bonus",rand(1395,1398),.monster_bonusCubeception,"prtcub::OnThisMobDeath3";
+
+			setmapflag .eventMap$, 12;
+			setmapflag .eventMap$, 0;
+			setmapflag .eventMap$, 3;
+			setmapflag .eventMap$, 4;
+			setmapflag .eventMap$, 15;
+			setmapflag .eventMap$, 1;
+			setmapflag .eventMap$, 13;
+			setmapflag .eventMap$, 31;
+
+			initnpctimer;
+
+			end;
+
+		OnTimer300000:
+			set $@Cubeception_Actif,0;
+			killmonsterall .eventMap$;
+			mapannounce .eventMap$,"Nobody win the event. What a shame !",bc_map | bc_blue;
+			sleep 3000;
+			for(set .@tmp1,1;.@tmp1<=$@event_cubeception_tabI;set .@tmp1,.@tmp1+1){
+	           	charcommand "#size "+$event_cubreception_playerInGame$[.@tmp1];
+				sleep 500;
+		    }
+		    sleep 2000;
+	   		deletearray $event_cubreception_playerInGame$,$@event_cubeception_tabI+1;
+	   		set $@event_cubeception_tabI,0;
+
+			for (set .@i,0; .@i<getarraysize($eventcubUsersAId); set .@i,.@i+1)
+			{
+				attachrid($eventcubUsersAId[.@i]);
+				atcommand("@load");
+			}
+	
+			deletearray $eventcubUsersAId[0], getarraysize($eventcubUsersAId);
+			end;
+
+		OnEventEnd:
+			removemapflag .eventMap$, 12;
+			removemapflag .eventMap$, 0;
+			removemapflag .eventMap$, 3;
+			removemapflag .eventMap$, 4;
+			removemapflag .eventMap$, 15;
+			removemapflag .eventMap$, 1;
+			removemapflag .eventMap$, 13;
+			removemapflag .eventMap$, 31;
+			end;
+
+		OnThisMobDeath:
+			set .monster_countCubeception, .monster_countCubeception-1;
+			dispbottom "I'm not the good Cubeception.";
+			mapannounce .eventMap$,"There's still "+(.monster_countCubeception+.monster_eventCubeception)+" Cubeceptions on the map !",bc_blue|bc_map;
+			end;
+
+		OnThisMobDeath2:
+			dispbottom "I am the good Cubeception !";
+			
+			if (.rewardMode == 0)
+			{
+				logmes "[Cubeception] " + strcharinfo(0) + " wins the event and obtains " + .prizeAmt + " Currency Points.";
+				callfunc ("AddPoints", getcharid(3), .prizeAmt);
+			}
+			else
+			{
+				logmes "[CachePoring] " + strcharinfo(0) + " wins the event and obtains " + .prizeAmt + " " + getitemname(rewardId) + ".";
+				getitem .rewardId, .prizeAmt;
+			}
+			
+			mapannounce .eventMap$,strcharinfo(0)+" just found the good Cubeception !",bc_map | bc_blue;
+			killmonsterall .eventMap$;
+			set $@Cubeception_Actif, 0;
+			for(set .@tmp1,1;.@tmp1<=$@event_cubeception_tabI;set .@tmp1,.@tmp1+1){
+	           	charcommand "#size "+$event_cubreception_playerInGame$[.@tmp1];
+				sleep 500;
+		    }
+		    sleep 2000;
+	   		deletearray $event_cubreception_playerInGame$,$@event_cubeception_tabI+1;
+	   		set $@event_cubeception_tabI,0;
+			for (set .@i,0; .@i<getarraysize($eventcubUsersAId); set .@i,.@i+1)
+			{
+				attachrid($eventcubUsersAId[.@i]);
+				atcommand("@load");
+			}
+	
+			deletearray $eventcubUsersAId[0], getarraysize($eventcubUsersAId);
+			goto OnEventEnd;
+			end;
+
+		OnThisMobDeath3:
+			set .monster_bonusCubeception, .monster_bonusCubeception-1;
+			if (.monster_bonusCubeception >= 1)
+				mapannounce .eventMap$,""+strcharinfo(0)+" found a bonus monster, there's still "+.monster_bonusCubeception+" !",bc_map | bc_blue;
+			else
+				mapannounce .eventMap$,""+strcharinfo(0)+" found a bonus monster, there's no more !",bc_map | bc_blue;
+			switch (rand(1,4))
+			{
+				case 1: set Zeny, Zeny + 25000; dispbottom "You're lucky, you become wealhtier !"; break;
+				case 2:
+					dispbottom "You're lucky !";
+					if (.rewardMode == 0)
+					{
+						logmes "[Cubeception] " + strcharinfo(0) + " kills a bonus monster and obtains " + .prizeAmt + " Currency Points.";
+						callfunc ("AddPoints", getcharid(3), .prizeAmt);
+					}
+					else
+					{
+						logmes "[CachePoring] " + strcharinfo(0) + " kills a bonus monster and obtains " + .prizeAmt + " " + getitemname(rewardId) + ".";
+						getitem .rewardId, .prizeAmt;
+					}
+					break;
+				case 3: percentheal -99, -99; specialeffect2 49,"strcharinfo(0)"; dispbottom "You're unlucky !"; break; // Malus HP/SP
+				case 4: charcommand "#size "+strcharinfo(0)+" 1"; dispbottom "You're lucky, you're getter smaller !"; break; //
+			}
+			end;
+		}
+	OnInit:
+		set .eventMap$, "geffen";
+		set .rewardMode, 0;
+		set .rewardId, 675;
+		set .prizeAmt, 250;
+		end;
+}
+
+//==============================================================
+//= Système de sécurité
+//==============================================================
+
+-	script	mapload::cubmapload	-1,{
+
+OnPCLoginEvent:
+
+getmapxy(.@map$,.@x,.@y,0);
+
+	if (.@map$ == .eventMap$)
+	{
+		warp "prt_vilg02",157,130;
+	}
+	end;
+}

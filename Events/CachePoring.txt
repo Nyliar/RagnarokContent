@@ -1,0 +1,90 @@
+// ===== eAthena Script =======================================
+// = Spawn Mob
+// ===== By: ==================================================
+// = Teki
+// ===== Current Version: =====================================
+// = 1.0
+// ===== Compatible With: =====================================
+// = eAthena Version 10+
+// ===== Description: =========================================
+// = spawn un mob toutes les 2 heures.
+// ============================================================
+
+-	script	Poringcache	-1,{
+
+OnWhisperGlobal:
+OnClock1100:
+OnCachePoringEventStart:	
+	setarray .prize[0],674,674,675,671,7231,7232,7233;	// Reward item ID
+	setarray .prizePer[0],1,5,15,10,30,40,20;
+	set .prizeAmt, rand(50,250);
+	set .rewardMode, 0;
+	callfunc "MobEventCache";
+	end;	
+
+GetReward:
+	if (.rewardMode == 0)
+	{
+		logmes "[CachePoring] " + strcharinfo(0) + " wins the event and obtains " + .prizeAmt + " Currency Points.";
+		callfunc ("AddPoints",getcharid(3),.prizeAmt);
+	}
+	else
+	{
+		set .@rand, rand(0,getarraysize(.prize) - 1);
+		set .@randPercent, rand(0,100);
+		while (.prizePer[.@rand] > .@randPercent)
+		{
+			set .@rand, rand(0,getarraysize(.prize) - 1);
+		}
+		logmes "[CachePoring] " + strcharinfo(0) + " wins the event and obtains " + .prizeAmt + " " + getitemname(.prize[.@rand]) + ".";
+		getitem .prize[.@rand], .prizeAmt;
+	}
+	end;
+
+OnMobMort:			
+	announce "[Hided poring]: "+strcharinfo(0)+" just find the monster. Congratulations to "+ ( Sex ? "him":"her" ) +"!!",bc_blue|bc_all;
+	goto GetReward;
+	end;
+}
+
+function	script	MobEventCache	{
+
+	setarray .@MobId[0], // ID des mobs -- possibilité d'en rajouter.
+				1002, // Poring
+				1005, // Familiar
+				1007; // Fabre
+	
+	setarray .@NameMob$[0], // correspond aux ID des mobs dans le même ordre.
+				"Poring",
+				"Familiar",
+				"Fabre";
+				
+	setarray .@Ville$[0], // Noms des villes -- possibilité d'en rajouter ou mettre des fields.
+				"izlude",
+				"umbala",
+				"prontera",
+				"payon",
+				"geffen",
+				"einbroch",
+				"niflheim",
+				"jawaii",
+				"veins",
+				"lighthalzen",
+				"rachel",
+				"alberta",
+				"louyang",
+				"gonryun",
+				"aldebaran",
+				"morocc",
+				"comodo",
+				"amatsu",
+				"xmas",
+				"hugel",
+				"yuno";
+
+	set .@v,rand( getarraysize(.@Ville$) );
+	set .@m,rand( getarraysize(.@MobId$) );
+	
+	monster .@Ville$[.@v],0,0,.@NameMob$[.@m],.@MobId[.@m],1,"Poringcache::OnMobMort";
+	announce "[Hided Poring]: Warning !!! A "+.@NameMob$[.@m]+" hides in "+.@Ville$[.@v]+", he's swallowed several items. Go and catch it !!",bc_blue|bc_all;
+}

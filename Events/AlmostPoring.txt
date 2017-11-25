@@ -1,0 +1,159 @@
+prontera,163,288,6	script	Almost Poring::almopo	909,{
+	set .eventMap$, "poring_w01";
+	
+	set .@npcname$, "[Almost Poring]";
+	mes .@npcname$;
+	
+	if ($@StartAlmostPoring == 1) {
+		mes " ";
+		mes "Do you want to be part of the game ?";
+		next;
+		switch( select ("~ Yes:~ No:~ Rules") )
+		{
+			case 1:
+				mes .@npcname$;
+				mes " ";
+				mes "Allright, let's go !";
+				close2;
+				$eventalpUsersAId[getarraysize(.eventalpUsersAId)] = getcharid(3);
+				warp .eventMap$,97,94;
+				end;
+				
+			case 2:
+				mes .@npcname$;
+				mes " ";
+				mes "Farewell then.";
+				close;
+				
+			case 3:
+				mes .@npcname$;
+				mes " ";
+				mes "The one who find the Almost Poring wins.";
+				mes "Be careful, errors can be deadly !";
+				mes "And skills are blocked during the event.";
+				close;
+		}
+	}
+	else {
+		mes .@npcname$;
+		mes "Sorry the event isn't active now...";
+		close;
+	}
+}
+		
+-	script	start_poring_event::prtalpo	-1,{
+	end;
+	
+OnWhisperGlobal:
+OnClock1000:
+OnStartAlmostPoring:
+	announce "[The event 'Almost Poring' will start in 1 minutes !]",bc_all;
+	killmonsterall .eventMap$;
+	enablenpc "almopo";
+	set $@StartAlmostPoring,1;
+	sleep 60000;
+	initnpctimer;
+				
+	announce "[The event 'Almost Poring' starts !]",bc_all;
+	goto OnPopPoring;
+	end;
+	
+OnPopPoring:
+	setmapflag .eventMap$, 12;
+	setmapflag .eventMap$, 0;
+	setmapflag .eventMap$, 3;
+	setmapflag .eventMap$, 4;
+	setmapflag .eventMap$, 15;
+	setmapflag .eventMap$, 1;
+	setmapflag .eventMap$, 13;
+	setmapflag .eventMap$, 31;
+
+	monster .eventMap$,0,0,"Poring",1002,25,"prtalpo::OnPopoNameFake";
+	monster .eventMap$,0,0,"Drops",1113,25,"prtalpo::OnPopoNameFake";
+	monster .eventMap$,0,0,"Poporing",1031,25,"prtalpo::OnPopoNameFake";
+	monster .eventMap$,0,0,"Marin",1242,25,"prtalpo::OnPopoNameFake";
+	monster .eventMap$,0,0,"Magmaring",1836,25,"prtalpo::OnPopoNameFake";
+
+	switch(rand(0,4))
+	{
+		case 0:
+			monster .eventMap$,0,0,"Por1ng",1002,1,"prtalpo::OnPopoNameDead";
+			break;
+		case 1:
+			monster .eventMap$,0,0,"Drop",1113,1,"prtalpo::OnPopoNameDead";
+			break;
+		case 2:
+			monster .eventMap$,0,0,"Popor1ng",1031,1,"prtalpo::OnPopoNameDead";
+			break;
+		case 3:
+			monster .eventMap$,0,0,"Mar1n",1242,1,"prtalpo::OnPopoNameDead";
+			break;
+		case 4:
+			monster .eventMap$,0,0,"Magmar1ng",1836,1,"prtalpo::OnPopoNameDead";
+			break;
+	}
+	end;
+
+OnTimer600000:
+	killmonsterall .eventMap$;
+	set $@StartAlmostPoring,0;
+	announce "[The event 'Almost Poring' ends without winner !]",bc_all;
+	goto OnEventEnd;
+	end;
+
+OnPopoNameDead:			
+	killmonsterall .eventMap$;
+	mapannounce .eventMap$,"[Auto event]: "+strcharinfo(0)+" just found the 'Almost Poring' Congrats to "+ ( Sex ? "her" : "him") +"!!",bc_map;
+	announce "[The event 'Almost Poring' ends !]",bc_all;
+	set $@StartAlmostPoring,0;
+			
+	if (.rewardMode == 1)
+	{
+		set .@id,rand( getarraysize(.@Prix) );
+		getitem .@Prix[.@id],1; // Prix reçus
+	}
+	else
+	{
+		logmes "[AlmostPoring] " + strcharinfo(0) + " wins the event and obtains " + .rewardAmt + " Currency Points.";
+		callfunc ("AddPoints",getcharid(3),.rewardAmt);
+	}
+
+	goto OnEventEnd;
+	end;
+
+OnPopoNameFake:
+	percentheal -100,-100;
+	end;
+
+OnEventEnd:
+	killmonsterall .eventMap$;
+
+	for (set .@i,0; .@i<getarraysize($eventalpUsersAId); set .@i,.@i+1)
+	{
+		attachrid($eventalpUsersAId[.@i]);
+		atcommand("@load");
+	}
+
+	deletearray $eventalpUsersAId[0], getarraysize($eventalpUsersAId);
+
+	removemapflag .eventMap$, 12;
+	removemapflag .eventMap$, 0;
+	removemapflag .eventMap$, 3;
+	removemapflag .eventMap$, 4;
+	removemapflag .eventMap$, 15;
+	removemapflag .eventMap$, 1;
+	removemapflag .eventMap$, 13;
+	removemapflag .eventMap$, 31;
+	end;
+	
+OnInit:
+	set .rewardMode, 0;	
+	setarray .reward[0], // ID des items (cadeaux)
+	12103,	//BB
+	12109, // Poring Box
+	7145;	// T-Shirt
+	set .rewardAmt, 250;
+	set .eventMap$, "poring_w01";
+	setarray $eventalpUsersAId[0],0;
+	end;
+}

@@ -1,0 +1,270 @@
+//===== Event Script =======================================
+//= Word Event
+//===== By: ==================================================
+//= 
+//===== Current Version: =====================================
+//= 5.1
+//===== Compatible With: =====================================
+//= 
+//===== Additional Comments: =================================
+
+//============================================================
+
+prontera,167,293,4	script	Word Event::prtwoev	4_F_JP_NOAH,{
+
+	// Currently set to run every two hours.
+	// To change times, edit the OnClock labels below.
+
+	set .@GMLevel,60;	// GM level required to access NPC.
+	set .@npcname$, "[Word Event]";
+
+	if (getgmlevel()>=.@GMLevel) {
+		mes .@npcname$;
+		mes "Hello!";
+		mes "Choose an option.";
+		next;
+		switch(select("Activate/Deactivate the event:Configuration")) {
+		case 1:
+			mes .@npcname$;
+			if (.EventON) {
+				mes "Event status: [^0000FFON^000000]";
+				mes "Wanna desactivate it ?";
+			} else {
+				mes "Event status: [^FF0000OFF^000000]";
+				mes "Wanna activate it ?";
+			}
+			if(select("Yes:No")==2) close;
+			if (.EventON) {
+				set .EventON,0; set .Timer,0;
+				setnpctimer 0; stopnpctimer;
+				announce "A GM decided to stop the event. No reward will be given.",bc_map | bc_blue;
+				deletepset 1;
+				setnpcdisplay strnpcinfo(3),626;
+				close;
+			}
+			set .EventON,1; set .Timer,1; setnpctimer 0; initnpctimer;
+			set .ResetCounter,.ResetCounter+1;
+
+			announce "The Random Word Event will start in 3 minutes.",bc_all | bc_blue;
+			close;
+		case 2:
+			mes .@npcname$;
+			mes "Choose an option.";
+			next;
+			switch(select("Turn count","Word difficulty")) {
+				case 1:
+					mes .@npcname$;
+					mes "Choose the turn count.";
+					mes "Actual count: [^0000FF"+$rounds+"^000000]";
+					next;
+					input .@Rounds;
+					set $rounds,.@Rounds;
+					mes .@npcname$;
+					mes "The turn count have been changed for "+$rounds+".";
+					close;
+				case 2:
+					mes .@npcname$;
+					mes "Choose the game difficulty.";
+					mes "Actual difficulty: [^0000FF"+$mode$+"^000000]";
+					next;
+					switch(select("Easy","Medium","Hard"))
+					{
+						case 1:
+							set $mode$,"Easy";
+							break;
+						case 2:
+							set $mode$,"Medium";
+							break;
+						case 3:
+							set $mode$,"Hard";
+							break;
+					}
+					mes .@npcname$;
+					mes "The game difficulty have been changed for "+$mode$+".";
+					close;
+			}
+		}
+	}
+	if (.EventON) end;
+	mes .@npcname$;
+	mes "Hello to you, " + strcharinfo(0);
+	mes "What can I do for your ?";
+	if(select("Informations:Nothing, thanks.")==2) close;
+	next;
+	mes .@npcname$;
+	mes "This event is pretty simple.";
+	mes "Each turn, I'm gonna say some random word.";
+	mes "First one to repeat get the reward!";
+	mes "There is " + $rounds + " turn per play.";
+	close;
+
+OnInit:
+	set .EventON,0;
+	set .Wait,0;
+	set .Winner,0;
+	set .ResetCounter,0;
+	if($rounds == 0)
+	{
+		set $rounds,10;
+		set $mode$,"Medium";
+	}
+	set .prize,675;
+	set .prizeAmt,15;
+	set .rewardMode,0;
+	setarray .letters$[0],"a","b","c","d","e","f","g","h","i","j","k","l","m","n","o","p","q","r","s","t","u","v","w","x","y","z";
+	setarray .lettersC$[0],"A","B","C","D","E","F","G","H","I","J","K","L","M","N","O","P","Q","R","S","T","U","V","W","X","Y","Z";
+	end;
+
+OnStartDisguise:
+OnClock1300:
+	set .ResetCounter,.ResetCounter+1;
+	set .EventON,1;
+	set .Timer,1;
+	set .Wait,1;
+	announce "The Random Word Event will start in 3 minutes.",bc_all | bc_blue;
+	setnpctimer 0;
+	initnpctimer;
+	end;
+	
+OnTimer10000:
+	if (.Timer) end;
+	set .Wait,0;
+	goto iDisguise;
+	end;
+	
+OnTimer30000:
+	if (.Timer) end;
+	setnpcdisplay strnpcinfo(3),626;
+	npctalk "You take too long to answer.";
+	sleep 1000;
+	npctalk "Wait 10 secondes before next turn.";
+	specialeffect EF_DETECT2;
+	deletepset 1;
+	stopnpctimer;
+	setnpctimer 0;
+	initnpctimer;
+	end;
+	
+OnWhisperGlobal:
+	set .Timer, 1;
+OnTimer180000:
+	if (.Timer!=1) end;
+	announce "The Random Word Event started !",bc_all | bc_blue;
+	set .Timer,0; stopnpctimer;
+	setnpctimer 0; initnpctimer;
+	
+iDisguise:
+	delwaitingroom();
+	
+	set $seekedWord$, "";
+	if($mode$ == "Easy")
+	{
+		set .letterCount, 5;
+	}
+	if($mode$ == "Medium")
+	{
+		set .letterCount, 8;
+		set .@switchRank, rand(0,8);
+	}
+	if($mode$ == "Hard")
+	{
+		set .letterCount, 12;
+	}
+	
+	for(set .@i,0; .@i<.letterCount; set .@i,.@i+1)
+	{
+		set .caps, 0;
+		if($mode$ != "Easy")
+		{
+			set .caps, 1;
+		}
+		if($mode$ == "Hard")
+		{
+			set .caps, 2;
+		}
+		if(.caps == 0)
+		{
+			set $seekedWord$, $seekedWord$ + .letters$[rand(0,getarraysize(.letters$) - 1)];
+		}
+		else
+		{
+			if(.caps == 1)
+			{
+				if(.@i < .@switchRank)
+				{
+					set $seekedWord$, $seekedWord$ + .letters$[rand(0,getarraysize(.letters$) - 1)];			
+				}
+				else
+				{
+					set $seekedWord$, $seekedWord$ + .lettersC$[rand(0,getarraysize(.lettersC$) - 1)];
+				}
+			}
+			else
+			{
+				if(rand(0,1) == 0)
+				{
+					set $seekedWord$, $seekedWord$ + .letters$[rand(0,getarraysize(.letters$) - 1)];			
+				}
+				else
+				{
+					set $seekedWord$, $seekedWord$ + .lettersC$[rand(0,getarraysize(.lettersC$) - 1)];
+				}
+			}
+		}
+	}
+	
+	deletepset 1;
+	
+	defpattern 1, "(.*)", "QuoteALL";
+	activatepset 1;
+	setnpctimer 0;
+	set .Winner,0;	
+	waitingroom($seekedWord$, 0);
+	
+	end;
+	
+QuoteALL:
+	debugmes "entered: " + $@p0$;
+	if(preg_match("\\b" + $seekedWord$ + "\\b", $@p0$) != 0)
+	{
+		goto iCorrect;
+	}
+	else
+	{
+		dispbottom "Try again.";
+	}
+	end;
+	
+iCorrect:
+	if (.Winner) {
+		dispbottom "Somebody already got the answer.";
+		end;
+	}
+	set .Winner,1;
+	set .RoundCount,.RoundCount+1;
+	deletepset 1;
+	activatepset 1;
+	if (.rewardMode == 0)
+	{
+		logmes "[Random Word] " + strcharinfo(0) + " wins the event and obtains " + .prizeAmt + " " + getitemname(.prize[.@rand]) + ".";
+		callfunc ("AddPoints",getcharid(3), .prizeAmt);
+	}
+	else
+	{
+		logmes "[Random Word] " + strcharinfo(0) + " wins the event and obtains " + .prizeAmt + " " + getitemname(.prize) + ".";
+		getitem .prize, .prizeAmt;
+	}
+	npctalk strcharinfo(0)+ " was the first !";
+	if (.RoundCount>=$rounds) {
+		set .RoundCount,0; 
+		set .EventON,0;
+		setnpctimer 0; 
+		delwaitingroom();
+		stopnpctimer;
+		sleep 3000;
+		npctalk "Thanks everyone for playing. See you next time !";
+		end;
+	}
+	setnpctimer 0;
+	end;
+}

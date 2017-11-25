@@ -1,0 +1,247 @@
+// ===== eAthena Script =======================================
+// = Spawn Mob
+// ===== By: ==================================================
+// = Teki
+// ===== Current Version: =====================================
+// = 1.0
+// ===== Compatible With: =====================================
+// = eAthena Version 10+
+// ===== Description: =========================================
+// = spawn un mob toutes les 2 heures.
+// ============================================================
+
+prontera,148,292,5	script	Prime Hunter::prtprimhunt	106,{
+	if ($@StartPirateHunt == 1) {
+		mes "[Prime Hunter]";
+		mes " ";
+		mes "A pirate has been detected in " + .eventMap$ + "!";
+		mes "This...beast have found a way to enter!";
+		mes "Wanna help me to get them out of here?";
+		next;
+		switch( select ("~ Yes:~ No:~ Rules") )
+		{
+			case 1:
+				mes "[Prime Hunter]";
+				mes " ";
+				mes "The Hunt will begin soon.";
+				mes "Talk to me again in 3 minutes.";
+				close2;
+				set $@count, $@count+1;
+				break;
+				
+			case 2:
+				mes "[Prime Hunter]";
+				mes " ";
+				mes "Do come crying to me when they'll cut your child's throat...";
+				close;
+				
+			case 3:
+				mes "[Prime Hunter]";
+				mes " ";
+				mes "Rules? There's no rules!";
+				mes "First one to find one, kill it and get the reward.";
+				mes "No mercy, no gift!";
+				mes "Your friends will be your foes, so be careful!";
+				close;
+		}
+	}
+	else if ($@StartPirateHunt == 2) {
+		switch(rand(0,1))
+		{
+			case 1:
+				$eventpimUsersAId[getarraysize(.eventpimUsersAId)] = getcharid(3);
+				warp .eventMap$,200,131;
+				break;
+			case 2:
+				$eventpimUsersAId[getarraysize(.eventpimUsersAId)] = getcharid(3);
+				warp .eventMap$,127,179;
+				break;
+		}
+		set HUNTINGPIRATE, 1;
+	}
+	else {
+		mes "[Prime Hunter]";
+		mes "No pirate seen recently.";
+		mes "But I keep an eyes opened!";
+		close;
+	}
+	end;
+
+OnInit:
+	set .eventMap$, "izlude";
+	setarray $eventpimUsersAId[0], 0;
+	end;
+}
+
+-	script	PirateHuntEvent::prtpirmaz	-1,{
+	end;
+
+OnInit:
+	set $@StartPirateHunt, 0;
+	set .eventMap$, "izlude";
+	set .prizeAmt, 10;
+	set .rewardMode, 0;	
+	setarray .prize[0], // ID des items (cadeaux) -- possibilité d'en rajouter
+			671, 675, 674, 969;
+	setarray .mobId, 1071; // Pirate Skeleton
+	set .countMobMax, 15;
+	end;
+
+OnWhisperGlobal:
+OnClock1600:
+	if ($@StartPirateHunt == 0)
+	{
+		goto OnStartPirateHunting;
+	}
+	end;
+
+OnStartPirateHunting:
+
+	//clean any previously unkilled mob
+	killmonsterall .eventMap$;
+	set .countPopedMob, rand(1,.countMobMax);
+	areamonster .eventMap$,2,43,359,397,"Wandering Pirate",.mobId,.countPopedMob,"prtpirmaz::OnMobMort";
+
+	set $@StartPirateHunt, 1;
+
+	pvpon .eventMap$;
+		
+	announce "[Wandering Pirate]: Be careful! Pirates has been detected!",bc_blue|bc_all;
+	announce "[Wandering Pirate]: Talk to the Prime Hunter to be part of the hunt.",bc_blue|bc_all;
+	announce "[Wandering Pirate]: It begun in 3 minutes.",bc_blue|bc_all;
+
+	set .@query$, "SELECT `account_id` FROM `char` WHERE `online`=1 AND `last_map`='" + .eventMap$ + "'";
+	query_sql(.@query$, .@account);
+	for (set .@i,0; .@i<getarraysize(.@account); set .@i,.@i+1)
+	{
+		attachrid(.@account[.@i]);
+		atcommand("@load");
+	}
+
+	startnpctimer;
+	hideonnpc "culguard";
+	end;
+	
+OnMobMort:			
+	announce "[Wandering Pirate]: "+strcharinfo(0)+" killed a pirate! Congratulation to "+ ( Sex ? "him" : "her" ) +"!!",bc_blue|bc_all;
+		
+	set .@rand,rand( getarraysize(.prize) );		
+	
+	if (.rewardMode == 0)
+	{
+		logmes "[Pirate Hunt] " + strcharinfo(0) + " kills a pirate and obtains  " + .prizeAmt + " Currency Points.";
+		callfunc ("AddPoints",getcharid(3), .prizeAmt);
+	}
+	else
+	{
+		logmes "[Pirate Hunt] " + strcharinfo(0) + " kills a pirate and obtains " + .prizeAmt + " " + getitemname(.prize[.@rand]) + ".";
+		getitem .prize[.@rand],.prizeAmt;
+	}
+
+	set .countMobMort, .countMobMort + 1;
+	if (.countMobMort == .countPopedMob)
+	{
+		announce "[Wandering Pirate]: Every pirates have been killed. Thanks for your help!!",bc_blue|bc_all;
+		pvpoff .eventMap$;
+		announce "[Wandering Pirate]: To leave, talk to the Hunt Guardin.",bc_blue|bc_all;
+		set $@StartPirateHunt, 0;
+
+		hideoffnpc "culguard";
+
+		//force warp after 3 minutes
+		sleep 180000;
+
+		for (set .@i,0; .@i<getarraysize($eventpimUsersAId); set .@i,.@i+1)
+		{
+			attachrid($eventpimUsersAId[.@i]);
+			atcommand("@load");
+		}
+
+		deletearray $eventpimUsersAId[0], getarraysize($eventpimUsersAId);
+
+		hideonnpc "culguard";
+	}
+	else
+	{
+		announce "[Wandering Pirate]: There's still " + (.countPopedMob - .countMobMort) + " alive pirate(s)!!",bc_blue|bc_all;
+	}
+	end;
+
+OnTimer1800000:
+	announce "[Wandering Pirate]: Every pirates have been killed, thanks for your help!!",bc_blue|bc_all;
+	pvpoff .eventMap$;
+	
+	killmonsterall .eventMap$;
+
+	for (set .@i,0; .@i<getarraysize($eventpimUsersAId); set .@i,.@i+1)
+	{
+		attachrid($eventpimUsersAId[.@i]);
+		atcommand("@load");
+	}
+
+	deletearray $eventpimUsersAId[0], getarraysize($eventpimUsersAId);
+
+	set $@StartPirateHunt, 0;
+	end;
+
+OnTimer60000:
+	announce "[Wandering Pirate]: Talk to the Prime Hunter to be part of the Hunt.",bc_blue|bc_all;
+	announce "[Wandering Pirate]: It'll start in 2 minutes.",bc_blue|bc_all;
+	end;
+	
+OnTimer120000:
+	announce "[Wandering Pirate]: Talk to the Prime Hunter to be part of the Hunt.",bc_blue|bc_all;
+	announce "[Wandering Pirate]: It'll start in 1 minutes.",bc_blue|bc_all;
+	end;
+
+OnTimer180000:
+	announce "[Wandering Pirate]: Talk to the Prime Hunter to be part of the Hunt.",bc_blue|bc_all;
+	announce "[Wandering Pirate]: The Hunt begins now.",bc_blue|bc_all;
+	set $@StartPirateHunt, 2;
+	end;
+
+OnPCLoginEvent:
+	if (strcharinfo(3) == .eventMap$ && $@StartPirateHunt == 0)
+	{
+		atcommand("@load");
+	}
+	if (HUNTINGPIRATE == 1)
+		set HUNTINGPIRATE, 0;
+	end;
+}
+
+izlude,128,112,5	script	Hunt Guardian::culguard	405,{
+	set .@npcname$, "[Hunt Guardian]";
+
+	mes .@npcname$;
+	mes "";
+	if (HUNTINGPIRATE == 1)
+	{
+		mes "You wanna go back?";
+		switch(select("Yes","No"))
+		{
+			case 1:
+				mes "Allright let's go then.";
+				percentheal 100, 100;
+				for (set .@i,0; .@i<getarraysize($eventpimUsersAId); set .@i,.@i+1)
+				{
+					if ($eventpimUsersAId[.@i] == getcharid(3))
+					{
+						deletearray $eventpimUsersAId[.@i], 1;
+					}
+				}
+
+				atcommand("@load");
+	
+				break;
+			case 2:
+				mes "As you wish.";
+				break;
+		}
+	}
+	else
+	{
+		mes "No pirate has been recently. Thanks god.";
+	}
+	close;
+}

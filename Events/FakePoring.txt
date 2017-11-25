@@ -1,0 +1,152 @@
+prontera,148,287,6	script	Fake Poring::prtfipo	909,{
+	set .@npcname$, "[Fake Poring]";
+	set .eventMap$, "poring_w01";
+	mes .@npcname$;
+	
+	if ($@StartFakePoring == 1) {
+		mes " ";
+		mes "Do you want to be part of the game ?";
+		next;
+		switch( select ("~ Yes:~ No:~ Rules") )
+		{
+			case 1:
+				mes .@npcname$;
+				mes " ";
+				mes "Allright, let's go !";
+				close2;
+				$eventfakpUsersAId[getarraysize(.eventfakpUsersAId)] = getcharid(3);
+				warp .eventMap$,97,94;
+				end;
+				
+			case 2:
+				mes .@npcname$;
+				mes " ";
+				mes "Farewell then.";
+				close;
+				
+			case 3:
+				mes .@npcname$;
+				mes " ";
+				mes "The one who find the Fake Poring wins.";
+				mes "Be careful, errors can be deadly !";
+				mes "And skills are blocked during the event.";
+				close;
+		}
+	}
+	else {
+		mes "Sorry the event isn't active now...";
+		close;
+	}
+}
+		
+-	script	start_poring_event::evtfipo	-1,{
+	end;
+
+OnClock1400:
+OnWhisperGlobal:
+OnStartFindPoring:
+	announce "[The event 'Fake Poring' will start in 3 minutes !]",bc_all;
+	announce "Come find the Fake Poring on Capitale South West.",bc_all;
+	killmonsterall .eventMap$;
+	enablenpc "prtfipo";
+	set $@StartFakePoring,1;
+	sleep 60000;
+	initnpctimer;
+				
+	announce "[The event 'Fake Poring' starts !]",bc_all;
+	goto OnPopPoring;
+	end;
+	
+OnPopPoring:
+	setmapflag .eventMap$, 12;
+	setmapflag .eventMap$, 0;
+	setmapflag .eventMap$, 3;
+	setmapflag .eventMap$, 4;
+	setmapflag .eventMap$, 15;
+	setmapflag .eventMap$, 1;
+	setmapflag .eventMap$, 13;
+	setmapflag .eventMap$, 31;
+
+	monster .eventMap$,0,0,"Poring",1002,1,"evtfipo::OnPopoNameDead";
+
+	monster .eventMap$,0,0,"Por1ng",1002,25,"evtfipo::OnPopoNameFake";
+	monster .eventMap$,0,0,"P0ring",1002,25,"evtfipo::OnPopoNameFake";
+	monster .eventMap$,0,0,"Poporing",1002,25,"evtfipo::OnPopoNameFake";
+	monster .eventMap$,0,0,"Porin9",1002,20,"evtfipo::OnPopoNameFake";
+	monster .eventMap$,0,0,"poring",1002,4,"evtfipo::OnPopoNameFake";
+
+	end;
+
+OnTimer600000:
+	killmonsterall .eventMap$;
+	set $@StartFakePoring,0;
+	announce "[The event 'Fake Poring' ends without winner !]",bc_all;
+	goto OnEventEnd;
+	end;
+
+OnPopoNameDead:			
+	killmonsterall .eventMap$,1;
+	mapannounce .eventMap$,"[Auto event]: "+strcharinfo(0)+" just found the 'Fake Poring' Congrats to "+ ( Sex ? "her" : "him") +"!!",bc_map;
+	announce "[The event 'Fake Poring' ends !]",bc_all;
+	set $@StartFakePoring,0;
+			
+	if (.rewardMode == 1)
+	{
+		set .@id,rand( getarraysize(.@Prix) );
+		getitem .@Prix[.@id],1; // Prix reçus
+	}
+	else
+	{
+		logmes "[FakePoring] " + strcharinfo(0) + " wins the event and obtains " + .rewardAmt + " Currency Points.";
+		callfunc ("AddPoints",getcharid(3),.rewardAmt);
+	}
+
+	goto OnEventEnd;
+	end;
+
+OnPopoNameFake:
+	percentheal -100,-100;
+	end;
+
+OnEventEnd:
+	killmonsterall .eventMap$;
+
+	for (set .@i,0; .@i<getarraysize($eventfakpUsersAId); set .@i,.@i+1)
+	{
+		attachrid($eventfakpUsersAId[.@i]);
+		atcommand("@load");
+	}
+
+	deletearray $eventfakpUsersAId[0], getarraysize($eventfakpUsersAId);
+	removemapflag .eventMap$, 12;
+	removemapflag .eventMap$, 0;
+	removemapflag .eventMap$, 3;
+	removemapflag .eventMap$, 4;
+	removemapflag .eventMap$, 15;
+	removemapflag .eventMap$, 1;
+	removemapflag .eventMap$, 13;
+	removemapflag .eventMap$, 31;
+	end;
+	
+OnInit:
+	set .rewardMode, 0;	
+	setarray .reward[0], // ID des items (cadeaux)
+	12103,	//BB
+	12109, // Poring Box
+	7145;	// T-Shirt
+	set .rewardAmt, 250;
+	set .eventMap$, "poring_w01";
+	setarray $eventfakpUsersAId[0],0;
+	end;
+}
+	
+poring_w01	mapflag	nobranch
+poring_w01	mapflag	nomemo
+poring_w01	mapflag	noreturn
+poring_w01	mapflag	nosave	savepoint
+poring_w01	mapflag	noteleport
+poring_w01	mapflag	nowarp
+poring_w01	mapflag	nowarpto
+poring_w01	mapflag	noloot
+poring_w01	mapflag	noskill
+

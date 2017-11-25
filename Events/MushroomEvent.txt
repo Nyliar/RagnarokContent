@@ -1,0 +1,110 @@
+//===== rAthena Script ======================================= 
+//= Find the Mushroom
+//===== By: ================================================== 
+//= Mysterious
+//===== Current Version: ===================================== 
+//= 3.6a
+//===== Compatible With: ===================================== 
+//= rAthena SVN
+//===== Description: ========================================= 
+//= Find the Mushroom - random amount of Mushrooms spawns in random maps.
+//= Players need to find these mushrooms and kill them to gain prizes!
+//===== Additional Comments: =================================
+//= 3.0 Fully Functional with Rewritten script. [Mysterious]
+//= 3.6a Slightly edited. [Euphy]
+//============================================================ 
+
+prontera,145,292,6	script	Find the Mushroom::prtmush	1084,{
+	mes "[ Find The Mushroom ]";
+	if (!.Status)
+		mes "There is no event at the moment!";
+	else {
+		mes "There are "+.Spawn+" Mushrooms left in "+.Map$+"!";
+		mes "Find and kill the mushrooms to gain a reward!";
+	}
+	if (.Status || getgmlevel() < .GM) close;
+	mes "Start the event?";
+	next;
+	if(select("- No:- Yes") == 1) close;
+	donpcevent strnpcinfo(3)+"::OnMinute10";
+	mes "[ Find The Mushroom ]";
+	mes "Event started!";
+	close;
+
+OnInit:
+	set .GM,60;	// GM level required to access NPC
+	setarray .prize[0],674,675,671,7231,7232,7233;	// Reward item ID
+	setarray .prizePer[0],5,15,10,30,40,20;
+	set .prizeAmt,50;
+	set .rewardMode,0;
+	setarray .Maps$[0],"izlude","geffen","morocc","prontera","hugel","payon"; // Possible maps
+	set .activeAuto, 0;
+	end;
+
+OnWhisperGlobal:
+OnMushroomEventStart:
+OnClock1500:
+	if (.Status) end;
+	set .Status,1;
+	set .Spawn,rand(1,10);	// How many Mushrooms should spawn?
+	set .Map$,.Maps$[rand(getarraysize(.Maps$))];
+	killmonster .Map$,"All";
+	monster .Map$,0,0,"Please don't kill me!",1084,.Spawn,strnpcinfo(3)+"::OnMobKilled";
+	announce "Find the Mushroom : A total of "+.Spawn+" mushrooms(s) have been invoked in "+.Map$+"!",0;
+	sleep 2500;
+	announce "Find the Mushroom : Every one of these mushrooms will give a reward!",0;
+	initnpctimer;
+	end;
+
+GetReward:
+	set .@rand, rand(0,getarraysize(.prize) - 1);
+	set .@randPercent, rand(0,100);
+	while (.prizePer[.@rand] > .@randPercent)
+	{
+		set .@rand, rand(0,getarraysize(.prize) - 1);
+	}
+	if (.rewardMode == 0)
+	{
+		logmes "[CachePoring] " + strcharinfo(0) + " kills a mushroom and obtains " + .prizeAmt + " Currency Points.";
+		callfunc ("AddPoints",getcharid(3), .prizeAmt);
+	}
+	else
+	{
+		logmes "[CachePoring] " + strcharinfo(0) + " kills a mushroom and obtains " + .prizeAmt + " " + getitemname(.prize[.@rand]) + ".";
+		getitem .prize[.@rand],.prizeAmt;
+	}
+	end;
+
+OnMinute10:	// Start time (every hour)
+	if (.activeAuto)
+	{
+		if (.Status) end;
+		set .Status,1;
+		set .Spawn,rand(1,10);	// How many Mushrooms should spawn?
+		set .Map$,.Maps$[rand(getarraysize(.Maps$))];
+		killmonster .Map$,"All";
+		monster .Map$,0,0,"Please don't kill me!",1084,.Spawn,strnpcinfo(3)+"::OnMobKilled";
+		announce "Find the Mushroom : A total of "+.Spawn+" mushrooms(s) have been invoked in "+.Map$+"!",0;
+		sleep 2500;
+		announce "Find the Mushroom : Every one of these mushrooms will give a reward!",0;
+		initnpctimer;
+	}
+	end;
+
+OnTimer3600000:
+	stopnpctimer;
+	if (.Status) set .Status,0;
+	killmonster .Map$,"All";
+	announce "Find the Mushroom : All mushrooms have been wiped.",0;
+	end;	
+
+OnMobKilled:
+	set .Spawn, .Spawn - 1;
+	if (.Spawn) announce "[ "+strcharinfo(0)+" ] killed a mushroom. There's still "+.Spawn+" to find.",bc_map;
+	else {
+		announce "The event Find the Mushroom is over. All mushrooms have been find",0;
+		set .Status,0;
+	}
+	goto GetReward;
+	end;
+}

@@ -1,0 +1,295 @@
+-	script	PPE_inital	-1,{
+	OnInit:
+	set $@PoringEventChecker, 0;
+	set $@PoringEventPrizeChecker, 0;
+	set $PPEDefendingChampion$,"secret";
+	end;
+}
+
+prontera,143,280,5	script	Poring Punch Event#main::ppevent	883,{
+	set .@npcname$, "[ Poring Punch Event ]";
+	mes .@npcname$;
+	mes "Hello to you. I'm the Poring Punch Manager. The current champion is ^777777"+$PPEDefendingChampion$+"^000000. What can I do for you?";
+	next;
+	menu "How does it work?",PPE_HowTo,"Join!",PPE_Join,"Get my reward.",PPE_claim,"Get my options back",PPE_opt,"Uhmmm?",PPE_nvm;
+
+	PPE_HowTo:
+		mes .@npcname$;
+		mes "It's a pretty simple event. All you have to do is punching poring. Kill the right ones, avoid the bad ones.";
+		mes "Each earn a different amount of point. The event last 5 minutes, the one with the more points at the end wins.";
+		next;
+		mes .@npcname$;
+		mes "But no cart, mount or weapons are allowed.";
+		close;
+
+	PPE_Join:
+		if ( $@PoringEventChecker != 0 ){
+			set .@proposeRemoval, 0;
+			if (gethominfo(2) != "null"){
+				mes .@npcname$;
+				mes "The homonculus aren't allowed. Sorry, "+strcharinfo(0)+" but you can't join the event!";
+				set .@proposeRemoval, 1;
+			}
+			if (getpetinfo(2) != "null"){
+				mes .@npcname$;
+				mes "The pets aren't allowed. Sorry, "+strcharinfo(0)+" but you can't join the event!";
+				set .@proposeRemoval, 1;
+			}
+			if (checkcart()){
+				mes .@npcname$;
+				mes "The carts aren't allowed. Sorry, "+strcharinfo(0)+" but you can't join the event!";
+				set .@proposeRemoval, 1;
+			}
+			if (checkfalcon()){
+				mes .@npcname$;
+				mes "The falcons aren't allowed. Sorry, "+strcharinfo(0)+" but you can't join the event!";
+				set .@proposeRemoval, 1;
+			}
+			if (checkriding()){
+				mes .@npcname$;
+				mes "The mounts aren't allowed. Sorry, "+strcharinfo(0)+" but you can't join the event!";
+				set .@proposeRemoval, 1;
+			}
+			if (.@proposeRemoval == 1)
+			{
+				mes "I can remove it for you (except pet or homonculus, use the usual options for that).";
+				mes "If so, come back to me to get them back.";
+				mes "Otherwise, you won't be allowed to enter.";
+				if (select("Yes","No") == 1)
+				{
+					if (checkcart())
+					{
+						setcart 0;
+						set PUNCHOPTION, 1;
+					}
+					if (checkfalcon())
+					{
+						setfalcon 0;
+						set PUNCHOPTION, 2;
+					}
+					if (checkriding())
+					{
+						setriding 0;
+						set PUNCHOPTION, 4;
+					}
+				}
+				else
+				{
+					mes "Allright, your choice.";
+					close;
+				}
+			}
+			mes .@npcname$;
+			mes "Good luck "+strcharinfo(0)+".";
+			close2;
+			set @PoringPoints, 0;
+			$eventppUsersAId[getarraysize(.eventppUsersAId)] = getcharid(3);
+			warp .eventMap$,0,0;
+			end;
+		}else{
+			mes .@npcname$;
+			mes "Sorry, the event isn't started.";
+			close;
+		}end;
+	PPE_opt:
+		if (PUNCHOPTION > 0)
+		{
+			if (PUNCHOPTION == 1)
+			{
+				setcart 1;
+			}
+			if (PUNCHOPTION == 2)
+			{
+				setfalcon 1;
+			}
+			if (PUNCHOPTION == 3)
+			{
+				setriding 1;
+			}
+		}	
+		mes "A bientôt!";
+		close;
+	PPE_claim:
+		if ($HighestPoringPointsName$ == strcharinfo(0) && $@PoringEventPrizeChecker == 1) {
+			mes "[Poring Punch Event]";
+			mes "Congratulations "+strcharinfo(0)+". Here's your reward.";
+			if (.rewardMode == 0)
+			{
+				logmes "[PoringPuncher] " + strcharinfo(0) + " wins the event and obtains  " + .prizeAmt + " Currency Points.";
+				callfunc ("AddPoints",getcharid(3),.rewardAmt);
+			}
+			else
+			{
+				logmes "[PoringPuncher] " + strcharinfo(0) + " wins the event and obtains " + .rewardAmt + " " + getitemname(.rewardId) + ".";
+				getitem .rewardId, .rewardAmt;
+			}
+			set $HighestPoringPointsName$,"";
+			set $HighestPoringPoints,0;
+			set $@PoringEventPrizeChecker, 0;
+			close;
+		} else {
+			mes .@npcname$;
+			mes "Sorry "+strcharinfo(0)+". You're not the winner.";
+			close;
+		}end;
+
+	PPE_nvm:
+		mes .@npcname$;
+		mes "Allright. Maybe next time.";
+		close;
+}
+
+-	script	start_poringpunch_event::prtppu	-1,{
+	end;
+
+	OnPoringKill:
+		if (getequipweaponlv(4)==0 && getequipweaponlv(3)==0){
+			set @PoringPoints,@PoringPoints+1;
+			if (@PoringPoints > $HighestPoringPoints) {
+				set $HighestPoringPointsName$,strcharinfo(0);
+				set $PPEDefendingChampion$,strcharinfo(0);
+				set $HighestPoringPoints,@PoringPoints;
+			}
+			dispbottom "You have "+@PoringPoints+" point(s)";
+			end;
+		}else {
+			dispbottom "You have to kill a poring without weapon to earn point.";
+			warp .returnMap$,155,185;
+			end;
+		}
+
+	OnDropsKill:
+		if (getequipweaponlv(4)==0 && getequipweaponlv(3)==0){
+			set @PoringPoints,@PoringPoints+5;
+			if (@PoringPoints > $HighestPoringPoints) {
+				set $HighestPoringPointsName$,strcharinfo(0);
+				set $PPEDefendingChampion$,strcharinfo(0);
+				set $HighestPoringPoints,@PoringPoints;
+			}
+			dispbottom "You have "+@PoringPoints+" point(s)";
+			end;
+		}else {
+			dispbottom "You have to kill a poring without weapon to earn point.";
+			warp .returnMap$,155,185;
+			end;
+		}
+		
+
+	OnPoporingKill:
+		if (getequipweaponlv(4)==0 && getequipweaponlv(3)==0){
+			if (@PoringPoints < 3) {
+				set @PoringPoints, 0;
+				dispbottom "You have "+@PoringPoints+" point(s)";
+				end;
+			}else {
+				set @PoringPoints,@PoringPoints-3;
+				dispbottom "You have "+@PoringPoints+" point(s)";
+				end;
+			}end;
+		}else {
+			dispbottom "You have to kill a poring without weapon to earn point.";
+			warp .returnMap$,155,185;
+			end;
+
+		}
+		
+OnTimer10000:
+	announce "The Poring Punch Event starts.",bc_all,0xFFCCFF;
+	sleep2 3000;
+	announce "Talk to me in Prontera to join the event.",bc_all,0xFFCCFF;
+	
+	monster .eventMap$,0,0,"1 Point",1002,30,"ppevent::OnPoringKill";
+	monster .eventMap$,0,0,"5 Points",1002,3,"ppevent::OnDropsKill";
+	monster .eventMap$,0,0,"-3 Points",1002,30,"ppevent::OnPoporingKill";
+
+	setmapflag .eventMap$, 12;
+	setmapflag .eventMap$, 0;
+	setmapflag .eventMap$, 3;
+	setmapflag .eventMap$, 4;
+	setmapflag .eventMap$, 15;
+	setmapflag .eventMap$, 1;
+	setmapflag .eventMap$, 13;
+	setmapflag .eventMap$, 31;
+	end;
+
+OnTimer70000:
+	mapannounce .eventMap$,"Poring Punch Event: 4 minutes remaining.",0;
+	monster .eventMap$,0,0,"1 Point",1002,30,"ppevent::OnPoringKill";
+	monster .eventMap$,0,0,"5 Points",1002,3,"ppevent::OnDropsKill";
+	monster .eventMap$,0,0,"-3 Points",1002,30,"ppevent::OnPoporingKill";
+	end;
+
+OnTimer130000:
+	mapannounce .eventMap$,"Poring Punch Event: 3 minutes remaining.",0;
+	monster .eventMap$,0,0,"1 Point",1002,30,"ppevent::OnPoringKill";
+	monster .eventMap$,0,0,"5 Points",1002,3,"ppevent::OnDropsKill";
+	monster .eventMap$,0,0,"-3 Points",1002,30,"ppevent::OnPoporingKill";
+	end;
+
+OnTimer190000:
+	mapannounce .eventMap$,"Poring Punch Event: 2 minutes remaining.",0;
+	monster .eventMap$,0,0,"1 Point",1002,30,"ppevent::OnPoringKill";
+	monster .eventMap$,0,0,"5 Points",1002,3,"ppevent::OnDropsKill";
+	monster .eventMap$,0,0,"-3 Points",1002,30,"ppevent::OnPoporingKill";
+	end;
+
+OnTimer250000:
+	mapannounce .eventMap$,"Poring Punch Event: 1 minute remaining.",0;
+	monster .eventMap$,0,0,"1 Point",1002,30,"ppevent::OnPoringKill";
+	monster .eventMap$,0,0,"5 Points",1002,3,"ppevent::OnDropsKill";
+	monster .eventMap$,0,0,"-3 Points",1002,30,"ppevent::OnPoporingKill";
+	end;
+
+OnTimer310000:
+	stopnpctimer;
+	announce "Poring Punch Event is over. And the winner is "+$HighestPoringPointsName$+".",0;
+	killmonsterall .eventMap$;
+	sleep2 3000;
+	announce "Poring Punch Event: "+$HighestPoringPointsName$+" come back to me to get your reward !!",0;
+	set $@PoringEventChecker, 0;
+	set $@PoringEventPrizeChecker, 1;
+	sleep2 5000;
+	mapannounce .eventMap$,"You'll be warped soon.",16;
+	sleep2 10000;
+
+	removemapflag .eventMap$, 12;
+	removemapflag .eventMap$, 0;
+	removemapflag .eventMap$, 3;
+	removemapflag .eventMap$, 4;
+	removemapflag .eventMap$, 15;
+	removemapflag .eventMap$, 1;
+	removemapflag .eventMap$, 13;
+	removemapflag .eventMap$, 31;
+
+
+	for (set .@i,0; .@i<getarraysize($eventppUsersAId); set .@i,.@i+1)
+	{
+		attachrid($eventppUsersAId[.@i]);
+		atcommand("@load");
+	}
+
+	deletearray $eventppUsersAId[0], getarraysize($eventppUsersAId);
+	end;
+
+OnWhisperGlobal:
+	if( getgmlevel() < 99 ) end;
+	mes "Start Poring Punch Event ?";
+	if( select( "Start Poring Punch Event","Cancel" ) == 1 ){
+		donpcevent "prtppu::OnStartEvent";
+	}
+	close;
+
+OnClock1700:
+OnStartEvent:
+	set $@PoringEventChecker, 1;
+	initnpctimer;
+	end;
+
+OnInit:
+	set .rewardMode, 0;
+	set .rewardId, 675;
+	set .rewardAmt, 300;
+	set .eventMap$, "morocc";
+	setarray $eventppUsersAId[0],0;
+	end;
+}

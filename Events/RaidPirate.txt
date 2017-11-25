@@ -1,0 +1,234 @@
+//===== eAthena Script =======================================
+//= Event automatique pour Ro-Island
+//===== Par: =================================================
+//= Hiero
+//===== Version du Script: ===================================
+//= 1.0 
+//===== Compatible Avec: =====================================
+//= eAthena TxT & SQL
+//===== Commentaires =========================================
+//
+//= Script automatique de l'event "Raid Pirate".
+//= Actif toutes les deux heures à partir 00h00.
+
+prontera,152,284,5	script	Coast Guard::prtcostguard	4_M_JP_DISH,{
+
+set .@npc$, "[^FF0000Coast Guard^000000]";
+set .@item, 675;
+
+	if ($@actif == 1) {
+	
+		mes .@npc$; mes "A pirate invasion has been seen. Wanna help us to kill these filthy bastards?"; next;
+		next;
+		switch (select("Kill them:Leave them alone:An invasion?")) {
+		case 1:
+			mes .@npc$; mes "Perfect, good luck then!";
+			close2;
+			set $eventrapiUsersAId[getarraysize(eventrapiUsersAId)], getcharid(3);
+			warp .eventMap$,0,0;
+			end;
+		
+		case 2:
+			mes .@npc$; mes "Come back if you change your mind.";
+			close;
+			
+		case 3:
+			mes .@npc$; mes "Yes pirates. There's a lot recently..."; next;
+			mes .@npc$; mes "There's generally one captain, one or two tenient and a lot of mousse. Some even got "+getitemname(.@item)+" on them."; next;
+			mes .@npc$; mes "The captain is hided. Find him, kill him, and they'll flee like the cowards they are."; next;
+			mes .@npc$; mes "Tenients also have treasures, but they'll curse you for stealing them!";
+			close;
+		
+		}
+		
+	} else {
+		mes .@npc$; mes "I have seen nothing recently...";
+		switch (select("What are you looking for?:Leave")) {
+		case 1:
+			next;
+			mes .@npc$; mes "For pirates. There's a lot recently..."; next;
+			mes .@npc$; mes "There's generally one captain, one or two tenient and a lot of mousse. Some even got "+getitemname(.@item)+" on them."; next;
+			mes .@npc$; mes "The captain is hided. Find him, kill him, and they'll flee like the cowards they are."; next;
+			mes .@npc$; mes "Tenients also have treasures, but they'll curse you for stealing them!";
+			close;
+			
+		case 2:
+			next; mes .@npc$; mes "Come back when we'll see some. We'll need help.";
+			close;
+		}
+	}
+
+OnInit:
+	set .eventMap$, "alberta";
+	end;
+}
+
+-	script	EventPirateRaid::prtpirraid	-1,{
+	end;
+
+OnWhisperGlobal:
+OnClock0900:
+	set $@actif, 0;
+	goto OnStartRaidPirate;
+	end;
+
+OnStartRaidPirate:
+	
+	disablenpc "thashicapt";
+	
+	if ($@actif == 1 ) {
+		end; // Si par hasard, le Capitaine n'est pas tué lors de 1er lancement de l'event, le script ne sera pas réactivé une 2eme fois.
+	} else {
+		killmonsterall .eventMap$;
+		set $@actif, 1; // Event actif si la variable $@actif = 1
+		set .monster_count, 99; // Nombre de Pirates sur la map
+		set .monster_event, 1; // Nombre de Pirate avec lot sur la map
+		set .monster_lieutenant, 5; // Nombre de Lieutenants sur la map
+		announce "[Pirate Raid]: Alert! A pirate raid has been discovered. Talk to the Cost Guard to help us pushing them back to the sea!",bc_blue|bc_all;
+		monster .eventMap$,0,0,"Pirate",1071,.monster_count,"prtpirraid::OnThisMobDeath";
+		monster .eventMap$,0,0,"Pirate",1071,.monster_event,"prtpirraid::OnThisMobDeath2";
+		monster .eventMap$,0,0,"Teniente",1071,.monster_lieutenant,"prtpirraid::OnThisMobDeath3";
+
+		setmapflag .eventMap$, 12;
+		setmapflag .eventMap$, 0;
+		setmapflag .eventMap$, 3;
+		setmapflag .eventMap$, 4;
+		setmapflag .eventMap$, 15;
+		setmapflag .eventMap$, 1;
+		setmapflag .eventMap$, 13;
+		setmapflag .eventMap$, 31;
+
+		initnpctimer;
+
+		end;
+	}
+
+OnTimer1800000:
+	goto OnEventEnd;
+	end;
+		
+OnThisMobDeath:
+	set .monster_count, .monster_count-1;
+	dispbottom "Hiarg hiarg hiarg! Try again...";
+	mapannounce .eventMap$,"There's still "+(.monster_count+.monster_event)+" alive pirates !",bc_blue|bc_map;
+	end;
+		
+OnThisMobDeath2:
+	dispbottom "Unbelievable, you've found me?!";
+	if (.rewardMode == 0)
+	{
+		logmes "[RaidPirate] " + strcharinfo(0) + " wins the event and obtains " + .prizeAmt + " Currency Points.";
+		callfunc ("AddPoints",getcharid(3), .prizeAmt);
+	}
+	else
+	{
+		logmes "[RaidPirate] " + strcharinfo(0) + " wins the event and obtains " + .prizeAmt + " " + getitemname(.prizeId) + ".";
+		getitem .prizeId,.prizeAmt;
+	}
+	announce ""+strcharinfo(0)+" killed the captain. The Raid is pushed back!",bc_yellow|bc_all;
+
+	goto OnEventEnd;
+	end;
+
+OnEventEnd:
+	removemapflag .eventMap$, 12;
+	removemapflag .eventMap$, 0;
+	removemapflag .eventMap$, 3;
+	removemapflag .eventMap$, 4;
+	removemapflag .eventMap$, 15;
+	removemapflag .eventMap$, 1;
+	removemapflag .eventMap$, 13;
+	removemapflag .eventMap$, 31;
+	killmonsterall .eventMap$;
+	set $@actif, 0;
+	enablenpc "thashicapt";
+
+	for (set .@i,0; .@i<getarraysize($eventrapiUsersAId); set .@i,.@i+1)
+	{
+		attachrid($eventrapiUsersAId[.@i]);
+		atcommand("@load");
+	}
+	
+	deletearray $eventrapiUsersAId[0], getarraysize($eventrapiUsersAId);
+	end;
+			
+OnThisMobDeath3:
+	set .monster_bonus, .monster_bonus-1;
+	if (.monster_bonus >= 1)
+		mapannounce .eventMap$,""+strcharinfo(0)+" killed a teniente. There's still "+.monster_bonus+" alive!",bc_yellow|bc_map;
+	else
+		mapannounce .eventMap$,""+strcharinfo(0)+" killed a teniente. They're all dead!",bc_yellow|bc_map;
+	switch (rand(1,6))
+	{
+		case 1: atcommand "@speed 70"; dispbottom "Well done! Take that!"; break; // Augmente votre vitesse
+		case 2: dispbottom "Well done! Take that!"; callfunc ("AddPoints",getcharid(3),50); break;
+		case 3: percentheal -99, -99; specialeffect2 49,"strcharinfo(0)"; dispbottom "Hiarg hiarg! Our Captain will kill you!"; break; // Malus HP/SP
+		case 4: atcommand "@useskill 34 10 "+strcharinfo(0)+""; atcommand "@useskill 29 10 "+strcharinfo(0)+""; specialeffect2 42,"strcharinfo(0)"; specialeffect2 37,"strcharinfo(0)"; dispbottom "Well done! Take that!"; break; // Lance le skill Blessing & Increase Agility lvl 10
+		case 5: atcommand "@speed 500"; dispbottom "Hiarg hiarg! Our Captain will kill you!"; break; // Diminue grandement votre vitesse
+		case 6:			
+			if (rand(0,100)<3)
+			{
+				if (.rewardMode == 0)
+				{
+					logmes "[RaidPirate] " + strcharinfo(0) + " kills a tenient and obtains 1 Currency Points.";
+					callfunc("AddPoints", getcharid(3), 1);
+				}
+				else
+				{
+					logmes "[RaidPirate] " + strcharinfo(0) + " kills a tenient and obtains 1 " + getitemname(.prizeId) + ".";
+					getitem .prizeId,1;
+				}
+			}
+			break;
+	}
+	end;
+
+OnInit:
+	set .eventMap$, "alberta";
+	set .prizeAmt, 200;
+	set .prizeId, 675;
+	set .rewardMode, 0;
+	setarray $eventrapiUsersAId[0],0;
+	end;
+}
+
+alberta,99,102,5	script	True Captain::thashicapt	405,{
+	set .@npcname$, "[True Captain]";
+
+	mes .@npcname$;
+	mes "";
+	mes "Well done!";
+	mes "Wanna be sent back?";
+	switch(select("Yes","No"))
+	{
+		case 1:
+			mes "Ok. See you soon.";
+			atcommand "@load";
+			break;
+		case 2:
+			mes "As you wish.";
+			break;
+	}
+	close;
+}
+
+//thalys_s,310,115,3	duplicate(prtcostguard)	Coast Guard#costguard2::prtcostguard	413
+
+//==============================================================
+//= Système de sécurité
+//==============================================================
+
+-	script	mapload::thashipmapload	-1,{
+
+OnPCLoginEvent:
+
+	getmapxy(.@map$,.@x,.@y,0);
+
+	if (.@map$ == .eventMap$) 
+	{
+		warp "prt_vilg02",88,154;
+		end;
+	}
+	end;
+}
+

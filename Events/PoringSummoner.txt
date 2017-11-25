@@ -1,0 +1,146 @@
+-	script	porsum::porsum	-1,{
+
+OnWhisperGlobal:
+	if( getgmlevel() < 99 ) end;
+	mes "Start Poring Summoner ?";
+	if( select( "Start Poring Summoner","Cancel" ) == 1 ){
+		donpcevent "porsum::OnStartEvent";
+	}
+	close;
+	
+OnClock0800:
+OnStartEvent:
+	set $@psEvent,1;
+	monster .map$,0,0,"Poring",1002,.SpecialPorings,"porsum::OnSpecialKill";
+	monster .map$,0,0,"Poring",1002,.NormalPorings,"porsum::OnNormalKill";
+	set .SpecialPorings[1],.SpecialPorings;
+	set .NormalPorings[1],.NormalPorings;
+	announce "The Poring Summoner event starts. Catch all the Porings...",bc_all,0xFFCCFF;
+	announce "Location: " + .map$,bc_all,0xFFCCFF;
+	announce "Special Porings: " + .SpecialPorings,bc_all,0xFFCCFF;
+	announce "Normal Porings: " + .NormalPorings,bc_all,0xFFCCFF;
+	end;
+
+OnSpecialKill:
+	set .SpecialPorings[1],.SpecialPorings[1]-1;
+	set @poring_rand,rand(1,100);
+	if(@poring_rand <= 10){
+		if (.rewardMode == 1)
+		{
+			logmes "[PoringSummoner] " + strcharinfo(0) + " obtains " + (.rewardAmt) + " " + getitemname(.itemID) + ".";
+			getitem .itemID,.rewardAmt;
+			announce strcharinfo(0) + " earns " + .rewardAmt + " " + getitemname(.itemID) + "!",bc_map,0xFFCCFF;
+		}
+		else 
+		{
+			logmes "[PoringSummoner] " + strcharinfo(0) + " obtains " + (.rewardAmt) + " Currency Points.";
+			callfunc ("AddPoints",getcharid(3),.rewardAmt);
+		}
+	}
+	else if(@poring_rand <= 30){
+		if (.rewardMode == 1)
+		{
+			logmes "[PoringSummoner] " + strcharinfo(0) + " obtains " + (.rewardAmt - 1) + " " + getitemname(.itemID) + ".";
+			getitem .itemID,.rewardAmt - 1;
+			announce strcharinfo(0) + " earns " + (.rewardAmt - 1) + " " + getitemname(.itemID) + "!",bc_map,0xFFCCFF;
+		}
+		else 
+		{
+			logmes "[PoringSummoner] " + strcharinfo(0) + " obtains " + (.rewardAmt - 1) + " Currency Points.";
+			callfunc ("AddPoints",getcharid(3),.rewardAmt - 1);
+		}
+	}
+	else if(@poring_rand <= 70) {
+		if (.rewardMode == 1)
+		{
+			logmes "[PoringSummoner] " + strcharinfo(0) + " obtains " + (.rewardAmt - 2) + " " + getitemname(.itemID) + ".";
+			getitem .itemID,.rewardAmt - 2;
+			announce strcharinfo(0) + " earns " + (.rewardAmt - 2) + " " + getitemname(.itemID) + "!",bc_map,0xFFCCFF;
+		}
+		else 
+		{
+			logmes "[PoringSummoner] " + strcharinfo(0) + " obtains " + (.rewardAmt - 2) + " Currency Points.";
+			callfunc ("AddPoints",getcharid(3),.rewardAmt - 2);
+		}
+	}
+	else
+	{
+		dispbottom "Sorry, bad luck for you!";
+	}
+	goto PoringCount;
+OnNormalKill:
+	set .NormalPorings[1],.NormalPorings[1]-1;
+	goto PoringCount;
+PoringCount:
+	announce "Special Porings: " + .SpecialPorings[1] + " || Normal Porings: " + .NormalPorings[1],bc_map,0xFFCCFF;
+	if(!.SpecialPorings[1]) goto EndEvent;
+	end;
+EndEvent:
+	if($@psEvent) announce "The Poring Summoner is now over!",bc_all,0xFFCCFF;
+	killmonster .map$,"All";
+	set $@psEvent,0;
+	set .SpecialPorings[1],0;
+	set .NormalPorings[1],0;
+
+	for (set .@i,0; .@i<getarraysize($eventpsUsersAId); set .@i,.@i+1)
+	{
+		attachrid($eventpsUsersAId[.@i]);
+		atcommand("@load");
+	}
+
+	deletearray $eventpsUsersAId[0], getarraysize($eventpsUsersAId);
+	end;
+
+OnInit:
+	set .rewardMode, 0;
+	set .rewardAmt, 100;
+	set .itemID,675;
+	set .map$,"hugel";
+	set .SpecialPorings,3;
+	set .NormalPorings,25;
+	setarray $eventpsUsersAId[0], 0;
+	end;
+}
+
+prontera,152,295,4	script	Poring Summoner::ps	4_MAN_PIOM4,{
+	set .eventMap$, "hugel";
+	
+	set .@npcname$, "[Poring Summoner]";
+	mes .@npcname$;
+	
+	if ($@psEvent == 1) {
+		mes " ";
+		mes "Do you want to be part of the game ?";
+		next;
+		switch( select ("~ Yes:~ No:~ Rules") )
+		{
+			case 1:
+				mes .@npcname$;
+				mes " ";
+				mes "Allright, let's go !";
+				close2;
+				$eventpsUsersAId[getarraysize(.eventpsUsersAId)] = getcharid(3);
+				warp .eventMap$,0,0;
+				end;
+				
+			case 2:
+				mes .@npcname$;
+				mes " ";
+				mes "Farewell then.";
+				close;
+				
+			case 3:
+				mes .@npcname$;
+				mes " ";
+				mes "You simply have to kill porings.";
+				mes "Each one gives reward !";
+				mes "And the Specials give greater ones.";
+				close;
+		}
+	}
+	else {
+		mes .@npcname$;
+		mes "Sorry the event isn't active now...";
+		close;
+	}
+}
