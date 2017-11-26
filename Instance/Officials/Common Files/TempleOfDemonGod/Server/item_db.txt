@@ -1,7 +1,7 @@
 //RATHENA
 6713,Heart_of_Soul,Heart of Soul,3,0,,0,,,,,,,,,,,,,{},{},{}
 6714,Sheenas_Soul,Sheena's Soul,3,20,,0,,,,,,,,,,,,,{},{},{}
-22567,Expedition_Award_Box,Expedition Award Box,0,20,,100,,,,,0xFFFFFFFF,63,2,,,,,,{},{},{}
+22567,Expedition_Award_Box,Expedition Award Box,0,20,,100,,,,,0xFFFFFFFF,63,2,,,,,,{ callfunc "AwardPrizeBox"; },{},{}
 
 //HERCULES
 {
@@ -28,5 +28,5 @@
 	Buy: 20
 	Weight: 100
 	BuyingStore: true
-	Script: <" ">
+	Script: <" callfunc "AwardPrizeBox"; ">
 },
