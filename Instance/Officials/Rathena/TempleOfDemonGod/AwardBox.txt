@@ -1,0 +1,13 @@
+function	script	AwardPrizeBox	{
+	setarray .@boxItems[0],505,547,607,608,7444,22566,4908,4909,4910,4911,4912,4913,4914,4915,4916,4917,4918,4919,4920,4921,4922,4923,4924,4925;
+	setarray .@boxCnt[0],10,10,3,5,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1;
+	
+	set .@random, rand(getarraysize( .@boxItems));
+	getitem .@boxItems[ .@random ], .@boxCnt[ .@random ];
+
+	if(AWARDPRIZEFIRST == 0)
+	{
+		getitem 6715, 1;
+	}
+	end;
+}
