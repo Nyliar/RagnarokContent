@@ -303,7 +303,7 @@ OnPCLogoutEvent:
 	end;
 
 OnInit:
-	setarray .base_level[0],145, 175;
+	setarray .base_level[0],145, 250; //175;
 	setarray .map$[0],"1@eom";
 	set .map_size, getarraysize( .map$ );
 	set .min_party_member, 1;
@@ -545,7 +545,7 @@ OnGuardianDied:
 			sleep 1500;
 			instance_announce instance_id(), "[Morocc] You don't think this is already over, do you?!",bc_map,0xFF0000;
 			sleep 1500;
-			set .randomPop, 1;
+			set 'randomPop, 1;
 			summon_guardian( .@map$, .@npc_name$ + "::OnGuardianDied" );
 		}
 		else if ('instance_tdg_level == .max_tdg_level)
@@ -578,7 +578,7 @@ OnTimer10000:
 		instance_destroy instance_id();
 		stopnpctimer;
 	}
-	if(.randomPop == 1)
+	if('randomPop == 1)
 	{
 		set .@map$, strnpcinfo(4);
 		set .@npc_name$, instance_npcname( strnpcinfo(0), instance_id() );
@@ -588,7 +588,7 @@ OnTimer10000:
 			summon_normal( .@map$,.@npc_name$, 0 );
 		}
 	}
-	if(.checkHP == 1)
+	if('checkHP == 1)
 	{
 		callsub OnCheckMoroccHP;
 	}
@@ -597,20 +597,32 @@ OnTimer10000:
 	
 OnCheckMoroccHP:	
 	//RATHENA
-	getunitdata(.moroccId, .@moroccData);
-	if(.@moroccData[UMOB_HP] <= .@moroccData[UMOB_MAXHP] / 2)
-	//HERCULES
-	//set .@hp, getunitdata($stefanId, UDT_HP);
-	//set .@mhp, getunitdata($stefanId, UDT_MAXHP);
-	//if(.@hp <= .@mhp / 2)
+	if(unitexists(.moroccId))
+	{
+		getunitdata(.moroccId, .@moroccData);
+		if(.@moroccData[UMOB_HP] <= .@moroccData[UMOB_MAXHP] / 2)
+		//HERCULES
+		//set .@hp, getunitdata($stefanId, UDT_HP);
+		//set .@mhp, getunitdata($stefanId, UDT_MAXHP);
+		//if(.@hp <= .@mhp / 2)
+		{
+			set .@map$, strnpcinfo(4);
+			set .@npc_name$, strnpcinfo(3);
+			killmonster strnpcinfo(4), "All";
+			set 'checkHP, 0;
+			//stop, kill monster and pop 2 morocc
+			summon_normal( .@map$, strnpcinfo(3), 0 );
+		}
+	}	
+	else
 	{
 		set .@map$, strnpcinfo(4);
 		set .@npc_name$, strnpcinfo(3);
 		killmonster strnpcinfo(4), "All";
-		set .checkHP, 0;
+		set 'checkHP, 0;
 		//stop, kill monster and pop 2 morocc
 		summon_normal( .@map$, strnpcinfo(3), 0 );
-	}	
+	}
 	return;
 	
 OnFirstFloorOn:
@@ -647,7 +659,7 @@ OnFourthFloorOn:
 	//pop morocc boy	
 	summon_guardian( .@map$, .@npc_name$ + "::OnGuardianDied");
 	enablenpc instance_npcname( "tdgWarp#5", instance_id() );
-	set .checkHP, 1;
+	set 'checkHP, 1;
 	end;
 }
 
@@ -727,12 +739,10 @@ OnInit:
 }
 
 1@eom,102,124,3	script	Morocc::alatdgmo	4_F_MOCBOY,2,2,{
-	end;
-	
 OnDialog1_1:
-	if(.moTalking == 0)
+	if('moTalking == 0)
 	{
-		set .moTalking, 1;
+		set 'moTalking, 1;
 		npctalk "I'll create a new world and become its creator.";
 		instance_announce instance_id(), "[Morocc] I'll create a new world and become its creator.",  bc_map, 0xFF0000;
 		sleep 1500;
@@ -757,9 +767,9 @@ OnDialog1_4:
 	end;
 
 OnInstanceInit:
+	set 'moTalking, 0;
 OnInit:
 	disablenpc strnpcinfo(3);
-	set .moTalking, 0;
 	end;
 }
 
@@ -851,9 +861,9 @@ OnInit:
 	end;
 	
 OnTouch:
-	if(.moTalking == 0)
+	if('moTalking == 0)
 	{
-		set .moTalking, 1;
+		set 'moTalking, 1;
 		npctalk "You exceeded my expectations.";
 		instance_announce instance_id(), "[Morocc] You exceeded my expectations.",bc_map, 0xFF0000;
 		sleep 1500;
@@ -872,9 +882,9 @@ OnTouch:
 	end;
 
 OnInstanceInit:
+	set 'moTalking, 0;
 OnInit:
 	disablenpc strnpcinfo(3);
-	set .moTalking, 0;
 	end;
 }
 
@@ -904,7 +914,7 @@ OnInit:
 	end;
 }
 
-1@eom,154,155,3	script	Nydhogg::alatdgny3	4_F_NYDHOG,{
+1@eom,154,155,3	script	Nydhogg::alatdgny3	4_F_NYDHOG,3,3,{
 	set .@npcname$, "[Nydhogg]";
 	mes .@npcname$;
 	mes "Good job again.";
@@ -917,6 +927,10 @@ OnInit:
 		set NYDMUS, 1;
 	}
 	close;
+
+OnTouch:
+	set 'moTalking, 0;
+	end;
 	
 OnDialog3:
 	instance_announce instance_id(), "[Nyddhog] Muspelskoll's influence has dissipated, and a new warp gate has appeared.",bc_map, 0x0000FF;
