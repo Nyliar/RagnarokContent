@@ -358,7 +358,7 @@ OnGuardianDied:
 			disablenpc instance_npcname( "alaroci3", instance_id() );
 			disablenpc instance_npcname( "alaroci4", instance_id() );
 			disablenpc instance_npcname( "alaroci5", instance_id() );
-			doevent instance_npcname( "alafen2", instance_id() ) + "::OnTalkAgain";
+			donpcevent instance_npcname( "alafen2", instance_id() ) + "::OnTalkAgain";
 		}
 		if ('instance_roc_level == 'max_roc_level)
 		{
@@ -368,7 +368,7 @@ OnGuardianDied:
 			disablenpc instance_npcname( "alaroci3", instance_id() );
 			disablenpc instance_npcname( "alaroci4", instance_id() );
 			disablenpc instance_npcname( "alaroci5", instance_id() );
-			doevent instance_npcname( "alafen2", instance_id() ) + "::OnTalkAgain";			
+			donpcevent instance_npcname( "alafen2", instance_id() ) + "::OnTalkAgain";			
 		}
 	}
 	end;
@@ -392,9 +392,9 @@ OnTimer10000:
 	if('summonSkill >= 0)
 	{
 		set 'summonSkill, 'summonSkill + 1;
-		if('summonSkill == 3 && .summoned == 0)
+		if('summonSkill == 3 && 'summoned == 0)
 		{
-			set .summoned, 1;
+			set 'summoned, 1;
 			set .@rand, rand(3,5);
 			enablenpc instance_npcname( "alafen" + .@rand, instance_id() );
 			enablenpc instance_npcname( "alaroci" + .@rand, instance_id() );
@@ -405,7 +405,7 @@ OnTimer10000:
 	end;
 
 OnSkillCasted:
-	set .summoned, 0;
+	set 'summoned, 0;
 	set 'summonSkill, 0;
 	end;
 	
@@ -421,7 +421,7 @@ OnSecondFloorOn:
 	set .@npc_name$, instance_npcname( strnpcinfo(0), instance_id() );
 	summon_guardian( .@map$, .@npc_name$ + "::OnGuardianDied" );
 	set 'summonSkill, 0;
-	set .summoned, 0;
+	set 'summoned, 0;
 	end;
 	
 OnThirdFloorOn:
@@ -430,7 +430,7 @@ OnThirdFloorOn:
 	set .@npc_name$, instance_npcname( strnpcinfo(0), instance_id() );
 	summon_guardian( .@map$, .@npc_name$ + "::OnGuardianDied" );
 	set 'summonSkill, 0;
-	set .summoned, 0;
+	set 'summoned, 0;
 	end;
 }
 
@@ -464,14 +464,16 @@ OnTalk:
 	
 	disablenpc instance_npcname( "alafen", instance_id() );
 	disablenpc instance_npcname( "alaroci", instance_id() );
+
+	set 'talking, 0;
 	end;
 	
 OnInstanceInit:
 	enablenpc strnpcinfo(3);
+	set 'talking, 0;
 	end;
 OnInit:
 	disablenpc strnpcinfo(3);
-	set 'talking, 0;
 	end;
 }
 
@@ -523,23 +525,24 @@ OnTouch:
 	end;
 	
 OnTalkAgain:
+	enablenpc instance_npcname( "alafen2", instance_id() );
+	enablenpc instance_npcname( "alaroci2", instance_id() );
+	enablenpc instance_npcname( "alarocb", instance_id() );
+
 	set 'talking, 0;
 	if('instance_roc_level == 1)
 	{
 		movenpc strnpcinfo(3), 100, 81;
-		doevent instance_npcname( "alaroci2", instance_id() ) + "::OnMove";
-		doevent instance_npcname( "alarocb", instance_id() ) + "::OnMove";
+		donpcevent instance_npcname( "alaroci2", instance_id() ) + "::OnMove";
+		donpcevent instance_npcname( "alarocb", instance_id() ) + "::OnMove";
 	}
 	else if('instance_roc_level == 2)
 	{
+debugmes "here";
 		movenpc strnpcinfo(3), 100, 91;
-		doevent instance_npcname( "alaroci2", instance_id() ) + "::OnMove";
-		doevent instance_npcname( "alarocb", instance_id() ) + "::OnMove";
+		donpcevent instance_npcname( "alaroci2", instance_id() ) + "::OnMove";
+		donpcevent instance_npcname( "alarocb", instance_id() ) + "::OnMove";
 	}
-
-	enablenpc instance_npcname( "alafen2", instance_id() );
-	enablenpc instance_npcname( "alaroci2", instance_id() );
-	enablenpc instance_npcname( "alarocb", instance_id() );
 	end;
 	
 OnTalk:	
@@ -1267,7 +1270,6 @@ OnTouch:
 	getmapxy(.@map$, .@x, .@y, 1, strnpcinfo(3));
 	//RATHENA
 	getunitdata('rocBossId, .@rocBossData);
-	set 'rocTalkingId, getcharid(3);
 	if(.@rocBossData[6] >= .@x - 10 && .@rowBossData[6] <= .@x + 10
 		&& .@rocBossData[7] >= .@y - 10 && .@rocBossData[7] <= .@y + 10)
 	{
@@ -1285,7 +1287,6 @@ OnTalk:
 	instance_announce instance_id(), "[Fenris] Then this is my turn! Spirited Yell!", bc_map, 0x0000FF;
 	specialeffect 721;
 	instance_announce instance_id(), "Graaarrrgghhh!!!", bc_map, 0xFF0000;
-	unittalk 'rocBossId,"Graaarrrgghhh!!!";
 	//RATHENA
 	getunitdata('rocBossId, .@rocBossData);
 	if(.@rocBossData[2] > .@rocBossData[3] * 10 / 100)
@@ -1314,15 +1315,13 @@ OnInstanceInit:
 	end;
 
 OnTalk:
-		
 	instance_announce instance_id(), "[Iris] Allright let me do it! What I, Iris, want is...", bc_map, 0x0000FF;
-	sleep 2500;
+	sleep2 2500;
 	instance_announce instance_id(), "[Iris] Mabi Amulet! Go!", bc_map, 0x0000FF;
 	sleep2 1500;
 	instance_announce instance_id(), "[Iris] It worked!", bc_map, 0x0000FF;
 	specialeffect 261;
 	instance_announce instance_id(), "Graaarrrgghhh!!!", bc_map, 0xFF0000;
-	unittalk 'rocBossId,"Graaarrrgghhh!!!";
 	sleep2 1500;
 	doevent instance_npcname( "alafen3", instance_id() ) + "::OnTalk";
 	end;
@@ -1340,7 +1339,6 @@ OnTouch:
 	getmapxy(.@map$, .@x, .@y, 1, strnpcinfo(3));
 	//RATHENA
 	getunitdata('rocBossId, .@rocBossData);
-	set 'rocTalkingId, getcharid(3);
 	if(.@rocBossData[6] >= .@x - 10 && .@rowBossData[6] <= .@x + 10
 		&& .@rocBossData[7] >= .@y - 10 && .@rocBossData[7] <= .@y + 10)
 	{
@@ -1348,6 +1346,7 @@ OnTouch:
 	//getmapxy(.@mmap$, .@mx, .@my, UNITTYPE_MOB, 'rocBossId);
 	//if(.@mx >= .@x - 10 && .@mx <= .@x + 10 && .@my >= .@y - 10 && .@my <= .@y + 10)
 	//{
+		set 'talkingRoc, getcharid(3);
 		instance_announce instance_id(), "[Fenris] Good work! Now it's up to you Iris!", bc_map, 0x0000FF;
 		doevent instance_npcname( "alaroci4", instance_id() ) + "::OnTalk";
 	}
@@ -1358,7 +1357,6 @@ OnTalk:
 	instance_announce instance_id(), "[Fenris] Then this is my turn! Spirited Yell!", bc_map, 0x0000FF;
 	specialeffect 721;
 	instance_announce instance_id(), "Graaarrrgghhh!!!", bc_map, 0xFF0000;
-	unittalk 'rocBossId,"Graaarrrgghhh!!!";
 	//RATHENA
 	getunitdata('rocBossId, .@rocBossData);
 	if(.@rocBossData[2] > .@rocBossData[3] * 10 / 100)
@@ -1387,9 +1385,8 @@ OnInstanceInit:
 	end;
 
 OnTalk:
-		
 	instance_announce instance_id(), "[Iris] Allright let me do it! What I, Iris, want is...", bc_map, 0x0000FF;
-	sleep 2500;
+	sleep2 2500;
 	instance_announce instance_id(), "[Iris] Mabi Amulet! Go!", bc_map, 0x0000FF;
 	sleep2 1500;
 	instance_announce instance_id(), "[Iris] It worked!", bc_map, 0x0000FF;
@@ -1413,7 +1410,6 @@ OnTouch:
 	getmapxy(.@map$, .@x, .@y, 1, strnpcinfo(3));
 	//RATHENA
 	getunitdata('rocBossId, .@rocBossData);
-	set 'rocTalkingId, getcharid(3);
 	if(.@rocBossData[6] >= .@x - 10 && .@rowBossData[6] <= .@x + 10
 		&& .@rocBossData[7] >= .@y - 10 && .@rocBossData[7] <= .@y + 10)
 	{
@@ -1431,7 +1427,6 @@ OnTalk:
 	instance_announce instance_id(), "[Fenris] Then this is my turn! Spirited Yell!", bc_map, 0x0000FF;
 	specialeffect 721;
 	instance_announce instance_id(), "Graaarrrgghhh!!!", bc_map, 0xFF0000;
-	unittalk 'rocBossId,"Graaarrrgghhh!!!";
 	//RATHENA
 	getunitdata('rocBossId, .@rocBossData);
 	if(.@rocBossData[2] > .@rocBossData[3] * 10 / 100)
@@ -1459,10 +1454,9 @@ OnInstanceInit:
 1@mir,103,64,1	script	Iris::alaroci5	4_F_IRIS,{
 	end;
 
-OnTalk:
-		
+OnTalk:	
 	instance_announce instance_id(), "[Iris] Allright let me do it! What I, Iris, want is...", bc_map, 0x0000FF;
-	sleep 2500;
+	sleep2 2500;
 	instance_announce instance_id(), "[Iris] Mabi Amulet! Go!", bc_map, 0x0000FF;
 	sleep2 1500;
 	instance_announce instance_id(), "[Iris] It worked!", bc_map, 0x0000FF;
