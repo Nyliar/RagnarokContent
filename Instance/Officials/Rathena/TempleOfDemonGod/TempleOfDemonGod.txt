@@ -303,7 +303,7 @@ OnPCLogoutEvent:
 	end;
 
 OnInit:
-	setarray .base_level[0],145, 250; //175;
+	setarray .base_level[0],145, 175;
 	setarray .map$[0],"1@eom";
 	set .map_size, getarraysize( .map$ );
 	set .min_party_member, 1;
