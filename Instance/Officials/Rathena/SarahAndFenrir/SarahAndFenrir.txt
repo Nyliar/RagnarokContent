@@ -437,7 +437,7 @@ OnTimer10000:
 		set 'lastSkillCast, 'lastSkillCast + 10;
 		if('lastSkillCast == 'safLastSkillCast * 60 && 'safBossAlive == 1)
 		{
-			donpcevent instance_npcname( "alasaff4", instance_id() ) + "::OnLastSkillCast";
+			doevent instance_npcname( "alasaff4", instance_id() ) + "::OnLastSkillCast";
 		} 
 	}
 	if('lastTimer >= 0)
@@ -448,7 +448,6 @@ OnTimer10000:
 		{
 			if('lastTimer == 'safExitDelay * 60)
 			{
-				attachrid 'safTalking;
 				instance_announce instance_id(), "[Fenrir] You're too slow. I'll cast a general teleportation, get ready", bc_map, 0x0000FF;
 				sleep2 1500;
 				getpartymember getcharid(1),2;
@@ -518,7 +517,7 @@ OnTouch:
 		instance_announce instance_id(), "[Fenrir] Greetings can come later. Careful! It seems somebody has summoned a monster!", bc_map, 0x0000FF;
 		
 		cutin "", 255;
-		donpcevent instance_npcname( "sarah_and_Fenrir", instance_id() ) + "::OnFirstFloorOn";
+		doevent instance_npcname( "sarah_and_Fenrir", instance_id() ) + "::OnFirstFloorOn";
 		
 		charcommand "#me " + strcharinfo(0) + " What are those things?!";
 		sleep2 1500;
@@ -574,7 +573,7 @@ OnTouch:
 		enablenpc instance_npcname( "alasaff2", instance_id() );
 		enablenpc instance_npcname( "safwarp#0", instance_id() );
 		enablenpc instance_npcname( "safwarp#02", instance_id() );
-		donpcevent instance_npcname( "sarah_and_Fenrir", instance_id() ) + "::OnSecondFloorOn";
+		doevent instance_npcname( "sarah_and_Fenrir", instance_id() ) + "::OnSecondFloorOn";
 	}
 	end;
 	
@@ -630,7 +629,7 @@ OnTouch:
 		viewpoint 1,289,344,5,0xF9FB00;
 		viewpoint 1,287,146,7,0xF9FB00;
 		
-		donpcevent instance_npcname( "sarah_and_Fenrir", instance_id() ) + "::OnThirdFloorOn";
+		doevent instance_npcname( "sarah_and_Fenrir", instance_id() ) + "::OnThirdFloorOn";
 		set 'safAnnounceDelay, 0;
 
 		disablenpc strnpcinfo(3);
@@ -715,36 +714,36 @@ OnInit:
 	end;
 	
 OnDialog1:
-	attachrid 'safTalking;
+	
 	cutin "sarah_hero3", 2;
 	instance_announce instance_id(), "[Sarah] It looks like an infinite time waiting after you...Fenris Fenrir!", bc_map, 0x0000FF;
 	sleep2 1500;
 	
-	donpcevent instance_npcname( "alasaff4", instance_id() ) + "::OnDialog2";	
+	doevent instance_npcname( "alasaff4", instance_id() ) + "::OnDialog2";	
 	end;
 	
 OnDialog3:
-	attachrid 'safTalking;
+	
 	cutin "sarah_hero3", 2;
 	instance_announce instance_id(), "[Sarah] Come take it by yourself, if you can!", bc_map, 0x0000FF;
 	sleep2 1500;
 	
-	donpcevent instance_npcname( "alasaff4", instance_id() ) + "::OnDialog4";	
+	doevent instance_npcname( "alasaff4", instance_id() ) + "::OnDialog4";	
 	end;
 	
 OnWhiteImprison:
-	attachrid 'safTalking;
+	
 	//white imprison	
 	specialeffect 802;
 	cutin "sarah_hero3", 2;
 	instance_announce instance_id(), "[Sarah] You can't stop me like that!", bc_map, 0x0000FF;
 	
-	donpcevent instance_npcname( "alasaff4", instance_id() ) + "::OnDialog5";	
+	doevent instance_npcname( "alasaff4", instance_id() ) + "::OnDialog5";	
 	end;
 
 
 OnSarahDialog:
-	attachrid 'safTalking;
+	
 	sleep2 1500;
 	set .@continue, 1;
 	
@@ -838,7 +837,7 @@ OnSarahDialog:
 	sleep2 3000;
 	if(.@continue == 1)
 	{
-		donpcevent instance_npcname( "alasaff4", instance_id() ) + "::OnCastSkill";
+		doevent instance_npcname( "alasaff4", instance_id() ) + "::OnCastSkill";
 	}
 	else if(.@continue == 0)
 	{
@@ -848,7 +847,7 @@ OnSarahDialog:
 		//HERCULES
 		//setunitdata 'safBossId, UDT_HP, 100;
 
-		donpcevent instance_npcname( "alasaff4", instance_id() ) + "::OnLastSkill";
+		doevent instance_npcname( "alasaff4", instance_id() ) + "::OnLastSkill";
 	}
 	end;
 	
@@ -868,22 +867,22 @@ OnTouch:
 		set 'safTalking, getcharid(3);
 		set 'talking, 1;
 		
-		donpcevent instance_npcname( "alasafs", instance_id() ) + "::OnDialog1";
+		doevent instance_npcname( "alasafs", instance_id() ) + "::OnDialog1";
 	}
 	end;
 	
 OnDialog2:	
-	attachrid 'safTalking;
+	
 	cutin "fenrir_b", 2;
 	instance_announce instance_id(), "[Fenrir] No need of useless word, Sarah. Hand me the Sentinel Breeze immediately!", bc_map, 0x0000FF;
 	sleep2 1500;
 
-	donpcevent instance_npcname( "alasafs", instance_id() ) + "::OnDialog3";
+	doevent instance_npcname( "alasafs", instance_id() ) + "::OnDialog3";
 	end;
 	
 	
 OnDialog4:	
-	attachrid 'safTalking;
+	
 	cutin "fenrir_b", 2;
 	instance_announce instance_id(), "[Fenrir] Sarah may be a bit to tough to face her alone. I'll fight her myself!", bc_map, 0x0000FF;
 	sleep2 1500;
@@ -891,12 +890,12 @@ OnDialog4:
 	sleep2 1500;
 	instance_announce instance_id(), "[Fenrir] White imprison!", bc_map, 0x0000FF;
 	sleep2 1500;
-	donpcevent instance_npcname( "alasafs", instance_id() ) + "::OnWhiteImprison";
+	doevent instance_npcname( "alasafs", instance_id() ) + "::OnWhiteImprison";
 	cutin "", 255;
 	end;
 	
 OnDialog5:	
-	attachrid 'safTalking;
+	
 	instance_announce instance_id(), "[Fenrir] I've weakened her now. But she's not down, far from it! I'll fight her while she's shackled.", bc_map, 0x0000FF;
 	sleep2 1500;
 	instance_announce instance_id(), "[Fenrir] I'll need your help to handle the monsters she'll send over us. I'm relying on you, now!", bc_map, 0x0000FF;
@@ -908,7 +907,7 @@ OnDialog5:
 
 	hideonnpc instance_npcname( "alasafs", instance_id() );	
 
-	donpcevent instance_npcname( "sarah_and_Fenrir", instance_id() ) + "::OnLastFightStart";
+	doevent instance_npcname( "sarah_and_Fenrir", instance_id() ) + "::OnLastFightStart";
 	
 	set 'skillSummonDamageCount, 0;
 
@@ -919,23 +918,23 @@ OnDialog5:
 	end;
 
 OnLastSkillCast:
-	attachrid 'safTalking;
+	
 	instance_announce instance_id(), "[Fenrir] Move! Now!", bc_map, 0x0000FF;
 	sleep2 1500;
 	instance_announce instance_id(), "[Fenrir] I summon you, Tetra Vortex!", bc_map, 0x0000FF;	
 	set 'skillSummonDamageCount, 11;
-	donpcevent instance_npcname( "alasafs", instance_id() ) + "::OnSarahDialog";
+	doevent instance_npcname( "alasafs", instance_id() ) + "::OnSarahDialog";
 	end;
 
 OnLastSkill:
-	attachrid 'safTalking;
+	
 	instance_announce instance_id(), "[Fenris] Now! I've put Sarah on a critical condition, but I'm almost  out of magic! You have to finish her!", bc_map, 0x0000FF;
 	sleep2 1500;
 	instance_announce instance_id(), "[Fenris] Since you may not be able to finish her, I'll prepare a last skill!", bc_map, 0x0000FF;
 	sleep2 1500;	
 	set 'lastSkillCast, 0;
 OnCastSkill:
-	attachrid 'safTalking;
+	
 	set 'castedSkill, 'castedSkill + 1;	
 	
 	switch('castedSkill)
@@ -951,7 +950,7 @@ OnCastSkill:
 			instance_announce instance_id(), "[Fenrir] Cloud Kill!!", bc_map, 0x0000FF;			
 			sleep2 2000;
 			set 'skillSummonDamageCount, 'skillSummonDamageCount + 1;
-			donpcevent instance_npcname( "alasafs", instance_id() ) + "::OnSarahDialog";
+			doevent instance_npcname( "alasafs", instance_id() ) + "::OnSarahDialog";
 			break;
 		case 1:
 			//Hell Fire
@@ -964,7 +963,7 @@ OnCastSkill:
 			instance_announce instance_id(), "[Fenrir] Emerge! Hell Fire!!", bc_map, 0x0000FF;			
 			sleep2 2000;
 			set 'skillSummonDamageCount, 'skillSummonDamageCount + 1;
-			donpcevent instance_npcname( "alasafs", instance_id() ) + "::OnSarahDialog";
+			doevent instance_npcname( "alasafs", instance_id() ) + "::OnSarahDialog";
 			break;
 		case 2:
 			//Heaven's Drive
@@ -977,7 +976,7 @@ OnCastSkill:
 			instance_announce instance_id(), "[Fenrir] Go forth! Heaven's Drive!!", bc_map, 0x0000FF;			
 			sleep2 2000;
 			set 'skillSummonDamageCount, 'skillSummonDamageCount + 1;
-			donpcevent instance_npcname( "alasafs", instance_id() ) + "::OnSarahDialog";
+			doevent instance_npcname( "alasafs", instance_id() ) + "::OnSarahDialog";
 			break;
 		case 3:
 			//Frost Misty
@@ -994,7 +993,7 @@ OnCastSkill:
 			instance_announce instance_id(), "[Fenrir] Frost Misty! I call you!!", bc_map, 0x0000FF;			
 			sleep2 2000;
 			set 'skillSummonDamageCount, 'skillSummonDamageCount + 2;
-			donpcevent instance_npcname( "alasafs", instance_id() ) + "::OnSarahDialog";
+			doevent instance_npcname( "alasafs", instance_id() ) + "::OnSarahDialog";
 			break;
 		case 4:
 			//Demonic Fire
@@ -1009,7 +1008,7 @@ OnCastSkill:
 			sleep2 2500;
 			specialeffect 909;
 			set 'skillSummonDamageCount, 'skillSummonDamageCount + 2;
-			donpcevent instance_npcname( "alasafs", instance_id() ) + "::OnSarahDialog";
+			doevent instance_npcname( "alasafs", instance_id() ) + "::OnSarahDialog";
 			break;
 		case 5:
 			//Thunderbolt
@@ -1023,7 +1022,7 @@ OnCastSkill:
 			instance_announce instance_id(), "[Fenrir] Lord of Vermillion! Fall now!!", bc_map, 0x0000FF;			
 			sleep2 2000;
 			set 'skillSummonDamageCount, 'skillSummonDamageCount + 2;
-			donpcevent instance_npcname( "alasafs", instance_id() ) + "::OnSarahDialog";
+			doevent instance_npcname( "alasafs", instance_id() ) + "::OnSarahDialog";
 			break;
 		case 6:
 			//Varetyr Spear
@@ -1042,7 +1041,7 @@ OnCastSkill:
 			sleep2 4000;
 			instance_announce instance_id(), "[Fenrir] I summon you, Varetyr Spear!", bc_map, 0x0000FF;	
 			set 'skillSummonDamageCount, 'skillSummonDamageCount + 1;
-			donpcevent instance_npcname( "alasafs", instance_id() ) + "::OnSarahDialog";
+			doevent instance_npcname( "alasafs", instance_id() ) + "::OnSarahDialog";
 			break;
 		case 7:
 			//Tetra Vortex
@@ -1115,7 +1114,7 @@ OnTouch:
 		instance_announce instance_id(), "[Sarah] I'll blow this entire place away!", bc_map, 0x0000FF;
 		sleep2 1500;	
 		specialeffect 563;
-		donpcevent instance_npcname( "alasaff5", instance_id() ) + "::OnDialog2_1";
+		doevent instance_npcname( "alasaff5", instance_id() ) + "::OnDialog2_1";
 	}
 	end;
 	
@@ -1130,7 +1129,7 @@ OnInit:
 	end;
 	
 OnDialog2_1:	
-	attachrid 'safTalking;
+	
 	cutin "fenrir_a", 2;
 
 	disablenpc instance_npcname( "alasafs2", instance_id() );
