@@ -898,7 +898,7 @@ OnTalk2:
 	getpartymember getcharid(1),2;
 		for( set .@i, 0; .@i < $@partymembercount; set .@i, .@i+1 )
 			if( attachrid( $@partymemberaid[.@i] ) && strcharinfo(3) == strnpcinfo(4)){
-				warp "SavePoint", 0, 0;
+				warp "verus01", 148, 177;
 			}
 	
 	sleep2 1500;
