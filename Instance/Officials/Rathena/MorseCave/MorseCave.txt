@@ -783,13 +783,10 @@ OnTouch:
 	if('talking == 0 && 'instance_moc_level == 0)
 	{
 		set 'talking, 1;
-		npctalk "We came to the right place!";
 		instance_announce instance_id(), "[Kaep] We came to the right place!", bc_map, 0x00FF99;
 		sleep2 1500;
-		npctalk "Wait, there's something ahead of us!";
 		instance_announce instance_id(), "[Kaep] Wait, there's something ahead of us!", bc_map, 0x00FF99;
 		sleep2 1500;
-		npctalk "Are those hideous monsters Morocc's lackeys?!";
 		instance_announce instance_id(), "[Kaep] Are those hideous monsters Morocc's lackeys?!", bc_map, 0x00FF99;
 		sleep2 1500;
 		doevent instance_npcname("morse_s_cave", instance_id()) + "::OnKeaTalkEnd";
@@ -809,19 +806,15 @@ OnInit:
 OnTalk:
 	set .@map$, strnpcinfo(4);
 	
-	npctalk "*Chuckles* We meet again";
 	instance_announce instance_id(), "[Yanku] *Chuckles* We meet again", bc_map, 0xFF0000;
 	sleep2 1500;
 	
-	npctalk "This world resides in his mind";
 	instance_announce instance_id(), "[Yanku] This world resides in his mind", bc_map, 0xFF0000;
 	sleep2 1500;
 	
-	npctalk "You can't do nothing against his will";
 	instance_announce instance_id(), "[Yanku] You can't do nothing against his will", bc_map, 0xFF0000;
 	sleep2 1500;
 	
-	npctalk "Lord Morocc is expecting you. Let me take you to him *Chuckles*";
 	instance_announce instance_id(), "[Yanku] Lord Morocc is expecting you. Let me take you to him *Chuckles*", bc_map, 0xFF0000;
 	sleep2 1500;
 	
@@ -857,23 +850,18 @@ OnTalk:
 		set 'talking, 1;
 		set .@map$, strnpcinfo(4);
 
-		npctalk "I should punish you for disturbing my slumber";
 		instance_announce instance_id(), "[Morocc] I should punish you for disturbing my slumber", bc_map, 0xFF0000;
 		sleep2 1500;
 		
-		npctalk "Do you really think you can stop me?";
 		instance_announce instance_id(), "[Morocc] Do you really think you can stop me?", bc_map, 0xFF0000;
 		sleep2 1500;
 		
-		npctalk "I may have not recovered my full strength";
 		instance_announce instance_id(), "[Morocc] I may have not recovered my full strength", bc_map, 0xFF0000;
 		sleep2 1500;
 		
-		npctalk "but I can still take down a bunch of you quite easily.";
 		instance_announce instance_id(), "[Morocc] but I can still take down a bunch of you quite easily.", bc_map, 0xFF0000;
 		sleep2 1500;
 		
-		npctalk "Death is your only escape.";
 		instance_announce instance_id(), "[Morocc] Death is your only escape.", bc_map, 0xFF0000;
 		sleep2 1500;
 		
