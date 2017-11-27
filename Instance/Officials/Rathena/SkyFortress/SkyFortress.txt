@@ -232,8 +232,8 @@ OnInstanceInit:
 	set .@npc_name$, instance_npcname( strnpcinfo(0), instance_id() );
 	
 	//apply mapflags
-	setmapflag .@map$,mf_nomobloot;
-	setmapflag .@map$,mf_nomvploot;
+	//setmapflag .@map$,mf_nomobloot;
+	//setmapflag .@map$,mf_nomvploot;
 	
 	set 'instance_sf_level, 0;
 	set .randomPop, 0;
