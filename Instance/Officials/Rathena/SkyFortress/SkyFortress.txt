@@ -787,13 +787,10 @@ OnTouch:
 			
 			cutin "stephan_j_e_w", 2;
 			sleep2 1500;
-			npctalk "Intruders...Inside the Sky Fortress";
 			instance_announce instance_id(), "Intruders...Inside the Sky Fortress", bc_map, 0x0000FF;
 			sleep2 1500;
-			npctalk "Bijou...Told me to destroy the intruders!";
 			instance_announce instance_id(), "Bijou...Told me to destroy the intruders!", bc_map, 0x0000FF;
 			sleep2 1500;
-			npctalk "Little...human...Greenhorn...Away!";
 			instance_announce instance_id(), "Little...human...Greenhorn...Away!", bc_map, 0x0000FF;
 			
 			cutin "", 255;
@@ -802,18 +799,15 @@ OnTouch:
 		}
 		else if('instance_sf_level == 1)
 		{
-			npctalk "Grunts!";
 			cutin "stephan_j_e_w", 2;
 			instance_announce instance_id(), "Grunts", bc_map, 0x0000FF;
 			sleep2 1500;
 			
-			npctalk "What a bunch of...Annoying worms!";
 			instance_announce instance_id(), "What a bunch of...Annoying worms!", bc_map, 0x0000FF;
 			sleep2 1500;
 			
 			charcommand "#me " + strcharinfo(0) + " I believe that huge golem play an important role here...";
 			
-			npctalk "Subordinates of the Sky Fortress...Stop them...Bijou's order!";
 			instance_announce instance_id(), "Subordinates of the Sky Fortress...Stop them...Bijou's order!", bc_map, 0x0000FF;
 			sleep2 1500;
 			
@@ -848,11 +842,9 @@ OnTouch:
 	if('talking == 0)
 	{
 		set 'talking, 1;
-		npctalk "Grunts";
 		instance_announce instance_id(), "Grunts", bc_map, 0x0000FF;
 		sleep2 1500;
 		
-		npctalk "Filthy humans! Stop them! Guard...The Holy Fortress!";
 		instance_announce instance_id(), "Filthy humans! Stop them! Guard...The Holy Fortress!", bc_map, 0x0000FF;
 		sleep2 1500;
 		
@@ -990,29 +982,24 @@ OnTouch:
 		sleep2 1500;
 		
 		cutin "stephan_j_e_w", 2;
-		npctalk "Adventurers...A bunch of foolish greenhorns!";
 		instance_announce instance_id(), "[Wolf] Adventurers...A bunch of foolish greenhorns!", bc_map, 0x0000FF;
 		sleep2 1500;
 
-		npctalk "I must follow orders...From Bijou!";
 		instance_announce instance_id(), "[Jack] I must follow orders...From Bijou!", bc_map, 0x0000FF;
 		sleep2 1500;
 
 		charcommand "#me " + strcharinfo(0) + " Bijou? So was the golem the mere guardian around here? Is that it?";
 		sleep2 1500;
 
-		npctalk "Growl!";
 		instance_announce instance_id(), "[Stefan] Growl!", bc_map, 0x0000FF;
 		sleep2 1500;
 
-		npctalk "Filthy worms...Can't lead life as intended. Immortal power...My body...";
 		instance_announce instance_id(), "[Earnest] Filthy worms...Can't lead life as intended. Immortal power...My body...", bc_map, 0x0000FF;
 		sleep2 1500;
 
 		charcommand "#me " + strcharinfo(0) + " I'd better defeat it first.";
 		sleep2 1500;
 
-		npctalk "Soldiers...Bijou's Fortress...Cut them all...I'll step up...I'll kill them...All.";
 		instance_announce instance_id(), "[Stefan J.E Wolf] Soldiers...Bijou's Fortress...Cut them all...I'll step up...I'll kill them...All", bc_map, 0x0000FF;
 		sleep2 1500;
 
