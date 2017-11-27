@@ -695,7 +695,6 @@ OnInstanceInit:
 		if(.ahat == 1 && .shnaim == 1)
 		{
 			set .warpingOn, 1;
-			npctalk "[Soul Globe] The Door is open.";
 			instance_announce instance_id(), "[Soul Globe] The Door is open.", bc_map, 0x00FF99;
 			//enable warp
 			enablenpc instance_npcname( "alatdgwe", instance_id() );
@@ -743,13 +742,10 @@ OnDialog1_1:
 	if('moTalking == 0)
 	{
 		set 'moTalking, 1;
-		npctalk "I'll create a new world and become its creator.";
 		instance_announce instance_id(), "[Morocc] I'll create a new world and become its creator.",  bc_map, 0xFF0000;
 		sleep 1500;
-		npctalk "Let me ask you, the first creatures that have stepped in my newborn land.";
 		instance_announce instance_id(), "[Morocc] Let me ask you, the first creatures that have stepped in my newborn land.", bc_map, 0xFF0000;
 		sleep 1500;
-		npctalk "How'd you like to follow me and watch the birth of a new world?";
 		instance_announce instance_id(), "[Morocc] How'd you like to follow me and watch the birth of a new world?", bc_map, 0xFF0000;
 		sleep 1500;
 		donpcevent instance_npcname( "alatdglo", instance_id() ) + "::OnDialog1_2";
@@ -757,10 +753,8 @@ OnDialog1_1:
 	end;
 	
 OnDialog1_4:
-	npctalk "Let me ask you, the first creatures that have stepped in my newborn land.";
 	instance_announce instance_id(), "[Morocc] Let me ask you, the first creatures that have stepped in my newborn land.",bc_map, 0xFF0000;
 	sleep 1500;
-	npctalk "How'd you like to follow me and watch the birth of a new world?";
 	instance_announce instance_id(), "[Morocc] How'd you like to follow me and watch the birth of a new world?",bc_map, 0xFF0000;
 	sleep 1500;
 	donpcevent instance_npcname( "alatdglo", instance_id() ) + "::OnDialog1_5";
@@ -777,19 +771,14 @@ OnInit:
 	end;
 	
 OnDialog1_2:
-	npctalk "Enough with your nonsense. Just say you like destroying things!";
 	instance_announce instance_id(), "[Loki] Enough with your nonsense. Just say you like destroying things!", bc_map, 0x00FF99;
 	sleep 1500;
-	npctalk "Create a new world and become its creator? If this is the new world you're talking about, then I'm disappointed!";
 	instance_announce instance_id(), "[Loki] Create a new world and become its creator? If this is the new world you're talking about, then I'm disappointed!", bc_map, 0x00FF99;
 	sleep 1500;
-	npctalk "Even if you burn your body, you power is not as potent as that of Ymir of the Genesis!";
 	instance_announce instance_id(), "[Loki] Even if you burn your body, you power is not as potent as that of Ymir of the Genesis!",bc_map, 0x00FF99;
 	sleep 1500;
-	npctalk "Just the fact that you had to steal Yggdrasil shows you lack of creativity!";
 	instance_announce instance_id(), "[Loki] Just the fact that you had to steal Yggdrasil shows you lack of creativity!",bc_map, 0x00FF99;
 	sleep 1500;
-	npctalk "Take a look at yourself. You're delusional if you think that you look like a creator of any kind!";
 	instance_announce instance_id(), "[Loki] Take a look at yourself. You're delusional if you think that you look like a creator of any kind!",bc_map, 0x00FF99;
 	sleep 1500;
 	
@@ -798,7 +787,6 @@ OnDialog1_2:
 	
 OnDialog1_5:
 	disablenpc instance_npcname( "alatdgmo", instance_id() );
-	npctalk "Are you running?!";
 	instance_announce instance_id(), "[Loki] Are you running?!",bc_map, 0x00FF99;
 	
 	disablenpc strnpcinfo(3);
@@ -837,13 +825,10 @@ OnInit:
 	close;
 	
 OnDialog1_3:
-	npctalk "I second that. You're unnecessary to this world. You don't belong here!";
 	instance_announce instance_id(), "[Nydhogg] I second that. You're unnecessary to this world. You don't belong here!",bc_map, 0x0000FF;
 	sleep 1500;
-	npctalk "Even Yggdrasil denies your existence!";
 	instance_announce instance_id(), "[Nydhogg] Even Yggdrasil denies your existence!",bc_map, 0x0000FF;
 	sleep 1500;
-	npctalk "As the Guardian of Yggdrasil, I have to erase your existence from this world.";
 	instance_announce instance_id(), "[Nydhogg] As the Guardian of Yggdrasil, I have to erase your existence from this world.",bc_map, 0x0000FF;
 	sleep 1500;
 
@@ -864,16 +849,12 @@ OnTouch:
 	if('moTalking == 0)
 	{
 		set 'moTalking, 1;
-		npctalk "You exceeded my expectations.";
 		instance_announce instance_id(), "[Morocc] You exceeded my expectations.",bc_map, 0xFF0000;
 		sleep 1500;
-		npctalk "I'll accept your challenge.";
 		instance_announce instance_id(), "[Morocc] I'll accept your challenge.",bc_map, 0xFF0000;
 		sleep 1500;
-		npctalk "I shall drench the land with your flowing blood, and nourish it with your torn flesh.";
 		instance_announce instance_id(), "[Morocc] I shall drench the land with your flowing blood, and nourish it with your torn flesh.",bc_map, 0xFF0000;
 		sleep 1500;
-		npctalk "I'll show you the true depth of despair.";
 		instance_announce instance_id(), "[Morocc] I'll show you the true depth of despair.",bc_map, 0xFF0000;
 		sleep 1500;
 		disablenpc strnpcinfo(3);
