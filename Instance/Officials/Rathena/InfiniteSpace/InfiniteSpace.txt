@@ -788,7 +788,7 @@ OnGuardianDied:
 		{
 			instance_announce instance_id(),"[ Infinite Space ] : Dimension will collapse in a few moments.",bc_map,0x00FF99;
 		
-			sleep 15000;
+			sleep2 15000;
 			getpartymember getcharid(1),2;
 			for( set .@i, 0; .@i < $@partymembercount; set .@i, .@i+1 )
 				if( attachrid( $@partymemberaid[.@i] ) && IS_INSTANCE_ID > 0){
