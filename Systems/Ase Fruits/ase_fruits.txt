@@ -1,0 +1,231 @@
+//Ase Tree Manager
+//Created by Eirel
+
+//chaque semaine, a une heure aléatoire du week end
+//activer n npc 0 < n < 50
+//réinitialiser tableau des variables accessibles
+//chaque npc activé, si talk, donne un item au hasard parmis les accessibles
+//ajoute les utilisés dans tableau utilisés
+
+
+//============================================================
+//Poping Ase Fruits
+//======================================
+
+-	script	Ase_Fruits	-1,{
+	end;
+
+OnSun0000:
+	set .hour, rand(0,10);
+	end;
+
+OnSun1000:
+	if (.hour == 0)
+	{
+		goto OnPopingFruit;
+	}
+	end;
+
+OnSun1100:
+	if (.hour == 1)
+	{
+		goto OnPopingFruit;
+	}
+	end;
+
+OnSun1200:
+	if (.hour == 2)
+	{
+		goto OnPopingFruit;
+	}
+	end;
+
+OnSun1300:
+	if (.hour == 3)
+	{
+		goto OnPopingFruit;
+	}
+	end;
+
+OnSun1400:
+	if (.hour == 4)
+	{
+		goto OnPopingFruit;
+	}
+	end;
+
+OnSun1500:
+	if (.hour == 5)
+	{
+		goto OnPopingFruit;
+	}
+	end;
+
+OnSun1600:
+	if (.hour == 6)
+	{
+		goto OnPopingFruit;
+	}
+	end;
+
+OnSun1700:
+	if (.hour == 7)
+	{
+		goto OnPopingFruit;
+	}
+	end;
+
+OnSun1800:
+	if (.hour == 8)
+	{
+		goto OnPopingFruit;
+	}
+	end;
+
+OnSun1900:
+	if (.hour == 9)
+	{
+		goto OnPopingFruit;
+	}
+	end;
+
+OnSun2000:
+	if (.hour == 10)
+	{
+		goto OnPopingFruit;
+	}
+	end;
+
+OnWhisperGlobal:
+OnPopingFruit:
+	set .@number, rand(1,49);
+	set .@numbertree, 49;
+
+	//initialize free tree hided name value
+	for (set .@i,0; .@i < .@numbertree; set .@i, .@i+1)
+	{
+		setarray .freetree[.@i], .@i;
+	}
+	
+	if(.initReload == 0)
+	{
+		donpcevent "::OnTreeInit";
+	}
+
+	if (.debug)
+		announce "Trees: initializing " + .@number + " trees.", bc_all;
+
+	//pop fruits
+	for (set .@i,0; .@i < .@number; set .@i, .@i+1)
+	{	
+		//choose a random value in freetree table
+		set .@val, rand(1,getarraysize(.freetree) - 1);
+		set .@npcname$, "AseTree" + .@val;
+		//make fruit growing on the choosen tree
+		donpcevent .@npcname$ + "::OnGrowinFruits";
+		//add tree in used tree
+		set .usedtree[.@i],.@val;
+		//remove tree from free tree table
+		deletearray .freetree[.@val],1;
+	}
+	announce "The Divine Fruits just began to grow.", bc_all;
+	end;
+
+OnInit:
+	set .debug, 0;
+	set .initReload, 1;
+	callsub OnPopingFruit;
+	set .initReload, 0;
+	end;
+
+}
+
+//============================================================
+//Ase Trees Manager. Each Tree should implements this 
+//interface
+//======================================
+
+prt_fild03,273,35,0	script	Ase Tree::AseTree0	906,7,7,{
+	set .@npcname$, "[Ase Tree]";
+	mes .@npcname$;
+	mes "*Cracking wood*";
+	mes "Not that much bloomed this time ...";
+	if ($treeFruit[atoi(strnpcinfo(2))] > 0)
+		goto OnGettingFruits;
+	close;
+
+OnInit:
+	set .debug, 0;
+	end;
+
+OnPCLoadMapEvent:
+	if (strcharinfo(3) == strnpcinfo(4))
+	{
+		dispbottom "I feel a strange power here...";
+	}
+	end;
+
+OnTouch:
+	dispbottom "This tree looks odd...There's a strange aura issuing from it.";
+	end;
+
+OnTreeInit:
+	if (strnpcinfo(3) == "AseTree0")
+	{
+		set .@beginfruit, 29441;
+		set .@endfruit, 29490;
+		//clean all array
+		deletearray $freefruit[0], getarraysize($freefruit);
+		//initialize free fruit value
+		for (set .@i, .@beginfruit; .@i <= .@endfruit; set .@i, .@i+1)
+		{
+			setarray $freefruit[getarraysize($freefruit)], .@i;
+		}
+		for (set .@i, 1; .@i <= 49; set .@i, .@i+1)
+		{
+			set $treeFruit[.@i], -1;
+		}
+	}
+	end;	
+
+OnGrowinFruits:
+	if (strnpcinfo(3) == "AseTree0")
+		end;
+	else
+	{
+		//choose a random value in possible fruit value
+		set .@val, rand(0,getarraysize($freefruit) - 1);
+
+		set .@fruitId, $freefruit[.@val];
+		set $treeFruit[atoi(strnpcinfo(2))], .@fruitId;
+		if (.debug)
+			announce "[" + strnpcinfo(3) + "] Adding fruit " + .@fruitId, bc_all;
+		deletearray $freefruit[.@val],1;
+	}	
+	end;
+
+OnGettingFruits:
+	if (strnpcinfo(3) == "AseTree0") end;
+	else
+	{
+		if ($treeFruit[atoi(strnpcinfo(2))] != -1 && $hidden_started != 1)
+		{
+			next;
+			mes .@npcname$;
+			mes "Maturity touch my fruit.";
+			mes "Take it...";
+			mes "*A fruit falled.*";
+			
+			rentitem $treeFruit[atoi(strnpcinfo(2))], 604800;
+			logmes "[Ase Fruit] " + strcharinfo(0) + " obtains a rental " + getitemname($treeFruit[atoi(strnpcinfo(2))]);
+			set $treeFruit[atoi(strnpcinfo(2))], -1;
+		}
+		else
+		{
+			mes "You're coming to late...";
+		}
+	}
+	close;
+}
+
+

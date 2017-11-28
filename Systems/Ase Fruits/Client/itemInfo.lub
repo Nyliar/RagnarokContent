@@ -1,0 +1,1012 @@
+[29441] = {
+      unidentifiedDisplayName = "Kilo-Kilo Fruit",
+      unidentifiedResourceName = "도토리",
+      unidentifiedDescriptionName = {
+          "Unknown Item, can be identified by [Magnifier]."
+      },
+      identifiedDisplayName = "Kilo-Kilo Fruit",
+      identifiedResourceName = "도토리",
+      identifiedDescriptionName = {
+         "^007700 Kilo-kilo Fruit^000000",
+         "A strange fruit, blessed by Yggdrasil's Power.",
+         "^000088Increase maximum weight.^000000",
+         "Class: ^777777Lower Headgear^000000",
+         "Defense: ^7777770^000000",
+         "Weight: ^7777775^000000",
+         "Jobs: ^777777All Classes^000000"
+      },
+      slotCount = 0,
+      ClassNum = 5
+  },
+  [29442] = {
+      unidentifiedDisplayName = "Caoutchouc Fruit",
+      unidentifiedResourceName = "구약푸딩",
+      unidentifiedDescriptionName = {
+          "Unknown Item, can be identified by [Magnifier]."
+      },
+      identifiedDisplayName = "Caoutchouc Fruit",
+      identifiedResourceName = "구약푸딩",
+      identifiedDescriptionName = {
+         "^007700 Caoutchouc Fruit^000000",
+         "A strange fruit, blessed by Yggdrasil's Power.",
+         "^000088Increase maximum attack range.^000000",
+         "Class: ^777777Lower Headgear^000000",
+         "Defense: ^7777770^000000",
+         "Weight: ^7777775^000000",
+         "Jobs: ^777777All Classes^000000"
+      },
+      slotCount = 0,
+      ClassNum = 5
+  },
+  [29443] = {
+      unidentifiedDisplayName = "Fragment Fruit",
+      unidentifiedResourceName = "배추잎",
+      unidentifiedDescriptionName = {
+          "Unknown Item, can be identified by [Magnifier]."
+      },
+      identifiedDisplayName = "Fragment Fruit",
+      identifiedResourceName = "배추잎",
+      identifiedDescriptionName = {
+         "^007700 Fragment Fruit^000000",
+         "A strange fruit, blessed by Yggdrasil's Power.",
+         "^000088Make your equipement drop.^000000",
+         "Class: ^777777Lower Headgear^000000",
+         "Defense: ^7777770^000000",
+         "Weight: ^7777775^000000",
+         "Jobs: ^777777All Classes^000000"
+      },
+      slotCount = 0,
+      ClassNum = 5
+  },
+  [29444] = {
+      unidentifiedDisplayName = "Sweep Fruit",
+      unidentifiedResourceName = "성스러운알",
+      unidentifiedDescriptionName = {
+          "Unknown Item, can be identified by [Magnifier]."
+      },
+      identifiedDisplayName = "Sweep Fruit",
+      identifiedResourceName = "성스러운알",
+      identifiedDescriptionName = {
+         "^007700 Sweep Fruit^000000",
+         "A strange fruit, blessed by Yggdrasil's Power.",
+         "^000088Make you sweepy, increasing your speed.^000000",
+         "Class: ^777777Lower Headgear^000000",
+         "Defense: ^7777770^000000",
+         "Weight: ^7777775^000000",
+         "Jobs: ^777777All Classes^000000"
+      },
+      slotCount = 0,
+      ClassNum = 5
+  },
+  [29445] = {
+      unidentifiedDisplayName = "Explosion Fruit",
+      unidentifiedResourceName = "KETUPAT",
+      unidentifiedDescriptionName = {
+          "Unknown Item, can be identified by [Magnifier]."
+      },
+      identifiedDisplayName = "Explosion Fruit",
+      identifiedResourceName = "KETUPAT",
+      identifiedDescriptionName = {
+         "^007700 Eclosion Fruit^000000",
+         "A strange fruit, blessed by Yggdrasil's Power.",
+         "^000088Add special drop to monster.^000000",
+         "Class: ^777777Lower Headgear^000000",
+         "Defense: ^7777770^000000",
+         "Weight: ^7777775^000000",
+         "Jobs: ^777777All Classes^000000"
+      },
+      slotCount = 0,
+      ClassNum = 5
+  },
+  [29446] = {
+      unidentifiedDisplayName = "Candle Fruit",
+      unidentifiedResourceName = "형광액체",
+      unidentifiedDescriptionName = {
+          "Unknown Item, can be identified by [Magnifier]."
+      },
+      identifiedDisplayName = "Candle Fruit",
+      identifiedResourceName = "형광액체",
+      identifiedDescriptionName = {
+         "^007700 Candle Fruit^000000",
+         "A strange fruit, blessed by Yggdrasil's Power.",
+         "^000088Add special drop to monster.^000000",
+         "Class: ^777777Lower Headgear^000000",
+         "Defense: ^7777770^000000",
+         "Weight: ^7777775^000000",
+         "Jobs: ^777777All Classes^000000"
+      },
+      slotCount = 0,
+      ClassNum = 5
+  },
+  [29447] = {
+      unidentifiedDisplayName = "Gluttony Fruit",
+      unidentifiedResourceName = "딸기초콜렛",
+      unidentifiedDescriptionName = {
+          "Unknown Item, can be identified by [Magnifier]."
+      },
+      identifiedDisplayName = "Gluttony Fruit",
+      identifiedResourceName = "딸기초콜렛",
+      identifiedDescriptionName = {
+         "^007700 Gluttony Fruit^000000",
+         "A strange fruit, blessed by Yggdrasil's Power.",
+         "^000088Enable use of Greed lvl 1.^000000",
+         "Class: ^777777Lower Headgear^000000",
+         "Defense: ^7777770^000000",
+         "Weight: ^7777775^000000",
+         "Jobs: ^777777All Classes^000000"
+      },
+      slotCount = 0,
+      ClassNum = 5
+  },
+  [29448] = {
+      unidentifiedDisplayName = "Travesty Fruit",
+      unidentifiedResourceName = "여신의눈물",
+      unidentifiedDescriptionName = {
+          "Unknown Item, can be identified by [Magnifier]."
+      },
+      identifiedDisplayName = "Travesty Fruit",
+      identifiedResourceName = "여신의눈물",
+      identifiedDescriptionName = {
+         "^007700 Travesty Fruit^000000",
+         "A strange fruit, blessed by Yggdrasil's Power.",
+         "^000088Change you sex when equipped.^000000",
+         "Class: ^777777Lower Headgear^000000",
+         "Defense: ^7777770^000000",
+         "Weight: ^7777775^000000",
+         "Jobs: ^777777All Classes^000000"
+      },
+      slotCount = 0,
+      ClassNum = 5
+  },
+  [29449] = {
+      unidentifiedDisplayName = "Cuttin Fruit",
+      unidentifiedResourceName = "무지갯빛루비",
+      unidentifiedDescriptionName = {
+          "Unknown Item, can be identified by [Magnifier]."
+      },
+      identifiedDisplayName = "Cuttin Fruit",
+      identifiedResourceName = "무지갯빛루비",
+      identifiedDescriptionName = {
+         "^007700 Cutting Fruit^000000",
+         "A strange fruit, blessed by Yggdrasil's Power.",
+         "^000088Add small chance to cause bleeding.^000000",
+         "Class: ^777777Lower Headgear^000000",
+         "Defense: ^7777770^000000",
+         "Weight: ^7777775^000000",
+         "Jobs: ^777777All Classes^000000"
+      },
+      slotCount = 0,
+      ClassNum = 5
+  },
+  [29450] = {
+      unidentifiedDisplayName = "Oursin Fruit",
+      unidentifiedResourceName = "독속성알",
+      unidentifiedDescriptionName = {
+          "Unknown Item, can be identified by [Magnifier]."
+      },
+      identifiedDisplayName = "Oursin Fruit",
+      identifiedResourceName = "독속성알",
+      identifiedDescriptionName = {
+         "^007700 Oursin Fruit^000000",
+         "A strange fruit, blessed by Yggdrasil's Power.",
+         "^000088Autospell Decrease Agi at low chance.^000000",
+         "Class: ^777777Lower Headgear^000000",
+         "Defense: ^7777770^000000",
+         "Weight: ^7777775^000000",
+         "^007700 Oursin Fruit^000000",
+         "A strange fruit, blessed by Yggdrasil's Power.",
+         "^000088Autospell Decrease Agi at low chance.^000000",
+         "Class: ^777777Lower Headgear^000000",
+         "Defense: ^7777770^000000",
+         "Weight: ^7777775^000000",
+         "Jobs: ^777777All Classes^000000"
+      },
+      slotCount = 0,
+      ClassNum = 5
+  },
+  [29451] = {
+      unidentifiedDisplayName = "Lazy Fruit",
+      unidentifiedResourceName = "럭요리07",
+      unidentifiedDescriptionName = {
+          "Unknown Item, can be identified by [Magnifier]."
+      },
+      identifiedDisplayName = "Lazy Fruit",
+      identifiedResourceName = "럭요리07",
+      identifiedDescriptionName = {
+         "^007700 Lazy Fruit^000000",
+         "A strange fruit, blessed by Yggdrasil's Power.",
+         "^000088Reduce your speed.^000000",
+         "Class: ^777777Lower Headgear^000000",
+         "Defense: ^7777770^000000",
+         "Weight: ^7777775^000000",
+         "Jobs: ^777777All Classes^000000"
+      },
+      slotCount = 0,
+      ClassNum = 5
+  },
+  [29452] = {
+      unidentifiedDisplayName = "Spring Fruit",
+      unidentifiedResourceName = "암속성알",
+      unidentifiedDescriptionName = {
+          "Unknown Item, can be identified by [Magnifier]."
+      },
+      identifiedDisplayName = "Spring Fruit",
+      identifiedResourceName = "암속성알",
+      identifiedDescriptionName = {
+         "^007700 Spring Fruit^000000",
+         "A strange fruit, blessed by Yggdrasil's Power.",
+         "^000088Enable use of High Jump lvl 1.^000000",
+         "Class: ^777777Lower Headgear^000000",
+         "Defense: ^7777770^000000",
+         "Weight: ^7777775^000000",
+         "Jobs: ^777777All Classes^000000"
+      },
+      slotCount = 0,
+      ClassNum = 5
+  },
+  [29453] = {
+      unidentifiedDisplayName = "Doorman Fruit",
+      unidentifiedResourceName = "교황쿠키",
+      unidentifiedDescriptionName = {
+          "Unknown Item, can be identified by [Magnifier]."
+      },
+      identifiedDisplayName = "Doorman Fruit",
+      identifiedResourceName = "교황쿠키",
+      identifiedDescriptionName = {
+         "^007700 Doorman Fruit^000000",
+         "A strange fruit, blessed by Yggdrasil's Power.",
+         "^000088Enable use of Teleport lvl 1.^000000",
+         "Class: ^777777Lower Headgear^000000",
+         "Defense: ^7777770^000000",
+         "Weight: ^7777775^000000",
+         "Jobs: ^777777All Classes^000000"
+      },
+      slotCount = 0,
+      ClassNum = 5
+  },
+  [29454] = {
+      unidentifiedDisplayName = "Bubble Fruit",
+      unidentifiedResourceName = "액체냉각탄",
+      unidentifiedDescriptionName = {
+          "Unknown Item, can be identified by [Magnifier]."
+      },
+      identifiedDisplayName = "Bubble Fruit",
+      identifiedResourceName = "액체냉각탄",
+      identifiedDescriptionName = {
+         "^007700 Bubble Fruit^000000",
+         "A strange fruit, blessed by Yggdrasil's Power.",
+         "^000088Autospell Waterball by low chance.^000000",
+         "Class: ^777777Lower Headgear^000000",
+         "Defense: ^7777770^000000",
+         "Weight: ^7777775^000000",
+         "Jobs: ^777777All Classes^000000"
+      },
+      slotCount = 0,
+      ClassNum = 5
+  },
+  [29455] = {
+      unidentifiedDisplayName = "Berry Fruit",
+      unidentifiedResourceName = "건조이그열매",
+      unidentifiedDescriptionName = {
+          "Unknown Item, can be identified by [Magnifier]."
+      },
+      identifiedDisplayName = "Berry Fruit",
+      identifiedResourceName = "건조이그열매",
+      identifiedDescriptionName = {
+         "^007700 Berry Fruit^000000",
+         "A strange fruit, blessed by Yggdrasil's Power.",
+         "^000088Add special drop to monster.^000000",
+         "Class: ^777777Lower Headgear^000000",
+         "Defense: ^7777770^000000",
+         "Weight: ^7777775^000000",
+         "Jobs: ^777777All Classes^000000"
+      },
+      slotCount = 0,
+      ClassNum = 5
+  },
+  [29456] = {
+      unidentifiedDisplayName = "Rusty Fruit",
+      unidentifiedResourceName = "탐스러운연꽃",
+      unidentifiedDescriptionName = {
+          "Unknown Item, can be identified by [Magnifier]."
+      },
+      identifiedDisplayName = "Rusty Fruit",
+      identifiedResourceName = "탐스러운연꽃",
+      identifiedDescriptionName = {
+         "^007700 Rusty Fruit^000000",
+         "A strange fruit, blessed by Yggdrasil's Power.",
+         "^000088Reduce neutral damage by 10%.^000000",
+         "Class: ^777777Lower Headgear^000000",
+         "Defense: ^7777770^000000",
+         "Weight: ^7777775^000000",
+         "Jobs: ^777777All Classes^000000"
+      },
+      slotCount = 0,
+      ClassNum = 5
+  },
+  [29457] = {
+      unidentifiedDisplayName = "Wheel Fruit",
+      unidentifiedResourceName = "월병",
+      unidentifiedDescriptionName = {
+          "Unknown Item, can be identified by [Magnifier]."
+      },
+      identifiedDisplayName = "Wheel Fruit",
+      identifiedResourceName = "월병",
+      identifiedDescriptionName = {
+         "^007700 Wheel Fruit^000000",
+         "A strange fruit, blessed by Yggdrasil's Power.",
+         "^000088Autospell Incrase Agi by low chance.^000000",
+         "Class: ^777777Lower Headgear^000000",
+         "Defense: ^7777770^000000",
+         "Weight: ^7777775^000000",
+         "Jobs: ^777777All Classes^000000"
+      },
+      slotCount = 0,
+      ClassNum = 5
+  },
+  [29458] = {
+      unidentifiedDisplayName = "Resurrection Fruit",
+      unidentifiedResourceName = "빛의알갱이",
+      unidentifiedDescriptionName = {
+          "Unknown Item, can be identified by [Magnifier]."
+      },
+      identifiedDisplayName = "Resurrection Fruit",
+      identifiedResourceName = "빛의알갱이",
+      identifiedDescriptionName = {
+         "^007700 Resurrection Fruit^000000",
+         "A strange fruit, blessed by Yggdrasil's Power.",
+         "^000088Enable use of Kaupe lvl 1.^000000",
+         "Class: ^777777Lower Headgear^000000",
+         "Defense: ^7777770^000000",
+         "Weight: ^7777775^000000",
+         "Jobs: ^777777All Classes^000000"
+      },
+      slotCount = 0,
+      ClassNum = 5
+  },
+  [29459] = {
+      unidentifiedDisplayName = "Shadow Fruit",
+      unidentifiedResourceName = "어스름한별빛",
+      unidentifiedDescriptionName = {
+          "Unknown Item, can be identified by [Magnifier]."
+      },
+      identifiedDisplayName = "Shadow Fruit",
+      identifiedResourceName = "어스름한별빛",
+      identifiedDescriptionName = {
+         "^007700 Shadow Fruit^000000",
+         "A strange fruit, blessed by Yggdrasil's Power.",
+         "^000088Add intravision.^000000",
+         "Class: ^777777Lower Headgear^000000",
+         "Defense: ^7777770^000000",
+         "Weight: ^7777775^000000",
+         "Jobs: ^777777All Classes^000000"
+      },
+      slotCount = 0,
+      ClassNum = 5
+  },
+  [29460] = {
+      unidentifiedDisplayName = "Ectoplasmer Fruit",
+      unidentifiedResourceName = "발키리의분노",
+      unidentifiedDescriptionName = {
+          "Unknown Item, can be identified by [Magnifier]."
+      },
+      identifiedDisplayName = "Ectoplasmer Fruit",
+      identifiedResourceName = "발키리의분노",
+      identifiedDescriptionName = {
+         "^007700 Ectoplasmer Fruit^000000",
+         "A strange fruit, blessed by Yggdrasil's Power.",
+         "^000088Randomly affect stun to target.^000000",
+         "Class: ^777777Lower Headgear^000000",
+         "Defense: ^7777770^000000",
+         "Weight: ^7777775^000000",
+         "^007700 Ectoplasmer Fruit^000000",
+         "A strange fruit, blessed by Yggdrasil's Power.",
+         "^000088Randomly affect stun to target.^000000",
+         "Class: ^777777Lower Headgear^000000",
+         "Defense: ^7777770^000000",
+         "Weight: ^7777775^000000",
+         "Jobs: ^777777All Classes^000000"
+      },
+      slotCount = 0,
+      ClassNum = 5
+  },
+  [29461] = {
+      unidentifiedDisplayName = "Passion Fruit",
+      unidentifiedResourceName = "춘련",
+      unidentifiedDescriptionName = {
+          "Unknown Item, can be identified by [Magnifier]."
+      },
+      identifiedDisplayName = "Passion Fruit",
+      identifiedResourceName = "춘련",
+      identifiedDescriptionName = {
+         "^007700 Passion Fruit^000000",
+         "A strange fruit, blessed by Yggdrasil's Power.",
+         "^000088Autospell Winkcharm by low chance.^000000",
+         "Class: ^777777Lower Headgear^000000",
+         "Defense: ^7777770^000000",
+         "Weight: ^7777775^000000",
+         "Jobs: ^777777All Classes^000000"
+      },
+      slotCount = 0,
+      ClassNum = 5
+  },
+  [29462] = {
+      unidentifiedDisplayName = "Invisibily Fruit",
+      unidentifiedResourceName = "룬의원석_일반",
+      unidentifiedDescriptionName = {
+          "Unknown Item, can be identified by [Magnifier]."
+      },
+      identifiedDisplayName = "Invisibily Fruit",
+      identifiedResourceName = "룬의원석_일반",
+      identifiedDescriptionName = {
+         "^007700 Invisibility Fruit^000000",
+         "A strange fruit, blessed by Yggdrasil's Power.",
+         "^000088Enable the use of Cloaking.^000000",
+         "Class: ^777777Lower Headgear^000000",
+         "Defense: ^7777770^000000",
+         "Weight: ^7777775^000000",
+         "Jobs: ^777777All Classes^000000"
+      },
+      slotCount = 0,
+      ClassNum = 5
+  },
+  [29463] = {
+      unidentifiedDisplayName = "Cushion Fruit",
+      unidentifiedResourceName = "KRATHONG",
+      unidentifiedDescriptionName = {
+          "Unknown Item, can be identified by [Magnifier]."
+      },
+      identifiedDisplayName = "Cushion Fruit",
+      identifiedResourceName = "KRATHONG",
+      identifiedDescriptionName = {
+         "^007700 Cushion Fruit^000000",
+         "A strange fruit, blessed by Yggdrasil's Power.",
+         "^000088Add drop to monsters.^000000",
+         "Class: ^777777Lower Headgear^000000",
+         "Defense: ^7777770^000000",
+         "Weight: ^7777775^000000",
+         "Jobs: ^777777All Classes^000000"
+      },
+      slotCount = 0,
+      ClassNum = 5
+  },
+  [29464] = {
+      unidentifiedDisplayName = "Toxin Fruit",
+      unidentifiedResourceName = "구약",
+      unidentifiedDescriptionName = {
+          "Unknown Item, can be identified by [Magnifier]."
+      },
+      identifiedDisplayName = "Toxin Fruit",
+      identifiedResourceName = "구약",
+      identifiedDescriptionName = {
+         "^007700 Toxin Fruit^000000",
+         "A strange fruit, blessed by Yggdrasil's Power.",
+         "^000088Add low chance of poison.^000000",
+         "Class: ^777777Lower Headgear^000000",
+         "Defense: ^7777770^000000",
+         "Weight: ^7777775^000000",
+         "Jobs: ^777777All Classes^000000"
+      },
+      slotCount = 0,
+      ClassNum = 5
+  },
+  [29465] = {
+      unidentifiedDisplayName = "Hormone Fruit",
+      unidentifiedResourceName = "염속성알",
+      unidentifiedDescriptionName = {
+          "Unknown Item, can be identified by [Magnifier]."
+      },
+      identifiedDisplayName = "Hormone Fruit",
+      identifiedResourceName = "염속성알",
+      identifiedDescriptionName = {
+         "^007700 Hormone Fruit^000000",
+         "A strange fruit, blessed by Yggdrasil's Power.",
+         "^000088Add an extra bonus of Str.^000000",
+         "Class: ^777777Lower Headgear^000000",
+         "Defense: ^7777770^000000",
+         "Weight: ^7777775^000000",
+         "Jobs: ^777777All Classes^000000"
+      },
+      slotCount = 0,
+      ClassNum = 5
+  },
+  [29466] = {
+      unidentifiedDisplayName = "Shears Fruit",
+      unidentifiedResourceName = "연꽃",
+      unidentifiedDescriptionName = {
+          "Unknown Item, can be identified by [Magnifier]."
+      },
+      identifiedDisplayName = "Shears Fruit",
+      identifiedResourceName = "연꽃",
+      identifiedDescriptionName = {
+         "^007700 Shears Fruit^000000",
+         "A strange fruit, blessed by Yggdrasil's Power.",
+         "^000088Add low chance of bleeding.^000000",
+         "Class: ^777777Lower Headgear^000000",
+         "Defense: ^7777770^000000",
+         "Weight: ^7777775^000000",
+         "Jobs: ^777777All Classes^000000"
+      },
+      slotCount = 0,
+      ClassNum = 5
+  },
+  [29467] = {
+      unidentifiedDisplayName = "Tremor Fruit",
+      unidentifiedResourceName = "원석",
+      unidentifiedDescriptionName = {
+          "Unknown Item, can be identified by [Magnifier]."
+      },
+      identifiedDisplayName = "Tremor Fruit",
+      identifiedResourceName = "원석",
+      identifiedDescriptionName = {
+         "^007700 Tremor Fruit^000000",
+         "A strange fruit, blessed by Yggdrasil's Power.",
+         "^000088Autospell Earthquake by low chance.^000000",
+         "Class: ^777777Lower Headgear^000000",
+         "Defense: ^7777770^000000",
+         "Weight: ^7777775^000000",
+         "Jobs: ^777777All Classes^000000"
+      },
+      slotCount = 0,
+      ClassNum = 5
+  },
+  [29468] = {
+      unidentifiedDisplayName = "Wringing Fruit",
+      unidentifiedResourceName = "초콜렛덩어리",
+      unidentifiedDescriptionName = {
+          "Unknown Item, can be identified by [Magnifier]."
+      },
+      identifiedDisplayName = "Wringing Fruit",
+      identifiedResourceName = "초콜렛덩어리",
+      identifiedDescriptionName = {
+         "^007700 Wringing Fruit^000000",
+         "A strange fruit, blessed by Yggdrasil's Power.",
+         "^000088Add special drop to monsters.^000000",
+         "Class: ^777777Lower Headgear^000000",
+         "Defense: ^7777770^000000",
+         "Weight: ^7777775^000000",
+         "Jobs: ^777777All Classes^000000"
+      },
+      slotCount = 0,
+      ClassNum = 5
+  },
+  [29469] = {
+      unidentifiedDisplayName = "Target Fruit",
+      unidentifiedResourceName = "어머니의악몽",
+      unidentifiedDescriptionName = {
+          "Unknown Item, can be identified by [Magnifier]."
+      },
+      identifiedDisplayName = "Target Fruit",
+      identifiedResourceName = "어머니의악몽",
+      identifiedDescriptionName = {
+         "^007700 Target Fruit^000000",
+         "A strange fruit, blessed by Yggdrasil's Power.",
+         "^000088Add an extra bonus of Hit.^000000",
+         "Class: ^777777Lower Headgear^000000",
+         "Defense: ^7777770^000000",
+         "Weight: ^7777775^000000",
+         "Jobs: ^777777All Classes^000000"
+      },
+      slotCount = 0,
+      ClassNum = 5
+  },
+  [29470] = {
+      unidentifiedDisplayName = "Bovidae Fruit",
+      unidentifiedResourceName = "암속성알",
+      unidentifiedDescriptionName = {
+          "Unknown Item, can be identified by [Magnifier]."
+      },
+      identifiedDisplayName = "Bovidae Fruit",
+      identifiedResourceName = "암속성알",
+      identifiedDescriptionName = {
+         "^007700 Bovidae Fruit^000000",
+         "A strange fruit, blessed by Yggdrasil's Power.",
+         "^000088Change yourself in a bovidae.^000000",
+         "Class: ^777777Lower Headgear^000000",
+         "Defense: ^7777770^000000",
+         "Weight: ^7777775^000000",
+         "Jobs: ^777777All Classes^000000"
+      },
+      slotCount = 0,
+      ClassNum = 5
+  },
+  [29471] = {
+      unidentifiedDisplayName = "Human Fruit",
+      unidentifiedResourceName = "갈색뿌리",
+      unidentifiedDescriptionName = {
+          "Unknown Item, can be identified by [Magnifier]."
+      },
+      identifiedDisplayName = "Human Fruit",
+      identifiedResourceName = "갈색뿌리",
+      identifiedDescriptionName = {
+         "^007700 Human Fruit^000000",
+         "A strange fruit, blessed by Yggdrasil's Power.",
+         "^000088Change yourself in a human.^000000",
+         "Class: ^777777Lower Headgear^000000",
+         "Defense: ^7777770^000000",
+         "Weight: ^7777775^000000",
+         "Jobs: ^777777All Classes^000000"
+      },
+      slotCount = 0,
+      ClassNum = 5
+  },
+  [29472] = {
+      unidentifiedDisplayName = "Fowl Fruit",
+      unidentifiedResourceName = "저택의열쇠",
+      unidentifiedDescriptionName = {
+          "Unknown Item, can be identified by [Magnifier]."
+      },
+      identifiedDisplayName = "Fowl Fruit",
+      identifiedResourceName = "저택의열쇠",
+      identifiedDescriptionName = {
+         "^007700 Fowl Fruit^000000",
+         "A strange fruit, blessed by Yggdrasil's Power.",
+         "^000088Change yourself in a Fowl.^000000",
+         "Class: ^777777Lower Headgear^000000",
+         "Defense: ^7777770^000000",
+         "Weight: ^7777775^000000",
+         "Jobs: ^777777All Classes^000000"
+      },
+      slotCount = 0,
+      ClassNum = 5
+  },
+  [29473] = {
+      unidentifiedDisplayName = "Excavator Fruit",
+      unidentifiedResourceName = "애니멀스크롤",
+      unidentifiedDescriptionName = {
+          "Unknown Item, can be identified by [Magnifier]."
+      },
+      identifiedDisplayName = "Excavator Fruit",
+      identifiedResourceName = "애니멀스크롤",
+      identifiedDescriptionName = {
+         "^007700 Excavator Fruit^000000",
+         "A strange fruit, blessed by Yggdrasil's Power.",
+         "^000088Change yourself in a Excavator.^000000",
+         "Class: ^777777Lower Headgear^000000",
+         "Defense: ^7777770^000000",
+         "Weight: ^7777775^000000",
+         "Jobs: ^777777All Classes^000000"
+      },
+      slotCount = 0,
+      ClassNum = 5
+  },
+  [29474] = {
+      unidentifiedDisplayName = "Canidae Fruit",
+      unidentifiedResourceName = "룬의원석_고대",
+      unidentifiedDescriptionName = {
+          "Unknown Item, can be identified by [Magnifier]."
+      },
+      identifiedDisplayName = "Canidae Fruit",
+      identifiedResourceName = "룬의원석_고대",
+      identifiedDescriptionName = {
+         "^007700 Canidae Fruit^000000",
+         "A strange fruit, blessed by Yggdrasil's Power.",
+         "^000088Change yourself in a Canidae.^000000",
+         "Class: ^777777Lower Headgear^000000",
+         "Defense: ^7777770^000000",
+         "Weight: ^7777775^000000",
+         "Jobs: ^777777All Classes^000000"
+      },
+      slotCount = 0,
+      ClassNum = 5
+  },
+  [29475] = {
+      unidentifiedDisplayName = "Horse Fruit",
+      unidentifiedResourceName = "풍속성알",
+      unidentifiedDescriptionName = {
+          "Unknown Item, can be identified by [Magnifier]."
+      },
+      identifiedDisplayName = "Horse Fruit",
+      identifiedResourceName = "풍속성알",
+      identifiedDescriptionName = {
+         "^007700 Horse Fruit^000000",
+         "A strange fruit, blessed by Yggdrasil's Power.",
+         "^000088Change yourself in a bovidae.^000000",
+         "Class: ^777777Lower Hat^000000",
+         "Defense: ^7777770^000000",
+         "Weight: ^7777775^000000",
+         "Jobs: ^777777All Classes^000000"
+      },
+      slotCount = 0,
+      ClassNum = 5
+  },
+  [29476] = {
+      unidentifiedDisplayName = "Leopard Fruit",
+      unidentifiedResourceName = "언데드알",
+      unidentifiedDescriptionName = {
+          "Unknown Item, can be identified by [Magnifier]."
+      },
+      identifiedDisplayName = "Leopard Fruit",
+      identifiedResourceName = "언데드알",
+      identifiedDescriptionName = {
+         "^007700 Leopard Fruit^000000",
+         "A strange fruit, blessed by Yggdrasil's Power.",
+         "^000088Change yourself in a Leopard.^000000",
+         "Class: ^777777Lower Headgear^000000",
+         "Defense: ^7777770^000000",
+         "Weight: ^7777775^000000",
+         "Jobs: ^777777All Classes^000000"
+      },
+      slotCount = 0,
+      ClassNum = 5
+  },
+  [29477] = {
+      unidentifiedDisplayName = "Donkey Fruit",
+      unidentifiedResourceName = "포장된가면",
+      unidentifiedDescriptionName = {
+          "Unknown Item, can be identified by [Magnifier]."
+      },
+      identifiedDisplayName = "Donkey Fruit",
+      identifiedResourceName = "포장된가면",
+      identifiedDescriptionName = {
+         "^007700 Donkey Fruit^000000",
+         "A strange fruit, blessed by Yggdrasil's Power.",
+         "^000088Change yourself in a Donkey.^000000",
+         "Class: ^777777Lower Headgear^000000",
+         "Defense: ^7777770^000000",
+         "Weight: ^7777775^000000",
+         "Jobs: ^777777All Classes^000000"
+      },
+      slotCount = 0,
+      ClassNum = 5
+  },
+  [29478] = {
+      unidentifiedDisplayName = "Wolf Fruit",
+      unidentifiedResourceName = "암속성알",
+      unidentifiedDescriptionName = {
+          "Unknown Item, can be identified by [Magnifier]."
+      },
+      identifiedDisplayName = "Wolf Fruit",
+      identifiedResourceName = "암속성알",
+      identifiedDescriptionName = {
+         "^007700 Wolf Fruit^000000",
+         "A strange fruit, blessed by Yggdrasil's Power.",
+         "^000088Change yourself in a Wolf.^000000",
+         "Class: ^777777Lower Headgear^000000",
+         "Defense: ^7777770^000000",
+         "Weight: ^7777775^000000",
+         "Jobs: ^777777All Classes^000000"
+      },
+      slotCount = 0,
+      ClassNum = 5
+  },
+  [29479] = {
+      unidentifiedDisplayName = "Pachyderm Fruit",
+      unidentifiedResourceName = "덜익은이그열매",
+      unidentifiedDescriptionName = {
+          "Unknown Item, can be identified by [Magnifier]."
+      },
+      identifiedDisplayName = "Pachyderm Fruit",
+      identifiedResourceName = "덜익은이그열매",
+      identifiedDescriptionName = {
+         "^007700 Pachyderm Fruit^000000",
+         "A strange fruit, blessed by Yggdrasil's Power.",
+         "^000088Change yourself in a Pachyderm.^000000",
+         "Class: ^777777Lower Headgear^000000",
+         "Defense: ^7777770^000000",
+         "Weight: ^7777775^000000",
+         "Jobs: ^777777All Classes^000000"
+      },
+      slotCount = 0,
+      ClassNum = 5
+  },
+  [29480] = {
+      unidentifiedDisplayName = "Anaconda Fruit",
+      unidentifiedResourceName = "옥수수구이",
+      unidentifiedDescriptionName = {
+          "Unknown Item, can be identified by [Magnifier]."
+      },
+      identifiedDisplayName = "Anaconda Fruit",
+      identifiedResourceName = "옥수수구이",
+      identifiedDescriptionName = {
+         "^007700 Anaconda Fruit^000000",
+         "A strange fruit, blessed by Yggdrasil's Power.",
+         "^000088Change yourself in a Anaconda.^000000",
+         "Class: ^777777Lower Hat^000000",
+         "Defense: ^7777770^000000",
+         "Weight: ^7777775^000000",
+         "Jobs: ^777777All Classes^000000"
+      },
+      slotCount = 0,
+      ClassNum = 5
+  },
+  [29481] = {
+      unidentifiedDisplayName = "Cobra Fruit",
+      unidentifiedResourceName = "액토플라즘",
+      unidentifiedDescriptionName = {
+          "Unknown Item, can be identified by [Magnifier]."
+      },
+      identifiedDisplayName = "Cobra Fruit",
+      identifiedResourceName = "액토플라즘",
+      identifiedDescriptionName = {
+         "^007700 Cobra Fruit^000000",
+         "A strange fruit, blessed by Yggdrasil's Power.",
+         "^000088Change yourself in a Cobra.^000000",
+         "Class: ^777777Lower Hat^000000",
+         "Defense: ^7777770^000000",
+         "Weight: ^7777775^000000",
+         "Jobs: ^777777All Classes^000000"
+      },
+      slotCount = 0,
+      ClassNum = 5
+  },
+  [29482] = {
+      unidentifiedDisplayName = "Pyro Fruit",
+      unidentifiedResourceName = "황혼의노을",
+      unidentifiedDescriptionName = {
+          "Unknown Item, can be identified by [Magnifier]."
+      },
+      identifiedDisplayName = "Pyro Fruit",
+      identifiedResourceName = "황혼의노을",
+      identifiedDescriptionName = {
+         "^007700 Pyro Fruit^000000",
+         "A strange fruit, blessed by Yggdrasil's Power.",
+         "^000088Give you the power of Fire^000000",
+         "Class: ^777777Lower Hat^000000",
+         "Defense: ^7777770^000000",
+         "Weight: ^7777775^000000",
+         "Jobs: ^777777All Classes^000000"
+      },
+      slotCount = 0,
+      ClassNum = 5
+  },
+  [29483] = {
+      unidentifiedDisplayName = "Fulguro Fruit",
+      unidentifiedResourceName = "수속성알",
+      unidentifiedDescriptionName = {
+          "Unknown Item, can be identified by [Magnifier]."
+      },
+      identifiedDisplayName = "Fulguro Fruit",
+      identifiedResourceName = "수속성알",
+      identifiedDescriptionName = {
+         "^007700 Fulguro Fruit^000000",
+         "A strange fruit, blessed by Yggdrasil's Power.",
+         "^000088Give you the power of Lightning^000000",
+         "Class: ^777777Lower Hat^000000",
+         "Defense: ^7777770^000000",
+         "Weight: ^7777775^000000",
+         "Jobs: ^777777All Classes^000000"
+      },
+      slotCount = 0,
+      ClassNum = 5
+  },
+  [29484] = {
+      unidentifiedDisplayName = "Sand Fruit",
+      unidentifiedResourceName = "마른모래",
+      unidentifiedDescriptionName = {
+          "Unknown Item, can be identified by [Magnifier]."
+      },
+      identifiedDisplayName = "Sand Fruit",
+      identifiedResourceName = "마른모래",
+      identifiedDescriptionName = {
+         "^007700 Sand Fruit^000000",
+         "A strange fruit, blessed by Yggdrasil's Power.",
+         "^000088Give you the power of Sand^000000",
+         "Class: ^777777Lower Hat^000000",
+         "Defense: ^7777770^000000",
+         "Weight: ^7777775^000000",
+         "Jobs: ^777777All Classes^000000"
+      },
+      slotCount = 0,
+      ClassNum = 5
+  },
+  [29485] = {
+      unidentifiedDisplayName = "Givro Fruit",
+      unidentifiedResourceName = "여명의정수",
+      unidentifiedDescriptionName = {
+          "Unknown Item, can be identified by [Magnifier]."
+      },
+      identifiedDisplayName = "Givro Fruit",
+      identifiedResourceName = "여명의정수",
+      identifiedDescriptionName = {
+         "^007700 Givro Fruit^000000",
+         "A strange fruit, blessed by Yggdrasil's Power.",
+         "^000088Give you the power of Ice^000000",
+         "Class: ^777777Lower Hat^000000",
+         "Defense: ^7777770^000000",
+         "Weight: ^7777775^000000",
+         "Jobs: ^777777All Classes^000000"
+      },
+      slotCount = 0,
+      ClassNum = 5
+  },
+  [29486] = {
+      unidentifiedDisplayName = "Tenebra Fruit",
+      unidentifiedResourceName = "음습한어둠",
+      unidentifiedDescriptionName = {
+          "Unknown Item, can be identified by [Magnifier]."
+      },
+      identifiedDisplayName = "Tenebra Fruit",
+      identifiedResourceName = "음습한어둠",
+      identifiedDescriptionName = {
+         "^007700 Tenebra Fruit^000000",
+         "A strange fruit, blessed by Yggdrasil's Power.",
+         "^000088Change yourself in a Darkness.^000000",
+         "Class: ^777777Lower Hat^000000",
+         "Defense: ^7777770^000000",
+         "Weight: ^7777775^000000",
+         "Jobs: ^777777All Classes^000000"
+      },
+      slotCount = 0,
+      ClassNum = 5
+  },
+  [29487] = {
+      unidentifiedDisplayName = "Lightning Fruit",
+      unidentifiedResourceName = "흐르는공기",
+      unidentifiedDescriptionName = {
+          "Unknown Item, can be identified by [Magnifier]."
+      },
+      identifiedDisplayName = "Lightning Fruit",
+      identifiedResourceName = "흐르는공기",
+      identifiedDescriptionName = {
+         "^007700 Lightning Fruit^000000",
+         "A strange fruit, blessed by Yggdrasil's Power.",
+         "^000088Give you the power of Lightning Strike^000000",
+         "Class: ^777777Lower Hat^000000",
+         "Defense: ^7777770^000000",
+         "Weight: ^7777775^000000",
+         "Jobs: ^777777All Classes^000000"
+      },
+      slotCount = 0,
+      ClassNum = 5
+  },
+  [29488] = {
+      unidentifiedDisplayName = "Magma Fruit",
+      unidentifiedResourceName = "굳어버린용암",
+      unidentifiedDescriptionName = {
+          "Unknown Item, can be identified by [Magnifier]."
+      },
+      identifiedDisplayName = "Magma Fruit",
+      identifiedResourceName = "굳어버린용암",
+      identifiedDescriptionName = {
+         "^007700 Magma Fruit^000000",
+         "A strange fruit, blessed by Yggdrasil's Power.",
+         "^000088Give you the power of Magma^000000",
+         "Class: ^777777Lower Hat^000000",
+         "Defense: ^7777770^000000",
+         "Weight: ^7777775^000000",
+         "Jobs: ^777777All Classes^000000"
+      },
+      slotCount = 0,
+      ClassNum = 5
+  },
+  [29489] = {
+      unidentifiedDisplayName = "Swamp Fruit",
+      unidentifiedResourceName = "분진",
+      unidentifiedDescriptionName = {
+          "Unknown Item, can be identified by [Magnifier]."
+      },
+      identifiedDisplayName = "Swamp Fruit",
+      identifiedResourceName = "분진",
+      identifiedDescriptionName = {
+         "^007700 Swamp Fruit^000000",
+         "A strange fruit, blessed by Yggdrasil's Power.",
+         "^000088Give you the power of Swamp^000000",
+         "Class: ^777777Lower Hat^000000",
+         "Defense: ^7777770^000000",
+         "Weight: ^7777775^000000",
+         "Jobs: ^777777All Classes^000000"
+      },
+      slotCount = 0,
+      ClassNum = 5
+  },
+  [29490] = {
+      unidentifiedDisplayName = "Smoke Fruit",
+      unidentifiedResourceName = "연막가루",
+      unidentifiedDescriptionName = {
+          "Unknown Item, can be identified by [Magnifier]."
+      },
+      identifiedDisplayName = "Smoke Fruit",
+      identifiedResourceName = "연막가루",
+      identifiedDescriptionName = {
+         "^007700 Smoke Fruit^000000",
+         "A strange fruit, blessed by Yggdrasil's Power.",
+         "^000088Give you the power of Smoke^000000",
+         "Class: ^777777Lower Hat^000000",
+         "Defense: ^7777770^000000",
+         "Weight: ^7777775^000000",
+         "Jobs: ^777777All Classes^000000"
+      },
+      slotCount = 0,
+      ClassNum = 5
+  },

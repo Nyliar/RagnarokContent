@@ -1,0 +1,50 @@
+29441,Kilo-Kilo Fruit,Kilo-Kilo Fruit,5,20,,100,,,1,0,0xFFFFFFFF,63,2,1,1,1,0,57,{set MaxWeight, MaxWeight+3000;},{},{}
+29442,Caoutchouc Fruit,Caoutchouc Fruit,5,20,,100,,,1,0,0xFFFFFFFF,63,2,1,1,1,0,57,{bonus bAtkRange,5;},{},{}
+29443,Fragment Fruit,Fragment Fruit,5,20,,100,,,1,0,0xFFFFFFFF,63,2,1,1,1,0,57,{ nude; },{},{}
+29444,Sweep Fruit,Sweep Fruit,5,20,,100,,,1,0,0xFFFFFFFF,63,2,1,1,1,0,57,{ bonus bSpeedRate,15; },{},{}
+29445,Explosion Fruit,Explosion Fruit,5,20,,100,,,1,0,0xFFFFFFFF,63,2,1,1,1,0,57,{ bonus2 bAddMonsterDropItem,643,50; },{},{}
+29446,Candle Fruit,Candle Fruit,5,20,,100,,,1,0,0xFFFFFFFF,63,2,1,1,1,0,57,{ bonus2 bAddMonsterDropItem,660,25; },{},{}
+29447,Gluttony Fruit,Gluttony Fruit,5,20,,100,,,1,0,0xFFFFFFFF,63,2,1,1,1,0,57,{ skill "BS_GREED",1; },{},{}
+29448,Travesty Fruit,Travesty Fruit,5,20,,100,,,1,0,0xFFFFFFFF,63,2,1,1,1,0,57,{ changesex; },{},{}
+29449,Cuttin Fruit,Cuttin Fruit,5,20,,100,,,1,0,0xFFFFFFFF,63,2,1,1,1,0,57,{ bonus3 bAddEff,Eff_Bleeding,100,ATF_TARGET; },{},{}
+29450,Oursin Fruit,Oursin Fruit,5,20,,100,,,1,0,0xFFFFFFFF,63,2,1,1,1,0,57,{ bonus3 bAutoSpell,"AL_DECAGI",5,10; },{},{}
+29451,Lazy Fruit,Lazy Fruit,5,20,,100,,,1,0,0xFFFFFFFF,63,2,1,1,1,0,57,{ bonus bSpeedRate,-15; },{},{}
+29452,Spring Fruit,Spring Fruit,5,20,,100,,,1,0,0xFFFFFFFF,63,2,1,1,1,0,57,{ skill "TK_HIGHJUMP",1; },{},{}
+29453,Doorman Fruit,Doorman Fruit,5,20,,100,,,1,0,0xFFFFFFFF,63,2,1,1,1,0,57,{ skill "AL_TELEPORT",1; },{},{}
+29454,Bubble Fruit,Bubble Fruit,5,20,,100,,,1,0,0xFFFFFFFF,63,2,1,1,1,0,57,{ bonus3 bAutoSpell,"WZ_WATERBALL",3,10; },{},{}
+29455,Berry Fruit,Berry Fruit,5,20,,100,,,1,0,0xFFFFFFFF,63,2,1,1,1,0,57,{ bonus2 bAddMonsterDropItem,607,25; },{},{}
+29456,Rusty Fruit,Rusty Fruit,5,20,,100,,,1,0,0xFFFFFFFF,63,2,1,1,1,0,57,{ bonus2 bSubEle,Ele_Neutral,10; },{},{}
+29457,Wheel Fruit,Wheel Fruit,5,20,,100,,,1,0,0xFFFFFFFF,63,2,1,1,1,0,57,{ bonus3 bAutoSpellWhenHit,"AL_INCAGI",5,10; },{},{}
+29458,Resurrection Fruit,Resurrection Fruit,5,20,,100,,,1,0,0xFFFFFFFF,63,2,1,1,1,0,57,{ skill "SL_KAUPE",1; },{},{}
+29459,Shadow Fruit,Shadow Fruit,5,20,,100,,,1,0,0xFFFFFFFF,63,2,1,1,1,0,57,{ bonus bIntravision,0; },{},{}
+29460,Ectoplasmer Fruit,Ectoplasmer Fruit,5,20,,100,,,1,0,0xFFFFFFFF,63,2,1,1,1,0,57,{ bonus3 bAddEff,Eff_Stan,100,ATF_TARGET; },{},{}
+29461,Passion Fruit,Passion Fruit,5,20,,100,,,1,0,0xFFFFFFFF,63,2,1,1,1,0,57,{ bonus3 bAutoSpell,"DC_WINKCHARM",1,10; },{},{}
+29462,Invisibility Fruit,Invisibility Fruit,5,20,,100,,,1,0,0xFFFFFFFF,63,2,1,1,1,0,57,{ skill "AS_CLOAKING",6; },{},{}
+29463,Cushion Fruit,Cushion Fruit,5,20,,100,,,1,0,0xFFFFFFFF,63,2,1,1,1,0,57,{ bonus2 bAddMonsterDropItem,5059,10; },{},{}
+29464,Toxin Fruit,Toxin Fruit,5,20,,100,,,1,0,0xFFFFFFFF,63,2,1,1,1,0,57,{ bonus3 bAddEff,Eff_Poison,10,ATF_SELF; },{},{}
+29465,Hormone Fruit,Hormone Fruit,5,20,,100,,,1,0,0xFFFFFFFF,63,2,1,1,1,0,57,{ bonus bStr,5; },{},{}
+29466,Shears Fruit,Shears Fruit,5,20,,100,,,1,0,0xFFFFFFFF,63,2,1,1,1,0,57,{ bonus3 bAddEff,Eff_Bleeding,10,ATF_SELF; },{},{}
+29467,Tremor Fruit,Tremor Fruit,5,20,,100,,,1,0,0xFFFFFFFF,63,2,1,1,1,0,57,{ bonus3 bAutoSpell,"NPC_EARTHQUAKE",6,10; },{},{}
+29468,Wringing Fruit,Wringing Fruit,5,20,,100,,,1,0,0xFFFFFFFF,63,2,1,1,1,0,57,{ bonus2 bAddMonsterDropItem,12065,10; },{},{}
+29469,Target Fruit,Target Fruit,5,20,,100,,,1,0,0xFFFFFFFF,63,2,1,1,1,0,57,{ bonus bHit,15; },{},{}
+29470,Bovidae Fruit,Bovidae Fruit,5,20,,100,,,1,0,0xFFFFFFFF,63,2,1,1,1,0,57,{ disguise 889; },{},{ undisguise; }
+29471,Human Fruit,Human Fruit,5,20,,100,,,1,0,0xFFFFFFFF,63,2,1,1,1,0,57,{ disguise 800; },{},{ undisguise; }
+29472,Fowl Fruit,Fowl Fruit,5,20,,100,,,1,0,0xFFFFFFFF,63,2,1,1,1,0,57,{ disguise 800; },{},{ undisguise; }
+29473,Excavator Fruit,Excavator Fruit,5,20,,100,,,1,0,0xFFFFFFFF,63,2,1,1,1,0,57,{ disguise 1145; },{},{ undisguise; }
+29474,Canidae Fruit,Canidae Fruit,5,20,,100,,,1,0,0xFFFFFFFF,63,2,1,1,1,0,57,{ disguise 1783; },{},{ undisguise; }
+29475,Horse Fruit,Horse Fruit,5,20,,100,,,1,0,0xFFFFFFFF,63,2,1,1,1,0,57,{ disguise 1427; },{},{ undisguise; }
+29476,Leopard Fruit,Leopard Fruit,5,20,,100,,,1,0,0xFFFFFFFF,63,2,1,1,1,0,57,{ disguise 1524; },{},{ undisguise; }
+29477,Donkey Fruit,Donkey Fruit,5,20,,100,,,1,0,0xFFFFFFFF,63,2,1,1,1,0,57,{ disguise 955; },{},{ undisguise; }
+29478,Wolf Fruit,Wolf Fruit,5,20,,100,,,1,0,0xFFFFFFFF,63,2,1,1,1,0,57,{ disguise 1795; },{},{ undisguise; }
+29479,Pachyderm Fruit,Pachyderm Fruit,5,20,,100,,,1,0,0xFFFFFFFF,63,2,1,1,1,0,57,{ disguise 1990; },{},{ undisguise; }
+29480,Anaconda Fruit,Anaconda Fruit,5,20,,100,,,1,0,0xFFFFFFFF,63,2,1,1,1,0,57,{ disguise 1025; },{},{ undisguise; }
+29481,Cobra Fruit,Cobra Fruit,5,20,,100,,,1,0,0xFFFFFFFF,63,2,1,1,1,0,57,{ disguise 1119; },{},{ undisguise; }
+29482,Pyro Fruit,Pyro Fruit,5,20,,100,,,1,0,0xFFFFFFFF,63,2,1,1,1,0,57,{ if(rand(1000)<250) sc_start SC_BURNING,10000,0; bonus3 bAutoSpell,"NJ_BAKUENRYU",2,10;  },{},{}
+29483,Fulguro Fruit,Fulguro Fruit,5,20,,100,,,1,0,0xFFFFFFFF,63,2,1,1,1,0,57,{ if(rand(1000)<250) sc_start SC_STUN,10000,0; bonus3 bAutoSpell,"WZ_JUPITEL",2,10; },{},{}
+29484,Sand Fruit,Sand Fruit,5,20,,100,,,1,0,0xFFFFFFFF,63,2,1,1,1,0,57,{ if(rand(1000)<250) sc_start SC_STONE,10000,0; bonus3 bAutoSpell,"WZ_HEAVENDRIVE",2,10; },{},{}
+29485,Givro Fruit,Givro Fruit,5,20,,100,,,1,0,0xFFFFFFFF,63,2,1,1,1,0,57,{ if(rand(1000)<250) sc_start SC_FREEZING,10000,0; bonus3 bAutoSpell,"WZ_STORMGUST",2,10; },{},{}
+29486,Tenebra Fruit,Tenebra Fruit,5,20,,100,,,1,0,0xFFFFFFFF,63,2,1,1,1,0,57,{ if(rand(1000)<250) sc_start SC_CURSE,10000,0; bonus3 bAutoSpell,"NPC_GRANDDARKNESS",2,10; },{},{}
+29487,Lightning Fruit,Lightning Fruit,5,20,,100,,,1,0,0xFFFFFFFF,63,2,1,1,1,0,57,{ if(rand(1000)<250) sc_start SC_BLIND,10000,0; bonus3 bAutoSpell,"WZ_VERMILION",2,10; },{},{}
+29488,Magma Fruit,Magma Fruit,5,20,,100,,,1,0,0xFFFFFFFF,63,2,1,1,1,0,57,{ if(rand(1000)<250) sc_start SC__IGNORANCE,10000,0; bonus3 bAutoSpell,"WZ_METEOR",2,10; },{},{}
+29489,Swamp Fruit,Swamp Fruit,5,20,,100,,,1,0,0xFFFFFFFF,63,2,1,1,1,0,57,{ if(rand(1000)<250) sc_start SC_POISON,10000,0; bonus3 bAutoSpell,"WZ_QUAGMIRE",5,10;bonus3 bAutoSpell,"CR_ACIDDEMONSTRATION",1,10;  },{},{}
+29490,Smoke Fruit,Smoke Fruit,5,20,,100,,,1,0,0xFFFFFFFF,63,2,1,1,1,0,57,{ if(rand(1000)<250) sc_start SC_CONFUSION,10000,0; bonus3 bAutoSpell,"PF_FOGWALL",5,10;bonus3 bAutoSpell,"GS_DUST",2,10; },{},{}
