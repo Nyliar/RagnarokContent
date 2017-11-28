@@ -1,0 +1,353 @@
+//===== Athena Script =====================================
+//= Achievement System
+//===== By ================================================
+//= Base over Loki1991's basic system
+//= Update by Alayne
+//===== Version ===========================================
+//= 1.0   - First release
+//= 1.0.1 - Small hotfix for older rathena/eathena systems
+//= 2.0	  - New modes and type insertion
+//===== Description =======================================
+//= A full working Achivement System without any source edit!
+//= A well guide about this script can be found in rathena!
+//=Mode 0 = Your custom achievements, see point Custom Achivemetns below.
+//=Mode 1 = Items in your inventar. It will be checked after every login and after every time when you are killing a mob. 9 different items at once are possible.
+//=Mode 2 = Kill Mobs. Will be checked after every mob kill. 9 different mobs at once are possible.
+//=Mode 3 = Mvp kills. Will be checked after every mob kill. Only 1 value is possible (ex. Kill 15 MvPs, Kill 30 Mvps. This mode is not like Kill 10 Phreeonis, for this use Mode 2!)
+//=Mode 4 = Pvp Kills. Will be checked after every pvp kill. Only 1 value is possible (ex. Kill 1 other Player, Kill 666 other Player etc.)
+//=Mode 5 = Reach Baselevel X. Will be checked on every BaseLevel up (@commands won't effect this trigger!). Only 1 value is possible
+//=Mode 6 = Reach Joblevel X. Will be checked on every JobLevel up (@commands won't effect this trigger!). Only 1 value is possible
+//=Mode 7 = Kill a monster or player with a baselvl different from your by x (stocked in singleval)
+//=Mode 8 = Visit a map (remember to add a loadevent mapflag on map when adding one)
+//=Mode 9 = Damage mode - unusable at this time
+//=Mode 10 = Complete all achievements in a given mode
+//
+//= Types only used in mob mode
+//= Type 0 = None
+//= Type 1 = Element
+//= Type 2 = Race
+//= Type 3 = Size
+//= Types used on PvP maps
+//= Type 1 = PvP maps
+//= Type 2 = GvG maps
+//= Type 3 = BG maps
+//= Type 4 = custom maps (pk?)
+//= Types used on lvl diff mode
+//= Type 0 = Target monster lvl lower
+//= Type 1 = Target monster lvl higher
+//= Type 2 = Target player lvl lower
+//= Type 3 = Target player lvl higher 
+//
+//=========================================================
+-	script	achievementSystem::achsyscore	-1,{
+    OnWhisperGlobal:
+	if (@whispervar0$ == "Info")
+	{
+		debugmes "Achievement amount: " + $achieve_amount;
+	}
+	if (@whispervar0$ == "Report")achievement_log
+	{
+		query_sql("SELECT ach_id FROM  WHERE char_id='"+getcharid(3)+"'",.@id);
+		for( .@i = 1; .@i <= getarraysize(.@id); .@i++)
+		{
+			debugmes "Checking id: " + .@id[.@i];
+			if (getd("a_done_"+.@id[.@i]) == 0)
+			{
+				debugmes "Missing achievement " + .@i + ". Updating.";
+				setd("a_done_"+.@id[.@i], 1);
+			}
+		}
+		for( .@i = 1; .@i <= 102; .@i++)
+		{
+			mes "Achieve " + .@i + " state: " + getd("a_done_"+.@i);
+		}
+		close;
+	}
+	else if (@whispervar0$ == "Reset")
+	{
+		set achieve_item,0;
+		set achieve_mob,0;
+		set achieve_mvp,0;
+		set achieve_pvp,0;
+		set achieve_lvl,0;
+		set achieve_jlvl,0;    
+		set achieve_difflvl,0;    
+		set achieve_map,0;  
+		set achieve_damage,0;    
+		set achieve_set,0;
+
+		for( .@i = 1; .@i < 102; .@i++)
+		{
+			set .@valCount, 0;
+			while(.@valCount < 7) {
+				setd("a_state_"+.@i+"_"+.@valCount, 0);
+				.@valCount += 1;
+			}	
+			setd("a_done_"+.@i, 0);
+		}
+	}
+	end;
+    OnInit:
+        //config start
+        set $a_cache_expire,120;
+        set $a_effect_id,908;
+        set $a_cutin_delay,8000;
+        //config end. Don't change anything below if you don't know what ya doing
+        set $a_cached,0;
+	query_sql("SELECT `id`,`name`,`desc`,`title`,`mode`,`type`,`deleted`,`cutin`,`points`,`single_val`,`mapname` FROM achievement",.@id,.@name$,.@desc$,.@title$,.@mode,.@type,.@deleted$,.@cutin$,.@points,.@single_val,.@map_name$);
+	query_sql("SELECT `val1`,`val1amount`,`val2`,`val2amount`,`val3`,`val3amount`,`val4`,`val4amount`,`val5`,`val5amount`,`val6`,`val6amount` FROM achievement",.@val1,.@val1amount,.@val2,.@val2amount,.@val3,.@val3amount,.@val4,.@val4amount,.@val5,.@val5amount,.@val6,.@val6amount); 
+        set .@i,0;
+        set $a_mode_other,0;
+        set $a_mode_item,0;
+        set $a_mode_mob,0;
+        set $a_mode_mvp,0;
+        set $a_mode_pvp,0;
+        set $a_mode_lvl,0;
+        set $a_mode_jlvl,0;  
+		set $a_mode_lvldifference,0;
+		set $a_mode_map,0;
+		set $a_mode_damage,0;
+		set $a_mode_achieveset,0;
+        while(.@i < getarraysize(.@id)) {
+            setd("$a_name_"+.@id[.@i]+"$",.@name$[.@i]);
+	     setd("$a_desc_"+.@id[.@i]+"$",.@desc$[.@i]);
+            setd("$a_mode_"+.@id[.@i],.@mode[.@i]); 
+	     setd("$a_type_"+.@id[.@i],.@type[.@i]);
+            setd("$a_del_"+.@id[.@i]+"$",.@deleted$[.@i]); 
+            setd("$a_cutin_"+.@id[.@i]+"$",.@cutin$[.@i]); 
+            setd("$a_points_"+.@id[.@i],.@points[.@i]);
+            setd("$a_val1_"+.@id[.@i],.@val1[.@i]); 
+            setd("$a_val1a_"+.@id[.@i],.@val1amount[.@i]); 
+            setd("$a_val2_"+.@id[.@i],.@val2[.@i]); 
+            setd("$a_val2a_"+.@id[.@i],.@val2amount[.@i]);
+            setd("$a_val3_"+.@id[.@i],.@val3[.@i]); 
+            setd("$a_val3a_"+.@id[.@i],.@val3amount[.@i]);
+            setd("$a_val4_"+.@id[.@i],.@val4[.@i]); 
+            setd("$a_val4a_"+.@id[.@i],.@val4amount[.@i]);
+            setd("$a_val5_"+.@id[.@i],.@val5[.@i]); 
+            setd("$a_val5a_"+.@id[.@i],.@val5amount[.@i]);
+            setd("$a_val6_"+.@id[.@i],.@val6[.@i]); 
+            setd("$a_val6a_"+.@id[.@i],.@val6amount[.@i]);
+            setd("$a_sval_"+.@id[.@i],.@single_val[.@i]);
+            setd("$a_mapname_"+.@id[.@i]+"$",.@map_name$[.@i]);
+	    
+            switch(.@mode[.@i]) {
+		        default: set $a_mode_other,$a_mode_other+1; break;
+                case 1: set $a_mode_item,$a_mode_item+1; break;
+                case 2: set $a_mode_mob,$a_mode_mob+1; break; 
+                case 3: set $a_mode_mvp,$a_mode_mvp+1; break; 
+                case 4: set $a_mode_pvp,$a_mode_pvp+1; break; 
+                case 5: set $a_mode_lvl,$a_mode_lvl+1; break; 
+                case 6: set $a_mode_jlvl,$a_mode_jlvl+1; break;  
+                case 7: set $a_mode_lvldifference,$a_mode_lvldifference+1; break;  
+                case 8: set $a_mode_map,$a_mode_map+1; break; 
+                //case 9: set $a_mode_damage,$a_mode_damage+1; break; 
+                case 10: set $a_mode_achieveset,$a_mode_achieveset+1; break; 
+            }
+			
+            set .@i,.@i+1;
+        }
+        set $achieve_amount, .@i;
+        set $a_cached,gettimetick(2); 
+    end;
+    
+//Cache achivements for .@cache_expire secounds
+OnPCLoginEvent:
+    if(gettimetick(2)-$a_cached <= $a_cache_expire && $a_cached != 0) goto InventoryChecker;
+	end;
+	
+//Get X Amount of Items in your inventar (mode item)
+//will be called after mob kill or map change
+InventoryChecker:
+    if($a_mode_item==0 || achieve_item==$a_mode_item) end;
+    set .@i,0;
+    while(.@i < $achieve_amount) {
+        set .@i,.@i+1;
+        if(getd("$a_mode_"+.@i) != 1 || getd("a_done_"+.@i) == 1 || getd("$a_del_"+.@i+"$")=="y") continue;
+        set .@valCount,0;
+        set .@ok,0;
+        while(.@valCount < 7) {
+            set .@valCount,.@valCount+1; 
+            if(getd("$a_val"+.@valCount+"_"+.@i)==0 || getd("$a_val"+.@valCount+"a_"+.@i)==0) { set .@ok,.@ok+1; continue; } //Skip trash or empty
+            if(countitem(getd("$a_val"+.@valCount+"_"+.@i)) >= getd("$a_val"+.@valCount+"a_"+.@i)) set .@ok,.@ok+1;
+        }
+        if(.@ok == 7) callfunc "achieve",.@i;
+    }
+	end;	
+
+    //special (mode special)
+    //No script.  Just place 'callfunc "achieve",<<yourAchievementId>>;' anywhere in your script (below).
+}
+
+
+function	script	achieve	{
+    set .@achieveId,getarg(0);
+	set .global_announce, 0;
+	set .own_announce, 1;
+    if(.@achieveId <= 0) end; //Param missing. WTF
+    
+    query_sql("SELECT id FROM achievement_log WHERE ach_id='"+.@achieveId+"' AND char_id='"+getcharid(3)+"'",.@id);
+    if(.@id>0) { setd("a_done_"+.@achieveId,1); end; } //User already got this achievement
+
+    //Everything looks fine, lets do it
+    query_sql("INSERT INTO achievement_log(ach_id,char_id,crdate) VALUES('"+.@achieveId+"','"+getcharid(3)+"','"+gettimetick(2)+"')");
+	setd("a_done_"+.@achieveId,1);
+	set .@mode, getd("$a_mode_"+.@achieveId);
+	query_sql("SELECT COUNT(*) FROM achievement WHERE mode = " + .@mode + "", .@count);
+
+    switch(.@mode) {
+        	default: 
+			set achieve_other,achieve_other+1; 
+			if (achieve_other == .@count)
+			{
+				query_sql("SELECT id FROM achievement WHERE mode = 10 AND single_val = 0", .@id);
+				if (getarraysize(.@id) > 0)
+				{
+					if(getd("$a_mode_"+.@id[0])!=10 || getd("a_done_"+.@id[0])==1 || getd("$a_del_"+.@id[0]+"$")=="y") { }
+					else { callfunc "achieve",.@id[0]; }
+				}
+			}
+			break;
+	    	case 1: 
+			set achieve_item,achieve_item+1; 
+			if (achieve_item == .@count)
+			{
+				query_sql("SELECT id FROM achievement WHERE mode = 10 AND single_val = 1", .@id);
+				if (getarraysize(.@id) > 0)
+				{
+					if(getd("$a_mode_"+.@id[0])!=10 || getd("a_done_"+.@id[0])==1 || getd("$a_del_"+.@id[0]+"$")=="y") { }
+					else { callfunc "achieve",.@id[0]; }
+				}
+			}
+			break;
+	    	case 2: 
+			set achieve_mob,achieve_mob+1; 
+			if (achieve_mob == .@count)
+			{
+				query_sql("SELECT id FROM achievement WHERE mode = 10 AND single_val = 2", .@id);
+				if (getarraysize(.@id) > 0)
+				{
+					if(getd("$a_mode_"+.@id[0])!=10 || getd("a_done_"+.@id[0])==1 || getd("$a_del_"+.@id[0]+"$")=="y") { }
+					else { callfunc "achieve",.@id[0]; }
+				}
+			}
+			break;
+           	case 3: 
+			set achieve_mvp,achieve_mvp+1; 
+			if (achieve_mvp == .@count)
+			{
+				query_sql("SELECT id FROM achievement WHERE mode = 10 AND single_val = 3", .@id);
+				if (getarraysize(.@id) > 0)
+				{
+					if(getd("$a_mode_"+.@id[0])!=10 || getd("a_done_"+.@id[0])==1 || getd("$a_del_"+.@id[0]+"$")=="y") { }
+					else { callfunc "achieve",.@id[0]; }
+				}
+			}
+			break;
+	    	case 4: 
+			set achieve_pvp,achieve_pvp+1;
+			if (achieve_pvp == .@count)
+			{
+				query_sql("SELECT id FROM achievement WHERE mode = 10 AND single_val = 4", .@id);
+				if (getarraysize(.@id) > 0)
+				{
+					if(getd("$a_mode_"+.@id[0])!=10 || getd("a_done_"+.@id[0])==1 || getd("$a_del_"+.@id[0]+"$")=="y") { }
+					else { callfunc "achieve",.@id[0]; }
+				}
+			}
+			break;
+        	case 5: 
+			set achieve_lvl,achieve_lvl+1; 
+			if (achieve_lvl == .@count)
+			{
+				query_sql("SELECT id FROM achievement WHERE mode = 10 AND single_val = 5", .@id);
+				if (getarraysize(.@id) > 0)
+				{
+					if(getd("$a_mode_"+.@id[0])!=10 || getd("a_done_"+.@id[0])==1 || getd("$a_del_"+.@id[0]+"$")=="y") { }
+					else { callfunc "achieve",.@id[0]; }
+				}
+			}
+			break;
+        	case 6: 
+			set achieve_jlvl,achieve_jlvl+1; 
+			if (achieve_jlvl == .@count)
+			{
+				query_sql("SELECT id FROM achievement WHERE mode = 10 AND single_val = 6", .@id);
+				if (getarraysize(.@id) > 0)
+				{
+					if(getd("$a_mode_"+.@id[0])!=10 || getd("a_done_"+.@id[0])==1 || getd("$a_del_"+.@id[0]+"$")=="y") { }
+					else { callfunc "achieve",.@id[0]; }
+				}
+			}
+			break;   
+		case 7: 
+			set achieve_lvldiff,achieve_lvldiff+1; 
+			if (achieve_lvldiff == .@count)
+			{
+				query_sql("SELECT id FROM achievement WHERE mode = 10 AND single_val = 7", .@id);
+				if (getarraysize(.@id) > 0)
+				{
+					if(getd("$a_mode_"+.@id[0])!=10 || getd("a_done_"+.@id[0])==1 || getd("$a_del_"+.@id[0]+"$")=="y") { }
+					else { callfunc "achieve",.@id[0]; }
+				}
+			}
+			break;        
+		case 8: 
+			set achieve_map,achieve_map+1; 
+			if (achieve_map == .@count)
+			{
+				query_sql("SELECT id FROM achievement WHERE mode = 10 AND single_val = 8", .@id);
+				if (getarraysize(.@id) > 0)
+				{
+					if(getd("$a_mode_"+.@id[0])!=10 || getd("a_done_"+.@id[0])==1 || getd("$a_del_"+.@id[0]+"$")=="y") { }
+					else { callfunc "achieve",.@id[0]; }
+				}
+			}
+			break;           
+		case 9: 
+			set achieve_damage,achieve_damage+1; 
+			if (achieve_damage == .@count)
+			{
+				query_sql("SELECT id FROM achievement WHERE mode = 10 AND single_val = 9", .@id);
+				if (getarraysize(.@id) > 0)
+				{
+					if(getd("$a_mode_"+.@id[0])!=10 || getd("a_done_"+.@id[0])==1 || getd("$a_del_"+.@id[0]+"$")=="y") { }
+					else { callfunc "achieve",.@id[0]; }
+				}
+			}
+			break;   	
+		case 10: 
+			set achieve_set,achieve_set+1;
+			if (achieve_set == .@count)
+			{
+				query_sql("SELECT id FROM achievement WHERE mode = 10 AND single_val = 10", .@id);
+				if (getarraysize(.@id) > 0)
+				{
+					if(getd("$a_mode_"+.@id[0])!=10 || getd("a_done_"+.@id[0])==1 || getd("$a_del_"+.@id[0]+"$")=="y") { }
+					else { callfunc "achieve",.@id[0]; }
+				}
+			}
+			break;   
+    }
+    
+    if($a_effect_id>0) {
+        specialeffect2 $a_effect_id; 
+    }
+	
+	if (.global_announce)
+		announce strcharinfo(0)+" got the achievement ["+getd("$a_name_"+.@achieveId+"$")+"]!",0;
+	if (.own_announce)
+		dispbottom "You got the achievement ["+getd("$a_name_"+.@achieveId+"$")+"]!";
+		
+    setd("a_done_"+.@achieveId,1);
+    query_sql("UPDATE `char` SET achievement_points=achievement_points+"+getd("$a_points_"+.@achieveId)+" WHERE char_id="+getcharid(3)); 
+    callfunc "AddPoints", getcharid(3), getd("$a_points_"+.@achieveId);
+    end;
+}
+
+function	script	getMonsterNameById	{
+    if(getarg(0)<=0) end;
+    query_sql("SELECT iName FROM mob_db WHERE ID="+getarg(0)+" UNION SELECT iName FROM mob_db2 WHERE ID="+getarg(0),.@mobName$);   
+    return .@mobName$;
+}
+

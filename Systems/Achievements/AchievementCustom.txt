@@ -1,0 +1,199 @@
+//Custom Achivements here (mode=0)
+//Look in the guide how to build your functions
+-	script	Custom Achievement::cusachchk	-1,{
+	end;
+	
+OnPCLoginEvent:
+    if($a_done_17 == 1 || $a_del_17$ == "y") end;
+    if(Zeny >= $a_sval_17) callfunc "achieve",17;
+    if($a_done_18 == 1 || $a_del_18$ == "y") end;
+    if(Zeny >= $a_sval_18) callfunc "achieve",18;
+	end;
+	
+OnNPCKillEvent:
+	if($a_mode_mob>0 || $a_mode_mvp>0) {  
+           set .@i,0;
+			
+	//retrieve monster infos
+	set .@monster_elem, getmonsterinfo(killedrid, 20);
+	set .@monster_race, getmonsterinfo(killedrid, 19);
+	set .@monster_size, getmonsterinfo(killedrid, 18);	
+
+        while(.@i < $achieve_amount) {
+            set .@i,.@i+1;
+            if((getd("$a_mode_"+.@i) != 2 && getd("$a_mode_"+.@i) !=3 ) || getd("a_done_"+.@i)==1 || getd("$a_del_"+.@i+"$")=="y") continue;
+            if(getd("$a_mode_"+.@i)==2 && $a_mode_mob > 0 && achieve_mob < $a_mode_mob) {
+					set .@valCount,0;
+					set .@ok,0;
+					while(.@valCount < 7) {
+						set .@valCount,.@valCount+1; 
+						if((getd("$a_type_"+.@i) == 0 && getd("$a_val"+.@valCount+"_"+.@i)==0) || getd("$a_val"+.@valCount+"a_"+.@i)==0) { set .@ok,.@ok+1; continue; } //Skip trash or empty
+						
+						//killing type
+						if(getd("$a_type_"+.@i) == 0 && killedrid == getd("$a_val"+.@valCount+"_"+.@i)) setd("a_state_"+.@i+"_"+.@valCount,getd("a_state_"+.@i+"_"+.@valCount) + 1);
+						//Element type
+						if(getd("$a_type_"+.@i) == 1 && .@monster_elem == getd("$a_val"+.@valCount+"_"+.@i)) { setd("a_state_"+.@i+"_"+.@valCount,getd("a_state_"+.@i+"_"+.@valCount) + 1); }
+						//Race type
+						if(getd("$a_type_"+.@i) == 2 && .@monster_race == getd("$a_val"+.@valCount+"_"+.@i)) { setd("a_state_"+.@i+"_"+.@valCount,getd("a_state_"+.@i+"_"+.@valCount) + 1); }
+						//Size type
+						if(getd("$a_type_"+.@i) == 3 && .@monster_size == getd("$a_val"+.@valCount+"_"+.@i)) { setd("a_state_"+.@i+"_"+.@valCount,getd("a_state_"+.@i+"_"+.@valCount) + 1); }
+						if(getd("a_state_"+.@i+"_"+.@valCount) >= getd("$a_val"+.@valCount+"a_"+.@i)) set .@ok,.@ok+1;
+					}
+					if(.@ok == 7)
+						callfunc "achieve",.@i;
+ 
+           } else if(getd("$a_mode_"+.@i)==3 && $a_mode_mvp > 0 && achieve_mvp < $a_mode_mvp) {
+                switch(killedrid) {
+                    default:
+                    break;
+                    case 1511: case 1647: case 1785: case 1630: case 1929: case 1039: case 1874: case 1272: case 1719: case 1046:
+                    case 1389: case 1112: case 1115: case 1957: case 1418: case 1871: case 1252: case 1768: case 1086: case 1649: case 1651:
+                    case 1832: case 1492: case 1734: case 1251: case 1779: case 1688: case 1646: case 1373: case 1147: case 1059: case 1150:
+                    case 1956: case 1087: case 1190: case 1038: case 1157: case 1159: case 1502: case 1623: case 1650: case 1583: case 1708:
+                    case 1312: case 1751: case 1685: case 1648: case 1917: case 1658: case 1885: case 2068: case 2238: case 2240: case 2236: 
+                    case 2241: case 1980: case 2156: case 2022: case 2235: case 2237: case 2087: case 2165: case 2239: 
+		   setd("a_state_"+.@i,getd("a_state_"+.@i) + 1);
+                    if(getd("a_state_"+.@i) >= getd("$a_sval_"+.@i)) callfunc "achieve",.@i; 
+                    break;
+                }
+            }
+        }
+    }
+    if($a_mode_lvldifference > 0) {
+		set .@monster_lvl, getmonsterinfo(killedrid, 1);
+		while(.@i < $achieve_amount) {
+            		set .@i,.@i+1;	
+			if(getd("$a_mode_"+.@i) !=7 || getd("a_done_"+.@i)==1 || getd("$a_del_"+.@i+"$")=="y") continue;
+			if ((getd("$a_type_"+.@i) == 0 && (BaseLevel - .@monster_lvl) > getd("$a_sval_"+.@i))
+				|| (getd("$a_type_"+.@i) == 1 && (.@monster_lvl - BaseLevel) > getd("$a_sval_"+.@i)))
+			{
+				callfunc "achieve",.@i;
+			}
+		}
+	}
+    donpcevent "achsyscore::InventoryChecker";
+
+	//custom achievement
+    if($a_done_17 == 1 || $a_del_17$ == "y") end;
+    if(Zeny >= $a_sval_17) callfunc "achieve",17;
+    if($a_done_18 == 1 || $a_del_18$ == "y") end;
+    if(Zeny >= $a_sval_18) callfunc "achieve",18;
+	end;
+	
+    
+ //PvP (mode pvp)        
+OnPCKillEvent:
+	if($a_mode_lvldifference > 0) {
+		set .@src_rid, getcharid(3);
+		set .@src_lvl, BaseLevel;
+		attachrid(killedrid);
+		set .@target_lvl, BaseLevel;
+		attachrid(.@src_rid);
+		while(.@i < $achieve_amount) {
+						set .@i,.@i+1;	
+			if(getd("$a_mode_"+.@i) !=7 || getd("a_done_"+.@i)==1 || getd("$a_del_"+.@i+"$")=="y") continue;
+			if ((getd("$a_type_"+.@i) == 2 && (.@src_lvl - .@target_lvl) > getd("$a_sval_"+.@i))
+				|| (getd("$a_type_"+.@i) == 3 && (.@target_lvl - .@src_lvl) > getd("$a_sval_"+.@i)))
+			{
+				callfunc "achieve",.@i;
+			}
+		}
+	}
+	if($a_mode_pvp==0 || achieve_pvp==$a_mode_pvp) end;
+	set pvp_counter,pvp_counter+1;
+	set .@i,0;
+	while(.@i < $achieve_amount) {
+		set .@i,.@i+1;
+		if(getd("$a_mode_"+.@i)!=4 || getd("a_done_"+.@i)==1 || getd("$a_del_"+.@i+"$")=="y") continue;
+		if(pvp_counter >= getd("$a_sval_"+.@i)) callfunc "achieve",.@i;
+	}
+	end;
+    
+//LevelUP (mode lvl)
+OnPCBaseLvUpEvent:
+    if($a_mode_lvl==0 || achieve_lvl==$a_mode_lvl) end; 
+    set .@i,0;
+    while(.@i < $achieve_amount) {
+        set .@i,.@i+1;
+        if(getd("$a_mode_"+.@i) !=5
+			|| getd("a_done_"+.@i)==1
+			|| getd("$a_del_"+.@i+"$")=="y")
+				continue;
+		if(BaseLevel >= getd("$a_sval_"+.@i)) callfunc "achieve",.@i;
+	}
+	end;
+    
+//JobLevelUP (mode jlvl)
+OnPCJobLvUpEvent:
+    if($a_mode_jlvl==0 || achieve_jlvl==$a_mode_jlvl) end; 
+    set .@i,0;
+    while(.@i < $achieve_amount) {
+        set .@i,.@i+1;
+        if(getd("$a_mode_"+.@i) != 6
+			|| getd("a_done_"+.@i)==1
+			|| getd("$a_del_"+.@i+"$")=="y")
+				continue;
+        if(BaseLevel >= getd("$a_sval_"+.@i)) callfunc "achieve",.@i;
+    }
+	end;
+		
+OnPCDieEvent:	
+	//custom achievement
+	setd("$a_state_31", getd("$a_state_31") + 1);
+	setd("$a_state_32", getd("$a_state_32") + 1);
+	setd("$a_state_33", getd("$a_state_33") + 1);
+    	if($a_done_31 == 1 || $a_del_31$ == "y") end;
+    	if(getd("$a_state_31") >= $a_sval_31) callfunc "achieve",31;
+   	 if($a_done_32 == 1 || $a_del_33$ == "y") end;
+   	 if(getd("$a_state_32") >= $a_sval_32) callfunc "achieve",32;
+    	if($a_done_33 == 1 || $a_del_33$ == "y") end;
+    	if(getd("$a_state_33") >= $a_sval_33) callfunc "achieve",33;
+	end;
+
+OnPCLoadMapEvent:	
+	if($a_mode_map > 0) {
+		while(.@i < $achieve_amount) {
+            		set .@i,.@i+1;	
+			if(getd("$a_mode_"+.@i) !=8 || getd("a_done_"+.@i)==1 || getd("$a_del_"+.@i+"$")=="y") continue;
+			if (getd("$a_mode_"+.@i) ==8)
+			{
+				if (strcharinfo(3) == getd("$a_mapname_"+.@i+"$"))
+				{
+					callfunc "achieve",.@i;
+				}
+			}
+		}
+	}	
+	end;	
+}
+
+prontera	mapflag	loadevent
+geffen	mapflag	loadevent
+morocc	mapflag	loadevent
+hugel	mapflag	loadevent
+payon	mapflag	loadevent
+xmas	mapflag	loadevent
+aldebaran	mapflag	loadevent
+alberta	mapflag	loadevent
+comodo	mapflag	loadevent
+amatsu	mapflag	loadevent
+ayothaya	mapflag	loadevent
+brasilis	mapflag	loadevent
+niflheim	mapflag	loadevent
+izlude	mapflag	loadevent
+mora	mapflag	loadevent
+dicastes01	mapflag	loadevent
+einbech	mapflag	loadevent
+einbroch	mapflag	loadevent
+eclage	mapflag	loadevent
+gonryun	mapflag	loadevent
+dewata	mapflag	loadevent
+jawaii	mapflag	loadevent
+lighthalzen	mapflag	loadevent
+louyang	mapflag	loadevent
+malangdo	mapflag	loadevent
+manuk	mapflag	loadevent
+rachel	mapflag	loadevent
+splendide	mapflag	loadevent
+veins	mapflag	loadevent
+yuno	mapflag	loadevent

@@ -1,0 +1,473 @@
+Hyrule,184,152,4	script	Achievement Hurl::achbob	899,{  
+OnWhisperGlobal:
+OnShowMenu:
+    //Hurl Config Params 
+    set .@name$,"[^FF0000Achievement Hurl^000000]";
+    set .@cutin$,"sc_vicente01";
+    set .@GmMenuAtWhichLevel,40;
+    set .@text_gmMenu$,"Hi there GM. Which kind of menu do you want to see?"; 
+    set .@text_startInfo$,"I have all information about the achievements which are activated on this server.";
+    set .@text_category$,"Please choose your category.";
+    set .@text_whichAch$,"For which achievement do you want to get details?"; 
+    set .@text_points$,"You have this achievement points:"; 
+    set .@text_close$,"I'm not interested."; 
+    set .@text_worth$,"Worth:";
+    set .@text_getPoints$,"points"; 
+    set .@text_bye$,"Have a nice day.";  
+    set .@text_kill$,"Kill";
+    set .@text_killrace$,"monsters whom race is";
+    set .@text_killelem$,"monsters whom element is";
+    set .@text_killsize$,"monsters whom size is";
+    set .@text_lvldiff$,"Kill a target";
+    set .@text_lvldiffplayer$,"monster";
+    set .@text_lvldiffmonster$,"player";
+    set .@text_lvldiff2$,"with a difference of level of";
+    set .@text_mvp$,"any kind of MvP";
+    set .@text_pvp$,"any other player";  
+    set .@text_lvl$,"Reach base level";
+    set .@text_jlvl$,"Reach job level";
+    set .@text_map$,"Visit the map";
+    set .@text_damage$,"Give a total damage of";
+    set .@text_set$,"Complete the achievement set of mode";
+    set .@text_mode_item$,"Item achievements"; 
+    set .@text_mode_mob$,"Monster achievements";
+    set .@text_mode_mvp$,"MvP achievements";
+    set .@text_mode_pvp$,"PvP achievements";
+    set .@text_mode_lvl$,"Base Level achievements";
+    set .@text_mode_jlvl$,"Job Level achievements";
+    set .@text_mode_lvldiff$,"Level difference achievements";
+    set .@text_mode_map$,"Exploration achievements";
+    //set .@text_mode_damage$,"Damages achievements";
+    set .@text_mode_set$,"Achievements sets achievements";
+    set .@text_mode_other$,"Other Achievements";
+    query_sql("SELECT achievement_points FROM `char` WHERE char_id="+getcharid(0),.@points);     
+   
+    //Check if a gm has set the player to a force action
+    query_sql("SELECT ach_id, mode FROM achievement_force WHERE done='n' AND char_id="+getcharid(0),.@ach_id,.@mode$);
+    if(getarraysize(.@ach_id) > 0) {
+        set .@i,0;
+        while(.@i < getarraysize(.@ach_id)) {
+            //Clear log before there is to much trash inside
+            query_sql("SELECT id FROM achievement_log WHERE ach_id="+.@ach_id[.@i]+" AND char_id="+getcharid(0),.@log_id);
+            query_sql("UPDATE achievement_force SET done='y' WHERE done='n' AND ach_id="+.@ach_id[.@i]+" AND char_id="+getcharid(0)); 
+            if(.@log_id > 0) query_sql("DELETE FROM achievement_log WHERE id="+.@log_id); 
+            if(.@mode$=="add") {
+                 if(getd("$a_done_"+.@ach_id[.@i]) == 1) {
+                    query_sql("UPDATE `char` SET achievement_points=achievement_points-"+getd("$a_points_"+.@ach_id[.@i])+" WHERE char_id="+getcharid(0));
+                 }
+                 setd("a_done_"+.@ach_id[.@i],0);  
+                 callfunc "achieve",.@ach_id[.@i];
+            } else {
+                 query_sql("SELECT mode FROM achievement WHERE id="+.@ach_id[.@i],.@mode);
+                 if(.@mode == 2) {
+                    set .@j,0;
+                    while(.@j < 8) {
+                        set .@j,.@j+1;
+                        setd("a_state_"+.@ach_id[.@i]+"_"+.@j,0);
+                    } 
+                 } else if(.@mode == 3) {
+                    setd("a_state_"+.@ach_id[.@i],0);
+                 }
+                 if(getd("$a_done_"+.@ach_id[.@i]) == 1) { 
+                    query_sql("UPDATE `char` SET achievement_points=achievement_points-"+getd("$a_points_"+.@ach_id[.@i])+" WHERE char_id="+getcharid(0));  
+                 }
+                 setd("a_done_"+.@ach_id[.@i],0);
+                 dispbottom "Achievement "+getd("$a_name_"+.@ach_id[.@i]+"$")+" was removed!";
+            }
+            set .@i,.@i+1;
+        } 
+    }
+    //Start the true script
+    cutin .@cutin$,2;
+    //If a gm talks to this npc, call the gm menu, else the normal script
+    if(getgmlevel() >= .@GmMenuAtWhichLevel) {
+        mes .@name$;
+        mes .@text_gmMenu$;
+        next;
+        menu "GM Menu",L_GM,"Title",L_Title,"Player Menu",-,.@text_close$,L_End;
+    }
+    
+    mes .@name$; 
+    mes .@text_startInfo$;
+    next;
+    mes .@name$;
+    mes .@text_category$;
+    next;
+    set .@i,0;
+    if($a_mode_other > 0) { set .@menu$,.@menu$+.@text_mode_other$+":"; setarray .@tempAr1[.@i],0; set .@i,.@i+1; }
+    if($a_mode_item > 0) { set .@menu$,.@menu$+.@text_mode_item$+":"; setarray .@tempAr1[.@i],1; set .@i,.@i+1; }  
+    if($a_mode_mob > 0) { set .@menu$,.@menu$+.@text_mode_mob$+":"; setarray .@tempAr1[.@i],2; set .@i,.@i+1; }  
+    if($a_mode_mvp > 0) { set .@menu$,.@menu$+.@text_mode_mvp$+":"; setarray .@tempAr1[.@i],3; set .@i,.@i+1; }  
+    if($a_mode_pvp > 0) { set .@menu$,.@menu$+.@text_mode_pvp$+":"; setarray .@tempAr1[.@i],4; set .@i,.@i+1; }  
+    if($a_mode_lvl > 0) { set .@menu$,.@menu$+.@text_mode_lvl$+":"; setarray .@tempAr1[.@i],5; set .@i,.@i+1; }  
+    if($a_mode_jlvl > 0) { set .@menu$,.@menu$+.@text_mode_jlvl$+":"; setarray .@tempAr1[.@i],6; set .@i,.@i+1; }  
+    if($a_mode_lvldifference > 0) { set .@menu$,.@menu$+.@text_mode_lvldiff$+":"; setarray .@tempAr1[.@i],7; set .@i,.@i+1; } 
+    if($a_mode_map > 0) { set .@menu$,.@menu$+.@text_mode_map$+":"; setarray .@tempAr1[.@i],8; set .@i,.@i+1; } 
+    //if($a_mode_damage > 0) { set .@menu$,.@menu$+.@text_mode_damage$+":"; setarray .@tempAr1[.@i],9; set .@i,.@i+1; } 
+    if($a_mode_achieveset > 0) { set .@menu$,.@menu$+.@text_mode_set$+":"; setarray .@tempAr1[.@i],10; set .@i,.@i+1; } 
+	
+    if(.@i == 0) { mes .@name$;  mes "Woot. No Achievements found."; cutin "",255; close; }
+    set .@menu$,.@menu$+.@text_close$;
+    set .@choose,select(.@menu$);
+    set .@choose,.@choose-1;
+    if( .@choose == .@i) goto L_End;
+    next;
+    mes .@name$;
+    mes .@text_whichAch$;
+    set .@i,0;
+    set .@j,0;
+    set .@menu$,"";
+    while(.@i < $achieve_amount) {
+        set .@i,.@i+1;
+        if(getd("$a_mode_"+.@i) != .@tempAr1[.@choose] || getd("$a_del_"+.@i+"$")=="y") continue;  
+        if(getd("a_done_"+.@i) == 1) {
+		set .@addMenu$, "^00FF00" + getd("$a_name_"+.@i+"$")+" ["+getd("$a_points_"+.@i)+"]^000000"+":";
+        } else {
+		set .@addMenu$, "^FF0000" + getd("$a_name_"+.@i+"$")+" ["+getd("$a_points_"+.@i)+"]^000000"+":";
+        }
+        set .@menu$,.@menu$+.@addMenu$;
+        setarray .@tempAr2[.@j],.@i;
+        set .@j,.@j+1;
+    }
+    set .@menu$,.@menu$+.@text_close$;
+    set .@choose2,select(.@menu$);
+    set .@choose2,.@choose2-1;
+    if( .@choose2 == .@j) { next; goto L_End; }
+    next;
+        mes .@name$; 
+    if(getd("$a_desc_"+.@tempAr2[.@choose2]+"$") != "") {
+        mes getd("$a_desc_"+.@tempAr2[.@choose2]+"$");
+        next;
+        mes .@name$; 
+    }
+    mes "^0000AA"+.@text_worth$+" "+getd("$a_points_"+.@tempAr2[.@choose2])+" "+.@text_getPoints$+"^000000"; 
+    if(.@tempAr1[.@choose] > 0) {
+        if(.@tempAr1[.@choose] == 1 || .@tempAr1[.@choose] == 2) {
+			set .@type, getd("$a_type_"+.@i);
+            set .@i,0;
+            while(.@i < 7) {
+                set .@i,.@i+1;
+                if(getd("$a_val"+.@i+"_"+.@tempAr2[.@choose2])>0 && getd("$a_val"+.@i+"a_"+.@tempAr2[.@choose2])>0) {
+                    if(.@tempAr1[.@choose] == 1) {
+                         mes "^0000AA"+getitemname(getd("$a_val"+.@i+"_"+.@tempAr2[.@choose2]))+" ["+countitem(getd("$a_val"+.@i+"_"+.@tempAr2[.@choose2]))+"/"+getd("$a_val"+.@i+"a_"+.@tempAr2[.@choose2])+"]^000000"; 
+                    } else {           
+						if (.@type == 0)
+						{
+							mes "^0000AA"+.@text_kill$+" "+callfunc("getMonsterNameById",getd("$a_val"+.@i+"_"+.@tempAr2[.@choose2]))+" ["+getd("a_state_"+.@tempAr2[.@choose2]+"_"+.@i)+"/"+getd("$a_val"+.@i+"a_"+.@tempAr2[.@choose2])+"]^000000"; 
+						}
+						if (.@type == 1)
+						{
+							switch(getd("$a_val"+.@tempAr2[.@choose2]+"_"+.@i))
+							{
+								case 1: set .@message$, "Neutral"; break;
+								case 2: set .@message$, "Water"; break;
+								case 3: set .@message$, "Earth"; break;
+								case 4: set .@message$, "Fire"; break;
+								case 5: set .@message$, "Wind"; break;
+								case 6: set .@message$, "Poison"; break;
+								case 7: set .@message$, "Holy"; break;
+								case 8: set .@message$, "Shadow"; break;
+								case 9: set .@message$, "Ghost"; break;
+								case 10: set .@message$, "Undead"; break;
+							}
+							mes "^0000AA"+.@text_kill$+" ["+getd("a_state_"+.@tempAr2[.@choose2]+"_"+.@i)+"/"+getd("$a_val"+.@i+"a_"+.@tempAr2[.@choose2])+"] " + .@text_killelem + " " + .@message$ + "^000000"; 
+						}
+						if (.@type == 2)
+						{
+							switch(getd("$a_val"+.@tempAr2[.@choose2]+"_"+.@i))
+							{
+								case 1: set .@message$, "Demi-Human"; break;
+								case 2: set .@message$, "Brute"; break;
+								case 3: set .@message$, "Insect"; break;
+								case 4: set .@message$, "Fish"; break;
+								case 5: set .@message$, "Dragon"; break;
+								case 6: set .@message$, "Plant"; break;
+								case 7: set .@message$, "Formless"; break;
+								case 8: set .@message$, "Angel"; break;
+								case 9: set .@message$, "Demon"; break;
+								case 10: set .@message$, "Undead"; break;
+							}
+							mes "^0000AA"+.@text_kill$+" ["+getd("a_state_"+.@tempAr2[.@choose2]+"_"+.@i)+"/"+getd("$a_val"+.@i+"a_"+.@tempAr2[.@choose2])+"] " + .@text_killrace + " " + .@message$ + "^000000"; 
+						}
+						if (.@type == 3)
+						{
+							switch(getd("$a_val"+.@tempAr2[.@choose2]+"_"+.@i))
+							{
+								case 1: set .@message$, "small"; break;
+								case 2: set .@message$, "medium"; break;
+								case 3: set .@message$, "large"; break;
+							}
+							mes "^0000AA"+.@text_kill$+" ["+getd("a_state_"+.@tempAr2[.@choose2]+"_"+.@i)+"/"+getd("$a_val"+.@i+"a_"+.@tempAr2[.@choose2])+"] " + .@text_killsize + " " + .@message$ + "^000000"; 
+						}
+                    }
+                } 
+            }
+        } else {
+            if(.@tempAr1[.@choose] == 3) mes "^0000AA"+.@text_kill$+" "+getd("$a_sval_"+.@tempAr2[.@choose2])+" "+.@text_mvp$+" ["+getd("a_state_"+.@tempAr2[.@choose2])+"/"+getd("$a_sval_"+.@tempAr2[.@choose2])+"]^000000";
+            if(.@tempAr1[.@choose] == 4) mes "^0000AA"+.@text_kill$+" "+getd("$a_sval_"+.@tempAr2[.@choose2])+" "+.@text_pvp$+" ["+pvp_counter+"/"+getd("$a_sval_"+.@tempAr2[.@choose2])+"]^000000";
+            if(.@tempAr1[.@choose] == 5) mes "^0000AA"+.@text_lvl$+" "+getd("$a_sval_"+.@tempAr2[.@choose2])+" ["+BaseLevel+"/"+getd("$a_sval_"+.@tempAr2[.@choose2])+"]^000000";
+            if(.@tempAr1[.@choose] == 6) mes "^0000AA"+.@text_jlvl$+" "+getd("$a_sval_"+.@tempAr2[.@choose2])+" ["+JobLevel+"/"+getd("$a_sval_"+.@tempAr2[.@choose2])+"]^000000";
+            if(.@tempAr1[.@choose] == 7) 
+		{
+			if (getd("$a_type_"+.@tempAr2[.@choose2]) == 0)
+			{
+				mes "^0000AA"+.@text_lvldiff$+ " " + .@text_lvldiffmonster$ + " " + .@text_lvldiff2$ + " ["+getd("$a_sval_"+.@tempAr2[.@choose2]) +"] higher than you ^000000";
+			}
+			else if (getd("$a_type_"+.@tempAr2[.@choose2]) == 1)
+			{
+				mes "^0000AA"+.@text_lvldiff$+ " " + .@text_lvldiffmonster$ + " " + .@text_lvldiff2$ + " ["+getd("$a_sval_"+.@tempAr2[.@choose2]) +"] lower than you ^000000";
+			}
+			else if (getd("$a_type_"+.@tempAr2[.@choose2]) == 2)
+			{
+				mes "^0000AA"+.@text_lvldiff$+ " " + .@text_lvldiffplayer$ + " " + .@text_lvldiff2$ + " ["+getd("$a_sval_"+.@tempAr2[.@choose2]) +"] higher than you ^000000";
+			}
+			else if (getd("$a_type_"+.@tempAr2[.@choose2]) == 3)
+			{
+				mes "^0000AA"+.@text_lvldiff$+ " " + .@text_lvldiffplayer$ + " " + .@text_lvldiff2$ + " ["+getd("$a_sval_"+.@tempAr2[.@choose2]) +"] lower than you ^000000";
+			}
+		}
+            if(.@tempAr1[.@choose] == 8) mes "^0000AA"+.@text_map$+" ["+getd("$a_mapname_"+.@tempAr2[.@choose2]+"$") +"] ^000000";
+            if(.@tempAr1[.@choose] == 9) mes "^0000AA"+.@text_damage$+" ["+getd("$a_sval_"+.@tempAr2[.@choose2])+"] ^000000";
+            if(.@tempAr1[.@choose] == 10) mes "^0000AA"+.@text_set$+" ["+getd("$a_sval_"+.@tempAr2[.@choose2])+"]^000000";
+        }
+    }
+    next;
+    goto L_End;
+    
+L_Title:
+	mes .@name$;
+	mes "";
+	mes "Acoording to your achievements, I can activate or deactivate a title.";
+	mes "There's no impact, except displaying what you've ascomplished.";
+	mes "Be careful, the display is limited. It can hide part or all of your name.";
+	mes "So? Interested?";
+	switch(select("Choose a title","Unactivate you title"))
+	{
+		case 1:
+			goto OnChooseTitle;
+			break;
+		case 2:
+			goto OnDeactivateTitle;
+	}
+	
+	close;
+	
+OnDeactivateTitle:
+	mes "Allright, no problem. Here we go.";
+	set SHOWTITLE, 0;
+	cutin "",255;
+	close2;
+	goto OnDisplayTitle;
+
+OnChooseTitle:
+	setarray .@titles$[0],0;
+	set .@count, 0;
+
+	query_sql("SELECT DISTINCT ach_id FROM achievement_log WHERE char_id="+getcharid(3),.@id);
+	set .@countId, getarraysize(.@id);
+	if (.@countId > 0)
+	{
+		set .@query$, "SELECT title FROM achievement WHERE deleted = 'n' AND id IN (" + .@id[0];
+		for (.@i = 1; .@i < .@countId; .@i++)
+		{
+			set .@query$, .@query$ + ", " + .@id[.@i];
+		}
+		set .@query$, .@query$ + ")";
+		query_sql(.@query$, .@titles$);
+		
+		set .@menu$, "";
+		for(set .@i,0; .@i<getarraysize(.@titles$); set .@i,.@i+1)
+		{
+			set .@titles$[.@i], replacestr(.@titles$[.@i], " ", "");
+			set .@menu$, .@menu$ + ( .@i ? ":" : "" ) + .@titles$[.@i];	
+		}
+		
+		// On récupère le choix de l'utilisateur
+			set .@choice, prompt(.@menu$) - 1;
+	
+		if (.@choice != 254)
+		{
+			next;
+			mes .@name$;
+			mes "So you want to use the title: " + .@titles$[.@choice] + "?";
+			if(select("Yes","No")==1)
+			{
+				set SHOWTITLE, 1;
+				set TITLE$, .@titles$[.@choice];
+					cutin "",255;
+				close2;
+				goto OnDisplayTitle;
+			}
+			else
+			{
+				mes "Ok. Let's start again then.";
+				goto OnChooseTitle;
+			}
+		}
+	}
+	else
+	{
+		next;
+		mes "You don't have any achievements completed.";
+	}
+	cutin "",255;
+	close;  
+
+OnPCLoginEvent:
+OnDisplayTitle:
+	if (SHOWTITLE == 1 && TITLE$ != "")
+	{
+		atcommand "@fakename [" + TITLE$ + "] " + strcharinfo(0);
+	}
+	else
+	{
+		atcommand "@fakename";
+	}
+	end;  
+    
+L_GM:
+    mes .@name$;
+    mes .@text_category$;
+    next;
+    switch(select("Force Player Achievement","Enable/Disable Achievements","Clear cache","Compare log with achivement points",.@text_close$)) {
+      case 1:
+        mes .@name$;
+        mes "If the player you write here talks to this npc, you can set some actions which will happen, for example get a achivement or revoke a achivement.";
+        mes "What is the name of the player?";
+        next;
+        input .@char_name$;
+        next;
+        mes .@name$;
+        query_sql("SELECT char_id FROM `char` WHERE name='"+.@char_name$+"'",.@char_id);
+        if(.@char_id > 0) {
+            mes "Which achivement?"; 
+            next;     
+            set .@i,0; 
+            set .@j,0;
+            set .@menu$,"";
+            while(.@i < $achieve_amount) {
+                set .@i,.@i+1;
+                if(getd("$a_del_"+.@i+"$") == "y") continue;
+                set .@menu$,.@menu$+getd("$a_name_"+.@i+"$")+":";
+                set .@j,.@j+1;
+                setarray .@tempAr1[.@j],.@i;
+            }
+            set .@menu$,.@menu$+.@text_close$;
+            set .@choose,select(.@menu$);
+            if( .@choose == .@j+1) goto L_GM;
+            next;
+            mes .@name$;
+            mes "Adding or removing this achivement?";
+            next;
+            switch(select("Add","Remove",.@text_close$)) {
+                case 1: set .@mode$,"add"; break;
+                case 2: set .@mode$,"del"; break; 
+                case 3: goto L_GM; break; 
+            }
+            next;
+            mes .@name$; 
+            mes "Player: "+.@char_name$;
+            mes "Achivement: "+getd("$a_name_"+.@tempAr1[.@choose]+"$")+" (id="+.@tempAr1[.@choose]+")";
+            mes "Mode: "+.@mode$;
+            mes "Are you sure?";
+            next;
+            menu "Yes!",-,"No",L_GM;
+            mes .@name$;
+            query_sql("INSERT INTO achievement_force(ach_id,char_id,mode) VALUES('"+.@tempAr1[.@choose]+"','"+.@char_id+"','"+.@mode$+"')");
+            if(.@mode$=="del") {
+                switch(getd("$a_mode_"+.@tempAr1[.@choose])) {
+                    default: set achieve_other,achieve_other-1; break;
+                    case 1: set achieve_item,achieve_item-1; break;
+                    case 2: set achieve_mob,achieve_mob-1; break;
+                    case 3: set achieve_mvp,achieve_mvp-1; break;
+                    case 4: set achieve_pvp,achieve_pvp-1; break;
+                    case 5: set achieve_lvl,achieve_lvl-1; break;
+                    case 6: set achieve_jlvl,achieve_jlvl-1; break;    
+                    case 7: set achieve_difflvl,achieve_difflvl-1; break;    
+                    case 8: set achieve_map,achieve_map-1; break;    
+                    case 9: set achieve_damage,achieve_damage-1; break;    
+                    case 10: set achieve_set,achieve_set-1; break;    
+                }
+            }
+            mes "Action added! "+.@char_name$+" should talk to me now!";
+            next;
+        } else {
+            mes "Player not found!";
+            next;
+        }
+        goto L_GM;
+      break;
+      
+      case 2:
+        mes .@name$;
+        mes "Red=disabled, green=enabled";
+        mes "Be carefull on your achievements you added without triggers (mode 0). If you don't check there if the achivement is deleted, it may cause problems";
+        set .@i,0; 
+        set .@menu$,"";
+        while(.@i < $achieve_amount) {
+            set .@i,.@i+1;
+            if(getd("$a_del_"+.@i+"$") == "n") {
+                set .@menu$,.@menu$+"^00AA00"; 
+            } else {
+                set .@menu$,.@menu$+"^FF0000"; 
+            }
+            set .@menu$,.@menu$+getd("$a_name_"+.@i+"$")+"^000000:";
+        }
+        set .@menu$,.@menu$+.@text_close$;  
+        next;
+        set .@choose,select(.@menu$);
+        if(.@choose <= .@i) {
+            if(getd("$a_del_"+.@choose+"$") == "n") {
+                set .@updateTo$,"y";
+            } else {
+                set .@updateTo$,"n"; 
+            }
+            query_sql("UPDATE achievement SET deleted='"+.@updateTo$+"' WHERE id="+.@choose);
+            dispbottom "Achivement "+getd("$a_name_"+.@choose+"$")+" updated to deleted='"+.@updateTo$+"'!";
+            dispbottom "Clear Cache to see any effects!!!";
+            goto L_GM;
+        }
+      break;
+      
+      case 3:
+            set $a_cached,0;
+            dispbottom "Cache remove Flag has been set. When the next player login, the cache will be cleared";
+            goto L_GM;
+      break;
+      
+      case 4:
+        //if you build in something like "For 100 achivement points get 1 Cookie", this function would be buggy!
+        query_sql("SELECT char_id,achievement_points,name FROM `char`",.@char_id,.@ach_points,.@char_name$);
+        set .@i,0;
+        dispbottom "Sync started!";
+        while(.@i < getarraysize(.@char_id)) {
+            cleararray .@ach_id[0],0,getarraysize(.@ach_id);
+            query_sql("SELECT ach_id FROM achievement_log WHERE char_id="+.@char_id[.@i],.@ach_id); 
+            set .@j,0;
+            set .@points,0;
+            while(.@j < getarraysize(.@ach_id)) {
+                set .@points,.@points+getd("$a_points_"+.@ach_id[.@j]);
+                set .@j,.@j+1; 
+            }
+            if(.@ach_points[.@i] != .@points) {
+                query_sql("UPDATE `char` SET achievement_points="+.@points+" WHERE char_id="+.@char_id[.@i]);
+                dispbottom .@char_name$[.@i]+" had "+.@ach_points[.@i]+" points, but should have "+.@points+" points. Fixed!";
+            } 
+            set .@i,.@i+1;
+        }
+        dispbottom "Sync done!"; 
+        goto L_GM;
+      break;
+      
+      case 5:
+      break;
+    }
+    goto L_End;
+    
+   L_End:
+    mes .@name$;
+    mes .@text_bye$;
+    close2;
+    cutin "",255;
+    end;
+}
