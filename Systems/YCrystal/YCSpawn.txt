@@ -1,0 +1,148 @@
+// [========================================================]
+// [===========    Yggdrasil Crystal Project     ===========]
+// [========================================================]
+// [ Version 1                                              ]
+// [========================================================]
+// [ Original script by: Alayne                             ]
+// [========================================================]
+// [ Description:                                           ]
+// [--------------------------------------------------------]
+// [ - Spawn of all Ygg Crystals                            ]
+// [ Random spawn maps & monsters choice                    ]
+// [ Automatic check of spawned YC                          ]
+// [ Event attached to YC monsters                          ]
+// [========================================================]
+// [ Changelog: (5 last updates)                            ]
+// [--------------------------------------------------------]
+// [                                                        ]
+// [ v0: Creation                      			    ]
+// [                                                        ]
+// [========================================================]
+// [                                                        ]
+// [========================================================]
+
+anthell02	mapflag	loadevent
+gefenia03	mapflag	loadevent
+odin_tem03	mapflag	loadevent
+ein_fild04	mapflag	loadevent
+ra_fild08	mapflag	loadevent
+ice_dun01	mapflag	loadevent
+thor_v02	mapflag	loadevent
+ve_fild03	mapflag	loadevent
+mosk_dun02	mapflag	loadevent
+c_tower3	mapflag	loadevent
+gef_fild07	mapflag	loadevent
+gl_chyard	mapflag	loadevent
+gl_sew04	mapflag	loadevent
+in_sphinx4	mapflag	loadevent
+iz_dun03	mapflag	loadevent
+mjo_dun03	mapflag	loadevent
+moc_fild03	mapflag	loadevent
+moc_pryd06	mapflag	loadevent
+orcsdun01	mapflag	loadevent
+pay_dun03	mapflag	loadevent
+prt_fild07	mapflag	loadevent
+prt_maze03	mapflag	loadevent
+xmas_dun01	mapflag	loadevent
+cmd_fild02	mapflag	loadevent
+tur_dun04	mapflag	loadevent
+ein_dun01	mapflag	loadevent
+lhz_dun01	mapflag	loadevent
+abyss_01	mapflag	loadevent
+tha_t10	mapflag	loadevent
+kh_dun01	mapflag	loadevent
+ra_san05	mapflag	loadevent
+man_fild03	mapflag	loadevent
+spl_fild03	mapflag	loadevent
+nyd_dun01	mapflag	loadevent
+bra_dun02	mapflag	loadevent
+dic_dun02	mapflag	loadevent
+bif_fild02	mapflag	loadevent
+
+-	script	Yggdrasil Crystal::alaycpro	-1,{
+	end;
+
+OnInit:
+	setarray .ycMaps$[0],"anthell02","gefenia03","odin_tem03","ein_fild04","ra_fild08","ice_dun01","thor_v02",
+	"ve_fild03","mosk_dun02","c_tower3","gef_fild07","gl_chyard","gl_sew04","in_sphinx4","iz_dun03","mjo_dun03",
+	"moc_fild03","moc_pryd06","orcsdun01","pay_dun03","prt_fild07","prt_maze03","xmas_dun01","cmd_fild02","tur_dun04",
+	"ein_dun01","lhz_dun01","abyss_01","tha_t10","kh_dun01","ra_san05","man_fild03","spl_fild03";
+		
+	setarray .ycMonstersId[0],1176,1371,1754,1378,1680,1776,1838,
+	1836,1881,1193,1008,1198,1206,1154,1045,1151,
+	1013,1297,1153,1020,1052,1101,1246,1317,1314,
+	1616,1627,1721,1701,1275,1773,1989;
+	
+	set .debug, 0;
+	goto OnInitYC;
+	end;
+
+OnWhisperGlobal:
+	if (@whispervar0$ == "clean")
+	{
+		for (set .@i,0; .@i<getarraysize(.ycMaps$); set .@i,.@i+1)
+		{
+			if (strcharinfo(3) == .ycMaps$[.@i])
+			{
+				if (mobcount(strcharinfo(3),"alaycpro::OnYcMonsterKilled") >= 1)
+				{
+					killmonster strcharinfo(3),"alaycpro::OnYcMonsterKilled",1;
+				}
+			}
+		}
+	}
+	else
+	{
+		goto OnInitYC;
+	}
+	end;
+
+OnInitYC:
+	set $ylrakAppeared, 0;
+	goto OnSpawnMonsters;
+	end;
+
+OnSpawnMonsters:
+	for (set .@j,0; .@j<7; set .@j,.@j+1)
+	{
+		set .@rank, rand(0,getarraysize(.ycMaps$)-1);
+		set .@idMonster, .ycMonstersId[.@rank];
+		set .@map$, .ycMaps$[.@rank];
+	
+		monster .@map$,0,0,strmobinfo(1,.@idMonster),.@idMonster,1,"alaycpro::OnYcMonsterKilled";
+		if (.debug)
+		{
+			announce "Spawning in " + .@map$, bc_all;
+		}
+	}
+	end;
+
+OnClock0000:
+	if ($ylrakAppeared == 1)
+	{
+		set $ylrakAppeared, 0;	
+	}
+	end;
+
+OnYcMonsterKilled:
+	if ($ylrakAppeared == 0 && $hidden_started != 1)
+	{
+		if (.debug)
+		{
+			attachrid(2000000);
+		}
+		set .@id,rand(29491,29497);
+		getitem .@id, 1;
+		logmes "[Yggdrasil Crystal] " + strcharinfo(0) + " obtains a " + getitemname(.@id);
+		set .@rank, rand(0,getarraysize(.ycMonstersId)-1);
+		set .@idMonster, .ycMonstersId[.@rank];
+		set .@map$, .ycMaps$[.@rank];
+	
+		monster .@map$,0,0,strmobinfo(1,.@idMonster),.@idMonster,1,"alaycpro::OnYcMonsterKilled";
+		if (.debug)
+		{
+			announce "Spawning in " + .@map$, bc_all;
+		}
+	}
+	end;
+}

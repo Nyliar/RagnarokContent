@@ -1,0 +1,7 @@
+29491,Yggdrasil Crystal Red,Yggdrasil Crystal Red,3,600,300,5,0,0,0,0,0xFFFFFFFF,63,2,0,0,0,,0,{},{},{}
+29492,Yggdrasil Crystal Yellow,Yggdrasil Crystal Yellow,3,600,300,5,0,0,0,0,0xFFFFFFFF,63,2,0,0,0,,0,{},{},{}
+29493,Yggdrasil Crystal Blue,Yggdrasil Crystal Blue,3,600,300,5,0,0,0,0,0xFFFFFFFF,63,2,0,0,0,,0,{},{},{}
+29494,Yggdrasil Crystal Green,Yggdrasil Crystal Green,3,600,300,5,0,0,0,0,0xFFFFFFFF,63,2,0,0,0,,0,{},{},{}
+29495,Yggdrasil Crystal Purple,Yggdrasil Crystal Purple,3,600,300,5,0,0,0,0,0xFFFFFFFF,63,2,0,0,0,,0,{},{},{}
+29496,Yggdrasil Crystal Black,Yggdrasil Crystal Black,3,600,300,5,0,0,0,0,0xFFFFFFFF,63,2,0,0,0,,0,{},{},{}
+29497,Yggdrasil Crystal White,Yggdrasil Crystal White,3,600,300,5,0,0,0,0,0xFFFFFFFF,63,2,0,0,0,,0,{},{},{}

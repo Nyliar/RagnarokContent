@@ -1,0 +1,124 @@
+//
+// [========================================================]
+// [===========    Yggdrasil Crystal Project     ===========]
+// [========================================================]
+// [ Shenron Version 1                                      ]
+// [========================================================]
+// [ Original script by: Alayne                             ]
+// [========================================================]
+// [ Description:                                           ]
+// [--------------------------------------------------------]
+// [                                                        ]
+// [========================================================]
+// [ Changelog: (5 last updates)                            ]
+// [--------------------------------------------------------]
+// [                                                        ]
+// [ v0: Creation                      			    ]
+// [                                                        ]
+// [========================================================]
+// [                                                        ]
+// [========================================================]
+
+//capitale,242,193
+Hyrule,172,150,5	script	Aelro#Ylrak::alaycylrak	539,{
+	set .@npcname$, "[" + strnpcinfo(1) + "]";
+
+	if (countitem(29491) <= 0 && countitem(29492) <= 0 && countitem(29493) <= 0 && countitem(29494) <= 0 && 
+		countitem(29495) <= 0 && countitem(29496) <= 0 && countitem(29497) <= 0)
+	{
+		mes .@npcname$;
+		mes "";
+		mes "Hello, " + strcharinfo(0);
+		mes "I've heard that a dragon is wandering around here.";
+		mes "That's a bit...Scary. But I've never seen him.";
+		mes "And...Oddly, the night sometimes fells, no matter the day hour.";
+		mes "I...I don't understand.";
+		next;
+		mes .@npcname$;
+		mes "";
+		mes "And those memory loss. That's driving me mad!";
+		mes "Let me think of it...It's often when the night falls.";
+		mes "Do you think I'm odd?";
+		switch(select("No, not at all...","Leave me alone, freak!"))
+		{
+			case 1:
+				mes "Thanks, your heart is pure. I hope .";
+				break;
+			case 2:
+				mes "I'm not a monster!";
+				break;
+		}
+	}
+	else
+	{
+		mes .@npcname$;
+		mes "";
+		mes "What...What happens?";
+	
+		set .@npcname$, "[" + strnpcinfo(2) + "]";
+		night;
+		setnpcdisplay "alaycylrak", 1885;
+		next;
+		
+		mes .@npcname$;
+		mes "";
+		mes "You've brought me the 7 Rainbow Crystals.";
+		mes "My lost memory is now revealed.";
+		mes "I'm Ylrak, Rainbow Crystals Guardian.";
+		mes "By finding them all, you've earned the right to ask me something.";
+		mes "What do you want?";
+		next;
+		set .@choice, 0;
+		while(.@choice != 3)
+		{
+			set .@choice, select("Be the World's Master","Stop all wars","Something great!");
+			switch(.@choice)
+			{
+				case 1:
+					mes "I...Can't do that. World will be ruined...";
+					break;
+				case 2:
+					mes "I...Can't do that. Don't be so childlish.";
+					break;
+				case 3:
+					mes "Allright, here's for you.";
+					getitem .reward, .rewardCount;
+					set SHENRON_USER, 1;
+					break;
+			}
+		}
+	
+		mes "The seven crystals has now been spread again.";
+		mes "My job here's done.";
+		mes "Goodbye.";
+	
+		delitem 29491, 1;
+		delitem 29492, 1;
+		delitem 29493, 1;
+		delitem 29494, 1;
+		delitem 29495, 1;
+		delitem 29496, 1;
+		delitem 29497, 1;
+		setnpcdisplay "alaycylrak", 539;
+		day;
+	
+		next;
+		set .@npcname$, "[" + strnpcinfo(1) + "]";
+		mes .@npcname$;
+		mes "";
+		mes "What just happened?";
+		next;
+		mes "[" + strcharinfo(0) + "]";
+		mes "*He doesn't seems to remember he just turned into a giant lizard.";
+		mes "I guess it's better for him.*";
+	
+		set $ylrakAppeared, 1;
+	}
+	
+	close;
+	
+OnInit:
+	set .reward, 675;
+	set .rewardCount, 100;
+	end;
+}

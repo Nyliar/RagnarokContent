@@ -1,0 +1,129 @@
+
+  [29491] = {
+      unidentifiedDisplayName = "Yggdrasil Crystal Red",
+      unidentifiedResourceName = "검붉은보석",
+      unidentifiedDescriptionName = {
+          "Unknown Item, can be identified by [Magnifier]."
+      },
+      identifiedDisplayName = "Yggdrasil Crystal Red",
+      identifiedResourceName = "검붉은보석",
+      identifiedDescriptionName = {
+         "^007700 Yggdrasil Crystal Red^000000",
+         "A strange Crystal shard, blessed by Yggdrasil's Power.",
+         "^000088An old fairy tale says that there's seven to find^000000",
+         "Class: ^777777Misc^000000",
+         "Weight: ^7777775^000000",
+      },
+      slotCount = 0,
+      ClassNum = 5
+  },
+  [29492] = {
+      unidentifiedDisplayName = "Yggdrasil Crystal Yellow",
+      unidentifiedResourceName = "노란색보석",
+      unidentifiedDescriptionName = {
+          "Unknown Item, can be identified by [Magnifier]."
+      },
+      identifiedDisplayName = "Yggdrasil Crystal Yellow",
+      identifiedResourceName = "노란색보석",
+      identifiedDescriptionName = {
+         "^007700 Yggdrasil Crystal Yellow^000000",
+         "A strange Crystal shard, blessed by Yggdrasil's Power.",
+         "^000088An old fairy tale says that there's seven to find^000000",
+         "Class: ^777777Misc^000000",
+         "Weight: ^7777775^000000",
+      },
+      slotCount = 0,
+      ClassNum = 5
+  },
+  [29493] = {
+      unidentifiedDisplayName = "Yggdrasil Crystal Blue",
+      unidentifiedResourceName = "파란색보석",
+      unidentifiedDescriptionName = {
+          "Unknown Item, can be identified by [Magnifier]."
+      },
+      identifiedDisplayName = "Yggdrasil Crystal Blue",
+      identifiedResourceName = "파란색보석",
+      identifiedDescriptionName = {
+         "^007700 Yggdrasil Crystal Blue^000000",
+         "A strange Crystal shard, blessed by Yggdrasil's Power.",
+         "^000088An old fairy tale says that there's seven to find^000000",
+         "Class: ^777777Misc^000000",
+         "Weight: ^7777775^000000",
+      },
+      slotCount = 0,
+      ClassNum = 5
+  },
+  [29494] = {
+      unidentifiedDisplayName = "Yggdrasil Crystal Green",
+      unidentifiedResourceName = "초록색보석",
+      unidentifiedDescriptionName = {
+          "Unknown Item, can be identified by [Magnifier]."
+      },
+      identifiedDisplayName = "Yggdrasil Crystal Green",
+      identifiedResourceName = "초록색보석",
+      identifiedDescriptionName = {
+         "^007700 Yggdrasil Crystal Green^000000",
+         "A strange Crystal shard, blessed by Yggdrasil's Power.",
+         "^000088An old fairy tale says that there's seven to find^000000",
+         "Class: ^777777Misc^000000",
+         "Weight: ^7777775^000000",
+      },
+      slotCount = 0,
+      ClassNum = 5
+  },
+  [29495] = {
+      unidentifiedDisplayName = "Yggdrasil Crystal Purple",
+      unidentifiedResourceName = "보라색보석",
+      unidentifiedDescriptionName = {
+          "Unknown Item, can be identified by [Magnifier]."
+      },
+      identifiedDisplayName = "Yggdrasil Crystal Purple",
+      identifiedResourceName = "보라색보석",
+      identifiedDescriptionName = {
+         "^007700 Yggdrasil Crystal Purple^000000",
+         "A strange Crystal shard, blessed by Yggdrasil's Power.",
+         "^000088An old fairy tale says that there's seven to find^000000",
+         "Class: ^777777Misc^000000",
+         "Weight: ^7777775^000000",
+      },
+      slotCount = 0,
+      ClassNum = 5
+  },
+  [29496] = {
+      unidentifiedDisplayName = "Yggdrasil Crystal Black",
+      unidentifiedResourceName = "하얀색보석",
+      unidentifiedDescriptionName = {
+          "Unknown Item, can be identified by [Magnifier]."
+      },
+      identifiedDisplayName = "Yggdrasil Crystal Black",
+      identifiedResourceName = "하얀색보석",
+      identifiedDescriptionName = {
+         "^007700 Yggdrasil Crystal Black^000000",
+         "A strange Crystal shard, blessed by Yggdrasil's Power.",
+         "^000088An old fairy tale says that there's seven to find^000000",
+         "Class: ^777777Misc^000000",
+         "Weight: ^7777775^000000",
+      },
+      slotCount = 0,
+      ClassNum = 5
+  },
+  [29497] = {
+      unidentifiedDisplayName = "Yggdrasil Crystal White",
+      unidentifiedResourceName = "분홍색보석",
+      unidentifiedDescriptionName = {
+          "Unknown Item, can be identified by [Magnifier]."
+      },
+      identifiedDisplayName = "Yggdrasil Crystal White",
+      identifiedResourceName = "분홍색보석",
+      identifiedDescriptionName = {
+         "^007700 Yggdrasil Crystal White^000000",
+         "A strange Crystal shard, blessed by Yggdrasil's Power.",
+         "^000088An old fairy tale says that there's seven to find^000000",
+         "Class: ^777777Misc^000000",
+         "Weight: ^7777775^000000",
+      },
+      slotCount = 0,
+      ClassNum = 5
+  },
+  
+  
