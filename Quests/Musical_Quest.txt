@@ -1,0 +1,473 @@
+// [========================================================]
+// [=============  		 Musician Quest 		============]
+// [========================================================]
+// [ Version 1                                              ]
+// [========================================================]
+// [ Original script by: Alayne				   				]
+// [========================================================]
+// [ Description:                                           ]
+// [--------------------------------------------------------]
+// [                                                        ]
+// [ - A quest based on music								]
+// [                                                        ]
+// [========================================================]
+// [ Changelog: (5 last updates)                            ]
+// [--------------------------------------------------------]
+// [                                                        ]
+// [ v0: Creation                      			    		]
+// [                                                        ]
+// [                                                        ]
+// [========================================================]
+// [                                                        ]
+// [========================================================]
+
+prt_in,244,99,2	script	Musician::alamusq	4_M_BARYO_MAN,{
+	set .@npcname$, "[Musician]";
+	mes .@npcname$;
+	//Symbol of Bravery, Peace, Faith, Richness, Nine Realm
+	setarray .@itemsId[0], 7812, 7817, 7816, 7810, 7305;
+	setarray .@itemsIdCount[0], 5, 1, 3, 1, 1;
+	
+	mes "";
+	mes "Hello to you, comrade.";
+	mes "Do you wanna hear a little song?";
+	mes "*Pick the Harp strings*";
+	if(select("It'll be my pleasure","No, really, thanks...") == 1)
+	{
+		if (MUSIC_Q == 0)
+		{
+			next;
+			mes .@npcname$;
+			mes "Hum...You looks like loving music.";
+			mes "I like you, my friend.";
+			mes "I'll give you my secret.";	
+			mes "How do I manage to have this powerful voice?";
+			mes "I use devices. Sounds Amplification Devices.";
+			mes "I can create you one.";
+			mes "But it's pretty rare.";
+			if(select("Create me one","No, thanks") == 1)
+			{
+				next;
+				mes .@npcname$;
+				set MUSIC_Q, 1;
+				mes "First of all, you need to understand what music is.";
+				mes "The music bring bravery, or peace or faith, according to it's rythm.";
+				mes "It's a symbol, through the 9 nine realms of Yggdrasil.";
+				mes "Therefor, I'll need some items which represents those music.";
+				for(set .@i,0; .@i<getarraysize(.@itemsId) - 1; set .@i,.@i+1)
+				{
+					mes "	~" + .@itemsIdCount[.@i] + " " + getitemname(.@itemsId[.@i]);
+				}
+				mes "And on top of that, " + .@itemsIdCount[getarraysize(.@itemsId) - 1] + " " + getitemname(.@itemsId[getarraysize(.@itemsId) - 1]) + "";
+				next;
+				mes .@npcname$;
+				mes "If you can prove me that you've encountered and convinced the Symbol Bearer to help you...";
+				mes "I'll reward you with one of those items.";
+				next;
+				mes .@npcname$;
+				mes "I'll wait here.";
+				mes "Now go. Hurry! Hurry!";
+			}
+		}
+		else if (MUSIC_Q == 1)
+		{
+			next;
+			mes .@npcname$;
+			mes "Do you got it all?";
+			for (set .@i, 0; .@i < getarraysize(.@itemsId); set .@i, .@i+1)
+			{
+				if (countitem(.@itemsId[.@i]) < .@itemsIdCount[.@i])
+				{
+					if(.@i == getarraysize(.@itemsId) - 1)
+					{
+						next;
+						mes .@npcname$;
+						//missing Nine Realm Symbol
+						mes "I can see you're lacking the last one, the Nine Realm Symbol...";
+						mes "You won't find this one as easily...";
+						mes "To get this one, you'll have to find the real Symbol of the Nine Realm.";
+						mes "There, you'll find a hole.";
+						mes "Insert your hand to pull a trigger, and call the Symbol to raise...";
+						mes "Good luck...";
+						set MUSIC_REALM_Q, 1;
+					}
+					else
+					{
+						mes "Sorry but you're missing some.";
+						mes "I absolutely need those items...Remember?";
+						for(set .@i,0; .@i<getarraysize(.@itemsId) - 1; set .@i,.@i+1)
+						{
+							mes "	~" + .@itemsIdCount[.@i] + " " + getitemname(.@itemsId[.@i]);
+						}
+						mes "And on top of that, " + .@itemsIdCount[getarraysize(.@itemsId) - 1] + " " + getitemname(.@itemsId[getarraysize(.@itemsId) - 1]) + "";
+					}
+					close;
+				}				
+			}
+			mes "You got it all.";
+			mes "Let's begin.";
+			for (set .@i, 0; .@i < getarraysize(.@itemsId); set .@i, .@i+1)
+			{
+				delitem .@itemsId[.@i], .@itemsIdCount[.@i];
+			}
+			mes "And here's for you. A Music Symbol";
+			getitem 2899, 1;
+			set MUSIC_Q, 2;
+			next;
+			mes .@npcname$;
+			mes "Take also this, for your pain.";
+			mes "It's a weapon forged with all these symbols.";
+			mes "It's really rare, you know?";
+			getitem 29393, 1; 			
+		}
+		else
+		{
+			next;
+			mes .@npcname$;	
+			mes "Sorry, my friend musician. I've got nothing more for you.";
+		}
+	}
+	else
+	{
+		mes "...You don't understand my art!";
+	}
+	close;
+}
+
+bif_fild02,155,237,2	script	Hole::alamush	HIDDEN_NPC,{
+	mes "There's a hole there.";
+	mes "Do you wish to put your hand inside it?";
+	if(select("Yes","No") == 1)
+	{
+		next;
+		mes .@npcname$;
+		if(MUSIC_REALM_Q == 1)
+		{
+			mes "There's a trigger inside it. Trigger it?";
+			if(select("Yes","No") == 1)
+			{
+				switch(rand(0,2))
+				{
+					case 0:
+						percentheal -99, 0;
+						break;
+					case 1:
+						percentheal 0, -99;
+						break;
+					case 2:
+						percentheal -80, -80;
+						break;
+				}
+				monster strnpcinfo(4), 163, 239, "--ja--", 2022, 1, strnpcinfo(3) + "::OnBossDead";
+				initnpctimer;
+			}
+		}
+		else
+		{
+			mes "You shouldn't put your hand anywhere...";
+			percentheal -50, -50;
+		}
+	}
+	close;
+	
+OnTimer600000:
+	killmonster strnpcinfo(4), strnpcinfo(3) + "::OnBossDead";
+	end;
+	
+OnBossDead:
+	hideoffnpc "alamushc";
+	end;
+}
+
+bif_fild02,159,229,2	script	Magic Chest::alamushc	4_TREASURE_BOX,{
+	if(MUSIC_REALM_Q == 1)
+	{
+		getitem 7305, 1;
+	}
+	hideonnpc strnpcinfo(3);
+	close;
+	
+OnInit:
+	hideonnpc strnpcinfo(3);
+	end;
+}
+
+cmd_fild08,340,362,2	script	Brave Warrior::alamusbw	4_M_JP_GUSTON,{
+	set .@npcname$, "[Warrior]";
+	set .@pcname$, "[" + strcharinfo(0) + "]";
+	mes .@npcname$;
+	mes "Hello.";
+	if(MUSIC_Q == 1)
+	{
+		next;
+		mes .@npcname$;
+		mes "Hum? You want a Symbol of Bravery?";
+		mes "That's not something that can be obtained this easily.";
+		mes "Being brave isn't just being strong.";
+		if(BaseLevel < .minLevel)
+		{
+			mes "But that's a prerequisite.";
+			mes "Come back later, child.";
+			close;
+		}
+		if((MUSIC_BRAVE_Q == 1 && BRAVEKILLCOUNT >= .killNeeded) || MUSIC_BRAVE_Q == 2)
+		{
+			if(MUSIC_BRAVE_Q == 1)
+			{
+				next;
+				mes .@npcname$;
+				mes "Good! You're brave!";
+				mes "Well, brave enough to continue, at least.";
+				next;
+				mes .@npcname$;
+				mes "Being brave isn't just being strong, not fearing the danger, and be a bit inconsious.";
+				mes "That's all that at a time.";
+				mes "So now...Go kill a Lord of Death.";
+				mes "That'll be my last proof.";
+				set BRAVEKILLCOUNT, 0;
+				set MUSIC_BRAVE_Q, 2;
+			}
+			else if(BRAVEKILLCOUNT == .secondKillNeeded)
+			{
+				next;
+				mes .@npcname$;
+				mes "Good...I can now see that you're brave.";
+				mes "Just as brave as me.";
+				mes "So...Now, you'll have to find those Symbol of Bravery.";
+				mes "I can give it to you, I'm sorry.";
+				mes "It's just that...Those monsters you've slayed...They were some of my own preys.";
+				mes "I was paid to kill them but...That was easier to make you kill them, bouahahahahah.";
+				next;
+				mes .@npcname$;
+				mes "But now, I know you're strong enough.";
+				mes "Those symbols can be obtained by fighting strong and fearless monsters.";
+				mes "By fighting against fear and danger.";
+				mes "Go, go and slay those hellish Thanatos monsters!";
+				set MUSIC_BRAVE_Q, 3;
+			}
+		}
+		else if(MUSIC_BRAVE_Q == 0 || BRAVEKILLCOUNT < .killNeeded)
+		{
+			next;
+			mes .@npcname$;
+			mes "Being brave isn't just being strong, and not fearing the danger.";
+			mes "But that's a start.";
+			mes "So...Show me that you don't fear danger, 'k?";
+			mes "Kill " + .killNeeded + " Abysmal Knights.";
+			mes "That'll be a good proof.";
+			if(MUSIC_BRAVE_Q == 0)
+			{
+				set BRAVEKILLCOUNT, 0;
+				set MUSIC_BRAVE_Q, 1;
+			}
+		}
+	}
+	close;
+	
+OnNPCKillEvent:
+	if(MUSIC_BRAVE_Q == 1 && killedrid == 1219)
+	{
+		set BRAVEKILLCOUNT, BRAVEKILLCOUNT + 1;
+	}
+	if(MUSIC_BRAVE_Q == 2 && killedrid == 1373)
+	{
+		set BRAVEKILLCOUNT, BRAVEKILLCOUNT + 1;
+	}
+	if(MUSIC_BRAVE_Q == 3 && (killedrid == 1704 || killedrid == 1705 || killedrid == 1706 || killedrid == 1707) && BRAVESYMBOL < 5)
+	{
+		if(rand(0,100) < 10)
+		{
+			getitem 7812, 1;
+			set BRAVESYMBOL, BRAVESYMBOL + 1;
+		}
+	}
+	end;
+	
+OnInit:
+	set .minLevel, 100;
+	set .killNeeded, 75;
+	set .secondKillNeeded, 1;
+	end;
+}
+
+prt_church,16,16,2	script	Faithful Priest::alamusfpr	1_M_PASTOR,{
+	set .@npcname$, "[Priest]";
+	mes .@npcname$;
+	mes "Hello.";
+	if(MUSIC_Q == 1)
+	{
+		if(MUSIC_FAITH_Q < 10)
+		{
+			mes "Hum? A Symbol of Faith?";
+			mes "What is this?";
+			set MUSIC_FAITH_Q, MUSIC_FAITH_Q + 1;
+		}
+		else
+		{
+			mes "Allright, you're right. I know what is it.";
+			mes "But I don't have one.";
+			mes "You can only find them by yourself, by experimenting Faith.";
+			mes "The TRUE faith.";
+			next;
+			mes .@npcname$;
+			mes "For that, you'll have to found some special points around the world.";
+			mes "Those points are a place where your faith will be put on hold.";
+			mes "If you don't have faith, you won't be able to go any further.";
+			mes "A wall will stand in front of you.";
+			mes "But with faith, you'll be able to go further.";
+			next;
+			mes .@npcname$;
+			mes "There, you'll find what you're looking for.";
+			set MUSIC_FAITH_Q, 11;
+		}
+	}
+	close;
+}
+
+cave,115,78,2	script	Faith Point::alamusfp	HIDDEN_WARP_NPC,3,3,{
+	end;
+	
+OnTouch:
+	if(MUSIC_FAITH_Q == 11 && FAITHSYMBOL < 5)
+	{
+		getitem 7816, 1;
+	}	
+	end;
+}
+
+cave,67,68,6	duplicate(alamusfp)	Faith Point::alamusfp2	HIDDEN_WARP_NPC,3,3
+cave,83,104,6	duplicate(alamusfp)	Faith Point::alamusfp3	HIDDEN_WARP_NPC,3,3
+
+gonryun,20,100,2	script	Peaceful Place::alamuspp	HIDDEN_WARP_NPC,3,3,{
+	end;
+
+OnTouch:
+	if(MUSIC_Q == 1 && MUSIC_PEACE_Q == 0)
+	{
+		mes "This place is really peaceful...";
+		getitem 7817, 1;
+		set MUSIC_PEACE_Q, 1;
+		close;
+	}		
+	end;
+}
+
+alberta_in,118,136,2	script	Wealthy Merchant::alamuswb	4_F_SHAMAN,{
+	set .@npcname$, "[Merchant]";
+	set .@pcname$, "[" + strcharinfo(0) + "]";
+	mes .@npcname$;
+	mes "Hello.";
+	if(MUSIC_Q == 1)
+	{
+		mes "Hum? What do you want exactly?";
+		mes "You told me that some strange musician send you here?";
+		mes "You shouldn't listen to everybody's strange idea or stories.";
+		mes "I don't have a secret.";
+		mes "I'm just a merchant which earn some money by working hard, you know.";
+		next;
+		mes .@pcname$;
+		mes "...";
+		next;
+		mes .@npcname$;
+		mes "...";
+		mes "What?";
+		next;
+		mes .@pcname$;
+		mes "...";
+		next;
+		mes .@npcname$;
+		mes "...";
+		mes "You...You won't leave, right?";
+		if(select("No I won't","Sorry, I'm leaving now") == 1)
+		{
+			next;
+			mes .@pcname$;
+			mes "...";
+			next;
+			mes .@npcname$;
+			mes "...";
+			mes "You're...a wound in my...";
+			mes "As long as you don't leave, I can't work, you know that?";
+			mes "Well...I don't have the choice, I guess...";
+			mes "There's a lost place, somewhere around " + $richMap$ + ".";
+			mes "Just find a strange tree around there.";
+			next;
+			mes .@npcname$;
+			mes "By saying 'I want to be rich', you'll make appear a magic chest.";
+			mes "It'll give you what you're looking for.";
+			set MUSIC_RICH_Q, 1;
+			next;
+			mes .@npcname$;
+			mes "Now, leave!";
+			mes "I need to work...";
+		}
+		else
+		{
+			next;
+			mes .@npcname$;
+			mes "...";
+			mes "Good. See you soon then...";			
+		}
+	}
+	close;
+}
+
+pay_fild03,376,52,2	script	Tree::alamuswbt	HIDDEN_NPC,{
+	mes "That's just a tree...";
+	close;
+
+OnPopChest:
+	if(MUSIC_RICH_Q == 1 && $unavailableChest == 0)
+	{
+		specialeffect 563; //quake
+		hideoffnpc "alamuswbm";
+	}
+	end;
+	
+OnInit:
+	defpattern 1, "I want to be rich", "OnPopChest";
+	activatepset 1;
+	set $unavailableChest, 0;
+	end;
+}
+
+pay_fild03,378,46,2	script	Magic Chest::alamuswbm	4_TREASURE_BOX,{
+	mes "What do you want?";
+	if(MUSIC_RICH_Q == 1)
+	{
+		switch(select("To be rich","To be strong"))
+		{
+			case 1:
+				next;
+				mes "For that, let 1.000.000z in the Chest";
+				if(select("Ok","No way") == 1)
+				{
+					if(Zeny >= 1000000)
+					{
+						set Zeny, Zeny - 1000000;
+						getitem 7810, 1;
+					}
+				}
+				break;
+			case 2:
+				next;
+				mes "You already are.";
+				mes "Just prove it.";
+				monster strnpcinfo(4), 378, 46, "--ja--", 1134, 15, strnpcinfo(3) + "::OnMobDead";
+				break;
+		}
+	}
+	initnpctimer;
+	set $unavailableChest, 1;
+	hideonnpc strnpcinfo(3);
+	close;
+	
+OnTimer600000:
+	killmonster strnpcinfo(4), strnpcinfo(3) + "::OnMobDead";
+	set $unavailableChest, 0;
+	end;
+	
+OnInit:
+	hideonnpc strnpcinfo(3);
+	end;
+}

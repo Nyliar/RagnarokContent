@@ -1,0 +1,62 @@
+//Fehu Quest
+
+70664#Uruz Rune#
+You've been asked by Fehu to create the Uruz rune.
+Uruz is the uncontrollable wave, the impetuous natural strength running on Earth.#
+#
+70665#Naudhiz Rune#
+You've been asked by Fehu to create the Naudhiz rune.
+Naudhiz symbolising the sacrifice's fire.#
+#
+70666#Raidho Rune#
+You've been asked by Fehu to create the Raidho rune.
+Raidho is a cure rune, which put back the body in it's initial form.#
+#
+70667#Berkano Rune#
+You've been asked by Fehu to create the Berkano rune.
+Berkano is here to remind us to keep our feet on Earth.#
+#
+70668#Isa Rune#
+You've been asked by Fehu to create the Isa rune.
+Isa represents what's static, cold. The Ice element.#
+#
+70669#Ansuz Rune#
+You've been asked by Fehu to create the Ansuz rune.
+Ansuz the initial blow, the conscience which unify to Thurisaz to make Human Being of a primitive being.#
+#
+70670#Thurisaz Rune#
+You've been asked by Fehu to create the Thurisaz rune.
+Like Thor, the Storm God, his rune represent the electricity, as dangerous as fertile.#
+#
+70671#Perthro Rune#
+You've been asked by Fehu to create the Perthro rune.
+Perthro symbolises the link between unconscient in each of us and the environement.#
+#
+70672#Hagalaz Rune#
+You've been asked by Fehu to create the Hagalaz rune.
+It represent the link between all past events, which make the present as it is.#
+#
+70673#Free the Runes Power#
+You've been asked by Fehu to defeat the Rune thief.#
+#
+
+//Veteran Quest
+
+70674#Y a des squelettes à pourtrer#SG_FEEL#QUE_NOIMAGE#
+You've been asked by the Veteran to kill some Skeletons.#
+#
+70675#Y a des orcs à décimer#SG_FEEL#QUE_NOIMAGE#
+You've been asked by the Veteran to kill some Orcs.#
+#
+70676#Y a des momies à cramer#SG_FEEL#QUE_NOIMAGE#
+You've been asked by the Veteran to burn some Mummies.#
+#
+70677#Y a des minotaures à tuer#SG_FEEL#QUE_NOIMAGE#
+You've been asked by the Veteran to kill some Minotorus.#
+#
+70678#Y a des liches à éventrer#SG_FEEL#QUE_NOIMAGE#
+You've been asked by the Veteran to kill some Necromancer.#
+#
+70679#Y a un dragon pour tester#SG_FEEL#QUE_NOIMAGE#
+You've been asked by the Veteran to tear off some Dragon's genitals.#
+#

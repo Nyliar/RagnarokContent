@@ -1,0 +1,1108 @@
+prontera,245,86,5	script	Enigma::en1	1_M_WIZARD,{
+
+	set .@npcname$, "[TenEnigma]";
+	mes .@npcname$;
+	set .@price, 100;
+	set .@basexp, 2000;
+	set .@jobexp, 1000;
+	mes "";
+	if ( questenigma == 0)
+	{
+		if (#paye == 1)
+		{
+			if (Zeny < .@price)
+			{
+				mes "Sorry but you have to pay for your participation now.";
+				mes "None can become First Enigma because he want's it.";
+				mes "Come back with " + .@price + " Zeny.";	
+				close;
+			}
+			else
+			{
+				mes "You know have to pay " + .@price + " to make a proposal.";
+				if(select("Ok","Well, no thanks") == 1)
+				{
+					set Zeny, Zeny - .@price;
+				}
+				else
+				{
+					mes "As you wish.";
+					close;
+				}
+			}
+		}
+		mes "Uoy ot yad doog, " + strcharinfo(0);
+		mes "M'I " + .@npcname$ + ", elddir fo retsaM taerG eht.";
+		mes "Em dnatsrednu uoy nac?";
+		switch(select("Yes","No, not at all."))
+		{
+			case 1:
+				next;
+				mes "Murder a s'tahw, esac sith ni?";
+					next;
+				input .@response$;
+				if (.@response$ == "Redrum")
+				{
+					mes "Well done! You've gone thought the first riddle.";
+					mes "Pretty strong, hu?";
+					set  questenigma, 1;
+					if (#paye == 0)
+						getexp .@basexp,.@jobexp;
+					mes "I'll offer you to find my next riddle. Ok?";
+					next;
+					switch(select("Ok, let's go.","No, not thanks..."))
+					{
+						case 1:
+							mes "Looks for an Enigma in the place I will told you about.";
+							mes "He will give you the next riddle.";
+							mes "Rusty Wind, Goldy Grain. Human Beast, Human Wolf.";
+							set #paye, 0;
+							set #haspaid, 0;
+							break;
+						case 2:
+							mes "...You're desappointing me.";
+							mes "Come back when you'll change your mind.";
+							set #paye, 1;
+							set  questenigma, 0;
+							break;
+					}
+				}
+				else
+					mes "Rewsna doog eht ton s'taht.";
+					mes "wonk ll'uoy nehw kcab emoc.";
+				break;
+			case 2:
+				mes "Em gnitseretni ton er'uoy neht.";
+				break;
+		}	
+		close;
+	}
+	else if ( questenigma == 1)
+	{
+		mes "I see that you've still not found.";
+		mes "Here's the riddle again.";
+		mes "Rusty Wind, Goldy Grain. Human Beast, Human Wolf.";				
+		mes "Do you wan't a clue? It will cost you your last reward.";
+		mes "An Enigma never offer something.";
+		next;
+		switch(prompt("Yes","No"))
+		{
+			case 1:
+				mes "Allright, you're choice.";
+				if (#haspaid == 2)
+				{
+					set BaseExp,BaseExp -.@basexp;
+					set JobExp,JobExp -.@jobexp;
+					set #haspaid, 1;
+				}
+				mes "Rusty Wind, Goldy Grain. That's the sand.";
+				break;
+			case 2:
+			case 255:
+				mes "I prefer that.";
+				break;
+		}
+	}
+	close;	
+}
+
+morocc,185,295,5	script	Enigma::en2	1_M_MOC_LORD,{
+	set .@npcname$, "[Nona Enigma]";
+	mes .@npcname$;
+	set .@price, 200;
+	set .@basexp, 4000;
+	set .@jobexp, 2000;
+	mes "";
+	
+	if (questenigma == 1)
+	{
+		if (#paye == 1)
+		{
+			if (Zeny < .@price)
+			{
+				mes "Sorry but you have to pay for your participation now.";
+				mes "None can become First Enigma because he want's it.";
+				mes "Come back with " + .@price + " Zeny.";	
+				close;
+			}
+			else
+			{
+				mes "You know have to pay " + .@price + " to make a proposal.";
+				if(select("Ok","Well, no thanks") == 1)
+				{
+					set Zeny, Zeny - .@price;
+				}
+				else
+				{
+					mes "As you wish.";
+					close;
+				}
+			}
+		}
+		mes "Interesting.";
+		mes "I can see that you've beaten the Tenth Enigma.";
+		mes "Remember that the smaller their rank is, the harder their riddle are.";
+		mes "Wanna here mine? I'm the Ninth.";
+		next;
+		switch(select("Doesn't affraid me","No, thanks."))
+		{
+			case 1:
+				mes "Allright, then.";
+				mes "Fighting against fire, they don't hesitate to open it. Who are they?";
+					next;
+				input .@response$;
+				if (.@response$ == "Remover")
+				{
+					mes "Well done. You've find the Second Answer.";
+					set  questenigma, 2;
+					if (#paye == 0)
+						getexp .@basexp,.@jobexp;
+					mes "I'll offer you to find my next riddle. Ok?";
+					next;
+					switch(select("Ok, let's go.","No, not thanks..."))
+					{
+						case 1:
+							mes "Looks for an Enigma in the place I will told you about.";
+							mes "He will give you the next riddle.";
+							mes "Green Ocean. Yellow Ocean. Red Ocean. Nothingness Ocean. Four times year changing Ocean.";
+							mes "We're looking for a city.";
+							set #paye, 0;
+							set #haspaid, 0;
+							break;
+						case 2:
+							mes "...You're desappointing me.";
+							mes "Come back when you'll change your mind.";
+							set  questenigma, 1;
+							set #paye, 1;
+							break;
+					}
+				}
+				else
+					mes "Sorry, but that's not the correct answer.";
+					mes "Come back if you need more help.";
+				break;
+			case 2:
+				mes "Have a good journey then.";
+				break;
+		}	
+		close;
+	}
+	else if (questenigma == 2)
+	{
+		mes "I see that you've still not found.";
+		mes "Here's the riddle again.";
+		mes "Green Ocean. Yellow Ocean. Red Ocean. Nothingness Ocean. Four times year changing Ocean.";				
+		mes "Do you wan't a clue? It will cost you your last reward.";
+		mes "An Enigma never offer something.";
+		next;
+		switch(prompt("Yes","No"))
+		{
+			case 1:
+				mes "Allright, you're choice.";
+				if (#haspaid == 2)
+				{
+					set BaseExp,BaseExp -.@basexp;
+					set JobExp,JobExp -.@jobexp;
+					set #haspaid, 1;
+				}
+				mes "A four time a year changing ocean? That's the forest!";
+				break;
+			case 2:
+			case 255:
+				mes "I prefer that.";
+				break;
+		}
+	}
+	else
+	{
+		mes "Sorry, I'm pretty busy right now.";
+		mes "I'm looking for new riddle of your world.";
+	}
+	close;
+}
+
+payon,69,303,5	script	Enigma::en3	4_F_SISTER,{
+	set .@npcname$, "[OctoNigma]";
+	mes .@npcname$;
+	set .@price, 400;
+	set .@basexp, 8000;
+	set .@jobexp, 4000;
+	mes "";
+	if ( questenigma == 2)
+	{
+		mes "Oh oh! You're a smart one, hu?";
+		mes "But go through Ninth and Tenth doesn't mean a thing.";
+		mes "I'm the Eight. Just me, I'm stronger than the two others. Ready for my riddle";
+		next;
+		switch(select("Go on, Michel!","No, no thanks."))
+		{
+			case 1:
+				if (#paye == 1)
+				{
+					if (Zeny < .@price)
+					{
+						mes "Sorry but you have to pay for your participation now.";
+						mes "None can become First Enigma because he want's it.";
+						mes "Come back with " + .@price + " Zeny.";	
+						close;
+					}	
+					else
+					{
+						mes "You know have to pay " + .@price + " to make a proposal.";
+						if(select("Ok","Well, no thanks") == 1)
+						{
+							set Zeny, Zeny - .@price;
+						}
+						else
+						{
+							mes "As you wish.";
+							close;
+						}
+					}
+				}
+				mes "My name's not Michel, but let's go.";
+				mes "The Enger representing, I'm the Walking Death. Who am I?";
+				next;
+				input .@response$;
+				if (.@response$ == "Wraith Dead")
+				{
+					mes "Well done.";
+					mes "You had to see the mistake!";
+					set  questenigma, 3;
+					if (#paye == 0)
+						getexp .@basexp,.@jobexp;
+					mes "I'll offer you to find my next riddle. Ok?";
+					next;
+					switch(select("Ok, let's go.","No, not thanks...")){
+						case 1:
+							mes "Looks for an Enigma in the place I will told you about.";
+							mes "He will give you the next riddle";
+							mes "Fine Sand, Singing Sea. Day of Night, Shadow Lights.";
+							set #paye, 0;
+							set #haspaid, 0;
+							break;
+						case 2:
+							mes "...You're desappointing me.";
+							mes "Come back when you'll change your mind.";
+							mes "Next tries will cost you " + .@price + " Zenys, so think of it well.";
+							set #paye, 1;
+							set  questenigma, 2;
+							break;
+					}
+				}
+				else
+					mes "Sorry, but that's not the correct answer.";
+					mes "Come back if you need more help.";
+				break;
+			case 2:
+				mes "Have a good journey then.";
+				break;
+		}	
+		close;
+	}
+	else if ( questenigma == 3)
+	{
+		mes "I see that you've still not found.";
+		mes "Here's the riddle again.";
+		mes "Fine Sand, Singing Sea. Day of Night, Shadow Lights.";				
+		mes "Do you wan't a clue? It will cost you your last reward.";
+		mes "An Enigma never offer something.";
+		next;
+		switch(prompt("Yes","No"))
+		{
+			case 1:
+				mes "Allright, you're choice.";
+				if (#haspaid == 2)
+				{
+					set BaseExp,BaseExp -.@basexp;
+					set JobExp,JobExp -.@jobexp;
+					set #haspaid, 1;
+				}
+				mes "Day of Night, Shadow Lights. That's a city surrounded by sea where you don't sleep much. And go with another person.";
+				break;
+			case 2:
+			case 255:
+				mes "I prefer that.";
+				break;
+		}
+	}
+	else
+	{
+		mes "Sorry, I'm pretty busy right now.";
+		mes "I'm looking for new riddle of your world.";
+	}
+	close;
+}
+
+jawaii,204,290,5	script	Enigma::en4	8_F_GIRL,{
+	set .@npcname$, "[Septa Enigma]";
+	mes .@npcname$;
+	set .@basexp, 16000;
+	set .@jobexp, 8000;
+	set .@price, 800;
+	mes "";
+	if ( questenigma == 3)
+	{
+		mes "Humpf. I'm the Seventh.";
+		mes "There's still 6 after me.";
+		mes "But to see them, you should beat me. Are you ready?";
+		next;
+		switch(select("Allright, I'll beat you too","No, thanks."))
+		{
+			case 1:
+				if (#paye == 1)
+				{
+					if (Zeny < .@price)
+					{
+						mes "Sorry but you have to pay for your participation now.";
+						mes "None can become First Enigma because he want's it.";
+						mes "Come back with " + .@price + " Zeny.";	
+						close;
+					}
+					else
+					{
+						mes "You know have to pay " + .@price + " to make a proposal.";
+						if(select("Ok","Well, no thanks") == 1)
+						{
+							set Zeny, Zeny - .@price;
+						}
+						else
+						{
+							mes "As you wish.";
+							close;
+						}
+					}
+				}
+				mes "Red, Green, Yellow. In this descending order.";
+				mes "What kind of object are we all looting after?";
+					next;
+				input .@response$;
+				if (.@response$ == "Andre Card")
+				{
+					mes "Well done.";
+					mes "You had to know about the ants, Deniro, Piere and Andre.";
+					set  questenigma, 4;
+					if (#paye == 0)
+						getexp .@basexp,.@jobexp;
+					mes "I'll offer you to find my next riddle. Ok?";
+					next;
+					switch(select("Ok, let's go.","No, not thanks...")){
+						case 1:
+							mes "Looks for an Enigma in the place I will told you about.";
+							mes "He will give you the next riddle.";
+							mes "Hanged on like a celestial rocks ballet, linked with some hemped rope.";
+							mes "We're looking for a city.";
+							set #paye, 0;
+							set #haspaid, 0;
+							break;
+						case 2:
+							mes "...You're desappointing me.";
+							mes "Come back when you'll change your mind.";
+							mes "Next tries will cost you " + .@price + " Zenys, so think of it well.";
+							set #paye, 1;
+							set  questenigma, 3;
+							break;
+					}
+				}
+				else
+					mes "Sorry, but that's not the correct answer.";
+					mes "Come back if you need more help.";
+				break;
+			case 2:
+				mes "Have a good journey then.";
+				break;
+		}	
+		close;
+	}
+	else if ( questenigma == 4)
+	{
+		mes "I see that you've still not found.";
+		mes "Here's the riddle again.";
+		mes "Hanged on like a celestial rocks ballet, linked with some hemped rope.";				
+		mes "Do you wan't a clue? It will cost you your last reward.";
+		mes "An Enigma never offer something.";
+		next;
+		switch(prompt("Yes","No"))
+		{
+			case 1:
+				mes "Allright, you're choice.";
+				if (#haspaid == 2)
+				{
+					set BaseExp,BaseExp -.@basexp;
+					set JobExp,JobExp -.@jobexp;
+					set #haspaid, 1;
+				}
+				mes "Celestial rocks. Where did you ever see floating rocks?";
+				break;
+			case 2:
+			case 255:
+				mes "I prefer that.";
+				break;
+		}
+	}
+	else
+	{
+		mes "Sorry, I'm pretty busy right now.";
+		mes "I'm looking for new riddle of your world.";
+	}
+	close;
+}
+
+gonryun,181,111,5	script	Enigma::en5	4_F_NOVICE,{
+	set .@npcname$, "[HexaNigma]";
+	mes .@npcname$;
+	set .@basexp, 20000;
+	set .@jobexp, 10000;
+	set .@price, 1600;
+	mes "";
+	if ( questenigma == 4)
+	{
+		mes "No need to detail it, you know I'm the Sixth.";
+		mes "You're looking at First, but you're still so far. Ready?";
+		next;
+		switch(select("Let's go, ask you riddle!","No, thanks."))
+		{
+			case 1:
+				if (#paye == 1)
+				{
+					if (Zeny < .@price)
+					{
+						mes "Sorry but you have to pay for your participation now.";
+						mes "None can become First Enigma because he want's it.";
+						mes "Come back with " + .@price + " Zeny.";	
+						close;
+					}
+					else
+					{
+						mes "You know have to pay " + .@price + " to make a proposal.";
+						if(select("Ok","Well, no thanks") == 1)
+						{
+							set Zeny, Zeny - .@price;
+						}
+						else
+						{
+							mes "As you wish.";
+							close;
+						}
+					}
+				}
+				mes "Never fille, always wantin. Movin Shado, escapin attac";
+				mes "Who am?";
+					next;
+				input .@response$;
+				if (.@response$ == "Frus")
+				{
+					mes "Wonderful!";
+					mes "You've find the word? Frustrated. We looked for a Frus!";
+					set  questenigma, 5;
+					if (#paye == 0)
+						getexp .@basexp,.@jobexp;
+					mes "I'll offer you to find my next riddle. Ok?";
+					next;
+					switch(select("Ok, let's go.","No, not thanks...")){
+						case 1:
+							mes "Looks for an Enigma in the place I will told you about.";
+							mes "He will give you the next riddle.";
+							mes "Infinite Water, Howling Water, run, run and fall as Rain.";
+							set #paye, 0;
+							set #haspaid, 0;
+							break;
+						case 2:
+							mes "...You're desappointing me.";
+							mes "Come back when you'll change your mind.";
+							mes "Next tries will cost you " + .@price + " Zenys, so think of it well.";
+							set #paye, 1;
+							set  questenigma, 4;
+							break;
+					}
+				}
+				else
+					mes "Sorry, but that's not the correct answer.";
+					mes "Come back if you need more help.";
+				break;
+			case 2:
+				mes "Have a good journey then.";
+				break;
+		}	
+		close;
+	}
+	else if ( questenigma == 5)
+	{
+		mes "I see that you've still not found.";
+		mes "Here's the riddle again.";
+		mes "Infinite Water, Moving Water, run, run, or stop and disappear.";				
+		mes "Do you wan't a clue? It will cost you your last reward.";
+		mes "An Enigma never offer something.";
+		next;
+		switch(prompt("Yes","No"))
+		{
+			case 1:
+				mes "Allright, you're choice.";
+				if (#haspaid == 2)
+				{
+					set BaseExp,BaseExp -.@basexp;
+					set JobExp,JobExp -.@jobexp;
+					set #haspaid, 1;
+				}
+				mes "Stop or disappear. That mean that the water, or whatever's around, will swallow you in the ground.";
+				break;
+			case 2:
+			case 255:
+				mes "I prefer that.";
+				break;
+		}
+	}
+	else
+	{
+		mes "Sorry, I'm pretty busy right now.";
+		mes "I'm looking for new riddle of your world.";
+	}
+	close;
+}
+
+um_fild03,320,358,5	script	Enigma::en6	1_M_HOF,{
+	set .@npcname$, "[Cinqo Enigma]";
+	mes .@npcname$;
+	set .@basexp, 30000;
+	set .@jobexp, 15000;
+	set .@price, 3200;
+	mes "";
+	if (questenigma == 5)
+	{
+		mes "What a surprise! I wasn't thinking you can beat Sixth.";
+		mes "Therefor, you won't beat me!";
+					next;
+		switch(select("Ask your riddle, we'll see!","No, thanks."))
+		{
+			case 1:
+				if (#paye == 1)
+				{
+					if (Zeny < .@price)
+					{
+						mes "Sorry but you have to pay for your participation now.";
+						mes "None can become First Enigma because he want's it.";
+						mes "Come back with " + .@price + " Zeny.";	
+						close;
+					}
+					else
+					{
+						mes "You know have to pay " + .@price + " to make a proposal.";
+						if(select("Ok","Well, no thanks") == 1)
+						{
+							set Zeny, Zeny - .@price;
+						}
+						else
+						{
+							mes "As you wish.";
+							close;
+						}
+					}
+				}
+				mes "Authority is my name, and Quality my state,";
+				mes "White Blow, like a cloud on top of a column. And without me, never again you'll eat.";
+				mes "Who am I?";
+					next;
+				input .@response$;
+				if (.@response$ == "Chief Hat")
+				{
+					mes "Great!";
+					mes "You know the Chief Hat? You? No way...";
+					set  questenigma, 6;
+					if (#paye == 0)
+						getexp .@basexp,.@jobexp;
+					mes "I'll offer you to find my next riddle. Ok?";
+					next;
+					switch(select("Ok, let's go.","No, not thanks...")){
+						case 1:
+							mes "Looks for an Enigma in the place I will told you about.";
+							mes "He will give you the next riddle.";
+							mes "What's this? What's this? There's color everywhere";
+							mes "What's this? There's white things in the air.";
+							mes "We're looking for a city.";
+							set #paye, 0;
+							set #haspaid, 0;
+							break;
+						case 2:
+							mes "...You're desappointing me.";
+							mes "Come back when you'll change your mind.";
+							mes "Next tries will cost you " + .@price + " Zenys, so think of it well.";
+							set #paye, 1;
+							set  questenigma, 5;
+							break;
+					}
+				}
+				else
+					mes "Sorry, but that's not the correct answer.";
+					mes "Come back if you need more help.";
+				break;
+			case 2:
+				mes "Have a good journey then.";
+				break;
+		}	
+		close;
+
+	}
+	else if ( questenigma == 6)
+	{
+		mes "I see that you've still not found.";
+		mes "Here's the riddle again.";
+		mes "What's this? What's this? There's color everywhere";
+		mes "What's this? There's white things in the air.";				
+		mes "Do you wan't a clue? It will cost you your last reward.";
+		mes "An Enigma never offer something.";
+		next;
+		switch(prompt("Yes","No"))
+		{
+			case 1:
+				mes "Allright, you're choice.";
+				if (#haspaid == 2)
+				{
+					set BaseExp,BaseExp -.@basexp;
+					set JobExp,JobExp -.@jobexp;
+					set #haspaid, 1;
+				}
+				mes "That's an extract of a movie, Nightmare Before Christmas.";
+				break;
+			case 2:
+			case 255:
+				mes "I prefer that.";
+				break;
+		}
+	}
+	else
+	{
+		mes "Sorry, I'm pretty busy right now.";
+		mes "I'm looking for new riddle of your world.";
+	}
+	close;
+}
+
+xmas,201,244,5	script	Enigma::en7	4_F_06,{
+	set .@npcname$, "[Quatro Enigma]";
+	mes .@npcname$;
+	set .@basexp, 40000;
+	set .@jobexp, 20000;
+	set .@price, 6400;
+	mes "";
+	if ( questenigma == 6)
+	{
+		mes "What? you've beaten Fifth?";
+		mes "But you won't beat me!";
+					next;
+		switch(select("Let's go, ask you riddle!","No, thanks."))
+		{
+			case 1:
+				if (#paye == 1)
+				{
+					if (Zeny < .@price)
+					{
+						mes "Sorry but you have to pay for your participation now.";
+						mes "None can become First Enigma because he want's it.";
+						mes "Come back with " + .@price + " Zeny.";	
+						close;
+					}
+					else
+					{
+						mes "You know have to pay " + .@price + " to make a proposal.";
+						if(select("Ok","Well, no thanks") == 1)
+						{
+							set Zeny, Zeny - .@price;
+						}
+						else
+						{
+							mes "As you wish.";
+							close;
+						}
+					}
+				}
+				mes "My name is an equivalent to virginity.";
+				mes "Surrounding my wearer with a snow fresh aura,";
+				mes "I'm an element needed by wizard, or healer.";
+				mes "What am I?";
+					next;
+				input .@response$;
+				if (.@response$ == "Purity Robe")
+				{
+					mes "Greatful!";
+					mes "You know the Purity Robe? That's pretty recent thought...";
+					mes "And I was thinking to trap you with that...";
+					set  questenigma, 7;
+					if (#paye == 0)
+						getexp .@basexp,.@jobexp;
+					mes "I'll offer you to find my next riddle. Ok?";
+					next;
+					switch(select("Ok, let's go.","No, not thanks...")){
+						case 1:
+							mes "Looks for an Enigma in the place I will told you about.";
+							mes "He will give you the next riddle.";
+							mes "Infinis tours et détours...";
+							mes "Follow the wall to find the Cat. The Cheshire Cat.";	
+							mes "We're looking for a dungeon.";
+							set #paye, 0;
+							set #haspaid, 0;
+							break;
+						case 2:
+							mes "...You're desappointing me.";
+							mes "Come back when you'll change your mind.";
+							mes "Next tries will cost you " + .@price + " Zenys, so think of it well.";
+							set #paye, 1;
+							set  questenigma, 6;
+							break;
+					}
+				}
+				else
+					mes "Sorry, but that's not the correct answer.";
+					mes "Come back if you need more help.";
+				break;
+			case 2:
+				mes "Have a good journey then.";
+				break;
+		}	
+		close;
+
+	}
+	else if ( questenigma == 7)
+	{
+		mes "I see that you've still not found.";
+		mes "Here's the riddle again.";
+		mes "Follow the wall to find the Cat. The Cheshire Cat.";				
+		mes "Do you wan't a clue? It will cost you your last reward.";
+		mes "An Enigma never offer something.";
+		next;
+		switch(prompt("Yes","No"))
+		{
+			case 1:
+				mes "Allright, you're choice.";
+				if (#haspaid == 2)
+				{
+					set BaseExp,BaseExp -.@basexp;
+					set JobExp,JobExp -.@jobexp;
+					set #haspaid, 1;
+				}
+				mes "The Cheshire Cat is sticked in a maze.";
+				break;
+			case 2:
+			case 255:
+				mes "I prefer that.";
+				break;
+		}
+	}
+	else
+	{
+		mes "Sorry, I'm pretty busy right now.";
+		mes "I'm looking for new riddle of your world.";
+	}
+	close;
+}
+
+prt_maze01,132,13,5	script	Enigma::en8	4_F_MONK,{
+	set .@npcname$, "[Enigma]";
+	mes .@npcname$;
+	set .@basexp, 50000;
+	set .@jobexp, 31000;
+	set .@price, 12800;
+	mes "";
+	if ( questenigma == 7 )
+	{
+		mes "Ahahahaha! There you are next to me, the Third.";
+		mes "I wasn't thinking you'll come here so fast!";
+					next;
+		switch(select("Let's go, ask you riddle!","No, thanks."))
+		{
+			case 1:
+				if (#paye == 1)
+				{
+					if (Zeny < .@price)
+					{
+						mes "Sorry but you have to pay for your participation now.";
+						mes "None can become First Enigma because he want's it.";
+						mes "Come back with " + .@price + " Zeny.";	
+						close;
+					}
+					else
+					{
+						mes "You know have to pay " + .@price + " to make a proposal.";
+						if(select("Ok","Well, no thanks") == 1)
+						{
+							set Zeny, Zeny - .@price;
+						}
+						else
+						{
+							mes "As you wish.";
+							close;
+						}
+					}
+				}
+				mes "Typical of new year feast in east,";
+				mes "paper giant, never fearing fire.";
+				mes "I spread my wing on sky, if I got some.";
+				mes "Who am I?";
+					next;
+				input .@response$;
+				if (.@response$ == "Dragon")
+				{
+					mes "Wonderful!";
+					mes "That was Kunlun's Dragon.";
+					set  questenigma, 8;
+					if (#paye == 0)
+						getexp .@basexp,.@jobexp;
+					mes "I'll offer you to find my next riddle. Ok?";
+					next;
+					switch(select("Ok, let's go.","No, not thanks...")){
+						case 1:
+							mes "Looks for an Enigma in the place I will told you about.";
+							mes "He will give you the next riddle.";
+							mes "Howling and spliting mountain.";
+							mes "Huge rock and fire mountain.";
+							mes "We're looking for a city.";
+							set #paye, 0;
+							set #haspaid, 0;
+							break;
+						case 2:
+							mes "...You're desappointing me.";
+							mes "Come back when you'll change your mind.";
+							mes "Next tries will cost you " + .@price + " Zenys, so think of it well.";
+							set #paye, 1;
+							set  questenigma, 7;
+							break;
+					}
+				}
+				else
+					mes "Sorry, but that's not the correct answer.";
+					mes "Come back if you need more help.";
+				break;
+			case 2:
+				mes "Have a good journey then.";
+				break;
+		}	
+		close;
+
+	}
+	else if ( questenigma == 8)
+	{
+		mes "I see that you've still not found.";
+		mes "Here's the riddle again.";
+		mes "Howling and spliting mountain.";
+		mes "Huge rock and fire mountain.";				
+		mes "Do you wan't a clue? It will cost you your last reward.";
+		mes "An Enigma never offer something.";
+		next;
+		switch(prompt("Yes","No"))
+		{
+			case 1:
+				mes "Allright, you're choice.";
+				if (#haspaid == 2)
+				{
+					set BaseExp,BaseExp -.@basexp;
+					set JobExp,JobExp -.@jobexp;
+					set #haspaid, 1;
+				}
+				mes "That's a volcano! A vo.lca.no.";
+				break;
+			case 2:
+			case 255:
+				mes "I prefer that.";
+				break;
+		}
+	}
+	else
+	{
+		mes "Sorry, I'm pretty busy right now.";
+		mes "I'm looking for new riddle of your world.";
+	}
+		
+	close;
+}
+
+moc_ruins,76,181,5	script	Enigma::en9	4_M_CRU_OLD,{
+	set .@npcname$, "[Enigma]";
+	mes .@npcname$;
+	set .@basexp, 65000;
+	set .@jobexp, 40000;
+	set .@price, 25600;
+	mes "";
+	if ( questenigma == 8)
+	{
+		mes "Hello to you, adventurer. I'm the Second, the closest to the First.";
+		mes "Are you ready to surpass me?";
+					next;
+		switch(select("Let's go, ask you riddle!","No, thanks."))
+		{
+			case 1:
+				if (#paye == 1)
+				{
+					if (Zeny < .@price)
+					{
+						mes "Sorry but you have to pay for your participation now.";
+						mes "None can become First Enigma because he want's it.";
+						mes "Come back with " + .@price + " Zeny.";	
+						close;
+					}
+					else
+					{
+						mes "You know have to pay " + .@price + " to make a proposal.";
+						if(select("Ok","Well, no thanks") == 1)
+						{
+							set Zeny, Zeny - .@price;
+						}
+						else
+						{
+							mes "As you wish.";
+							close;
+						}
+					}
+				}
+				mes "Infinite flower, with huge bloom,";
+				mes "Representative of the world immensity,";
+				mes "I'm the start and the end in the Asgard world.";
+				mes "Who am I?";
+					next;
+				input .@response$;
+				if (.@response$ == "Yggdrasil")
+				{
+					mes "Well done!";
+					mes "You know about Yggdrasil? You're ready to meet the First Enigma.";
+					set  questenigma, 9;
+					if (#paye == 0)
+						getexp .@basexp,.@jobexp;
+					mes "I'll offer you to find my next riddle. Ok?";
+					next;
+					switch(select("Ok, let's go.","No, not thanks...")){
+						case 1:
+							mes "Looks for an Enigma in the place I will told you about.";
+							mes "He will give you the next riddle.";
+							mes "No clue, without clue.";
+							mes "No end without start. Clue was already given.";
+							set #paye, 0;
+							set #haspaid, 0;
+							break;
+						case 2:
+							mes "...You're desappointing me.";
+							mes "Come back when you'll change your mind.";
+							mes "Next tries will cost you " + .@price + " Zenys, so think of it well.";
+							set #paye, 1;
+							set  questenigma, 8;
+							break;
+					}
+				}
+				else
+					mes "Sorry, but that's not the correct answer.";
+					mes "Come back if you need more help.";
+				break;
+			case 2:
+				mes "Have a good journey then.";
+				break;
+		}	
+		close;
+
+	}
+	else if ( questenigma == 9)
+	{
+		mes "I see that you've still not found.";
+		mes "Here's the riddle again.";
+		mes "No clue, without clue.";
+		mes "No end without start. Clue was already given.";				
+		mes "Do you wan't a clue? It will cost you your last reward.";
+		mes "An Enigma never offer something.";
+		next;
+		switch(prompt("Yes","No"))
+		{
+			case 1:
+				mes "Allright, you're choice.";
+				if (#haspaid == 2)
+				{
+					set BaseExp,BaseExp -.@basexp;
+					set JobExp,JobExp -.@jobexp;
+					set #haspaid, 1;
+				}
+				mes "I can't tell you more. The answer was in my first question.";
+				break;
+			case 2:
+			case 255:
+				mes "I prefer that.";
+				break;
+		}
+	}
+	else
+	{
+		mes "Sorry, I'm pretty busy right now.";
+		mes "I'm looking for new riddle of your world.";
+	}
+	close;
+}
+
+//ars_fild13,59,206,5	script	Enigma::en10	4_M_ALCHE_A,{
+bif_fild01,26,372,5	script	Enigma::en10	4_M_ALCHE_A,{
+	set .@npcname$, "[Enigma]";
+	mes .@npcname$;
+	set .@basexp, 80000;
+	set .@jobexp, 50000;
+	set .@price, 51200;
+	mes "";
+	if ( questenigma == 9)
+	{
+		mes "Great! You've beaten Second.";
+		mes "But I'm pretty sure that you won't beat me!";
+					next;
+		switch(select("Let's go, ask you riddle!","No, thanks."))
+		{
+			case 1:
+				if (#paye == 1)
+				{
+					if (Zeny < .@price)
+					{
+						mes "Sorry but you have to pay for your participation now.";
+						mes "None can become First Enigma because he want's it.";
+						mes "Come back with " + .@price + " Zeny.";	
+						close;
+					}
+					else
+					{
+						mes "You know have to pay " + .@price + " to make a proposal.";
+						if(select("Ok","Well, no thanks") == 1)
+						{
+							set Zeny, Zeny - .@price;
+						}
+						else
+						{
+							mes "As you wish.";
+							close;
+						}
+					}
+				}
+				mes "What's the answer to everyting?";
+					next;
+				input .@response$;
+				if (.@response$ == "42")
+				{
+					mes "Unbelievable!";
+					mes "You know THE answer...";
+					set  questenigma, 10;
+					if (#paye == 0)
+						getexp .@basexp,.@jobexp;
+					mes "You've became the Prima. I'm beaten!";
+				}
+				else
+					mes "Sorry, but that's not the correct answer.";
+					mes "Come back if you need more help.";
+				break;
+			case 2:
+				mes "Have a good journey then.";
+				break;
+		}	
+		close;
+	}
+	else if ( questenigma == 10)
+	{
+		mes "Sorry, I've nothing more for you.";
+		mes "Or maybe...Do you hear about Mysterio?";
+		mes "As far as I know, every Prima tried to discover it's secret, but none succeed.";
+		set #quetemysterio, 1;
+	}
+	else
+	{
+		mes "Sorry, I'm pretty busy right now.";
+		mes "I'm looking for new riddle of your world.";
+	}	
+	close;
+}

@@ -1,0 +1,121 @@
+payon,210,80,1	script	Number 10::alanum10	4W_KID,{
+	set .@npcname$, "^0000FF[ Number  10 ]^000000";
+	if($handsq == 0)
+	{
+		mes .@npcname$;
+		mes "";
+		if((HideAndSeekQ > 1) && (HideAndSeekQ < 10))
+		{
+			mes "Humm I see that you've found some members, but not all. Continue this way !";
+			close;
+		}
+		else if(HideAndSeekQ == 1)
+		{
+			mes "I'm waiting here. Go and find my friends !";
+			close;
+		}
+		else if(HideAndSeekQ == 10)
+		{
+			mes "HEY congratulations! You've find all players !";
+			next;
+			mes .@npcname$;
+			mes "";			
+			mes "Here's a small reward for you.";
+			getexp 2000,1000;
+			//getitem 7146,1; //Donne l'item au joueur
+			//Baby Dragon Hat, transform item for Miniature Dragon, 29320
+			getitem 5531, 1;
+			mes "That's my favorite puppet so...Keep it safe, okay?";
+			set HideAndSeekQ,5; //Pour fermer la quete
+			close;
+		}
+		mes "37 ... 36 ...35 ...34 ...33 ...32 ...";
+		mes "Pfouaaa I'm pissed...I'm always the one counting...I bet that's cause I'm the only girl...";
+		if($handsq == 0)
+		{
+			next;
+			mes .@npcname$;
+			mes "";
+			mes "Maybe you can seek the others for me...No ?";
+			next;
+			switch(select("Well why not:Nah, sorry.."))
+			{
+				case 1 :
+					mes .@npcname$;
+					mes "";
+					if(HideAndSeekQ > 1) //Je regarde si la variable est supérieur à 1 car elle peut etre a 1 2 3 4 en cours d'event
+					{
+						mes "Humm...You've allready played right? You may know all the hiding place now...Not funny.";
+						close;
+					}
+					mes "Wow how nice of you! Then let's go. There's Number 1 to 9 to find.";
+					mes "Don't worry, they're all around here. Maybe inside, thought.";
+					next;
+					mes .@npcname$;
+					mes "";
+					mes "I'm gonna warn them that you're coming to find them. I'm Number 10, and you are ^3333FF" + strcharinfo(0) + "^000000, right?!";
+					next;
+					mes .@npcname$;
+					mes "";
+					mes "Go on now! I'll count all over. You'll have 15 minutes, after than that, you'll lose.";
+					close2;
+					npctalk "HEEEEEYYY boys! " + strcharinfo(0) + " is coming for you now !!!";
+					set HideAndSeekQ,1;
+					set $handsq, 1;
+					initnpctimer;
+					close;
+
+				case 2 :
+					mes .@npcname$;
+					mes "";
+					mes "Ok ok I'll take it back :";
+					mes "31 ... 30 ... 29 ...";
+					close;
+			}
+		}
+	}
+	mes .@npcname$;
+	mes "";
+	mes "Leave me alone. We're playing Hide & Seek.";
+	close;
+	
+OnTimer900000:
+	mapannounce strnpcinfo(4), "[Number 10] It's over! Let's change the game!", bc_red|bc_map;
+	set $handsq, 0;
+	end;
+
+OnInit:
+	set $handsq, 0;
+	end;
+}
+
+payon,182,143,3	script	Number 1#1::alanum1	1_M_SIZ,{
+	set .@npcname$, "^0000FF[ Number " + strnpcinfo(2) + " ]^000000";
+	mes .@npcname$;
+	mes "";
+	if((HideAndSeekQ >= 1) && (HideAndSeekQ < 10) && $handsq == 1) //Si le joueur est dans la quete
+	{
+		if(getd("HideAndSeekQ" + strnpcinfo(2)) == 0)
+		{
+			mes "Raaa you've found me ...";
+			mes "Find the others, or go back to Number 10.";
+			setd("HideAndSeekQ" + strnpcinfo(2), 1); //Pour savoir si il a deja parlé a ce npc
+			set HideAndSeekQ,HideAndSeekQ+1;
+			close;
+		}
+		mes "You've already found me, you know. Find the others, or go back to Number 10.";
+		close;
+	}
+	mes "Shuush be quiet...Do as if I weren't there..";
+	close;
+}
+
+payon,144,229,6	duplicate(alanum1)	Number 2#2::alanum2	4_F_FAIRYKID5
+payon,130,41,6	duplicate(alanum1)	Number 3#3::alanum3	4_F_FAIRYKID4
+payon,102,191,6	duplicate(alanum1)	Number 4#4::alanum4	4_F_JP_RINNE
+payon,76,342,6	duplicate(alanum1)	Number 5#5::alanum5	JP_AIRI
+payon_in03,24,193,6	duplicate(alanum1)	Number 6#6::alanum6	4_M_DEWGIRL
+payon_in03,123,159,6	duplicate(alanum1)	Number 7#7::alanum7	4_F_BARYO_GIRL
+payon,201,142,6	duplicate(alanum1)	Number 8#8::alanum8	4_M_KR_BOY
+payon,260,110,6	duplicate(alanum1)	Number 9#9::alanum9	4_F_SARAH_BABY
+

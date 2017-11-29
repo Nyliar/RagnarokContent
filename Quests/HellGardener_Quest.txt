@@ -1,0 +1,440 @@
+prt_fild08,337,303,4	script	Ilva::alhegai	4_MAN_PIOM,{
+	set .@npcname$, "[Ilva]";
+	set .@pcname$, "[" + strcharinfo(0) + "]";
+	mes "";
+	mes .@npcname$;
+	mes "Hello. Welcome in my little Paradise.";
+	mes "What can I do for you?";
+	if(HELLGARDENERQ == 0)
+	{
+		next;
+		mes .@pcname$;
+		mes "Why do you call this place a Paradise?";
+		next;
+		mes .@npcname$;
+		mes "Well don't feel you're in peace here?";
+		mes "This place is where I come when I need to calm down.";
+		mes "And believe me, that's not a small thing to accomplish...";
+		next;
+		mes .@pcname$;
+		mes "What do you mean?";
+		next;
+		mes .@npcname$;
+		mes "That's not something I'm not pleased to talk about.";
+		mes "It's an old story, which made me earn the nickname of 'Hell's Gardener'.";
+		set HELLGARDENERQ, 1;
+	}
+	else if(HELLGARDENERQ == 2)
+	{
+		next;
+		mes .@pcname$;
+		mes "So...It was you?";
+		next;
+		mes .@npcname$;
+		mes "Well...I can't hide it, right?";
+		mes "A story is meant to be spoken...";
+		mes "Yes, I'm the one who changed Niflheim. Not the only one, of course.";
+		mes "I didn't bring the monsters there.";
+		mes "Well, except the Trees of course.";
+		mes "Those were entirely my fault...";
+		next;
+		mes .@pcname$;
+		mes "But how is that possible?";
+		mes "Simple anger canno't change the world's face.";
+		next;
+		mes .@npcname$;
+		mes "Cause that's not 'simple' anger.";
+		mes "You know, my anger makes thing change.";
+		mes "I'm affected, nature is affected...Probably peoples will be too.";
+		mes "I don't why this happens.";
+		mes "But it is.";
+		next;
+		mes .@npcname$;
+		mes "I don't what I can do to stop that.";
+		mes "So...I started to try to be as cool as possible.";
+		mes "Keep calm and go on.";
+		next;
+		mes .@npcname$;
+		mes "My only regret goes to those trees I've changed.";
+		mes "If only I can make them disappear, and rest in peace...";
+		set HELLGARDENERQ, 3;
+	}
+	else if(HELLGARDENERQ == 4)
+	{
+		next;
+		mes .@npcname$;
+		mes "I...I've felt what you've done...";
+		mes "You've killed those trees I've cursed.";
+		mes "Thank you. Honestly.";
+		next;
+		mes .@pcname$;
+		mes "Your welcome.";
+		mes "It won't change your condition but still...I thought it will be good for you.";
+		next;
+		mes .@npcname$;
+		mes "No, actually. As I don't know what cause that...";
+		mes "You can't change it. Nobody can...";
+		mes "Thought, this doctor I saw one time in Lighthazeln seemed to know something...";
+		set HELLGARDENERQ, 5;
+	}
+	else if(HELLGARDENERQ == 6)
+	{
+		next;
+		mes .@npcname$;
+		mes "Hum? You again?";
+		if(select("Slap him in the face","Tell him about the Doctor's opinion") == 1)
+		{
+			next;
+			mes .@npcname$;
+			mes "Hey! Are you mad?";
+			mes "Go away!";
+			set HELLGARDENERSLAP, HELLGARDENERSLAP + 1;
+		}
+		else
+		{
+			next;
+			mes .@npcname$;
+			mes "Hum...Strange opinion...And why didn't he tell me about that earlier?";
+			next;
+			mes .@pcname$;
+			mes "I don't know.";
+			mes "Maybe cause he wanted to prevent from doing something...dangerous.";
+			next;
+			mes .@npcname$;
+			mes "Hum maybe...That's true that I may have done that before.";
+			mes "So what now...What I am supposed to do?";
+			mes "What can you do to help me?";
+			if(select("Slap him in the face","Offer to drain his life") == 1)
+			{
+				next;
+				mes .@npcname$;
+				mes "Hey! Are you mad?";
+				mes "Go away! That's not a solution!";
+				set HELLGARDENERSLAP, HELLGARDENERSLAP + 1;				
+			}
+			else
+			{
+				next;
+				mes .@pcname$;
+				mes "Do you know about the spell Drain Life?";
+				next;
+				mes .@npcname$;
+				mes "Yes of course. I see where you wanna go.";
+				mes "But I have to stop you.";
+				mes "That won't be enough.";
+				mes "My life can't be spared.";
+				mes "But it can't be wasted either.";
+				next;
+				mes .@npcname$;
+				mes "Do you know " + getitemname(.gemId) + " item?";
+				mes "It's a small precious stone. By using Drain Life while you're holding one...";
+				mes "You can store the life you'll stole me.";
+				mes "Then, you'll be able to use it for...something.";
+				next;
+				mes .@npcname$;
+				mes "Come back with " + .gemCount + " of those items.";
+				mes "We'll use them this way.";
+				set HELLGARDENERQ, 7;
+			}
+		}
+	}
+	else if(HELLGARDENERQ == 7)
+	{
+		next;
+		mes .@npcname$;
+		mes "Do you got them all?";
+		if(countitem(.gemId) < .gemCount)
+		{
+			next;
+			mes .@npcname$;
+			mes "Not yet. Come back with them all.";
+			close;
+		}
+		next;
+		mes .@npcname$;
+		mes "Allright we're ready now.";
+		mes "Let's go. Use those items to take some of my life.";
+		mes "It'll be stored inside it.";
+		defpattern 1, "Drain Life!", "OnDrainLife";
+		activatepset 1;
+	}
+	else if(HELLGARDENERQ == 8)
+	{
+		next;
+		mes .@npcname$;
+		mes "Who...Who are you?";
+		mes "I...I know you, right?";
+		mes "I can't remember...";
+		set HELLGARDENERQ, 0;
+	}
+	close;
+	
+OnDrainLife:
+	if(countitem(.gemId) > 0 && HELLGARDENERQ >= 7 && HELLGARDENERQ <= 8 && .deadNpc != 1)
+	{
+		set .@killRand, 0;
+		set .@checkKill, 0;
+		if(HELLGARDENERDRAIN > 5)
+		{
+			set .@checkKill, 1;
+			set .@killRand, rand(0,5);
+		}
+		specialeffect 216; //blood drain
+		set HELLGARDENERDRAIN, HELLGARDENERDRAIN + 1;
+		delitem .gemId, 1;
+		getitem $chargedGemId, 1;
+		if((.@checkKill == 1 && .@killRand <= 2) || HELLGARDENERDRAIN == 10)
+		{
+			setnpcdisplay strnpcinfo(3), 4_MAN_PIOM2;
+			set .@npcname$, "[Ilva]";
+			set .@pcname$, "[" + strcharinfo(0) + "]";
+			mes .@pcname$;
+			mes "Hey! Are you okay?";
+			next;
+			mes .@npcname$;
+			mes "...N...No...Not really...";
+			mes "I think it's time for me...";
+			mes "To leave this place...";
+			next;
+			mes .@pcname$;
+			mes "You canno't do that...That's not what I wanted...";
+			next;
+			mes .@npcname$;
+			mes "Don't worry...That was...my choice...";
+			mes "Go...And spread...The gems...";
+			mes "Find...Places...To plant them...";
+			hideonnpc strnpcinfo(3);
+			initnpctimer;
+			set .deadNpc, 1;
+			set HELLGARDENERQ, 8;
+			setnpcdisplay strnpcinfo(3), 4_MAN_PIOM;
+			close;
+		}
+	}
+	end;
+	
+OnTimer180000:
+	set .deadNpc, 0;
+	hideoffnpc strnpcinfo(3);
+	end;
+	
+OnNPCKillEvent:
+	if(killedrid == .treeId && HGARDENQKILL < .treeCount && HELLGARDENERQ == 3)
+	{
+		set HGARDENQKILL, HGARDENQKILL + 1;
+		if(HGARDENQKILL == .treeCount)
+		{
+			dispbottom "[Hell Gardener] I...I feel strange...Come back please...";
+			set HELLGARDENERQ, 4;
+		}
+	}
+	end;
+	
+OnInit:
+	set .treeId, 1503;
+	set .treeCount, 150;
+	set .gemId, 7428;
+	set .gemCount, 10;
+	set $chargedGemId, 7430;
+	set .deadNpc, 0;
+	end;
+}
+
+lhz_in03,101,106,4	script	Doctor::alhodo	4_F_BRZ_WOMAN,{
+	set .@npcname$, "[Doctor]";
+	set .@pcname$, "[" + strcharinfo(0) + "]";
+	mes .@npcname$;
+	mes "";
+	mes "Next patient please!";
+	mes "What can I do for you?";
+	if(HELLGARDENERQ == 5)
+	{
+		next;
+		mes .@pcname$;
+		mes "For me, nothing.";
+		mes "I'm here for Ilva.";
+		next;
+		mes .@npcname$;
+		mes "The Hell's Gardener?";
+		mes "How does he go?";
+		mes "Hope his health is as good as before.";
+		next;
+		mes .@pcname$;
+		mes "Well I guess so. He's a bit worried about his condition.";
+		next;
+		mes .@npcname$;
+		mes "Well I will happily believe it.";
+		mes "He was such a medical discovery.";
+		mes "Do you know that his affection is due to his too strong health.";
+		mes "By getting angry, his immense life force flew from his body.";
+		mes "It then affect everything around him.";
+		next;
+		mes .@pcname$;
+		mes "And...Can't we do something for him?";
+		next;
+		mes .@npcname$;
+		mes "Well...Except...Hurting him...A lot...";
+		set HELLGARDENERQ, 6;
+	}
+	else
+	{
+		mes "...But you're in perfect health!";
+		mes "Don't talk others place please...";
+	}
+	close;
+}
+
+prt_gld,112,163,4	script	Gardener::alhoga	4_M_NOVELIST,{
+	set .@npcname$, "[Gardener]";
+	set .@pcname$, "[" + strcharinfo(0) + "]";
+	mes "";
+	mes .@npcname$;
+	mes "Hello. I'm the royal gardener.";
+	mes "My role here is to take care of those gardens, and generally all plants or flowers in the city.";
+	if(HELLGARDENERQ == 1)
+	{
+		next;
+		mes .@pcname$;
+		mes "A gardener he?";
+		mes "Did you ever heard about the Hell's Gardener?";
+		next;
+		mes .@npcname$;
+		mes "Hell's Gardener?";
+		mes "Any Gardener did allready heard this name at least once in his history.";
+		next;
+		mes .@pcname$;
+		mes "But why? He didn't look such a bad guy...";
+		next;
+		mes .@npcname$;
+		mes "You've encountered him?";
+		next;
+		mes .@pcname$;
+		mes "Well yeah. Some times ago.";
+		mes "He was...looking for peace, apparently.";
+		next;
+		mes .@npcname$;
+		mes "Well yeah, I can believe so...";
+		mes "He was a pure hearted man.";
+		mes "But anger was hidden in his heart.";
+		mes "Do you know why a Gardener can't be angry?";
+		if(select("Cause of his...tools?") == 1)
+		{
+			next;
+			mes .@pcname$;
+			mes "Well I guess it's cause he use sharp tools. Dangerous ones?";
+			next;
+			mes .@npcname$;
+			mes "Not bad, but not exactly that.";
+			mes "In a world full of swords, a scissors isn't really a threat.";
+			mes "No, that's cause the plants and the nature in general can feel it.";
+			mes "Be get angry near a plant, and you'll affect it.";
+			mes "It'll grow badly. And for a Gardener, there's nothing worst.";
+			next;
+			mes .@pcname$;
+			mes "Well ok but still...That's only plants...";
+			next;
+			mes .@npcname$;
+			mes "You're a bit narrow minded aren't you?";
+			mes "Did you ever go to Niflheim fields?";
+			select("Yes, of course","No, not yet");
+			next;
+			mes .@npcname$;
+			mes "There's some trees there. Those trees where initially beautiful ones.";
+			mes "But the Hell's Gardener was used to get there to let his anger get out.";
+			mes "He yelled, hit, throw stones...whatever.";
+			mes "And the trees and nature around there started to...change.";
+			next;
+			mes .@pcname$;
+			mes "You mean that his simple anger changed this place from a nice countryside to...this?";
+			next;
+			mes .@npcname$;
+			mes "Why do you think he's called Hell's Gardener?";
+			set HELLGARDENERQ, 2;
+		}
+	}
+	close;
+}
+
+prt_fild10,236,43,4	script	Hole::alhghol	4_CRACK,10,10,{
+	mes "*There's a strange hole on the floor...*";
+	if (HELLGARDENERQ == 8 && countitem($chargedGemId) > 0)
+	{
+		mes "Do you want to drop one gem inside this hole?";
+		if(select("Yes","No") == 1)
+		{
+			delitem $chargedGemId, 1;
+			specialeffect 883; //epiclesis
+			switch(rand(0,10))
+			{
+				case 0:
+					//nothing
+					mes "Nothing happens. But your soul seems lighter.";
+					break;
+				case 1:
+					//drain life to player
+					specialeffect2 378;
+					percentheal 0 - rand(1,99), 0;
+					break;
+				case 2:
+					//drain energy to player
+					specialeffect2 380;
+					percentheal 0,  0 - rand(1,99);
+					break;
+				case 3:
+					//Ygg leaf
+					getitem 610, 15;
+					break;
+				case 5:
+					//pop gibbets (*5) 1503
+					getmapxy(.@map$, .@x, .@y, UNITTYPE_PC);
+					monster .@map$, .@x, .@y, "--ja--", 1503, 5;
+					break;
+				case 6:
+					//pop ancient tree (*3) 2019
+					getmapxy(.@map$, .@x, .@y, UNITTYPE_PC);
+					monster .@map$, .@x, .@y, "--ja--", 2019, 3;
+					break;
+				case 7:
+					//get seeds
+					getitem 608, 10;
+					break;
+				case 8:
+					//get berries
+					getitem 607, 5;
+					break;
+				case 9:
+					//get zenys items
+					getitem 12134, 3;
+					break;
+				case 4:
+				case 10:
+					//get card
+					rentitem 29298, 60;
+					break;
+			}
+		}
+		hideonnpc strnpcinfo(3);
+		initnpctimer;
+	}
+	close;
+
+OnTouch:
+	dispbottom "Woops, there's a hole there! Be careful not to fall.";
+	end;
+
+OnTimer300000:
+	stopnpctimer;
+	hideoffnpc strnpcinfo(3);
+	end;
+}
+
+prt_fild03,245,188,0	duplicate(alhghol)	Hole::alhghol1	4_CRACK
+pay_fild05,254,148,0	duplicate(alhghol)	Hole::alhghol2	4_CRACK
+gef_fild02,38,220,0	duplicate(alhghol)	Hole::alhghol3	4_CRACK
+yuno_fild06,342,313,0	duplicate(alhghol)	Hole::alhghol4	4_CRACK
+hu_fild06,187,88,0	duplicate(alhghol)	Hole::alhghol5	4_CRACK
+ein_fild01,127,102,0	duplicate(alhghol)	Hole::alhghol6	4_CRACK
+bra_fild01,93,192,0	duplicate(alhghol)	Hole::alhghol7	4_CRACK
+bif_fild01,158,80,0	duplicate(alhghol)	Hole::alhghol8	4_CRACK
+nif_fild02,63,258,0	duplicate(alhghol)	Hole::alhghol9	4_CRACK
+prt_fild06,77,233,0	duplicate(alhghol)	Hole::alhghol10	4_CRACK

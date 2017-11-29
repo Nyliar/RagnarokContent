@@ -1,0 +1,575 @@
+niflheim,154,260,3	script	Skull Collectionneur::biscol	4_M_ROKI,{
+	set .@price, 4000;
+
+	set .@npcname$, "[Skulletor]";
+	mes .@npcname$;
+	mes "YAHHHRRRR!";
+	mes "I can feel it...Yeahhhh....You got corpse part with you.";
+	mes "I have my little...Collection, you see. From large to tiny, I want it all.";
+	next;
+	mes .@npcname$;
+	mes "Everybody is own lust, hu?";
+	mes "I can exchange you some. For special items, see?";
+	mes "Are you okay??";
+	if (select("Okay!","Beurk...no way...") == 1)
+	{
+		next;
+		mes .@npcname$;
+		mes "YAHHHRRRR!";
+		mes "Then I'll need a Blood Thirst, plus " + .@price + " Zenys.";
+		mes "Also, I need a body corpse part. What do you have for me, hu?";
+		if(countitem(6470) == 0)
+		{	
+			next;
+			mes .@npcname$;
+			mes "Well sorry, but I'll need those " + getitemname(6470) + " too...";
+			close;
+		}
+		for(set .@i,0; .@i<getarraysize(.bodyPartAccepted); set .@i,.@i+1)
+		{
+			if(countitem(.bodyPartAccepted[.@i]) > 0)
+			{
+				set .@menu$, .@menu$ + ( .@i ? ":" : "" ) + getitemname(.bodyPartAccepted[.@i]);
+				set .@bodyPartFound[getarraysize(.@bodyPartFound)], .bodyPartAccepted[.@i];
+			}
+		}
+		if(getarraysize(.@bodyPartFound) == 0)
+		{
+			next;
+			mes .@npcname$;
+			mes "Hum...Looks like you don't have a thing for me...";
+			mes "Come back later, okay?";
+			close;
+		}
+		set .@menuChoice, select(.@menu$) - 1;
+		next;
+		mes .@npcname$;
+		mes "How much can you trade me?";
+		mes "0 means 'as much as possible'.";
+		input .@count;
+		if (.@count == 0)
+		{
+			set .@count, countitem(.@bodyPartFound[.@menuChoice]);
+			if (countitem(.@bodyPartFound[.@menuChoice]) < .@count)
+				set .@count, countitem(.@bodyPartFound[.@menuChoice]);
+			if (Zeny / .@price < .@count)
+				set .@count, Zeny < .@price;
+		}
+		if(.@count > countitem(6470))
+		{
+			set .@count, countitem(6470);
+		}
+		if(.@price > Zeny)
+		{
+			next;
+			mes .@npcname$;
+			mes "Arf...I'll also need Zenies, as I said.";
+			close;
+		}
+		delitem 6470, .@count;
+		delitem .@bodyPartFound[.@menuChoice], .@count;	
+		set Zeny, Zeny - (.@count * .@price);	
+		getitem 11596, .@count;
+		if (JORMUNGAND_STUFFQ == 0)
+		{
+			if (.@count >= .requiredBloodInOneTime)
+			{
+				//if 75 blood in skulls are bought in one single time and that the mysterio quest is already fullfilled
+				//start jormungand hat and staff quest
+				set .@playerName$, "[" + strcharinfo(0) + "]";
+				next;
+				mes .@npcname$;
+				mes "Hum...You're a good friend of mine now.";
+				mes "Looks like you've always been here for me, taking care of me and my madness.";
+				next;
+				mes .@playerName$;
+				mes "Yeah...I guess you can say that.";
+				mes "But I'm not losing anything in these exchange...";
+				next;
+				mes .@npcname$;
+				mes "But I'm not mad. Not the way you can think of.";
+				mes "It's just that...I've seen...";
+				mes "The big yellow eye...";
+				mes "The danger, in all its greatness...";
+				next;
+				mes .@npcname$;
+				mes "I've seen Jormungand.";
+				mes "I've seen the World Snake.";
+				mes "And I can say I understand why gods themselves fear him...";
+				next;
+				mes .@playerName$;
+				mes "And...Why?";
+				next;
+				mes .@npcname$;
+				mes "Imagine a giant snake. Higher than you and me.";
+				mes "A snake that can broke all your bones in one second.";
+				mes "Which is able to fly, to bite and lot more.";
+				mes "Nobody stand a chance against him.";
+				mes "And that's why I think it's the greatest Lord of all time!";
+				mes "All hail Jormungand!";
+				if(select("Hail Jormungand","You...You're mad!") == 1)
+				{
+					next;
+					mes .@playerName$;
+					mes "All Hail Jormungand, the World Snake!";
+					next;
+					mes .@npcname$;
+					mes "He he he! You've understand, brother.";
+					mes "Welcome in the Jormungand's Family.";
+					next;
+					mes .@playerName$;
+					mes "Thank you, brother.";
+					mes "What can I do for our Lord?";
+					next;
+					mes .@npcname$;
+					mes "Did you ever heard of Bilfrost?";
+					next;
+					mes .@playerName$;
+					mes "Well yes. That's a recently found area, climbing over Yggdrasil body.";
+					next;
+					mes .@npcname$;
+					mes "Yeah. This one.";
+					mes "That's a lie.";
+					mes "This is not Yggdrasil. Not the real one.";
+					mes "But as for all legend, a part of truth exists in this one.";
+					next;
+					mes .@npcname$;
+					mes "Jormungand did not live across this tree. It's too small for him.";
+					mes "But when the Ases fought him during last battle, they've ripped off some of his ribs.";
+					mes "Those ribs have been thrown in this fake representation of Yggdrasil, and eaten by monsters in there.";
+					next;
+					mes .@npcname$;
+					mes "To give its power back to our Lord, we should find those ribs.";
+					mes "Bring them back to me.";
+					mes "Our Lord was composed with " + .ribCount + " ribs.";
+					mes "Bring them back. And we'll be able to advance.";
+					set JORMUNGAND_STUFFQ, 1;
+					set jormungand_qdelay, ( gettimetick(2) + 43200); //12h delay
+				}
+				else
+				{
+					next;
+					mes .@npcname$;
+					mes "...You don't understand...";
+				}
+			}
+			else
+			{
+				mes "Ahahahahaha, thank you my friend";
+				mes "Soon, you'll be part of my collection...";
+			}
+		}
+		else if (JORMUNGAND_STUFFQ == 1)
+		{
+			callsub CheckDelay;
+			next;
+			mes .@npcname$;
+			mes "Ke ke ke...";
+			if(countitem(.ridId) >= .ribCount)
+			{
+				next;
+				mes .@npcname$;
+				mes "I can feel it...Our Lord is with you...";
+				delitem .ridId, .ribCount;
+				mes "His raise gets closer...";
+				next;
+				mes .@npcname$;
+				mes "Did you ever heard about the poem Husdrapa. No?";
+				mes "What about the Ragnarsdrapa?";
+				mes "That's an interesting story about Jormungand...";
+				mes "You should read it.";
+				set JORMUNGAND_STUFFQ, 2;
+			}
+			else
+			{
+				mes "Work for you Lord.";
+			}
+		}
+		else if (JORMUNGAND_STUFFQ == 2)
+		{
+			callsub CheckDelay;
+			next;
+			mes .@npcname$;
+			mes "You didn't read it, hu?";
+			mes "Honestly, you should.";
+			mes "Remember my words. The poem Husdrapa. Okay?";
+		}
+		else if (JORMUNGAND_STUFFQ == 3)
+		{
+			callsub CheckDelay;
+			next;
+			mes .@npcname$;
+			mes "So you've found the hammer?";
+			mes "It was known to be Mjollnir.";
+			delitem $hammerId, 1;
+			mes "Thor, the filthy god, throw it to our Lord's head.";
+			mes "But thanks to all demons, he missed him, and simply cause him to sleep in the deep ocean.";
+			next;
+			mes .@npcname$;
+			mes "During years, Jormungands slept in the deepest water.";
+			mes "There, he left lots of his scales, as his skin get soaked by the surrounding water.";
+			mes "And during these times, those scales, imbued with the power of the Great Snake, turns to monsters.";
+			mes "You should convince them to join our forces...";
+			set JORMUNGAND_STUFFQ, 4;
+		}
+		else if (JORMUNGAND_STUFFQ == 4)
+		{
+			callsub CheckDelay;
+			next;
+			mes .@npcname$;
+			mes "Did you manage to convince the monsters?";
+		}
+		else if (JORMUNGAND_STUFFQ == 5)
+		{
+			callsub CheckDelay;
+			next;
+			mes .@npcname$;
+			mes "Allright...I can feel it...Our Lord is now ready to be called back from the Lymbs where Ases sent him.";
+			mes "You need to find the 5 Lost Childs.";
+			mes "Talk to them. Tell them we're ready.";
+			mes "Bring them back, and we'll call Jormungandr back.";
+			mes "They're waiting in some great town, preaching our Lord return.";
+		}
+		else if (JORMUNGAND_STUFFQ < 10)
+		{
+			next;
+			mes .@npcname$;
+			mes "Bring them back...Hurry up!";
+		}
+		else if (JORMUNGAND_STUFFQ == 10)
+		{
+			next;
+			mes .@npcname$;
+			mes "Finally!";
+			mes "Finally, the days has come!";
+			mes "To start the invocation, you should become part of it too.";
+			mes "Nobody can block it.";
+			mes "Choose a sacrifice you wanna make.";
+			set .lastChoice, select("Sacrifice 90% HP","Sacrifice 90% SP");
+			hideoffnpc "jorqdp_2";
+			hideoffnpc "jorqdp2_2";
+			hideoffnpc "jorqdp3_2";
+			hideoffnpc "jorqdp4_2";
+			hideoffnpc "jorqdp5_2";
+			close2;
+			set JORMUNGAND_STUFFQ, 11;
+			npctalk strnpcinfo(3), "World Snake! Jormungandr";
+			sleep 1000;
+			npctalk strnpcinfo(3), "Hear our call!";
+			sleep 1000;
+			npctalk strnpcinfo(3), "Take back you ribs, scales, and our sacrifice to grow back, and return to us!";
+			sleep 1000;
+			donpcevent "jorqdp_2::OnTalk";
+		}
+		else if (JORMUNGAND_STUFFQ == 11)
+		{
+			next;
+			mes .@npcname$;
+			mes "Why...Why did you do that to us...";
+		}
+		else if (JORMUNGAND_STUFFQ == 12)
+		{
+			next;
+			mes .@npcname$;
+			mes "Thank you...It's been so long since I was able to think clearly";
+			mes "My mind was devoured by those eyes I saw a long, long time ago in the water...";
+			mes "It was terrible...I wasn't able to control my own hand, or my tongue.";
+			mes "All those things I said...";
+			next;
+			mes .@npcname$;
+			mes "But thanks to you, I've been able to freed my memories.";
+			mes "Take that. All started when I was hunting for this thing.";
+			mes "I don't wan't it anymore...";
+			getitem .rewardId[0], 1;
+			rentitem 29354, 60;
+			set JORMUNGAND_STUFFQ, 14;
+			hideonnpc "jorqdp_2";
+			hideonnpc "jorqdp2_2";
+			hideonnpc "jorqdp3_2";
+			hideonnpc "jorqdp4_2";
+			hideonnpc "jorqdp5_2";
+		}
+		else if (JORMUNGAND_STUFFQ == 13)
+		{
+			next;
+			mes .@npcname$;
+			mes "Thank you...It's been so long since I was able to think clearly";
+			mes "My mind was devoured by those eyes I saw a long, long time ago in the water...";
+			mes "It was terrible...I wasn't able to control my own hand, or my tongue.";
+			mes "All those things I said...";
+			next;
+			mes .@npcname$;
+			mes "But thanks to you, I've been able to freed my memories.";
+			mes "Take that. All started when I was hunting for this thing.";
+			mes "I don't wan't it anymore...";
+			getitem .rewardId[1], 1;
+			rentitem 29354, 60;
+			set JORMUNGAND_STUFFQ, 14;
+			hideonnpc "jorqdp_2";
+			hideonnpc "jorqdp2_2";
+			hideonnpc "jorqdp3_2";
+			hideonnpc "jorqdp4_2";
+			hideonnpc "jorqdp5_2";
+		}
+		else if (JORMUNGAND_STUFFQ == 14)
+		{
+			next;
+			mes .@npcname$;
+			mes "I think I'll keep this strange collection habbit for a while...";
+		}
+		else
+		{
+			next;
+			mes .@npcname$;
+			mes "B...Blood! Skull! Bones!";
+		}
+	}
+	else
+	{
+		next;
+		mes .@npcname$;
+		mes "...You're pretty weird, aren't you?";
+	}
+	close;
+
+OnStartLastEvent:
+	if(.lastChoice == 1)
+	{
+		npctalk "The...The Army members...Why did you send them against us, Jormungandr?";
+		//HP
+		monster strnpcinfo(4), 0, 0, "Army Members", .hpMobId, .hpMobCount, strnpcinfo(3) + "::OnHpMobKilled";
+	}
+	else
+	{
+		npctalk "Take our souls, Snake Lord!";
+		//SP
+		monster strnpcinfo(4), 0, 0, "Jormungandr", .spMobId, .spMobCount, strnpcinfo(3) + "::OnSpMobKilled";
+	}
+	end;
+
+OnHpMobKilled:
+	if(mobcount( strnpcinfo(4),strnpcinfo(3) + "OnHpMobKilled" ) == 0)
+	{
+		set JORMUNGAND_STUFFQ, 12;
+		dispbottom "[Skullector] Thank...Thank you. Come back to me...";
+	}
+	end;
+
+OnSpMobKilled:
+	dispbottom "[Skullector] Thank...Thank you. Come back to me...";
+	set JORMUNGAND_STUFFQ, 13;
+	end;
+
+OnNPCKillEvent:
+	if(JORMUNGAND_STUFFQ == 1 && (strcharinfo(3) == "bif_fild01" || strcharinfo(3) == "bif_fild02"))
+	{
+		if(rand(0,100) <= .ribSuccessRate)
+		{
+			getitem .ridId, 1;
+		}
+	}
+	end;
+
+	
+CheckDelay:
+	set .@npcname$, "[Skulletor]";
+	if(gettimetick(2) >= jormungand_qdelay)
+	{
+		mes "That's too late...With missed the invocation...";
+		mes "We should start it all over again...";
+		set JORMUNGAND_STUFFQ, 0;
+		close;
+	}
+	else
+	{
+		next;
+		mes .@npcname$;
+		mes "We're not ready yet...";
+		mes "We should hurry...";
+	}
+	return;
+
+OnInit:
+	setarray .bodyPartAccepted[0], 7005, 932; //skull, bone
+	set .ridId, 6598;
+	set .ribCount, 234;
+	set .ribSuccessRate, 100;
+	set $hammerId, 7808;
+	set .hpMobId, 2047;
+	set .hpMobCount, 100;
+	set .spMobId, 1418;
+	set .spMobCount, 1;
+	set .requiredBloodInOneTime, 75;
+	setarray .rewardId[0], 18987, 2020;
+	end;
+}
+
+payon,165,115,7	script	Unknown Youth#1::jorqdp	JP_AIRI,{ //533
+	set .@npcname$, "[Unknown Youth]";
+	mes .@npcname$;
+	if (JORMUNGAND_STUFFQ >= 5 && JORMUNGAND_STUFFQ < 10)
+	{
+		if(getd("JORMQ_" + strnpcinfo(2)) == 0)
+		{
+			mes "You...You're one of us, right?";
+			mes "I can feel the Great Snake's Eye on you.";	
+			mes "Is it true? Is it finally time for us to call Him back?";
+			mes "Wait for me. I'll be back soon near the Skullector.";
+			mes "Hail Jormungandr!";
+			set JORMUNGAND_STUFFQ, JORMUNGAND_STUFFQ + 1;
+		}
+		else
+		{
+			mes "Find the others.";
+		}
+	}
+	else
+	{
+		mes "May the Great Snake be with you.";
+	}
+	close;
+}
+
+geffen,183,108,7	duplicate(jorqdp)	Unknown Youth#2::jorqdp2	JP_SUPIKA //529
+morocc,197,265,7	duplicate(jorqdp)	Unknown Youth#3::jorqdp3	JP_SABIKU //530
+izlude,44,91,7	duplicate(jorqdp)	Unknown Youth#4::jorqdp4	JP_ARUGORU //531
+alberta,131,167,7	duplicate(jorqdp)	Unknown Youth#5::jorqdp5	JP_ARUNA //532
+
+
+niflheim,157,264,3	script	Lost Child::jorqdp_2	JP_AIRI,{ //533
+	set .@npcname$, "[Lost Child]";
+	mes .@npcname$;
+	if (JORMUNGAND_STUFFQ == 10)
+	{
+		mes "We are ready to call you back, Lord Snake!";
+	}
+	else if (JORMUNGAND_STUFFQ == 11)
+	{
+		mes "The...The big yellow eyes...Help us!";
+	}
+	else if (JORMUNGAND_STUFFQ == 13)
+	{
+		mes "Who are you? Why am I here?";
+	}
+	close;
+
+OnTalk:
+	if(strnpcinfo(3) == "jorqdp_2")
+	{
+		npctalk "Jormungandr! Receive the Hammer of the False God, which was thrown at you!";
+			sleep 1000;
+		donpcevent "jorqdp4_2::OnTalk";
+	}
+	else if(strnpcinfo(3) == "jorqdp4_2")
+	{
+		npctalk "Accept our sacrifice, to restore you own power!";
+			sleep 1000;
+		donpcevent "jorqdp2_2::OnTalk";
+	}
+	else if(strnpcinfo(3) == "jorqdp2_2")
+	{
+		npctalk "Wh...What's happening?!";
+			sleep 1000;
+		npctalk "No...No please!";
+			sleep 1000;
+		donpcevent "jorqdp3_2::OnTalk";
+	}
+	else if(strnpcinfo(3) == "jorqdp3_2")
+	{
+		npctalk "Those...Those eyesssssssss!";
+			sleep 1000;
+		donpcevent "biscol::OnStartLastEvent";
+	}
+	end;
+
+OnInit:
+	hideonnpc strnpcinfo(3);
+	end;
+}
+
+niflheim,159,260,3	duplicate(jorqdp_2)	Lost Child::jorqdp2_2	JP_SUPIKA //529
+niflheim,157,257,1	duplicate(jorqdp_2)	Lost Child::jorqdp3_2	JP_SABIKU //530
+niflheim,154,255,7	duplicate(jorqdp_2)	Lost Child::jorqdp4_2	JP_ARUGORU //531
+niflheim,149,257,7	duplicate(jorqdp_2)	Lost Child::jorqdp5_2	JP_ARUNA //532
+
+iz_dun05,141,187,4	script	Dungeon Entry::jorqentry	HIDDEN_WARP_NPC,3,3,{
+	end;
+	
+OnTouch:
+	if(JORMUNGAND_STUFFQ == 4)
+	{
+		monster strnpcinfo(4), 0, 0, "--ja--", .mobId, .mobCount, strnpcinfo(3) + "::OnMonsterConvinced";
+		dispbottom "You have 15 minutes to convince all monsters to join your army. Defeat them to collect their Jormungand Scale as proof.";
+		initnpctimer;
+	}
+	end;
+	
+OnMonsterConvinced:
+	if(JORMUNGAND_STUFFQ == 4)
+	{
+		getitem .scaleId, 1;
+		if (countitem(.scaleId) >= .scaleCount)
+		{
+			dispbottom "Your army is ready!";
+			set JORMUNGAND_STUFFQ, 5;
+		}
+	}
+	end;
+	
+OnTimer900000:
+	killmonster strnpcinfo(4), "jorqentry::OnMonsterConvinced";
+	end;
+	
+OnInit:
+	set .mobId, 1993;
+	set .mobCount, 100;
+	set .scaleId, 6091;
+	set .scaleCount, 25;
+	end;
+}
+
+alb2trea,95,98,4	script	Fishing Spot::jorfishing	1_SHADOW_NPC,3,3,{
+	if(countitem(.beefHeadId) >= 1 && JORMUNGAND_STUFFQ == 2)
+	{
+		mes "Something huge moves under the water.";
+		mes "Do you wish to throw the Beef Head in the water?";
+		if(select("Yes","No") == 1)
+		{
+			delitem .beefHeadId, 1;
+			if(rand(0,500) <= .minSuccessRate)
+			{
+				next;
+				mes "You've catch something strange.";
+				mes "Looks like an old rusty hammer...";
+				mes "After cleaning it, it looks shiny.";
+				getitem $hammerId, 1;
+				set JORMUNGAND_STUFFQ, 3;
+			}
+			else
+			{
+				next;
+				mes "Nothing happens...";
+				mes "Maybe you'll get more luck next time.";
+			}
+		}
+		close;
+	}
+	else
+	{
+		mes "You can't see anything. The water is completely dark.";
+		close;
+	}
+	end;
+
+OnTouch:
+	if(countitem(.beefHeadId) >= 1)
+	{
+		dispbottom "Something moved in the water...";
+	}
+	end;
+
+OnInit:
+	set .minSuccessRate, 20;
+	set .beefHeadId, 6254;
+	end;
+}

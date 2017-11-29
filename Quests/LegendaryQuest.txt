@@ -1,0 +1,180 @@
+// [========================================================]
+// [=============   Legendary Quest - Main		============]
+// [========================================================]
+// [ Version 1                                              ]
+// [========================================================]
+// [ Original script by: Alayne				   				]
+// [========================================================]
+// [ Description:                                           ]
+// [--------------------------------------------------------]
+// [                                                        ]
+// [ - A legendary quest to obtain access to legenday quests]
+// [========================================================]
+// [ Changelog: (5 last updates)                            ]
+// [--------------------------------------------------------]
+// [                                                        ]
+// [ v0: Creation                      			    		]
+// [                                                        ]
+// [                                                        ]
+// [========================================================]
+// [                                                        ]
+// [========================================================]
+
+ars_fild13,165,182,0	script	Gameri::lquest3	4_M_HUOLDARMY,{
+	set .@npcname$, "[Gameri]";
+	mes .@npcname$;
+	mes "";
+	mes "Hello to you, " + strcharinfo(0);
+	if (LQUEST == 4)
+	{
+		mes "Looks like you've already heard about several points of view.";
+		mes "You should know that every single people in every single city of every world has a different point of view.";
+		mes "Some will think they've been mistreated all their life.";
+		mes "Some will fight for what they have. Or what they think they should have.";
+		mes "Other will simply follow the life stream.";
+		mes "But every of them have a strong and self centered mind.";
+		next;
+		mes .@npcname$;
+		mes "You should try to talk to other people.";
+		mes "Life isn't just about fighting, growing in strength, or killing monsters.";
+		mes "You should discover what the life here, in Midgard, can bring you.";
+		set LQUEST, 5;
+	}
+	close;
+}
+
+ars_fild13,148,206,0	script	Anyro::lquest2	4_F_HUGRANMA,{
+	set .@npcname$, "[Anyro]";
+	mes .@npcname$;
+	mes "";
+	mes "Good day to you, Meister.";
+	if(LQUEST == 3)
+	{
+		mes "Hum...You've been hurt by Malgrea's sentences right?";
+		mes "I can understand that.";
+		mes "Life has never been specially easy in our world.";
+		mes "But with all the problems coming recently, it became even harder.";
+		next;
+		mes .@npcname$;
+		mes "I don't think like Malgrea. I don't think you're responsible of our loss, our grief.";
+		mes "Gods decided it this way.";
+		mes "We have to fight against what they choose to send upon our heads.";
+		next;
+		mes .@npcname$;
+		mes "That is our daily struggle.";
+		mes "And...Just a last thing Malgrea forgot to tell you.";
+		mes "A Meister isn't just a nightmare, or a sorrow origin.";
+		mes "It's also a sign of hope, a sign to show us that anybody can raise.";
+		mes "A sign that anybody has chances to change his own world.";
+		set LQUEST, 4;
+	}
+	close;
+}
+
+ars_fild13,198,190,0	script	Malgrea::lquest1	4_F_DST_GRAND,2,2,{
+	set .@npcname$, "[Malgrea]";
+	mes .@npcname$;
+	mes "";
+	mes "Good day to you, Meister.";
+	if (LQUEST == 0)
+	{
+		switch (select("Meister?","Good day to you too","What do you mean?"))
+		{
+			case 1:
+				next;
+				mes .@npcname$;
+				mes "That's how people of my kind call the Adventurers like you.";
+				mes "It's an equivalent of 'Sire'.";			
+				break;
+			case 2:
+				next;
+				mes .@npcname$;
+				mes "Thank you, Meister.";
+				break;
+			case 3:
+				next;
+				mes .@npcname$;
+				mes "What should I mean, hu?";
+				mes "That it will be a good day, whatever you'll do or not?";
+				mes "That I order you to have a good day?";
+				mes "No, none of that.";
+				mes "I simply wish you'll have a good and fun day, sire.";
+				break;
+		}
+	}
+	else
+	{
+		if (LQUEST == 1)
+		{
+			mes "He he he he!";
+			mes "I guess you don't know what that mean, hu?";
+			mes "Meister...What a strange word do we have here.";
+			mes "It's...No, I shouldn't talk about that now...";
+			set LQUEST, 2;
+		}
+		else if (LQUEST == 2)
+		{
+			next;
+			mes "[" + strcharinfo(0) + "]";
+			mes "Don't be affraid, Malgrea.";
+			mes "Tell me more about that word you seems frightened to say out loud.";
+			next;
+			mes .@npcname$;
+			mes "No...No I sincerely shouldn't talk about that, Meister...";
+			set LQUEST, 3;
+		}
+		else if (LQUEST == 3)
+		{
+			if (select("Ask her gently","Frightened her") == 1)
+			{	
+				next;
+				mes "[" + strcharinfo(0) + "]";
+				mes "Tell me, please.";
+				next;
+				mes .@npcname$;
+				mes "No, honestly, I just...can't.";
+			}
+			else
+			{
+				next;
+				mes "[" + strcharinfo(0) + "]";
+				mes "You shouldn't play with my patience, lady...";
+				mes "Tell me what's a Meister!";
+				next;
+				mes .@npcname$;
+				mes "But...That really doesn't matter, you know...";
+				next;
+				mes "[" + strcharinfo(0) + "]";
+				mes "If that wasn't important at all, you wouldn't have call me that way...";
+				mes "I don't know you, but you seems to know me.";
+				next;
+				mes .@npcname$;
+				mes "Don't believe that.";
+				mes "I don't know you personaly.";
+				mes "But I know other people like you.";
+				mes "Lot of us know you.";
+				mes "You are the Adventurers, the Great, the Powerful Adventurers.";
+				mes "You are those who crawl all around our country, all around our fields.";
+				mes "You destroy the monsters, but before you start coming around here, there wasn't any monsters.";
+				mes "You are those who get the monsters here.";
+				mes "Haven't you ever thought about that before?";
+				mes "We thank you for killing our nightmares, but you're our nightmare origins!";
+				mes "And that, Sire, is what we call a Meister...";
+			}
+		}
+	}
+	close;
+	
+OnTouch:
+	getpartymember(getcharid(1));
+	if ($@partymembercount >= 5)
+	{
+		npctalk "[Malgrea] Good day to you, Meister.";
+		set LQUEST, 1;
+	}
+	end;
+
+OnInit:
+	set .debug, 1;
+	end;
+}

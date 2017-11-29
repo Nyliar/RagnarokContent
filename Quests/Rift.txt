@@ -1,0 +1,232 @@
+//
+// [========================================================]
+// [===========       Rift Project               ===========]
+// [========================================================]
+// [ Version 1                                              ]
+// [========================================================]
+// [ Original script by: Alayne                             ]
+// [========================================================]
+// [ Description:                                           ]
+// [--------------------------------------------------------]
+// [ - Spawn Rift monsters                                  ]
+// [ Random spawn maps & monsters choice                    ]
+// [ Event attached to DB monsters                          ]
+// [========================================================]
+// [ Changelog: (5 last updates)                            ]
+// [--------------------------------------------------------]
+// [                                                        ]
+// [ v0: Creation                      			    ]
+// [                                                        ]
+// [========================================================]
+// [                                                        ]
+// [========================================================]
+
+anthell02	mapflag	loadevent
+gefenia03	mapflag	loadevent
+odin_tem03	mapflag	loadevent
+ein_fild04	mapflag	loadevent
+ra_fild08	mapflag	loadevent
+ice_dun01	mapflag	loadevent
+thor_v02	mapflag	loadevent
+ve_fild03	mapflag	loadevent
+mosk_dun02	mapflag	loadevent
+c_tower3	mapflag	loadevent
+gef_fild07	mapflag	loadevent
+gl_chyard	mapflag	loadevent
+gl_sew04	mapflag	loadevent
+in_sphinx4	mapflag	loadevent
+iz_dun03	mapflag	loadevent
+mjo_dun03	mapflag	loadevent
+moc_fild03	mapflag	loadevent
+moc_pryd06	mapflag	loadevent
+orcsdun01	mapflag	loadevent
+pay_dun03	mapflag	loadevent
+prt_fild07	mapflag	loadevent
+prt_maze03	mapflag	loadevent
+xmas_dun01	mapflag	loadevent
+cmd_fild02	mapflag	loadevent
+tur_dun04	mapflag	loadevent
+ein_dun01	mapflag	loadevent
+lhz_dun01	mapflag	loadevent
+abyss_01	mapflag	loadevent
+tha_t10	mapflag	loadevent
+kh_dun01	mapflag	loadevent
+ra_san05	mapflag	loadevent
+
+prontera,139,144,5	script	Drifter::alaridr	1_M_03,{	
+	set .@npcname$, "[Drifter]";
+	mes .@npcname$;
+	mes "Did you ever heard of Rifts?";
+	mes "They're a...rip in the fabric of the universe.";
+	mes "From those rip, monsters come into our dimension.";
+	mes "That's a frightening thing to hear about, hu?";
+	if(RIFTQ == 1)
+	{
+		next;
+		mes .@npcname$;
+		mes "Ho! You've fought in one of those rip?";
+		mes "And survived?";
+		mes "You must be really strong...";
+		//define reward
+		getitem 512;
+		set RIFTQ, 0;
+	}
+	close;
+}
+-	script	Rift::alarift	-1,{
+	end;
+
+OnClock0000:
+	set .hour, rand(0,10);
+	callsub OnClearMonsters;
+	end;
+
+OnWhisperGlobal:
+	callsub OnClearMonsters;
+	goto OnSpawnMonsters;
+	end;
+
+OnClock1000:
+	if (.hour == 0)
+	{
+		goto OnSpawnMonsters;
+	}
+	end;
+
+OnClock1100:
+	if (.hour == 1)
+	{
+		goto OnSpawnMonsters;
+	}
+	end;
+
+OnClock1200:
+	if (.hour == 2)
+	{
+		goto OnSpawnMonsters;
+	}
+	end;
+
+OnClock1300:
+	if (.hour == 3)
+	{
+		goto OnSpawnMonsters;
+	}
+	end;
+
+OnClock1400:
+	if (.hour == 4)
+	{
+		goto OnSpawnMonsters;
+	}
+	end;
+
+OnClock1500:
+	if (.hour == 5)
+	{
+		goto OnSpawnMonsters;
+	}
+	end;
+
+OnClock1600:
+	if (.hour == 6)
+	{
+		goto OnSpawnMonsters;
+	}
+	end;
+
+OnClock1700:
+	if (.hour == 7)
+	{
+		goto OnSpawnMonsters;
+	}
+	end;
+
+OnClock1800:
+	if (.hour == 8)
+	{
+		goto OnSpawnMonsters;
+	}
+	end;
+
+OnClock1900:
+	if (.hour == 9)
+	{
+		goto OnSpawnMonsters;
+	}
+	end;
+
+OnClock2000:
+	if (.hour == 10)
+	{
+		goto OnSpawnMonsters;
+	}
+	end;
+
+
+OnInit:
+	setarray .riMaps$[0],"anthell02","gefenia03","odin_tem03","ein_fild04","ra_fild08","ice_dun01","thor_v02",
+	"ve_fild03","mosk_dun02","c_tower3","gef_fild07","gl_chyard","gl_sew04","in_sphinx4","iz_dun03","mjo_dun03",
+	"moc_fild03","moc_pryd06","orcsdun01","pay_dun03","prt_fild07","prt_maze03","xmas_dun01","cmd_fild02","tur_dun04",
+	"ein_dun01","lhz_dun01","abyss_01","tha_t10","kh_dun01","ra_san05";
+	setarray .riMonstersId[0],1087,1190,1768,2087,1785,2249,2253,2255,2210,2476,1874;
+	set .totalSpawn, 3;
+	setarray .reward[0],12103,12704,607,608,12109,7539,12135,12104,12111,12114,12115,12116,12117,12118,12119,12120,12121;
+	set .rewardCashPoint, 150;
+	set .rewardMode, 1;
+	set .displayMap, 1;
+	end;
+
+OnSpawnMonsters:
+	stopnpctimer;
+	set .@rankMap, rand(0,getarraysize(.riMaps$)-1);
+	set .map$, .riMaps$[.@rankMap];
+	//pop n monsters on selected map
+
+	for (set .@j,0; .@j<.totalSpawn; set .@j,.@j+1)
+	{
+		set .@rankMonster, rand(0,getarraysize(.riMonstersId)-1);
+		set .@idMonster, .riMonstersId[.@rankMonster];
+	
+		monster .map$,0,0,strmobinfo(1,.@idMonster),.@idMonster,1,"alarift::OnMonsterKilled";
+	}
+
+	if (.displayMap == 1)
+	{
+		announce "A rift just opens...Monsters appeared on map " + .map$ + "...",bc_all,0xFF0000;
+	}
+	else
+	{
+		announce "A rift just opens...Monsters appeared somewhere in the world...",bc_all,0xFF0000;
+	}
+	end;
+
+OnClearMonsters:
+	if(.map$ != "")
+	{
+		killmonster .map$, "alarift::OnMonsterKilled";
+		announce "The rift is closing down...",bc_map,0xFF0000;
+	}
+	return;
+
+OnMonsterKilled:
+	if (.rewardMode == 0)
+	{
+		getitem .reward[rand(0,getarraysize(.reward))], 1;
+	}
+	else
+	{
+		callfunc("AddPoints", getcharid(3), .rewardCashPoint);
+		set RIFTQ, 1;
+	}
+
+	set .@map$, strcharinfo(3);
+	set .@mob_dead_num,mobcount(.@map$,"alarift::OnMonsterKilled");
+	if (.@mob_dead_num < 1)
+	{
+		announce "The rift is closing down...",bc_map,0xFF0000;	
+		//reinit pop timer
+		initnpctimer;
+	}
+	end;
+}

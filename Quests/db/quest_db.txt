@@ -1,0 +1,21 @@
+//Fehu Quest
+
+70664,0,1778,35,1366,15,0,0,"Uruz Rune"
+70665,0,0,0,0,0,0,0,"Naudhiz Rune"
+70666,0,1652,30,0,0,0,0,"Raidho Rune"
+70667,0,0,0,0,0,0,0,"Berkano Rune"
+70668,0,1777,75,0,0,0,0,"Isa Rune"
+70669,0,0,0,0,0,0,0,"Ansuz Rune"
+70670,0,0,0,0,0,0,0,"Thurisaz Rune"
+70671,0,0,0,0,0,0,0,"Perthro Rune"
+70672,0,0,0,0,0,0,0,"Hagalaz Rune"
+70673,0,1039,1,0,0,0,0,"Free the Runes Power"
+
+//Veteran Quest
+
+70674,0,1028,100,1016,50,1196,25,"Y a des squelettes à pourtrer"
+70675,0,1213,75,1189,50,1177,25,"Y a des orcs à décimer"
+70676,0,1041,100,1297,25,0,0,"Y a des momies à cramer"
+70677,0,1149,80,0,0,0,0,"Y a des minotaures à tuer"
+70678,0,1870,5,0,0,0,0,"Y a des liches à éventrer"
+70679,0,1885,1,0,0,0,0,"Y a un dragon pour tester"

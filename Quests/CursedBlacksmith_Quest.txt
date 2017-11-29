@@ -1,0 +1,603 @@
+//===== Hercules Script =======================================
+//=
+//===== By: ==================================================
+//= Alayne
+//===== Current Version: =====================================
+//= 1.0
+//===== Compatible With: ===================================== 
+//= 
+//===== Description: =========================================
+//= Rewards are based on quest difficulty.
+//============================================================
+
+lhz_in02,267,280,6	script	HiddenNPC::srwcq	HIDDEN_WARP_NPC,2,2,{
+	end;
+	
+OnWhisperGlobal:
+	set SILVERRWCQ, 0;
+	end;
+OnTouch:
+	if (SILVERRWCQ == 0)
+	{
+		hideoffnpc "srwcqdb";
+		set SILVERRWCQ, 1;
+		doevent "srwcqbar::OnDialog1";
+	}
+	end;
+	
+OnInit:
+	set $rwcWinePrice, 15000000;
+	set $wineId, 682;
+	set $tomeId, 7527;
+	set $pendantId, 2714;
+}
+
+lhz_in02,273,286,6	script	Bartender::srwcqbar	1_ETC_01,{
+	set .@npcname$, "[Bartender]";
+	if (SILVERRWCQ == 1)
+	{
+		mes .@npcname$;
+		mes "Hey. Sorry you had to hear that. Can I get you something?";
+		switch(select("Who was that?","No thanks, just looking around."))
+		{
+			case 1:
+				next;
+				mes .@npcname$;
+				mes "Who? Oh, that?"; 
+				mes "He's just some drunk who begs outside the airships.";
+				mes "Asking for money from travelers so he can buy some cheap booze.";
+				mes "He comes in here once or twice a week.";
+				mes "Very, very bad for business. Can you go and talk to him? Make him stay away from here?";
+				break;
+			case 2:
+				mes "Alright then, see you around!";
+				mes "Actually, wait! Can you go and talk to that beggar and make him stay away from here?";
+				mes "He's very, very bad for business. You will be paid, of course.";
+				break;
+		}
+		set SILVERRWCQ, 2;
+		hideoffnpc "srwcqdb2";
+	}
+	else if (SILVERRWCQ == 3)
+	{
+		mes .@npcname$;
+		mes "";
+		mes "Hmm?";
+		if (select("So about that drink...") == 1)
+		{
+			next;
+			mes .@npcname$;
+			mes "Oh, so what would you have?";
+			if (select("I want the best money can buy!") == 1)
+			{
+				next;
+				mes .@npcname$;
+				mes "The best money can buy? HAHA! Can you afford it? ";
+				if (select("Pretty sure I can!") == 1)
+				{
+					next;
+					mes .@npcname$;
+					mes "This is called TristanIII. It was brewed specifically for TristanIII.";
+					mes "But for some reason it was not given. It costs...." + $rwcWinePrice + " zeny!";
+					if (select("" + $rwcWinePrice + " ZENY?!?!?!?!?!") == 1)
+					{
+						next;
+						mes .@npcname$;
+						mes "Yes. HAHAHAHA. Can you pay for it?";
+						if (select("Fine.") == 1)
+						{
+							next;
+							mes .@npcname$;
+							if (Zeny >= $rwcWinePrice)
+							{
+								set Zeny, Zeny - $rwcWinePrice;
+								getitem $wineId, 1;
+								mes "Enjoy! HAHAHAHAHA.";
+							}
+							else
+							{
+								mes "Sorry, but you can't afford this wine...";
+							}
+						}
+					}
+				}
+			}
+		}
+	}
+	else
+	{
+		mes .@npcname$;
+		mes "";
+		mes "Take you time, have a seat.";
+	}
+	close;
+	
+OnDialog1:
+	set .@attach, getcharid(3);
+	npctalk "Hey! It's you again! How many times have I told you that beggars are not allowed in here!";
+	sleep 1000;
+	attachrid .@attach;
+	doevent "srwcqdb::OnDialog1";
+	end;
+	
+OnDialog2:
+	npctalk "GET OUT!!!";
+	hideonnpc "srwcqdb";
+	end;
+}
+
+lhz_in02,274,281,6	script	Drunk Beggar::srwcqdb	4_M_JPNOJI,{
+	end;
+	
+OnDialog1:
+	set .@attach, getcharid(3);
+	npctalk "Oh come on, I have enough money for one drink, gimme some drink.";
+	sleep 1000;
+	attachrid .@attach;
+	doevent "srwcqbar::OnDialog2";
+	end;
+}
+
+lighthalzen,163,129,6	script	Drunk Beggar::srwcqdb2	4_M_JPNOJI,{
+	set .@npcname2$, "[Drunk Beggar]";
+	if (SILVERRWCQ == 2)
+	{
+		mes .@npcname2$;
+		mes "Hey, some coin for a poor old man?";
+		if (select("The bartender wants you to stay away.") == 1)
+		{
+			next;
+			mes .@npcname2$;
+			mes "Oh phooey! Bartender schmartender.";
+			mes "Why listen to a jerk like that? You seem like a smart adventurer.";
+			mes "*Hic* Hic* Hic* Wanna hear a story?";
+			switch (select("Sure.","Stop wasting my time, drunk!"))
+			{
+				case 1:
+					next;
+					mes .@npcname2$;
+					mes "HAH! But first, buy me a drink! *Hic*Hic*Hic*";
+					mes "And I don't want none of those cheap ones! Buy me the best! HAHAHAHA!";
+					set SILVERRWCQ, 3;
+					break;
+				case 2:
+					//nothing
+					break;
+			}
+		}
+	}
+	else if (SILVERRWCQ == 3)
+	{
+		mes .@npcname2$;
+		mes "Hmm? Well did you bring it? Didja? Didja?";
+		if (countitem($wineId) >= 1)
+		{
+			if (select("Here you go! I paid " + $rwcWinePrice + "z for that!") == 1)
+			{
+				next;
+				mes "*He drinks the wine, directly from the bottle...*";
+				next;
+				mes .@npcname2$;
+				mes "PHEW! What is this crocker? Did you get this from the sewers?";
+				if (select("WHAT?!") == 1)
+				{
+					next;
+					mes .@npcname2$;
+					mes "HAH sewer water. Now about that story.";
+					mes "AHAHA You've been tricked, kid! *Hic*Hic*Hic*";
+					mes "Ah well, a drink is a drink. And you did say you paid " + $rwcWinePrice + "z for this."; 
+					
+					next;					
+					mes .@npcname2$;
+					mes "Legend talks of a mysterious artifact, unknown to mortal man.";
+					mes "Whose very existence is only but a rumour to the planes of Rune-Midgard.";
+					mes "An artifact, that is tempered from a very hard steel that only the very best Blacksmith from Rune-Midgard can temper.";
+					mes "But it has also been said that the Blacksmith had long retired.";
+					mes "Why? Rumours say that because he lost his three children: William, Rebecca and Carmen."; 
+					
+					next;
+					mes .@npcname2$;
+					mes "Anyway, that' all I can tell you for this amount of bad liquor. Now begone! *hic*.";
+					mes "You're making me dizzy.";
+					
+					next;
+					mes "*The beggar falls asleep on the floor.*";
+					
+					set SILVERRWCQ, 4;
+				}
+			}
+		}
+		else
+		{
+			mes "Don't come back without my wine...";
+		}
+	}
+	else if (SILVERRWCQ == 9)
+	{
+		if (countitem($tomeId) >= 1 && countitem($pendantId) >= 1)
+		{
+			mes "Those are...those are the items...that I gave my children...when they were young.";
+			mes "*-Beggar cries uncontrollably-*";
+			next;
+			mes .@npcname$;
+			mes "Tell me, how did you go by these items.";
+			next;
+			mes "*-You tell the whole story-*";
+			next;
+			mes .@npcname$;
+			mes "By the king! You have helped my family more than I ever could. Please let me repay the favor. Hear my story.";
+			set .@npcname$, "[Wayland]";
+			next;
+			mes .@npcname$;
+			mes "My name is Wayland Silver-born.";
+			mes "I am the best blacksmith of Rune-Midgard.";
+			mes "The artifact that I told you about was made of a special silver, which only two of them existed.";
+			mes "My family is the only one who can produce this silver and it was very hard at the time.";
+			
+			next;
+			mes .@npcname$;
+			mes "I was driven by money and fame.";
+			mes "I made this artifact for a rich person, using one of the special silvers that I made.";
+			mes "It turned out that this person used the artifact for evil deeds.";
+			mes "I vowed never to make weapons and armors again.";
+			mes "So I split the main ingredient of the silver into three.";
+			mes "Putting each of them to these items that you hold. I gave them to my children.";
+			mes "That person who I sold the artifact to, learned of what I did.";
+			mes "And he hunted all my children. And now my children are dead.";
+			mes "And their spirits were trapped wandering Rune-Midgard.";
+			mes "Never to rest, and never to experience peace.";
+			
+			next;
+			mes .@npcname$;
+			mes "But you, you came. You helped them move on. And for you.";
+			mes "I shall forge once again! Meet me at my forge.";
+			set SILVERRWCQ, 10;
+		}
+	}
+	else
+	{
+		mes .@npcname2$;
+		mes "He's sleeping...";
+	}
+	close;
+	
+OnInit:
+	//hideonnpc strnpcinfo(3);
+	end;
+}
+
+lhz_in02,262,30,6	script	Wayland::srwcqw	4_M_JPNOJI,{
+	//structure: id,count
+	setarray .@finalQuestIds[0],7451,2,7562,3,6091,5,969,15,7356,10,7357,10,7358,10,7359,10;
+	set .@waitinghour, 1;
+	set .@rewardId, 29417;
+	
+	set .@npcname$, "[Wayland]";
+	mes .@npcname$;
+	mes "";
+	if (SILVERRWCQ == 10)
+	{
+		mes "I would need the following to produce the Special Silver. Please speak to me once you have all the items:";
+		for (set .@i,0; .@i<getarraysize(.@finalQuestIds); set .@i, .@i+2)
+		{
+			mes "" + .@finalQuestIds[.@i + 1] + "x " + getitemname(.@finalQuestIds[.@i]) + "(" + .@finalQuestIds[.@i] + ")";			
+		}
+		mes "I'll wait you here.";
+		set SILVERRWCQ, 11;
+	}
+	else if (SILVERRWCQ == 11)
+	{
+		mes "Do you have the items?";
+		if (select("Yes. Here they are.") == 1)
+		{
+			for (set .@i,0; .@i<getarraysize(.@finalQuestIds); set .@i, .@i+2)
+			{
+				if (countitem(.@finalQuestIds[.@i]) < .@finalQuestIds[.@i + 1])
+				{
+					mes "You still miss some " + getitemname(.@finalQuestIds[.@i]) + "(" + .@finalQuestIds[.@i] + ")";
+					close;
+				}
+			}
+			mes "Perfect.";
+			for (set .@i,0; .@i<getarraysize(.@finalQuestIds); set .@i, .@i+2)
+			{
+				delitem .@finalQuestIds[.@i], .@finalQuestIds[.@i + 1];
+			}
+			mes "I would need a some time to prepare the silver. Please come back in a while. Let's say " + .@waitinghour + " hours.";
+			//manage Delay
+			set TimeRWCSilverQ, gettimetick(2) + .@waitinghour * 3600;
+			set SILVERRWCQ, 12;
+		}
+		else
+		{
+			mes "I'll wait here, then.";
+		}
+	}
+	else if (SILVERRWCQ == 12)
+	{
+		if (TimeRWCSilverQ < gettimetick(2))
+		{
+			mes "Here at last! It is done! I believe that you will use it well.";
+			mes "I have named it after my children. From now it, this artifact shall be called:";
+			mes "Heavy Bow.";
+			next;
+			mes .@npcname$;
+			mes "It's an old enchanted (or cursed, the way I see it) bow.";
+			mes "Take good care of it. And again, thank you.";
+			getitem .@rewardId, 1;
+			set SILVERRWCQ, 13;
+		}
+		else
+		{
+			mes "It's not ready yet. You have to be patient.";
+		}
+	}
+	else
+	{
+		mes "Sorry, I'm a bit busy right now...";
+	}
+	close;	
+}
+
+ra_fild11,23,313,6	script	William's Spirit::srwcqws	4_GHOST_STAND,2,2,{
+	end;
+	
+OnTouch:
+	set .@maprwcsphinx$, "evt_mobroom";
+	if (SILVERRWCQ == 4)
+	{
+		set .@npcname$, "[Spirit]";
+		mes .@npcname$;
+		mes "";
+		mes ".....";
+		if (select("Hey!") == 1)
+		{
+			next;
+			mes .@npcname$;
+			mes "";
+			mes "Wait. You can see me?";
+			if (select("Who are you?") == 1)
+			{
+				next;
+				set .@npcname$, "[Spirit of William]";
+				mes .@npcname$;
+				mes "";
+				mes "William.....My name...is William.....";
+				mes "I need you...to help me.......";
+				if (select("Okay! What do I have to do?") == 1)
+				{
+					next;
+					mes "I need you to set me free....";
+					mes "I will send you to a realm where I am being held...";
+					mes "Please...I don't have much time.....";
+					switch(select("Let's do it now!","Maybe later"))
+					{
+						case 1:
+							set SILVERRWCQ, 5;
+							warp .@maprwcsphinx$, 219, 20;
+							break;
+						case 2:
+							mes "You should...really hurry up...";
+							break;
+					}
+				}
+			}
+		}
+	}
+	else if (SILVERRWCQ == 6)
+	{
+		mes .@npcname$;
+		mes "";
+		mes "I am free! Thank you, thank you!";
+		mes "Here, take this! This is for your help.";
+		mes "I don't know if it will help you in your journeys but it was given to me by my father.";
+		if (select("Your father?") == 1)
+		{
+			next;
+			mes .@npcname$;
+			mes "Yes. He is a great man. Talk to my sisters. They will point the way.";
+			getitem $tomeId, 1;
+		}
+	}
+	close;
+	
+OnInit:
+	hideoffnpc strnpcinfo(3);
+	end;
+}
+
+evt_mobroom,196,32,6	script	Sphinx::srwcqs	1511,{
+	set .@npcname$, "[Sphinx]";
+	mes .@npcname$;
+	mes "";
+	if (SILVERRWCQ == 5)
+	{
+		mes "Hello mortal. Answer three riddles and you may help your friend. Fail once, and you will die.";
+		mes "Are you ready?";
+		switch(select("Yes","Give me moment to get ready"))
+		{
+			case 1:
+				next;
+				mes .@npcname$;
+				mes "";
+				mes "I give warmth,";
+				mes "I give light,";
+				mes "I give hope,";
+				mes "I give sight.";
+				mes "";
+				mes "What am I?";
+				input(.@answer$);
+				if (.@answer$ == "Fire" || .@answer$ == "fire")
+				{
+					next;
+					mes .@npcname$;
+					mes "";
+					mes "I can be anything you want, ";
+					mes "a picture or a plane.";
+					mes "You can tell me your stories,";
+					mes "or take other people's stories from me.";
+					mes "";
+					mes "What am I?";
+					input(.@answer$);
+					if (.@answer$ == "Paper" || .@answer$ == "paper")
+					{
+						next;
+						mes .@npcname$;
+						mes "";
+						mes "What do I have in my pocket?";
+						input(.@answer$);
+						if (.@answer$ == "The Ring" || .@answer$ == "the ring")
+						{
+							next;
+							mes .@npcname$;
+							mes "Congratulations! Your friend is free to go.";
+							set SILVERRWCQ, 6;
+							atcommand "#tonpc " + strcharinfo(0) + " srwcqws";
+						}
+						else
+						{
+							mes "Wrong...";
+							atcommand "@nuke " + strcharinfo(0);
+							atcommand "@load " + strcharinfo(0);
+						}
+					}
+					else
+					{
+						mes "Wrong...";
+						atcommand "@nuke " + strcharinfo(0);
+						atcommand "@load";
+					}
+				}
+				else
+				{
+					mes "Wrong...";
+					atcommand "@nuke " + strcharinfo(0);
+					atcommand "@load";
+				}
+				break;
+			case 2:
+				mes "you shouldn't waste my time...";
+				break;
+		}
+	}
+	else
+	{
+		mes "How did you get there?";
+		mes "You have nothing to do here.";
+		atcommand "@load";
+	}
+	close;
+}
+
+pay_fild02,84,85,6	script	Sonia's Spirit::srwcqss	4_GHOST_STAND,2,2,{
+	end;
+
+OnTouch:
+	set .@mazeEventMap$, "que_qaru05";
+	set .@npcname$, "[Sonia]";
+	mes .@npcname$;
+	mes "";
+	if (SILVERRWCQ == 6 || SILVERRWCQ == 7)
+	{
+		mes "Hmm?";
+		if (select("Are you William's sister?") == 1)
+		{
+			next;
+			mes .@npcname$;
+			mes "Yes....Please....save me............";
+			mes "Hurry...I don't have much time.....";
+			switch(select("What do i have to do?","Maybe later"))
+			{
+				case 1:
+					set SILVERRWCQ, 7;
+					warp .@mazeEventMap$, 0, 0;
+					break;
+				case 2:
+					mes "Please...Hurry...";
+					break;
+			}
+		}
+	}
+	close;
+}
+
+que_qaru05,73,273,6	script	Sonia's Spirit::srwcqssm	4_F_RACING,{
+	set .@npcname$, "[Sonia]";
+	mes .@npcname$;
+	mes "";
+	if (SILVERRWCQ == 7)
+	{
+		mes "Thank you.";
+		mes "You went on a journey to help someone who means nothing to you.";
+		mes "You did not even know me, and yet you help me. Please take this.";
+		mes "My father gave me this. I don't know if this will be of help but i've kept it with me.";
+		mes "Even in death. Please talk to my sister.";
+		mes "I will forever be in your debt.";
+		getitem $pendantId, 1;
+	}
+	else
+	{
+		mes "How do you get there?";
+		atcommand "@load";
+	}
+	close;
+}
+
+niflheim,139,37,6	script	Carmen Spirit::srwcqcs	4_GHOST_STAND,2,2,{
+	end;
+	
+OnTouch:
+	//structure: id,count
+	setarray .@questIds[0],7035,1,660,5,7327,5;
+	set .@npcname$, "[Carmen]";
+	if (SILVERRWCQ == 7 && countitem($pendantId) == 1)
+	{
+		mes .@npcname$;
+		mes "";
+		mes "AAAAAAAAAAAAH!!!!!!! I...am...so...scared.....Light....Pls...bring me the following:";
+		for (set .@i,0; .@i<getarraysize($questIds); set .@i, .@i+2)
+		{
+			mes "" + .@questIds[.@i + 1] + "x " + getitemname(.@questIds[.@i]) + ";";			
+		}
+		set SILVERRWCQ, 8;
+	}
+	else if (SILVERRWCQ == 8)
+	{
+		mes .@npcname$;
+		mes "";
+		mes "Do you got it all?";
+		for (set .@i,0; .@i<getarraysize($questIds); set .@i, .@i+2)
+		{
+			if (countitem(.@questIds[.@i]) < .@questIds[.@i + 1])
+			{
+				mes "You still miss some " + getitemname($questIds[.@i]);
+				close;
+			}
+		}
+		mes "Perfect.";
+		for (set .@i,0; .@i<getarraysize(.@questIds); set .@i, .@i+2)
+		{
+			delitem .@questIds[.@i], .@questIds[.@i + 1];
+		}
+		mes "Thank you, kind stranger. Please take this to my father.";
+		if (select("Your father?") == 1)
+		{
+			next;
+			mes .@npcname$;
+			mes "Yes. Me and my siblings have been watching him for a long time.";
+			mes "Unbeknownst to him, we were always close by.";
+			mes "Please. Take the items that you got from my brother and sister to him.";
+			mes "He knows that you have done our family a great service.";
+			if (select("Where can I find your father?") == 1)
+			{
+				next;
+				mes .@npcname$;
+				mes "I believe you've met him. He is at Lighthalzen. Again, thank you.";
+				next;
+				mes "*The spirit of Carmen fades. " + strcharinfo(0) + " gets the Sword of Courage.*";
+				set SILVERRWCQ, 9;
+			}
+		}
+	}
+	close;
+}
