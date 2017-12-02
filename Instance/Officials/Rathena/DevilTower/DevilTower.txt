@@ -127,7 +127,6 @@ dali,99,148,5	script	Portal Dimensional#tnm	PORTAL,{
 		switch(select("Devil's Tower.:Leave.")) {
 			case 1:
 				if (getcharid(0) == getpartyleader(.@party_id,2)) {
-					erasequest 13994;
 					//RATHENA
 					set .@playtime, checkquest(13994,PLAYTIME);
 					//HERCULES
