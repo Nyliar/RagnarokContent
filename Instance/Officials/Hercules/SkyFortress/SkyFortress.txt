@@ -21,10 +21,7 @@ OnStart:
 	set .@party_id, getcharid(1);
 	set .@sf_leader, ( getcharid(0) == getpartyleader(.@party_id,2) );
 
-	//RATHENA
-	//set .@has_instance, SF_INSTANCE_ID > 0;
-	//HERCULES
-	set .@has_instance, has_instance(.map$[0], instance_id());
+	set .@has_instance, SF_INSTANCE_ID > 0;
 	
 	set .@instance_delay, ( instance_delay_skyf - gettimetick(2) );
 
@@ -60,15 +57,6 @@ OnStart:
 					}
 				}
 			attachrid( .@origin );
-		}
-		
-		//check that nobody else is inside
-		for(set .@i,0; .@i<getarraysize(.map$); set .@i,.@i+1)
-		{
-			if (.map$[.@i] != "" && getmapusers(instance_mapname(.map$[.@i], -1)) > 0) {
-				mes "Another team is already in the " + .instance_name$ + ". I can't send you there, sorry.";
-				close;
-			}
 		}
 		
 		//clean any previously remaining instance
@@ -187,7 +175,7 @@ prt_q,243,74,3	script	Dimensional Device::alasfdd	PORTAL,{
 	else{
 		//RATHENA
 		getmapxy(.@map$, .@x, .@y, UNITTYPE_PC);
-		save .@map$, .@x, .@y;
+		//save .@map$, .@x, .@y;
 		//switch(instance_enter(.instance_name$)) {
 		//	default:
 		//		mes "An unknown error has occurred.";
@@ -205,6 +193,7 @@ prt_q,243,74,3	script	Dimensional Device::alasfdd	PORTAL,{
 		//}
 		
 		//HERCULES
+		savepoint .@map$, .@x, .@y;
 		if( has_instance( .map$[0] ) == "" ){
 			mes .instance_name$ + " doesnt exist for Party - "+getpartyname( .@party_id );
 		}
@@ -232,11 +221,11 @@ OnInstanceInit:
 	set .@npc_name$, instance_npcname( strnpcinfo(0), instance_id() );
 	
 	//apply mapflags
-	setmapflag .@map$,mf_nomobloot;
-	setmapflag .@map$,mf_nomvploot;
+	//setmapflag .@map$,mf_nomobloot;
+	//setmapflag .@map$,mf_nomvploot;
 	
 	set 'instance_sf_level, 0;
-	set .randomPop, 0;
+	set 'randomPop, 0;
 	set .max_sf_level, 4;
 
 	set 'doorOpened, -1;
@@ -244,15 +233,15 @@ OnInstanceInit:
 	set 'ldEntryX, -1;
 	set 'ldEntryY, -1;
 	
-	set .stephanId, -1;
+	set 'stephanId, -1;
 	deletearray .stephanData[0], getarraysize(.@stephanData);
-	deletearray .stephanFollower[0], getarraysize(.stephanFollower);
-	set .eQCount, -1;
+	deletearray 'stephanFollower[0], getarraysize('stephanFollower);
+	set 'eQCount, -1;
 	set .maxStephanServant, 10;
 	
 	set 'sfKeyId, 6960;
 	
-	set .timerCount, 0;
+	set 'timerCount, 0;
 	initnpctimer;
 	end;
 
@@ -437,9 +426,9 @@ function	summon_normal	{
 			set .@clabel$, .@npcname$ + "::OnNormalDied";
 			//RATHENA
 			//areamonster .@map$,.@coordinate[0],.@coordinate[1],.@coordinate[2],.@coordinate[3],"--ja--",.@monster[0],.@amount[0],.@clabel$;
-			//copyarray .stephanFollower, $@mobId[0], .@amount;
+			//copyarray 'stephanFollower, $@mobId[0], .@amount;
 			//HERCULES
-			set .stephanFollower, areamonster(.@map$,.@coordinate[0],.@coordinate[1],.@coordinate[2],.@coordinate[3],"--ja--",.@monster[0],.@amount[0],.@clabel$);			
+			set 'stephanFollower, areamonster(.@map$,.@coordinate[0],.@coordinate[1],.@coordinate[2],.@coordinate[3],"--ja--",.@monster[0],.@amount[0],.@clabel$);			
 			break;
 	}
 	return;
@@ -629,7 +618,7 @@ OnGuardianDied:
 			instance_announce instance_id(), "[ Stefan J.E Wolf ] : Come back...the power of Bijou...Eternal body...again!", bc_map, 0x0000FF;
 			sleep2 1500;
 
-			set .randomPop, 0;
+			set 'randomPop, 0;
 			killmonster instance_mapname( "1@sthd" ), "All";
 			
 			//enable portal
@@ -650,8 +639,8 @@ OnGuardianDied:
 OnTimer10000:
 	stopnpctimer;
 	//each 10s, increase timer
-	set .timerCount, .timerCount + 10;
-	if(.timerCount == $sf_timer_delay)
+	set 'timerCount, 'timerCount + 10;
+	if('timerCount == $sf_timer_delay)
 	{
 		instance_announce instance_id(), "[ Sky Fortress ] The Dimension collapse! I have to get you out of there!", bc_map, 0xFF0000;
 		sleep 5000;
@@ -663,11 +652,11 @@ OnTimer10000:
 		instance_destroy instance_id();
 		stopnpctimer;
 	}
-	if(.randomPop == 1)
+	if('randomPop == 1)
 	{
-		if(.eQCount >= 0)
+		if('eQCount >= 0)
 		{
-			set .eQCount, .eQCount + 1;
+			set 'eQCount, 'eQCount + 1;
 		}
 		set .@map$, instance_mapname( "1@sthd" );
 		set .@npc_name$, instance_npcname( strnpcinfo(0), instance_id() );
@@ -696,9 +685,9 @@ OnTimer10000:
 					set .@mvpHp, .@hp <= .@mhp / 3;
 					
 					//if mob hp is inferior to 1/3, that an earthquake didn't pop in the last minute, and that rand is okay
-					if(.@mvpHp == 1 && .eQCount >= 6 && rand(0,1) == 1)
+					if(.@mvpHp == 1 && 'eQCount >= 6 && rand(0,1) == 1)
 					{
-						set .eQCount, 0;
+						set 'eQCount, 0;
 						addtimer 3000, strnpcinfo(3) + "::OnEarthquakePop";
 						set .@continue, 0;
 					}
@@ -713,16 +702,16 @@ OnTimer10000:
 OnEarthquakePop:
 	set .@map$, strnpcinfo(4);
 	set .@npc_name$, instance_npcname( strnpcinfo(0), instance_id() );
-	for(set .@i, 0; .@i<getarraysize(.stephanFollower); set .@i,.@i+1)
+	for(set .@i, 0; .@i<getarraysize('stephanFollower); set .@i,.@i+1)
 	{
 		//earthquake on all mobs
-		if(unitexists(.stephanFollower[.@i]))
+		if(unitexists('stephanFollower[.@i]))
 		{
-			unitskilluseid .stephanFollower[.@i], 653, 10;
+			unitskilluseid 'stephanFollower[.@i], 653, 10;
 		}
 		else
 		{
-			deletearray .stephanFollower[.@i], 1;
+			deletearray 'stephanFollower[.@i], 1;
 		}
 	}	
 	end;
@@ -767,8 +756,8 @@ OnLastFloorOn:
 	set .@map$, instance_mapname( "1@sthd" );
 	set .@npc_name$, instance_npcname( strnpcinfo(0), instance_id() );
 	//pop mvp
-	set .randomPop, 1;
-	set .eQCount, 0;
+	set 'randomPop, 1;
+	set 'eQCount, 0;
 	summon_normal( .@map$, .@npc_name$, 1 );
 	summon_guardian( .@map$, .@npc_name$ );	
 	end;	
@@ -778,23 +767,19 @@ OnLastFloorOn:
 	end;
 
 OnTouch:
-	if(.talking == 0)
+	if('talking == 0)
 	{
-		set 'sfTalking, getcharid(3);
-		set .talking, 1;
+		set 'talking, 1;
 		if('instance_sf_level == 0)
 		{
 			charcommand "#me " + strcharinfo(0) + " Is this what caused the invasion into Prontera? Inside the Sky Fortress?";
 			
 			cutin "stephan_j_e_w", 2;
 			sleep2 1500;
-			npctalk "Intruders...Inside the Sky Fortress";
 			instance_announce instance_id(), "Intruders...Inside the Sky Fortress", bc_map, 0x0000FF;
 			sleep2 1500;
-			npctalk "Bijou...Told me to destroy the intruders!";
 			instance_announce instance_id(), "Bijou...Told me to destroy the intruders!", bc_map, 0x0000FF;
 			sleep2 1500;
-			npctalk "Little...human...Greenhorn...Away!";
 			instance_announce instance_id(), "Little...human...Greenhorn...Away!", bc_map, 0x0000FF;
 			
 			cutin "", 255;
@@ -803,19 +788,15 @@ OnTouch:
 		}
 		else if('instance_sf_level == 1)
 		{
-			npctalk "Grunts!";
 			cutin "stephan_j_e_w", 2;
 			instance_announce instance_id(), "Grunts", bc_map, 0x0000FF;
 			sleep2 1500;
 			
-			npctalk "What a bunch of...Annoying worms!";
 			instance_announce instance_id(), "What a bunch of...Annoying worms!", bc_map, 0x0000FF;
 			sleep2 1500;
-						
-			attachrid 'sfTalking;
+			
 			charcommand "#me " + strcharinfo(0) + " I believe that huge golem play an important role here...";
 			
-			npctalk "Subordinates of the Sky Fortress...Stop them...Bijou's order!";
 			instance_announce instance_id(), "Subordinates of the Sky Fortress...Stop them...Bijou's order!", bc_map, 0x0000FF;
 			sleep2 1500;
 			
@@ -833,13 +814,13 @@ OnTouch:
 	end;
 	
 OnTalkEnabled:
-	set .talking, 0;	
+	set 'talking, 0;	
 	end;
 	
 OnInstanceInit:
+	set 'talking, 0;
 OnInit:
 	enablenpc strnpcinfo(3);
-	set .talking, 0;
 	end;
 }
 
@@ -847,19 +828,15 @@ OnInit:
 	end;
 
 OnTouch:
-	if(.talking == 0)
+	if('talking == 0)
 	{
-		set 'sfTalking, getcharid(3);
-		set .talking, 1;
-		npctalk "Grunts";
+		set 'talking, 1;
 		instance_announce instance_id(), "Grunts", bc_map, 0x0000FF;
 		sleep2 1500;
 		
-		npctalk "Filthy humans! Stop them! Guard...The Holy Fortress!";
 		instance_announce instance_id(), "Filthy humans! Stop them! Guard...The Holy Fortress!", bc_map, 0x0000FF;
 		sleep2 1500;
 		
-		attachrid 'sfTalking;
 		charcommand "#me " + strcharinfo(0) + " It's extremly vigilante...";
 		sleep2 1500;
 		charcommand "#me " + strcharinfo(0) + " I thinks there must be something";
@@ -873,13 +850,13 @@ OnTouch:
 	end;
 	
 OnTalkEnabled:
-	set .talking, 0;	
+	set 'talking, 0;	
 	end;
 	
 OnInstanceInit:
+	set 'talking, 0;
 OnInit:
 	disablenpc strnpcinfo(3);
-	set .talking, 0;
 	end;
 }
 
@@ -902,19 +879,19 @@ OnInit:
 			switch('warpPoint)
 			{
 				case 0:
-					setarray .entry[0], 115, 92;
+					setarray 'entry[0], 115, 92;
 					break;
 				case 1:
-					setarray .entry[0], 66, 10;
+					setarray 'entry[0], 66, 10;
 					break;
 				case 2:
-					setarray .entry[0], 66, 92;
+					setarray 'entry[0], 66, 92;
 					break;
 				case 3:
-					setarray .entry[0], 16, 9;
+					setarray 'entry[0], 16, 9;
 					break;
 				case 4:
-					setarray .entry[0], 15, 93;
+					setarray 'entry[0], 15, 93;
 					break;
 			}
 
@@ -923,7 +900,7 @@ OnInit:
 				if( attachrid( $@partymemberaid[.@i] ) ){
 					if(strcharinfo(3) == instance_mapname( "1@sthb" ))
 					{
-						warp instance_mapname( "1@sthc" ), .entry[0], .entry[1];
+						warp instance_mapname( "1@sthc" ), 'entry[0], 'entry[1];
 					}
 				}
 
@@ -937,19 +914,19 @@ OnInit:
 			switch('warpPoint)
 			{
 				case 0:
-					setarray .entry[0], 115, 92;
+					setarray 'entry[0], 115, 92;
 					break;
 				case 1:
-					setarray .entry[0], 66, 10;
+					setarray 'entry[0], 66, 10;
 					break;
 				case 2:
-					setarray .entry[0], 66, 92;
+					setarray 'entry[0], 66, 92;
 					break;
 				case 3:
-					setarray .entry[0], 16, 9;
+					setarray 'entry[0], 16, 9;
 					break;
 				case 4:
-					setarray .entry[0], 15, 93;
+					setarray 'entry[0], 15, 93;
 					break;
 			}
 
@@ -958,16 +935,11 @@ OnInit:
 				if( attachrid( $@partymemberaid[.@i] ) ){
 					if(strcharinfo(3) == instance_mapname( "1@sthb" ))
 					{
-						warp instance_mapname( "1@sthc" ), .entry[0], .entry[1];
+						warp instance_mapname( "1@sthc" ), 'entry[0], 'entry[1];
 					}
 				}
 		}
 	}
-	end;
-	
-OnInstanceInit:
-OnInit:
-	set .opened, 0;
 	end;
 }
 
@@ -992,37 +964,31 @@ OnTouch:
 	end;
 
 OnTouch:
-	if(.talking == 0)
+	if('talking == 0)
 	{
-		set 'sfTalking, getcharid(3);
-		set .talking, 1;
+		set 'talking, 1;
 		charcommand "#me " + strcharinfo(0) + " So this is finally the last...I suppose he must be the cause of Prontera invasion isn't he?";
 		sleep2 1500;
 		
 		cutin "stephan_j_e_w", 2;
-		npctalk "Adventurers...A bunch of foolish greenhorns!";
 		instance_announce instance_id(), "[Wolf] Adventurers...A bunch of foolish greenhorns!", bc_map, 0x0000FF;
 		sleep2 1500;
 
-		npctalk "I must follow orders...From Bijou!";
 		instance_announce instance_id(), "[Jack] I must follow orders...From Bijou!", bc_map, 0x0000FF;
 		sleep2 1500;
 
 		charcommand "#me " + strcharinfo(0) + " Bijou? So was the golem the mere guardian around here? Is that it?";
 		sleep2 1500;
 
-		npctalk "Growl!";
 		instance_announce instance_id(), "[Stefan] Growl!", bc_map, 0x0000FF;
 		sleep2 1500;
 
-		npctalk "Filthy worms...Can't lead life as intended. Immortal power...My body...";
 		instance_announce instance_id(), "[Earnest] Filthy worms...Can't lead life as intended. Immortal power...My body...", bc_map, 0x0000FF;
 		sleep2 1500;
 
 		charcommand "#me " + strcharinfo(0) + " I'd better defeat it first.";
 		sleep2 1500;
 
-		npctalk "Soldiers...Bijou's Fortress...Cut them all...I'll step up...I'll kill them...All.";
 		instance_announce instance_id(), "[Stefan J.E Wolf] Soldiers...Bijou's Fortress...Cut them all...I'll step up...I'll kill them...All", bc_map, 0x0000FF;
 		sleep2 1500;
 
@@ -1033,9 +999,9 @@ OnTouch:
 	end;
 	
 OnInstanceInit:
+	set 'talking, 0;
 OnInit:
 	disablenpc strnpcinfo(3);
-	set .talking, 0;
 	end;
 }
 
@@ -1049,10 +1015,10 @@ OnInit:
 	mes "Do you want to activate the device?";
 	if(select("Yes","No") == 1)
 	{
-		if(.used == 0)
+		if(getd("'used" + strnpcinfo(2)) == 0)
 		{
 			donpcevent instance_npcname( "sky_fortress", instance_id() ) + "::OnDevicePoped";
-			set .used, 1;
+			setd("'used" + strnpcinfo(2), 1);
 		}
 		else
 		{
@@ -1063,9 +1029,8 @@ OnInit:
 	}
 	close;
 
-OnInit:
 OnInstanceInit:
-	set .used, 0;
+	setd("'used" + strnpcinfo(2), 0);
 	end;
 }
 
@@ -1094,4 +1059,5 @@ OnInit:
 
 1@sthb,73,70	warp	sfwarp#1	2,2,1@sthb,73,75
 1@sthb,93,74	warp	sfwarp#2	2,2,1@sthb,210,98
+
 

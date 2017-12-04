@@ -56,7 +56,7 @@ OnStart:
 	set .@party_id, getcharid(1);
 	set .@moc_leader, ( getcharid(0) == getpartyleader(.@party_id,2) );
 
-	set .@has_instance, MOC_INSTANCE_ID >= 0;
+	set .@has_instance, MOC_INSTANCE_ID > 0;
 	set .@instance_delay, ( instance_delay_morsec - gettimetick(2) );
 
 	set .@npcname$, "[Senior Tracker]";
@@ -78,7 +78,7 @@ OnStart:
 		if( .@instance_delay > 0 )
 		{
 			mes "You have to wait : ^FF0000"+.@instance_delay+" Seconds.^000000";
-			//close;
+			close;
 		}
 		getpartymember .@party_id,2;
 		if( .min_party_member >= 1 ){
@@ -101,12 +101,12 @@ OnStart:
 		//clean any previously remaining instance
 		if(MOC_INSTANCE_ID != -1)
 		{
+			instance_destroy MOC_INSTANCE_ID;
 			getpartymember getcharid(1),2;
 			for( set .@i, 0; .@i < $@partymembercount; set .@i, .@i+1 )
 				if( attachrid( $@partymemberaid[.@i] ) && MOC_INSTANCE_ID > 0){
 					set MOC_INSTANCE_ID, -1;
 				}
-			instance_destroy instance_id();
 		}
 		
 		if( .@name$ != "" && .@fail ){
@@ -117,10 +117,10 @@ OnStart:
 			if( .@fail & 1 ) mes "^777777You must be Level: "+.base_level[0]+" - "+.base_level[1]+"^000000";
 			if( .@fail & 2 ) mes "^777777You need "+ .instance_zeny +" Zeny^000000";
 			if( .@fail & 4 ) mes "^777777You still have cooldown.^000000";
-			//break;
+			break;
 		}
 		
-		getpartymember getcharid(1),0;
+		getpartymember getcharid(1),2;
 		if (instance_check_party(.@party_id, .min_party_member, .base_level[0], .base_level[1]) == 0) {
 			mes "^0055FF[ "+.instance_name$+" ]^000000";
 			mes "Make or join a party with at least "+.min_party_member+" member and try again, with level between " +.base_level[0] + " and " + .base_level[1] + ".";
@@ -174,11 +174,11 @@ OnStart:
  		}
 		break;
 	case 2:
-		instance_destroy MOC_INSTANCE_ID;
 		mes .instance_name$ + " Destroyed.";
+		instance_destroy MOC_INSTANCE_ID;
 		getpartymember getcharid(1),2;
 		for( set .@i, 0; .@i < $@partymembercount; set .@i, .@i+1 )
-			if( attachrid( $@partymemberaid[.@i] ) && MOC_INSTANCE_ID >= 0){
+			if( attachrid( $@partymemberaid[.@i] ) && MOC_INSTANCE_ID > 0){
 				set MOC_INSTANCE_ID, -1;
 			}
 		break;
@@ -193,7 +193,7 @@ OnPCLogoutEvent:
 	end;
 
 OnInit:
-	setarray .base_level[0], 160, 175;
+	setarray .base_level[0], 160, 250; //175;
 	setarray .map$[0],"1@rev";
 	set .map_size, getarraysize( .map$ );
 	set .min_party_member, 1;
@@ -206,8 +206,8 @@ OnInit:
 }
 
 moro_cav,57,68,3	script	Red Flower::alamocrf	HIDDEN_NPC,{
-	if( MOC_INSTANCE_ID < 0 ){
-		mes .instance_name$ + " doesn't exist for Party - "+ getpartyname( getcharid(1) );
+	if( MOC_INSTANCE_ID <= 0 ){
+		mes .instance_name$ + " doesn't exist for Party - "+getpartyname( .@party_id );
 	}
 	else{
 		//RATHENA
@@ -461,10 +461,10 @@ function	summon_guardian	{
 }
 
 OnNormalDied2:
-	set .@map$, strnpcinfo(4);
+	set .@map$, instance_mapname(strnpcinfo(4), instance_id());
 	set .@mob_dead_num2, mobcount(.@map$,.@npc_name$+"::OnNormalDied2" );
 OnNormalDied:
-	set .@map$, strnpcinfo(4);
+	set .@map$, instance_mapname(strnpcinfo(4), instance_id());
 	set .@npc_name$, instance_npcname( strnpcinfo(0), instance_id() );
 	set .@mob_dead_num, mobcount(.@map$,.@npc_name$+"::OnNormalDied" );
 	if( .@mob_dead_num == 0 && .@mob_dead_num2 == 0 ){
@@ -474,7 +474,7 @@ OnNormalDied:
 		{
 			//yanku talk + warp enabled
 			enablenpc instance_npcname( "alamocya", instance_id() );
-			donpcevent instance_npcname( "alamocya", instance_id() ) + "::OnTalk";
+			doevent instance_npcname( "alamocya", instance_id() ) + "::OnTalk";
 		}
 		else if('instance_moc_level == 3)
 		{
@@ -487,9 +487,9 @@ OnNormalDied:
 			else
 			{
 				killmonster .@map$, "All";
-				attachrid 'mocTalking;
+				//attachrid 'mocTalking;
 				//warp all players to fourth room + summon
-				getpartymember getcharid(1),0;
+				getpartymember getcharid(1),2;
 				set .@memberCount, $@partymembercount;
 				copyarray .@members[0], $@partymemberaid[0], .@memberCount;
 				for(set .@i,0; .@i<.@memberCount; set .@i,.@i+1)
@@ -499,7 +499,8 @@ OnNormalDied:
 						warp .@map$, 111, 44;
 					}
 				}
-				donpcevent instance_npcname( "alamocmo", instance_id() ) + "::OnTalk3";
+
+				goto OnMoTalk3End;
 			}
 		}
 		else if('instance_moc_level == 4)
@@ -511,7 +512,7 @@ OnNormalDied:
 			}
 			else
 			{
-				donpcevent instance_npcname( "alamocmo", instance_id() ) + "::OnTalk4";				
+				goto OnMoTalk4End;			
 			}
 		}
 		else if('instance_moc_level == 5)
@@ -532,7 +533,7 @@ OnNormalDied:
 	end;
 	
 OnGuardianDied:
-	set .@map$, strnpcinfo(4);
+	set .@map$, instance_mapname(strnpcinfo(4), instance_id());
 	set .@npc_name$, instance_npcname( strnpcinfo(0), instance_id() );
 	set .@mob_dead_num, mobcount(.@map$,.@npc_name$+"::OnGuardianDied" );
 	set .@party_id, getcharid(1);
@@ -541,7 +542,7 @@ OnGuardianDied:
 		if('instance_moc_level == 2)
 		{
 			//wounded talk 2
-			donpcevent instance_npcname( "alamocmo", instance_id() ) + "::OnTalk2";
+			goto OnMoTalk2End;
 		}
 		else if ('instance_moc_level == .max_moc_level)
 		{
@@ -592,7 +593,7 @@ OnTimer10000:
 	}
 	if(.randomPop == 1)
 	{
-		set .@map$, strnpcinfo(4);
+		set .@map$, instance_mapname(strnpcinfo(4), instance_id());
 		set .@npc_name$, instance_npcname( strnpcinfo(0), instance_id() );
 		set .@mob_dead_num, mobcount(.@map$,.@npc_name$+"::OnGuardianDied" );
 		if(.@mob_dead_num == 0)
@@ -604,13 +605,13 @@ OnTimer10000:
 	end;
 	
 OnKeaTalkEnd:
-	set .@map$, strnpcinfo(4);
+	set .@map$, instance_mapname(strnpcinfo(4), instance_id());
 	set .@npcname$, instance_npcname(strnpcinfo(0), instance_id());
 	summon_normal( .@map$,.@npcname$,1 );
 	end;
 	
 OnMoTalkEnd:
-	set .@map$, strnpcinfo(4);
+	set .@map$, instance_mapname(strnpcinfo(4), instance_id());
 	set .@npcname$, instance_npcname(strnpcinfo(0), instance_id());
 	'instance_moc_level++;
 	//pop weakened wounded morroc
@@ -618,11 +619,26 @@ OnMoTalkEnd:
 	end;
 	
 OnMoTalk2End:
-	attachrid 'mocTalking;
+	instance_announce instance_id(), "[Morocc] Profits that I don't have recovered yet", bc_map, 0xFF0000;
+	sleep2 1500;
+	
+	instance_announce instance_id(), "[Morocc] I have to leave you alive for now", bc_map, 0xFF0000;
+	sleep2 1500;
+	
+	instance_announce instance_id(), "[Morocc] Do your best to escape my world", bc_map, 0xFF0000;
+	sleep2 1500;
+	
+	instance_announce instance_id(), "[Morocc] In the end, you'll encounter an inevitable fate", bc_map, 0xFF0000;
+	sleep2 1500;
+	
+	instance_announce instance_id(), "[Morocc] and your souls will be mine!", bc_map, 0xFF0000;
+	sleep2 1500;
+	
 	//split team
 	deletearray 'mocTeam1[0], getarraysize('mocTeam1);
 	deletearray 'mocTeam2[0], getarraysize('mocTeam2);
-	getpartymember getcharid(1),0;
+
+	getpartymember getcharid(1),2;
 	set .@memberCount, $@partymembercount;
 	copyarray .@members[0], $@partymemberaid[0], .@memberCount;
 	for(set .@i,0; .@i<.@memberCount - 1; set .@i,.@i+1)
@@ -666,7 +682,7 @@ OnMoTalk2End:
 		}
 	}
 	
-	set .@map$, strnpcinfo(4);
+	set .@map$, instance_mapname(strnpcinfo(4), instance_id());
 	set .@npcname$, instance_npcname(strnpcinfo(0), instance_id());
 	
 	//warp team 1 on point 1
@@ -722,7 +738,16 @@ OnPopIceWalls:
 	return;
 	
 OnMoTalk3End:
-	set .@map$, strnpcinfo(4);
+	instance_announce instance_id(), "[Morocc] But it's enough now. I'm tired of this little players", bc_map, 0xFF0000;
+	sleep2 1500;
+	
+	instance_announce instance_id(), "[Morocc] Your bodies and souls belong to me", bc_map, 0xFF0000;
+	sleep2 1500;
+	
+	instance_announce instance_id(), "[Morocc] My soldiers! Break them, and bring them to me!", bc_map, 0xFF0000;
+	sleep2 1500;
+
+	set .@map$, instance_mapname(strnpcinfo(4), instance_id());
 	set .@npcname$, instance_npcname(strnpcinfo(0), instance_id());
 	//pop mob waves
 	set .popCount, 0;
@@ -732,7 +757,19 @@ OnMoTalk3End:
 	end;
 	
 OnMoTalk4End:
-	set .@map$, strnpcinfo(4);
+	instance_announce instance_id(), "[Morocc] I'm surprised you lasted this long", bc_map, 0xFF0000;
+	sleep2 1500;
+	
+	instance_announce instance_id(), "[Morocc] But I can feel now. I'm back!", bc_map, 0xFF0000;
+	sleep2 1500;
+	
+	instance_announce instance_id(), "[Morocc] My necromancer! I leave them to you! Bring me their souls", bc_map, 0xFF0000;
+	sleep2 1500;
+	
+	instance_announce instance_id(), "[Morocc] I shall feast of all their hopes and defeat feelings", bc_map, 0xFF0000;
+	sleep2 1500;
+
+	set .@map$, instance_mapname(strnpcinfo(4), instance_id());
 	set .@npcname$, instance_npcname(strnpcinfo(0), instance_id());
 	//pop morocc mage
 	summon_normal( .@map$, .@npcname$, 1 );
@@ -743,27 +780,23 @@ OnMoTalk4End:
 	end;
 	
 OnTouch:
-	if(.talking == 0)
+	if('talking == 0 && 'instance_moc_level == 0)
 	{
-		set 'mocTalking, getcharid(3);
-		set .talking, 1;
-		npctalk "We came to the right place!";
+		set 'talking, 1;
 		instance_announce instance_id(), "[Kaep] We came to the right place!", bc_map, 0x00FF99;
 		sleep2 1500;
-		npctalk "Wait, there's something ahead of us!";
 		instance_announce instance_id(), "[Kaep] Wait, there's something ahead of us!", bc_map, 0x00FF99;
 		sleep2 1500;
-		npctalk "Are those hideous monsters Morocc's lackeys?!";
 		instance_announce instance_id(), "[Kaep] Are those hideous monsters Morocc's lackeys?!", bc_map, 0x00FF99;
 		sleep2 1500;
-		donpcevent instance_npcname("morse_s_cave", instance_id()) + "::OnKeaTalkEnd";
+		doevent instance_npcname("morse_s_cave", instance_id()) + "::OnKeaTalkEnd";
 	}
 	end;
 	
-OnInit:
 OnInstanceInit:
+	set 'talking, 0;
+OnInit:
 	enablenpc strnpcinfo(3);
-	set .talking, 0;
 	end;
 }
 
@@ -771,22 +804,17 @@ OnInstanceInit:
 	end;
 	
 OnTalk:
-	attachrid('mocTalking);
 	set .@map$, strnpcinfo(4);
 	
-	npctalk "*Chuckles* We meet again";
 	instance_announce instance_id(), "[Yanku] *Chuckles* We meet again", bc_map, 0xFF0000;
 	sleep2 1500;
 	
-	npctalk "This world resides in his mind";
 	instance_announce instance_id(), "[Yanku] This world resides in his mind", bc_map, 0xFF0000;
 	sleep2 1500;
 	
-	npctalk "You can't do nothing against his will";
 	instance_announce instance_id(), "[Yanku] You can't do nothing against his will", bc_map, 0xFF0000;
 	sleep2 1500;
 	
-	npctalk "Lord Morocc is expecting you. Let me take you to him *Chuckles*";
 	instance_announce instance_id(), "[Yanku] Lord Morocc is expecting you. Let me take you to him *Chuckles*", bc_map, 0xFF0000;
 	sleep2 1500;
 	
@@ -804,11 +832,11 @@ OnInit:
 	end;
 	
 OnTouch:
-	set 'mocTalking, getcharid(3);
 	if('instance_moc_level == 1)
 	{
+		set 'talking, 0;
 		enablenpc instance_npcname( "alamocmo", instance_id() );
-		donpcevent instance_npcname( "alamocmo", instance_id() ) + "::OnTalk";
+		doevent instance_npcname( "alamocmo", instance_id() ) + "::OnTalk";
 	}
 	end;
 }
@@ -817,102 +845,34 @@ OnTouch:
 	end;
 	
 OnTalk:
-	if(.talking == 0)
+	if('talking == 0)
 	{
-		attachrid('mocTalking);
-		set .talking, 1;
+		set 'talking, 1;
 		set .@map$, strnpcinfo(4);
 
-		npctalk "I should punish you for disturbing my slumber";
 		instance_announce instance_id(), "[Morocc] I should punish you for disturbing my slumber", bc_map, 0xFF0000;
 		sleep2 1500;
 		
-		npctalk "Do you really think you can stop me?";
 		instance_announce instance_id(), "[Morocc] Do you really think you can stop me?", bc_map, 0xFF0000;
 		sleep2 1500;
 		
-		npctalk "I may have not recovered my full strength";
 		instance_announce instance_id(), "[Morocc] I may have not recovered my full strength", bc_map, 0xFF0000;
 		sleep2 1500;
 		
-		npctalk "but I can still take down a bunch of you quite easily.";
 		instance_announce instance_id(), "[Morocc] but I can still take down a bunch of you quite easily.", bc_map, 0xFF0000;
 		sleep2 1500;
 		
-		npctalk "Death is your only escape.";
 		instance_announce instance_id(), "[Morocc] Death is your only escape.", bc_map, 0xFF0000;
 		sleep2 1500;
 		
 		disablenpc strnpcinfo(3);
-		donpcevent instance_npcname( "morse_s_cave", instance_id() ) + "::OnMoTalkEnd";
+		doevent instance_npcname( "morse_s_cave", instance_id() ) + "::OnMoTalkEnd";
 	}
 	end;
 	
-OnTalk2:
-	attachrid('mocTalking);
-	set .@map$, strnpcinfo(4);
-
-	npctalk "Profits that I don't have recovered yet";
-	instance_announce instance_id(), "[Morocc] Profits that I don't have recovered yet", bc_map, 0xFF0000;
-	sleep2 1500;
-	
-	npctalk "I have to leave you alive for now";
-	instance_announce instance_id(), "[Morocc] I have to leave you alive for now", bc_map, 0xFF0000;
-	sleep2 1500;
-	
-	npctalk "Do your best to escape my world";
-	instance_announce instance_id(), "[Morocc] Do your best to escape my world", bc_map, 0xFF0000;
-	sleep2 1500;
-	
-	npctalk "In the end, you'll encounter an inevitable fate";
-	instance_announce instance_id(), "[Morocc] In the end, you'll encounter an inevitable fate", bc_map, 0xFF0000;
-	sleep2 1500;
-	
-	npctalk "and your souls will be mine!";
-	instance_announce instance_id(), "[Morocc] and your souls will be mine!", bc_map, 0xFF0000;
-	sleep2 1500;
-	
-	donpcevent instance_npcname( "morse_s_cave", instance_id() ) + "::OnMoTalk2End";
-	end;
-	
-OnTalk3:	
-	attachrid('mocTalking);
-	set .@map$, strnpcinfo(4);
-
-	instance_announce instance_id(), "[Morocc] But it's enough now. I'm tired of this little players", bc_map, 0xFF0000;
-	sleep2 1500;
-	
-	instance_announce instance_id(), "[Morocc] Your bodies and souls belong to me", bc_map, 0xFF0000;
-	sleep2 1500;
-	
-	instance_announce instance_id(), "[Morocc] My soldiers! Break them, and bring them to me!", bc_map, 0xFF0000;
-	sleep2 1500;
-
-	donpcevent instance_npcname( "morse_s_cave", instance_id() ) + "::OnMoTalk3End";
-	end;
-	
-OnTalk4:
-	attachrid('mocTalking);
-	set .@map$, strnpcinfo(4);
-
-	instance_announce instance_id(), "[Morocc] I'm surprised you lasted this long", bc_map, 0xFF0000;
-	sleep2 1500;
-	
-	instance_announce instance_id(), "[Morocc] But I can feel now. I'm back!", bc_map, 0xFF0000;
-	sleep2 1500;
-	
-	instance_announce instance_id(), "[Morocc] My necromancer! I leave them to you! Bring me their souls", bc_map, 0xFF0000;
-	sleep2 1500;
-	
-	instance_announce instance_id(), "[Morocc] I shall feast of all their hopes and defeat feelings", bc_map, 0xFF0000;
-	sleep2 1500;
-
-	donpcevent instance_npcname( "morse_s_cave", instance_id() ) + "::OnMoTalk4End";
-	end;
-	
 OnInstanceInit:
+	set 'talking, 0;
 OnInit:
-	set .talking, 0;
 	end;
 }
 

@@ -35,10 +35,7 @@ dali02,142,81,3	script	Dimensionnal Portal#sara::dpsa	PORTAL,{
 		erasequest 15051;
 		end;
 	}
-	//RATHENA
-	//if(.@airassault_time == 0)
-	//HERCULES
-	if(.@airassault_time == 1)
+	if(.@airassault_time == 0)
 	{
 		mes "^ff0000It is not yet time for you to come here again.^000000";
 		close;
@@ -81,28 +78,28 @@ dali02,142,81,3	script	Dimensionnal Portal#sara::dpsa	PORTAL,{
 						mes "^ff0000The instance is created.^000000";
 						mes "^ff0000Activated dimensional Portal.^000000";
 						//HERCULES
-                       				setarray .@maps$[0], "1@air1", "1@air2";
+                       	setarray .@maps$[0], "1@air1", "1@air2";
 						for( set .@i, 0; .@i < getarraysize(.@maps$); set .@i,.@i+1 )
 						{
 							if( instance_attachmap( .@maps$[.@i],.@instance ) == "" ){
 								setmapflag .@maps$[.@i],mf_zone,"Memorial Dungeon";
 								npctalk "Airship Assault reservation failed due to map attach failure.";
 								mes "- ^FF0000Reservation Failed!^000000";
-								instance_destroy( .@instance );
+								instance_destroy( instance_id() );
 								close;
 							}
 						}
 						
-						instance_set_timeout 7200,300,.@instance;
-						instance_init(.@instance);
+						instance_set_timeout 7200,300,instance_id();
+						instance_init(instance_id());
             
-						disablenpc instance_npcname("warp1#air1", .@instance);
-						disablenpc instance_npcname("warp2a#air1", .@instance);
-						disablenpc instance_npcname("warp2b#air1", .@instance);
-						disablenpc instance_npcname("warp3a#air1", .@instance);
-						disablenpc instance_npcname("warp3b#air1", .@instance);
-						disablenpc instance_npcname("warp4a#air2", .@instance);
-						disablenpc instance_npcname("warp5a#air2", .@instance);
+						disablenpc instance_npcname("warp1#air1", instance_id());
+						disablenpc instance_npcname("warp2a#air1", instance_id());
+						disablenpc instance_npcname("warp2b#air1", instance_id());
+						disablenpc instance_npcname("warp3a#air1", instance_id());
+						disablenpc instance_npcname("warp3b#air1", instance_id());
+						disablenpc instance_npcname("warp4a#air2", instance_id());
+						disablenpc instance_npcname("warp5a#air2", instance_id());
 						
 						//RATHENA
 						//donpcevent "::OnASInstanceInit";
@@ -111,10 +108,7 @@ dali02,142,81,3	script	Dimensionnal Portal#sara::dpsa	PORTAL,{
 					}
 				case 2:
 					getmapxy(.@map$, .@x, .@y, UNITTYPE_PC);
-					//RATHENA
-					//save .@map$, .@x, .@y;
-					//Hercules
-					savepoint .@map$, .@x, .@y;
+					save .@map$, .@x, .@y;
 					mes "^ff0000Dimensionnal Portal activated^000000";
 					next;
 					mes "^ff0000Fulfills the mission without delay.^000000";
@@ -143,11 +137,11 @@ dali02,142,81,3	script	Dimensionnal Portal#sara::dpsa	PORTAL,{
 					//}
 					//HERCULES
 					if( has_instance( "1@air1" ) == "" ){
-						mes "Airship Assault doesnt exist for Party - "+getpartyname( .@party_id );
+							mes "Airship Assault doesnt exist for Party - "+getpartyname( .@party_id );
 					}
 					else{
-						instance_announce has_instance2( "1@air1" ), strcharinfo(0) + " from party, " +getpartyname( .@party_id )+", is entering the Airship Assault instance.",bc_map,"0x00FF99",FW_NORMAL,12;
-						warp "1@air1",244,28;
+							instance_announce has_instance2( "1@air1" ), strcharinfo(0) + " from party, " +getpartyname( .@party_id )+", is entering the Airship Assault instance.",bc_map,"0x00FF99",FW_NORMAL,12;
+							warp "1@air1",244,28;
 					}
 				case 3:
 					close;

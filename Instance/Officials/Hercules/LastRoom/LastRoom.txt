@@ -21,10 +21,7 @@ OnStart:
 	set .@party_id, getcharid(1);
 	set .@lr_leader, ( getcharid(0) == getpartyleader(.@party_id,2) );
 	
-	//RATHENA
-	//set .@has_instance, LR_INSTANCE_ID != -1;
-	//HERCULES
-	set .@has_instance, has_instance(.map$[0], instance_id());
+	set .@has_instance, LR_INSTANCE_ID > 0;
 	
 	set .@instance_delay, ( instance_delay_lastr - gettimetick(2) );
 
@@ -141,8 +138,8 @@ OnStart:
 		}
 		else{
 			getmapxy(.@map$, .@x, .@y, UNITTYPE_PC);
-			save .@map$, .@x, .@y;
 			//RATHENA
+			//save .@map$, .@x, .@y;
 			//switch(instance_enter(.instance_name$)) {
 			//	default:
 			//		mes "An unknown error has occurred.";
@@ -160,6 +157,7 @@ OnStart:
 			//}
 			
 			//HERCULES
+			savepoint .@map$, .@x, .@y;
 			if( has_instance( .map$[0] ) == "" ){
 				mes "Last Room doesnt exist for Party - "+getpartyname( .@party_id );
 			}
@@ -328,7 +326,7 @@ function	summon_guardian	{
 		set .bossId, areamonster(.@map$,.@coordinate[0],.@coordinate[1],.@coordinate[2],.@coordinate[3],"--ja--",.@monster[.@i],.@target_amount,.@label$,.@size);
 		//RATHENA	
 		//areamonster(.@map$,.@coordinate[0],.@coordinate[1],.@coordinate[2],.@coordinate[3],"--ja--",.@monster[.@i],.@target_amount,.@label$,.@size);
-		set .bossId, $@mobId[0];
+		//set .bossId, $@mobId[0];
 	}
 	return;
 }
@@ -441,7 +439,6 @@ OnThirdFloorOn:
 OnTalk:			
 	attachrid('lrTalking);
 	cutin "bu_du5", 2;
-	npctalk "[Du] Sister are you allright?";
 	instance_announce instance_id(), "[Du] Sister are you allright?", bc_map, 0x00FF00;
 	sleep2 1500;
 	
@@ -452,7 +449,6 @@ OnTalk2:
 	attachrid('lrTalking);	
 	cutin "bu_du1", 2;
 	cutin "bu_du1", 2;
-	npctalk "[Du] Eifie! I think it is better that you go back!";
 	instance_announce instance_id(), "[Du] Eifie! I think it is better that you go back!", bc_map, 0x00FF00;
 	sleep2 1500;
 	
@@ -470,15 +466,12 @@ OnTouch:
 		set .talking, 1;	
 
 		cutin "ep15_2_brt_3", 2;
-		npctalk "[Verity] Humpf. I suddenly have a feeling that is no good...";
 		instance_announce instance_id(), "[Verity] Humpf. I suddenly have a feeling that is no good...", bc_map, 0x00FF00;
 		sleep2 1500;
 	
-		npctalk "[Verity] Something is splitting my head...Ugh...";
 		instance_announce instance_id(), "[Verity] Something is splitting my head...Ugh...", bc_map, 0x00FF00;
 		sleep2 1500;
-	
-		npctalk "[Verity] Ugh";
+
 		instance_announce instance_id(), "[Verity] Ugh", bc_map, 0x00FF00;
 		sleep2 1500;
 	
@@ -489,7 +482,6 @@ OnTouch:
 OnTalk2:
 	attachrid('lrTalking);
 	cutin "ep15_2_brt_3", 2;
-	npctalk "[Verity] Have to go back";
 	instance_announce instance_id(), "[Verity] Have to go back", bc_map, 0x00FF00;
 	sleep2 1500;
 	
@@ -499,7 +491,6 @@ OnTalk2:
 OnTalk3:
 	attachrid('lrTalking);
 	cutin "ep15_2_brt_4", 2;
-	npctalk "[Verity] Ugh";
 	instance_announce instance_id(), "[Verity] Ugh", bc_map, 0x00FF00;
 	sleep2 1500;
 	
@@ -509,7 +500,6 @@ OnTalk3:
 OnTalk4:
 	attachrid('lrTalking);
 	cutin "ep15_2_brt_5", 2;
-	npctalk "[Verity] N...No. I will catch up soone so go on ahead";
 	instance_announce instance_id(), "[Verity] N...No. I will catch up soone so go on ahead", bc_map, 0x00FF00;
 	sleep2 1500;
 	
@@ -528,11 +518,9 @@ OnInstanceInit:
 OnTalk:			
 	attachrid('lrTalking);
 	cutin "ep143_tahuk", 2;
-	npctalk "[Tamarin] Verity are you allright?";
 	instance_announce instance_id(), "[Tamarin] Verity are you allright?", bc_map, 0x00FF00;
 	sleep2 1500;
 
-	npctalk "[Tamarin] Can you walk?";
 	instance_announce instance_id(), "[Tamarin] Can you walk?", bc_map, 0x00FF00;
 	sleep2 1500;
 	
@@ -542,7 +530,6 @@ OnTalk:
 OnTalk2:	
 	attachrid('lrTalking);
 	cutin "ep143_tasmi", 2;
-	npctalk "[Tamarin] Then i'll stay with Verity until she recovers. So you can go on!";
 	instance_announce instance_id(), "[Tamarin] Then i'll stay with Verity until she recovers. So you can go on!", bc_map, 0x00FF00;
 	sleep2 1500;
 
@@ -566,23 +553,18 @@ OnTouch:
 		cutin "ep143_tahuk", 2;
 		set .talking, 1;
 
-		npctalk "[Tamarin] Huff huff! Verity suddenly huff huff couldn't event stand straight before huff huff...";
 		instance_announce instance_id(), "[Tamarin] Huff huff! Verity suddenly huff huff couldn't event stand straight before huff huff...", bc_map, 0x00FF00;
 		sleep2 1500;
 		
-		npctalk "[Tamarin] Ran off so fast huff huff...to even catch up! huff huff";
 		instance_announce instance_id(), "[Tamarin] Ran off so fast huff huff...to even catch up! huff huff", bc_map, 0x00FF00;
 		sleep2 1500;
 		
-		npctalk "[Tamarin] Uh...Could Verity have gone that far?";
 		instance_announce instance_id(), "[Tamarin] Uh...Could Verity have gone that far?", bc_map, 0x00FF00;
 		sleep2 1500;
 		
-		npctalk "[Tamarin] We need to find her quickly!";
 		instance_announce instance_id(), "[Tamarin] We need to find her quickly!", bc_map, 0x00FF00;
 		sleep2 1500;
 		
-		npctalk "[Tamarin] I have a bad feeling about that";
 		instance_announce instance_id(), "[Tamarin] I have a bad feeling about that", bc_map, 0x00FF00;
 		sleep2 1500;
 
@@ -689,11 +671,9 @@ OnTouch:
 		set .poping, 1;
 
 		cutin "ep15_2_brt_7", 2;
-		npctalk "[Verity] Finally...We came back...";
 		instance_announce instance_id(), "[Verity] Finally...We came back...", bc_map, 0x00FF00;
 		sleep2 1500;
 		
-		npctalk "[Verity] Finally...";
 		instance_announce instance_id(), "[Verity] Finally...", bc_map, 0x00FF00;
 		sleep2 1500;
 		
@@ -720,11 +700,9 @@ OnInit:
 OnTalk:	
 	attachrid('lrTalking);
 	cutin "ep15_2_brt_7", 2;
-	npctalk "[Verity] Uh...Uhm! What's going on?";
 	instance_announce instance_id(), "[Verity] Uh...Uhm! What's going on?", bc_map, 0x00FF00;
 	sleep2 1500;
 	
-	npctalk "[Verity] With those serious faces!";
 	instance_announce instance_id(), "[Verity] With those serious faces!", bc_map, 0x00FF00;
 	sleep2 1500;
 	
@@ -734,11 +712,9 @@ OnTalk:
 OnTalk2:	
 	attachrid('lrTalking);
 	cutin "ep15_2_brt_7", 2;
-	npctalk "[Verity] Remember?";
 	instance_announce instance_id(), "[Verity] Remember?", bc_map, 0x00FF00;
 	sleep2 1500;
 	
-	npctalk "[Verity] Now that I think of it...Where am I?";
 	instance_announce instance_id(), "[Verity] Now that I think of it...Where am I?", bc_map, 0x00FF00;
 	sleep2 1500;
 	
@@ -748,11 +724,9 @@ OnTalk2:
 OnTalk3:	
 	attachrid('lrTalking);
 	cutin "ep15_2_brt_3", 2;
-	npctalk "[Verity] Hum...I think my head was splitting since I went underground...";
 	instance_announce instance_id(), "[Verity] Hum...I think my head was splitting since I went underground...", bc_map, 0x00FF00;
 	sleep2 1500;
 	
-	npctalk "[Verity] I don't remember anything after that...";
 	instance_announce instance_id(), "[Verity] I don't remember anything after that...", bc_map, 0x00FF00;
 	sleep2 1500;
 	
@@ -774,7 +748,6 @@ OnTouch:
 		set 'lrTalking, getcharid(3);
 		cutin "bu_du1", 2;
 		set .talking, 1;
-		npctalk "[Du] Sister! What happened? Are you allright?";
 		instance_announce instance_id(), "[Du] Sister! What happened? Are you allright?", bc_map, 0x00FF00;
 		sleep2 1500;
 		
@@ -784,8 +757,7 @@ OnTouch:
 	
 OnTalk2:
 	attachrid('lrTalking);
-		cutin "bu_du5", 2;
-	npctalk "[Du] Do you remember? What did you think!";
+	cutin "bu_du5", 2;
 	instance_announce instance_id(), "[Du] Do you remember? What did you think!", bc_map, 0x00FF00;
 	sleep2 1500;
 	
@@ -794,8 +766,7 @@ OnTalk2:
 	
 OnTalk3:
 	attachrid('lrTalking);
-		cutin "bu_du1", 2;
-	npctalk "[Du] Just now something tremendous";
+	cutin "bu_du1", 2;
 	instance_announce instance_id(), "[Du] Just now something tremendous", bc_map, 0x00FF00;
 	sleep2 1500;
 	
@@ -804,12 +775,10 @@ OnTalk3:
 	
 OnTalk4:
 	attachrid('lrTalking);
-		cutin "bu_du5", 2;
-	npctalk "[Du] You call this chatting away?";
+	cutin "bu_du5", 2;
 	instance_announce instance_id(), "[Du] You call this chatting away?", bc_map, 0x00FF00;
 	sleep2 1500;
 	
-	npctalk "[Du] It was tremendous before okay?";
 	instance_announce instance_id(), "[Du] It was tremendous before okay?", bc_map, 0x00FF00;
 	sleep2 1500;
 	
@@ -818,8 +787,7 @@ OnTalk4:
 	
 OnTalk5:
 	attachrid('lrTalking);
-		cutin "bu_du1", 2;
-	npctalk "[Du] What...What's this now?";
+	cutin "bu_du1", 2;
 	instance_announce instance_id(), "[Du] What...What's this now?", bc_map, 0x00FF00;
 	sleep2 1500;
 	
@@ -839,7 +807,6 @@ OnInit:
 OnTalk:
 	attachrid('lrTalking);
 	cutin "bu_alp1", 2;
-	npctalk "[Alp] Hey! I don't think this is a situation we should be chatting away carefree now...";
 	instance_announce instance_id(), "[Alp]Hey! I don't think this is a situation we should be chatting away carefree now...", bc_map, 0x00FF00;
 	sleep2 1500;
 	
@@ -849,7 +816,6 @@ OnTalk:
 OnTalk2:
 	attachrid('lrTalking);
 	cutin "bu_alp3", 2;
-	npctalk "[Alp]Don't you hear? Something's coming...";
 	instance_announce instance_id(), "[Alp]Don't you hear? Something's coming...", bc_map, 0x00FF00;
 	sleep2 1500;
 	
@@ -859,7 +825,6 @@ OnTalk2:
 OnTalk3:
 	attachrid('lrTalking);
 	cutin "bu_alp5", 2;
-	npctalk "[Alp]This is dangerous...That's not something we can handle	";
 	instance_announce instance_id(), "[Alp]This is dangerous...That's not something we can handle	", bc_map, 0x00FF00;
 	sleep2 1500;
 	
@@ -878,7 +843,6 @@ OnInit:
 OnTalk:
 	attachrid('lrTalking);
 	cutin "ep143_tasta", 2;
-	npctalk "[Tamarin] Verity! Pull yourself together!";
 	instance_announce instance_id(), "[Tamarin] Verity! Pull yourself together!", bc_map, 0x00FF00;
 	sleep2 1500;
 	
@@ -888,7 +852,6 @@ OnTalk:
 OnTalk2:
 	attachrid('lrTalking);
 	cutin "ep143_taang", 2;
-	npctalk "[Tamarin] Verity, you don't remember a thing? Before...";
 	instance_announce instance_id(), "[Tamarin] Verity, you don't remember a thing? Before...", bc_map, 0x00FF00;
 	sleep2 1500;
 	
@@ -898,7 +861,6 @@ OnTalk2:
 OnTalk3:
 	attachrid('lrTalking);
 	cutin "ep143_tahuk", 2;
-	npctalk "[Tamarin] Now...now that I look the ground is...shaking, isn't it?";
 	instance_announce instance_id(), "[Tamarin] Now...now that I look the ground is...shaking, isn't it?", bc_map, 0x00FF00;
 	sleep2 1500;
 	
@@ -917,7 +879,6 @@ OnInit:
 OnTalk:
 	attachrid('lrTalking);
 	cutin "bu_mark1", 2;
-	npctalk "[Marik] Everybody, out of the way! I'll cast Heal";
 	instance_announce instance_id(), "[Marik] Everybody, out of the way! I'll cast Heal", bc_map, 0x00FF00;
 	sleep2 1500;
 	
@@ -927,7 +888,6 @@ OnTalk:
 OnTalk2:
 	attachrid('lrTalking);
 	cutin "bu_mark4", 2;
-	npctalk "[Marik] Qu...Quickly! Outside";
 	instance_announce instance_id(), "[Marik] Qu...Quickly! Outside", bc_map, 0x00FF00;
 	sleep2 1500;
 
@@ -936,7 +896,7 @@ OnTalk2:
 	getpartymember getcharid(1),2;
 		for( set .@i, 0; .@i < $@partymembercount; set .@i, .@i+1 )
 			if( attachrid( $@partymemberaid[.@i] ) && strcharinfo(3) == strnpcinfo(4)){
-				warp "SavePoint", 0, 0;
+				warp "verus01", 148, 177;
 			}
 	
 	sleep2 1500;

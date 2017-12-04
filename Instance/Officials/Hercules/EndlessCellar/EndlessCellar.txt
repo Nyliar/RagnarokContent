@@ -24,10 +24,7 @@ e_tower,76,79,0	script	Cellar Protection Stone	2_MONEMUS,{
 	set .@party_id, getcharid(1);
 	set .@is_leader, ( getcharid(0) == getpartyleader(.@party_id,2) );
 	
-	//RATHENA
-	//set .@has_instance, EC_INSTANCE_ID > 0;
-	//HERCULES
-	set .@has_instance, has_instance(.map$[0], instance_id());
+	set .@has_instance, EC_INSTANCE_ID > 0;
 
 	mes "^0055FF[ "+.instance_name$+" ]^000000";
 	mes "We're now recruiting people to enter in " + .instance_name$ + " and eliminate all the monsters that live there. Could you lend us a hand on this ?";
@@ -136,10 +133,7 @@ e_tower,76,79,0	script	Cellar Protection Stone	2_MONEMUS,{
 		}
 		else{
 			getmapxy(.@map$, .@x, .@y, UNITTYPE_PC);
-			//RATHENA
-			//save .@map$, .@x, .@y;
-			//HERCULES
-			savepoint .@map$, .@x, .@y;
+			save .@map$, .@x, .@y;
 			//RATHENA
 			//switch(instance_enter(.instance_name$)) {
 			//	default:
@@ -158,6 +152,7 @@ e_tower,76,79,0	script	Cellar Protection Stone	2_MONEMUS,{
 			//	}
 				
 			//HERCULES
+			savepoint .@map$, .@x, .@y;
 			if( has_instance( .map$[0] ) == "" ){
 				mes .instance_name$ + " doesnt exist for Party - "+getpartyname( .@party_id );
 			}
@@ -169,12 +164,12 @@ e_tower,76,79,0	script	Cellar Protection Stone	2_MONEMUS,{
 		break;
 	case 3:
 		mes "Endless Cellar Destroyed.";
+		instance_destroy EC_INSTANCE_ID;
 		getpartymember getcharid(1),2;
 		for( set .@i, 0; .@i < $@partymembercount; set .@i, .@i+1 )
 			if( attachrid( $@partymemberaid[.@i] ) && EC_INSTANCE_ID > 0){
 				set EC_INSTANCE_ID, -1;
 			}
-		instance_destroy instance_id();
 		break;
 	default: 
 		break;
@@ -216,12 +211,12 @@ OnInit:
 			input .@level,0,77;
 			if(.@level == 0) close;
 			set 'EC_Floor,.@level;
-			killmonsterall instance_mapname("1@new", $instance_ec);
-			killmonsterall instance_mapname("2@new", $instance_ec);
-			killmonsterall instance_mapname("3@new", $instance_ec);
-			killmonsterall instance_mapname("4@new", $instance_ec);
+			killmonsterall instance_mapname("1@new", instance_id());
+			killmonsterall instance_mapname("2@new", instance_id());
+			killmonsterall instance_mapname("3@new", instance_id());
+			killmonsterall instance_mapname("4@new", instance_id());
 			for(set .@k,1; .@k < 'EC_Floor && .@k < 77; set .@k,.@k + 1)
-				enablenpc instance_npcname("ECwarp_"+.@k, $instance_ec);
+				enablenpc instance_npcname("ECwarp_"+.@k, instance_id());
 			EC_Spawns();
 			mes "Should I warp you there now?";
 			next;
@@ -234,24 +229,24 @@ OnInit:
 				if(.@level == 0) close; 
 			}
 			if(.@level == 77)
-				warp instance_mapname("5@new", $instance_ec),156,65;
+				warp instance_mapname("5@new", instance_id()),156,65;
 			else {
 				setarray .@warpx[0],96,184,270,354;
 				setarray .@warpy[0],393,309,221,137,51;
 				set .@x,.@warpx[((.@level-1) % 20) % 4];
 				set .@y,.@warpy[((.@level-1) % 20) / 4];
-				warp instance_mapname(((.@level-1) / 20 + 1)+"@new", $instance_ec),.@x,.@y;
+				warp instance_mapname(((.@level-1) / 20 + 1)+"@new", instance_id()),.@x,.@y;
 			}
 			close;
 		case 4:
 			mes "Floor: "+'EC_Floor;
 			mes "Lasttime varibale: "+'EC_Lasttime;
 			if('EC_Floor == 77)
-				set .@map$,instance_mapname("5@new", $instance_ec);
+				set .@map$,instance_mapname("5@new", instance_id());
 			else if('EC_Floor < 77)
-				set .@map$,instance_mapname((('EC_Floor-1) / 20 + 1)+"@new", $instance_ec);
+				set .@map$,instance_mapname((('EC_Floor-1) / 20 + 1)+"@new", instance_id());
 			mes "Alive mobs(variable): "+'EC_Mobs;
-			mes "Alive mobs(real): "+mobcount(.@map$, instance_npcname("EC_Manager",$instance_ec)+"::OnMobDead");
+			mes "Alive mobs(real): "+mobcount(.@map$, instance_npcname("EC_Manager",instance_id())+"::OnMobDead");
 			close;
 		case 5:
 			mes "Are you sure?";
@@ -279,7 +274,7 @@ OnInit:
 	}
 	if('EC_Floor >= 41) {
 		delitem 'EC_AshID,1;
-		warp instance_mapname("3@new", $instance_ec),96,393; 
+		warp instance_mapname("3@new", instance_id()),96,393; 
 		end;
 	}
 	if(getpartyleader(getcharid(1),2) != getcharid(0)){
@@ -288,13 +283,13 @@ OnInit:
 		close;
 	}
 	set 'EC_Floor,41;
-	killmonsterall instance_mapname("1@new", $instance_ec);
-	killmonsterall instance_mapname("2@new", $instance_ec);
+	killmonsterall instance_mapname("1@new", instance_id());
+	killmonsterall instance_mapname("2@new", instance_id());
 	EC_Spawns();
 	for(set .@k,1; .@k < 'EC_Floor && .@k < 77; set .@k,.@k + 1)
-		enablenpc instance_npcname("ECwarp_"+.@k,$instance_ec);
+		enablenpc instance_npcname("ECwarp_"+.@k,instance_id());
 	delitem 'EC_AshID,1;
-	warp instance_mapname("3@new", $instance_ec),96,393; 
+	warp instance_mapname("3@new", instance_id()),96,393; 
 	end;
 
 function	EC_Spawns	{
@@ -777,7 +772,7 @@ OnInstanceInit:
 		EC_Spawns();
 	}
 	else
-		donpcevent instance_npcname("EC_Manager", $instance_ec)+"::OnPorDead";
+		donpcevent instance_npcname("EC_Manager", instance_id())+"::OnPorDead";
 	end;
 	
 OnMobDead:
@@ -789,9 +784,9 @@ OnMobDead:
 	}
 
 	if('EC_Floor < 77)
-		enablenpc instance_npcname("ECwarp_"+'EC_Floor, $instance_ec);
+		enablenpc instance_npcname("ECwarp_"+'EC_Floor, instance_id());
 	if('EC_Floor == 40) 
-		donpcevent instance_npcname("ECwarp_40", $instance_ec)+"::OnEnableAshtimer";
+		donpcevent instance_npcname("ECwarp_40", instance_id())+"::OnEnableAshtimer";
 	instance_announce .@i,"All monsters on the "+'EC_Floor+('EC_Floor % 10 == 1 ? "st" : ('EC_Floor % 10 == 2 ? "nd" : ('EC_Floor % 10 == 3 ? "rd" : "th")))+" level have been defeated.",bc_map;
 	set 'EC_Floor,'EC_Floor+1;
 	if('EC_Floor <= 77)
@@ -817,42 +812,42 @@ OnPorDead:
 	instance_announce .@i,"Squeaky Voice: I know.  I'll let you play with my pets, the Six Great Pains.",bc_map,0xFF0000;
 	sleep2 3000;
 	instance_announce .@i,"Squeaky Voice: Try not to die too fast, they need their exercise.",bc_map,0xFF0000;
-	monster instance_mapname("5@new"),156,145,"High Priest Magaleta",1649,1,instance_npcname("EC_Manager", $instance_ec)+"::OnPain1";
+	monster instance_mapname("5@new"),156,145,"High Priest Magaleta",1649,1,instance_npcname("EC_Manager", instance_id())+"::OnPain1";
 	end;
 
 OnPain1:
 	sleep2 5000;
 	instance_announce .@i,"Squeaky Voice: You are stronger than you look, now try the pain of magic.",bc_map,0xFF0000;
 	sleep2 5000;
-	monster instance_mapname("5@new"),156,145,"High Wizard Katrinn",1651,1,instance_npcname("EC_Manager", $instance_ec)+"::OnPain2";
+	monster instance_mapname("5@new"),156,145,"High Wizard Katrinn",1651,1,instance_npcname("EC_Manager", instance_id())+"::OnPain2";
 	end;
 
 OnPain2:
 	sleep2 5000;
 	instance_announce .@i,"Squeaky Voice: Impressive, but how will you handle the pain of distance?",bc_map,0xFF0000;
 	sleep2 5000;
-	monster instance_mapname("5@new"),156,145,"Sniper Shecil",1650,1,instance_npcname("EC_Manager", $instance_ec)+"::OnPain3";
+	monster instance_mapname("5@new"),156,145,"Sniper Shecil",1650,1,instance_npcname("EC_Manager", instance_id())+"::OnPain3";
 	end;
 
 OnPain3:
 	sleep2 5000;
 	instance_announce .@i,"Squeaky Voice: Have you ever fought something you couldn't see?",bc_map,0xFF0000;
 	sleep2 5000;
-	monster instance_mapname("5@new"),156,145,"Assassin Cross Eremes",1647,1,instance_npcname("EC_Manager", $instance_ec)+"::OnPain4";
+	monster instance_mapname("5@new"),156,145,"Assassin Cross Eremes",1647,1,instance_npcname("EC_Manager", instance_id())+"::OnPain4";
 	end;
 
 OnPain4:
 	sleep2 5000;
 	instance_announce .@i,"Squeaky Voice: You murderers, it's time to feel the pain of paralysis.",bc_map,0xFF0000;
 	sleep2 5000;
-	monster instance_mapname("5@new"),156,145,"Whitesmith Harword",1648,1,instance_npcname("EC_Manager", $instance_ec)+"::OnPain5";
+	monster instance_mapname("5@new"),156,145,"Whitesmith Harword",1648,1,instance_npcname("EC_Manager", instance_id())+"::OnPain5";
 	end;
 
 OnPain5:
 	sleep2 5000;
 	instance_announce .@i,"Squeaky Voice: I'm getting annoyed, my last pet will finish you off.",bc_map,0xFF0000;
 	sleep2 5000;
-	monster instance_mapname("5@new"),156,145,"Whitesmith Harword",1648,1,instance_npcname("EC_Manager", $instance_ec)+"::OnPain6";
+	monster instance_mapname("5@new"),156,145,"Whitesmith Harword",1648,1,instance_npcname("EC_Manager", instance_id())+"::OnPain6";
 	end;
 
 OnPain6:
@@ -865,7 +860,7 @@ OnPain6:
 	sleep2 3000;
 	instance_announce .@i,"Squeaky Voice: Baphomet, make these weaklings entertain me a little more before they die.",bc_map,0x00FF00;
 	sleep2 3000;
-	areamonster instance_mapname("5@new"),151,122,160,134,"Super Baphomet",1399,1,instance_npcname("EC_Manager", $instance_ec)+"::OnBapho";
+	areamonster instance_mapname("5@new"),151,122,160,134,"Super Baphomet",1399,1,instance_npcname("EC_Manager", instance_id())+"::OnBapho";
 	areamonster instance_mapname("5@new"),130,114,181,150,"Piamette",1930,3;
 	areamonster instance_mapname("5@new"),130,114,181,150,"Wish Maiden",1931,3;
 	end;
@@ -876,7 +871,7 @@ OnBapho:
 	sleep2 3000;
 	instance_announce .@i,"Squeaky Voice: No?  Then its time to show you who I am.",bc_map,0x00FF00;
 	sleep2 3000;
-	areamonster instance_mapname("5@new"),151,122,160,134,"Pori Pori",1502,1,instance_npcname("EC_Manager", $instance_ec)+"::OnPoripori";
+	areamonster instance_mapname("5@new"),151,122,160,134,"Pori Pori",1502,1,instance_npcname("EC_Manager", instance_id())+"::OnPoripori";
 	areamonster instance_mapname("5@new"),130,114,181,150,"Golden Savage",1840,10;
 	areamonster instance_mapname("5@new"),130,114,181,150,"Pouring",1894,10;
 	areamonster instance_mapname("5@new"),130,114,181,150,"Bomb Poring",1904,20;
@@ -886,7 +881,7 @@ OnPoripori:
 	instance_announce .@i,"Pori Pori: What..... what is happening?  How could I..... lose.....",bc_map,0xFFD700;
 	sleep2 5000;
 	instance_announce .@i,"Pori Pori: I'll return when I've healed, then..... then you'll all suffer!!!",bc_map,0xFFD700;
-	enablenpc instance_npcname("EC_Arc_Pori", $instance_ec);
+	enablenpc instance_npcname("EC_Arc_Pori", instance_id());
 	sleep2 15000;
 	getpartymember getcharid(1),2;
 	for( set .@i, 0; .@i < $@partymembercount; set .@i, .@i+1 )

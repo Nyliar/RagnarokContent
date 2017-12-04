@@ -4,10 +4,7 @@ OnStart:
 	set .@party_id, getcharid(1);
 	set .@porv_leader, ( getcharid(0) == getpartyleader(.@party_id,2) );
 
-	//RATHENA
-	//set .@has_instance, PV_INSTANCE_ID > 0;
-	//HERCULES
-	set .@has_instance, has_instance(.map$[0], instance_id());	
+	set .@has_instance, PV_INSTANCE_ID > 0;
 
 	set .@instance_delay, ( instance_delay_porvil - gettimetick(2) );
 
@@ -26,7 +23,7 @@ OnStart:
 		if( .@instance_delay > 0 )
 		{
 			mes "You have to wait : ^FF0000"+.@instance_delay+" Seconds.^000000";
-			//close;
+			close;
 		}
 		getpartymember .@party_id,2;
 		if( .min_party_member >= 1 ){

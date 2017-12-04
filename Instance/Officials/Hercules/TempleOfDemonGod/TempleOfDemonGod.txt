@@ -137,9 +137,7 @@ OnStart:
 	set .@party_id, getcharid(1);
 	set .@tdg_leader, ( getcharid(0) == getpartyleader(.@party_id,2) );
 
-	set .@has_instance, TDG_INSTANCE_ID >= 0;
-	
-	set .@instance_delay, ( instance_delay_templedg - gettimetick(2) );
+	set .@has_instance, TDG_INSTANCE_ID > 0;
 
 	set .@npcname$, "[Yggdrasil Lookalike]";
 	mes .@npcname$;
@@ -153,6 +151,7 @@ OnStart:
 	"Nevermind."
 		)){
 	case 1:
+		set .@instance_delay, ( instance_delay_templedg - gettimetick(2) );
 		if( .@instance_delay > 0 )
 		{
 			mes "You have to wait : ^FF0000"+.@instance_delay+" Seconds.^000000";
@@ -249,7 +248,7 @@ OnStart:
 			disablenpc instance_npcname( "tdgWarp#5", .@instance );
  		}
 	case 2:
-		if( TDG_INSTANCE_ID < 0 ){
+		if( TDG_INSTANCE_ID <= 0 ){
 			mes .instance_name$ + " doesn't exist for Party - "+getpartyname( .@party_id );
 		}
 		else{
@@ -271,6 +270,7 @@ OnStart:
 			//		mapannounce .map$[0], strcharinfo(0)+" from party, " +getpartyname( .@party_id )+", tdg entering the dungeon, "+.instance_name$+".",bc_map,"0x00ff99",FW_NORMAL,12;
 			//		close;
 			//}
+			
 			//HERCULES
 			savepoint .@map$, .@x, .@y;
 			if( has_instance( .map$[0] ) == "" ){
@@ -463,8 +463,8 @@ function	summon_guardian	{
 			//setunitdata .moroccId, 2, .@moroccData[UMOB_MAXHP] * 20 / 100;
 			//HERCULES
 			set .moroccId, areamonster(.@map$,.@coordinate[0],.@coordinate[1],.@coordinate[2],.@coordinate[3],"--ja--",.@monster[.@i],.@target_amount,.@label$,.@size);
-			set .@mhp, getunitdata(.moroccId, UDT_MAXHP);
-			setunitdata .moroccId, UDT_HP, .@mhp * 20 / 100;
+			set .@mhp, getunitdata($moroccId, UDT_MAXHP);
+			setunitdata $moroccId, UDT_HP, .@mhp * 20 / 100;
 		}
 		else
 		{
@@ -544,7 +544,7 @@ OnGuardianDied:
 			sleep 1500;
 			instance_announce instance_id(), "[Morocc] You don't think this is already over, do you?!",bc_map,0xFF0000;
 			sleep 1500;
-			set .randomPop, 1;
+			set 'randomPop, 1;
 			summon_guardian( .@map$, .@npc_name$ + "::OnGuardianDied" );
 		}
 		else if ('instance_tdg_level == .max_tdg_level)
@@ -577,7 +577,7 @@ OnTimer10000:
 		instance_destroy instance_id();
 		stopnpctimer;
 	}
-	if(.randomPop == 1)
+	if('randomPop == 1)
 	{
 		set .@map$, strnpcinfo(4);
 		set .@npc_name$, instance_npcname( strnpcinfo(0), instance_id() );
@@ -587,7 +587,7 @@ OnTimer10000:
 			summon_normal( .@map$,.@npc_name$, 0 );
 		}
 	}
-	if(.checkHP == 1)
+	if('checkHP == 1)
 	{
 		callsub OnCheckMoroccHP;
 	}
@@ -596,20 +596,35 @@ OnTimer10000:
 	
 OnCheckMoroccHP:	
 	//RATHENA
-	//getunitdata(.moroccId, .@moroccData);
-	//if(.@moroccData[UMOB_HP] <= .@moroccData[UMOB_MAXHP] / 2)
+	//if(unitexists(.moroccId))
 	//HERCULES
-	set .@hp, getunitdata($stefanId, UDT_HP);
-	set .@mhp, getunitdata($stefanId, UDT_MAXHP);
-	if(.@hp <= .@mhp / 2)
+	.@exists = getmapxy(.@map$, .@x, .@y, UNITTYPE_MOB, .moroccId);
+	if(.@exists == 0)
+	{
+		//getunitdata(.moroccId, .@moroccData);
+		//if(.@moroccData[UMOB_HP] <= .@moroccData[UMOB_MAXHP] / 2)
+		//HERCULES
+		set .@hp, getunitdata($stefanId, UDT_HP);
+		set .@mhp, getunitdata($stefanId, UDT_MAXHP);
+		if(.@hp <= .@mhp / 2)
+		{
+			set .@map$, strnpcinfo(4);
+			set .@npc_name$, strnpcinfo(3);
+			killmonster strnpcinfo(4), "All";
+			set 'checkHP, 0;
+			//stop, kill monster and pop 2 morocc
+			summon_normal( .@map$, strnpcinfo(3), 0 );
+		}
+	}	
+	else
 	{
 		set .@map$, strnpcinfo(4);
 		set .@npc_name$, strnpcinfo(3);
 		killmonster strnpcinfo(4), "All";
-		set .checkHP, 0;
+		set 'checkHP, 0;
 		//stop, kill monster and pop 2 morocc
 		summon_normal( .@map$, strnpcinfo(3), 0 );
-	}	
+	}
 	return;
 	
 OnFirstFloorOn:
@@ -646,7 +661,7 @@ OnFourthFloorOn:
 	//pop morocc boy	
 	summon_guardian( .@map$, .@npc_name$ + "::OnGuardianDied");
 	enablenpc instance_npcname( "tdgWarp#5", instance_id() );
-	set .checkHP, 1;
+	set 'checkHP, 1;
 	end;
 }
 
@@ -682,7 +697,6 @@ OnInstanceInit:
 		if(.ahat == 1 && .shnaim == 1)
 		{
 			set .warpingOn, 1;
-			npctalk "[Soul Globe] The Door is open.";
 			instance_announce instance_id(), "[Soul Globe] The Door is open.", bc_map, 0x00FF99;
 			//enable warp
 			enablenpc instance_npcname( "alatdgwe", instance_id() );
@@ -726,19 +740,14 @@ OnInit:
 }
 
 1@eom,102,124,3	script	Morocc::alatdgmo	4_F_MOCBOY,2,2,{
-	end;
-	
 OnDialog1_1:
-	if(.moTalking == 0)
+	if('moTalking == 0)
 	{
-		set .moTalking, 1;
-		npctalk "I'll create a new world and become its creator.";
+		set 'moTalking, 1;
 		instance_announce instance_id(), "[Morocc] I'll create a new world and become its creator.",  bc_map, 0xFF0000;
 		sleep 1500;
-		npctalk "Let me ask you, the first creatures that have stepped in my newborn land.";
 		instance_announce instance_id(), "[Morocc] Let me ask you, the first creatures that have stepped in my newborn land.", bc_map, 0xFF0000;
 		sleep 1500;
-		npctalk "How'd you like to follow me and watch the birth of a new world?";
 		instance_announce instance_id(), "[Morocc] How'd you like to follow me and watch the birth of a new world?", bc_map, 0xFF0000;
 		sleep 1500;
 		donpcevent instance_npcname( "alatdglo", instance_id() ) + "::OnDialog1_2";
@@ -746,19 +755,17 @@ OnDialog1_1:
 	end;
 	
 OnDialog1_4:
-	npctalk "Let me ask you, the first creatures that have stepped in my newborn land.";
 	instance_announce instance_id(), "[Morocc] Let me ask you, the first creatures that have stepped in my newborn land.",bc_map, 0xFF0000;
 	sleep 1500;
-	npctalk "How'd you like to follow me and watch the birth of a new world?";
 	instance_announce instance_id(), "[Morocc] How'd you like to follow me and watch the birth of a new world?",bc_map, 0xFF0000;
 	sleep 1500;
 	donpcevent instance_npcname( "alatdglo", instance_id() ) + "::OnDialog1_5";
 	end;
 
 OnInstanceInit:
+	set 'moTalking, 0;
 OnInit:
 	disablenpc strnpcinfo(3);
-	set .moTalking, 0;
 	end;
 }
 
@@ -766,19 +773,14 @@ OnInit:
 	end;
 	
 OnDialog1_2:
-	npctalk "Enough with your nonsense. Just say you like destroying things!";
 	instance_announce instance_id(), "[Loki] Enough with your nonsense. Just say you like destroying things!", bc_map, 0x00FF99;
 	sleep 1500;
-	npctalk "Create a new world and become its creator? If this is the new world you're talking about, then I'm disappointed!";
 	instance_announce instance_id(), "[Loki] Create a new world and become its creator? If this is the new world you're talking about, then I'm disappointed!", bc_map, 0x00FF99;
 	sleep 1500;
-	npctalk "Even if you burn your body, you power is not as potent as that of Ymir of the Genesis!";
 	instance_announce instance_id(), "[Loki] Even if you burn your body, you power is not as potent as that of Ymir of the Genesis!",bc_map, 0x00FF99;
 	sleep 1500;
-	npctalk "Just the fact that you had to steal Yggdrasil shows you lack of creativity!";
 	instance_announce instance_id(), "[Loki] Just the fact that you had to steal Yggdrasil shows you lack of creativity!",bc_map, 0x00FF99;
 	sleep 1500;
-	npctalk "Take a look at yourself. You're delusional if you think that you look like a creator of any kind!";
 	instance_announce instance_id(), "[Loki] Take a look at yourself. You're delusional if you think that you look like a creator of any kind!",bc_map, 0x00FF99;
 	sleep 1500;
 	
@@ -787,7 +789,6 @@ OnDialog1_2:
 	
 OnDialog1_5:
 	disablenpc instance_npcname( "alatdgmo", instance_id() );
-	npctalk "Are you running?!";
 	instance_announce instance_id(), "[Loki] Are you running?!",bc_map, 0x00FF99;
 	
 	disablenpc strnpcinfo(3);
@@ -826,13 +827,10 @@ OnInit:
 	close;
 	
 OnDialog1_3:
-	npctalk "I second that. You're unnecessary to this world. You don't belong here!";
 	instance_announce instance_id(), "[Nydhogg] I second that. You're unnecessary to this world. You don't belong here!",bc_map, 0x0000FF;
 	sleep 1500;
-	npctalk "Even Yggdrasil denies your existence!";
 	instance_announce instance_id(), "[Nydhogg] Even Yggdrasil denies your existence!",bc_map, 0x0000FF;
 	sleep 1500;
-	npctalk "As the Guardian of Yggdrasil, I have to erase your existence from this world.";
 	instance_announce instance_id(), "[Nydhogg] As the Guardian of Yggdrasil, I have to erase your existence from this world.",bc_map, 0x0000FF;
 	sleep 1500;
 
@@ -850,19 +848,15 @@ OnInit:
 	end;
 	
 OnTouch:
-	if(.moTalking == 0)
+	if('moTalking == 0)
 	{
-		set .moTalking, 1;
-		npctalk "You exceeded my expectations.";
+		set 'moTalking, 1;
 		instance_announce instance_id(), "[Morocc] You exceeded my expectations.",bc_map, 0xFF0000;
 		sleep 1500;
-		npctalk "I'll accept your challenge.";
 		instance_announce instance_id(), "[Morocc] I'll accept your challenge.",bc_map, 0xFF0000;
 		sleep 1500;
-		npctalk "I shall drench the land with your flowing blood, and nourish it with your torn flesh.";
 		instance_announce instance_id(), "[Morocc] I shall drench the land with your flowing blood, and nourish it with your torn flesh.",bc_map, 0xFF0000;
 		sleep 1500;
-		npctalk "I'll show you the true depth of despair.";
 		instance_announce instance_id(), "[Morocc] I'll show you the true depth of despair.",bc_map, 0xFF0000;
 		sleep 1500;
 		disablenpc strnpcinfo(3);
@@ -871,9 +865,9 @@ OnTouch:
 	end;
 
 OnInstanceInit:
+	set 'moTalking, 0;
 OnInit:
 	disablenpc strnpcinfo(3);
-	set .moTalking, 0;
 	end;
 }
 
@@ -903,7 +897,7 @@ OnInit:
 	end;
 }
 
-1@eom,154,155,3	script	Nydhogg::alatdgny3	4_F_NYDHOG,{
+1@eom,154,155,3	script	Nydhogg::alatdgny3	4_F_NYDHOG,3,3,{
 	set .@npcname$, "[Nydhogg]";
 	mes .@npcname$;
 	mes "Good job again.";
@@ -916,6 +910,10 @@ OnInit:
 		set NYDMUS, 1;
 	}
 	close;
+
+OnTouch:
+	set 'moTalking, 0;
+	end;
 	
 OnDialog3:
 	instance_announce instance_id(), "[Nyddhog] Muspelskoll's influence has dissipated, and a new warp gate has appeared.",bc_map, 0x0000FF;

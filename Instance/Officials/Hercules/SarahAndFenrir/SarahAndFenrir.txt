@@ -51,9 +51,15 @@ OnStart:
 	set .@party_id, getcharid(1);
 	set .@saf_leader, ( getcharid(0) == getpartyleader(.@party_id,2) );
 
-	set .@has_instance, SAF_INSTANCE_ID >= 0;
+	set .@has_instance, SAF_INSTANCE_ID > 0;
 	
 	set .@instance_delay, ( instance_delay_sarahaf - gettimetick(2) );
+
+	if( .@instance_delay > 0 )
+	{
+		mes "You have to wait : ^FF0000"+.@instance_delay+" Seconds.^000000";
+		close;
+	}
 
 	next;
 	switch( select( 
@@ -62,11 +68,6 @@ OnStart:
 	"Nevermind."
 		)){
 	case 1:
-		if( .@instance_delay > 0 )
-		{
-			mes "You have to wait : ^FF0000"+.@instance_delay+" Seconds.^000000";
-			close;
-		}
 		getpartymember .@party_id,2;
 		if( .min_party_member >= 1 ){
 			set .@origin, getcharid(3);
@@ -86,7 +87,7 @@ OnStart:
 		}
 		
 		//safean any previously remaining instance
-		if(SAF_INSTANCE_ID >= 0)
+		if(SAF_INSTANCE_ID > 0)
 		{
 			getpartymember getcharid(1),2;
 			for( set .@i, 0; .@i < $@partymembercount; set .@i, .@i+1 )
@@ -152,23 +153,23 @@ OnStart:
 			instance_init(.@instance);
 			
 			//disable unused npcs for now
-			disablenpc instance_npcname( "safwarp#0", .@instance );
-			disablenpc instance_npcname( "safwarp#02", .@instance );
-			disablenpc instance_npcname( "safwarp#1", .@instance );
-			disablenpc instance_npcname( "safwarp#2", .@instance );
-			disablenpc instance_npcname( "safwarp#3", .@instance );
-			disablenpc instance_npcname( "safwarp#4", .@instance );
-			disablenpc instance_npcname( "safwarp#5", .@instance );
+			disablenpc instance_npcname( "safwarp#0", instance_id() );
+			disablenpc instance_npcname( "safwarp#02", instance_id() );
+			disablenpc instance_npcname( "safwarp#1", instance_id() );
+			disablenpc instance_npcname( "safwarp#2", instance_id() );
+			disablenpc instance_npcname( "safwarp#3", instance_id() );
+			disablenpc instance_npcname( "safwarp#4", instance_id() );
+			disablenpc instance_npcname( "safwarp#5", instance_id() );
  		}
 		break;
 	case 2:
 		mes .instance_name$ + " Destroyed.";
-		instance_destroy SAF_INSTANCE_ID;
 		getpartymember getcharid(1),2;
 		for( set .@i, 0; .@i < $@partymembercount; set .@i, .@i+1 )
-			if( attachrid( $@partymemberaid[.@i] ) && SAF_INSTANCE_ID >= 0){
+			if( attachrid( $@partymemberaid[.@i] ) && SAF_INSTANCE_ID > 0){
 				set SAF_INSTANCE_ID, -1;
 			}
+		instance_destroy instance_id();
 		break;
 	default: 
 		break;
@@ -194,8 +195,8 @@ OnInit:
 }
 
 dali02,97,145,3	script	Dimensional Device::alasafdd	PORTAL,{
-	if( SAF_INSTANCE_ID < 0 ){
-		mes .instance_name$ + " doesn't exist for Party - "+getpartyname( getcharid(1) );
+	if( SAF_INSTANCE_ID <= 0 ){
+		mes .instance_name$ + " doesn't exist for Party - "+getpartyname( .@party_id );
 		close;
 	}
 	else{
@@ -220,7 +221,6 @@ dali02,97,145,3	script	Dimensional Device::alasafdd	PORTAL,{
 		
 		//HERCULES
 		savepoint .@map$, .@x, .@y;
-
 		if( has_instance( .map$[0] ) == "" ){
 			mes .instance_name$ + " doesnt exist for Party - "+getpartyname( .@party_id );
 		}
@@ -248,15 +248,15 @@ OnInstanceInit:
 	set .@npc_name$, instance_npcname( strnpcinfo(0), instance_id() );
 	
 	set 'instance_saf_level, 0;
-	set .lastLevelStart, 0;
+	set 'lastLevelStart, 0;
 	
-	set .timerCount, 0;
+	set 'timerCount, 0;
 	set 'lastTimer, -1;
 	set 'safAnnounceDelay, -1;
 	set 'lastSkillCast, -1;
-	set .safLastSkillCast, 1; //number of minute before Fenrir cast last skill, killing Sarah
-	set .safWaitDelay, 5; //number of minute before Fenrir leave after Sarah
-	set .safExitDelay, 3; //number of minute before castle collapse
+	set 'safLastSkillCast, 1; //number of minute before Fenrir cast last skill, killing Sarah
+	set 'safWaitDelay, 5; //number of minute before Fenrir leave after Sarah
+	set 'safExitDelay, 3; //number of minute before castle collapse
 	initnpctimer;
 	end;
 	
@@ -382,7 +382,6 @@ OnNormalDied:
 OnGuardianDied:
   	set 'safBossAlive, 0;
 	set .@map$, strnpcinfo(4);	
-	npctalk "[Sarah] Urgh...ARGHHHHH!!!!!!";
 	instance_announce instance_id(), "[Sarah] Urgh...ARGHHHHH!!!!!!", bc_map, 0x0000FF;
 		
 	disablenpc instance_npcname( "alasaff4", instance_id() );
@@ -398,8 +397,8 @@ OnGuardianDied:
 	
 OnTimer10000:
 	//each 10s, increase timer
-	set .timerCount, .timerCount + 10;
-	if(.timerCount == $saf_timer_delay)
+	set 'timerCount, 'timerCount + 10;
+	if('timerCount == $saf_timer_delay)
 	{
 		instance_announce instance_id(), "[ Sarah And Fenrir ] The Dimension collapse! I have to get you out of there!", bc_map, 0xFF0000;
 		sleep 5000;
@@ -417,7 +416,7 @@ OnTimer10000:
 		if('safAnnounceDelay == 60 || 'safAnnounceDelay == 120 || 'safAnnounceDelay == 180
 			|| 'safAnnounceDelay == 240 || 'safAnnounceDelay == 300)
 		{
-			if('safAnnounceDelay == .safWaitDelay * 60)
+			if('safAnnounceDelay == 'safWaitDelay * 60)
 			{
 				instance_announce instance_id(), "[Fenrir] I have to continue...Take the warp to get out. Thanks for your help!", bc_map, 0x0000FF;
 				set 'safReadyToWarp, 0;
@@ -425,18 +424,18 @@ OnTimer10000:
 				disablenpc instance_npcname( "alasaff2", instance_id() );
 				disablenpc instance_npcname( "alasaff2_2", instance_id() );
 			}
-			else if('safAnnounceDelay < .safWaitDelay * 60)
+			else if('safAnnounceDelay < 'safWaitDelay * 60)
 			{
-				instance_announce instance_id(), "[Fenrir] Hurry up! I'll let you " + (.safWaitDelay - ('safAnnounceDelay / 60)) + " minutes before leaving you there!", bc_map, 0x0000FF;				
+				instance_announce instance_id(), "[Fenrir] Hurry up! I'll let you " + ('safWaitDelay - ('safAnnounceDelay / 60)) + " minutes before leaving you there!", bc_map, 0x0000FF;				
 			}
 		}
 	}
 	if('lastSkillCast >= 0)
 	{
 		set 'lastSkillCast, 'lastSkillCast + 10;
-		if('lastSkillCast == .safLastSkillCast * 60 && 'safBossAlive == 1)
+		if('lastSkillCast == 'safLastSkillCast * 60 && 'safBossAlive == 1)
 		{
-			donpcevent instance_npcname( "alasaff4", instance_id() ) + "::OnLastSkillCast";
+			doevent instance_npcname( "alasaff4", instance_id() ) + "::OnLastSkillCast";
 		} 
 	}
 	if('lastTimer >= 0)
@@ -445,9 +444,8 @@ OnTimer10000:
 		if('lastTimer == 60 || 'lastTimer == 120 || 'lastTimer == 180
 			|| 'lastTimer == 240 || 'lastTimer == 300)
 		{
-			if('lastTimer == .safExitDelay * 60)
+			if('lastTimer == 'safExitDelay * 60)
 			{
-				attachrid 'safTalking;
 				instance_announce instance_id(), "[Fenrir] You're too slow. I'll cast a general teleportation, get ready", bc_map, 0x0000FF;
 				sleep2 1500;
 				getpartymember getcharid(1),2;
@@ -459,7 +457,7 @@ OnTimer10000:
 			}
 			else
 			{
-				instance_announce instance_id(), "[Fenrir] Hurry up! I'll let you " + (.safExitDelay - ('lastTimer / 60)) + " minutes before leaving you there!", bc_map, 0x0000FF;				
+				instance_announce instance_id(), "[Fenrir] Hurry up! I'll let you " + ('safExitDelay - ('lastTimer / 60)) + " minutes before leaving you there!", bc_map, 0x0000FF;				
 			}
 		}
 	}
@@ -491,7 +489,7 @@ OnThirdFloorOn:
 	
 OnLastFightStart:
 	set .@map$, strnpcinfo(4);
-	set .lastLevelStart, 0;
+	set 'lastLevelStart, 0;
 	summon_guardian( .@map$, .@npc_name$ );
 	end;
 	
@@ -505,35 +503,29 @@ OnAfterLastFight:
 	end;
 	
 OnTouch:
-	if(.talking == 0)
+	if('talking == 0)
 	{
 		set 'safTalking, getcharid(3);
-		set .talking, 1;
+		set 'talking, 1;
 		cutin "fenrir_a", 2;
-		npctalk "That's strange...I don't recall Glast Heim castle to be filled with such a dark presence...";
 		instance_announce instance_id(), "[Fenrir] That's strange...I don't recall Glast Heim castle to be filled with such a dark presence...", bc_map, 0x0000FF;
 		sleep2 1500;
 		charcommand "#me " + strcharinfo(0) + " Hu?! There's someone here? Hello, you must be a traveller!";
 		sleep2 1500;
-		npctalk "Greetings can come later. Careful! It seems somebody has summoned a monster!";
 		instance_announce instance_id(), "[Fenrir] Greetings can come later. Careful! It seems somebody has summoned a monster!", bc_map, 0x0000FF;
 		
 		cutin "", 255;
-		donpcevent instance_npcname( "sarah_and_Fenrir", instance_id() ) + "::OnFirstFloorOn";
+		doevent instance_npcname( "sarah_and_Fenrir", instance_id() ) + "::OnFirstFloorOn";
 		
 		charcommand "#me " + strcharinfo(0) + " What are those things?!";
 		sleep2 1500;
 		//progressbar "008800",9;
-		npctalk "Buy me some times while I cast some magic! I'll handle this!";
 		instance_announce instance_id(), "[Fenrir] Buy me some times while I cast some magic! I'll handle this!", bc_map, 0x0000FF;
 		sleep2 3000;
-		npctalk "Wrath of the True Sky!";
 		instance_announce instance_id(), "[Fenrir] Wrath of the True Sky", bc_map, 0x0000FF;
 		sleep2 3000;
-		npctalk "Thunderbolt that may split the Earth!";
 		instance_announce instance_id(), "[Fenrir] Thunderbolt that may split the Earth!", bc_map, 0x0000FF;
 		sleep2 3000;
-		npctalk "Fall before me right now!";
 		instance_announce instance_id(), "[Fenrir] Fall before me right now!", bc_map, 0x0000FF;
 		//skill Thunderbolt, kill monsters
 		specialeffect 30;
@@ -541,19 +533,14 @@ OnTouch:
 
 		sleep2 1500;
 		cutin "fenrir_a", 2;
-		npctalk "Glastheim...Once was the cathedral for Asgard Gods!";
 		instance_announce instance_id(), "[Fenrir] Glastheim...Once was the cathedral for Asgard Gods!", bc_map, 0x0000FF;
 		sleep2 1500;
-		npctalk "Just it's just another monster lair...";
 		instance_announce instance_id(), "[Fenrir] Just it's just another monster lair...", bc_map, 0x0000FF;
 		sleep2 1500;
-		npctalk "Wait, thinking of it, something's not right.";
 		instance_announce instance_id(), "[Fenrir] Wait, thinking of it, something's not right.", bc_map, 0x0000FF;
 		sleep2 1500;
-		npctalk "Gallions aren't the monsters living in this place...";
 		instance_announce instance_id(), "[Fenrir] Gallions aren't the monsters living in this place...", bc_map, 0x0000FF;
 		sleep2 1500;
-		npctalk "By the way, I know it was sudden but thanks for helping me.";
 		instance_announce instance_id(), "[Fenrir] By the way, I know it was sudden but thanks for helping me.", bc_map, 0x0000FF;
 		sleep2 1500;
 		npctalk "And...Who are you?";
@@ -563,19 +550,14 @@ OnTouch:
 		sleep2 1500;
 		charcommand "#me " + strcharinfo(0) + " I'm just a traveller, wandering around the world.";
 		sleep2 1500;
-		npctalk "Oh. Is that so? I see. I guess it does not really matters anyway.";
 		instance_announce instance_id(), "[Fenrir] Oh. Is that so? I see. I guess it does not really matters anyway.", bc_map, 0x0000FF;
 		sleep2 1500;
-		npctalk "This place isn't safe. It's not to late to turn back.";
 		instance_announce instance_id(), "[Fenrir] This place isn't safe. It's not to late to turn back.", bc_map, 0x0000FF;
 		sleep2 1500;
-		npctalk "There's something I must do. I need to hurry now. Thank you for your help.";
 		instance_announce instance_id(), "[Fenrir] There's something I must do. I need to hurry now. Thank you for your help.", bc_map, 0x0000FF;
 		sleep2 1500;
-		npctalk "Maybe you can help me...";
 		instance_announce instance_id(), "[Fenrir] Maybe you can help me...", bc_map, 0x0000FF;
 		sleep2 1500;
-		npctalk "No I can't. Anyway, I have to go. Thanks again, maybe we'll see each other later.";
 		instance_announce instance_id(), "[Fenrir] No I can't. Anyway, I have to go. Thanks again, maybe we'll see each other later.", bc_map, 0x0000FF;
 			
 		disablenpc strnpcinfo(3);
@@ -589,13 +571,13 @@ OnTouch:
 		enablenpc instance_npcname( "alasaff2", instance_id() );
 		enablenpc instance_npcname( "safwarp#0", instance_id() );
 		enablenpc instance_npcname( "safwarp#02", instance_id() );
-		donpcevent instance_npcname( "sarah_and_Fenrir", instance_id() ) + "::OnSecondFloorOn";
+		doevent instance_npcname( "sarah_and_Fenrir", instance_id() ) + "::OnSecondFloorOn";
 	}
 	end;
 	
 OnInstanceInit:
+	set 'talking, 0;
 OnInit:
-	set .talking, 0;
 	end;
 }
 
@@ -604,41 +586,33 @@ OnInit:
 	end;
 	
 OnTouch:
-	if(.talking == 0)
+	if('talking == 0)
 	{
 		set 'safTalking, getcharid(3);
-		set .talking, 1;
+		set 'talking, 1;
 		cutin "fenrir_a", 2;
-		npctalk "You're still in Glast Heim? Why don't you leave this dangerous place?";
 		instance_announce instance_id(), "[Fenrir] You're still in Glast Heim? Why don't you leave this dangerous place?", bc_map, 0x0000FF;
 		sleep2 1500;
 		cutin "", 255;
 		charcommand "#me " + strcharinfo(0) + " I know it could be dangerous, but I thought it can be fun. So I couldn't help myself!";
 		sleep2 1500;
 		cutin "fenrir_a", 2;
-		npctalk "Hum adventurers...";
 		instance_announce instance_id(), "[Fenrir] Hum adventurers...", bc_map, 0x0000FF;
 		sleep2 1500;
 		cutin "", 255;
 		charcommand "#me " + strcharinfo(0) + " You don't have to worry for me. I'm quite strong actually!";
 		sleep2 1500;
 		cutin "fenrir_a", 2;
-		npctalk "Oh really? Maybe you can help me then?";
 		instance_announce instance_id(), "[Fenrir] Oh really? Maybe you can help me then?", bc_map, 0x0000FF;
 		sleep2 1500;
-		npctalk "This...Thing I'm looking for is here, somewhere in Glastheim.";
 		instance_announce instance_id(), "[Fenrir] This...Thing I'm looking for is here, somewhere in Glastheim.", bc_map, 0x0000FF;
 		sleep2 1500;
-		npctalk "But others will come soon to find it before me.";
 		instance_announce instance_id(), "[Fenrir] But others will come soon to find it before me.", bc_map, 0x0000FF;
 		sleep2 1500;
-		npctalk "We don't have much time before they arrive. 5 minutes will be a max.";
 		instance_announce instance_id(), "[Fenrir] We don't have much time before they arrive. 5 minutes will be a max.", bc_map, 0x0000FF;
 		sleep2 1500;
-		npctalk "I'll go ahead, and I'll wait you before continuing. Remember, 5 minutes.";
 		instance_announce instance_id(), "[Fenrir] I'll go ahead, and I'll wait you before continuing. Remember, 5 minutes.",bc_map, 0x0000FF;
 		sleep2 1500;
-		npctalk "Past this delay, I'll considere you decided to stay aback. And I'll go on by myself.";
 		instance_announce instance_id(), "[Fenrir] Past this delay, I'll considere you decided to stay aback. And I'll go on by myself.", bc_map, 0x0000FF;
 		
 		cutin "", 255;
@@ -653,7 +627,7 @@ OnTouch:
 		viewpoint 1,289,344,5,0xF9FB00;
 		viewpoint 1,287,146,7,0xF9FB00;
 		
-		donpcevent instance_npcname( "sarah_and_Fenrir", instance_id() ) + "::OnThirdFloorOn";
+		doevent instance_npcname( "sarah_and_Fenrir", instance_id() ) + "::OnThirdFloorOn";
 		set 'safAnnounceDelay, 0;
 
 		disablenpc strnpcinfo(3);
@@ -665,7 +639,7 @@ OnTouch:
 	
 OnInstanceInit:
 	disablenpc strnpcinfo(3);
-	set .talking, 0;
+	set 'talking, 0;
 	set 'safReadyToWarp, 0;
 	end;
 }
@@ -674,7 +648,7 @@ OnInstanceInit:
 	end;
 
 OnTouch:
-	if('safReadyToWarp == 1 && .talking == 0)
+	if('safReadyToWarp == 1 && 'talking == 0)
 	{
 		set 'safTalking, getcharid(3);
 		viewpoint 0,199,271,1,0xFF0000;
@@ -682,10 +656,8 @@ OnTouch:
 		set 'safReadyToWarp, 0;
 		
 		cutin "fenrir_a", 2;
-		npctalk "So you came! Good! I'm really glad of it.";
 		instance_announce instance_id(), "[Fenrir] So you came! Good! I'm really glad of it.", bc_map, 0x0000FF;
 		sleep2 1500;
-		npctalk "Let's hurry up.";
 		instance_announce instance_id(), "[Fenrir] Let's hurry up.", bc_map, 0x0000FF;
 		sleep2 1500;
 
@@ -699,9 +671,9 @@ OnTouch:
 	end;
 	
 OnInstanceInit:
+	set 'talking, 0;
 OnInit:
 	disablenpc strnpcinfo(3);
-	set .talking, 0;
 	end;
 }
 
@@ -709,18 +681,15 @@ OnInit:
 	end;
 	
 OnTouch:
-	if(.talking == 0)
+	if('talking == 0)
 	{
 		set 'safTalking, getcharid(3);
-		set .talking, 1;
+		set 'talking, 1;
 		cutin "fenrir_a", 2;
-		npctalk "Once again, I'm glad that you weren't late and decided to assist me.";
 		instance_announce instance_id(), "[Fenrir] Once again, I'm glad that you weren't late and decided to assist me.", bc_map, 0x0000FF;
 		sleep2 1500;
-		npctalk "Let's split to find the Sentinel Breeze. Sarah will probably be after it.";
 		instance_announce instance_id(), "[Fenrir] Let's split to find the Sentinel Breeze. Sarah will probably be after it.", bc_map, 0x0000FF;
 		sleep2 1500;
-		npctalk "One last thing. If you change your mind, I opened a warp on our left. Take it to escape this place.";
 		instance_announce instance_id(), "[Fenrir] One last thing. If you change your mind, I opened a warp on our first meeting place. Take it to escape.", bc_map, 0x0000FF;
 		sleep2 1500;		
 		
@@ -733,9 +702,9 @@ OnTouch:
 	end;
 	
 OnInstanceInit:
+	set 'talking, 0;
 OnInit:
 	disablenpc strnpcinfo(3);
-	set .talking, 0;
 	end;
 }
 
@@ -743,39 +712,36 @@ OnInit:
 	end;
 	
 OnDialog1:
-	attachrid 'safTalking;
+	
 	cutin "sarah_hero3", 2;
-	npctalk "[Sarah] It looks like an infinite time waiting after you...Fenris Fenrir!";
 	instance_announce instance_id(), "[Sarah] It looks like an infinite time waiting after you...Fenris Fenrir!", bc_map, 0x0000FF;
 	sleep2 1500;
 	
-	donpcevent instance_npcname( "alasaff4", instance_id() ) + "::OnDialog2";	
+	doevent instance_npcname( "alasaff4", instance_id() ) + "::OnDialog2";	
 	end;
 	
 OnDialog3:
-	attachrid 'safTalking;
+	
 	cutin "sarah_hero3", 2;
-	npctalk "[Sarah] Come take it by yourself, if you can!";
 	instance_announce instance_id(), "[Sarah] Come take it by yourself, if you can!", bc_map, 0x0000FF;
 	sleep2 1500;
 	
-	donpcevent instance_npcname( "alasaff4", instance_id() ) + "::OnDialog4";	
+	doevent instance_npcname( "alasaff4", instance_id() ) + "::OnDialog4";	
 	end;
 	
 OnWhiteImprison:
-	attachrid 'safTalking;
+	
 	//white imprison	
 	specialeffect 802;
 	cutin "sarah_hero3", 2;
-	npctalk "[Sarah] You can't stop me like that!";
 	instance_announce instance_id(), "[Sarah] You can't stop me like that!", bc_map, 0x0000FF;
 	
-	donpcevent instance_npcname( "alasaff4", instance_id() ) + "::OnDialog5";	
+	doevent instance_npcname( "alasaff4", instance_id() ) + "::OnDialog5";	
 	end;
 
 
 OnSarahDialog:
-	attachrid 'safTalking;
+	
 	sleep2 1500;
 	set .@continue, 1;
 	
@@ -790,15 +756,12 @@ OnSarahDialog:
 			switch(rand(0,2))
 			{
 				case 0:
-					npctalk "[Sarah] It was sudden, Fenrir...But unsufficient!!";
 					instance_announce instance_id(), "[Sarah] It was sudden, Fenrir...But unsufficient!!", bc_map, 0xFF0000;
 					break;
 				case 1:
-					npctalk "[Sarah] Not bad...Not at all. But still too weak!";
 					instance_announce instance_id(), "[Sarah] Not bad...Not at all. But still too weak!", bc_map, 0xFF0000;
 					break;
 				case 2:
-					npctalk "[Sarah] Why don't you stop your childish magic, Fenrir?!";
 					instance_announce instance_id(), "[Sarah] Why don't you stop your childish magic, Fenrir?!", bc_map, 0xFF0000;
 					break;
 			}
@@ -806,31 +769,24 @@ OnSarahDialog:
 		case 6:
 			set .startSkillRange, 3;
 			set .endSkillRange, 5;
-			npctalk "[Sarah] I won't be defeated like this, do you hear me?!";
 			instance_announce instance_id(), "[Sarah] I won't be defeated like this, do you hear me?!", bc_map, 0xFF0000;
 			break;
 		case 7:
-			npctalk "[Sarah] Ah...Arh!!! I, Sarah Irene, won't lose!!";
 			instance_announce instance_id(), "[Sarah] Ah...Arh!!! I, Sarah Irene, won't lose!!", bc_map, 0xFF0000;
 			break;
 		case 8:
-			npctalk "[Sarah] Ugh! You're stronger than i predicted, Fenris!";
 			instance_announce instance_id(), "[Sarah] Ugh! You're stronger than i predicted, Fenris!", bc_map, 0xFF0000;
 			break;
 		case 9:
 			set .startSkillRange, 5;
 			set .endSkillRange, 7;
-			npctalk "[Sarah] Argh!!! I'll kill you all!";
 			instance_announce instance_id(), "[Sarah] Argh!!! I'll kill you all!", bc_map, 0xFF0000;
 			break;
 		case 10:
-			npctalk "[Sarah] Urk, this canno't happens...I canno't lose!";
 			instance_announce instance_id(), "[Sarah] Urk, this canno't happens...I canno't lose!", bc_map, 0xFF0000;
-			
 			set .@continue, 0;			
 			break;		
 		case 11:
-			npctalk "[Sarah] Urgh...ARGHHHHH!!!!!!";
 			instance_announce instance_id(), "[Sarah] Urgh...ARGHHHHH!!!!!!", bc_map, 0xFF0000;
 			
 			killmonster strnpcinfo(4), instance_npcname( "sarah_and_Fenrir", instance_id() ) + "::OnGuardianDied";
@@ -879,7 +835,7 @@ OnSarahDialog:
 	sleep2 3000;
 	if(.@continue == 1)
 	{
-		donpcevent instance_npcname( "alasaff4", instance_id() ) + "::OnCastSkill";
+		doevent instance_npcname( "alasaff4", instance_id() ) + "::OnCastSkill";
 	}
 	else if(.@continue == 0)
 	{
@@ -888,16 +844,15 @@ OnSarahDialog:
 		//setunitdata 'safBossId, 9, 0x170000;
 		//HERCULES
 		setunitdata 'safBossId, UDT_HP, 100;
-		setunitdata 'safBossId, UDT_MODE, 0x170000;
 
-		donpcevent instance_npcname( "alasaff4", instance_id() ) + "::OnLastSkill";
+		doevent instance_npcname( "alasaff4", instance_id() ) + "::OnLastSkill";
 	}
 	end;
 	
 OnInstanceInit:
+	set 'talking, 0;
 OnInit:
 	disablenpc strnpcinfo(3);
-	set .talking, 0;
 	end;
 }
 
@@ -905,51 +860,44 @@ OnInit:
 	end;
 	
 OnTouch:
-	if(.talking == 0)
+	if('talking == 0)
 	{
 		set 'safTalking, getcharid(3);
-		set .talking, 1;
+		set 'talking, 1;
 		
-		donpcevent instance_npcname( "alasafs", instance_id() ) + "::OnDialog1";
+		doevent instance_npcname( "alasafs", instance_id() ) + "::OnDialog1";
 	}
 	end;
 	
 OnDialog2:	
-	attachrid 'safTalking;
+	
 	cutin "fenrir_b", 2;
-	npctalk "No need of useless word, Sarah. Hand me the Sentinel Breeze immediately!";
 	instance_announce instance_id(), "[Fenrir] No need of useless word, Sarah. Hand me the Sentinel Breeze immediately!", bc_map, 0x0000FF;
 	sleep2 1500;
 
-	donpcevent instance_npcname( "alasafs", instance_id() ) + "::OnDialog3";
+	doevent instance_npcname( "alasafs", instance_id() ) + "::OnDialog3";
 	end;
 	
 	
 OnDialog4:	
-	attachrid 'safTalking;
+	
 	cutin "fenrir_b", 2;
-	npctalk "Sarah may be a bit to tough to face her alone. I'll fight her myself!";
 	instance_announce instance_id(), "[Fenrir] Sarah may be a bit to tough to face her alone. I'll fight her myself!", bc_map, 0x0000FF;
 	sleep2 1500;
-	npctalk "Pure white, unbreakable prison! Come down to my word now!";
 	instance_announce instance_id(), "[Fenrir] Pure white, unbreakable prison! Come down to my word now", bc_map, 0x0000FF;
 	sleep2 1500;
-	npctalk "White imprison!";
 	instance_announce instance_id(), "[Fenrir] White imprison!", bc_map, 0x0000FF;
 	sleep2 1500;
-	donpcevent instance_npcname( "alasafs", instance_id() ) + "::OnWhiteImprison";
+	doevent instance_npcname( "alasafs", instance_id() ) + "::OnWhiteImprison";
 	cutin "", 255;
 	end;
 	
 OnDialog5:	
-	attachrid 'safTalking;
-	npctalk "I've weakened her now. But she's not down, far from it! I'll fight her while she's shackled.";
+	
 	instance_announce instance_id(), "[Fenrir] I've weakened her now. But she's not down, far from it! I'll fight her while she's shackled.", bc_map, 0x0000FF;
 	sleep2 1500;
-	npctalk "I'll need your help to handle the monsters she'll send over us. I'm relying on you, now!";
 	instance_announce instance_id(), "[Fenrir] I'll need your help to handle the monsters she'll send over us. I'm relying on you, now!", bc_map, 0x0000FF;
 	sleep2 1500;
-	npctalk "Our goal is to attack Sarah when she'll weakened!";
 	instance_announce instance_id(), "[Fenrir] Our goal is to attack Sarah when she'll weakened!", bc_map, 0x0000FF;
 	sleep2 1500;
 	cutin "", 255;
@@ -957,7 +905,7 @@ OnDialog5:
 
 	hideonnpc instance_npcname( "alasafs", instance_id() );	
 
-	donpcevent instance_npcname( "sarah_and_Fenrir", instance_id() ) + "::OnLastFightStart";
+	doevent instance_npcname( "sarah_and_Fenrir", instance_id() ) + "::OnLastFightStart";
 	
 	set 'skillSummonDamageCount, 0;
 
@@ -968,27 +916,23 @@ OnDialog5:
 	end;
 
 OnLastSkillCast:
-	attachrid 'safTalking;
-	npctalk "Move! now!";
+	
 	instance_announce instance_id(), "[Fenrir] Move! Now!", bc_map, 0x0000FF;
 	sleep2 1500;
-	npctalk "I summon you, Tetra Vortex!";
 	instance_announce instance_id(), "[Fenrir] I summon you, Tetra Vortex!", bc_map, 0x0000FF;	
 	set 'skillSummonDamageCount, 11;
-	donpcevent instance_npcname( "alasafs", instance_id() ) + "::OnSarahDialog";
+	doevent instance_npcname( "alasafs", instance_id() ) + "::OnSarahDialog";
 	end;
 
 OnLastSkill:
-	attachrid 'safTalking;
-	npctalk "[Fenris] Now! I've put Sarah on a critical condition, but I'm almost out of magic! You have to finish her!";
+	
 	instance_announce instance_id(), "[Fenris] Now! I've put Sarah on a critical condition, but I'm almost  out of magic! You have to finish her!", bc_map, 0x0000FF;
 	sleep2 1500;
-	npctalk "[Fenris] Since you may not be able to finish her, I'll prepare a last skill!";
 	instance_announce instance_id(), "[Fenris] Since you may not be able to finish her, I'll prepare a last skill!", bc_map, 0x0000FF;
 	sleep2 1500;	
 	set 'lastSkillCast, 0;
 OnCastSkill:
-	attachrid 'safTalking;
+	
 	set 'castedSkill, 'castedSkill + 1;	
 	
 	switch('castedSkill)
@@ -999,14 +943,12 @@ OnCastSkill:
 			specialeffect 513;
 			//progressbar "008800",6;
 			sleep2 1500;
-			npctalk "Lethal cloud, appear before me, and bring my ennemies a painfull death!";
 			instance_announce instance_id(), "[Fenrir] Lethal cloud, appear before me, and bring my ennemies a painfull death!", bc_map, 0x0000FF;
 			sleep2 2500;
-			npctalk "Cloud Kill!!";
 			instance_announce instance_id(), "[Fenrir] Cloud Kill!!", bc_map, 0x0000FF;			
 			sleep2 2000;
 			set 'skillSummonDamageCount, 'skillSummonDamageCount + 1;
-			donpcevent instance_npcname( "alasafs", instance_id() ) + "::OnSarahDialog";
+			doevent instance_npcname( "alasafs", instance_id() ) + "::OnSarahDialog";
 			break;
 		case 1:
 			//Hell Fire
@@ -1014,14 +956,12 @@ OnCastSkill:
 			specialeffect 513;
 			//progressbar "008800",6;
 			sleep2 1500;
-			npctalk "I speak to you and controls Fire. I, Fenris, desire a fire that does not smoulder!";
 			instance_announce instance_id(), "[Fenrir] I speak to you and controls Fire. I, Fenris, desire a fire that does not smoulder!", bc_map, 0x0000FF;
 			sleep2 2500;
-			npctalk "Emerge! Hell Fire!!";
 			instance_announce instance_id(), "[Fenrir] Emerge! Hell Fire!!", bc_map, 0x0000FF;			
 			sleep2 2000;
 			set 'skillSummonDamageCount, 'skillSummonDamageCount + 1;
-			donpcevent instance_npcname( "alasafs", instance_id() ) + "::OnSarahDialog";
+			doevent instance_npcname( "alasafs", instance_id() ) + "::OnSarahDialog";
 			break;
 		case 2:
 			//Heaven's Drive
@@ -1029,14 +969,12 @@ OnCastSkill:
 			specialeffect 513;
 			//progressbar "008800",6;
 			sleep2 1500;
-			npctalk "The root of earthshaking power! Fear the power of the Earth itself!";
 			instance_announce instance_id(), "[Fenrir] The root of earthshaking power! Fear the power of the Earth itself!", bc_map, 0x0000FF;
 			sleep2 2500;
-			npctalk "Go forth! Heaven's Drive!!";
 			instance_announce instance_id(), "[Fenrir] Go forth! Heaven's Drive!!", bc_map, 0x0000FF;			
 			sleep2 2000;
 			set 'skillSummonDamageCount, 'skillSummonDamageCount + 1;
-			donpcevent instance_npcname( "alasafs", instance_id() ) + "::OnSarahDialog";
+			doevent instance_npcname( "alasafs", instance_id() ) + "::OnSarahDialog";
 			break;
 		case 3:
 			//Frost Misty
@@ -1045,18 +983,15 @@ OnCastSkill:
 			specialeffect 910;
 			//progressbar "008800",9;
 			sleep2 1000;
-			npctalk "Mercyless cold breath of the Northern wind...";
 			instance_announce instance_id(), "[Fenrir] Mercyless cold breath of the Northern wind...", bc_map, 0x0000FF;
 			sleep2 3500;
-			npctalk "Come down to earth, like the silent dawn mist, and freeze everything's breating on your path!";
 			instance_announce instance_id(), "[Fenrir] Come down to earth, like the silent dawn mist, and freeze everything's breating on your path!", bc_map, 0x0000FF;
 			sleep2 2500;
 			specialeffect 910;
-			npctalk "Frost Misty! I call you!!";
 			instance_announce instance_id(), "[Fenrir] Frost Misty! I call you!!", bc_map, 0x0000FF;			
 			sleep2 2000;
 			set 'skillSummonDamageCount, 'skillSummonDamageCount + 2;
-			donpcevent instance_npcname( "alasafs", instance_id() ) + "::OnSarahDialog";
+			doevent instance_npcname( "alasafs", instance_id() ) + "::OnSarahDialog";
 			break;
 		case 4:
 			//Demonic Fire
@@ -1065,15 +1000,13 @@ OnCastSkill:
 			specialeffect 909;
 			//progressbar "008800",7;
 			sleep2 1000;
-			npctalk "Endlessly burning conflagration, a fire that can scorch even the Soul. Come down to me, now!";
 			instance_announce instance_id(), "[Fenrir] Endlessly burning conflagration, a fire that can scorch even the Soul. Come down to me, now!", bc_map, 0x0000FF;
 			sleep2 3500;
-			npctalk "Demonic Fire! I call you!!";
 			instance_announce instance_id(), "[Fenrir] Demonic Fire! I call you!!", bc_map, 0x0000FF;			
 			sleep2 2500;
 			specialeffect 909;
 			set 'skillSummonDamageCount, 'skillSummonDamageCount + 2;
-			donpcevent instance_npcname( "alasafs", instance_id() ) + "::OnSarahDialog";
+			doevent instance_npcname( "alasafs", instance_id() ) + "::OnSarahDialog";
 			break;
 		case 5:
 			//Thunderbolt
@@ -1082,14 +1015,12 @@ OnCastSkill:
 			specialeffect 908;
 			//progressbar "008800",7;
 			sleep2 1500;
-			npctalk "True power of the endless sky's wrath, come down to me now!";
 			instance_announce instance_id(), "[Fenrir] True power of the endless sky's wrath, come down to me now!", bc_map, 0x0000FF;
 			sleep2 3500;
-			npctalk "Lord of Vermillion! Fall now!!";
 			instance_announce instance_id(), "[Fenrir] Lord of Vermillion! Fall now!!", bc_map, 0x0000FF;			
 			sleep2 2000;
 			set 'skillSummonDamageCount, 'skillSummonDamageCount + 2;
-			donpcevent instance_npcname( "alasafs", instance_id() ) + "::OnSarahDialog";
+			doevent instance_npcname( "alasafs", instance_id() ) + "::OnSarahDialog";
 			break;
 		case 6:
 			//Varetyr Spear
@@ -1098,22 +1029,17 @@ OnCastSkill:
 			specialeffect 885;
 			//progressbar "008800",10;
 			sleep2 1500;
-			npctalk "Heaven's Sword, that pierce the sky!";
 			instance_announce instance_id(), "[Fenrir] Heaven's Sword, that pierce the sky!", bc_map, 0x0000FF;
 			sleep2 1500;
-			npctalk "Let me borrow your strength for a moment!";
 			instance_announce instance_id(), "[Fenrir] Let me borrow your strength for a moment!", bc_map, 0x0000FF;			
 			sleep2 1500;
-			npctalk "Sword, that can even tear the Vacuum in pieces!";
 			instance_announce instance_id(), "[Fenrir] Sword, that can even tear the Vacuum in pieces!", bc_map, 0x0000FF;			
 			sleep2 1500;
-			npctalk "Let down your endless force! Sword that control Life and Death!";
 			instance_announce instance_id(), "[Fenrir] Let down your endless force!", bc_map, 0x0000FF;			
 			sleep2 4000;
-			npctalk "I summon you, Varetyr Spear!";
 			instance_announce instance_id(), "[Fenrir] I summon you, Varetyr Spear!", bc_map, 0x0000FF;	
 			set 'skillSummonDamageCount, 'skillSummonDamageCount + 1;
-			donpcevent instance_npcname( "alasafs", instance_id() ) + "::OnSarahDialog";
+			doevent instance_npcname( "alasafs", instance_id() ) + "::OnSarahDialog";
 			break;
 		case 7:
 			//Tetra Vortex
@@ -1122,37 +1048,30 @@ OnCastSkill:
 			specialeffect 805;
 			//progressbar "008800",17;
 			sleep2 2000;
-			npctalk "Elemental Powers, Pride of Earth, Liberty of Wind, Wrath of Fire, Mercy of Water!";
 			instance_announce instance_id(), "[Fenrir] Elemental Powers, Pride of Earth, Liberty of Wind, Wrath of Fire, Mercy of Water!", bc_map, 0x0000FF;
 			sleep2 2500;
 			if('safBossAlive == 1)
 			{
-				npctalk "From all directions, gathering your fierce damaging strength...";
 				instance_announce instance_id(), "[Fenrir] From all directions, gathering your fierce damaging strength...", bc_map, 0x0000FF;			
 				sleep2 2500;
 				if('safBossAlive == 1)
 				{
-					npctalk "From the deepest Cold...";
 					instance_announce instance_id(), "[Fenrir] From the deepest Cold...", bc_map, 0x0000FF;	
 					sleep2 2500;
 					if('safBossAlive == 1)
 					{
-						npctalk "To the hotest Warmth...";
 						instance_announce instance_id(), "[Fenrir] To the hotest Warmth...", bc_map, 0x0000FF;		
 						sleep2 2500;
 						if('safBossAlive == 1)
 						{
-							npctalk "Resisting to the fierest Breeze...";
 							instance_announce instance_id(), "[Fenrir] Resisting to the fierest Breeze...", bc_map, 0x0000FF;		
 							sleep2 2500;
 							if('safBossAlive == 1)
 							{
-								npctalk "But defiling against the hardest Stones...";
 								instance_announce instance_id(), "[Fenrir] But defiling against the hardest Stones...", bc_map, 0x0000FF;		
 								sleep2 2500;
 								if('safBossAlive == 1)
 								{
-									npctalk "Raise, raise and hit, from all your rage...";
 									instance_announce instance_id(), "[Fenrir] Raise, raise and hit, from all your rage...", bc_map, 0x0000FF;					
 									set 'skillSummonDamageCount, 'skillSummonDamageCount + 1;
 								}
@@ -1166,9 +1085,9 @@ OnCastSkill:
 	end;	
 	
 OnInstanceInit:
+	set 'talking, 0;
 OnInit:
 	disablenpc strnpcinfo(3);
-	set .talking, 0;
 	end;
 }
 
@@ -1176,36 +1095,31 @@ OnInit:
 	end;
 	
 OnTouch:
-	if(.talking == 0)
+	if('talking == 0)
 	{
 		set 'safTalking, getcharid(3);
-		set .talking, 1;
+		set 'talking, 1;
 		cutin "sarah_hero3", 2;
 		
-		npctalk "Urk!";
 		instance_announce instance_id(), "[Sarah] Urk!", bc_map, 0x0000FF;
 		sleep2 1500;
-		npctalk "Not yet! I'm not defeated yet!";
 		instance_announce instance_id(), "[Sarah] Not yet! I'm not defeated yet!", bc_map, 0x0000FF;
 		sleep2 1500;
-		npctalk "You escaped, like a rat!";
 		instance_announce instance_id(), "[Sarah] You escaped, like a rat!", bc_map, 0x0000FF;
 		sleep2 1500;		
-		npctalk "But I'm can't leave like that. I can let you go away like that!";
 		instance_announce instance_id(), "[Sarah] But I'm can't leave like that. I can let you go away like that!", bc_map, 0x0000FF;
 		sleep2 1500;		
-		npctalk "I'll blow this entire place away!";
 		instance_announce instance_id(), "[Sarah] I'll blow this entire place away!", bc_map, 0x0000FF;
 		sleep2 1500;	
 		specialeffect 563;
-		donpcevent instance_npcname( "alasaff5", instance_id() ) + "::OnDialog2_1";
+		doevent instance_npcname( "alasaff5", instance_id() ) + "::OnDialog2_1";
 	}
 	end;
 	
 OnInstanceInit:
+	set 'talking, 0;
 OnInit:
 	disablenpc strnpcinfo(3);
-	set .talking, 0;
 	end;
 }
 
@@ -1213,15 +1127,13 @@ OnInit:
 	end;
 	
 OnDialog2_1:	
-	attachrid 'safTalking;
+	
 	cutin "fenrir_a", 2;
 
 	disablenpc instance_npcname( "alasafs2", instance_id() );
 	
-	npctalk "She's planning to destroy the entire castle!";
 	instance_announce instance_id(), "[Fenrir] She's planning to destroy the entire castle!", bc_map, 0x0000FF;
 	sleep2 1500;	
-	npctalk "Run! Go back to the entrance!";
 	instance_announce instance_id(), "[Fenrir] Run! Go back to the entrance!", bc_map, 0x0000FF;
 	sleep2 1500;	
 	
@@ -1238,9 +1150,9 @@ OnDialog2_1:
 	end;
 	
 OnInstanceInit:
+	set 'talking, 0;
 OnInit:
 	disablenpc strnpcinfo(3);
-	set .talking, 0;
 	end;
 }
 
@@ -1249,12 +1161,11 @@ OnInit:
 	end;
 	
 OnTouch:	
-	if(.talking == 0)
+	if('talking == 0)
 	{
 		set 'safTalking, getcharid(3);
 		cutin "fenrir_a", 2;
 		
-		npctalk "[Sarah] You're finally here! Get ready, I'll warp us all!";
 		instance_announce instance_id(), "[Sarah] You're finally here! Get ready, I'll warp us all!", bc_map, 0x0000FF;
 		sleep2 1500;	
 		cutin "", 255;
@@ -1277,9 +1188,9 @@ OnTouch:
 	end;
 	
 OnInstanceInit:
+	set 'talking, 0;
 OnInit:
 	disablenpc strnpcinfo(3);
-	set .talking, 0;
 	end;
 }
 

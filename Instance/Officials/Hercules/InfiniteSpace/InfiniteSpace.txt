@@ -22,11 +22,8 @@ OnStart:
 	set .@party_id, getcharid(1);
 	set .@is_leader, ( getcharid(0) == getpartyleader(.@party_id,2) );
 
-	//RATHENA
-	//set .@has_instance, IS_INSTANCE_ID > 0;
-	//HERCULES
-	set .@has_instance, has_instance(.map$[0], $instance_is_id);
-
+	set .@has_instance, IS_INSTANCE_ID > 0;
+	
 	mes "^0055FF[ "+.instance_name$+" ]^000000";
 	mes "Are you ready to explore the area under Pharos Lighthouse?";
 	mes "After a few visits underground, I've found that a bunch of monsters lived there decades ago.";
@@ -67,7 +64,7 @@ OnStart:
 				}
 			attachrid( .@origin );
 		}
-	
+		
 		//clean any previously remaining instance
 		if(IS_INSTANCE_ID != -1)
 		{
@@ -134,55 +131,55 @@ OnStart:
 			instance_set_timeout .instance_delay,300,.@is_instance;
 			instance_init(.@is_instance);
 			
-			disablenpc instance_npcname( "iswarp#1", .@is_instance );
-			disablenpc instance_npcname( "iswarp#2", .@is_instance );
-			disablenpc instance_npcname( "iswarp#3", .@is_instance );
-			disablenpc instance_npcname( "iswarp#4", .@is_instance );
-			disablenpc instance_npcname( "iswarp#5", .@is_instance );
-			disablenpc instance_npcname( "iswarp#6", .@is_instance );
-			disablenpc instance_npcname( "iswarp#7", .@is_instance );
-			disablenpc instance_npcname( "iswarp#8", .@is_instance );
-			disablenpc instance_npcname( "iswarp#9", .@is_instance );
-			disablenpc instance_npcname( "iswarp#10", .@is_instance );
-			disablenpc instance_npcname( "iswarp#11", .@is_instance );
-			disablenpc instance_npcname( "iswarp#12", .@is_instance );
-			disablenpc instance_npcname( "iswarp#13", .@is_instance );
-			disablenpc instance_npcname( "iswarp#14", .@is_instance );
-			disablenpc instance_npcname( "iswarp#15", .@is_instance );
-			disablenpc instance_npcname( "iswarp#16", .@is_instance );
-			disablenpc instance_npcname( "iswarp#17", .@is_instance );
-			disablenpc instance_npcname( "iswarp#18", .@is_instance );
-			disablenpc instance_npcname( "iswarp#19", .@is_instance );
-			disablenpc instance_npcname( "iswarp#20", .@is_instance );
-			disablenpc instance_npcname( "iswarp#21", .@is_instance );
-			disablenpc instance_npcname( "iswarp#22", .@is_instance );
-			disablenpc instance_npcname( "iswarp#23", .@is_instance );
-			disablenpc instance_npcname( "iswarp#24", .@is_instance );
-			disablenpc instance_npcname( "iswarp#25", .@is_instance );
-			disablenpc instance_npcname( "iswarp#26", .@is_instance );
-			disablenpc instance_npcname( "iswarp#27", .@is_instance );
-			disablenpc instance_npcname( "iswarp#28", .@is_instance );
-			disablenpc instance_npcname( "iswarp#29", .@is_instance );
-			disablenpc instance_npcname( "iswarp#30", .@is_instance );
-			disablenpc instance_npcname( "iswarp#31", .@is_instance );
-			disablenpc instance_npcname( "iswarp#32", .@is_instance );
-			disablenpc instance_npcname( "iswarp#33", .@is_instance );
-			disablenpc instance_npcname( "iswarp#34", .@is_instance );
-			disablenpc instance_npcname( "iswarp#35", .@is_instance );
-			disablenpc instance_npcname( "iswarp#36", .@is_instance );
-			disablenpc instance_npcname( "iswarp#37", .@is_instance );
-			disablenpc instance_npcname( "iswarp#38", .@is_instance );
-			disablenpc instance_npcname( "iswarp#39", .@is_instance );
-			disablenpc instance_npcname( "iswarp#40", .@is_instance );
-			disablenpc instance_npcname( "iswarp#41", .@is_instance );
-			disablenpc instance_npcname( "iswarp#42", .@is_instance );
-			disablenpc instance_npcname( "iswarp#43", .@is_instance );
-			disablenpc instance_npcname( "iswarp#44", .@is_instance );
-			disablenpc instance_npcname( "iswarp#45", .@is_instance );
-			disablenpc instance_npcname( "iswarp#46", .@is_instance );
-			disablenpc instance_npcname( "iswarp#47", .@is_instance );
-			disablenpc instance_npcname( "iswarp#48", .@is_instance );
-			disablenpc instance_npcname( "iswarp#49", .@is_instance );
+			disablenpc instance_npcname( "iswarp#1" );
+			disablenpc instance_npcname( "iswarp#2" );
+			disablenpc instance_npcname( "iswarp#3" );
+			disablenpc instance_npcname( "iswarp#4" );
+			disablenpc instance_npcname( "iswarp#5" );
+			disablenpc instance_npcname( "iswarp#6" );
+			disablenpc instance_npcname( "iswarp#7" );
+			disablenpc instance_npcname( "iswarp#8" );
+			disablenpc instance_npcname( "iswarp#9" );
+			disablenpc instance_npcname( "iswarp#10" );
+			disablenpc instance_npcname( "iswarp#11" );
+			disablenpc instance_npcname( "iswarp#12" );
+			disablenpc instance_npcname( "iswarp#13" );
+			disablenpc instance_npcname( "iswarp#14" );
+			disablenpc instance_npcname( "iswarp#15" );
+			disablenpc instance_npcname( "iswarp#16" );
+			disablenpc instance_npcname( "iswarp#17" );
+			disablenpc instance_npcname( "iswarp#18" );
+			disablenpc instance_npcname( "iswarp#19" );
+			disablenpc instance_npcname( "iswarp#20" );
+			disablenpc instance_npcname( "iswarp#21" );
+			disablenpc instance_npcname( "iswarp#22" );
+			disablenpc instance_npcname( "iswarp#23" );
+			disablenpc instance_npcname( "iswarp#24" );
+			disablenpc instance_npcname( "iswarp#25" );
+			disablenpc instance_npcname( "iswarp#26" );
+			disablenpc instance_npcname( "iswarp#27" );
+			disablenpc instance_npcname( "iswarp#28" );
+			disablenpc instance_npcname( "iswarp#29" );
+			disablenpc instance_npcname( "iswarp#30" );
+			disablenpc instance_npcname( "iswarp#31" );
+			disablenpc instance_npcname( "iswarp#32" );
+			disablenpc instance_npcname( "iswarp#33" );
+			disablenpc instance_npcname( "iswarp#34" );
+			disablenpc instance_npcname( "iswarp#35" );
+			disablenpc instance_npcname( "iswarp#36" );
+			disablenpc instance_npcname( "iswarp#37" );
+			disablenpc instance_npcname( "iswarp#38" );
+			disablenpc instance_npcname( "iswarp#39" );
+			disablenpc instance_npcname( "iswarp#40" );
+			disablenpc instance_npcname( "iswarp#41" );
+			disablenpc instance_npcname( "iswarp#42" );
+			disablenpc instance_npcname( "iswarp#43" );
+			disablenpc instance_npcname( "iswarp#44" );
+			disablenpc instance_npcname( "iswarp#45" );
+			disablenpc instance_npcname( "iswarp#46" );
+			disablenpc instance_npcname( "iswarp#47" );
+			disablenpc instance_npcname( "iswarp#48" );
+			disablenpc instance_npcname( "iswarp#49" );
 			
 			next;
 			mes "^0055FF[ "+.instance_name$+" ]^000000";
@@ -223,15 +220,12 @@ OnInit:
 
 cmd_fild07,55,280,1	script	Portal::alaisp	PORTAL,{
 	if( IS_INSTANCE_ID == -1){
-		mes .instance_name$ + " doesn't exist for Party - "+getpartyname( getcharid(1) );
-		close;
+		mes .instance_name$ + " doesn't exist for Party - "+getpartyname( .@party_id );
 	}
 	else{
 		getmapxy(.@map$, .@x, .@y, UNITTYPE_PC);
 		//RATHENA
 		//save .@map$, .@x, .@y;
-		//HERCULES
-		savepoint .@map$, .@x, .@y;
 		//switch(instance_enter(.instance_name$)) {
 		//	default:
 		//		mes "An unknown error has occurred.";
@@ -248,6 +242,7 @@ cmd_fild07,55,280,1	script	Portal::alaisp	PORTAL,{
 		//		end;
 		//	}
 		//HERCULES
+		savepoint .@map$, .@x, .@y;
 		if( has_instance( .map$[0] ) == "" ){
 			mes .instance_name$ + " doesnt exist for Party - "+getpartyname( .@party_id );
 		}
@@ -791,7 +786,7 @@ OnGuardianDied:
 		{
 			instance_announce instance_id(),"[ Infinite Space ] : Dimension will collapse in a few moments.",bc_map,0x00FF99;
 		
-			sleep 15000;
+			sleep2 15000;
 			getpartymember getcharid(1),2;
 			for( set .@i, 0; .@i < $@partymembercount; set .@i, .@i+1 )
 				if( attachrid( $@partymemberaid[.@i] ) && IS_INSTANCE_ID > 0){

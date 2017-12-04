@@ -1,0 +1,40 @@
+//===== Alayne Scripts =======================================
+//= Last Room Item quests
+//===== By: ================================================== 
+//= Alayne
+//===== Current Version: ===================================== 
+//= 1.0
+//===== Compatible With: ===================================== 
+//= rAthena SVN
+//= hercules SVN
+//===== Description: ========================================= 
+//= The official instance Last Room stuff transcription
+//===== Todo Remaining: ======================================
+// 
+//===== Additional Comments: =================================
+//
+//
+//============================================================
+
+verus01,151,173,3	script	Fruit::alalrf	4_F_RUSGREEN,{
+	.@neededForExchange = 6034;
+	.@neededForExchangeCnt = 10;
+	setarray .@possibleReward[0], 18997, 28326, 28327;
+	mes "[Fruit]";
+	mes "I can exchange you " + .@neededForExchangeCnt + " " + getitemname(.@neededForExchange) + " for a random reward. Interested?";
+	if(select("Yes","No") == 1)
+	{
+		next;
+		mes "[Fruit]";
+		if(countitem(.@neededForExchange) >= .@neededForExchangeCnt)
+		{
+			delitem .@neededForExchange, .@neededForExchangeCnt;
+			getitem .@possibleReward[rand(getarraysize(.@possibleReward) - 1)], 1;
+		}
+		else
+		{
+			mes "You don't have those items...";
+		}
+	}
+	close;
+}
