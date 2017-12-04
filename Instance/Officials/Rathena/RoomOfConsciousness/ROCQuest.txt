@@ -183,8 +183,9 @@ S_Disenchant:
 				next;
 				mes "[Dylan]";
 				mes "Good, here we are!";
+				set .@cardId, getequipcardid(.@pos, 0);
 				delequip .@pos;
-				getitem2 .@enchantableItem[.@itemId], 1, 1, 0, 0, 0, 0, 0, 0;		
+				getitem2 .@enchantableItem[.@itemId], 1, 1, 0, 0, .@cardId, 0, 0, 0;		
 			}
 		}
 		else
@@ -231,8 +232,9 @@ S_Disenchant:
 			mes "[Dylan]";
 			mes "Good, here we are!";
 			delitem .@neededForEnchant, .@neededForDisenchantCnt;
+			set .@cardId, getequipcardid(EQI_ARMOR, 0);
 			delequip EQI_ARMOR;
-			getitem2 .@enchantableItem[.@itemId], 1, 1, 0, 0, 0, 0, 0, 0;	
+			getitem2 .@enchantableItem[.@itemId], 1, 1, 0, 0, .@cardId, 0, 0, 0;	
 		}
 		else
 		{
