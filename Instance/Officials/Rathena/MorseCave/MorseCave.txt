@@ -78,7 +78,7 @@ OnStart:
 		if( .@instance_delay > 0 )
 		{
 			mes "You have to wait : ^FF0000"+.@instance_delay+" Seconds.^000000";
-			//close;
+			close;
 		}
 		getpartymember .@party_id,2;
 		if( .min_party_member >= 1 ){
@@ -117,7 +117,7 @@ OnStart:
 			if( .@fail & 1 ) mes "^777777You must be Level: "+.base_level[0]+" - "+.base_level[1]+"^000000";
 			if( .@fail & 2 ) mes "^777777You need "+ .instance_zeny +" Zeny^000000";
 			if( .@fail & 4 ) mes "^777777You still have cooldown.^000000";
-			//break;
+			break;
 		}
 		
 		getpartymember getcharid(1),2;
@@ -193,7 +193,7 @@ OnPCLogoutEvent:
 	end;
 
 OnInit:
-	setarray .base_level[0], 160, 250; //175;
+	setarray .base_level[0], 160, 175;
 	setarray .map$[0],"1@rev";
 	set .map_size, getarraysize( .map$ );
 	set .min_party_member, 1;
