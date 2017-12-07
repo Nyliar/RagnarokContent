@@ -1010,9 +1010,9 @@ OnTouch:
 	end;
 	
 OnInstanceInit:
+	set 'talking, 0;
 OnInit:
 	disablenpc strnpcinfo(3);
-	set 'talking, 0;
 	end;
 }
 
