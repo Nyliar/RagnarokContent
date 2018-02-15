@@ -622,7 +622,13 @@ OnFloorSummon:
 
 	if( 'at_instance_floor < 12 ){
 		for( set .@i, 0; .@i < 'at_instance_sum_count; set .@i,.@i+1 )
-			enablenpc instance_npcname( "Star#"+( ( 'at_instance_firstId['at_instance_floor] ) + .@i ) );
+		{
+			// 61 is the last Star id, so we should never go further than that point
+			if(( 'at_instance_firstId['at_instance_floor] ) + .@i ) < 62 )
+			{
+				enablenpc instance_npcname( "Star#"+( ( 'at_instance_firstId['at_instance_floor] ) + .@i ) );
+			}
+		}
 	}
 	else if( 'at_instance_floor == 12 ){
 		donpcevent instance_npcname( "astral_main_boss" )+"::OnEnable";
