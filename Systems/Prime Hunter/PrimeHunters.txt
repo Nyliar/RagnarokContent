@@ -1,0 +1,28 @@
+mal_in02,188,47,3	script	Roru::alapriro	4_M_02,{
+	set .@npcname$, "[Roru]";
+	mes .@npcname$;
+	mes "";
+	mes "Most wanted peoples...";
+	mes "I'd like to capture one of them.";
+	mes "The prime must be so high...";
+	close;
+}
+
+mal_in02,163,70,2	script	Tror::alapritro	1_M_KNIGHTMASTER,{
+	set .@npcname$, "[Tror]";
+	mes .@npcname$;
+	mes "";
+	mes "Welcome to the Prime Hunter head quarter.";
+	mes "Talk to our chief if you want something special.";
+	close;
+}
+
+
+mal_in02,179,51,5	script	Kil::alapritfi	4_MAL_SOLDIER,{
+	set .@npcname$, "[Kil]";
+	mes .@npcname$;
+	mes "";
+	mes "You won't find lots of them around here.";
+	mes "Because of our work, we're often spread around the world.";
+	close;
+}

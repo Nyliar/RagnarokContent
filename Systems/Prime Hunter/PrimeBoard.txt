@@ -1,0 +1,518 @@
+// [========================================================]
+// [===========  	  Bounty Hunter - Core 	     ===========]
+// [========================================================]
+// [ Version 2                                              ]
+// [========================================================]
+// [ Original script by: Nyliar	                            ]
+// [========================================================]
+// [ Description:                                           ]
+// [--------------------------------------------------------]
+// [                                                        ]
+// [ - Bounty Hunter base implementation					    ]
+// [                                                        ]
+// [========================================================]
+// [                                                        ]
+// [  Based on Bounty Hunter logic:                          ]
+// [  Killing a player on pvp maps make your karma decrease ]
+// [  Prime is calculated according to your karma           ]
+// [  A killer can be targeted twice, the reward increasing ]
+// [                                                        ]
+// [  Database structure                                    ]
+// [     - id (INT PRIMARY KEY A_I)                         ]
+// [     - name (VARCHAR 255)                               ]
+// [     - karma (INT)      	                            ]
+// [     - prime (INT)                                      ]
+// [     - hunterCount (INT)                                ]
+// [     - killer (INT)                                     ]
+// [     - hunter (INT)                                     ]
+// [     - targetId (INT)                                   ]
+// [                                                        ]
+// [========================================================]
+// [========================================================]
+// [ Changelog: (5 last updates)                            ]
+// [--------------------------------------------------------]
+// [                                                        ]
+// [ v0: Creation                      			    		]
+// [                                                        ]
+// [========================================================]
+// [                                                        ]
+// [========================================================]
+
+mal_in02,186,74,5	script	Bounty Hunter::alaprihun	4_MAL_CAPTAIN,{
+	set .@npcname$, "[Bounty Hunter]";
+	mes .@npcname$;
+	mes "";
+	mes "Hello to you.";
+	mes "I'm the Bounty Hunter.";
+	mes "I'm the one you should refer to if you want to take a hunter on a rewarded head.";
+	mes "I'm the one you should talk to if you want to add a prime upon someone's head.";
+	mes "What do you wanna do?";
+	switch(select("Add a prime","Take a hunt","Register as a Hunter","See a prey's hunters"))
+	{
+		case 1:
+			//add prime
+			next;
+			mes .@npcname$;
+			mes "So you wanna add a prime on somebody's head?";
+			mes "You've been foolished, or he slept with your wife?";
+			mes "No matter for me. Simply tell me the infos I need.";
+			mes "Keep in mind that it will decrease your karam.";
+			mes "Plus, it will cost you a minimum wages of " + .minWages + "z.";
+			if (select("Ok","No...Forget it."))
+			{
+				next;
+				mes .@npcname$;
+				mes "Allright. So, what's the prime?";
+				input .@wages;
+				if (Zeny >= .@wages)
+				{
+					next;
+					mes .@npcname$;
+					mes "Ok. Who's the target? I need the exact name;";
+					input .@targetName$;
+					query_sql("SELECT `char_id`,`account_id` FROM `char` WHERE `name`='" + .@targetName$ + "'", .@id, .@accId);
+					if (getarraysize(.@id) > 0)
+					{
+						next;
+						mes .@npcname$;
+						mes "Allright. Here we are.";
+						if (.@accId[0] == getcharid(3))
+						{
+							mes "I don't know how exactly...But I think you're trying to fool me.";
+							mes "Get away from my sight, you little piece of crap.";
+							mes "I'll keep your zenies for that. Disappear now";
+							atcommand ("@load");
+							set Zeny, Zeny - .@wages;
+							logmes "Character " + strcharinfo(0) + " tried to add a prime on another char of his own account.";
+							close;
+						}
+						query_sql("SELECT `id` FROM `prime_char` WHERE `name`='" + .@targetName$ + "'", .@name);
+						if (getarraysize(.@name) > 0)
+						{
+							query_sql("UPDATE `prime_char` SET `prime`=" + .@wages + " WHERE `name`='" + .@targetName$ + "'", .@count);
+						}
+						else
+						{
+							query_sql("INSERT INTO `prime_char` (`name`,`prime`,`hunterCount`,`karma`,`killer`,`hunter`,`targetId`) VALUE ('" + .@targetName$ + "'," + .@wages + ",0,0,0,0,0)", .@count);
+						}
+						set Zeny, Zeny - .@wages;
+						mes "Your prime has been added.";
+						//update Karma
+						query_sql("SELECT `karma` FROM `prime_char` WHERE `name`='" + strcharinfo(0) + "'", .@karma);
+						if (getarraysize(.@karma) != 0)
+						{
+							query_sql("UPDATE `prime_char` SET `karma`=" + (.@karma[0] - 1) + " WHERE `name`='" + strcharinfo(0) + "'", .@count);
+						}
+						else
+						{
+							//the starter doesn't exist in prime_char, create it
+							query_sql("INSERT INTO `prime_char` (`name`,`prime`,`hunterCount`,`karma`,`killer`,`hunter`,`targetId`) VALUE ('" + .@targetName$ + "',0,0,-1,0,0,0)", .@count);
+						}
+					}
+					else
+					{
+						next;
+						mes .@npcname$;
+						mes "There's nobody of this name...I'm loosing my patience...";
+					}
+				}
+				else
+				{
+					mes "You don't have that money...Don't make me put a prime upon your head...";
+				}
+			}
+			else
+			{
+				next;
+				mes .@npcname$;
+				mes "Yeah...You'll be safier...";
+			}
+			break;
+		case 2:
+			//take hunt
+			next;
+			mes .@npcname$;
+			query_sql("SELECT `name` FROM `prime_char` WHERE `name`='" + strcharinfo(0) + "' AND hunter=1", .@namehunter$);
+			if (getarraysize(.@namehunter$) > 0)
+			{
+				mes "Choose a kind of targets.";
+				set .@killer, 0;
+				if (select("Killers","Wanted") == 1)
+				{
+					set .@killer, 1;
+				}
+				next;
+				mes .@npcname$;
+				mes "Here's a list of the most wanted peoples...";
+				set .@query$, "SELECT `id`, `name`, `prime`, `hunterCount` FROM `prime_char` WHERE `killer`=" + .@killer + " AND `name`!='" + strcharinfo(0) + "' ORDER BY `karma` DESC";
+				debugmes .@query$;
+				query_sql(.@query$, .@id, .@name$, .@prime, .@huntCount);
+				set .@menu$, "";
+				for (set .@i,0; .@i<getarraysize(.@name$); set .@i,.@i+1)
+				{
+					set .@menu$, .@menu$ + ( .@i ? ":" : "" ) + .@name$[.@i]; 
+				}
+				set .@choice, select(.@menu$) - 1;
+				if (.@choice != 254)
+				{
+					next;
+					mes .@npcname$;
+					mes "So you wanna hunt " + .@name$[.@choice] + ", for a prime of " + .@prime[.@choice] + " hu?";
+					if (select("Yes","No"))
+					{
+						next;
+						mes .@npcname$;
+						if (.@huntCount >= 1)
+						{
+							mes "There's already a hunter on his tracks.";
+							mes "Do you still wanna hunt him down?";
+							mes "If so, you'll have to pay a fee.";
+							mes "The first one to kill him will get the prime, plus the fees.";
+							mes "The fee is " + .fee + "z.";
+							mes "Still interested?";
+							if (select("Yes","No"))
+							{
+								if (Zeny >= .fee)
+								{
+									next;
+									mes .@npcname$;
+									mes "Perfect.";
+									set Zeny, Zeny - .fee;
+									set .@feePaid, 1;
+								}
+								else
+								{
+									next;
+									mes .@npcname$;
+									mes "You don't have enough money...";
+								}
+							}
+							else
+							{
+								mes "Your choice. If you think you're not good enough, I can't force you...";
+								close;
+							}
+						}
+						//check target count
+						query_sql("SELECT `targetId` FROM `prime_char` WHERE `name`='" + strcharinfo(0) + "'", .@targetId);
+						if (getarraysize(.@targetId) > 0 && .@targetId != 0)
+						{
+							mes "You can't take more than a hunt at a time.";
+							close;
+						}
+						
+						//update huntcount
+						set .@query$, "UPDATE `prime_char` SET `hunterCount`=" + (.@huntCount + 1);
+						if (.@feePaid)
+						{
+							set .@query$, .@query$ + ",`prime`=" + (.@prime[.@choice] + .fee);
+						}
+						set .@query$, .@query$ + " WHERE `name`='" + .@name[.@choice] + "'";
+						query_sql(.@query$, .@count);
+						
+						//update targetId
+						set .@query$, "UPDATE `prime_char` SET `targetId`=" + .@id[.@choice];
+						set .@query$, .@query$ + " WHERE `name`='" + strcharinfo(0) + "'";
+						query_sql(.@query$, .@count);
+						
+						mes "You've been registered as a Hunter for this prey.";
+						mes "Good luck to you then.";
+					}
+					else
+					{
+						next;
+						mes .@npcname$;
+						mes "Then, don't make me loose my time...";
+					}
+				}
+			}
+			else
+			{
+				mes "You have to be Hunter to take a Hunt.";
+			}
+			break;
+		case 3:
+			//register
+			next;
+			mes .@npcname$;
+			query_sql("SELECT `name` FROM `prime_char` WHERE `name`='" + strcharinfo(0) + "' AND hunter=1", .@name$);
+			if (getarraysize(.@name$) == 0)
+			{
+				mes "If you wanna be a hunter, you'll have to pay " + .hunterWages;
+				mes "Ok?";
+				if (select("Yes","No"))
+				{
+					if (Zeny >= .hunterWages)
+					{
+						next;
+						mes .@npcname$;
+						mes "Okay.";
+						
+						set .@result, callfunc("OnRegisterJob",getcharid(0),7);
+						if (.@result == 1)
+						{
+							set Zeny, Zeny - $registeringGuildFee;
+							next;
+							mes .@npcname$;
+							mes "Be the welcomed, my brother Bounty Hunter.";
+							query_sql("SELECT `id` FROM `prime_char` WHERE `name`='" + strcharinfo(0) + "'", .@id);
+							if (getarraysize(.@id) != 0)
+							{
+								query_sql("UPDATE `prime_char` SET `hunter`=1 WHERE `name`='" + strcharinfo(0) + "'", .@count);
+							}
+							else
+							{
+								//the starter doesn't exist in prime_char, create it
+								query_sql("INSERT INTO `prime_char` (`name`,`prime`,`hunterCount`,`karma`,`killer`,`hunter`,`targetId`) VALUE ('" + strcharinfo(0) + "',0,0,-1,0,1,0)", .@count);
+							}
+						}
+						else if (.@result == -1)
+						{
+							next;
+							mes .@npcname$;
+							mes "Sorry but you're already registered on another Guild.";
+							mes "Do you want to switch to the Bounty Hunter Guild?";
+							if (select("Yes","No") == 1)
+							{
+								set .@fee, $registeringGuildFee;
+								if (callfunc("OnLookForExistingJob",getcharid(0),7) == 1)
+								{
+									next;
+									mes .@npcname$;
+									mes "You've already registered as a Bounty Hunter.";
+									mes "The activation alone only cost " + $activationGuildFee + "z.";
+									set .@fee, $activationGuildFee;
+								}
+								if (callfunc("OnChangeJob",getcharid(0),7) == 1)
+								{
+									set Zeny, Zeny - .@fee;
+									next;
+									mes .@npcname$;
+									mes "Be the welcomed, my brother Bounty Hunter.";
+									query_sql("SELECT `id` FROM `prime_char` WHERE `name`='" + strcharinfo(0) + "'", .@id);
+									if (getarraysize(.@id) != 0)
+									{
+										query_sql("UPDATE `prime_char` SET `hunter`=1 WHERE `name`='" + strcharinfo(0) + "'", .@count);
+									}		
+									else
+									{
+										//the starter doesn't exist in prime_char, create it
+										query_sql("INSERT INTO `prime_char` (`name`,`prime`,`hunterCount`,`karma`,`killer`,`hunter`,`targetId`) VALUE ('" + strcharinfo(0) + "',0,0,-1,0,1,0)", .@count);
+									}
+								}
+							}
+						}
+						else
+						{
+							next;
+							mes .@npcname$;
+							mes "You're already one of us, my friend...";
+							close;
+						}
+					}
+					else
+					{
+						next;
+						mes .@npcname$;
+						mes "Your choice.";
+					}
+				}
+				else
+				{
+					next;
+					mes .@npcname$;
+					mes "Your choice.";
+				}
+			}
+			else
+			{
+				mes "You're already a Hunter, my friend.";
+			}
+			break;
+		case 4:
+			//See hunters
+			next;
+			mes .@npcname$;
+			mes "So you wanna check your rivals, he?";
+			mes "Here you are, chose a target.";
+			query_sql("SELECT `id`, `name` FROM `prime_char` WHERE `prime`>0 ORDER BY `karma` DESC", .@id, .@name$);
+			set .@menu$, "";
+			for (set .@i,0; .@i<getarraysize(.@name$); set .@i,.@i+1)
+			{
+				set .@menu$, .@menu$ + ( .@i ? ":" : "" ) + .@name$[.@i]; 
+			}
+			set .@choice, select(.@menu$) - 1;
+			if (.@choice != 254)
+			{
+				next;
+				mes .@npcname$;
+				query_sql("SELECT `name` FROM `prime_char` WHERE `targetId`=" + .@id[.@choice], .@hunterName$);
+				mes "This prey is hunted by the following:";
+				for (set .@i,0; .@i<getarraysize(.@hunterName$); set .@i,.@i+1)
+				{
+					mes " ~ " + .@hunterName$[.@i];
+				}
+				next;
+				mes .@npcname$;
+				mes "Good luck to you...";
+			}
+			break;
+	}
+	close;
+	
+//Prime Hunter
+	set .@isIn, 0;
+	if(.primeHunterMap$[0] == "All")
+	{
+		set .@isIn, 1;
+	}
+	else
+	{
+		for (set .@i,0; .@i<getarraysize(.primeHunterMap$) && .@isIn == 0; set .@i,.@i+1)
+		{
+			if (strcharinfo(3) == .primeHunterMap$[.@i])
+			{
+				set .@isIn, 1;
+			}
+		}
+	}
+
+	if (.@isIn == 1)
+	{
+		set .@killerAId, getcharid(3);
+		set .@killedAid, killedrid;
+
+		attachrid(.@killedAid);
+		set .@targetName$, strcharinfo(0);
+		set .@query$, "SELECT `name`, `prime`, `karma`, `killer` FROM `prime_char` WHERE `name`='" + .@targetName$+ "'";
+		query_sql(.@query$, .@tname$, .@tprime, .@tkarma, .@tkiller);
+		attachrid(.@killerAId);
+		if (getarraysize(.@tname$) > 0)
+		{
+			//Bounty Hunter
+			query_sql("SELECT `name`,`targetId`,`karma`,`hunterCount`,`hunter` FROM `prime_char` WHERE `name`='" + strcharinfo(0) + "'", .@hname$,.@htargetId,.@hkarmaHunter,.@hhunterCount,.@hunter);
+			if (getarraysize(.@hname$) != 0 && .@hunter[0] == 1)
+			{
+				set .@primeRatio, 0;
+				if (.@targetId[0] != 0)
+				{
+					query_sql("SELECT `name` FROM `prime_char` WHERE `id`=" + .@htargetId[0], .@tname$);
+					if (.@tname$[0] == .@targetName$)
+					{
+						set .@primeRatio, 1;
+					}
+				}
+				set .@query$, "UPDATE `prime_char` SET `karma`=" + (.@hkarmaHunter[0] + 1) + ",`targetId`=0";
+				if (.@primeRatio)
+				{
+					set .@query$, .@query$ + ",`hunterCount`=" + (.@hhunterCount[0] + 1);
+					dispbottom "[Bounty Hunter] You've gained a point in Hunters ranking for hunting a prey you've been registered for.";
+				}
+				
+				dispbottom "[Bounty Hunter] You've killed a wanted people. Here's your reward: " + .@tprime[0];
+				set Zeny, Zeny + .@tprime[0];
+				set .@query$, .@query$ + " WHERE `name`='" + strcharinfo(0) + "'";
+				query_sql(.@query$, .@count);
+			}
+			else
+			{
+				set .@newKiller, 0;
+				set .@newPrime, 0;
+				if (getarraysize(.@tkiller) > 0 && .@tkiller[0] == 1)
+				{
+					//killer char
+					dispbottom "[Bounty Hunter] You've killed a wanted people. Here's your reward: " + (.@tprime[0] / 2);
+					set Zeny, Zeny + (.@tprime[0] / 2);
+					dispbottom "[Bounty Hunter] To get more, register as official Hunter.";
+				}
+				else if(getarraysize(.@tprime) > 0 && .@tprime[0] > 0)
+				{
+					//primed char
+					dispbottom "[Bounty Hunter] You've killed a primed people, without being a Hunter. Here's your reward: " + (.@tprime[0] / 2);
+					set Zeny, Zeny + (.@tprime[0] / 2);
+					query_sql("SELECT `killer`,`prime` FROM `prime_char` WHERE `name`='" + strcharinfo(0) + "'", .@hkiller, .@hprime);
+					if (.@hkiller == 0)
+					{
+						dispbottom "[Bounty Hunter] Therefor, you'll now be known as a Wanted.";				
+						set .@newKiller, 1;
+					}
+					else
+					{
+						dispbottom "[Bounty Hunter] Therefor, your own Prime have been increased.";
+						set .@newPrime, .@hprime[0] + 10000;
+					}
+					
+					//reduce negative karma of target
+					set .@newKarma, .@tkarma[0] + 1; 
+					set .@query$, "UPDATE `prime_char` SET `prime`=0";
+					if (.@newKarma == 0)
+					{
+						set .@query$, .@query$ + ",`killer`=0,`karma`=0";
+					}
+					else
+					{
+						set .@query$, .@query$ + ",`karma`=" + .@newKarma;
+					}
+					set .@query$, .@query$ + " WHERE `name`='" + .@targetName$ + "'";	
+					//update killed karma and prime
+					debugmes "query: " + .@query$;
+					query_sql(.@query$, .@count);
+				}
+			}
+			//update hunter karma and prime
+			set .@query$, "UPDATE `prime_char` SET `prime`=" + .@newPrime;
+			if (.@newKiller == 1)
+			{
+				set .@query$, .@query$ + ", `killer`=" + .@newKiller;
+			} 
+		
+			set .@query$, .@query$ + ",`karma`=" + (.@hkarmaHunter[0] - 2) + " WHERE `name`='" + strcharinfo(0) + "'";
+			query_sql(.@query$, .@count);
+		}
+		else
+		{
+			//Player Killer
+			//update Karma
+			query_sql("SELECT `id`,`karma`, `prime` FROM `prime_char` WHERE `name`='" + strcharinfo(0) + "'", .@hid, .@hkarma, .@hprime);
+			if (getarraysize(.@hid) != 0)
+			{
+				set .@prime, .@hprime[0] + 2 * .karmaPrime; 
+				query_sql("UPDATE `prime_char` SET `karma`=" + (.@hkarma[0] - 2) + ", `prime`=" + .@hprime + " WHERE `name`='" + strcharinfo(0) + "'", .@count);
+			}
+			else
+			{
+				//the starter doesn't exist in prime_char, create it
+				query_sql("INSERT INTO `prime_char` (`name`,`prime`,`hunterCount`,`karma`,`killer`,`hunter`,`targetId`) VALUE ('" + strcharinfo(0) + "',10000,0,-2,1,0,0)", .@count);
+			}
+			dispbottom "[Bounty Hunter] You've killed a man! You'll now be known as a Wanted.";
+		}
+	}
+	end;
+	
+OnInit:
+	set .fee, 100000;
+	set .minWages, 2500000;
+	set .hunterWages, 500000;
+	setarray .primeHunterMap$, "All";
+	end;
+}
+
+mal_in02,185,76,5	script	Prime Board::alapriboa	2_BULLETIN_BOARD,{
+	set .@npcname$, "[Bounty Hunter]";
+	mes .@npcname$;
+	mes "";
+	mes "Most wanted peoples...";
+	query_sql("SELECT `name`, `prime` FROM `prime_char` WHERE `prime`>0 ORDER BY `karma` DESC", .@name$, .@prime);
+	set .@count, 0;
+	for(set .@i,0; .@i<getarraysize(.@name$); set .@i,.@i+1)
+	{
+		mes (.@i + 1) + " ~ " + " " + .@name$[.@i] + " wanted for " + .@prime[.@i] + "z.";
+		set .@count, .@count + 1;
+		if (.@count >= 10)
+		{
+			next;
+			mes .@npcname$;
+		}
+	}
+	close;
+}
