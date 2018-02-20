@@ -1,0 +1,521 @@
+// [========================================================]
+// [===========       Guild Registration	 ===========]
+// [========================================================]
+// [ Version 1                                              ]
+// [========================================================]
+// [ Original script by: Alayne                             ]
+// [========================================================]
+// [ Description:                                           ]
+// [--------------------------------------------------------]
+// [                                                        ]
+// [ - Artisanats Jobs registration			    ]
+// [                                                        ]
+// [========================================================]
+// [ Changelog: (5 last updates)                            ]
+// [--------------------------------------------------------]
+// [                                                        ]
+// [ v0: Creation                      			    ]
+// [                                                        ]
+// [  Database structure                                    ]
+// [     - id (INT PRIMARY KEY A_I)                         ]
+// [     - char_id (INT)                         	    ]
+// [     - jobType(TINYINT)      	                    ]
+// [     - jobPoint(TINYINT)      	                    ]
+// [     - jobRank(TINYINT)      	                    ]
+// [     - activeJob(TINYINT)      	                    ]
+// [                                                        ]
+// [========================================================]
+// [                                                        ]
+// [========================================================]
+
+tha_in1,106,25,2	script	Guild Chief::guicore	416,{
+	set .@npcname$, "[Ayolan]";
+	mes .@npcname$;
+	mes "Hello to you," + strcharinfo(0) + ".";
+	mes "What can I do for you?";
+	do
+	{
+		switch(select("Where are we?","What's a Guild?","What are the differents Guilds?","How can I register?","Where can I find recipes?","Cancel my registration"))
+		{
+			case 1:
+				next;
+				mes .@npcname$;
+				mes "You're here at the Guild Headquarter.";
+				mes "This is a place where anybody can have informations about the Guilds System.";
+				break;
+			case 2:
+				next;
+				mes .@npcname$;
+				mes "A Guild is different here of the Adventurers Groups you already know.";
+				mes "This is an organisation of people who works on the same kind of job.";
+				mes "There's several different ones, but anybody in a Guild have to do the same thing.";
+				mes "On the other hand, just as in normal guilds, there's rank.";
+				mes "Low ranked member can do less things than higher one.";
+				break;
+			case 3:
+				next;
+				mes .@npcname$;
+				mes "They're currently 10 Guilds registered, plus 2 special one.";
+				mes "	^C4C4C4(Apothecary)^000000, which can create potions,";
+				mes "	^C4C4C4(ArmorSmith)^000000, which can create armors,";
+				mes "	^C4C4C4(WeaponSmith)^000000, which can create weapons,";
+				mes "	^C4C4C4(Tailor)^000000, which can create light armors, shoes or garments,";
+				mes "	^C4C4C4(Jeweller)^000000, which can create Power Stones,";
+				mes "	^C4C4C4(Pastry)^000000, which can create pastries or food,";
+				mes "	^C4C4C4(Mercenary)^000000, which can be hired for several kind of jobs,";
+				mes "	^C4C4C4(Bounty Hunter)^000000, which can hunt the wanted people,";
+				mes "	^C4C4C4(Trapper)^000000, which can capture dead monster soul to make them summonable,";
+				mes "	^C4C4C4(Scribe)^000000, which can create scrolls or books,";
+				next;
+				mes .@npcname$;
+				mes "Of course, there's specificities.";
+				mes "There's also the Fishermans and the Miners.";
+				break;
+			case 4:
+				next;
+				mes .@npcname$;
+				mes "You just have to register to one the Guild Master.";
+				mes "Be careful, you can only have one job at a time.";
+				mes "Choose carefully. You'll be able to change later, but it will be a loss of time.";
+				break;
+			case 5:
+				next;
+				mes .@npcname$;
+				mes "That's a secret the Guild Masters keep jealously.";
+				mes "You'll be able to learn the easiest pretty quickly.";
+				mes "But for the hardest, you'll have to find it by yourself.";
+				mes "Sometimes, you can find some sold by other people. But that's pretty rare.";
+				break;
+			case 6:
+				next;
+				mes .@npcname$;
+				mes "You wanna completely cancel your job?";
+				mes "Without changing for another one?";
+				mes "Well...Allright.";
+				callfunc("OnChangeJob", -1);
+				break;
+			case 255:
+				mes "Perfect, have a good day.";
+				close;
+		}
+	}
+	while(1);
+	close;
+
+OnInit:
+	set $registeringGuildFee, 50000;
+	set $activationGuildFee, 10000;
+	set $pointsPerLevel, 250;
+
+	//set recipes script
+	setarray .@recipesItems[0],7797;
+	for(set .@i,0; .@i<getarraysize(.@recipesItems); set .@i,.@i+1)
+	{
+		setitemscript(.@recipesItems[.@i], "{ callfunc \"OnReceiveRecipe\", getcharid(0); }", 0);
+	}
+	end;
+}
+
+function	script	OnChangeJob	{
+	set .@charId, getarg(0);
+	set .@jobType, getarg(1);
+	set .@query$, "SELECT `id` FROM `guildjob_member` WHERE `char_id`=" + .@charId + " AND `activeJob`=1";
+	query_sql(.@query$, .@id);
+	if (getarraysize(.@id) > 0)
+	{
+		//check if job allready exists
+		set .@query$, "SELECT `id` FROM `guildjob_member` WHERE `char_id`=" + .@charId + " AND `activeJob`=0 AND `jobType`=" + .@jobType;
+		query_sql(.@query$, .@otherId);
+		if (getarraysize(.@otherId) > 0)
+		{
+			set .@query$, "UPDATE `guildjob_member` SET `activeJob`=0 WHERE `id`=" + .@id[0];
+			query_sql(.@query$, .@count);
+
+			set .@query$, "UPDATE `guildjob_member` SET `activeJob`=1 WHERE `id`=" + .@otherId[0];
+			query_sql(.@query$, .@count);
+		}
+		else
+		{
+			set .@query$, "UPDATE `guildjob_member` SET `activeJob`=0 WHERE `id`=" + .@id[0];
+			query_sql(.@query$, .@count);
+
+			//find last ranker
+			set .@newJobRank, 0;
+			if (getarraysize(.@jobRank) > 0)
+			{
+				for (set .@i,0; .@i<getarraysize(.@jobRank); set .@i,.@i+1)
+				{
+					if (.@jobRank[0] > .@newJobRank)
+					{
+						set .@newJobRank, .@jobRank[0];
+					}
+				}
+			}
+			//increase by one
+			set .@newJobRank, .@newJobRank + 1;
+
+			set .@query$, "INSERT INTO `guildjob_member` (`char_id`,`jobType`,`jobPoint`,`jobRank`,`activeJob`) VALUES (" + .@charId + "," + .@jobType + ",0," + .@newJobRank + ",1)"; 
+			query_sql(.@query$, .@count);
+		}
+		return 1;
+	}
+	else
+	{
+		//no job found
+		return -1;
+	}
+	end;
+}
+
+function	script	OnLookForExistingJob	{
+	set .@charId, getarg(0);
+	set .@jobType, getarg(1);
+	set .@query$, "SELECT `id`,`jobType` FROM `guildjob_member` WHERE `char_id`=" + .@charId + " AND `activeJob`=0";
+	query_sql(.@query$, .@id, .@jobTypeFound);
+	if (getarraysize(.@id) > 0)
+	{
+		set .@found, -1;
+		for(set .@i,0; .@i<getarraysize(.@id); set .@i,.@i+1)
+		{
+			if(.@jobTypeFound[.@i] == .@jobType)
+				return 1;
+		}
+		//no registration for more than 1 job
+		return .@found;
+	}
+	return -1;
+}
+
+function	script	OnRegisterJob	{
+	set .@charId, getarg(0);
+	set .@jobType, getarg(1);
+	set .@query$, "SELECT `id`,`jobType` FROM `guildjob_member` WHERE `char_id`=" + .@charId + " AND `activeJob`=1";
+	query_sql(.@query$, .@id, .@jobTypeFound);
+	if (getarraysize(.@id) > 0)
+	{
+		if (.@jobTypeFound[0] == .@jobType)
+			return -2;
+		//no registration for more than 1 job
+		return -1;
+	}
+	else
+	{
+		set .@query$, "SELECT `jobRank` FROM `guildjob_member` WHERE `jobType`=" + .@jobType + " AND `activeJob`=1 ORDER BY `jobRank` DESC";
+		query_sql(.@query$, .@jobRank);
+		
+		//find last ranker
+		set .@newJobRank, 0;
+		if (getarraysize(.@jobRank) > 0)
+		{
+			for (set .@i,0; .@i<getarraysize(.@jobRank); set .@i,.@i+1)
+			{
+				if (.@jobRank[0] > .@newJobRank)
+				{
+					set .@newJobRank, .@jobRank[0];
+				}
+			}
+		}
+		//increase by one
+		set .@newJobRank, .@newJobRank + 1;
+		
+		set .@query$, "INSERT INTO `guildjob_member` (`char_id`,`jobType`,`jobPoint`,`jobLevel`,`jobRank`,`activeJob`) VALUES (" + .@charId + "," + .@jobType + ",0,1," + .@newJobRank + ",1)"; 
+		query_sql(.@query$, .@count);
+		return 1;
+	}
+	end;
+}
+
+function	script	OnIncreasePoint	{
+	set .@charId, getarg(0);
+
+	set .@query$, "SELECT `jobType` FROM `guildjob_member` WHERE `char_id`=" + .@charId + " AND `activeJob`=1";	
+	query_sql(.@query$, .@type);
+
+	set .@query$, "SELECT `id`,`jobPoint`,`jobLevel`,`jobRank` FROM `guildjob_member` WHERE `char_id`=" + .@charId + " AND `activeJob`=1";
+	query_sql(.@query$, .@id, .@point, .@level, .@rank);
+	if (getarraysize(.@id) > 0)
+	{
+		set .@query$, "SELECT `id`, `jobRank`, `jobPoint` FROM `guildjob_member` WHERE `jobType`=" + .@type[0] + " AND `activeJob`=1 AND `char_id`!=" + .@charId + " ORDER BY `jobPoint`";
+		query_sql(.@query$, .@allIds, .@allRanks, .@points);
+		
+		set .@newPointCount, .@point[0] + 1;
+		
+		set .@newRank, .@rank[0];		
+		if (getarraysize(.@allRanks) > 0)
+		{
+			set .@lastValue, .@newPointCount;
+			set .@newPosition, -1;
+			for(set .@i,0; .@i<getarraysize(.@points) && .@newPosition == -1; set .@i,.@i+1)
+			{
+				if (.@points[.@i] < .@lastValue)
+				{
+					set .@newPosition, .@i;
+				}
+			}
+			if (.@newPosition > -1)
+			{
+				set .@newRank, .@allRanks[.@newPosition];
+			}
+		}
+		set .@query$, "UPDATE `guildjob_member` SET `jobPoint`=" + .@newPointCount + ", `jobRank`=" + .@newRank;
+		if (.@newPointCount % 250 == 0)
+		{
+			set .@newLevel, .@level[0] + 1;
+			set .@query$, .@query$ + ", `jobLevel`=" + .@newLevel;
+		}
+		set .@query$, .@query$ + " WHERE `jobType`=" + .@type[0] + " AND `char_id`=" + .@charId;
+		query_sql(.@query$, .@count);
+		
+		if (.@newPosition > -1)
+		{
+			set .@query$, "UPDATE `guildjob_member` SET `jobRank`=" + (.@newRank + 1) + " WHERE `jobType`=" + .@type[0] + " AND `id`=" + .@allIds[.@newPosition];
+			query_sql(.@query$, .@count);
+		}
+		return 1;
+	}
+	else
+	{
+		return -1;
+	}
+	end;
+}
+
+function	script	OnReceiveRecipe	{
+	set .@charId, getarg(0);
+
+	set .@query$, "SELECT `jobType`, `jobLevel` FROM `guildjob_member` WHERE `char_id`=" + .@charId + " AND `activeJob`=1";
+	query_sql(.@query$, .@jobType, .@level);
+	if (getarraysize(.@level) > 0)
+	{
+		setarray .@recipeSentences$[0],"";
+		switch(.@jobType[0])
+		{				
+			case 0:
+				//Apothecary
+				if(.@level[0] < 5)
+				{
+					set .@recipeSentences$[getarraysize(.@recipeSentences$)], "Cornus Tears <-- 1 Black Ladle, 1 Large Cookpot (0), 10 Crystal Fragment,5 Cursed Water";
+					set .@recipeSentences$[getarraysize(.@recipeSentences$)], "Herb of Incantation <-- 1 Black Ladle, 1 Large Cookpot (0),5 Worn out Magic Scroll,15 Fig Leaf,1 4Leaf Clover";
+					set .@recipeSentences$[getarraysize(.@recipeSentences$)], "Luciola Honey Jam <-- 1 Black Ladle, 1 Large Cookpot (0), 10 Honey,2 Ube Jam";
+					set .@recipeSentences$[getarraysize(.@recipeSentences$)], "Mega Resist Potion <-- 1 Black Ladle, 1 Large Cookpot (0),3 Torn Magic Book, 3 Solid Shell, 3 Solid Husk, 8 Detrimindexta";
+					set .@recipeSentences$[getarraysize(.@recipeSentences$)], "Regeneration Potion <-- 1 Black Ladle, 1 Large Cookpot (0),30 Grasshoper Leg, 10 Harpy Feather, 2 Hinalle";
+				}
+				if (.@level[0] < 4)
+				{
+					set .@recipeSentences$[getarraysize(.@recipeSentences$)], "Distilled Fighting Spirit <-- 1 Black Ladle, 1 Large Cookpot (0), 5 Holy Water";
+					set .@recipeSentences$[getarraysize(.@recipeSentences$)], "Speed Up Potion <-- 1 Black Ladle, 1 Large Cookpot (0),20 Daengies, 10 Alcohol,1 Empty Bottle";
+					set .@recipeSentences$[getarraysize(.@recipeSentences$)], "Big Magic Defense Pots <-- 1 Black Ladle, 1 Large Cookpot (0), 4 Torn Magic Book, 6 Detrimindexta";
+					set .@recipeSentences$[getarraysize(.@recipeSentences$)], "Big Defense Pots <-- 1 Black Ladle, 1 Large Cookpot (0), 8 Solid Shell, 8 Solid Husk, 6 Detrimindexta";
+				}
+				if (.@level[0] < 3)
+				{
+					set .@recipeSentences$[getarraysize(.@recipeSentences$)], "Tasty White Potion <-- 1 Black Ladle, 1 Large Cookpot (0), 1 Condensed White Potion, 25 White Herb, 15 White Mask";
+					set .@recipeSentences$[getarraysize(.@recipeSentences$)], "Tasty Pink Potion <-- 1 Black Ladle, 1 Large Cookpot (0),2 Flame Heart, 5 Flavored Alcohol,2 Fluorescent Liquid";
+					set .@recipeSentences$[getarraysize(.@recipeSentences$)], "SP Consuption Reduction Potion <-- 1 Black Ladle, 1 Large Cookpot (0), 50 Frill, 25 Gill";
+					set .@recipeSentences$[getarraysize(.@recipeSentences$)], "Medium Life Potion <-- 1 Black Ladle, 1 Large Cookpot (0),1 Level 5 Heal,20 Horrendous Hair";
+				}
+				if (.@level[0] < 2)
+				{
+					set .@recipeSentences$[getarraysize(.@recipeSentences$)], "Green Ale <-- 1 Black Ladle, 1 Large Cookpot (0), 20 Aloe, 10 Alcohol, 5 Green Plant";
+					set .@recipeSentences$[getarraysize(.@recipeSentences$)], "Small Defense Potion <-- 1 Black Ladle, 1 Large Cookpot (0), 5 Solid Shell, 5 Solid Husk, 3 Detrimindexta";
+					set .@recipeSentences$[getarraysize(.@recipeSentences$)], "Small Life Potion <-- 1 Black Ladle, 1 Large Cookpot (0),1 Level 3 Heal,50 Decayed Nail";
+					set .@recipeSentences$[getarraysize(.@recipeSentences$)], "Small Magic Defense Potion <-- 1 Black Ladle, 1 Large Cookpot (0), 2 Torn Magic Book, 3 Detrimindexta";
+				}
+				set .@recipeSentences$[getarraysize(.@recipeSentences$)], "Glass of Illusion <-- 1 Black Ladle, 1 Large Cookpot (0), 50 Glass Bead, 1 Illusion Flower";
+				set .@recipeSentences$[getarraysize(.@recipeSentences$)], "Berzerk Pots <-- 1 Black Ladle, 1 Large Cookpot (0), 5 Alcohol, 1 Battered Kettle, 5 Brown Root";
+				set .@recipeSentences$[getarraysize(.@recipeSentences$)], "Awakening Pots <-- 1 Black Ladle, 1 Large Cookpot (0), 5 Alcohol, 15 Animal Gore, 5 Bacillus";
+				set .@recipeSentences$[getarraysize(.@recipeSentences$)], "Concentration Potion <-- 1 Black Ladle, 1 Large Cookpot (0), 5 Alcohol, 15 Aloe, 5 Ancient Tooth";
+				set .@recipeSentences$[getarraysize(.@recipeSentences$)], "29 Fruits <-- 1 Black Ladle, 1 Large Cookpot (0), 10 Bag of Nuts, 5 Bacillus";
+				break;
+			case 1:
+				//ArmorSmith
+				if(.@level[0] < 5)
+				{
+					set .@recipeSentences$[getarraysize(.@recipeSentences$)], "Aebecee's Raging Typhoon Armor <-- 1 Hammer of Blacksmith, 1 God Anvil (0), 1 Wooden Mail, 10 lvl 5 Lightning Bolt, 25 Green Bijou, 40 Dragon Skin";
+					set .@recipeSentences$[getarraysize(.@recipeSentences$)], "Claytos Cracking Earth Armor <-- 1 Hammer of Blacksmith, 1 God Anvil (0), 1 Wooden Mail, 75 Earthworm Peeling, 10 lvl 5 EarthSpike, 50 Great Nature";
+					set .@recipeSentences$[getarraysize(.@recipeSentences$)], "Saphien's Armor of Ocean <-- 1 Hammer of Blacksmith, 1 God Anvil (0), 1 Wooden Mail, 35 Frozen Rose, 25 Glacial Heart, 10 lvl 5 Cold Bolt";
+				}
+				if (.@level[0] < 4)
+				{
+					set .@recipeSentences$[getarraysize(.@recipeSentences$)], "Aegir Armor <-- 1 Hammer of Blacksmith, 1 God Anvil (0), 25 Frozen Heart, 250 Mermaid Heart, 1 Goibne's Armor";
+					set .@recipeSentences$[getarraysize(.@recipeSentences$)], "Armor of Faith <-- 1 Hammer of Blacksmith, 1 God Anvil (0), 1 Odin's Blessing, 5 Symbol of Faith";
+					set .@recipeSentences$[getarraysize(.@recipeSentences$)], "Armor of Sanctity <-- 1 Hammer of Blacksmith, 1 God Anvil (0), 50 Holy Water, 25 Lvl 5 Heal";
+				}
+				if (.@level[0] < 3)
+				{
+					set .@recipeSentences$[getarraysize(.@recipeSentences$)], "Golden Armor <-- 1 Hammer of Blacksmith, 1 God Anvil (0), 1 Golden Bell, 50 Golden Hair, 1 Full Plate";
+					set .@recipeSentences$[getarraysize(.@recipeSentences$)], "Legion Plate Armor <-- 1 Hammer of Blacksmith, 1 God Anvil (0), 50 Used Iron Plate, 70 Destroyed Armor";
+				}
+				if (.@level[0] < 2)
+				{
+					set .@recipeSentences$[getarraysize(.@recipeSentences$)], "Full Plate[1] <-- 1 Hammer of Blacksmith, 1 God Anvil (0), 50 Destroyed Armor, 45 Flexible Tube";
+					set .@recipeSentences$[getarraysize(.@recipeSentences$)], "Iron Boots <-- 1 Hammer of Blacksmith, 1 God Anvil (0), 1 Boots[1], 35 Iron";
+				}
+				set .@recipeSentences$[getarraysize(.@recipeSentences$)], "Ordinary Armor <-- 1 Hammer of Blacksmith, 1 God Anvil (0), 50 Destroyed Armor";
+				set .@recipeSentences$[getarraysize(.@recipeSentences$)], "Novice BreastPlate <-- 1 Hammer of Blacksmith, 1 God Anvil (0), 50 Destroyed Armor , 25 Horn";
+				break;
+			case 2:
+				//WeaponSmith
+				if(.@level[0] < 5)
+				{
+					set .@recipeSentences$[getarraysize(.@recipeSentences$)], "Tjungkuletti <-- 1 Hammer of Blacksmith, 1 God Anvil (0),1 Haati Fang, 65 Fragment,1 Metal Fragment";
+					set .@recipeSentences$[getarraysize(.@recipeSentences$)], "Geledria <-- 1 Hammer of Blacksmith, 1 God Anvil (0), 10 Evil Horn, 2 Metal Fragment";
+					set .@recipeSentences$[getarraysize(.@recipeSentences$)], "Princess Knife <-- 1 Hammer of Blacksmith, 1 God Anvil (0),1 Old Hilt, 85 Executioner Mitten, 3 Metal Fragment";
+				}
+				if (.@level[0] < 4)
+				{
+					set .@recipeSentences$[getarraysize(.@recipeSentences$)], "Equestrian Spear <-- 1 Hammer of Blacksmith, 1 God Anvil (0),1 Boots[1], 75 Fang, 15 Steel";
+					set .@recipeSentences$[getarraysize(.@recipeSentences$)], "Cleaver <-- 1 Hammer of Blacksmith, 1 God Anvil (0),10 Helm of Dulahan, 75 Heroic Emblem, 20 Steel";
+					set .@recipeSentences$[getarraysize(.@recipeSentences$)], "Staff of Healing <-- 1 Hammer of Blacksmith, 1 God Anvil (0),1 Dark Piece, 25 Steel";
+				}
+				if (.@level[0] < 3)
+				{
+					set .@recipeSentences$[getarraysize(.@recipeSentences$)], "Bill Guisarme <-- 1 Hammer of Blacksmith, 1 God Anvil (0), 65 Iron, 25 Needle of Alarm";
+					set .@recipeSentences$[getarraysize(.@recipeSentences$)], "Bow of Evil <-- 1 Hammer of Blacksmith, 1 God Anvil (0), 65 Iron, 25 Fine Grained Trunk, 15 Thin Trunk";
+					set .@recipeSentences$[getarraysize(.@recipeSentences$)], "Caesar's Sword <-- 1 Hammer of Blacksmith, 1 God Anvil (0), 65 Iron, 5 Muscovite";
+					set .@recipeSentences$[getarraysize(.@recipeSentences$)], "Jiite <-- 1 Hammer of Blacksmith, 1 God Anvil (0), 65 Iron, 30 Nose Ring, 15 Old Shuriken";
+				}
+				if (.@level[0] < 2)
+				{
+					set .@recipeSentences$[getarraysize(.@recipeSentences$)], "Angelic Wing Dagger <-- 1 Hammer of Blacksmith, 1 God Anvil (0), 45 Iron, 50 Feather of Bird";
+					set .@recipeSentences$[getarraysize(.@recipeSentences$)], "Arc Wand <-- 1 Hammer of Blacksmith, 1 God Anvil (0), 45 Wooden Heart, 45 Iron";
+					set .@recipeSentences$[getarraysize(.@recipeSentences$)], "Holy Dagger <-- 1 Hammer of Blacksmith, 1 God Anvil (0), 45 Iron, 20 Ogre Tooth";
+				}
+				set .@recipeSentences$[getarraysize(.@recipeSentences$)], "Blade <-- 1 Hammer of Blacksmith, 1 God Anvil (0), 25 Iron, 10 Live Coal";
+				set .@recipeSentences$[getarraysize(.@recipeSentences$)], "Buster <-- 1 Hammer of Blacksmith, 1 God Anvil (0), 25 Iron, 55 Moth Dust, 15 Wooden Gnarl";
+				set .@recipeSentences$[getarraysize(.@recipeSentences$)], "Bow <-- 1 Hammer of Blacksmith, 1 God Anvil (0), 25 Iron, 65 Trunk, 15 Decomposed Rope";
+				break;
+			case 3:
+				//Tailor
+				if(.@level[0] < 5)
+				{
+					set .@recipeSentences$[getarraysize(.@recipeSentences$)], "Aegir Shoes <--1 Broken Needle, 10 Cactus Needle, 1 Needle Packet(0),1 Boots[1], 250 Frozen Heart";
+					set .@recipeSentences$[getarraysize(.@recipeSentences$)], "Aegir Helm <--1 Broken Needle, 10 Cactus Needle, 1 Needle Packet(0), 100 Ice Cubic, 1 Fin Helm, 50 Fin ";
+					set .@recipeSentences$[getarraysize(.@recipeSentences$)], "Aegir Manteau <--1 Broken Needle, 10 Cactus Needle, 1 Needle Packet(0), 250 Frozen Heart, 1 Red Silk Seal";
+					set .@recipeSentences$[getarraysize(.@recipeSentences$)], "Mega Resist Potion <-- 1 Black Ladle, 1 Large Cookpot (0),3 Torn Magic Book, 3 Solid Shell, 3 Solid Husk, 8 Detrimindexta";
+					set .@recipeSentences$[getarraysize(.@recipeSentences$)], "Regeneration Potion <-- 1 Black Ladle, 1 Large Cookpot (0),30 Grasshoper Leg, 10 Harpy Feather, 2 Hinalle";
+				}
+				if (.@level[0] < 4)
+				{
+					set .@recipeSentences$[getarraysize(.@recipeSentences$)], "Used Mage Coat <-- 1 Broken Needle,  10 Cactus Needle, 1 Needle Packet(0), 20 Hung Doll, 15 Jelly Bean";
+					set .@recipeSentences$[getarraysize(.@recipeSentences$)], "Old Green Panties <-- 1 Broken Needle,  10 Cactus Needle, 1 Needle Packet(0), 10 Kaong, 40 Animal Skin";
+					set .@recipeSentences$[getarraysize(.@recipeSentences$)], "Recuperative Armor <-- 1 Broken Needle,  10 Cactus Needle, 1 Needle Packet(0),25 Langka, 35 Leopard Skin";
+				}
+				if (.@level[0] < 3)
+				{
+					set .@recipeSentences$[getarraysize(.@recipeSentences$)], "Dragon Vest <--1 Broken Needle, 10 Cactus Needle, 1 Needle Packet(0), 25 Denture from Dragon Mask, 50 Dragon Tails";
+					set .@recipeSentences$[getarraysize(.@recipeSentences$)], "Blessed Holy Robe <--1 Broken Needle, 10 Cactus Needle, 1 Needle Packet(0), 50 Holy Water, 28 Fine Grit, 50 Fabric";
+					set .@recipeSentences$[getarraysize(.@recipeSentences$)], "Skin of Ventus <--1 Broken Needle, 10 Cactus Needle, 1 Needle Packet(0), 20 Ectoplasm, 25 Decomposed Rope, 30 Dark Crystal Fragment";
+				}
+				if (.@level[0] < 2)
+				{
+					set .@recipeSentences$[getarraysize(.@recipeSentences$)], "Air Boss <--1 Broken Needle, 10 Cactus Needle, 1 Needle Packet(0), 175 Dust Pollutant, 1 Black Leather Boots, 10 Flexible Tube";
+					set .@recipeSentences$[getarraysize(.@recipeSentences$)], "Musika <--1 Broken Needle, 10 Cactus Needle, 1 Needle Packet(0), 20 Ectoplasm, 20 Elastic Band";
+					set .@recipeSentences$[getarraysize(.@recipeSentences$)], "Dragon Manteau <--1 Broken Needle, 10 Cactus Needle, 1 Needle Packet(0), 100 Dragon Skin, 25 Fabric";
+				}
+				set .@recipeSentences$[getarraysize(.@recipeSentences$)], "Coat of Dragon Scale <--1 Broken Needle, 10 Cactus Needle, 1 Needle Packet(0), 50 Dragon Scale, 100 Dragon Skin";
+				set .@recipeSentences$[getarraysize(.@recipeSentences$)], "Bunny Sleeper <--1 Broken Needle, 10 Cactus Needle, 1 Needle Packet(0),1 Bunny Band, 50 Fur";
+				set .@recipeSentences$[getarraysize(.@recipeSentences$)], "Golden Shoes <--1 Broken Needle, 10 Cactus Needle, 1 Needle Packet(0),50 Fragment, 10 Fine Sand";
+				break;
+			case 4:
+				//Jeweller
+				if(.@level[0] < 5)
+				{
+					set .@recipeSentences$[getarraysize(.@recipeSentences$)], "Symbol of the Nine Realm <-- 1 Bee Sting, 1 Diver goggle(0), 6 Agate, 6 Citrin, 25 Amethyste";
+					set .@recipeSentences$[getarraysize(.@recipeSentences$)], "Symbol of Richness <-- 1 Bee Sting, 1 Diver goggle(0), 5 Agate, 5 Citrin, 5 Biotite, 50 Black Charcoal";
+				}
+				if (.@level[0] < 4)
+				{
+					set .@recipeSentences$[getarraysize(.@recipeSentences$)], "Symbol of Peace <-- 1 Bee Sting, 1 Diver goggle(0), 4 Agate, 4 Citrin, 25 Aquamarine, 10 Brigan";
+				}
+				if (.@level[0] < 3)
+				{
+					set .@recipeSentences$[getarraysize(.@recipeSentences$)], "Symbol of Faith <-- 1 Bee Sting, 1 Diver goggle(0), 3 Agate, 3 Citrin, 20 Blue Bijour, 10 Blue Jewel";
+				}
+				if (.@level[0] < 2)
+				{
+					set .@recipeSentences$[getarraysize(.@recipeSentences$)], "Symbol of Bravery <-- 1 Bee Sting, 1 Diver goggle(0), 2 Agate, 2 Citrin, 50 Bloody Rune";
+				}
+				set .@recipeSentences$[getarraysize(.@recipeSentences$)], "Cat's Eyes <-- 1 Bee Sting, 1 Diver goggle(0), 1 Agate, 1 Citrin";
+				break;
+			case 5:
+				//Pastry
+				if(.@level[0] < 5)
+				{
+					set .@recipeSentences$[getarraysize(.@recipeSentences$)], "Buche de Noel <-- 1 Black Ladle, 1 Large Cookpot (0), 10 Cacao, 2 Milk, 5 Egg, 2 Strawberry, 2 Banana";
+					set .@recipeSentences$[getarraysize(.@recipeSentences$)], "Halo Halo <-- 1 Black Ladle, 1 Large Cookpot (0), 5 Milk, 6 Honey, 2 Strawberry, 2 Banana, 3 Ice Cubic";
+					set .@recipeSentences$[getarraysize(.@recipeSentences$)], "Luxurious Western Food <-- 1 Black Ladle, 1 Large Cookpot (0), 5 Egg, 2 Bag of Nuts, 5 Bun, 6 Meat, 3 Cooking Oil";
+					set .@recipeSentences$[getarraysize(.@recipeSentences$)], "Rune Strawberry Cake <-- 1 Black Ladle, 1 Large Cookpot (0), 10 Strawberry, 5 Milk, 5 Egg";
+				}
+				if (.@level[0] < 4)
+				{
+					set .@recipeSentences$[getarraysize(.@recipeSentences$)], "Akaraje <-- 1 Black Ladle, 1 Large Cookpot (0), 9 Shrimp, 5 Egg, 2 Bread, 2 Aloe Leaflet";
+					set .@recipeSentences$[getarraysize(.@recipeSentences$)], "Arunazfelt Desert Sandwish <-- 1 Black Ladle, 1 Large Cookpot (0), 2 Bread, 5 Aloe Leaflet, 1 Egg, 1 Cooking Oil, 1 Meat";
+					set .@recipeSentences$[getarraysize(.@recipeSentences$)], "Schwartzwald Pine Jubilee <-- 1 Black Ladle, 1 Large Cookpot (0), 1 Milk, 5 Orange";
+				}
+				if (.@level[0] < 3)
+				{
+					set .@recipeSentences$[getarraysize(.@recipeSentences$)], "Chewy Rice Cake <-- 1 Black Ladle, 1 Large Cookpot (0), 2 Bread, 3 Grilled Rice Cake";
+					set .@recipeSentences$[getarraysize(.@recipeSentences$)], "Oriental Pastry <-- 1 Black Ladle, 1 Large Cookpot (0), 8 Cacao, 1 Milk, 5 Honey";
+					set .@recipeSentences$[getarraysize(.@recipeSentences$)], "Sesame Pastry <-- 1 Black Ladle, 1 Large Cookpot (0), 2 Bread, 1 Milk, 1 Cooking Oil, 1 Orange";
+				}
+				if (.@level[0] < 2)
+				{
+					set .@recipeSentences$[getarraysize(.@recipeSentences$)], "Ginger Bread <-- 1 Black Ladle, 1 Large Cookpot (0), 5 Egg, 7 Honey, 2 Bread";
+					set .@recipeSentences$[getarraysize(.@recipeSentences$)], "Grilled Corn <-- 1 Black Ladle, 1 Large Cookpot (0), 10 Acorn, 5 Live Coal";
+					set .@recipeSentences$[getarraysize(.@recipeSentences$)], "Siroma Iced Tea <-- 1 Black Ladle, 1 Large Cookpot (0), 3 Orange, 1 Battered Kettle, 2 Holy Water, 1 Ice Cubic";
+				}
+				set .@recipeSentences$[getarraysize(.@recipeSentences$)], "Chocolate Strawberry <-- 1 Black Ladle, 1 Large Cookpot (0), 2 Fraise, 2 Cacao, 1 Milk";
+				set .@recipeSentences$[getarraysize(.@recipeSentences$)], "Guyak Pudding <-- 1 Black Ladle, 1 Large Cookpot (0), 5 Egg, 2 Bread, 5 Apple";
+				set .@recipeSentences$[getarraysize(.@recipeSentences$)], "Honey Pastry <-- 1 Black Ladle, 1 Large Cookpot (0), 2 Egg, 5 Honey, 2 Bread";
+				set .@recipeSentences$[getarraysize(.@recipeSentences$)], "Rainbow Cake <-- 1 Black Ladle, 1 Large Cookpot (0), 1 Milk, 3 Egg, 5 Orange";
+				break;
+			case 9:
+				//Scribe
+				if(.@level[0] < 5)
+				{
+					set .@recipeSentences$[getarraysize(.@recipeSentences$)], "Doppelganger Contract <-- 1 Bookclip in Memory, 1 Squid Ink, 1 Slick Paper, 50 Cursed Ruby";
+					set .@recipeSentences$[getarraysize(.@recipeSentences$)], "Egnigem Cenia Contract <-- 1 Bookclip in Memory, 1 Squid Ink, 1 Slick Paper, 50 Research Chart ";
+					set .@recipeSentences$[getarraysize(.@recipeSentences$)], "LV10 Agil Scroll <-- 1 Bookclip in Memory, 1 Squid Ink, 1 Slick Paper, 2 Authoritative Badge";
+					set .@recipeSentences$[getarraysize(.@recipeSentences$)], "LV10 Wind Walker Scroll <-- 1 Bookclip in Memory, 1 Squid Ink, 1 Slick Paper, 5 Authoritative Badge";
+					set .@recipeSentences$[getarraysize(.@recipeSentences$)], "LV5 Adrenaline Scroll <-- 1 Bookclip in Memory, 1 Squid Ink, 1 Slick Paper, 5 Brown Root";
+					set .@recipeSentences$[getarraysize(.@recipeSentences$)], "LV5 Assumptio Scroll <-- 1 Bookclip in Memory, 1 Squid Ink, 1 Slick Paper, 1 Holy Water, 2 Ancient Lips";
+					set .@recipeSentences$[getarraysize(.@recipeSentences$)], "LV5 Aspersio Scroll <-- 1 Bookclip in Memory, 1 Squid Ink, 1 Slick Paper, 1 Holy Water , 15 Broken Shell";
+					set .@recipeSentences$[getarraysize(.@recipeSentences$)], "LV10 Blessing Scroll <-- 1 Bookclip in Memory, 1 Squid Ink, 1 Slick Paper, 1 Chocolate Strawberry";
+				}
+				if (.@level[0] < 4)
+				{
+					set .@recipeSentences$[getarraysize(.@recipeSentences$)], "Chemical Protection Armor Scroll <-- 1 Bookclip in Memory, 1 Squid Ink, 1 Slick Paper, 1 Glistening Coat";
+					set .@recipeSentences$[getarraysize(.@recipeSentences$)], "Chemical Protection Helm Scroll <-- 1 Bookclip in Memory, 1 Squid Ink, 1 Slick Paper, 1 Glistening Coat";
+					set .@recipeSentences$[getarraysize(.@recipeSentences$)], "Chemical Protection Shield Scroll <-- 1 Bookclip in Memory, 1 Squid Ink, 1 Slick Paper, 1 Glistening Coat";
+					set .@recipeSentences$[getarraysize(.@recipeSentences$)], "Chemical Protection Weapon Scroll <-- 1 Bookclip in Memory, 1 Squid Ink, 1 Slick Paper, 1 Glistening Coat";
+				}
+				if (.@level[0] < 3)
+				{
+					set .@recipeSentences$[getarraysize(.@recipeSentences$)], "Life Insurrance <-- 1 Bookclip in Memory, 1 Squid Ink, 1 Slick Paper, 5 Yggdrasil Leaf";
+					set .@recipeSentences$[getarraysize(.@recipeSentences$)], "Holy Elemental Scroll <-- 1 Bookclip in Memory, 1 Squid Ink, 1 Slick Paper, 15 Holy Water";
+					set .@recipeSentences$[getarraysize(.@recipeSentences$)], "Shadow Armor Scroll <-- 1 Bookclip in Memory, 1 Squid Ink, 1 Slick Paper, 10 Cursed Water";
+					set .@recipeSentences$[getarraysize(.@recipeSentences$)], "Undead Elemental Scroll <-- 1 Bookclip in Memory, 1 Squid Ink, 1 Slick Paper, 70 Skel Bones";
+				}
+				if (.@level[0] < 2)
+				{
+					set .@recipeSentences$[getarraysize(.@recipeSentences$)], "Book of Magic <-- 1 Bookclip in Memory, 1 Squid Ink, 10 Slick Paper, 5 Worn out magic scroll";
+					set .@recipeSentences$[getarraysize(.@recipeSentences$)], "Concentration Scroll <-- 1 Bookclip in Memory, 1 Squid Ink, 1 Slick Paper, 5 Concentration Potion";
+					set .@recipeSentences$[getarraysize(.@recipeSentences$)], "Evasion Scroll <-- 1 Bookclip in Memory, 1 Squid Ink, 1 Slick Paper, 2 Alcohol";
+				}
+				set .@recipeSentences$[getarraysize(.@recipeSentences$)], "Charm of Happiness <-- 1 Bookclip in Memory, 1 Squid Ink, 1 Slick Paper, 10 Amulette";
+				set .@recipeSentences$[getarraysize(.@recipeSentences$)], "Disguise Scroll <-- 1 Bookclip in Memory, 1 Squid Ink, 1 Slick Paper, 1 Blade Lost in Darkness";
+				set .@recipeSentences$[getarraysize(.@recipeSentences$)], "Dungeon Teleport Scroll <-- 1 Bookclip in Memory, 1 Squid Ink, 1 Slick Paper, 100 Fly Wing";
+				set .@recipeSentences$[getarraysize(.@recipeSentences$)], "Repair Weapon Scroll <-- 1 Bookclip in Memory, 1 Squid Ink, 1 Slick Paper, 1 Oridecon Hammer ";
+				break;
+		}
+		set .@randId, rand(0,getarraysize(.@recipeSentences$) - 1);
+		dispbottom " You've obtained a recipes:";
+		dispbottom "	~ " + .@recipeSentences$[.@randId];
+	}
+	else
+	{
+		dispbottom " You can't read what's written on the recipes while not belonging to the Guild.";
+	}
+	end;
+}

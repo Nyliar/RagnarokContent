@@ -1,0 +1,174 @@
+tha_in1,18,17,2	script	ArmorSmith Master::guiasma	63,{
+	set .@npcname$, "[Biuln]";
+	mes .@npcname$;
+	mes "Hello to you," + strcharinfo(0) + ".";
+	mes "What can I do for you?";
+	do
+	{
+		switch(select("Where are we?","What's an ArmorSmith?","What are the differents Guilds?","How can I register?","Where can I find recipes?"))
+		{
+			case 1:
+				next;
+				mes .@npcname$;
+				mes "You're here on the Guild Headquarters.";
+				mes "That a small place, but anybody around here is a good worker.";
+				mes "We're like a small family.";
+				break;
+			case 2:
+				next;
+				mes .@npcname$;
+				mes "An ArmorSmith is someone who can create Armor out of nothing.";
+				mes "By using a special hammer, the best anvil, and some special items,";
+				mes "you'll be able to create some stuff piece you won't find anywhere else.";
+				mes "That's what is an ArmorSmith.";
+				break;
+			case 3:
+				next;
+				mes .@npcname$;
+				mes "Well, you should go to the Guilds Headquarter.";
+				mes "Or to the other Masters. I don't have all the infos.";
+				break;
+			case 4:
+				next;
+				mes .@npcname$;
+				mes "That's pretty simple actually.";
+				mes "You just have to sign here.";
+				mes "Ah, and you'll have to pay a registration fee of " + $registeringGuildFee;
+				mes "On the other hand, any money you'll earn will be entirely yours.";
+				mes "So? Interested?";
+				if (select("Yes","No") == 1)
+				{
+					if (Zeny > $registeringGuildFee)
+					{
+						next;
+						mes .@npcname$;
+						mes "Perfect. Wait a second.";
+						set .@result, callfunc("OnRegisterJob",getcharid(0),1);
+						if (.@result == 1)
+						{
+							set Zeny, Zeny - $registeringGuildFee;
+							next;
+							mes .@npcname$;
+							mes "Be the welcomed, my brother ArmorSmith.";
+						}
+						else if (.@result == -1)
+						{
+							next;
+							mes .@npcname$;
+							mes "Sorry but you're already registered on another Guild.";
+							mes "Do you want to switch to the ArmorSmith Guild?";
+							if (select("Yes","No") == 1)
+							{
+								set .@fee, $registeringGuildFee;
+								if (callfunc("OnLookForExistingJob",getcharid(0),1) == 1)
+								{
+									next;
+									mes .@npcname$;
+									mes "You've already registered as an ArmorSmith.";
+									mes "The activation alone only cost " + $activationGuildFee + "z.";
+									set .@fee, $activationGuildFee;
+								}
+								if (callfunc("OnChangeJob",getcharid(0),1) == 1)
+								{
+									set Zeny, Zeny - .@fee;
+									next;
+									mes .@npcname$;
+									mes "Be the welcomed, my brother ArmorSmith.";
+								}
+							}
+						}
+						else
+						{
+							next;
+							mes .@npcname$;
+							mes "You're already one of us, my friend...";
+						}
+					}
+					else
+					{
+						next;
+						mes .@npcname$;
+						mes "You lack some zenies.";
+						mes "Sorry.";
+					}
+				}
+				else
+				{
+					next;
+					mes .@npcname$;
+					mes "Your choice. Come back if you change your mind.";
+				}
+				break;
+			case 5:
+				next;
+				mes .@npcname$;
+				set .@query$, "SELECT `id` FROM `guildjob_member` WHERE `char_id`=" + getcharid(0)  + " AND `jobType`=1 AND `activeJob`=1";
+				query_sql(.@query$, .@id);
+				if (getarraysize(.@id) > 0)
+				{
+					mes "Well. I can give you the easiest one.";
+					mes "For the others, you'll have to find them.";
+					mes "There's lots of item to create.";
+					mes "But finding the recipes isn't easy.";
+					mes "Talk to others ArmorSmith to find some clue.";
+					mes "But don't rely on them to give you the recipes...";
+					next;
+					mes .@npcname$;
+					mes "So. What do you wanna know about?";
+					if (select("Recipes","ArmorSmith levels") == 1)
+					{
+						//define base recipes
+						switch(select("Ordinary Armor","Novice Breastplate"))
+						{
+							case 1:
+								next;
+								mes .@npcname$;
+								mes "For an Ordinary Armor, you'll need:";
+								mes "1 Hammer of Blacksmith, 1 God Anvil (0), 50 Destroyed Armor";
+								break;
+							case 2:
+								next;
+								mes .@npcname$;
+								mes "For a Novice Breastplate, you'll need:";
+								mes "1 Hammer of Blacksmith, 1 God Anvil (0), 50 Destroyed Armor , 25 Horn";
+								break;
+						}
+					}
+					else
+					{
+						mes "So you wanna learn more about the different levels?";
+						mes "I can't tell you anything, you'll have to find some by yourself.";
+						mes "But here's some infos.";
+						next;
+						mes .@npcname$;
+						mes "At level 1, an ArmorSmith can produce:";
+						mes "	Ordinary Armor or Novice Breastplate.";
+						next;
+						mes .@npcname$;
+						mes "At level 2, an ArmorSmith can produce:";
+						mes "	Full Plate[1] or Iron Boots.";
+						next;
+						mes .@npcname$;
+						mes "At level 3, an ArmorSmith can produce:";
+						mes "	Golden Armor or Legion Plate Armor.";
+						next;
+						mes .@npcname$;
+						mes "At level 4, an ArmorSmith can produce:";
+						mes "	Aegir Armor, Armor of Faith or Armor of Sanctify.";
+						next;
+						mes .@npcname$;
+						mes "At level 5, an ArmorSmith can produce:";
+						mes "	Aebecee's Raging Typhoon Armor, Claytos Cracking Earth Armor or Saphien's Armor of Ocean.";
+					}
+				}
+				else
+				{
+					mes "You're not an active ArmorSmith, aren't you.";
+					mes "I won't compromise our sells, sorry.";
+				}
+				break;
+		}
+	}
+	while(1);
+	close;
+}	

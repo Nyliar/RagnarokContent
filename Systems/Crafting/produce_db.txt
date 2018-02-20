@@ -1,0 +1,431 @@
+Id --> recipe
+7845
+7914
+7797
+7449
+
+
+//Useful?
+//Apple pudding 6108
+//Beef Head 6254 
+//Bun 6115
+//Cacao 7182
+//Chicken Egg 7605
+//Clam Flesh 966
+//Cloud Crumb 7162
+//Clover 705
+//Coal 1003
+//Cogwhell 7093
+//Cooking Oil 7457
+//Coral Reef 7013
+
+//---- Armor Smith -----------------------------
+//usefull item:
+//Armor Piece of Dulahan 7210
+//Burning Heart 7097
+//Charcoal 7892
+//Chivalry Emblem 1004
+//-- Ordinary Armor <-- 1 God Hammer, 1 God Anvil (0), 
+5829,30,0,0,7808,1,7806,0,995,50,950,250,2354,1
+//-- Novice BreastPlate <-- 1 God Hammer, 1 God Anvil (0), 
+2340,30,0,0,7808,1,7806,0,995,50,950,250,2354,1
+//-- Aegir Armor <-- 1 God Hammer, 1 God Anvil (0), 25 Frozen Heart, 250 Mermaid Heart, 1 Goibne's Armor 
+15138,30,0,0,7808,1,7806,0,995,50,950,250,2354,1
+//-- Armor of Faith <-- 1 God Hammer, 1 God Anvil (0), 1 Odin's Blessing, 50 Symbol of Faith
+20756,30,0,0,7808,1,7806,0,995,25,2700,1,2353,1,7816,50
+//-- Armor of Sanctity <-- 1 God Hammer, 1 God Anvil (0), 50 Holy Water
+20756,30,0,0,7808,1,7806,0,995,25,2700,1, 523, 50
+//-- Aebecee's Raging Typhoon Armor <-- 1 God Hammer, 1 God Anvil (0),
+2348,30,0,0,7808,1,7806,0,995,25,2700,1, 523, 50
+//-- Claytos Cracking Earth Armor <-- 1 God Hammer, 1 God Anvil (0), 
+2350,30,0,0,7808,1,7806,0,995,25,2700,1, 523, 5014
+//-- Saphien's Armor of Ocean <-- 1 God Hammer, 1 God Anvil (0),
+2346,30,0,0,7808,1,7806,0,995,25,2700,1, 523, 50
+//-- Full Plate[1] <-- 1 God Hammer, 1 God Anvil (0),
+2317,30,0,0,7808,1,7806,0,995,25,2700,1, 523, 50
+//-- Golden Armor <-- 1 God Hammer, 1 God Anvil (0),
+2368,30,0,0,7808,1,7806,0,995,25,2700,1, 523, 50
+//-- Legion Plate Armor <-- 1 God Hammer, 1 God Anvil (0),
+2341,30,0,0,7808,1,7806,0,995,25,2700,1, 523, 50
+//-- Spiritual Tunic <-- 1 God Hammer, 1 God Anvil (0),
+2384,30,0,0,7808,1,7806,0,995,25,2700,1, 523, 50
+//-- Iron Boots <-- 1 God Hammer, 1 God Anvil (0),
+2429,30,0,0,7808,1,7806,0,995,25,2700,1, 523, 50
+
+//---- Alchemist -----------------------------
+//usefull item:
+//Alcohol 970
+//Aloe 704
+//Ancient Lips 1054
+//Ancient Tooth 1053
+//Animal Gore 702
+//Bacillus 7119
+//Bag of Nuts 7888
+//Battered Kettle 7323
+//Black Hair 1020
+//Blue Feather 7441
+//Blue Hair 1034
+//Broken Shell 7070
+//Brown Root 7188
+//Bug Leg 1042
+//Burning Hair 7122
+//Illusion Flower 710
+//Glass Bead 746
+//-- 29 Fruits <-- 1 Black Ladle, 1 Large Cookpot (0), 10 Bag of Nuts, 5 Bacillus
+12402,31,0,0,737,1,6255,0,7888,10,7119,5
+//-- Concentration Potion <-- 1 Black Ladle, 1 Large Cookpot (0), 1 Alcohol, 1 Aloe, 5 Ancient Tooth
+645,31,0,0,737,1,6255,0,
+//-- Awakening Pots <-- 1 Black Ladle, 1 Large Cookpot (0), 2 Alcohol, 1 Animal Gore, 5 Bacillus
+656,31,0,0,737,1,6255,0,
+//-- Berzerk Pots <-- 1 Black Ladle, 1 Large Cookpot (0), 5 Alcohol, 1 Battered Kettle, 5 Brown Root
+657,31,0,0,737,1,6255,0,
+//-- Big Defense Pots <-- 1 Black Ladle, 1 Large Cookpot (0), 
+14542,31,0,0,737,1,6255,0,
+//-- Big Magic Defense Pots <-- 1 Black Ladle, 1 Large Cookpot (0), 
+14544,31,0,0,737,1,6255,0,
+//-- Cornus Tears <-- 1 Black Ladle, 1 Large Cookpot (0), 
+12349,31,0,0,737,1,6255,0,
+//-- Distilled Fighting Spirit <-- 1 Black Ladle, 1 Large Cookpot (0),
+12349,31,0,0,737,1,6255,0, 
+//-- Glass of Illusion <-- 1 Black Ladle, 1 Large Cookpot (0), 10 Glass Bead, 1 Illusion Flower
+14538,31,0,0,737,1,6255,0,746,10,710,1
+//-- Green Ale <-- 1 Black Ladle, 1 Large Cookpot (0),
+12135,31,0,0,737,1,6255,0, 
+//-- Herb of Incantation <-- 1 Black Ladle, 1 Large Cookpot (0),
+683,31,0,0,737,1,6255,0, 
+//-- Luciola Honey Jam <-- 1 Black Ladle, 1 Large Cookpot (0),
+12345,31,0,0,737,1,6255,0, 
+//-- Medium Life Potion <-- 1 Black Ladle, 1 Large Cookpot (0),
+14535,31,0,0,737,1,6255,0, 
+//-- Mega Resist Potion <-- 1 Black Ladle, 1 Large Cookpot (0),
+12299,31,0,0,737,1,6255,0, 
+//-- Regneration Potion <-- 1 Black Ladle, 1 Large Cookpot (0),
+14537,31,0,0,737,1,6255,0, 
+//-- Small Defense Potion <-- 1 Black Ladle, 1 Large Cookpot (0),
+14541,31,0,0,737,1,6255,0, 
+//-- Small Life Potion <-- 1 Black Ladle, 1 Large Cookpot (0),
+14534,31,0,0,737,1,6255,0, 
+//-- Small Magic Defense Potion <-- 1 Black Ladle, 1 Large Cookpot (0),
+14543,31,0,0,737,1,6255,0, 
+//-- SP Consuption Reduction Potion <-- 1 Black Ladle, 1 Large Cookpot (0),
+12298,31,0,0,737,1,6255,0, 
+//-- Speed Up Potion <-- 1 Black Ladle, 1 Large Cookpot (0),
+12016,31,0,0,737,1,6255,0, 
+//-- Tasty Pink Potion <-- 1 Black Ladle, 1 Large Cookpot (0),
+12269,31,0,0,737,1,6255,0, 
+//-- Tasty White Potion <-- 1 Black Ladle, 1 Large Cookpot (0),
+12270,31,0,0,737,1,6255,0, 
+
+682,31,0,0,737,1,6255,0,
+//---- Tailor -----------------------------
+//usefull item:
+//Alice Apron 7047
+//Animal Skin 919
+//Anolian Skin 7003
+//Antelope Skin 7107
+//Bear Footskin 948
+//Black bear skin 7161
+//Cobweb 1025
+//-- Coat of Dragon Scale <-- 1 Cactus Needle, 1 Needle Packet(0), 
+2526,32,0,0,952,1,7213,0,
+//-- Dragon Manteau <-- 1 Cactus Needle, 1 Needle Packet(0), 
+2553,32,0,0,952,1,7213,0,
+//-- Aegir Shoes <-- 1 Cactus Needle, 1 Needle Packet(0),,1 Boots[1], 25 Frozen Heart  
+22059,32,0,0,952,1,7213,0,995,25,2406,1
+//-- Aegir Helm <-- 1 Cactus Needle, 1 Needle Packet(0),, 25 Frozen Heart, 1 Fin Helm 
+19026,32,0,0,952,1,7213,0,5014,1,995,10
+//-- Aegir Manteau <-- 1 Cactus Needle, 1 Needle Packet(0),, 25 Frozen Heart, 1 Red Silk Seal 
+20756,32,0,0,952,1,7213,0,995,25,2700,1
+//-- Air Boss <-- 1 God Hammer, 1 God Anvil (0), 50 Holy Water
+2448,32,0,0,952,1,7213,0,995,25,2700,1, 523, 50
+//-- Bunny Sleeper <-- 1 God Hammer, 1 God Anvil (0), 50 Holy Water
+2415,32,0,0,952,1,7213,0,995,25,2700,1, 523, 50
+//-- Golden Shoes <-- 1 God Hammer, 1 God Anvil (0), 50 Holy Water
+2427,32,0,0,952,1,7213,0,995,25,2700,1, 523, 50
+//-- Musika <-- 1 Cactus Needle, 1 Needle Packet(0), 
+2545,32,0,0,952,1,7213,0,
+//-- Skeleton Manteau <-- 1 Cactus Needle, 1 Needle Packet(0), 
+2511,32,0,0,952,1,7213,0,
+//-- Skin of Ventus <-- 1 Cactus Needle, 1 Needle Packet(0), 
+2536,32,0,0,952,1,7213,0,
+//-- Dragon Vest <-- 1 Cactus Needle, 1 Needle Packet(0),, 25 Frozen Heart, 1 Red Silk Seal 
+2399,32,0,0,952,1,7213,0,995,25,2700,1
+//-- Blessed Holy Robe <-- 1 God Hammer, 1 God Anvil (0), 50 Holy Water
+2356,32,0,0,952,1,7213,0,995,25,2700,1, 523, 50
+//-- Old Green Panties <-- 1 God Hammer, 1 God Anvil (0), 50 Holy Water
+2392,32,0,0,952,1,7213,0,995,25,2700,1, 523, 50
+//-- Recuperative Armor <-- 1 God Hammer, 1 God Anvil (0), 50 Holy Water
+2385,32,0,0,952,1,7213,0,995,25,2700,1, 523, 50
+//-- Used Mage Coat <-- 1 God Hammer, 1 God Anvil (0), 50 Holy Water
+2370,32,0,0,952,1,7213,0,995,25,2700,1, 523, 50
+
+//---- Jeweler -----------------------------
+//usefull item:
+//Agate 7291
+//Amethiste 719
+//Aquamarine 720
+//Biotite 7297
+//Black charcoal 6251
+//Bloody Rune 7563
+//Blue Bijou 7446
+//Blue Jewel 7576
+//Brigan 7054
+//Cytrin 7295
+//-- Cat's Eyes <-- 1 Bee Sting, 1 Diver goggle(0), 
+7263,33,0,0,939,1,2205,0,7291,1,7295,1
+//-- Symbol of Bravery <-- 1 Bee Sting, 1 Diver goggle(0), 
+7812,33,0,0,939,1,2205,0,7291,2,7295,2,7563,50
+//-- Symbol of Faith <-- 1 Bee Sting, 1 Diver goggle(0), 
+7816,33,0,0,939,1,2205,0,7291,3,7295,3,7446,20,7576,10
+//-- Symbol of Peace <-- 1 Bee Sting, 1 Diver goggle(0), 
+7817,33,0,0,939,1,2205,0,7291,4,7295,4,720,25,7054,10
+//-- Symbol of Richness <-- 1 Bee Sting, 1 Diver goggle(0), 
+7810,33,0,0,939,1,2205,0,7291,5,7295,5,7297,5,6251,50
+//-- Symbol of the Nine Realm <-- 1 Bee Sting, 1 Diver goggle(0), 
+7305,33,0,0,939,1,2205,0,7291,6,7295,6,719,25
+
+//---- Scribe -----------------------------
+//Usefull Item
+//Burnt Tree 7068
+//Chief King Orlean 11002
+//Crysallis 915
+//Contorted Self Portrait 7223
+//-- Book of Magic <-- 1 Bookclip in Memory, 1 Squid Ink, 10 Slick Paper, 
+12142,34,0,0,7015,0,1024,1,7111,10,
+//-- Charm of Happiness <-- 1 Bookclip in Memory, 1 Squid Ink, 1 Slick Paper, 10 Amulette
+12328,34,0,0,7015,0,1024,1,7111,1,609,10
+//-- Chemical Protection Armor Scroll <-- 1 Bookclip in Memory, 1 Squid Ink, 1 Slick Paper, 1 Glistening Coat
+14519,34,0,0,7015,0,1024,1,7111,1,7139,1
+//-- Chemical Protection Helm Scroll <-- 1 Bookclip in Memory, 1 Squid Ink, 1 Slick Paper, 1 Glistening Coat
+14517,34,0,0,7015,0,1024,1,7111,1,7139,1
+//-- Chemical Protection Shield Scroll <-- 1 Bookclip in Memory, 1 Squid Ink, 1 Slick Paper, 1 Glistening Coat
+14518,34,0,0,7015,0,1024,1,7111,1,7139,1
+//-- Chemical Protection Weapon Scroll <-- 1 Bookclip in Memory, 1 Squid Ink, 1 Slick Paper, 1 Glistening Coat
+14520,34,0,0,7015,0,1024,1,7111,1,7139,1
+//-- Concentration Scroll <-- 1 Bookclip in Memory, 1 Squid Ink, 1 Slick Paper, 5 Concentration Potion
+14531,34,0,0,7015,0,1024,1,7111,1,645,5
+//-- Doppelganger Contract <-- 1 Bookclip in Memory, 1 Squid Ink, 1 Slick Paper, 50 Cursed Ruby
+12301,34,0,0,7015,0,1024,1,7111,1,724,50
+//-- Egnigem Cenia Contract <-- 1 Bookclip in Memory, 1 Squid Ink, 1 Slick Paper, 50 Research Chart 
+12302,34,0,0,7015,0,1024,1,7111,1,7347,50
+//-- Disguise Scroll <-- 1 Bookclip in Memory, 1 Squid Ink, 1 Slick Paper, 
+12277,34,0,0,7015,0,1024,1,7111,1,
+//-- Dungeon Teleport Scroll <-- 1 Bookclip in Memory, 1 Squid Ink, 1 Slick Paper, 100 Fly Wing
+14527,34,0,0,7015,0,1024,1,7111,1,601,100
+//-- Evasion Scroll <-- 1 Bookclip in Memory, 1 Squid Ink, 1 Slick Paper, 
+14530,34,0,0,7015,0,1024,1,7111,1,
+//-- Holy Elemental Scroll <-- 1 Bookclip in Memory, 1 Squid Ink, 1 Slick Paper, 15 Holy Water
+12280,34,0,0,7015,0,1024,1,7111,1,523,15
+//-- Life Insurrance <-- 1 Bookclip in Memory, 1 Squid Ink, 1 Slick Paper, 5 Yggdrasil Leaf
+12209,34,0,0,7015,0,1024,1,7111,1,610,5
+//-- LV10 Agil Scroll <-- 1 Bookclip in Memory, 1 Squid Ink, 1 Slick Paper, 
+12216,34,0,0,7015,0,1024,1,7111,1,
+//-- LV10 Wind Walker Scroll <-- 1 Bookclip in Memory, 1 Squid Ink, 1 Slick Paper, 3 Authoritative Badge
+12219,34,0,0,7015,0,1024,1,7111,1,662,3
+//-- LV5 Adrenaline Scroll <-- 1 Bookclip in Memory, 1 Squid Ink, 1 Slick Paper, 
+12220,34,0,0,7015,0,1024,1,7111,1,
+//-- LV5 Aspersio Scroll <-- 1 Bookclip in Memory, 1 Squid Ink, 1 Slick Paper, 
+12217,34,0,0,7015,0,1024,1,7111,1,
+//-- LV5 Assumptio Scroll <-- 1 Bookclip in Memory, 1 Squid Ink, 1 Slick Paper, 
+12218,34,0,0,7015,0,1024,1,7111,1,
+//-- LV10 Blessing Scroll <-- 1 Bookclip in Memory, 1 Squid Ink, 1 Slick Paper, 1 Chocolate Strawberry
+12215,34,0,0,7015,0,1024,1,7111,1,12235,1
+//-- Repair Weapon Scroll <-- 1 Bookclip in Memory, 1 Squid Ink, 1 Slick Paper, 1 Oridecon Hammer 
+14521,34,0,0,7015,0,1024,1,7111,1,615,1
+//-- Shadow Armor Scroll <-- 1 Bookclip in Memory, 1 Squid Ink, 1 Slick Paper, 10 Cursed Water 
+14539,34,0,0,7015,0,1024,1,7111,1,12020,10
+//-- Undead Elemental Scroll <-- 1 Bookclip in Memory, 1 Squid Ink, 1 Slick Paper, 70 Skel Bones
+12279,34,0,0,7015,0,1024,1,7111,1,932,70
+
+//---- Pastry Chief -----------------------------
+//usefull item:
+//Alcohol 970
+//Aloe 704
+//Ancient Lips 1054
+//Ancient Tooth 1053
+//Animal Gore 702
+//Bacillus 7119
+//Bag of Nuts 7888
+//Battered Kettle 7323
+//Black Hair 1020
+//Blue Feather 7441
+//Blue Hair 1034
+//Broken Shell 7070
+//Brown Root 7188
+//Bug Leg 1042
+//Burning Hair 7122
+//-- Akaraje <-- 1 Black Ladle, 1 Large Cookpot (0), 
+12375,35,0,0,737,1,6255,0,
+//-- Buche de Noel <-- 1 Black Ladle, 1 Large Cookpot (0), 
+12354,35,0,0,737,1,6255,0,
+//-- Chewy Rice Cake <-- 1 Black Ladle, 1 Large Cookpot (0), 
+14525,35,0,0,737,1,6255,0,
+//-- Chocolate Strawberry <-- 1 Black Ladle, 1 Large Cookpot (0), 
+12235,35,0,0,737,1,6255,0,
+//-- Ginger Bread <-- 1 Black Ladle, 1 Large Cookpot (0), 
+12232,35,0,0,737,1,6255,0,
+//-- Grilled Corn <-- 1 Black Ladle, 1 Large Cookpot (0), 
+12338,35,0,0,737,1,6255,0,
+//-- Guyak Pudding <-- 1 Black Ladle, 1 Large Cookpot (0), 
+12710,35,0,0,737,1,6255,0,
+//-- Halo Halo <-- 1 Black Ladle, 1 Large Cookpot (0), 
+12247,35,0,0,737,1,6255,0,
+//-- Honey Pastry <-- 1 Black Ladle, 1 Large Cookpot (0), 
+12123,35,0,0,737,1,6255,0,
+//-- Luxurious Western Food <-- 1 Black Ladle, 1 Large Cookpot (0), 
+14607,35,0,0,737,1,6255,0, 
+//-- Oriental Pastry <-- 1 Black Ladle, 1 Large Cookpot (0), 
+14526,35,0,0,737,1,6255,0,
+//-- Rainbow Cake <-- 1 Black Ladle, 1 Large Cookpot (0), 
+12124,35,0,0,737,1,6255,0,
+//-- Rune Strawberry Cake <-- 1 Black Ladle, 1 Large Cookpot (0), 
+12319,35,0,0,737,1,6255,0,
+//-- Schwartzwald Pine Jubilee <-- 1 Black Ladle, 1 Large Cookpot (0), 
+12320,35,0,0,737,1,6255,0,
+//-- Sesame Pastry <-- 1 Black Ladle, 1 Large Cookpot (0), 
+12122,35,0,0,737,1,6255,0,
+//-- Siroma Iced Tea <-- 1 Black Ladle, 1 Large Cookpot (0), 
+12432,35,0,0,737,1,6255,0,
+//-- Arunazfelt Desert Sandwish <-- 1 Black Ladle, 1 Large Cookpot (0), 
+12321,35,0,0,737,1,6255,0,
+
+//---- Weapon Smith -----------------------------
+//usefull item:
+//Blade Lost in Darkness 7023
+//Bloody Edge 7024
+//Broken Sword 7110
+//-- Angelic Wing Dagger <-- 1 God Hammer, 1 God Anvil (0),1 Boots[1], 25 Frozen Heart  
+13005,36,0,0,7808,1,7806,0,995,25,2406,1
+//-- Blade <-- 1 God Hammer, 1 God Anvil (0),1 Boots[1], 25 Frozen Heart  
+1109,36,0,0,7808,1,7806,0,995,25,2406,1
+//-- Buster <-- 1 God Hammer, 1 God Anvil (0),1 Boots[1], 25 Frozen Heart  
+1359,36,0,0,7808,1,7806,0,995,25,2406,1
+//-- Bow <-- 1 God Hammer, 1 God Anvil (0),1 Boots[1], 25 Frozen Heart  
+1703,36,0,0,7808,1,7806,0,995,25,2406,1
+//-- Arc Wand <-- 1 God Hammer, 1 God Anvil (0),1 Boots[1], 25 Frozen Heart  
+1612,36,0,0,7808,1,7806,0,995,25,2406,1
+//-- Bill Guisarme <-- 1 God Hammer, 1 God Anvil (0),1 Boots[1], 25 Frozen Heart  
+1467,36,0,0,7808,1,7806,0,995,25,2406,1
+//-- Bow of Evil <-- 1 God Hammer, 1 God Anvil (0),1 Boots[1], 25 Frozen Heart  
+1744,36,0,0,7808,1,7806,0,995,25,2406,1
+//-- Caesar's Sword <-- 1 God Hammer, 1 God Anvil (0),1 Boots[1], 25 Frozen Heart  
+1134,36,0,0,7808,1,7806,0,995,25,2406,1
+//-- Cleaver <-- 1 God Hammer, 1 God Anvil (0),1 Boots[1], 25 Frozen Heart  
+1305,36,0,0,7808,1,7806,0,995,25,2406,1
+//-- Equestrian Spear <-- 1 God Hammer, 1 God Anvil (0),1 Boots[1], 25 Frozen Heart  
+1475,36,0,0,7808,1,7806,0,995,25,2406,1
+//-- Geledria <-- 1 God Hammer, 1 God Anvil (0),1 Boots[1], 25 Frozen Heart  
+1414,36,0,0,7808,1,7806,0,995,25,2406,1
+//-- Holy Dagger <-- 1 God Hammer, 1 God Anvil (0),1 Boots[1], 25 Frozen Heart  
+1244,36,0,0,7808,1,7806,0,995,25,2406,1
+//-- Jiite <-- 1 God Hammer, 1 God Anvil (0),1 Boots[1], 25 Frozen Heart  
+13007,36,0,0,7808,1,7806,0,995,25,2406,1
+//-- Princess Knife <-- 1 God Hammer, 1 God Anvil (0),1 Boots[1], 25 Frozen Heart  
+1240,36,0,0,7808,1,7806,0,995,25,2406,1
+//-- Staff of Healing <-- 1 God Hammer, 1 God Anvil (0),1 Boots[1], 25 Frozen Heart  
+1638,36,0,0,7808,1,7806,0,995,25,2406,1
+//-- Tjungkuletti <-- 1 God Hammer, 1 God Anvil (0),1 Boots[1], 25 Frozen Heart  
+1416,36,0,0,7808,1,7806,0,995,25,2406,1 
+
+//usefull item:
+{
+	Id: 15049
+	AegisName: "Armor_Of_Faith"
+	Name: "Armor Of Faith"
+	Type: 5
+	Buy: 200000
+	Weight: 100
+	Def: 13
+	Slots: 0
+	Loc: 64
+	EquipLv: 80
+	Script: <"
+		bonus bStr,4; bonus bInt,4; bonus bVit,4; bonus bDex,4; bonus bAgi,4; bonus bLuk,4;
+	">
+},
+{
+	Id: 15050
+	AegisName: "Armor_Of_Sanctity"
+	Name: "Armor Of Sanctity"
+	Type: 5
+	Buy: 200000
+	Weight: 100
+	Def: 13
+	Slots: 0
+	Loc: 64
+	EquipLv: 80
+	Script: <"
+		bonus bStr,4; bonus bInt,4; bonus bVit,4; bonus bDex,4; bonus bAgi,4; bonus bLuk,4;
+	">
+},
+{
+	Id: 15138
+	AegisName: "Egir_Armor"
+	Name: "Aegir Armor"
+	Type: 5
+	Buy: 200000
+	Weight: 2600
+	Def: 55
+	Slots: 1
+	Upper: 63
+	Loc: 16
+	EquipLv: 80
+	Script: <"
+		bonus bStr,1;
+		bonus bInt,1;
+		bonus bVit,1;
+		bonus bDex,1;
+		bonus bAgi,1;
+		bonus bLuk,1;
+		bonus bUnbreakableArmor,0;
+	">
+},
+{
+	Id: 19026
+	AegisName: "Egir_Helm"
+	Name: "Aegir Helm"
+	Type: 5
+	Buy: 200000
+	Weight: 800
+	Def: 10
+	Slots: 1
+	Loc: 256
+	EquipLv: 80
+	View: 870
+	Script: <"
+		bonus bMdef,5;
+		bonus bUnbreakableHelm,0;
+	">
+},
+{
+	Id: 20756
+	AegisName: "Egir_Manteau"
+	Name: "Aegir Mantle"
+	Type: 5
+	Buy: 200000
+	Weight: 300
+	Def: 10
+	Slots: 1
+	Loc: 4
+	EquipLv: 80
+	Script: <"
+		bonus bUnbreakableGarment,0;
+		bonus bUnbreakableHelm,0;
+	">
+},
+{
+	Id: 22059
+	AegisName: "Egir_Shoes"
+	Name: "Aegir Shoes"
+	Type: 5
+	Buy: 200000
+	Weight: 300
+	Def: 13
+	Slots: 1
+	Loc: 64
+	EquipLv: 80
+	Script: <"
+		if(BaseClass==Job_Mage||BaseClass==Job_Archer||BaseClass==Job_Acolyte) bonus bMaxHP,BaseLevel*5;
+		else if(BaseClass==Job_Swordman||BaseClass==Job_Merchant||BaseClass==Job_Thief) bonus bMaxSP,JobLevel*2;
+	">
+},

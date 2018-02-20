@@ -1,0 +1,180 @@
+tha_in1,115,42,5	script	Tailor Master::guitma	460,{
+	set .@npcname$, "[Elona]";
+	mes .@npcname$;
+	mes "Hello to you," + strcharinfo(0) + ".";
+	mes "What can I do for you?";
+	do
+	{
+		switch(select("Where are we?","What's an Tailor?","What are the differents Guilds?","How can I register?","Where can I find recipes?"))
+		{
+			case 1:
+				next;
+				mes .@npcname$;
+				mes "You're here on the Tailor Headquarters.";
+				mes "That a small place, but anybody around here is a good Tailor.";
+				mes "We're like a small family.";
+				break;
+			case 2:
+				next;
+				mes .@npcname$;
+				mes "An Tailor is someone who can create piece of stuff out of animal skins.";
+				mes "Shoes, Garments, or event light armor,";
+				mes "a Tailor is able to create those with only a needle and some skills.";
+				mes "That's what is an Tailor.";
+				break;
+			case 3:
+				next;
+				mes .@npcname$;
+				mes "Well, you should go to the Guilds Headquarter.";
+				mes "Or to the other Masters. I don't have all the infos.";
+				break;
+			case 4:
+				next;
+				mes .@npcname$;
+				mes "That's pretty simple actually.";
+				mes "You just have to sign here.";
+				mes "Ah, and you'll have to pay a registration fee of " + $registeringGuildFee;
+				mes "On the other hand, any money you'll earn will be entirely yours.";
+				mes "So? Interested?";
+				if (select("Yes","No") == 1)
+				{
+					if (Zeny > $registeringGuildFee)
+					{
+						next;
+						mes .@npcname$;
+						mes "Perfect. Wait a second.";
+						set .@result, callfunc("OnRegisterJob",getcharid(0),3);
+						if (.@result == 1)
+						{
+							set Zeny, Zeny - $registeringGuildFee;
+							next;
+							mes .@npcname$;
+							mes "Be the welcomed, my brother Tailor.";
+						}
+						else if (.@result == -1)
+						{
+							next;
+							mes .@npcname$;
+							mes "Sorry but you're already registered on another Guild.";
+							mes "Do you want to switch to the Tailor Guild?";
+							if (select("Yes","No") == 1)
+							{
+								set .@fee, $registeringGuildFee;
+								if (callfunc("OnLookForExistingJob",getcharid(0),3) == 1)
+								{
+									next;
+									mes .@npcname$;
+									mes "You've already registered as a Tailor.";
+									mes "The activation alone only cost " + $activationGuildFee + "z.";
+									set .@fee, $activationGuildFee;
+								}
+								if (callfunc("OnChangeJob",getcharid(0),3) == 1)
+								{
+									set Zeny, Zeny - .@fee;
+									next;
+									mes .@npcname$;
+									mes "Be the welcomed, my brother Tailor.";
+								}
+							}
+						}
+						else
+						{
+							next;
+							mes .@npcname$;
+							mes "You're already one of us, my friend...";
+						}
+					}
+					else
+					{
+						next;
+						mes .@npcname$;
+						mes "You lack some zenies.";
+						mes "Sorry.";
+					}
+				}
+				else
+				{
+					next;
+					mes .@npcname$;
+					mes "Your choice. Come back if you change your mind.";
+				}
+				break;
+			case 5:
+				next;
+				mes .@npcname$;
+				set .@query$, "SELECT `id` FROM `guildjob_member` WHERE `char_id`=" + getcharid(0) + " AND `jobType`=3 AND `activeJob`=1";
+				query_sql(.@query$, .@id);
+				if (getarraysize(.@id) > 0)
+				{
+					mes "Well. I can give you the easiest one.";
+					mes "For the others, you'll have to find them.";
+					mes "There's lots of item to create.";
+					mes "But finding the recipes isn't easy.";
+					mes "Talk to others Tailor to find some clue.";
+					mes "But don't rely on them to give you the recipes...";
+					next;
+					mes .@npcname$;
+					mes "So. What do you wanna know about?";
+					if (select("Recipes","Tailor levels") == 1)
+					{
+						//define base recipes
+						switch(select("Coat of Dragon Scale","Bunny Slipper","Golden Shoes"))
+						{
+							case 1:
+								next;
+								mes .@npcname$;
+								mes "For a Coat of Dragon Scale, you'll need:";
+								mes "1 Broken Needle,  10 Cactus Needle, 1 Needle Packet(0), 50 Dragon Scale, 100 Dragon Skin";
+								break;
+							case 2:
+								next;
+								mes .@npcname$;
+								mes "For a Bunny Slipper, you'll need:";
+								mes "1 Broken Needle,  10 Cactus Needle, 1 Needle Packet(0),1 Bunny Band, 50 Fur";
+								break;
+							case 3:
+								next;
+								mes .@npcname$;
+								mes "For a Golden Shoes, you'll need:";
+								mes "1 Broken Needle,  10 Cactus Needle, 1 Needle Packet(0),50 Fragment, 10 Fine Sand";
+								break;
+						}
+					}
+					else
+					{
+						mes "So you wanna learn more about the different levels?";
+						mes "I can't tell you anything, you'll have to find some by yourself.";
+						mes "But here's some infos.";
+						next;
+						mes .@npcname$;
+						mes "At level 1, a Tailor can produce:";
+						mes "	Coat of Dragon Scale, Bunny Slipper or Golden Shoes.";
+						next;
+						mes .@npcname$;
+						mes "At level 2, a Tailor can produce:";
+						mes "	Air Boss, Musika or Dragon Manteau.";
+						next;
+						mes .@npcname$;
+						mes "At level 3, a Tailor can produce:";
+						mes "	Dragon Vest, Blessed Holy Robe or Skin of Ventus.";
+						next;
+						mes .@npcname$;
+						mes "At level 4, a Tailor can produce:";
+						mes "	Use Mage Coat, Old Green Panties or Recuperative Armor.";
+						next;
+						mes .@npcname$;
+						mes "At level 5, a Tailor can produce:";
+						mes "	Aegir Shoes, Aegir Helm, Aegir Manteau or Skeleton Manteau.";
+					}
+				}
+				else
+				{
+					mes "You're not an active Tailor, aren't you.";
+					mes "I won't compromise our sells, sorry.";
+				}
+				break;
+		}
+	}
+	while(1);
+	close;
+}	

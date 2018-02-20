@@ -1,0 +1,9 @@
+tha_in1,99,36,2	script	Dilu::guiapdi	740,{
+	set .@npcname$, "[Dilu]";
+	mes .@npcname$;
+	mes "Hello to you," + strcharinfo(0) + ".";
+	mes "That's not really hard to be a good Apothecary.";
+	mes "We probably have the less dangerous jobs of all guilds.";
+	mes "Except if you don't know how to use a Laddle.";
+	close;
+}

@@ -1,0 +1,192 @@
+tha_in1,29,18,2	script	Apothecary Master::guiapma	573,{
+	set .@npcname$, "[Liorek]";
+	mes .@npcname$;
+	mes "Hello to you," + strcharinfo(0) + ".";
+	mes "What can I do for you?";
+	do
+	{
+		switch(select("Where are we?","What's an Apothecary?","What are the differents Guilds?","How can I register?","Where can I find recipes?"))
+		{
+			case 1:
+				next;
+				mes .@npcname$;
+				mes "You're here on the Guild Headquarters.";
+				mes "That a small place, but anybody around here is a good worker.";
+				mes "We're like a small family.";
+				break;
+			case 2:
+				next;
+				mes .@npcname$;
+				mes "An Apothecary is someone who know how to extract the best out of common ingredients.";
+				mes "Plants, animal pieces, even poison.";
+				mes "When mixing it, with the good recipe, we know how to create powerful and usefull potions.";
+				mes "That's what is an Apothecary.";
+				break;
+			case 3:
+				next;
+				mes .@npcname$;
+				mes "Well, you should go to the Guilds Headquarter.";
+				mes "Or to the other Masters. I don't have all the infos.";
+				break;
+			case 4:
+				next;
+				mes .@npcname$;
+				mes "That's pretty simple actually.";
+				mes "You just have to sign here.";
+				mes "Ah, and you'll have to pay a registration fee of " + $registeringGuildFee;
+				mes "On the other hand, any money you'll earn will be entirely yours.";
+				mes "So? Interested?";
+				if (select("Yes","No") == 1)
+				{
+					if (Zeny > $registeringGuildFee)
+					{
+						next;
+						mes .@npcname$;
+						mes "Perfect. Wait a second.";
+						set .@result, callfunc("OnRegisterJob",getcharid(0),0);
+						if (.@result == 1)
+						{
+							set Zeny, Zeny - $registeringGuildFee;
+							next;
+							mes .@npcname$;
+							mes "Be the welcomed, my brother Apothecary.";
+						}
+						else if (.@result == -1)
+						{
+							next;
+							mes .@npcname$;
+							mes "Sorry but you're already registered on another Guild.";
+							mes "Do you want to switch to the Apothecary Guild?";
+							if (select("Yes","No") == 1)
+							{
+								set .@fee, $registeringGuildFee;
+								if (callfunc("OnLookForExistingJob",getcharid(0),0) == 1)
+								{
+									next;
+									mes .@npcname$;
+									mes "You've already registered as a Apothecary.";
+									mes "The activation alone only cost " + $activationGuildFee + "z.";
+									set .@fee, $activationGuildFee;
+								}
+								if (callfunc("OnChangeJob",getcharid(0),0) == 1)
+								{
+									set Zeny, Zeny - .@fee;
+									next;
+									mes .@npcname$;
+									mes "Be the welcomed, my brother Apothecary.";
+								}
+							}
+						}
+						else
+						{
+							next;
+							mes .@npcname$;
+							mes "You're already one of us, my friend...";
+						}
+					}
+					else
+					{
+						next;
+						mes .@npcname$;
+						mes "You lack some zenies.";
+						mes "Sorry.";
+					}
+				}
+				else
+				{
+					next;
+					mes .@npcname$;
+					mes "Your choice. Come back if you change your mind.";
+				}
+				break;
+			case 5:
+				next;
+				mes .@npcname$;
+				set .@query$, "SELECT `id` FROM `guildjob_member` WHERE `char_id`=" + getcharid(0) + " AND `jobType`=0 AND `activeJob`=1";
+				query_sql(.@query$, .@id);
+				if (getarraysize(.@id) > 0)
+				{
+					mes "Well. I can give you the easiest one.";
+					mes "For the others, you'll have to find them.";
+					mes "There's lots of item to create.";
+					mes "But finding the recipes isn't easy.";
+					mes "Talk to others Apothecary to find some clue.";
+					mes "But don't rely on them to give you the recipes...";
+					next;
+					mes .@npcname$;
+					mes "So. What do you wanna know about?";
+					if (select("Recipes","Apothecary levels") == 1)
+					{
+						//define base recipes
+						switch(select("Glass of Illusion","Concentration Potion","Awakening Potion","Berserk Potion","29Fruits"))
+						{
+							case 1:
+								next;
+								mes .@npcname$;
+								mes "For a Glass of Illusion, you'll need:";
+								mes "1 Black Ladle, 1 Large Cookpot (0), 10 Glass Bead, 1 Illusion Flower";
+								break;
+							case 2:
+								next;
+								mes .@npcname$;
+								mes "For a Concentration Potion, you'll need:";
+								mes "1 Black Ladle, 1 Large Cookpot (0), 1 Alcohol, 1 Aloe, 5 Ancient Tooth";
+								break;
+							case 3:
+								next;
+								mes .@npcname$;
+								mes "For a Awakening Potion, you'll need:";
+								mes "1 Black Ladle, 1 Large Cookpot (0), 2 Alcohol, 1 Animal Gore, 5 Bacillus";
+								break;
+							case 4:
+								next;
+								mes .@npcname$;
+								mes "For a Berserk Potion, you'll need:";
+								mes "1 Black Ladle, 1 Large Cookpot (0), 5 Alcohol, 1 Battered Kettle, 5 Brown Root";
+								break;
+							case 5:
+								next;
+								mes .@npcname$;
+								mes "For a 29Fruits, you'll need:";
+								mes "1 Black Ladle, 1 Large Cookpot (0), 10 Bag of Nuts, 5 Bacillus";
+								break;
+						}
+					}
+					else
+					{
+						mes "So you wanna learn more about the different levels?";
+						mes "I can't tell you anything, you'll have to find some by yourself.";
+						mes "But here's some infos.";
+						next;
+						mes .@npcname$;
+						mes "At level 1, a Apothecary can produce:";
+						mes "	29Fruits, Concentration Potion, Awakening Potion, Berzerk Potion or Glass of Illusion.";
+						next;
+						mes .@npcname$;
+						mes "At level 2, a Apothecary can produce:";
+						mes "	Green Ale, Small Defense Potion, Small Magic Defense Potion, Small Life Potion.";
+						next;
+						mes .@npcname$;
+						mes "At level 3, a Apothecary can produce:";
+						mes "	Tasty White Potion, Tasty Pink Potion, SP Consumption Reduction Potion, Medium Life Potion.";
+						next;
+						mes .@npcname$;
+						mes "At level 4, a Apothecary can produce:";
+						mes "	Distilled Fighting Spirit, Speed Up Potion, Big Defense Potion, Big Magic Defense Potion.";
+						next;
+						mes .@npcname$;
+						mes "At level 5, a Apothecary can produce:";
+						mes "	Cornus Tears, Herb of Incantation, Luciola Honey Jam, Mega Resist Potion.";
+					}
+				}
+				else
+				{
+					mes "You're not an active Apothecary, aren't you.";
+					mes "I won't compromise our sells, sorry.";
+				}
+				break;
+		}
+	}
+	while(1);
+	close;
+}	

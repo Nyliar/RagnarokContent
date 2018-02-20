@@ -1,0 +1,11 @@
+tha_in1,89,36,0	warp	gwarp1	1,1,tha_in1,15,38
+tha_in1,13,34,0	warp	gwarp2	1,1,tha_in1,93,35
+
+tha_in1,30,49,0	warp	gwarp3	1,1,tha_in1,105,46
+tha_in1,105,52,0	warp	gwarp4	1,1,tha_in1,25,49
+
+tha_in1,23,6,0	warp	gwarp5	1,1,Hyrule,148,69
+Hyrule,148,73,0	warp	gwarp6	1,1,tha_in1,23,10
+
+mal_in02,158,60,0	warp	gwarp7	1,1,Hyrule,215,40
+Hyrule,218,37,0	warp	gwarp8	1,1,mal_in02,162,60
