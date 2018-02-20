@@ -1,0 +1,735 @@
+einbech,130,247,0	script	Mining Master::einminmas	813,{
+	setarray @Array_Nombre_Exp_lvlup[0],50,150,350,850,1850,3850,8850;
+	
+	if(#Niveau_Mineur<1)
+	{
+		set #Niveau_Mineur,1;
+		set #Nombre_Item_Mine,0;
+	}
+
+	setarray @Array_Nom_Mineur$[0],"Novice","Untrained","Apprentice","Compagnon","Trained","Expert","Artisan","Master";
+		//Chaque phrase sera dites à chaque up de niveau => 7 phrases, car passer de
+		setarray .Array_Phrase_Conseil$[0],"Use a Safety Helmet to become even more quicker!",
+		"There's almost a hundred rocks to be mined.",
+		"Some rocks spawn again quicker.",
+		"There's at list 5 kind of rocks.",
+		"Good miners get something from precious rock 1 time on 5 extraction.",
+		"Trained, you can only become better.",
+		"You become a miner by mining!",
+		"The Mining Tool that have been repaired are really good tools.";
+
+	set .npcname$, "[Mining Master]";
+	mes .npcname$;
+	mes "Hello there. What can I do for you?";
+	next;
+	if(#Nombre_Item_Mineur > 0)
+	{
+		mes .npcname$;
+		set #Nombre_Item_Mine,#Nombre_Item_Mine+#Nombre_Item_Mineur/2;
+		set #Nombre_Item_Mineur,0;
+		mes "Oh I see. You're not already aware. Since the miner become always much numerous, the rocks became friabler.";
+		mes "Actually rocks are so friable that it's really hard to extract something from a rock.";
+		next;
+		mes .npcname$;
+		mes "Thought, I can give some advice, so can quickly become stronger, and have more chance to extract something!";
+		set #Niveau_Mineur,1;
+		next;
+	}
+	if (#Niveau_Mineur>=8) //Histoire de passer au niveau 10
+	{
+		mes .npcname$;
+		mes "Oh it's you "+strcharinfo(0)+", the young apprentice who became a master. I'm so proud of you!";
+		mes "I don't have anything more to learn you, you're wonderful!";
+		if (#Niveau_Mineur==8)
+			set #Niveau_Mineur,10;//Histoire de passer au niveau 10
+		close;
+	}		
+	else if (#Niveau_Mineur>=1)
+	{
+		switch(select("Can you explain me again how to mine?", "Somthing more to learn me?", "I found something useful!", "Well nothing, sorry."))
+		{
+			case 1:
+				goto Explication;
+			break;
+			case 2:
+				if (@Array_Nombre_Exp_lvlup[#Niveau_Mineur-1]>#Nombre_Item_Mine)
+				{
+					mes .npcname$;
+					mes "You mined only "+#Nombre_Item_Mine+" rocks on the "+@Array_Nombre_Exp_lvlup[#Niveau_Mineur-1]+" required.";
+					mes "Good luck!";
+					close;
+				}
+				else
+				{
+					mes .npcname$;
+					mes "Haha, bravo ! You've trained hard, I think I can give the "+@Array_Nom_Mineur$[#Niveau_Mineur]+" rank ! Proud ?";
+					next;
+					mes .npcname$;
+					mes "First advice :";
+					mes .Array_Phrase_Conseil$[#Niveau_Mineur];
+					next;
+					mes "[The Mining Master gives you some more advices]";
+					set #Niveau_Mineur,#Niveau_Mineur+1;
+					next;
+					mes .npcname$;
+					mes "Well nothing's better than training. Let's go now !";
+					close;					
+				}
+			break;
+			case 3:
+				if (countitem(7753)>0)
+				{
+					mes .npcname$;
+					mes "Well that could be really useful, but they're broken!";
+					mes "Give me back 1 Elunium, 1 Oridecon and " + .price + " zeny per mining tool, and I 'll repair it !";
+					next;
+					switch(select("Allright let's go !","Arf, I don't have it"))
+					{
+						case 1:
+							mes .npcname$;
+							mes "How many do you want ?";
+							while(input(.Nombre,0,countitem(7753)))
+							{
+								next;
+								mes "Choose between 0 and "+countitem(7753)+".";
+							}
+							if ((countitem(7753)>=.Nombre)&&(countitem(985)>=.Nombre)&&(countitem(984)>=.Nombre)&&(Zeny>=.price*.Nombre))
+							{
+								next;
+								mes .npcname$;
+								specialeffect2 EF_REPAIRWEAPON;
+								mes "Here's your mining tools !";
+								delitem 985,.Nombre;
+								delitem 984,.Nombre;
+								delitem 7753,.Nombre;
+								set Zeny, Zeny-.price*.Nombre;
+								getitem 7318,10 * .Nombre;
+								logmes "[MiningManager] Le joueur " + strcharinfo(0) + " obtient " + (10 * .Nombre) + " " + getitemname(7318);
+								close;
+							}else
+							{
+								next;
+								mes .npcname$;
+								mes "Hey, my little "+@Array_Nom_Mineur$[#Niveau_Mineur-1]+", you don't have the needed.";
+								close;
+							}
+						break;
+						case 2:
+							mes .npcname$;
+							mes "The mining tool raise your chance to get something rare!";
+							close;
+						break;
+							
+					}
+				}else
+				{
+					mes .npcname$;
+					mes "What are you talking about ? You don't have anything!";
+					close;
+				}
+			break;
+			case 4:
+				goto Refus;
+			break;
+		}
+	}else//Si c'est la première fois
+	{
+		switch(select("Can you learn me to mine ?","Oh no nothing, sorry."))
+		{
+			case 1:
+				goto Explication;
+				break;
+			case 2:
+				goto Refus;
+				break;
+		}
+	}
+	close;
+
+Explication:
+	mes .npcname$;
+	mes "Ooooh, you know, that's not really easy.";
+	mes "It's really important to know where to find a rock to mine. There's almost everywhere in the world.";
+	mes "Get some Old Pick, and...Pick. Pick until the rock breaks.";
+	mes "Of course, it will break you Old Pick, but the reward are really enough for that loss !";
+	if (givenPick == 0)
+	{
+		mes "Well, here's some, that's my gift Apprentice ! Now I've got to work, sorry !";
+		getitem 7318,10;
+		logmes "[MiningManager] Le joueur " + strcharinfo(0) + " obtient " + (10) + " " + getitemname(7318);
+		set givenPick, 1;
+	}
+	close;
+		
+Refus:
+	mes .npcname$;
+	mes "No problem, see ya !";
+	close;
+	
+OnInit:
+	set .price, 10000;
+	end;
+}
+
+function	script	Mineur_Calcul_Drop_Rare	{
+//arguments :
+//0 : rid
+//1 : Tableaux d'id
+//2 : taille tableau
+//3 : pourcentage de change sur 10 000
+//4 : 0 : old pick, 1 : Miner Tool
+	attachrid(getarg(0));
+	set .Var_Alea,rand(1,10000);
+	//On a Poucentage de base * Niveau Mineur + Poucentage de base * Niveau Mineur * Bonus via item chance de drop
+	if (.Var_Alea<=getarg(3)*#Niveau_Mineur+getarg(3)*getarg(4)*#Niveau_Mineur)
+	{
+		set .Var_Alea_item,rand(1,getarg(2));
+		getitem getelementofarray(getarg(1),.Var_Alea_item-1),1;
+		logmes "[MiningManager] Le joueur " + strcharinfo(0) + " obtient 1 " + getitemname(getelementofarray(getarg(1),.Var_Alea_item-1));
+		set #Nombre_Item_Mine,#Nombre_Item_Mine+10;
+		getexp #Niveau_Mineur*BaseLevel*BaseLevel/84,#Niveau_Mineur*BaseLevel*BaseLevel/84;
+	}
+	return(0);
+}
+	
+
+function	script	Mineur_Core	{	
+	//arg 0 : rid
+	attachrid(getarg(0));
+	if (#Niveau_Mineur<1) //S'il n'est pas allé voir le maître mineur
+	{
+		mes "These rock looks particular.";
+		close;
+	}
+	else
+	{
+		if (countitem(7318) > 0) // S'il posséde une pioche ou un mining tool
+		{
+			set .Item_Utilise,0;
+			delitem 7318,1;
+			specialeffect2 EF_REPAIRWEAPON;
+			if(getequipid(1)==5009)
+			{
+				set .@niveau, #Niveau_Mineur - 4;
+				if (.@niveau < 0) set .@niveau, 0;
+				progressbar "ffff00",6-.@niveau;
+			}
+			else
+				progressbar "ffff00",12-#Niveau_Mineur;
+			
+			//Nombre d'items
+			set @nombre_item,20;
+			//Tableau des items
+			setarray $@Array_ID_Items_Normale[0],1003,985,714,969,998,984,757,756,1000,1001,999;
+			//Tableau correspondant aux chances sur 10000 cumulés de drop
+			setarray $@Array_Chance_Items_Normale[0],1700,2200,2300,2400,3900,4400,5900,7400,7900,9400,9900;
+			//Tableau des items à 0,05
+			set .nombre_item_0_05,2;
+			setarray $@Array_Chance_Items_0_05[0],7619,7620;
+			//Tableau des items à 0,02
+			set .nombre_item_0_02,4;
+			setarray $@Array_Chance_Items_0_02[0],6241,6240,6225,6226;
+			//Tableau des items à 0,01
+			set .nombre_item_0_01,1;
+			setarray $@Array_Chance_Items_0_01[0],6090;
+			set @Var_Alea_Choix_Drop,rand(1,10000);
+			for(set @j,0;j < @nombre_item;set @j,@j+1)//S'arrête quand on trouve la récompense
+			{
+				if (@Var_Alea_Choix_Drop < $@Array_Chance_Items_Normale[@j])
+				{
+					set #Nombre_Item_Mine,#Nombre_Item_Mine+1;
+					getexp #Niveau_Mineur*BaseLevel*BaseLevel/84,#Niveau_Mineur*BaseLevel*BaseLevel/84;
+					getitem $@Array_ID_Items_Normale[@j],1; //Récompense
+					logmes "[MiningManager] Le joueur " + strcharinfo(0) + " obtient 1 " + getitemname($@Array_ID_Items_Normale[@j]);
+					break;
+				}
+			}
+			callfunc "Mineur_Calcul_Drop_Rare",getcharid(0),$@Array_Chance_Items_0_05,.nombre_item_0_05,5,1;
+			callfunc "Mineur_Calcul_Drop_Rare",getcharid(0),$@Array_Chance_Items_0_02,.nombre_item_0_02,2,1;
+			callfunc "Mineur_Calcul_Drop_Rare",getcharid(0),$@Array_Chance_Items_0_01,.nombre_item_0_01,1,1;
+			return(1);
+		}
+		else {
+			mes "Looks like you don't have tools to mine.";
+			mes "Get back with some Old Pick !";
+			close;
+		}
+		
+	}
+}
+
+function	script	Choix_Alea_Coord_Rock	{
+return(rand(getarg(0),getarg(1)));
+}
+
+// xmin xmax ymin ymax
+//xmas_fild01 50	210	60	250	10
+//ice_dun03	50	250	60	240	10
+ice_dun03,70,70,0	script	Blue Rock#0::Minage_BR0	844,7,7,{
+	callfunc "Mineur_Core",getcharid(0);
+		//Tableau des positions des zones sur chaque map, donc 4 entiers par zone 
+		setarray @Array_Positions[0],50,210,60,240,220,60,250,10;		
+		//Drop des Crystal Blue/Mystic Frozen
+		set @var_alea_drop_water,rand(1,50);
+		if(@var_alea_drop_water<=20 + #Niveau_Mineur + BaseLevel/83 + JobLevel/12)
+		{
+			getitem 991,1;
+			logmes "[MiningManager] Le joueur " + strcharinfo(0) + " obtient 1 " + getitemname(991);
+		}
+		if(@var_alea_drop_water <= 5*#Niveau_Mineur)
+		{
+			setarray .@array_ID_Precieux[0],730,731,732;
+			getitem .@array_ID_Precieux[rand(0,getarraysize(.@array_ID_Precieux) - 1)], 1; 
+			logmes "[MiningManager] Le joueur " + strcharinfo(0) + " obtient 1 " + getitemname(.@array_ID_Precieux[rand(0,getarraysize(.@array_ID_Precieux) - 1)]);
+		}
+		set @var_alea_drop_water,rand(1,50);
+		if(@var_alea_drop_water<=5 + #Niveau_Mineur + BaseLevel/83 + JobLevel/12)
+		{
+			getitem 995,1;
+			logmes "[MiningManager] Le joueur " + strcharinfo(0) + " obtient 1 " + getitemname(995);
+		}
+		
+		initnpctimer;
+		//Choix aléatoire des coordonnées dans la zone
+		set @Num_NPC,strnpcinfo(2);
+		movenpc strnpcinfo(3),callfunc ("Choix_Alea_Coord_Rock",@Array_Positions[@Num_NPC*4],@Array_Positions[@Num_NPC*4+1]),
+				callfunc ("Choix_Alea_Coord_Rock",@Array_Positions[@Num_NPC*4+2],@Array_Positions[@Num_NPC*4+3]);
+		disablenpc strnpcinfo(3);
+	end;
+
+OnTouch:
+	dispbottom "This rocks looks odd...There's a strange aura issuing from it.";
+	end;
+
+OnTimer300000://5 minutes
+	enablenpc strnpcinfo(3);
+	stopnpctimer;
+	end;
+
+}
+
+//Map	xmin	xmax	ymin	ymax	nombre	
+//thor_v02	90	180	70	155	10	
+//ve_fild03	105	300	70	235	10	
+thor_v02,75,75,0	script	Red Rock#0::Minage_RR0	844,7,7,{
+	callfunc "Mineur_Core",getcharid(0);
+		//Tableau des positions des zones sur chaque map, donc 4 entiers par zone
+		setarray @Array_Positions[0],90,180,70,155,105,300,70,235;
+		set @var_alea_drop_water,rand(1,50);
+		if(@var_alea_drop_water<20 + #Niveau_Mineur + BaseLevel/83 + JobLevel/12)
+		{
+			getitem 990,1;
+			logmes "[MiningManager] Le joueur " + strcharinfo(0) + " obtient 1 " + getitemname(990);
+		}
+		if(@var_alea_drop_water <= 5*#Niveau_Mineur)
+		{
+			setarray .@array_ID_Precieux[0],730,731,732;
+			getitem .@array_ID_Precieux[rand(0,getarraysize(.@array_ID_Precieux) - 1)], 1; 
+			logmes "[MiningManager] Le joueur " + strcharinfo(0) + " obtient 1 " + getitemname(.@array_ID_Precieux[rand(0,getarraysize(.@array_ID_Precieux) - 1)]);
+		}
+		set @var_alea_drop_water,rand(1,50);
+		if(@var_alea_drop_water<5 + #Niveau_Mineur + BaseLevel/83 + JobLevel/12)
+		{
+			getitem 994,1;
+			logmes "[MiningManager] Le joueur " + strcharinfo(0) + " obtient 1 " + getitemname(994);
+		}
+		
+		initnpctimer;
+		//Choix aléatoire des coordonnées dans la zone
+		set @Num_NPC,strnpcinfo(2);
+		movenpc strnpcinfo(3),callfunc ("Choix_Alea_Coord_Rock",@Array_Positions[@Num_NPC*4],@Array_Positions[@Num_NPC*4+1]),
+				callfunc ("Choix_Alea_Coord_Rock",@Array_Positions[@Num_NPC*4+2],@Array_Positions[@Num_NPC*4+3]);
+		disablenpc strnpcinfo(3);
+	end;
+
+OnTouch:
+	dispbottom "This rocks looks odd...There's a strange aura issuing from it.";
+	end;
+
+OnTimer300000://5 minutes
+	enablenpc strnpcinfo(3);
+	stopnpctimer;
+	end;
+
+}
+
+//Map	xmin	xmax	ymin	ymax	nombre	
+//lhz_fild02	30	200	220	300	7	
+//lhz_fild03	210	290	115	310	7	
+//odin_tem01	110	375	90	155	6	
+lhz_fild02,80,250,0	script	Green Rock#0::Minage_GR0	844,7,7,{
+	callfunc "Mineur_Core",getcharid(0);
+		//Tableau des positions des zones sur chaque map, donc 4 entiers par zone
+		setarray @Array_Positions[0],30,200,220,300,210,290,115,310,110,375,90,155;
+		//Drop des Wind Of Verdure/Rough Wind
+		set @var_alea_drop_water,rand(1,50);
+		if(@var_alea_drop_water<20 + #Niveau_Mineur + BaseLevel/83 + JobLevel/12)
+		{
+			getitem 992,1;
+			logmes "[MiningManager] Le joueur " + strcharinfo(0) + " obtient 1 " + getitemname(992);
+		}
+		if(@var_alea_drop_water <= 5*#Niveau_Mineur)
+		{
+			setarray .@array_ID_Precieux[0],730,731,732;
+			getitem .@array_ID_Precieux[rand(0,getarraysize(.@array_ID_Precieux) - 1)], 1; 
+			logmes "[MiningManager] Le joueur " + strcharinfo(0) + " obtient 1 " + getitemname(.@array_ID_Precieux[rand(0,getarraysize(.@array_ID_Precieux) - 1)]);
+		}
+		set @var_alea_drop_water,rand(1,50);
+		if(@var_alea_drop_water<5 + #Niveau_Mineur + BaseLevel/83 + JobLevel/12)
+		{
+			getitem 996,1;
+			logmes "[MiningManager] Le joueur " + strcharinfo(0) + " obtient 1 " + getitemname(996);
+		}
+		
+		initnpctimer;
+		//Choix aléatoire des coordonnées dans la zone
+		set @Num_NPC,strnpcinfo(2);
+		movenpc strnpcinfo(3),callfunc ("Choix_Alea_Coord_Rock",@Array_Positions[@Num_NPC*4],@Array_Positions[@Num_NPC*4+1]),
+				callfunc ("Choix_Alea_Coord_Rock",@Array_Positions[@Num_NPC*4+2],@Array_Positions[@Num_NPC*4+3]);
+		disablenpc strnpcinfo(3);
+	end;
+
+OnTouch:
+	dispbottom "This rocks looks odd...There's a strange aura issuing from it.";
+	end;
+
+OnTimer300000://5 minutes
+	enablenpc strnpcinfo(3);
+	stopnpctimer;
+	end;
+
+}
+
+//Map	xmin	xmax	ymin	ymax	nombre
+//moc_fild17	65	340	185	345	10
+//moc_fild18	125	290	105	320	10
+moc_fild17,80,210,0	script	Brown Rock#0::Minage_BrR0	844,7,7,{
+	callfunc "Mineur_Core",getcharid(0);
+		//Tableau des positions des zones sur chaque map, donc 4 entiers par zone
+		setarray @Array_Positions[0],65,340,185,345,125,290,105,320;
+		//Drop des Green Live/Great Nature
+		set @var_alea_drop_water,rand(1,50);
+		if(@var_alea_drop_water<20 + #Niveau_Mineur + BaseLevel/83 + JobLevel/12)
+		{
+			getitem 993,1;
+			logmes "[MiningManager] Le joueur " + strcharinfo(0) + " obtient 1 " + getitemname(993);
+		}
+		if(@var_alea_drop_water <= 5*#Niveau_Mineur)
+		{
+			setarray .@array_ID_Precieux[0],730,731,732;
+			getitem .@array_ID_Precieux[rand(0,getarraysize(.@array_ID_Precieux) - 1)], 1; 
+			logmes "[MiningManager] Le joueur " + strcharinfo(0) + " obtient 1 " + getitemname(.@array_ID_Precieux[rand(0,getarraysize(.@array_ID_Precieux) - 1)]);
+		}
+		set @var_alea_drop_water,rand(1,50);
+		if(@var_alea_drop_water<5 + #Niveau_Mineur + BaseLevel/83 + JobLevel/12)
+		{
+			getitem 997,1;
+			logmes "[MiningManager] Le joueur " + strcharinfo(0) + " obtient 1 " + getitemname(997);
+		}
+		
+		initnpctimer;
+		//Choix aléatoire des coordonnées dans la zone
+		set @Num_NPC,strnpcinfo(2);
+		movenpc strnpcinfo(3),callfunc ("Choix_Alea_Coord_Rock",@Array_Positions[@Num_NPC*4],@Array_Positions[@Num_NPC*4+1]),
+		callfunc ("Choix_Alea_Coord_Rock",@Array_Positions[@Num_NPC*4+2],@Array_Positions[@Num_NPC*4+3]);
+		disablenpc strnpcinfo(3);
+	end;
+OnTouch:
+	dispbottom "This rocks looks odd...There's a strange aura issuing from it.";
+	end;
+
+OnTimer300000://5 minutes
+	enablenpc strnpcinfo(3);
+	stopnpctimer;
+	end;
+
+}
+
+//Map	xmin	xmax	ymin	ymax	nombre	
+//ein_dun02	125	185	130	160	5	
+//ein_dun01	115	155	175	225	5	
+ein_dun02,180,150,0	script	Precious Rock#0::Minage_PR0	844,7,7,{
+	callfunc "Mineur_Core",getcharid(0);
+		//Tableau des positions des zones sur chaque map, donc 4 entiers par zone
+		setarray @Array_Positions[0],125,185,130,160,115,155,175,225;
+		//Tableau des précieux
+		setarray $@Array_ID_Precieux[0],730,731,732,7291,719,720,7295,733,724,721,718,7292,727,722,7289,7290,7296,7293,723,7231,7232,7233;
+		//Précieux
+		set @nombre_precieux, 19;
+		set @Var_Alea_Choix_Drop,rand(0,@nombre_precieux*5 - #NiveauMineur * (BaseLevel/83 + JobLevel/12));//1 chance sur 5 d'avoir quelque chose
+		if(@Var_Alea_Choix_Drop <= @nombre_precieux)//Sinon rien
+		{
+			set #Nombre_Item_Mine,#Nombre_Item_Mine+1;
+			getexp #Niveau_Mineur*BaseLevel*BaseLevel/84,#Niveau_Mineur*BaseLevel*BaseLevel/84;
+			getitem $@Array_ID_Precieux[@Var_Alea_Choix_Drop],1; //Récompense
+			logmes "[MiningManager] Le joueur " + strcharinfo(0) + " obtient 1 " + getitemname($@Array_ID_Precieux[@Var_Alea_Choix_Drop]);
+		}	
+		
+					initnpctimer;
+		//Choix aléatoire des coordonnées dans la zone
+		set @Num_NPC,strnpcinfo(2);
+		movenpc strnpcinfo(3),callfunc ("Choix_Alea_Coord_Rock",@Array_Positions[@Num_NPC*4],@Array_Positions[@Num_NPC*4+1]),
+				callfunc ("Choix_Alea_Coord_Rock",@Array_Positions[@Num_NPC*4+2],@Array_Positions[@Num_NPC*4+3]);
+		disablenpc strnpcinfo(3);
+	end;
+
+OnTouch:
+	dispbottom "This rocks looks odd...There's a strange aura issuing from it.";
+	end;
+
+OnTimer1200000://20 minutes
+	enablenpc strnpcinfo(3);
+	stopnpctimer;
+	end;
+
+}
+
+
+//Map	xmin	xmax	ymin	ymax	nombre	
+//mid_camp		170 235 288 325 4
+//mid_camp		309 330 142 172 2
+//man_fild02	238 320 80 125 3
+//man_fild03	60	130	115	360	10	
+//moc_fild01	65	360	50	360	15	
+//pay_fild07	80	390	85	290	10	
+//comodo	120	210	185	270	5	
+//ra_fild03	100	315	170	321	10	
+//hu_fild03	80	355	90	300	10
+//mjo_dun03	40	290	40	250	10
+//man_fild01	130	290	55	370	10
+//yuno_fild01	300 355 310 370 5
+
+man_fild01,180,150,0	script	Rock#0::Minage_R0	844,7,7,{
+	callfunc "Mineur_Core",getcharid(0);
+		//Tableau des positions des zones sur chaque map, donc 4 entiers par zone
+		setarray @Array_Positions[0],170,235,288,325,309,330,142,172,238,320,80,125,60,130,115,360,65,360,
+		50,360,80,390,85,290,120,210,185,270,100,315,170,320,80,355,90,300,40,290,40,250,130,290,55,370,300,355,310,370;
+		
+		initnpctimer;
+		//Choix aléatoire des coordonnées dans la zone
+		set @Num_NPC,strnpcinfo(2);
+		movenpc strnpcinfo(3),callfunc ("Choix_Alea_Coord_Rock",@Array_Positions[@Num_NPC*4],@Array_Positions[@Num_NPC*4+1]),
+		callfunc ("Choix_Alea_Coord_Rock",@Array_Positions[@Num_NPC*4+2],@Array_Positions[@Num_NPC*4+3]);
+		disablenpc strnpcinfo(3);
+	end;
+
+OnTouch:
+	dispbottom "This rocks looks odd...There's a strange aura issuing from it.";
+	end;
+
+OnTimer300000://5 minutes
+	enablenpc strnpcinfo(3);
+	stopnpctimer;
+	end;
+
+}
+
+//Blue
+ice_dun03,250,80,0	duplicate(Minage_BR0)	Blue Rock#0::Minage_BR1	844,7,7
+ice_dun03,130,90,0	duplicate(Minage_BR0)	Blue Rock#0::Minage_BR2	844,7,7
+ice_dun03,100,200,0	duplicate(Minage_BR0)	Blue Rock#0::Minage_BR3	844,7,7
+ice_dun03,200,68,0	duplicate(Minage_BR0)	Blue Rock#0::Minage_BR4	844,7,7
+ice_dun03,175,105,0	duplicate(Minage_BR0)	Blue Rock#0::Minage_BR5	844,7,7
+ice_dun03,108,204,0	duplicate(Minage_BR0)	Blue Rock#0::Minage_BR6	844,7,7
+ice_dun03,152,126,0	duplicate(Minage_BR0)	Blue Rock#0::Minage_BR7	844,7,7
+ice_dun03,240,140,0	duplicate(Minage_BR0)	Blue Rock#0::Minage_BR8	844,7,7
+ice_dun03,198,165,0	duplicate(Minage_BR0)	Blue Rock#0::Minage_BR9	844,7,7
+
+xmas_fild01,200,80,0	duplicate(Minage_BR0)	Blue Rock#1::Minage_BR10	844,7,7
+xmas_fild01,130,90,0	duplicate(Minage_BR0)	Blue Rock#1::Minage_BR11	844,7,7
+xmas_fild01,100,200,0	duplicate(Minage_BR0)	Blue Rock#1::Minage_BR12	844,7,7
+xmas_fild01,200,83,0	duplicate(Minage_BR0)	Blue Rock#1::Minage_BR13	844,7,7
+xmas_fild01,175,200,0	duplicate(Minage_BR0)	Blue Rock#1::Minage_BR14	844,7,7
+xmas_fild01,58,204,0	duplicate(Minage_BR0)	Blue Rock#1::Minage_BR15	844,7,7
+xmas_fild01,72,126,0	duplicate(Minage_BR0)	Blue Rock#1::Minage_BR16	844,7,7
+xmas_fild01,240,152,0	duplicate(Minage_BR0)	Blue Rock#1::Minage_BR17	844,7,7
+xmas_fild01,100,165,0	duplicate(Minage_BR0)	Blue Rock#1::Minage_BR18	844,7,7
+xmas_fild01,150,150,0	duplicate(Minage_BR0)	Blue Rock#1::Minage_BR19	844,7,7
+
+//Red
+thor_v02,180,82,0	duplicate(Minage_RR0)	Red Rock#0::Minage_RR1	844,7,7
+thor_v02,130,90,0	duplicate(Minage_RR0)	Red Rock#0::Minage_RR2	844,7,7
+thor_v02,100,85,0	duplicate(Minage_RR0)	Red Rock#0::Minage_RR3	844,7,7
+thor_v02,120,102,0	duplicate(Minage_RR0)	Red Rock#0::Minage_RR4	844,7,7
+thor_v02,175,105,0	duplicate(Minage_RR0)	Red Rock#0::Minage_RR5	844,7,7
+thor_v02,108,140,0	duplicate(Minage_RR0)	Red Rock#0::Minage_RR6	844,7,7
+thor_v02,90,126,0	duplicate(Minage_RR0)	Red Rock#0::Minage_RR7	844,7,7
+thor_v02,112,152,0	duplicate(Minage_RR0)	Red Rock#0::Minage_RR8	844,7,7
+thor_v02,134,155,0	duplicate(Minage_RR0)	Red Rock#0::Minage_RR9	844,7,7
+
+ve_fild03,220,105,0	duplicate(Minage_RR0)	Red Rock#1::Minage_RR10	844,7,7
+ve_fild03,130,112,0	duplicate(Minage_RR0)	Red Rock#1::Minage_RR11	844,7,7
+ve_fild03,90,150,0	duplicate(Minage_RR0)	Red Rock#1::Minage_RR12	844,7,7
+ve_fild03,120,102,0	duplicate(Minage_RR0)	Red Rock#1::Minage_RR13	844,7,7
+ve_fild03,100,70,0	duplicate(Minage_RR0)	Red Rock#1::Minage_RR14	844,7,7
+ve_fild03,110,80,0	duplicate(Minage_RR0)	Red Rock#1::Minage_RR15	844,7,7
+ve_fild03,130,200,0	duplicate(Minage_RR0)	Red Rock#1::Minage_RR16	844,7,7
+ve_fild03,200,150,0	duplicate(Minage_RR0)	Red Rock#1::Minage_RR17	844,7,7
+ve_fild03,150,180,0	duplicate(Minage_RR0)	Red Rock#1::Minage_RR18	844,7,7
+ve_fild03,175,220,0	duplicate(Minage_RR0)	Red Rock#1::Minage_RR19	844,7,7
+
+//Green
+lhz_fild02,40,282,0	duplicate(Minage_GR0)	Green Rock#0::Minage_GR1	844,7,7
+lhz_fild02,30,290,0	duplicate(Minage_GR0)	Green Rock#0::Minage_GR2	844,7,7
+lhz_fild02,100,285,0	duplicate(Minage_GR0)	Green Rock#0::Minage_GR3	844,7,7
+lhz_fild02,200,252,0	duplicate(Minage_GR0)	Green Rock#0::Minage_GR4	844,7,7
+lhz_fild02,175,235,0	duplicate(Minage_GR0)	Green Rock#0::Minage_GR5	844,7,7
+lhz_fild02,80,240,0	duplicate(Minage_GR0)	Green Rock#0::Minage_GR6	844,7,7
+
+lhz_fild03,280,170,0	duplicate(Minage_GR0)	Green Rock#1::Minage_GR7	844,7,7
+lhz_fild03,230,190,0	duplicate(Minage_GR0)	Green Rock#1::Minage_GR8	844,7,7
+lhz_fild03,210,185,0	duplicate(Minage_GR0)	Green Rock#1::Minage_GR9	844,7,7
+lhz_fild03,220,260,0	duplicate(Minage_GR0)	Green Rock#1::Minage_GR10	844,7,7
+lhz_fild03,275,105,0	duplicate(Minage_GR0)	Green Rock#1::Minage_GR11	844,7,7
+lhz_fild03,270,280,0	duplicate(Minage_GR0)	Green Rock#1::Minage_GR12	844,7,7
+lhz_fild03,252,126,0	duplicate(Minage_GR0)	Green Rock#1::Minage_GR13	844,7,7
+
+odin_tem01,180,70,0	duplicate(Minage_GR0)	Green Rock#2::Minage_GR14	844,7,7
+odin_tem01,130,90,0	duplicate(Minage_GR0)	Green Rock#2::Minage_GR15	844,7,7
+odin_tem01,110,85,0	duplicate(Minage_GR0)	Green Rock#2::Minage_GR16	844,7,7
+odin_tem01,120,60,0	duplicate(Minage_GR0)	Green Rock#2::Minage_GR17	844,7,7
+odin_tem01,275,105,0	duplicate(Minage_GR0)	Green Rock#2::Minage_GR18	844,7,7
+odin_tem01,270,80,0	duplicate(Minage_GR0)	Green Rock#2::Minage_GR19	844,7,7
+
+//Brown
+moc_fild17,70,270,0	duplicate(Minage_BrR0)	Brown Rock#0::Minage_BrR1	844,7,7
+moc_fild17,80,260,0	duplicate(Minage_BrR0)	Brown Rock#0::Minage_BrR2	844,7,7
+moc_fild17,90,250,0	duplicate(Minage_BrR0)	Brown Rock#0::Minage_BrR3	844,7,7
+moc_fild17,190,350,0	duplicate(Minage_BrR0)	Brown Rock#0::Minage_BrR4	844,7,7
+moc_fild17,170,340,0	duplicate(Minage_BrR0)	Brown Rock#0::Minage_BrR5	844,7,7
+moc_fild17,160,300,0	duplicate(Minage_BrR0)	Brown Rock#0::Minage_BrR6	844,7,7
+moc_fild17,150,200,0	duplicate(Minage_BrR0)	Brown Rock#0::Minage_BrR7	844,7,7
+moc_fild17,140,190,0	duplicate(Minage_BrR0)	Brown Rock#0::Minage_BrR8	844,7,7
+moc_fild17,180,370,0	duplicate(Minage_BrR0)	Brown Rock#0::Minage_BrR9	844,7,7
+
+moc_fild18,130,112,0	duplicate(Minage_BrR0)	Brown Rock#1::Minage_BrR10	844,7,7
+moc_fild18,190,150,0	duplicate(Minage_BrR0)	Brown Rock#1::Minage_BrR11	844,7,7
+moc_fild18,220,102,0	duplicate(Minage_BrR0)	Brown Rock#1::Minage_BrR12	844,7,7
+moc_fild18,200,270,0	duplicate(Minage_BrR0)	Brown Rock#1::Minage_BrR13	844,7,7
+moc_fild18,210,280,0	duplicate(Minage_BrR0)	Brown Rock#1::Minage_BrR14	844,7,7
+moc_fild18,230,200,0	duplicate(Minage_BrR0)	Brown Rock#1::Minage_BrR15	844,7,7
+moc_fild18,200,150,0	duplicate(Minage_BrR0)	Brown Rock#1::Minage_BrR16	844,7,7
+moc_fild18,150,180,0	duplicate(Minage_BrR0)	Brown Rock#1::Minage_BrR17	844,7,7
+moc_fild18,175,220,0	duplicate(Minage_BrR0)	Brown Rock#1::Minage_BrR18	844,7,7
+moc_fild18,220,105,0	duplicate(Minage_BrR0)	Brown Rock#1::Minage_BrR19	844,7,7
+
+//Previous
+ein_dun02,170,130,0	duplicate(Minage_PR0)	Precious Rock#0::Minage_PR1	844,7,7
+ein_dun02,180,160,0	duplicate(Minage_PR0)	Precious Rock#0::Minage_PR2	844,7,7
+ein_dun02,120,150,0	duplicate(Minage_PR0)	Precious Rock#0::Minage_PR3	844,7,7
+ein_dun02,130,140,0	duplicate(Minage_PR0)	Precious Rock#0::Minage_PR4	844,7,7
+
+ein_dun01,110,170,0	duplicate(Minage_PR0)	Precious Rock#1::Minage_PR5	844,7,7
+ein_dun01,120,180,0	duplicate(Minage_PR0)	Precious Rock#1::Minage_PR6	844,7,7
+ein_dun01,130,200,0	duplicate(Minage_PR0)	Precious Rock#1::Minage_PR7	844,7,7
+ein_dun01,150,220,0	duplicate(Minage_PR0)	Precious Rock#1::Minage_PR8	844,7,7
+ein_dun01,140,190,0	duplicate(Minage_PR0)	Precious Rock#1::Minage_PR9	844,7,7
+
+//Générale
+
+mid_camp,220,288,0	duplicate(Minage_R0)	Rock#0::Minage_R1	844,7,7
+mid_camp,200,325,0	duplicate(Minage_R0)	Rock#0::Minage_R2	844,7,7
+mid_camp,210,298,0	duplicate(Minage_R0)	Rock#0::Minage_R3	844,7,7
+mid_camp,190,315,0	duplicate(Minage_R0)	Rock#0::Minage_R4	844,7,7
+
+mid_camp,309,142,0	duplicate(Minage_R0)	Rock#1::Minage_R5	844,7,7
+mid_camp,330,172,0	duplicate(Minage_R0)	Rock#1::Minage_R6	844,7,7
+
+man_fild02,238,80,0	duplicate(Minage_R0)	Rock#2::Minage_R7	844,7,7
+man_fild02,320,125,0	duplicate(Minage_R0)	Rock#2::Minage_R8	844,7,7
+man_fild02,300,100,0	duplicate(Minage_R0)	Rock#2::Minage_R9	844,7,7
+
+man_fild03,120,205,0	duplicate(Minage_R0)	Rock#3::Minage_R20	844,7,7
+man_fild03,130,212,0	duplicate(Minage_R0)	Rock#3::Minage_R21	844,7,7
+man_fild03,90,150,0	duplicate(Minage_R0)	Rock#3::Minage_R22	844,7,7
+man_fild03,120,202,0	duplicate(Minage_R0)	Rock#3::Minage_R23	844,7,7
+man_fild03,100,270,0	duplicate(Minage_R0)	Rock#3::Minage_R24	844,7,7
+man_fild03,110,280,0	duplicate(Minage_R0)	Rock#3::Minage_R25	844,7,7
+man_fild03,130,300,0	duplicate(Minage_R0)	Rock#3::Minage_R26	844,7,7
+man_fild03,70,350,0	duplicate(Minage_R0)	Rock#3::Minage_R27	844,7,7
+man_fild03,80,180,0	duplicate(Minage_R0)	Rock#3::Minage_R28	844,7,7
+man_fild03,75,220,0	duplicate(Minage_R0)	Rock#3::Minage_R29	844,7,7
+
+moc_fild01,200,102,0	duplicate(Minage_R0)	Rock#4::Minage_R30	844,7,7
+moc_fild01,130,112,0	duplicate(Minage_R0)	Rock#4::Minage_R31	844,7,7
+moc_fild01,90,150,0	duplicate(Minage_R0)	Rock#4::Minage_R32	844,7,7
+moc_fild01,120,102,0	duplicate(Minage_R0)	Rock#4::Minage_R33	844,7,7
+moc_fild01,100,70,0	duplicate(Minage_R0)	Rock#4::Minage_R34	844,7,7
+moc_fild01,110,80,0	duplicate(Minage_R0)	Rock#4::Minage_R35	844,7,7
+moc_fild01,130,200,0	duplicate(Minage_R0)	Rock#4::Minage_R36	844,7,7
+moc_fild01,200,150,0	duplicate(Minage_R0)	Rock#4::Minage_R37	844,7,7
+moc_fild01,150,180,0	duplicate(Minage_R0)	Rock#4::Minage_R38	844,7,7
+moc_fild01,175,220,0	duplicate(Minage_R0)	Rock#4::Minage_R39	844,7,7
+moc_fild01,275,320,0	duplicate(Minage_R0)	Rock#4::Minage_R40	844,7,7
+moc_fild01,70,80,0	duplicate(Minage_R0)	Rock#4::Minage_R41	844,7,7
+moc_fild01,330,300,0	duplicate(Minage_R0)	Rock#4::Minage_R42	844,7,7
+moc_fild01,300,350,0	duplicate(Minage_R0)	Rock#4::Minage_R43	844,7,7
+moc_fild01,350,280,0	duplicate(Minage_R0)	Rock#4::Minage_R44	844,7,7
+
+pay_fild07,175,220,0	duplicate(Minage_R0)	Rock#5::Minage_R45	844,7,7
+pay_fild07,220,105,0	duplicate(Minage_R0)	Rock#5::Minage_R46	844,7,7
+pay_fild07,130,112,0	duplicate(Minage_R0)	Rock#5::Minage_R47	844,7,7
+pay_fild07,90,150,0	duplicate(Minage_R0)	Rock#5::Minage_R48	844,7,7
+pay_fild07,120,102,0	duplicate(Minage_R0)	Rock#5::Minage_R49	844,7,7
+pay_fild07,100,70,0	duplicate(Minage_R0)	Rock#5::Minage_R50	844,7,7
+pay_fild07,110,80,0	duplicate(Minage_R0)	Rock#5::Minage_R51	844,7,7
+pay_fild07,130,200,0	duplicate(Minage_R0)	Rock#5::Minage_R52	844,7,7
+pay_fild07,200,150,0	duplicate(Minage_R0)	Rock#5::Minage_R53	844,7,7
+pay_fild07,150,180,0	duplicate(Minage_R0)	Rock#5::Minage_R54	844,7,7
+
+comodo,200,270,0	duplicate(Minage_R0)	Rock#6::Minage_R55	844,7,7
+comodo,220,205,0	duplicate(Minage_R0)	Rock#6::Minage_R56	844,7,7
+comodo,230,212,0	duplicate(Minage_R0)	Rock#6::Minage_R57	844,7,7
+comodo,190,250,0	duplicate(Minage_R0)	Rock#6::Minage_R58	844,7,7
+comodo,120,202,0	duplicate(Minage_R0)	Rock#6::Minage_R59	844,7,7
+
+
+ra_fild03,220,105,0	duplicate(Minage_R0)	Rock#7::Minage_R60	844,7,7
+ra_fild03,130,112,0	duplicate(Minage_R0)	Rock#7::Minage_R61	844,7,7
+ra_fild03,290,150,0	duplicate(Minage_R0)	Rock#7::Minage_R62	844,7,7
+ra_fild03,120,102,0	duplicate(Minage_R0)	Rock#7::Minage_R63	844,7,7
+ra_fild03,100,270,0	duplicate(Minage_R0)	Rock#7::Minage_R64	844,7,7
+ra_fild03,110,280,0	duplicate(Minage_R0)	Rock#7::Minage_R65	844,7,7
+ra_fild03,130,200,0	duplicate(Minage_R0)	Rock#7::Minage_R66	844,7,7
+ra_fild03,200,150,0	duplicate(Minage_R0)	Rock#7::Minage_R67	844,7,7
+ra_fild03,150,180,0	duplicate(Minage_R0)	Rock#7::Minage_R68	844,7,7
+ra_fild03,175,220,0	duplicate(Minage_R0)	Rock#7::Minage_R69	844,7,7
+
+hu_fild03,220,105,0	duplicate(Minage_R0)	Rock#8::Minage_R70	844,7,7
+hu_fild03,130,112,0	duplicate(Minage_R0)	Rock#8::Minage_R71	844,7,7
+hu_fild03,90,150,0	duplicate(Minage_R0)	Rock#8::Minage_R72	844,7,7
+hu_fild03,120,102,0	duplicate(Minage_R0)	Rock#8::Minage_R73	844,7,7
+hu_fild03,100,270,0	duplicate(Minage_R0)	Rock#8::Minage_R74	844,7,7
+hu_fild03,110,280,0	duplicate(Minage_R0)	Rock#8::Minage_R75	844,7,7
+hu_fild03,130,200,0	duplicate(Minage_R0)	Rock#8::Minage_R76	844,7,7
+hu_fild03,200,150,0	duplicate(Minage_R0)	Rock#8::Minage_R77	844,7,7
+hu_fild03,150,180,0	duplicate(Minage_R0)	Rock#8::Minage_R78	844,7,7
+hu_fild03,175,220,0	duplicate(Minage_R0)	Rock#8::Minage_R79	844,7,7
+
+mjo_dun03,220,105,0	duplicate(Minage_R0)	Rock#9::Minage_R80	844,7,7
+mjo_dun03,130,112,0	duplicate(Minage_R0)	Rock#9::Minage_R81	844,7,7
+mjo_dun03,90,150,0	duplicate(Minage_R0)	Rock#9::Minage_R82	844,7,7
+mjo_dun03,30,102,0	duplicate(Minage_R0)	Rock#9::Minage_R83	844,7,7
+mjo_dun03,100,70,0	duplicate(Minage_R0)	Rock#9::Minage_R84	844,7,7
+mjo_dun03,110,80,0	duplicate(Minage_R0)	Rock#9::Minage_R85	844,7,7
+mjo_dun03,130,200,0	duplicate(Minage_R0)	Rock#9::Minage_R86	844,7,7
+mjo_dun03,200,50,0	duplicate(Minage_R0)	Rock#9::Minage_R87	844,7,7
+mjo_dun03,55,180,0	duplicate(Minage_R0)	Rock#9::Minage_R88	844,7,7
+mjo_dun03,175,220,0	duplicate(Minage_R0)	Rock#9::Minage_R89	844,7,7
+
+man_fild01,220,105,0	duplicate(Minage_R0)	Rock#10::Minage_R10	844,7,7
+man_fild01,130,112,0	duplicate(Minage_R0)	Rock#10::Minage_R11	844,7,7
+man_fild01,90,150,0	duplicate(Minage_R0)	Rock#10::Minage_R12	844,7,7
+man_fild01,120,102,0	duplicate(Minage_R0)	Rock#10::Minage_R13	844,7,7
+man_fild01,100,70,0	duplicate(Minage_R0)	Rock#10::Minage_R14	844,7,7
+man_fild01,110,80,0	duplicate(Minage_R0)	Rock#10::Minage_R15	844,7,7
+man_fild01,130,200,0	duplicate(Minage_R0)	Rock#10::Minage_R16	844,7,7
+man_fild01,200,150,0	duplicate(Minage_R0)	Rock#10::Minage_R17	844,7,7
+man_fild01,150,180,0	duplicate(Minage_R0)	Rock#10::Minage_R18	844,7,7
+man_fild01,175,220,0	duplicate(Minage_R0)	Rock#10::Minage_R19	844,7,7
+
+yuno_fild01,300,310,0	duplicate(Minage_R0)	Rock#11::Minage_R90	844,7,7
+yuno_fild01,355,370,0	duplicate(Minage_R0)	Rock#11::Minage_R91	844,7,7
+yuno_fild01,305,320,0	duplicate(Minage_R0)	Rock#11::Minage_R92	844,7,7
+yuno_fild01,315,350,0	duplicate(Minage_R0)	Rock#11::Minage_R93	844,7,7
+yuno_fild01,325,340,0	duplicate(Minage_R0)	Rock#11::Minage_R94	844,7,7
