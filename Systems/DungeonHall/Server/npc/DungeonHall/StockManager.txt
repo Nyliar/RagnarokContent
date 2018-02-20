@@ -1,0 +1,260 @@
+// [========================================================]
+// [==========    Stock Manager - Presentation     =========]
+// [========================================================]
+// [ Version 1                                              ]
+// [========================================================]
+// [ Original script by: Alayne				    			]
+// [========================================================]
+// [ Description:                                           ]
+// [--------------------------------------------------------]
+// [                                                        ]
+// [ - The Stock Manager		    	    				]
+// [========================================================]
+// [ Changelog: (5 last updates)                            ]
+// [--------------------------------------------------------]
+// [                                                        ]
+// [ v0: Creation                      			    		]
+// [                                                        ]
+// [                                                        ]
+// [========================================================]
+// [                                                        ]
+// [========================================================]
+
+brasilis,101,207,5	script	Stock Manager#1::stoDmBras	429,{
+	set .@npcname$, "[Ziln]";
+	mes .@npcname$;
+	query_sql("SELECT `guild_id` FROM `dungeon_master` WHERE `id`=" + atoi(strnpcinfo(2)), .@guildId);
+	if (getarraysize(.@guildId) > 0 && .@guildId[0] == getcharid(2))
+	{
+		//dungeon master
+		if (strcharinfo(0) != getguildmaster(getcharid(2))) {
+			set .@title$, "sire";
+		}
+		else
+		{
+			set .@title$, "master";
+		}
+		mes "Welcome here, " + .@title$ + ".";
+		mes "What can I do for you?";
+		switch(select("Which item can I store","What's your role here?","What should I do?"))
+		{
+			case 2:
+				next;
+				mes .@npcname$;
+				mes "I'm here to manage the Hall supplies.";
+				mes "If you bring some supplies to me, I can store them, and keep a trace of it.";
+				next;
+				mes .@npcname$;
+				mes "Some people will need those supplies to provide other things, such as dishes, alcohol, or whatever.";
+				mes "Without me, those won't be able to work.";
+				break;
+			case 1:
+				next;
+				mes .@npcname$;
+				callsub OnAskType;
+				next;
+				mes .@npcname$;
+				mes "The stocks have been updated.";
+				mes "See you soon, " + .@title$ + ".";
+				break;
+			case 3:
+				next;
+				mes .@npcname$;
+				mes "Well...I'm sorry " + .@title$ + ", but I don't know what to answer...";
+				mes "Maybe you should ask the Head Buttler...";
+				break;
+		}
+	}
+	else
+	{
+		mes "Sorry, my friend, but there's nothing I can do for you.";
+		if (getarraysize(.@guildId) > 0)
+		{
+			mes "All my work belong to the Guild " + getguildname(.@guildId[0]);
+		}
+	}
+	close;
+	
+OnAskType:
+	mes "Well, first, you need to choose a type of supplies you want me to store.";
+	set .@supply_Type, select("All I can","Baker supplies","Tavern supplies","Restaurant supplies");
+	switch(.@supply_Type)
+	{
+		case 1:
+			for(set .@i,0; .@i<getarraysize($pastryStockItemIds); set .@i,.@i+1)
+			{
+				if(countitem($pastryStockItemIds[.@i]) > 0)
+				{
+					set .@supplyId, $pastryStockItemIds[.@i];
+					set .@addSupplies, countitem($pastryStockItemIds[.@i]);
+					callsub OnAddSupplies, .@supplyId, .@addSupplies, 1, 1;
+				}
+			}
+			for(set .@i,0; .@i<getarraysize($tavernStockItemIds); set .@i,.@i+1)
+			{
+				if(countitem($tavernStockItemIds[.@i]) > 0)
+				{
+					set .@supplyId, $tavernStockItemIds[.@i];
+					set .@addSupplies, countitem($tavernStockItemIds[.@i]);
+					callsub OnAddSupplies, .@supplyId, .@addSupplies, 2, 1;
+				}
+			}
+			for(set .@i,0; .@i<getarraysize($restaurantStockItemIds); set .@i,.@i+1)
+			{
+				if(countitem($restaurantStockItemIds[.@i]) > 0)
+				{
+					set .@supplyId, $restaurantStockItemIds[.@i];
+					set .@addSupplies, countitem($restaurantStockItemIds[.@i]);
+					callsub OnAddSupplies, .@supplyId, .@addSupplies, 3, 1;
+				}
+			}
+			break;
+		case 2:
+			next;
+			mes .@npcname$;
+			mes "Perfect. Now, please choose a type of supply to store.";
+			for(set .@i,0; .@i<getarraysize($pastryStockItemIds); set .@i,.@i+1)
+			{
+				set .@menu$, .@menu$ + ( .@i ? ":" : "" ) + getitemname($pastryStockItemIds[.@i]);
+			}
+			set .@choice, select(.@menu$) - 1;
+			if (.@choice != 254)
+			{
+				set .@supplyId, $pastryStockItemIds[.@choice];
+				next;
+				mes .@npcname$;
+				mes "Perfect. How many?";
+				mes "'0' means as much as possible.";
+				input .@addSupplies;
+				if (.@addSupplies == 0)
+				{
+					set .@addSupplies, countitem(.@supplyId);
+				}
+				callsub OnAddSupplies, .@supplyId, .@addSupplies, .@supply_Type - 1, 0;
+				goto OnAskType;
+			}
+			break;
+		case 3:
+			next;
+			mes .@npcname$;
+			mes "Perfect. Now, please choose a type of supply to store.";
+			for(set .@i,0; .@i<getarraysize($tavernStockItemIds); set .@i,.@i+1)
+			{
+				set .@menu$, .@menu$ + ( .@i ? ":" : "" ) + getitemname($tavernStockItemIds[.@i]);
+			}
+			set .@choice, select(.@menu$) - 1;
+			if (.@choice != 254)
+			{
+				set .@supplyId, $tavernStockItemIds[.@choice];
+				next;
+				mes .@npcname$;
+				mes "Perfect. How many?";
+				mes "'0' means as much as possible.";
+				input .@addSupplies;
+				if (.@addSupplies == 0)
+				{
+					set .@addSupplies, countitem(.@supplyId);
+				}
+				callsub OnAddSupplies, .@supplyId, .@addSupplies, .@supply_Type - 1, 0;
+				goto OnAskType;
+			}
+			break;
+		case 4:
+			next;
+			mes .@npcname$;
+			mes "Perfect. Now, please choose a type of supply to store.";
+			for(set .@i,0; .@i<getarraysize($restaurantStockItemIds); set .@i,.@i+1)
+			{
+				set .@menu$, .@menu$ + ( .@i ? ":" : "" ) + getitemname($restaurantStockItemIds[.@i]);
+			}
+			set .@choice, select(.@menu$) - 1;
+			if (.@choice != 254)
+			{
+				set .@supplyId, $restaurantStockItemIds[.@choice];
+				next;
+				mes .@npcname$;
+				mes "Perfect. How many?";
+				mes "'0' means as much as possible.";
+				input .@addSupplies;
+				if (.@addSupplies == 0)
+				{
+					set .@addSupplies, countitem(.@supplyId);
+				}
+				callsub OnAddSupplies, .@supplyId, .@addSupplies, .@supply_Type - 1, 0;
+				goto OnAskType;
+			}
+			break;
+	}
+	return;
+	
+OnAddSupplies:
+	set .@supplyId, getarg(0);
+	set .@addSupplies, getarg(1);
+	set .@supply_Type, getarg(2);
+	set .@auto, getarg(3);
+	if (countitem(.@supplyId) < .@addSupplies)
+	{
+		next;
+		mes .@npcname$;
+		mes "Sorry, but you don't have that much supplies...";
+	}
+	else if (countitem(.@supplyId) == 0)
+	{
+		next;
+		mes .@npcname$;
+		mes "Sorry, but you don't have that supply...";
+	}
+	else
+	{
+		query_sql("SELECT `item_count` FROM `dungeon_stocks` WHERE `dungeon_id` = " + atoi(strnpcinfo(2)) + " AND `item_id` = " + .@supplyId, .@countSupplies);
+		if (getarraysize(.@countSupplies) > 0)
+		{
+			query_sql("UPDATE `dungeon_stocks` SET `item_count`=" + (.@countSupplies[0] + .@addSupplies) + " WHERE `dungeon_id` = " + atoi(strnpcinfo(2)) + " AND `item_id` = " + .@supplyId, .@count);
+		}
+		else
+		{
+			query_sql("INSERT INTO `dungeon_stocks` VALUES (" + atoi(strnpcinfo(2)) + "," + .@supply_Type + "," + .@supplyId + "," + .@addSupplies + ")", .@count);									
+		}
+		delitem .@supplyId, .@addSupplies;
+	}	
+	if (.@auto == 0)
+	{
+		next;
+		mes .@npcname$;
+	}
+	return;
+	
+OnInit:
+	setarray $pastryStockItemIds[0],512,518,519,521,523,567,574,578,580,582,1020,6099,7066,7098,7182,7323,7457;
+	setarray $restaurantStockItemIds[0],503,508,509,511,515,517,518,520,521,522,548,549,577,579,940,945,951,954,956,960,962,966,1054,1062,7031,7100,7198,7286,7452,7453,7454,7455,7457;
+	setarray $tavernStockItemIds[0],501,507,508,510,514,518,520,521,526,531,533,534,568,576,578,582,607,610,619,620,632,634,645,707,710,970,1033,1037,7066,7119,7123,7452,7455,7456;
+	end;
+}
+
+function	script	OnCheckSupply	{
+	set .@dungeonId, getarg(0);
+	set .@itemId, getarg(1);
+	set .@itemCount, getarg(2);
+	query_sql("SELECT `item_count` FROM `dungeon_stocks` WHERE `dungeon_id` = " + .@dungeonId + " AND `item_id` = " + .@itemId, .@countSupplies);
+	if (getarraysize(.@countSupplies) > 0 && .@countSupplies[0] >= .@itemCount)
+	{
+		return .@countSupplies[0] / .@itemCount;
+	}
+	return 0;
+}
+
+function	script	OnUpdateStocks	{
+	set .@dungeonId, getarg(0);
+	set .@itemId, getarg(1);
+	set .@itemCount, getarg(2);
+	set .@direction, getarg(3);
+	set .@query$, "SELECT `item_count` FROM `dungeon_stocks` WHERE `dungeon_id` = " + .@dungeonId + " AND `item_id` = " + .@itemId;
+	query_sql(.@query$, .@countSupplies);
+	if (getarraysize(.@countSupplies) > 0 || .@countSupplies> 0)
+	{
+		set .@countSupplies[0], .@countSupplies[0] + .@itemCount * .@direction;
+		set .@query$, "UPDATE `dungeon_stocks` SET `item_count`=" + .@countSupplies[0] + " WHERE `dungeon_id` = " + .@dungeonId + " AND `item_id` = " + .@itemId;
+		query_sql(.@query$, .@count);
+	}
+	return;
+}

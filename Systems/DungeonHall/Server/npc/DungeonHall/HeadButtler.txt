@@ -1,0 +1,465 @@
+// [========================================================]
+// [==========    Head Buttler - Presentation     ==========]
+// [========================================================]
+// [ Version 1                                              ]
+// [========================================================]
+// [ Original script by: Alayne				    			]
+// [========================================================]
+// [ Description:                                           ]
+// [--------------------------------------------------------]
+// [                                                        ]
+// [ - The Head Buttler			    	   				 	]
+// [========================================================]
+// [ Changelog: (5 last updates)                            ]
+// [--------------------------------------------------------]
+// [                                                        ]
+// [ v0: Creation                      			    		]
+// [                                                        ]
+// [                                                        ]
+// [========================================================]
+// [                                                        ]
+// [========================================================]
+
+bra_in01,135,26,3	script	Head Buttler#1::hbutDmBras	55,{
+	set .@npcname$, "[Ildur]";
+	mes .@npcname$;
+	query_sql("SELECT `guild_id` FROM `dungeon_master` WHERE `guild_id`=" + getcharid(2) + " AND `id` = " + atoi(strnpcinfo(2)), .@guildId);
+	if (getarraysize(.@guildId) > 0 && .@guildId[0] == getcharid(2))
+	{
+		//dungeon master
+		if (strcharinfo(0) != getguildmaster(getcharid(2))) {
+			set .@title$, "Sire";
+		}
+		else
+		{
+			set .@title$, "Master";
+		}
+		mes "Welcome here, " + .@title$ + ".";
+		mes "What can I do for you?";
+		switch(select("What's your role here?","Acces to Guild Bank","Enter in my Dungeon","How can I add something in the Chest?","See Chest content","General report about the Hall","What should I do?"))
+		{
+			case 1:
+				next;
+				mes .@npcname$;
+				mes "You can see me as a normal buttler.";
+				mes "I'm just here to make your life easier, " + .@title$;
+				mes "You can also see me as a banker.";
+				mes "Guild members can let me their money, and I'll manage it with all my skills.";
+				break;
+			case 2:
+				goto OnOpenGuildBank;
+				break;
+			case 3:
+				query_sql("SELECT `startMap`,`startMapX`,`startMapY` FROM `dungeon_maps` WHERE `dungeon_id`=" + atoi(strnpcinfo(2)) + "", .@firstMapName$, .@startX, .@startY);
+				warp .@firstMapName$[0], .@startX[0], .@startY[0];
+				break;
+			case 4:
+				next;
+				mes .@npcname$;
+				mes "The first thing to do to increase the Chest content is to add something in the Dungeon.";
+				mes "One tenth of anything you'll gonna pay will be added to the Chest.";
+				next;
+				mes .@npcname$;
+				mes "Now, if you want to add something special, you can also do it here.";
+				mes "What do you want to add, " + .@title$ + "?";
+				if (select("Zenies","An item") == 1)
+				{
+					next;
+					mes .@npcname$;
+					query_sql("SELECT `chestZenyAmount` FROM `dungeon_master` WHERE `guild_id`=" + getcharid(2), .@chest);
+					mes "The actual Chest content is " + .@chest[0] + " Zenies.";
+					mes "How many do you wanna add?";
+					input .@addAmount;
+					if(Zeny >= .@addAmount)
+					{
+						query_sql("UPDATE `dungeon_master` SET `chestZenyAmount`=" + (.@chest[0] + .@addAmount) + " WHERE `guild_id`=" + getcharid(2), .@count);
+						set Zeny, Zeny - .@addAmount;
+						next;
+						mes .@npcname$;
+						mes "Perfect, " + .@title$ + ". The Chest amount is now " + (.@chest[0] + .@addAmount) + " Zenies.";
+					}
+					else
+					{
+						next;
+						mes .@npcname$;
+						mes "Sorry but you don't have that money...";
+					}	
+				}
+				else
+				{
+					next;
+					mes .@npcname$;
+					mes "So you wanna add some items as reward?";
+					mes "Be careful, once added, you can't retrieve it.";
+					callsub OnAddNewItem;
+				}
+				break;
+			case 5:
+				next;
+				mes .@npcname$;
+				callsub OnSeeChestContent;
+				break;
+			case 6:
+				next;
+				mes .@npcname$;
+				callsub OnGeneralReport;
+				break;
+			case 7:
+				next;
+				mes .@npcname$;
+				mes "I can't...I can't tell you what to do exactly...";
+				mes "You're a member of the Masters from now on.";
+				mes "Your role is to protect the dungeon, its treasure, its secrets.";
+				mes "For that, you'll have to summon monsters, add traps...";
+				mes "All those, combined with the guardians, will prevent adventurer to take your chest.";
+				mes "Because, if the chest fall...Then the dungeon too...";
+				break;
+		}
+	}
+	else
+	{
+		//visitor
+		//shouldn't be able to arrive here...
+		mes "What are you doing here?";
+		mes "You shouldn't be here.";
+		warp "Save",0,0;
+	}	
+	close;
+
+OnPCLoadMapEvent:	
+	set .@entered, 0;
+	query_sql("SELECT `startMap`,`secondMap`,`thirdMap`,`fourthMap`,`fifthMap` FROM `dungeon_maps` WHERE `dungeon_id`=" + atoi(strnpcinfo(2)), .@startMap$, .@secondMap$, .@thirdMap$, .@fourthMap$, .@fifthMap$);
+	if (.@fifthMap$[0] != "" && strcharinfo(3) == .@fifthMap$)
+	{
+		set .@message$, " on fifth floor of the dungeon.";
+		set .@entered, 1;
+	}
+	else if (.@fourthMap$[0] != "" && strcharinfo(3) == .@fourthMap$)
+	{
+		set .@message$, " on fourth floor of the dungeon.";
+		set .@entered, 1;
+	}
+	else if (.@thirdMap$[0] != "" && strcharinfo(3) == .@thirdMap$)
+	{
+		set .@message$, " on third floor of the dungeon.";
+		set .@entered, 1;
+	}
+	else if (.@secondMap$[0] != "" && strcharinfo(3) == .@secondMap$)
+	{
+		set .@message$, " on second floor of the dungeon.";
+		set .@entered, 1;
+	}
+	else if (.@startMap$[0] != "" && strcharinfo(3) == .@startMap$)
+	{
+		set .@message$, " on first floor of the dungeon.";
+		set .@entered, 1;
+	}
+	npctalk "Sire, somebody just entered " + .@message$ + ".";
+	end;
+
+OnGeneralReport:
+	set .@npcname$, "[Head Buttler]";
+	callsub OnSeeChestContent;
+	next;
+	mes .@npcname$;
+	set .@query$, "SELECT `defeatCount`,`famePoint`,`bankAmount` FROM `dungeon_master` WHERE `guild_id`=" + getcharid(2);
+	//debugmes .@query$;
+	query_sql(.@query$, .@defeatCount, .@fame,.@bankAmount);
+	if (getarraysize(.@defeatCount) > 0)
+	{
+		mes "On top of that, the Chest has already been taken " + .@defeatCount[0] + " times.";
+	}
+	else
+	{
+		mes "On top of that, the Chest has never been taken.";
+	}
+	next;
+	mes .@npcname$;
+	if (getarraysize(.@fame) > 0)
+	{
+		mes "The Hall fame has reached a total of " + .@fame[0] + " points.";
+	}
+	else
+	{
+		mes "I'm sorry, but the fame is still at it's lowest point, Sire.";
+	}
+	next;
+	mes .@npcname$;
+	if (getarraysize(.@bankAmount) > 0)
+	{
+		mes "The Vault contains a total of " + .@bankAmount[0] + "z.";
+	}
+	else
+	{
+		mes "I'm sorry, but the Vault is empty, Sire.";
+	}
+	return;
+
+OnSeeChestContent:
+	mes "In the Chest, there is currently:";
+	for (set .@i,1; .@i<9 && .@done == 0; set .@i,.@i+1)
+	{
+		set .@variableName$, "idRewardId" + .@i;
+		set .@variableName2$, "idRewardCount" + .@i;
+		set .@query$, "SELECT `" +.@variableName$ + "`,`" + .@variableName2$ + "` FROM `dungeon_master` WHERE `guild_id`=" + getcharid(2);
+		//debugmes .@query$;
+		query_sql(.@query$, .@itemId, .@itemCount);
+		if (getarraysize(.@itemId) > 0)
+		{
+			mes "	~ " + .@itemCount[0] + " " + getitemname(.@itemId[0]);
+		}
+	}
+	mes "";
+	set .@query$, "SELECT `chestZenyAmount` FROM `dungeon_master` WHERE `guild_id`=" + getcharid(2);
+	//debugmes .@query$;
+	query_sql(.@query$, .@zeniesInChest);
+	if (getarraysize(.@zeniesInChest) > 0)
+	{
+		mes "And a total of " + .@zeniesInChest[0] + "z.";
+	}
+	return;
+
+OnAddNewItem:
+	next;
+	mes .@npcname$;
+	mes "You should known that you can only add 9 different items.";
+	mes "However, for each kind of item, you can specify a different amount.";
+	mes "For instance, you can add 10 Gold and 1 Silver Coin.";
+	set .@result, callsub(OnAddItem);
+	if (.@result == -1)
+	{
+		callsub(OnAddNewItem);
+	}
+	if (.@result == 0)
+	{
+		mes "Sorry Master, but you don't have free spots...";
+		mes "Do you wish to replace an item?";
+		if (select("Yes","No") == 1)
+		{
+			next;
+			mes .@npcname$;
+			mes "Please select the item number you wanna change.";
+			input .@rank;
+			if (.@rank < 1 || .@rank > 9)
+			{
+				mes "Sorry, but that doesn't correspond to anything...";
+				close;
+			}
+			else
+			{
+				mes "Perfect.";
+				query_sql("SELECT `idRewardId" + .@rank + "`, `itemRewardCount" + .@rank + "` FROM `dungeon_master` WHERE `guild_id`=" + getcharid(2), .@itemId, .@itemCount);
+				if (getarraysize(.@itemId) > 0)
+				{
+					getitem .@itemId[0], .@itemCount[0];
+				}
+				query_sql("UPDATE `dungeon_master` SET `idRewardId" + .@rank + "`=0, `itemRewardCount" + .@rank + "`=0 WHERE `guild_id`=" + getcharid(2), .@count);
+				set .@result, callsub(OnAddItem);
+				if (.@result != 1)
+				{
+					callsub(OnAddNewItem);
+				}
+			}
+		}
+		else
+		{
+			next;
+			mes .@npcname$;
+			mes "As you wish, " + .@title$ + ".";
+		}
+	}
+	killmonster .@map$, "aladunmas::OnChestDead";
+	atcommand "@cleanmap " + .@map$;
+	close;
+	
+OnAddItem:
+	next;
+	mes .@npcname$;
+	mes "So, please, enter an item id to add.";
+	input .@itemIdAdd;
+	next;
+	mes .@npcname$;
+	mes "Okay. Now enter an amount.";
+	input .@itemCount;
+	if(.@itemCount == 0)
+	{
+		next;
+		mes .@npcname$;
+		mes "Sorry...Is...Is that a joke?";
+		close;
+	}
+	if (.@itemCount <= countitem(.@itemIdAdd))
+	{
+		next;
+		mes .@npcname$;
+		mes "Perfect. Give me a second.";
+		mes "So we're talking about " + .@itemCount + " " + getitemname(.@itemIdAdd) + "(s)";
+
+		//existing item
+		for (set .@i,1; .@i<9 && .@done == 0; set .@i,.@i+1)
+		{
+			set .@variableName$, "idRewardId" + .@i;
+			set .@variableName2$, "idRewardCount" + .@i;
+			set .@query$, "SELECT " + .@variableName2$ + " FROM `dungeon_master` WHERE `guild_id`=" + getcharid(2) + " AND " + .@variableName$ + " = " + .@itemIdAdd;
+			//debugmes .@query$;
+			query_sql(.@query$, .@count);
+			if(getarraysize(.@count) > 0)
+			{
+				//update existing one
+				set .@query$, "UPDATE `dungeon_master` SET `" + .@variableName2$ + "`=" + (.@count[0] + .@itemCount) + " WHERE `guild_id`=" + getcharid(2);
+				//debugmes .@query$;
+				query_sql(.@query$, .@count);
+				delitem .@itemIdAdd, .@itemCount;
+				set .@done, 1;
+			}
+
+		}
+		if (.@done == 0)
+		{
+			//no matching item found, add a new one
+			for (set .@i,1; .@i<9 && .@done == 0; set .@i,.@i+1)
+			{
+				set .@variableName$, "idRewardId" + .@i;
+				set .@variableName2$, "idRewardCount" + .@i;
+				query_sql("SELECT `" + .@variableName$ + "` FROM `dungeon_master` WHERE `guild_id`=" + getcharid(2), .@itemId);
+				if (getarraysize(.@itemId) == 0 || .@itemId[0] == 0)
+				{
+					//first free item
+					set .@query$, "UPDATE `dungeon_master` SET `" + .@variableName$ + "`=" + .@itemIdAdd+ ",`" + .@variableName2$ + "`=" + .@itemCount + " WHERE `guild_id`=" + getcharid(2);
+					//debugmes .@query$;
+					query_sql(.@query$, .@count);
+					delitem .@itemIdAdd, .@itemCount;
+					set .@done, 1;
+				}
+			}
+		}
+		return .@done;
+	}
+	else
+	{
+		next;
+		mes .@npcname$;
+		mes "Sorry but you don't have that item(s)...";
+	}
+	return -1;
+
+	
+OnOpenGuildBank:
+	next;
+	mes .@npcname$;
+	mes "Sure, " + .@title$ + ".";
+	mes "Let me a moment.";
+	next;
+	mes .@npcname$;
+	query_sql("SELECT `bankAmount`,`bankPwd` FROM `dungeon_master` WHERE `guild_id`=" + getcharid(2), .@bankAmount, .@password$);
+	mes "The Guild Bank Account currently contains " + .@bankAmount[0] + "z.";
+	if (getarraysize(.@password$) == 0)
+	{
+		next;
+		mes .@npcname$;
+		if (strcharinfo(0) != getguildmaster(getcharid(2))) {
+			mes "Sorry, but the Guild Leader should define a password for the Vault before anybody can use it.";
+			close;
+		}
+		mes "First of all, you need to define the password the members should use to access to the vault.";
+		input .@pass$;
+		next;
+		mes .@npcname$;
+		mes "Do you want to use the '" + .@pass$ + "' password?";
+		if (select("Yes","No") == 1)
+		{
+			next;
+			mes .@npcname$;
+			mes "Perfect, " + .@title$ + ".";
+			query_sql("UPDATE `dungeon_master` SET `bankPwd`='" + .@pass$ + "' WHERE `guild_id`=" + getcharid(2), .@count);
+		}
+		else
+		{
+			goto OnOpenGuildBank;
+		}
+	}
+	mes "Please insert the password to access to the Bank account itself.";
+	input .@pass$;
+	if (.@pass$ != .@password$)
+	{
+		next;
+		mes .@npcname$;
+		mes "Sorry but that's not the good password.";
+		mes "I can't let you access to the Guild Funds.";
+		close;
+	}
+	next;
+	mes .@npcname$;
+	mes "What do you wanna do?";
+	//security check
+	set .@newAmount, .@bankAmount[0];
+	switch(select("Retrieve money","Add money","Change password"))
+	{
+		case 1:
+			next;
+			mes .@npcname$;
+			mes "Surely, which amount please?";
+			input .@amount;
+			if (.@bankAmount[0] >= .@amount)
+			{
+				set Zeny, Zeny + .@amount;
+				set .@newAmount, .@amount;
+				set .@direction, -1;
+			}
+			else
+			{
+				next;
+				mes .@npcname$;
+				mes "Sorry, but there's not that much money.";
+				close;
+			}
+			break;
+		case 2:
+			mes "Surely, which amount please?";
+			input .@amount;
+			if (Zeny >= .@amount)
+			{
+				set Zeny, Zeny - .@amount;
+				set .@newAmount, .@amount;
+				set .@direction, 1;
+			}
+			else
+			{
+				next;
+				mes .@npcname$;
+				mes "Sorry, but you do not have that much money.";
+				close;
+			}
+			break;
+		case 3:
+			next;
+			mes .@npcname$;
+			if (strcharinfo(0) == getguildmaster(getcharid(2))) {
+				mes "Sorry, but only the Guild Leader can define a password for the Vault before anybody can use it.";
+				close;
+			}
+			mes "Please, define the new password the members should use to access to the vault.";
+			input .@pass$;
+			next;
+			mes .@npcname$;
+			mes "Do you want to use the '" + .@pass$ + "' password?";
+			if (select("Yes","No") == 1)
+			{
+				next;
+				mes .@npcname$;
+				mes "Perfect, " + .@title$ + ".";
+				query_sql("UPDATE `dungeon_master` SET `bankPwd`='" + .@pass$ + "' WHERE `guild_id`=" + getcharid(2), .@count);
+			}
+			else
+			{
+				goto OnOpenGuildBank;
+			}
+			close;
+	}
+	//update amount
+	callfunc "AddAmountToBank",getcharid(2),.@amount,.@direction;
+	next;
+	mes .@npcname$;
+	mes "See you soon, " + .@title$ + ".";
+	close;
+}

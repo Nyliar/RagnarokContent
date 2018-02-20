@@ -1,0 +1,435 @@
+// [========================================================]
+// [============     Baker - Presentation      =============]
+// [========================================================]
+// [ Version 1                                              ]
+// [========================================================]
+// [ Original script by: Alayne				    			]
+// [========================================================]
+// [ Description:                                           ]
+// [--------------------------------------------------------]
+// [                                                        ]
+// [ - The Baker				    	    				]
+// [========================================================]
+// [ Changelog: (5 last updates)                            ]
+// [--------------------------------------------------------]
+// [                                                        ]
+// [ v0: Creation                      			    		]
+// [                                                        ]
+// [                                                        ]
+// [========================================================]
+// [                                                        ]
+// [========================================================]
+
+bra_in01,103,27,2	script	Baker#1::bakDmBras	701,4,4,{
+	set .@npcname$, "[Baker]";
+	mes .@npcname$;
+	//set .taken, 1;
+	set .@belongToGuild, 0;
+	query_sql("SELECT `guild_id` FROM `dungeon_master` WHERE `guild_id`=" + getcharid(2) + " AND `id` = " + atoi(strnpcinfo(2)), .@guildId);
+	if (getarraysize(.@guildId) > 0 && .@guildId[0] == getcharid(2))
+	{
+		//dungeon master
+		if (strcharinfo(0) != getguildmaster(getcharid(2))) {
+			set .@title$, "Sire";
+		}
+		else
+		{
+			set .@title$, "Master";
+		}
+		set .@belongToGuild, 1;
+	}
+	else
+	{
+		set .@title$, "traveller";
+	}
+	mes "Hello to you, " + .@title$ + "!";
+	mes "What can I do for you?";
+	callsub OnBuildAvailableList;
+	mes "Here's a list of what I have today:";
+	for(set .@i,0; .@i < getarraysize(.availableItemsIds); set .@i,.@i+1)
+	{
+		set .@basePrice, getiteminfo(.availableItemsIds[.@i],0);
+		set .@menu$, .@menu$ + ( .@i ? ":" : "" ) + " (" + (.@belongToGuild == 1 ? .@basePrice / 2 : .@basePrice) + "z)	 ~ " + .availableItemsCount[.@i] + " " + getitemname(.availableItemsIds[.@i]);
+	}
+	set .@choice, select(.@menu$) - 1;
+	next;
+	mes .@npcname$;
+	mes "Sure. How many?";
+	input .@count;
+	if (.@count > .availableItemsCount[.@choice])
+	{
+		next;
+		mes .@npcname$;
+		mes "Sorry, but I don't have that much items...";
+		close;
+	}
+	set .@basePrice, getiteminfo(.availableItemsIds[.@choice],0);
+	set .@price, .@belongToGuild == 1 ? .@basePrice / 2 : .@basePrice;
+	if (Zeny < .@count * .@price)
+	{
+		next;
+		mes .@npcname$;
+		mes "Sorry, but you don't have enough money...";
+		close;
+	}
+	
+	set Zeny, Zeny - .@count * .@price;
+	getitem .availableItemsIds[.@choice], .@count;
+	callsub OnItemBought, .@count, .availableItemsIds[.@choice];
+	if (.@belongToGuild == 0)
+	{
+		callfunc "AddAmountToBank",.@guildId[0],.@price / 2,1;
+	}
+	close2;
+	npctalk "See you soon in our shop!";
+	//set .taken, 0;
+	end;
+	close;
+	
+OnTouch:
+	npctalk "Hello to you! Come here, come here!";
+	sleep 1000;
+	npctalk "We've got plenty of delicious pastries!";
+	end;
+	
+OnItemBought:
+	set .@itemBoughtCount, getarg(0);
+	set .@bought_nameid, getarg(1);
+	
+	set .@rank, -1;
+	for(set .@i,0;.@i<getarraysize(.recipesIds); set .@i,.@i+1)
+	{
+		if (.@bought_nameid == .recipesIds[.@i])
+		{
+			set .@rank, .@i + 1;
+		}
+	}
+	switch(.@rank)
+	{
+		case 1:
+			for(set .@i,0; .@i<getarraysize(.recipes1Items); set .@i,.@i+2)
+			{
+				callfunc("OnUpdateStocks",atoi(strnpcinfo(2)),.recipes1Items[.@i], .recipes1Items[.@i+1] * .@itemBoughtCount, -1);
+			}
+			break;
+		case 2:
+			for(set .@i,0; .@i<getarraysize(.recipes2Items); set .@i,.@i+2)
+			{
+				callfunc("OnUpdateStocks",atoi(strnpcinfo(2)),.recipes2Items[.@i], .recipes2Items[.@i+1] * .@itemBoughtCount, -1);
+			}
+			break;
+		case 3:
+			for(set .@i,0; .@i<getarraysize(.recipes3Items); set .@i,.@i+2)
+			{
+				callfunc("OnUpdateStocks",atoi(strnpcinfo(2)),.recipes3Items[.@i], .recipes3Items[.@i+1] * .@itemBoughtCount, -1);
+			}
+			break;
+		case 4:
+			for(set .@i,0; .@i<getarraysize(.recipes4Items); set .@i,.@i+2)
+			{
+				callfunc("OnUpdateStocks",atoi(strnpcinfo(2)),.recipes4Items[.@i], .recipes4Items[.@i+1] * .@itemBoughtCount, -1);
+			}
+			break;
+		case 5:
+			for(set .@i,0; .@i<getarraysize(.recipes5Items); set .@i,.@i+2)
+			{
+				callfunc("OnUpdateStocks",atoi(strnpcinfo(2)),.recipes5Items[.@i], .recipes5Items[.@i+1] * .@itemBoughtCount, -1);
+			}
+			break;
+		case 6:
+			for(set .@i,0; .@i<getarraysize(.recipes6Items); set .@i,.@i+2)
+			{
+				callfunc("OnUpdateStocks",atoi(strnpcinfo(2)),.recipes6Items[.@i], .recipes6Items[.@i+1] * .@itemBoughtCount, -1);
+			}
+			break;
+		case 7:
+			for(set .@i,0; .@i<getarraysize(.recipes7Items); set .@i,.@i+2)
+			{
+				callfunc("OnUpdateStocks",atoi(strnpcinfo(2)),.recipes7Items[.@i], .recipes7Items[.@i+1] * .@itemBoughtCount, -1);
+			}
+			break;
+		case 8:
+			for(set .@i,0; .@i<getarraysize(.recipes8Items); set .@i,.@i+2)
+			{
+				callfunc("OnUpdateStocks",atoi(strnpcinfo(2)),.recipes8Items[.@i], .recipes8Items[.@i+1] * .@itemBoughtCount, -1);
+			}
+			break;
+		case 9:
+			for(set .@i,0; .@i<getarraysize(.recipes9Items); set .@i,.@i+2)
+			{
+				callfunc("OnUpdateStocks",atoi(strnpcinfo(2)),.recipes9Items[.@i], .recipes9Items[.@i+1] * .@itemBoughtCount, -1);
+			}
+			break;
+		case 10:
+			for(set .@i,0; .@i<getarraysize(.recipes10Items); set .@i,.@i+2)
+			{
+				callfunc("OnUpdateStocks",atoi(strnpcinfo(2)),.recipes10Items[.@i], .recipes10Items[.@i+1] * .@itemBoughtCount, -1);
+			}
+			break;
+	}
+	return;
+	
+OnInit:
+	setarray .recipes1Items[0],578,2,7182,2,519,1;
+	setarray .recipes2Items[0],574,5,580,2,512,5;
+	setarray .recipes3Items[0],574,2,518,5,580,2;
+	setarray .recipes4Items[0],519,1,574,3,582,5;
+	setarray .recipes5Items[0],574,5,518,7,580,2;
+	setarray .recipes6Items[0],1020,10,7098,5;
+	setarray .recipes7Items[0],580,2,6099,3;
+	setarray .recipes8Items[0],7182,8,519,1,518,5;
+	setarray .recipes9Items[0],580,2,519,1,7457,1,582,1;
+	setarray .recipes10Items[0],580,2,521,5,574,1,7457,1,517,1;
+	setarray .recipesIds[0],12235,12710,12123,12124,12232,12338,14525,14526,12122,12321;
+	setarray .availableItemsIds[0], 0;
+	setarray .availableItemsCount[0], 0;
+	set .taken, 0;
+	end;
+
+OnBuildAvailableList:
+	deletearray .availableItemsIds[0], getarraysize(.availableItemsIds);
+	deletearray .availableItemsCount[0], getarraysize(.availableItemsCount);
+
+	set .@addItem, 1;
+	set .@itemCount, 10;
+	//check if all requirements are available
+	for(set .@i,0; .@i<getarraysize(.recipes1Items) && .@addItem == 1; set .@i,.@i+2)
+	{
+		set .@possibleCount, callfunc("OnCheckSupply",atoi(strnpcinfo(2)),.recipes1Items[.@i],.recipes1Items[.@i+1]);
+		if(.@possibleCount == 0)
+		{
+			set .@addItem, 0;
+		}
+		else
+		{
+			if (.@possibleCount < .@itemCount)
+			{
+				set .@itemCount, .@possibleCount;
+			}
+		}
+	}
+	if (.@itemCount > 0 && .@addItem == 1)
+	{
+		set .availableItemsIds[getarraysize(.availableItemsIds)], .recipesIds[0];
+		set .availableItemsCount[getarraysize(.availableItemsCount)], .@itemCount;
+	}
+	
+	set .@addItem, 1;
+	set .@itemCount, 10;
+	//check if all requirements are available
+	for(set .@i,0; .@i<getarraysize(.recipes2Items) && .@addItem == 1; set .@i,.@i+2)
+	{
+		set .@possibleCount, callfunc("OnCheckSupply",atoi(strnpcinfo(2)),.recipes2Items[.@i],.recipes2Items[.@i+1]);
+		if(.@possibleCount == 0)
+		{
+			set .@addItem, 0;
+		}
+		else
+		{
+			if (.@possibleCount < .@itemCount)
+			{
+				set .itemCount, .@possibleCount;
+			}
+		}
+	}
+	if (.@itemCount > 0 && .@addItem == 1)
+	{
+		set .availableItemsIds[getarraysize(.availableItemsIds)], .recipesIds[0];
+		set .availableItemsCount[getarraysize(.availableItemsCount)], .@itemCount;
+	}
+	
+	set .@addItem, 1;
+	set .@itemCount, 10;
+	//check if all requirements are available
+	for(set .@i,0; .@i<getarraysize(.recipes3Items) && .@addItem == 1; set .@i,.@i+2)
+	{
+		set .@possibleCount, callfunc("OnCheckSupply",atoi(strnpcinfo(2)),.recipes3Items[.@i],.recipes3Items[.@i+1]);
+		if(.@possibleCount == 0)
+		{
+			set .@addItem, 0;
+		}
+		else
+		{
+			if (.@possibleCount < .@itemCount)
+			{
+				set .itemCount, .@possibleCount;
+			}
+		}
+	}
+	if (.@itemCount > 0 && .@addItem == 1)
+	{
+		set .availableItemsIds[getarraysize(.availableItemsIds)], .recipesIds[0];
+		set .availableItemsCount[getarraysize(.availableItemsCount)], .@itemCount;
+	}
+	
+	set .@addItem, 1;
+	set .@itemCount, 10;
+	//check if all requirements are available
+	for(set .@i,0; .@i<getarraysize(.recipes4Items) && .@addItem == 1; set .@i,.@i+2)
+	{
+		set .@possibleCount, callfunc("OnCheckSupply",atoi(strnpcinfo(2)),.recipes4Items[.@i],.recipes4Items[.@i+1]);
+		if(.@possibleCount == 0)
+		{
+			set .@addItem, 0;
+		}
+		else
+		{
+			if (.@possibleCount < .@itemCount)
+			{
+				set .itemCount, .@possibleCount;
+			}
+		}
+	}
+	if (.@itemCount > 0 && .@addItem == 1)
+	{
+		set .availableItemsIds[getarraysize(.availableItemsIds)], .recipesIds[0];
+		set .availableItemsCount[getarraysize(.availableItemsCount)], .@itemCount;
+	}
+
+	set .@addItem, 1;
+	set .@itemCount, 10;
+	//check if all requirements are available
+	for(set .@i,0; .@i<getarraysize(.recipes5Items) && .@addItem == 1; set .@i,.@i+2)
+	{
+		set .@possibleCount, callfunc("OnCheckSupply",atoi(strnpcinfo(2)),.recipes5Items[.@i],.recipes5Items[.@i+1]);
+		if(.@possibleCount == 0)
+		{
+			set .@addItem, 0;
+		}
+		else
+		{
+			if (.@possibleCount < .@itemCount)
+			{
+				set .itemCount, .@possibleCount;
+			}
+		}
+	}
+	if (.@itemCount > 0 && .@addItem == 1)
+	{
+		set .availableItemsIds[getarraysize(.availableItemsIds)], .recipesIds[0];
+		set .availableItemsCount[getarraysize(.availableItemsCount)], .@itemCount;
+	}
+	
+	set .@addItem, 1;
+	set .@itemCount, 10;
+	//check if all requirements are available
+	for(set .@i,0; .@i<getarraysize(.recipes6Items) && .@addItem == 1; set .@i,.@i+2)
+	{
+		set .@possibleCount, callfunc("OnCheckSupply",atoi(strnpcinfo(2)),.recipes6Items[.@i],.recipes6Items[.@i+1]);
+		if(.@possibleCount == 0)
+		{
+			set .@addItem, 0;
+		}
+		else
+		{
+			if (.@possibleCount < .@itemCount)
+			{
+				set .itemCount, .@possibleCount;
+			}
+		}
+	}
+	if (.@itemCount > 0 && .@addItem == 1)
+	{
+		set .availableItemsIds[getarraysize(.availableItemsIds)], .recipesIds[0];
+		set .availableItemsCount[getarraysize(.availableItemsCount)], .@itemCount;
+	}
+	
+	set .@addItem, 1;
+	set .@itemCount, 10;
+	//check if all requirements are available
+	for(set .@i,0; .@i<getarraysize(.recipes7Items) && .@addItem == 1; set .@i,.@i+2)
+	{
+		set .@possibleCount, callfunc("OnCheckSupply",atoi(strnpcinfo(2)),.recipes7Items[.@i],.recipes7Items[.@i+1]);
+		if(.@possibleCount == 0)
+		{
+			set .@addItem, 0;
+		}
+		else
+		{
+			if (.@possibleCount < .@itemCount)
+			{
+				set .itemCount, .@possibleCount;
+			}
+		}
+	}
+	if (.@itemCount > 0 && .@addItem == 1)
+	{
+		set .availableItemsIds[getarraysize(.availableItemsIds)], .recipesIds[0];
+		set .availableItemsCount[getarraysize(.availableItemsCount)], .@itemCount;
+	}
+	
+	set .@addItem, 1;
+	set .@itemCount, 10;
+	//check if all requirements are available
+	for(set .@i,0; .@i<getarraysize(.recipes8Items) && .@addItem == 1; set .@i,.@i+2)
+	{
+		set .@possibleCount, callfunc("OnCheckSupply",atoi(strnpcinfo(2)),.recipes8Items[.@i],.recipes8Items[.@i+1]);
+		if(.@possibleCount == 0)
+		{
+			set .@addItem, 0;
+		}
+		else
+		{
+			if (.@possibleCount < .@itemCount)
+			{
+				set .itemCount, .@possibleCount;
+			}
+		}
+	}
+	if (.@itemCount > 0 && .@addItem == 1)
+	{
+		set .availableItemsIds[getarraysize(.availableItemsIds)], .recipesIds[0];
+		set .availableItemsCount[getarraysize(.availableItemsCount)], .@itemCount;
+	}
+	
+	set .@addItem, 1;
+	set .@itemCount, 10;
+	//check if all requirements are available
+	for(set .@i,0; .@i<getarraysize(.recipes9Items) && .@addItem == 1; set .@i,.@i+2)
+	{
+		set .@possibleCount, callfunc("OnCheckSupply",atoi(strnpcinfo(2)),.recipes9Items[.@i],.recipes9Items[.@i+1]);
+		if(.@possibleCount == 0)
+		{
+			set .@addItem, 0;
+		}
+		else
+		{
+			if (.@possibleCount < .@itemCount)
+			{
+				set .itemCount, .@possibleCount;
+			}
+		}
+	}
+	if (.@itemCount > 0 && .@addItem == 1)
+	{
+		set .availableItemsIds[getarraysize(.availableItemsIds)], .recipesIds[0];
+		set .availableItemsCount[getarraysize(.availableItemsCount)], .@itemCount;
+	}
+	
+	set .@addItem, 1;
+	set .@itemCount, 10;
+	//check if all requirements are available
+	for(set .@i,0; .@i<getarraysize(.recipes10Items) && .@addItem == 1; set .@i,.@i+2)
+	{
+		set .@possibleCount, callfunc("OnCheckSupply",atoi(strnpcinfo(2)),.recipes10Items[.@i],.recipes10Items[.@i+1]);
+		if(.@possibleCount == 0)
+		{
+			set .@addItem, 0;
+		}
+		else
+		{
+			if (.@possibleCount < .@itemCount)
+			{
+				set .itemCount, .@possibleCount;
+			}
+		}
+	}
+	if (.@itemCount > 0 && .@addItem == 1)
+	{
+		set .availableItemsIds[getarraysize(.availableItemsIds)], .recipesIds[0];
+		set .availableItemsCount[getarraysize(.availableItemsCount)], .@itemCount;
+	}
+	
+	return;
+}
+

@@ -1,0 +1,98 @@
+// [========================================================]
+// [==========    Head Buttler - Presentation     ==========]
+// [========================================================]
+// [ Version 1                                              ]
+// [========================================================]
+// [ Original script by: Alayne				    			]
+// [========================================================]
+// [ Description:                                           ]
+// [--------------------------------------------------------]
+// [                                                        ]
+// [ - The Head Buttler			    	   				 	]
+// [========================================================]
+// [ Changelog: (5 last updates)                            ]
+// [--------------------------------------------------------]
+// [                                                        ]
+// [ v0: Creation                      			    		]
+// [                                                        ]
+// [                                                        ]
+// [========================================================]
+// [                                                        ]
+// [========================================================]
+
+bra_in01,91,62,3	script	Buttler#1::butDmBras	55,{
+	set .@npcname$, "[Ildur]";
+	mes .@npcname$;
+	query_sql("SELECT `guild_id` FROM `dungeon_master` WHERE `guild_id`=" + getcharid(2) + " AND `id` = " + atoi(strnpcinfo(2)), .@guildId);
+	if (getarraysize(.@guildId) > 0 && .@guildId[0] == getcharid(2))
+	{
+		//dungeon master
+		mes "Welcome here, Master.";
+		mes "I think you're looking for the Head Buttler.";
+		mes "He's in the City Hall, sire.";
+	}
+	else
+	{
+		//visitor
+		mes "Can I make something for you?";
+		mes "I can lead you to a Dungeon.";
+		switch(select("What's this place?","What's the reward","Can I enter the dungeon?","How can I access to the Fields?"))
+		{
+			case 1:
+				next;
+				mes .@npcname$;		
+				mes "You're asking information about a Dungeon Hall.";
+				mes "This a place a guild can acquire and configure at will, to become a new kind of Dungeon.";
+				mes "This guild can then add monsters, guardians, traps...";
+				mes "Anything they will judge usefull to protect their treasure.";
+				break;
+			case 2:
+				next;
+				mes .@npcname$;
+				mes "As I've said, the reward is the treasure of the Dungeon Hall.";
+				mes "The Owner can define it himself, but there's a minimum content of zenies.";
+				mes "The remaining is up to the owner, and can be defined from 1 to 9 differents items.";
+				break;
+			case 3:
+				next;
+				mes .@npcname$;
+				mes "Well sure.";
+				mes "But there's a cost to enter.";
+				mes "The base value will be " + $dmMinimumEnterValue + "z, but it depends on the Dungeon's owner choice.";
+				break;
+			case 4:
+				next;
+				mes .@npcname$;
+				mes "Well to enter in the fields, you need to obtain a pass.";
+				mes "I'm the only one who can provide you one.";
+				mes "The pass price is " + $passPrice + "z, and it last for " + $passDuration + " minutes.";
+				mes "It means that you can stay in the field as long as you want once in, but the pass itself only have a duration of this time.";
+				next;
+				mes .@npcname$;
+				mes "Do you want one?";
+				if (select("Yes","No") == 1)
+				{
+					if (Zeny >= $passPrice)
+					{
+						set Zeny, Zeny - $passPrice;
+						rentitem $passId[0], $passDuration * 60;
+						callfunc "AddAmountToBank",getcharid(2),$passPrice / 10,1;
+					}
+					else
+					{
+						next;
+						mes .@npcname$;
+						mes "You lack some zenies, sorry...";
+					}
+				}
+				else
+				{
+					next;
+					mes .@npcname$;
+					mes "As you wish.";
+				}
+				break;
+		}
+	}	
+	close;
+}

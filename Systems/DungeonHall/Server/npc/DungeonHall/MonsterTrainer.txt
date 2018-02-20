@@ -1,0 +1,631 @@
+// [========================================================]
+// [========    Monster Trainer - Presentation     =========]
+// [========================================================]
+// [ Version 1                                              ]
+// [========================================================]
+// [ Original script by: Alayne				    			]
+// [========================================================]
+// [ Description:                                           ]
+// [--------------------------------------------------------]
+// [                                                        ]
+// [ - The Monster Trainer Manager			    	    	]
+// [========================================================]
+// [ Changelog: (5 last updates)                            ]
+// [--------------------------------------------------------]
+// [                                                        ]
+// [ v0: Creation                      			    		]
+// [                                                        ]
+// [                                                        ]
+// [========================================================]
+// [                                                        ]
+// [========================================================]
+
+bra_in01,156,64,4	script	Monster Trainer#1::traDmBras	409,{
+	set .@npcname$, "[Soumn]";
+	mes .@npcname$;
+	mes "";
+	mes "Welcome here.";
+	mes "I'm the Monster Trainer.";
+	query_sql("SELECT `guild_id` FROM `dungeon_master` WHERE `guild_id`=" + getcharid(2) + " AND `id` = " + atoi(strnpcinfo(2)), .@guildId);
+	if (getarraysize(.@guildId) > 0 && .@guildId[0] == getcharid(2))
+	{
+		//dungeon master
+		if (strcharinfo(0) != getguildmaster(getcharid(2))) {
+			set .@title$, "sire";
+		}
+		else
+		{
+			set .@title$, "master";
+		}
+		mes "Welcome in your Hall, " + .@title$ + ".";
+		switch(select("How does it work?","How can I add a monster","How can I add a Guardian?","Summon the monsters again"))
+		{
+			case 1:
+				next;
+				mes .@npcname$;
+				mes "Allright. The first thing to know is that I don't have super powers.";
+				mes "I can't tame any monsters you can ever want.";
+				next;
+				mes .@npcname$;
+				mes "To let me work properly, you first need to defeat the monsters you wanna add.";
+				next;
+				mes .@npcname$;
+				mes "If you subdue them while wearing a certain ring, you have a small chance that they'll agree to join your side.";
+				next;
+				mes .@npcname$;
+				mes "These rings can be made by the Craftsman.";
+				mes "There's different kind, but you need to see that with him.";
+				next;
+				mes .@npcname$;
+				mes "Once you've defeated one or more monsters, you can come back to me to summon them.";
+				mes "For that, you'll need to buy me some special items to let me know where you want them to spawn.";
+				next;
+				mes .@npcname$;
+				mes "Use them to establish a mental link with me, and we'll set this up together.";
+				break;
+			case 2:
+				next;
+				mes .@npcname$;
+				mes "It's pretty simple actually.";
+				next;
+				mes .@npcname$;
+				mes "The only thing you'll have to do is to go where you want the monsters to appear.";
+				mes "Use one of the item I can give you. It'll established a communication between us.";
+				next;
+				mes .@npcname$;
+				mes "I will then help you to define the monster you want to summon.";
+				next;
+				mes .@npcname$;
+				mes "So. Do you want spawn items?";
+				if (select("Yes","No") == 1)
+				{
+					next;
+					mes .@npcname$;
+					mes "What kind of monster?";
+					set .@choice, select("Monsters","Mini Boss") - 1;
+					next;
+					mes .@npcname$;
+					mes "One of those items costs "  + .summonItemPrice[.@choice] + "z. 1/10th of the price will be set in the Chest, of course.";
+					mes "Are you still interested?";
+					if (select("Yes","No") == 1)
+					{
+						next;
+						mes .@npcname$;
+						mes "Here you are then.";
+						mes "How many do you want of these items?";
+						input .@count;
+						if (Zeny >= .@count * .summonItemPrice[.@choice])
+						{
+							set Zeny, Zeny - .@count * .summonItemPrice[.@choice];
+							callfunc "UpdateChestAmount", getcharid(2), .@count * .summonItemPrice[.@choice] / 10;
+							getitem .summonItemId[.@choice], .@count;
+						}
+						else
+						{
+							next;
+							mes .@npcname$;
+							mes "Sorry, but you lack some zenies...";
+						}
+					}
+					else
+					{
+						next;
+						mes .@npcname$;
+						mes "I understand " + .@title$ + ". But I have no other choice. I need money to buy the ingredients to create those items..."; 
+					}
+				}
+				break;
+			case 3:
+				next;
+				mes .@npcname$;
+				mes "It's pretty simple actually.";
+				mes "Just as for the monsters, the only thing you'll have to do is to go where you want the monsters to appear.";
+				mes "Use one the item I can give you. It'll established a communication between us.";
+				mes "I will then help you to define the monster you want to summon.";
+				mes "Keep in mind that they are highly difficul to invok, and therefor, cost a lot more money.";
+				mes "On the other hand, you can register yourself as the Guardian of a floor.";
+				mes "If you choose this option, you'll have to fight to defend the Dungeon.";
+				mes "If you're missing, I'll create a clone of you to take your place.";
+				mes "But he'll disappear as soon as your power will be feel anywhere in Midgard.";
+				next;
+				mes .@npcname$;
+				mes "So. Do you want spawn items?";
+				if (select("Yes","No") == 1)
+				{
+					next;
+					mes .@npcname$;
+					mes "What kind of item?";
+					set .@choice, 2 + select("Monsters","Guardian") - 1;
+					next;
+					mes .@npcname$;
+					mes "One of those items costs "  + .summonItemPrice[.@choice] + "z. 1/10th of the price will be set in the Chest, of course.";
+					mes "Are you still interested?";
+					if (select("Yes","No") == 1)
+					{
+						next;
+						mes .@npcname$;
+						mes "Here you are then.";
+						mes "How many do you want of these items?";
+						input .@count;
+						if (Zeny >= .@count * .summonItemPrice[.@choice])
+						{
+							set Zeny, Zeny - .@count * .summonItemPrice[.@choice];
+							callfunc "UpdateChestAmount", getcharid(2), .@count * .summonItemPrice[.@choice] / 10;
+							getitem .summonItemId[.@choice], .@count;
+						}
+						else
+						{
+							next;
+							mes .@npcname$;
+							mes "Sorry, but you lack some zenies...";
+						}
+					}
+					else
+					{
+						next;
+						mes .@npcname$;
+						mes "I understand " + .@title$ + ". But I have no other choice. I need money to buy the ingredients to create those items..."; 
+					}
+				}
+				break;
+			case 4:
+				callfunc "SummonMonsters",atoi(strnpcinfo(2)),1,.@npcname$;
+				break;
+		}
+	}
+	else
+	{
+		mes "I'm sorry, but I have no rights to talk to you.";
+		mes "Have a nice day.";
+	}
+	close;
+	
+OnSetupSpawn:
+	set .@npcname$, "[Soumn]";
+	set .@spawnType, $spawnType;
+	//user is on one of the right maps
+	//enable adding
+	if (strcharinfo(0) != getguildmaster(getcharid(2))) {
+		set .@title$, "sire";
+	}
+	else
+	{
+		set .@title$, "master";
+	}
+	mes .@npcname$;
+	mes "Perfect, " + .@title$ + ".";
+	mes "You can know choose the kind of monster you want to summon here.";
+	mes "Be careful, you won't be immuned to them.";
+	mes "Monsters are monsters...";
+	
+	if (.@spawnType == 0)
+	{
+		//monster
+		goto OnAddMonster;
+	}
+	else if (.@spawnType == 1)
+	{
+		//mini boss
+		goto OnAddMiniBoss;
+	}
+	else if (.@spawnType == 2)
+	{
+		//mvp
+		goto OnAddBoss;
+	}
+	else if (.@spawnType == 3)
+	{
+		//guardian
+		goto OnAddGuardian;
+	}
+	close;
+	
+OnAddSpawn:
+	set .@mobId, getarg(0);
+	set .@mobCount, getarg(1);
+	set .@price, getarg(2);
+	set .@spawnType, getarg(3);
+	set .@dunId, getarg(4);
+	set .@hp, getmonsterinfo(.@mobId,2);
+	set .@lv, getmonsterinfo(.@mobId,1);
+	next;
+	mes .@npcname$;
+	mes "For this one, you'll gonna need " + (.@price * .@lv) + "z per mob. Okay?";
+	if (select("Okay","Well no...") == 1)
+	{
+		if (.@spawnType == 0 || .@spawnType == 1)
+		{
+			next;
+			mes .@npcname$;
+			mes "Perfect. How many?";
+			input .@mobCount;
+			if (.@mobCount > 0)
+			{
+				//nothing, continue			
+			}
+			else
+			{
+				next;
+				mes .@npcname$;
+				mes "Sorry but you need to give me a valid amount...";
+				goto OnAddMonster;
+			}
+		}
+		next;
+		mes .@npcname$;
+		mes "Perfect!";
+		mes "We're done here then.";
+		mes "Come back talk to me and I'll invok the monsters.";
+		getmapxy(.@userMap$, .@userx, .@usery, 0);
+		set .@query$, "INSERT INTO `dungeon_addons` (`dungeon_id`,`add_type`,`spawn_type`,`monster_id`,`monster_count`,`price`,`trap_type`,`spawnPointMap`,`spawnPointX`,`spawnPointY`,`spawnWideness`) VAlUES (" + .@dunId + ",0," + .@spawnType + "," + .@mobId + "," + .@mobCount + "," + (.@price * .@lv) + ",0,'" + .@userMap$ + "'," + .@userx + "," + .@usery + ",10)";
+		query_sql(.@query$, .@count);
+	}
+	close;
+	
+OnAddMonster:
+	next;
+	mes .@npcname$;
+	mes "Allright, now you've choose the point, choose the monster type.";
+	mes "Here's a list of monsters you've subjugated:";
+	callsub OnChooseMonster, 0;
+	
+OnChooseMonster:
+	query_sql("SELECT `monster_id` FROM `dungeon_monsters` WHERE `guild_id` = " + getcharid(2) + " AND `monster_type`=" + getarg(0), .@Id);
+	if (getarraysize(.@Id) > 0)
+	{
+		for (set .@i, 0; .@i < getarraysize(.@Id); set .@i, .@i+1)
+		{
+			set .@menu$, .@menu$ + ( .@i ? ":" : "" ) + getmonsterinfo(.@Id[.@i], 0);
+		}
+		set .@choice, select(.@menu$) - 1;
+		if (.@choice!= 254)
+		{
+			set .@basePrice, $dmRentingBasePricePerMob;
+			if (getarg(0) == 1)
+			{
+				set .@basePrice, $dmRentingBasePricePerMiniBoss;
+			}
+			query_sql("SELECT `id` FROM `dungeon_master` WHERE `guild_id` = " + getcharid(2), .@dunId);
+			callsub OnAddSpawn, .@Id[.@choice], .@mobCount, .@basePrice, getarg(0), .@dunId[0];
+		}
+		else
+		{
+			next;
+			mes .@npcname$;
+			mes "As you wish.";
+			getitem .summonItemId[getarg(0)], 1;			
+		}
+	}
+	else
+	{
+		next;
+		mes .@npcname$;
+		mes "Sorry, but it looks like you haven't subjugated any monsters of this type...";
+		getitem .summonItemId[getarg(0)], 1;
+	}
+	close;
+	
+OnAddMiniBoss:
+	next;
+	mes .@npcname$;
+	mes "Allright, now you've choose the point, choose the mini boss type.";
+	mes "Here's a list of monsters you've subjugated:";
+	callsub OnChooseMonster, 1;	
+	
+OnAddBoss:
+	next;
+	mes .@npcname$;
+	mes "So you wanna summon a Boss.";
+	mes "Keep in mind that you can only summon one per level.";
+	mes "Plus, they're pretty expensive.";
+	mes "And they're quite...rude. Don't get to close.";
+	goto OnChangeBoss;
+	close;
+	
+OnAddGuardian:
+	next;
+	mes .@npcname$;
+	mes "So you wanna register as a Guardian.";
+	mes "This one's free. You just have to activate the item.";
+	query_sql("SELECT `monster_Id` FROM `dungeon_addons` WHERE `add_type`=0 AND `spawn_type`=2 AND `spawnPointMap`='" + strcharinfo(3) + "'", .@idMvp);
+	if (getarraysize(.@idMvp) > 0)
+	{
+		next;
+		mes .@npcname$;
+		mes "Sorry Sire, but there's already a boss Guardian for this level.";
+		mes "Do you wish to remove it, and take it's place?";
+		if (select("Yes","No") == 1)
+		{
+			killmonster strcharinfo(3),"aladunmas::OnGuardianDead";
+			query_sql("DELETE FROM `dungeon_addons` WHERE `monster_Id`=" + .@idMvp[0], .@count);
+		}
+		else
+		{
+			next;
+			mes .@npcname$;
+			mes "Sure, Sire.";
+			close;
+		}
+	}
+	getmapxy(.@userMap$, .@userx, .@usery, 0);
+	mes "You're now registered as Guardian for this map.";
+	query_sql("INSERT INTO `dungeon_addons` (`dungeon_id`,`add_type`,`spawn_type`,`account_Id`,`monster_Id`,`price`,`spawnPointMap`,`spawnPointX`,`spawnPointY`) VALUES (" + .@dunId[0] + ",0,3," + getcharid(3) + "," + getcharid(0) + ",0,'" + .@userMap$ + "'," + .@userx + "," + .@usery + ")", .@count);
+	close;
+	
+OnChangeBoss:
+	query_sql("SELECT `monster_Id` FROM `dungeon_addons` WHERE `add_type`=0 AND `spawn_Type`=2 AND `spawnPointMap`='" + strcharinfo(3) + "'", .@idMvp);
+	if (getarraysize(.@idMvp) > 0)
+	{
+		next;
+		mes .@npcname$;
+		mes "Sorry Sire, but you can't invok more than one Guardian per level.";
+		mes "Do you wish to remove the last one?";
+		if (select("Yes","No") == 1)
+		{
+			killmonster strcharinfo(3),"Dungeon Summoner::OnMvpKill";
+			query_sql("DELETE FROM `dungeon_addons` WHERE `monster_Id`=" + .@idMvp[0], .@count);
+		}
+		else
+		{
+			next;
+			mes .@npcname$;
+			mes "Sure, Sire.";
+			close;
+		}
+	}
+	mes "Here's a list of monsters you've subjugated:";
+	query_sql("SELECT `monster_id` FROM `dungeon_monsters` WHERE `guild_id` = " + getcharid(2) + " AND `monster_type`=2", .@Id);
+	if (getarraysize(.@Id) > 0)
+	{
+		for (set .@i, 0; .@i < getarraysize(.@Id); set .@i, .@i+1)
+		{
+			set .@menu$, .@menu$ + ( .@i ? ":" : "" ) + getmonsterinfo(.@Id[.@i], 0);
+		}
+		set .@choiceMap, select(.@menu$) - 1;
+		if (.@choiceMap != 254)
+		{
+			query_sql("SELECT `id` FROM `dungeon_master` WHERE `guild_id` = " + getcharid(2), .@dunId);
+			callsub OnAddSpawn, .@Id[.@choice], 1, $dmRentingBasePricePerMvp, 2, .@dunId[0];
+		}
+		else
+		{
+			mes "As you wish.";
+			getitem .summonItemId[0], 1;			
+		}
+	}
+	else
+	{
+		next;
+		mes .@npcname$;
+		mes "Sorry, but it looks like you haven't subjugated any monsters of this type...";
+		getitem .summonItemId[2], 1;
+	}
+	close;	
+	
+OnPCLoginEvent:
+	query_sql("SELECT `monster_Id`,`spawnPointMap` FROM `dungeon_addons` WHERE `monster_Id`=" + getcharid(0), .@monsterId, .@spawnMap$);
+	if (getarraysize(.@monsterId) > 0)
+	{
+		if( mobcount( .@spawnMap$[0],"aladunmas::OnGuardianDead" ) ){
+			killmonster .@spawnMap$[0], "aladunmas::OnGuardianDead";
+		}
+	}
+	end;
+
+OnWhisperGlobal:
+	query_sql("SELECT `monster_Id`,`spawnPointMap`,`spawnPointX`,`spawnPointY` FROM `dungeon_addons` WHERE `dungeon_id`=0", .@monsterId, .@spawnMap$, .@spawnX, .@spawnY);
+	if (getarraysize(.@monsterId) > 0)
+	{
+		set .@countGuardian, mobcount( .@spawnMap$[0],"aladunmas::OnGuardianDead" );
+		debugmes "There's still " + .@countGuardian;
+	}
+	end;
+	
+OnPCLogoutEvent:
+	query_sql("SELECT `monster_Id`,`spawnPointMap`,`spawnPointX`,`spawnPointY` FROM `dungeon_addons` WHERE `monster_Id`=" + getcharid(0), .@monsterId, .@spawnMap$, .@spawnX, .@spawnY);
+	if (getarraysize(.@monsterId) > 0)
+	{
+		if( !mobcount( .@spawnMap$[0],"aladunmas::OnGuardianDead" ) ){
+			clone .@spawnMap$[0], .@spawnMapX[0], .@spawnY[0], "aladunmas::OnGuardianDead", .@monsterId[0];
+		}
+	}
+	end;
+	
+OnInit:
+	setarray .summonItemId[0], 30260, 30261, 30262, 30263; //item used to set spawns. Monster, Mini Boss, Boss, Guardian
+	setarray .summonItemPrice[0], 1000, 10000, 100000, 250000;
+	end;
+}
+
+function	script	SummonMonster	{
+	set .@totalPrice, getarg(0);
+	set .@spawnMap$, getarg(1);
+	set .@spawnMapX, getarg(2);
+	set .@spawnMapY, getarg(3);
+	set .@monsterId, getarg(4);
+	set .@count, getarg(5);
+	set .@event$, getarg(6);
+	if (.@totalPrice != 0)
+	{
+		set Zeny, Zeny - .@totalPrice;
+		callfunc "UpdateChestAmount",getcharid(2),.@totalPrice / 10;
+	}
+	monster .@spawnMap$, .@spawnX, .@spawnY, strmobinfo(1,.@monsterId),.@monsterId,.@count,.@event$;
+	return;
+}
+
+function	script	SummonMonsters	{
+	set .@dungeon_Id, getarg(0);
+	set .@requirePaiement, getarg(1);
+	set .@npcname$, getarg(2);
+	set .@query$, "SELECT `spawn_type`,`account_Id`,`monster_Id`,`monster_count`,`spawnPointMap`,`spawnPointX`,`spawnPointY`,`spawnWideness`,`price` FROM `dungeon_addons` WHERE `dungeon_id`=" + .@dungeon_Id + " AND (`add_type`=0 OR `add_type`=1)";
+	query_sql(.@query$, .@spawn_type, .@accountId, .@monsterId, .@monsterCount, .@spawnMap$, .@spawnX, .@spawnY, .@spawnWide, .@price);	
+	for(set .@i,0; .@i < getarraysize(.@monsterId); set .@i,.@i + 1)
+	{
+		if (.@monsterId[.@i] > 0)
+		{
+			if (.@spawn_type[.@i] == 0 || .@spawn_type[.@i] == 1)
+			{
+				set .@event$, "aladunmas::OnMonsterDead";
+			}
+			else if (.@spawn_type[.@i] == 2)
+			{
+				set .@event$, "aladunmas::OnGuardianDead";
+			}	
+			set .@invokNeed, .@monsterCount[.@i];
+			if (.@requirePaiement == 1)
+			{
+				//mob
+				if (.@spawn_type[.@i] != 3)
+				{
+					next;
+					mes .@npcname$;
+					mes "It'll cost you " + (.@invokNeed * .@price[.@i]) + " to invok " + .@invokNeed + " " + getmonsterinfo(.@monsterId[.@i],0) + ".";
+					if(select("Okay","Well, forget about that...") == 1)
+					{
+						if (Zeny >= (.@invokNeed * .@price[.@i]))
+						{
+							mes "Perfect, I'll summon then now.";
+								callfunc "SummonMonster",(.@invokNeed * .@price[.@i]), .@spawnMap$[.@i], .@spawnX[.@i], .@spawnY[.@i], .@monsterId[.@i], .@invokNeed, .@event$;
+						}
+						else
+						{
+							mes "Sorry, but you don't have that much money...";
+						}
+					}
+					else
+					{
+						mes "Do you want to invok less?";
+						if (select("Yes","No") == 1)
+						{
+							mes "Sure, how many?";
+							input .@invokNeed;
+							if (Zeny >= (.@invokNeed * .@price[.@i]))
+							{
+								mes "Perfect, I'll summon then now.";
+								callfunc "SummonMonster",(.@invokNeed * .@price[.@i]), .@spawnMap$[.@i], .@spawnX[.@i], .@spawnY[.@i], .@monsterId[.@i], .@invokNeed, .@event$;
+							}
+							else
+							{
+								mes "Sorry, but you don't have that much money...";
+							}
+						}
+						else
+						{
+							mes "Your choice, Sire.";
+						}
+					}
+				}
+				else
+				{
+					//nothing, this case is managed on login and logout
+				}
+			}
+			else
+			{
+				if (.@spawn_type[.@i] == 3)
+				{
+					if(attachrid(.@accountId[0]))
+					{
+						if(getcharid(0) == .@monsterId[.@i])
+						{
+							clone .@spawnMap$[.@i], .@spawnX[.@i], .@spawnY[.@i], "aladunmas::OnGuardianDead", .@monsterId[.@i];
+						}
+					}
+				}
+				else
+				{
+					callfunc "SummonMonster", 0, .@spawnMap$[.@i], .@spawnX[.@i], .@spawnY[.@i], .@monsterId[.@i], .@invokNeed, .@event$;
+				}
+			}
+		}
+		else
+		{
+			//????
+		}
+	}
+	return;
+}
+
+function	script	OnMonsterScrollUsed	{
+	set .@guildId, getarg(0);
+	set $spawnType, getarg(1);
+	query_sql("SELECT `firstMapName`,`guild_id`,`id` FROM `dungeon_master` WHERE `guild_id` = " + .@guildId, .@firstMapName$, .@guildId, .@dunId);
+	if (getarraysize(.@guildId) > 0 && .@guildId[0] == getcharid(2))
+	{
+		getmapxy(.@userMap$, .@userx, .@usery, 0);
+		query_sql("SELECT `startMap`,`secondMap`,`thirdMap`,`fourthMap`,`fifthMap` FROM `dungeon_maps` WHERE `startMap`=" + .@firstMapName[0], .@startMap$, .@secondMap$, .@thirdMap$, .@fourthMap$, .@fifthMap$);
+		if (.@userMap$ == .@startMap$ || .@userMap$ == .@secondMap$ || .@userMap$ == .@thirdMap$ ||
+			.@userMap$ == .@fourthMap$ || .@userMap$ == .@fifthMap$)
+		{
+			if(.@dunId[0] == 1)
+			{
+				//brasilis
+				doevent "traDmBras::OnSetupSpawn";
+			}
+			else if(.@dunId[0] == 2)
+			{
+				//dewata
+				donpcevent "traDmDew::OnSetupSpawn";
+			}
+			else if(.@dunId[0] == 3)
+			{
+				//eclage
+				donpcevent "traDmEcl::OnSetupSpawn";
+			}
+			else if(.@dunId[0] == 4)
+			{
+				//el dicastes
+				donpcevent "traDmEl::OnSetupSpawn";
+			}
+			else if(.@dunId[0] == 5)
+			{
+				//splendid
+				donpcevent "traDmSpl::OnSetupSpawn";
+			}
+			else if(.@dunId[0] == 6)
+			{
+				//manuk
+				donpcevent "traDmMan::OnSetupSpawn";
+			}
+			else if(.@dunId[0] == 7)
+			{
+				//Malangdo
+				donpcevent "traDmMal::OnSetupSpawn";
+			}
+			else if(.@dunId[0] == 8)
+			{
+				//Malaya
+				donpcevent "traDmAya::OnSetupSpawn";
+			}
+			else if(.@dunId[0] == 9)
+			{
+				//Mora
+				donpcevent "traDmMor::OnSetupSpawn";
+			}
+		}
+		else
+		{
+			set .@npcname$, "[Soumn]";
+			mes .@npcname$;
+			mes "Sorry master, but you can't add a spawn out of the dungeon...";
+			switch($spawnType)	
+			{
+				case 0:
+					getitem 30260, 1;
+					break;
+				case 1:
+					getitem 30261, 1;
+					break;
+				case 2:
+					getitem 30262, 1;
+					break;
+				case 3:
+					getitem 30263, 1;
+					break;
+			}
+			close;
+		}
+	}
+	end;
+}

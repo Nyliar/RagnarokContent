@@ -1,0 +1,62 @@
+bra_dun01	mapflag	pvp
+bra_dun01	mapflag	nomobloot
+bra_dun01	mapflag	loadevent
+bra_dun02	mapflag	pvp
+bra_dun02	mapflag	nomobloot
+bra_dun02	mapflag	loadevent
+
+dew_dun01	mapflag	pvp
+dew_dun01	mapflag	nomobloot
+dew_dun01	mapflag	loadevent
+dew_dun02	mapflag	pvp
+dew_dun02	mapflag	nomobloot
+dew_dun02	mapflag	loadevent
+
+ecl_tdun01	mapflag	pvp
+ecl_tdun01	mapflag	nomobloot
+ecl_tdun01	mapflag	loadevent
+ecl_tdun02	mapflag	pvp
+ecl_tdun02	mapflag	nomobloot
+ecl_tdun02	mapflag	loadevent
+ecl_tdun03	mapflag	pvp
+ecl_tdun03	mapflag	nomobloot
+ecl_tdun03	mapflag	loadevent
+
+dic_dun01	mapflag	pvp
+dic_dun01	mapflag	nomobloot
+dic_dun01	mapflag	loadevent
+dic_dun02	mapflag	pvp
+dic_dun02	mapflag	nomobloot
+dic_dun02	mapflag	loadevent
+
+nyd_dun01	mapflag	pvp
+nyd_dun01	mapflag	nomobloot
+nyd_dun01	mapflag	loadevent
+nyd_dun02	mapflag	pvp
+nyd_dun02	mapflag	nomobloot
+nyd_dun02	mapflag	loadevent
+
+1@nyd	mapflag	pvp
+1@nyd	mapflag	nomobloot
+1@nyd	mapflag	loadevent
+2@nyd	mapflag	pvp
+2@nyd	mapflag	nomobloot
+2@nyd	mapflag	loadevent
+
+mal_dun01	mapflag	pvp
+mal_dun01	mapflag	nomobloot
+mal_dun01	mapflag	loadevent
+
+1@ma_h	mapflag	pvp
+1@ma_h	mapflag	nomobloot
+1@ma_h	mapflag	loadevent
+1@ma_c	mapflag	pvp
+1@ma_c	mapflag	nomobloot
+1@ma_c	mapflag	loadevent
+1@ma_b	mapflag	pvp
+1@ma_b	mapflag	nomobloot
+1@ma_b	mapflag	loadevent
+
+1@mist	mapflag	pvp
+1@mist	mapflag	nomobloot
+1@mist	mapflag	loadevent

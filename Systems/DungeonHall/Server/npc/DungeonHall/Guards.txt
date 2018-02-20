@@ -1,0 +1,377 @@
+// [========================================================]
+// [==========    Realm Guard - Presentation     ===========]
+// [========================================================]
+// [ Version 1                                              ]
+// [========================================================]
+// [ Original script by: Alayne				    			]
+// [========================================================]
+// [ Description:                                           ]
+// [--------------------------------------------------------]
+// [                                                        ]
+// [ - The Realm Guards			    	    				]
+// [========================================================]
+// [ Changelog: (5 last updates)                            ]
+// [--------------------------------------------------------]
+// [                                                        ]
+// [ v0: Creation                      			    		]
+// [                                                        ]
+// [                                                        ]
+// [========================================================]
+// [                                                        ]
+// [========================================================]
+
+
+brasilis,208,97,1	script	GuardManager::alaguaman	859,{
+	end;
+	
+OnInit:
+	setarray $fieldWarpPoint$[0],"brasilis","dewata","eclage","dicastes01","splendide","manuk","","malaya","mora";
+	setarray $fieldWarpPointX[0],300,56,143,198,366,190,0,337,85;
+	setarray $fieldWarpPointY[0],313,248,61,103,242,181,0,278,54;
+	setarray $dungeonWarpPoint$[0],"bra_dun01","dew_dun02","ecl_tdun01","dic_dun01","nyd_dun01","1@nyd","mal_dun01","1@ma_h","1@mist";
+	setarray $dungeonWarpPointX[0],131,234,59,35,74,32,34,36;
+	setarray $dungeonWarpPointY[0],33,262,24,212,181,39,231,156;
+	setarray $cityHallWarpPoint$[0],"bra_in01","dewata", "eclage","dicastes02","splendide","manuk","malangdo","malaya","mora";
+	setarray $cityHallWarpPointX[0],17,131,288,120,196,298,199,325,121;
+	setarray $cityHallWarpPointY[0],67,290,298,202,180,142,145,71,135;
+	setarray $hallWarpPoint$[0],"brasilis","dewata","eclage","dicastes01","splendide","manuk","malangdo","malaya","mora";
+	setarray $hallWarpPointX[0],314,233,205,106,196,328,220,272,106;
+	setarray $hallWarpPointY[0],53,44,289,202,10,180,84,55,64;
+	end;
+}
+
+//------------------------------------- Realm entrance -----------------------------------------//
+
+//brasilis
+alberta,141,240,1	script	Realm Guard#1::alareagua	414,2,2,{
+	set .@npcname$, "[Realm Guard]";
+	mes .@npcname$;
+	query_sql("SELECT `dungeonName`,`guild_id`,`chestZenyAmount` FROM `dungeon_master` WHERE `id`=" + atoi(strnpcinfo(2)), .@dungeonName$, .@guildId, .@chest);
+	if (getarraysize(.@dungeonName$) > 0)
+	{
+		mes "I can send you to the Realm of " + .@dungeonName$[0];
+		if (.@guildId[0] != 0)
+		{
+			mes "This country belongs to the guild " + getguildname(.@guildId[0]);
+		}
+		mes "Do you wish to enter?";
+		if (getarraysize(.@guildId) > 0 && .@guildId[0] != getcharid(2))
+		{
+			mes "It'll cost you " + $dmMinimumEnterValue + "z to enter.";
+		}
+		if(select("Yes","No") == 1)
+		{
+			if (getarraysize(.@guildId) > 0 && .@guildId[0] != getcharid(2))
+			{
+				if (Zeny < $dmMinimumEnterValue)
+				{
+					next;
+					mes .@npcname$;
+					mes "You don't have that money.";
+					close;
+				}
+				set Zeny, Zeny - $dmMinimumEnterValue;
+				query_sql("UPDATE `dungeon_master` SET `chestZenyAmount`=" + (.@chest[0] + $dmMinimumEnterValue) + " WHERE `guild_id`=" + .@guildId[0], .@count);
+				callfunc "UpdateFameAmount", .@guildId[0], 10;
+			}
+			warp $hallWarpPoint$[atoi(strnpcinfo(2)) - 1], $hallWarpPointX[atoi(strnpcinfo(2)) - 1], $hallWarpPointY[atoi(strnpcinfo(2)) - 1];
+		}
+	}
+	else
+	{
+		mes "Sorry, but you have nothing to do here.";
+	}
+	close;
+	
+OnTouch:
+	query_sql("SELECT `guild_id` FROM `dungeon_master` WHERE `id`=" + atoi(strnpcinfo(2)), .@guildId);
+	if (getarraysize(.@guildId) < 0 || .@guildId[0] != getcharid(2))
+	{
+		npctalk "Hey you! Stay calm in the Realm.";
+		sleep 1000;
+		npctalk "I got you on sight!";
+	}
+	else
+	{
+		npctalk "Welcome, Sire.";
+	}
+	end;
+}
+
+//dewata
+alberta,185,144,4	duplicate(alareagua)	Realm Guard#2::alareagua2	413,2,2
+
+//eclage
+payon,229,48,4	duplicate(alareagua)	Realm Guard#3::alareagua3	415,2,2
+
+//el dicastes
+einbech,157,246,4	duplicate(alareagua)	Realm Guard#4::alareagua4	417,2,2
+
+//splendid
+payon,79,211,4	duplicate(alareagua)	Realm Guard#5::alareagua5	418,2,2
+
+//manuk
+einbech,128,259,4	duplicate(alareagua)	Realm Guard#6::alareagua6	419,2,2
+
+//malangdo
+alberta,242,117,4	duplicate(alareagua)	Realm Guard#7::alareagua7	420,2,2
+
+//malaya
+alberta,240,26,4	duplicate(alareagua)	Realm Guard#8::alareagua8	430,2,2
+
+//mora
+payon,78,48,4	duplicate(alareagua)	Realm Guard#9::alareagua9	404,2,2
+
+
+//------------------------------------- Fields -----------------------------------------//
+
+//brasilis
+brasilis,298,322,5	script	Realm Guard#1::alareafgua	414,2,2,{
+	set .@npcname$, "[Realm Guard]";
+	mes .@npcname$;
+	query_sql("SELECT `dungeonName`,`guild_id`,`id` FROM `dungeon_master` WHERE `id`=" + atoi(strnpcinfo(2)), .@dungeonName$, .@guildId, .@id);
+	if (getarraysize(.@dungeonName$) > 0)
+	{
+		mes "You're here at the exit of the Realm of " + .@dungeonName$[0];
+		if (.@guildId[0] != 0)
+		{
+			mes "This country belongs to the guild " + getguildname(.@guildId[0]);
+			if (getcharid(2) == .@guildId[0])
+			{
+				mes "Hoping to see you soon, Sire.";
+			}
+			else
+			{
+				if (countitem($passId + (.@id[0] - 1)) == 0)
+				{	
+					mes "As your not a member of the guild, you have to obtain a pass to go further.";
+					mes "The fields are reserved to the Masters and those they allow to pass.";
+					//warp back
+					warp $fieldWarpPoint$[atoi(strnpcinfo(2)) - 1], $fieldWarpPointX[atoi(strnpcinfo(2)) - 1], $fieldWarpPointY[atoi(strnpcinfo(2)) - 1];
+				}
+				else
+				{
+					mes "I can see you have a pass.";
+					mes "You can go.";
+					delitem ($passId + (.@id[0] - 1)), 1;
+				}
+			}
+		}
+	}
+	else
+	{
+		mes "Sorry, but you have nothing to do here.";
+	}
+	close;
+	
+OnTouch:
+	set .@attachrid, getcharid(3);
+	query_sql("SELECT `guild_id`,`id` FROM `dungeon_master` WHERE `id`=" + atoi(strnpcinfo(2)), .@guildId, .@id);
+	if (getarraysize(.@guildId) > 0 && .@guildId[0] != getcharid(2))
+	{
+		npctalk "Hey you! you're not allowed to go any further.";
+		sleep 1000;
+		attachrid(.@attachrid);
+		if (countitem($passId + (.@id[0] - 1)) == 0)
+		{
+			npctalk "Step back, now!";
+			sleep 1000;
+			attachrid(.@attachrid);
+			//warp back
+			warp $fieldWarpPoint$[atoi(strnpcinfo(2)) - 1], $fieldWarpPointX[atoi(strnpcinfo(2)) - 1], $fieldWarpPointY[atoi(strnpcinfo(2)) - 1];
+		}
+		else
+		{
+			npctalk "Ho I didn't see your pass. I'll keep that then";
+			sleep 1000;
+			npctalk "You can go.";
+			attachrid(.@attachrid);
+			delitem $passId + (.@id[0] - 1), 1;
+		}
+	}
+	else
+	{
+		npctalk "Be careful, Sire. Monsters looks nervous.";
+	}
+	end;
+}
+
+brasilis,303,322,4	duplicate(alareafgua)	Realm Guard#1::alareafgua2	414,2,2
+
+//dewata
+dewata,49,247,4	duplicate(alareafgua)	Realm Guard#2::alareafgua3	413,2,2
+dewata,51,252,4	duplicate(alareafgua)	Realm Guard#2::alareafgua4	413,2,2
+
+//eclage
+eclage,141,56,4	duplicate(alareafgua)	Realm Guard#3::alareafgua5	415,2,2
+eclage,141,50,4	duplicate(alareafgua)	Realm Guard#3::alareafgua6	415,2,2
+
+//el dicastes
+dicastes01,195,92,4	duplicate(alareafgua)	Realm Guard#4::alareafgua7	417,2,2
+dicastes01,200,92,4	duplicate(alareafgua)	Realm Guard#4::alareafgua8	417,2,2
+
+//splendid
+splendide,373,249,4	duplicate(alareafgua)	Realm Guard#5::alareafgua9	418,2,2
+splendide,373,243,4	duplicate(alareafgua)	Realm Guard#5::alareafgua10	418,2,2
+
+//manuk
+manuk,186,186,4	duplicate(alareafgua)	Realm Guard#6::alareafgua11	419,2,2
+manuk,192,187,4	duplicate(alareafgua)	Realm Guard#6::alareafgua12	419,2,2
+
+//malaya
+malaya,346,275,4	duplicate(alareafgua)	Realm Guard#8::alareafgua11	419,2,2
+malaya,346,280,4	duplicate(alareafgua)	Realm Guard#8::alareafgua12	419,2,2
+
+//mora
+mora,78,54,4	duplicate(alareafgua)	Realm Guard#9::alareafgua17	404,2,2
+mora,80,47,4	duplicate(alareafgua)	Realm Guard#9::alareafgua18	404,2,2
+
+
+//------------------------------------- Dungeon -----------------------------------------//
+
+//brasilis
+brasilis,192,323,5	script	Realm Guard#1::alareadgua	414,4,0,{
+	set .@npcname$, "[Realm Guard]";
+	mes .@npcname$;
+	query_sql("SELECT `dungeonName`,`guild_id` FROM `dungeon_master` WHERE `id`=" + atoi(strnpcinfo(2)), .@dungeonName$, .@guildId);
+	if (getarraysize(.@dungeonName$) > 0)
+	{
+		mes "You're here at the entrance of the Dungeon from the Realm of " + .@dungeonName$[0];
+		if (.@guildId[0] != 0)
+		{
+			mes "This place belongs to the guild " + getguildname(.@guildId[0]);
+		}
+	}
+	else
+	{
+		mes "Sorry, but you have nothing to do here.";
+	}
+	close;
+	
+OnTouch:
+	set .@npcname$, "[Realm Guard]";
+	query_sql("SELECT `guild_id` FROM `dungeon_master` WHERE `id`=" + atoi(strnpcinfo(2)), .@guildId);
+	if (getarraysize(.@guildId) > 0 && .@guildId[0] != getcharid(2))
+	{
+		npctalk "Hey you! We know you're here for the Treasure Chest...";
+		sleep 1000;
+		npctalk "I hope you'll fail!!";
+	}
+	else
+	{
+		npctalk "Be careful, Sire. Monsters looks nervous.";
+	}
+	end;
+}
+
+brasilis,199,323,4	duplicate(alareadgua)	Realm Guard#1::alareadgua2	414,4,0
+                                                             
+//dewata                                                     
+dewata,75,193,4	duplicate(alareadgua)	Realm Guard#2::alareadgua3	413,2,2
+dewata,81,193,4	duplicate(alareadgua)	Realm Guard#2::alareadgua4	413,2,2
+                                                             
+//eclage                                                     
+eclage,171,54,4	duplicate(alareadgua)	Realm Guard#3::alareadgua5	415,2,2
+eclage,171,52,4	duplicate(alareadgua)	Realm Guard#3::alareadgua6	415,2,2
+                                                             
+//el dicastes                                                
+dic_in01,135,191,4	duplicate(alareadgua)	Realm Guard#4::alareadgua7	417,2,2
+dic_in01,140,191,4	duplicate(alareadgua)	Realm Guard#4::alareadgua8	417,2,2
+                                                             
+//splendid                                                   
+spl_in01,27,221,4	duplicate(alareadgua)	Realm Guard#5::alareadgua9	418,2,2
+spl_in01,32,221,4	duplicate(alareadgua)	Realm Guard#5::alareadgua10	418,2,2
+                                                             
+//manuk                                                      
+man_in01,22,27,4	duplicate(alareadgua)	Realm Guard#6::alareadgua11	419,2,2
+man_in01,22,23,4	duplicate(alareadgua)	Realm Guard#6::alareadgua12	419,2,2
+                                                             
+//malangdo                                                      
+malangdo,76,230,4	duplicate(alareadgua)	Realm Guard#7::alareadgua13	420,2,2
+malangdo,81,233,4	duplicate(alareadgua)	Realm Guard#7::alareadgua14	420,2,2
+                                                             
+//malaya                                                     
+malaya,56,73,4	duplicate(alareadgua)	Realm Guard#8::alareadgua15	430,2,2
+malaya,56,78,4	duplicate(alareadgua)	Realm Guard#8::alareadgua16	430,2,2
+                                                             
+//mora                                                     
+mora,168,76,4	duplicate(alareadgua)	Realm Guard#9::alareadgua17	404,2,2
+mora,169,70,4	duplicate(alareadgua)	Realm Guard#9::alareadgua18	404,2,2
+                                                            
+
+
+//------------------------------------- City Hall -----------------------------------------//
+
+//brasilis
+bra_in01,12,64,1	script	Realm Guard#1::alareacgua	414,0,4,{
+	set .@npcname$, "[Realm Guard]";
+	mes .@npcname$;
+	query_sql("SELECT `dungeonName`,`guild_id` FROM `dungeon_master` WHERE `id`=" + atoi(strnpcinfo(2)), .@dungeonName$, .@guildId);
+	if (getarraysize(.@dungeonName$) > 0)
+	{
+		mes "You're here at the entrance of the Realm of " + .@dungeonName$[0];
+		if (.@guildId[0] != 0)
+		{
+			mes "This country belongs to the guild " + getguildname(.@guildId[0]);
+		}
+	}
+	else
+	{
+		mes "Sorry, but you have nothing to do here.";
+		warp $cityHallWarpPoint$[atoi(strnpcinfo(2)) - 1], $cityHallWarpPointX[atoi(strnpcinfo(2)) - 1], $cityHallWarpPointY[atoi(strnpcinfo(2)) - 1];
+	}
+	close;
+	
+OnTouch:
+	set .@attachrid, getcharid(3);
+	set .@npcname$, "[Realm Guard]";
+	query_sql("SELECT `guild_id` FROM `dungeon_master` WHERE `id`=" + strnpcinfo(2), .@guildId);
+	if (getarraysize(.@guildId) > 0 && .@guildId[0] != getcharid(2))
+	{
+		warp $cityHallWarpPoint$[atoi(strnpcinfo(2)) - 1], $cityHallWarpPointX[atoi(strnpcinfo(2)) - 1], $cityHallWarpPointY[atoi(strnpcinfo(2)) - 1];
+		npctalk "Hey you! You have nothing to do here!";
+		sleep 1000;
+		npctalk "Go back! Now!";
+		sleep 1000;
+	}
+	else
+	{
+		npctalk "Here comes " + strcharinfo(0) + ", member of the Masters!";		
+	}
+	end;
+}
+
+bra_in01,12,69,4	duplicate(alareacgua)	Realm Guard#1::alareacgua2	414,0,4
+                                                             
+//dewata                                                     
+dewata,128,295,4	duplicate(alareacgua)	Realm Guard#2::alareacgua3	413,2,2
+dewata,135,295,4	duplicate(alareacgua)	Realm Guard#2::alareacgua4	413,2,2
+                                                             
+//eclage                                                     
+ecl_in01,81,71,4	duplicate(alareacgua)	Realm Guard#3::alareacgua5	415,2,2
+ecl_in01,81,65,4	duplicate(alareacgua)	Realm Guard#3::alareacgua6	415,2,2
+                                                             
+//el dicastes                                                
+dicastes02,117,206,4	duplicate(alareacgua)	Realm Guard#4::alareacgua7	417,2,2
+dicastes02,122,206,4	duplicate(alareacgua)	Realm Guard#4::alareacgua8	417,2,2
+                                                             
+//splendid                                                   
+splendide,192,193,4	duplicate(alareacgua)	Realm Guard#5::alareacgua9	418,2,2
+splendide,202,193,4	duplicate(alareacgua)	Realm Guard#5::alareacgua10	418,2,2
+                                                             
+//manuk                                                      
+manuk,304,144,4	duplicate(alareacgua)	Realm Guard#6::alareacgua11	419,2,2
+manuk,304,139,4	duplicate(alareacgua)	Realm Guard#6::alareacgua12	419,2,2
+                                                             
+//malangdo                                                      
+malangdo,194,146,4	duplicate(alareacgua)	Realm Guard#7::alareacgua13	420,2,2
+malangdo,197,150,4	duplicate(alareacgua)	Realm Guard#7::alareacgua14	420,2,2
+                                                             
+//malaya                                                     
+malaya,322,69,4	duplicate(alareacgua)	Realm Guard#8::alareacgua15	430,2,2
+malaya,322,63,4	duplicate(alareacgua)	Realm Guard#8::alareacgua16	430,2,2
+                                                             
+//mora                                                       
+mora,118,140,4	duplicate(alareacgua)	Realm Guard#9::alareacgua17	404,2,2
+mora,128,141,4	duplicate(alareacgua)	Realm Guard#9::alareacgua18	404,2,2
+                                                             

@@ -1,0 +1,1122 @@
+// [========================================================]
+// [==========    DungeonMaster - Presentation     =========]
+// [========================================================]
+// [ Version 1                                              ]
+// [========================================================]
+// [ Original script by: Alayne				    ]
+// [========================================================]
+// [ Description:                                           ]
+// [--------------------------------------------------------]
+// [                                                        ]
+// [ - The Dungeon Master Manager			    	    ]
+// [========================================================]
+// [ Changelog: (5 last updates)                            ]
+// [--------------------------------------------------------]
+// [                                                        ]
+// [ v0: Creation                      			    ]
+// [                                                        ]
+// [ Dungeons Master (primary table)                        ]
+// [     id (INT PK)                                        ]
+// [     guild_Id (INT NULLABLE)                            ]
+// [     prioritaryGuildId   (INT NULLABLE)            	    ]
+// [     priorityExpiration   (BIGINT NULLABLE)             ]
+// [     cleared   (TINYINT)      			 	    ]
+// [     famePoint   (INT)      			 	    ]
+// [	  dungeonName (VARCHAR)				    ] 
+// [     firstMapName (VARCHAR)                             ]
+// [     bankAmount   (INT)    			           ]
+// [     bankPwd   (VARCHAR)    			           ]
+// [     chestZenyAmount   (INT)                            ]
+// [     itemRewardId1 (INT)                                ]
+// [     itemRewardCount1 (INT)                             ]
+// [     itemRewardId2 (INT)                                ]
+// [     itemRewardCount2 (INT)                             ]
+// [     itemRewardId3 (INT)                                ]
+// [     itemRewardCount3 (INT)                             ]
+// [     itemRewardId4 (INT)                                ]
+// [     itemRewardCount4 (INT)                             ]
+// [     itemRewardId5 (INT)                                ]
+// [     itemRewardCount5 (INT)                             ]
+// [     itemRewardId6 (INT)                                ]
+// [     itemRewardCount6 (INT)                             ]
+// [     itemRewardId7 (INT)                                ]
+// [     itemRewardCount7 (INT)                             ]
+// [     itemRewardId8 (INT)                                ]
+// [     itemRewardCount8 (INT)                             ]
+// [     itemRewardId9 (INT)                                ]
+// [     itemRewardCount9 (INT)                             ]
+// [	  defeatCount (INT)					    ]
+// [	  enterCount (INT)					    ]
+// [                                                        ]
+// [ Dungeons Addons (primary table)                        ]
+// [     id                             			    ]
+// [     dungeon_id                             		    ]
+// [     add_type (INT)                                     ]
+// [     spawn_Type (INT)                                   ]
+// [     account_Id (INT)                                   ]
+// [     monster_Id (INT)                                   ]
+// [     monster_count (INT)                                ]
+// [     price (INT)                  		           ]
+// [     trap_Type (INT)                                    ]
+// [     spawnPointMap (VARCHAR)                            ]
+// [     spawnPointX   (INT)                                ]
+// [     spawnPointY (INT)                                  ]
+// [     spawnWideness (INT)                                ]
+// [                                                        ]
+// [ Dungeons Maps (primary table)                          ]
+// [     dungeon_id (INT FK)                                ]
+// [     countMap (INT)                           	    ]
+// [     startMap (VARCHAR)                        	    ]
+// [     startMapX (INT)                        		    ]
+// [     startMapY (INT)                        		    ]
+// [     secondMap (VARCHAR)                        	    ]
+// [     thirdMap (VARCHAR)                        	    ]
+// [     fourthMap (VARCHAR)                        	    ]
+// [     fifthMap (VARCHAR)                        	    ]
+// [                                                        ]
+// [ Dungeons monsters (primary table)                      ]
+// [     guild_Id (INT PK)                                  ]
+// [     monster_id (INT)                                   ]
+// [     monster_type (TINYINT)                             ]
+// [                                                        ]
+// [ Dungeons stocks (primary table)                        ]
+// [     dungeon_id (INT PK)                                ]
+// [     stock_type (TINYINT)                               ]
+// [     item_id (INT)                 		           ]
+// [     item_count (INT)              		           ]
+// [                                                        ]
+// [========================================================]
+// [                                                        ]
+// [========================================================]
+
+prontera,82,145,3	script	Dungeon Master::aladunmas	HIDDEN_WARP_NPC,{
+	end;
+	
+OnSpawnChest:
+	query_sql("SELECT `firstMapName` FROM `dungeon_master` WHERE `guild_Id`=" + getcharid(2), .@firstMapName$);
+	if (getarraysize(.@firstMapName$) <= 0)
+	{
+		//error
+		logmes "An error occured during chest spawning.";
+		close;
+	}
+	query_sql("SELECT `startMap`,`secondMap`,`thirdMap`,`fourthMap`,`fifthMap` FROM `dungeon_maps` WHERE `startMap`='" + .@firstMapName$[0] + "'", .@startMap$, .@secondMap$, .@thirdMap$, .@fourthMap$, .@fifthMap$);
+	if (.@fifthMap$[0] != "")
+	{
+		//last map
+		set .@map$, .@fifthMap$[0];
+	}
+	else if (.@fourthMap$[0] != "")
+	{
+		//last map
+		set .@map$, .@fourthMap$[0];
+	}
+	else if (.@thirdMap$[0] != "")
+	{
+		//last map
+		set .@map$, .@thirdMap$[0];
+	}
+	else if (.@secondMap$[0] != "")
+	{
+		//last map
+		set .@map$, .@secondMap$[0];
+	}
+	else if (.@startMap$[0] != "")
+	{
+		//last map
+		set .@map$, .@startMap$[0];
+	}
+	
+	//kill any previously existing chest
+	killmonster .@map$, "aladunmas::OnChestDead";
+	atcommand "@cleanmap " + .@map$;
+	monster .@map$, 0, 0, "Master Chest", $treasureId, 1, "aladunmas::OnChestDead";
+	addtimer 900000, "aladunmas::OnChestExpire"; 
+	close;	
+
+OnChestExpire:
+	query_sql("SELECT `firstMapName` FROM `dungeon_master` WHERE `guild_Id`=" + getcharid(2), .@firstMapName$);
+	if (getarraysize(.@firstMapName$) <= 0)
+	{
+		//error
+		logmes "An error occured during chest spawning.";
+		close;
+	}
+	query_sql("SELECT `startMap`,`secondMap`,`thirdMap`,`fourthMap`,`fifthMap` FROM `dungeon_maps` WHERE `startMap`='" + .@firstMapName$[0] + "'", .@startMap$, .@secondMap$, .@thirdMap$, .@fourthMap$, .@fifthMap$);
+	if (.@fifthMap$[0] != "")
+	{
+		//last map
+		set .@map$, .@fifthMap$[0];
+	}
+	else if (.@fourthMap$[0] != "")
+	{
+		//last map
+		set .@map$, .@fourthMap$[0];
+	}
+	else if (.@thirdMap$[0] != "")
+	{
+		//last map
+		set .@map$, .@thirdMap$[0];
+	}
+	else if (.@secondMap$[0] != "")
+	{
+		//last map
+		set .@map$, .@secondMap$[0];
+	}
+	else if (.@startMap$[0] != "")
+	{
+		//last map
+		set .@map$, .@startMap$[0];
+	}
+	//chest expiration, mob hasn't been killed by the initial player
+	if (mobcount( .@map$,"aladunmas::OnChestDead"))
+	{
+		killmonster .@map$,"aladunmas::OnChestDead";
+	}
+	end;	
+	
+OnGuardianDead:
+	if (callsub(OnCheckCleared) == 1)
+	{
+		callsub OnSpawnChest;
+	}
+	end;
+	
+OnMonsterDead:
+	if (callsub(OnCheckCleared) == 1)
+	{
+		callsub OnSpawnChest;
+	}
+	end;
+
+OnCheckCleared:
+	set .@cleared, 1;
+	query_sql("SELECT `dungeon_id`,`startMap`,`secondMap`,`thirdMap`,`fourthMap`,`fifthMap`, `countMap` FROM `dungeon_maps` WHERE `startMap`='" + strcharinfo(3) + "' OR `secondMap`='" + strcharinfo(3) + "' OR `thirdMap`='" + strcharinfo(3) + "' OR `fourthMap`='" + strcharinfo(3) + "' OR `fifthMap`='" + strcharinfo(3) + "'", .@dungeonId, .@startMap$, .@secondMap$, .@thirdMap$, .@fourthMap$, .@fifthMap$, .@countMap);
+	if (getarraysize(.@dungeonId) > 0)
+	{
+		if (.@countMap[0] >= 1)
+		{
+			if( mobcount( .@startMap$[0],"aladunmas::OnGuardianDead" )
+				|| mobcount( .@startMap$[0],"aladunmas::OnMonsterDead" ))
+			{
+				set .@cleared, 0;
+			}
+		}
+		if (.@countMap[0] >= 2)
+		{
+			if( mobcount( .@secondMap$[0],"aladunmas::OnGuardianDead" )
+				|| mobcount( .@secondMap$[0],"aladunmas::OnMonsterDead" ))
+			{
+				set .@cleared, 0;
+			}
+		}
+		if (.@countMap[0] >= 3)
+		{
+			if( mobcount( .@thirdMap$[0],"aladunmas::OnGuardianDead" )
+				|| mobcount( .@thirdMap$[0],"aladunmas::OnMonsterDead" ))
+			{
+				set .@cleared, 0;
+			}
+		}
+		if (.@countMap[0] >= 4)
+		{	
+			if( mobcount( .@fourthMap$[0],"aladunmas::OnGuardianDead" )
+				|| mobcount( .@fourthMap$[0],"aladunmas::OnMonsterDead" ))
+			{
+				set .@cleared, 0;
+			}
+		}
+		if (.@countMap[0] >= 5)
+		{
+			if( mobcount( .@fifthMap$[0],"aladunmas::OnGuardianDead" )
+				|| mobcount( .@fifthMap$[0],"aladunmas::OnMonsterDead" ))
+			{
+				set .@cleared, 0;
+			}
+		}
+	}
+
+	if (.@cleared == 1)
+	{
+		query_sql("SELECT `guild_Id` FROM `dungeon_master` WHERE `id` = " + .@dungeonId[0], .@guildId);
+		if (getarraysize(.@guildId) == 0)
+		{
+			//first clean, update priority
+			set .@query$, "UPDATE `dungeon_master` SET `cleared` = 1";
+			if (getcharid(2) != 0)
+			{
+				set .@query$, .@query$ + ",`priorityGuildId`=" + getcharid(2) + ",`priorityExpiration`=" + (gettimetick(2) + 1800000 + " ");
+			}
+			set .@query$, .@query$ + "WHERE `id` = " + .@dungeonId[0];
+			query_sql(.@query$, .@count);
+		}
+		else
+		{
+			//dungeon taken
+			query_sql("UPDATE `dungeon_master` SET `cleared` = 1 WHERE `id` = " + .@dungeonId[0], .@count);
+		}
+	}
+	return .@cleared;
+	
+OnChestDead:
+	query_sql("SELECT `dungeon_id` FROM `dungeon_maps` WHERE `startMap`='" + strcharinfo(3) + "' OR `secondMap`='" + strcharinfo(3) + "' OR `thirdMap`='" + strcharinfo(3) + "' OR `fourthMap`='" + strcharinfo(3) + "' OR `fifthMap`='" + strcharinfo(3) + "'", .@dungeonId);
+	if (getarraysize(.@dungeonId) > 0)
+	{
+		query_sql("SELECT `guild_Id`,`defeatCount`,`chestZenyAmount`,`idRewardId1`,`idRewardCount1`,`idRewardId2`,`idRewardCount2`,`idRewardId3`,`idRewardCount3`,`idRewardId4`,`idRewardCount4`,`idRewardId5`,`idRewardCount5`,`idRewardId6`,`idRewardCount6`,`idRewardId7`,`idRewardCount7`,`idRewardId8`,`idRewardCount8`,`idRewardId9`,`idRewardCount9` FROM `dungeon_master` WHERE `id`='" + .@dungeonId[0] + "'", .@guildId, .@defeatCount, .@zeny, .@itemId1, .@itemCount1, .@itemId2, .@itemCount2, .@itemId3, .@itemCount3, .@itemId4, .@itemCount4, .@itemId5, .@itemCount5, .@itemId6, .@itemCount6, .@itemId7, .@itemCount7, .@itemId8, .@itemCount8, .@itemId9, .@itemCount9);
+		set Zeny, Zeny + .@zeny[0];
+		if(.@itemId1[0] > 0 && .@itemCount1[0] > 0)
+		{
+			getitem .@itemId1[0], .@itemCount1[0];
+		}
+		if(.@itemId2[0] > 0 && .@itemCount2[0] > 0)
+		{
+			getitem .@itemId2[0], .@itemCount2[0];
+		}
+		if(.@itemId3[0] > 0 && .@itemCount3[0] > 0)
+		{
+			getitem .@itemId3[0], .@itemCount3[0];
+		}
+		if(.@itemId4[0] > 0 && .@itemCount4[0] > 0)
+		{
+			getitem .@itemId4[0], .@itemCount4[0];
+		}
+		if(.@itemId5[0] > 0 && .@itemCount5[0] > 0)
+		{
+			getitem .@itemId5[0], .@itemCount5[0];
+		}
+		if(.@itemId6[0] > 0 && .@itemCount6[0] > 0)
+		{
+			getitem .@itemId6[0], .@itemCount6[0];
+		}
+		if(.@itemId7[0] > 0 && .@itemCount7[0] > 0)
+		{
+			getitem .@itemId7[0], .@itemCount7[0];
+		}
+		if(.@itemId8[0] > 0 && .@itemCount8[0] > 0)
+		{
+			getitem .@itemId8[0], .@itemCount8[0];
+		}
+		if(.@itemId9[0] > 0 && .@itemCount9[0] > 0)
+		{
+			getitem .@itemId9[0], .@itemCount9[0];
+		}
+		if (.@defeatCount[0] + 1 == 3)
+		{
+			//lost for the last time!
+			//debugmes "dungeon: " + .@dungeonId[0] + ", guild: " + .@guildId[0];
+			callsub OnResetDungeon, .@dungeonId[0], .@guildId[0]; 
+		}
+		query_sql("UPDATE `dungeon_master` set `defeatCount`=" + (.@defeatCount[0] + 1) + ",`chestZenyAmount`=0 WHERE `id`=" + .@dungeonId[0], .@count);
+		query_sql("UPDATE `dungeon_master` set `idRewardId1`=0,`idRewardCount1`=0,`idRewardId2`=0,`idRewardCount2`=0,`idRewardId3`=0,`idRewardCount3`=0,`idRewardId4`=0,`idRewardCount4`=0,`idRewardId5`=0,`idRewardCount5`=0 WHERE `id`=" + .@dungeonId[0], .@count);
+		query_sql("UPDATE `dungeon_master` set `idRewardId6`=0,`idRewardCount6`=0,`idRewardId7`=0,`idRewardCount7`=0,`idRewardId8`=0,`idRewardCount8`=0,`idRewardId9`=0,`idRewardCount9`=0 WHERE `id`=" + .@dungeonId[0], .@count);
+		dispbottom "[Dungeon Master] Congratulations, you've just defeated the " + .@dungeonName$[0] + " Dungeon Hall.";
+	}
+	deltimer "aladunmas::OnChestExpire";
+	end;
+	
+OnResetDungeon:
+	//args 0: dungeon id
+	//args 1: guild id
+	//reset the specified id dungeon
+	query_sql("UPDATE `dungeon_master` SET `guildId` = NULL, `chestZenyAmount` = " + $baseGuildTownPrice + ", `priorityGuildId` = NULL, `priorityExpiration` = NULL, `cleared` = 0 WHERE `id` = " + getarg(0), .@count);
+	query_sql("UPDATE `dungeon_master` SET `itemRewardId1` = 0, `itemRewardCount1` = 0, `itemRewardId2` = 0, `itemRewardCount2` = 0 WHERE `id` = " + getarg(0), .@count);
+	query_sql("UPDATE `dungeon_master` SET `itemRewardId3` = 0, `itemRewardCount3` = 0, `itemRewardId4` = 0, `itemRewardCount4` = 0 WHERE `id` = " + getarg(0), .@count);
+	query_sql("UPDATE `dungeon_master` SET `itemRewardId5` = 0, `itemRewardCount5` = 0, `itemRewardId6` = 0, `itemRewardCount6` = 0 WHERE `id` = " + getarg(0), .@count);
+	query_sql("UPDATE `dungeon_master` SET `itemRewardId7` = 0, `itemRewardCount7` = 0, `itemRewardId8` = 0, `itemRewardCount8` = 0 WHERE `id` = " + getarg(0), .@count);
+	query_sql("UPDATE `dungeon_master` SET `itemRewardId9` = 0, `itemRewardCount9` = 0 WHERE `id` = " + getarg(0), .@count);
+	//reset addons
+
+	//disable mapflags
+	query_sql("SELECT `spawn_Type` FROM `dungeon_addons` WHERE `add_type` = 3 AND `id` = " + getarg(0), .@mapflags);
+	query_sql("SELECT `startMap`,`secondMap`,`thirdMap`,`fourthMap`,`fifthMap`,`countMap` FROM `dungeon_maps` WHERE `dungeonId`='" + getarg(0) + "'", .@startMap$, .@secondMap$, .@thirdMap$, .@fourthMap$, .@fifthMap$, .@countMap);
+				
+	for(set .@i,0; .@i<getarraysize(.@mapflags); set .@i,.@i+1)
+	{
+		if (.@countMap[0] >= 1)
+		{
+			removemapflag .@startMap$[0], .@mapflags[.@i];
+		}
+		if (.@countMap[0] >= 2)
+		{
+			removemapflag .@secondMap$[0], .@mapflags[.@i];
+		}
+		if (.@countMap[0] >= 3)
+		{
+			removemapflag .@thirdMap$[0], .@mapflags[.@i];
+		}
+		if (.@countMap[0] >= 4)
+		{
+			removemapflag .@fourthMap$[0], .@mapflags[.@i];
+		}
+		if (.@countMap[0] >= 5)
+		{
+			removemapflag .@fifthMap$[0], .@mapflags[.@i];
+		}
+	}
+
+	//disable traps
+	//donpcevent "trapDmBras::OnResetTrap";
+	//for(set .@i,1; .@i<=10; set .@i,.@i+1)
+	//{
+	//	donpcevent "trapDmBras1-" + .@i + "::OnResetTrap";
+	//	donpcevent "trapDmBras2-" + .@i + "::OnResetTrap";
+	//	donpcevent "trapDmDew1-" + .@i + "::OnResetTrap";
+	//	donpcevent "trapDmDew2-" + .@i + "::OnResetTrap";
+	//	donpcevent "trapDmEcl1-" + .@i + "::OnResetTrap";
+	//	donpcevent "trapDmEcl2-" + .@i + "::OnResetTrap";
+	//	donpcevent "trapDmEcl3-" + .@i + "::OnResetTrap";
+	//	donpcevent "trapDmDic1-" + .@i + "::OnResetTrap";
+	//	donpcevent "trapDmDic2-" + .@i + "::OnResetTrap";
+	//	donpcevent "trapDmSpl1-" + .@i + "::OnResetTrap";
+	//	donpcevent "trapDmSpl2-" + .@i + "::OnResetTrap";
+	//	donpcevent "trapDmMan1-" + .@i + "::OnResetTrap";
+	//	donpcevent "trapDmMan2-" + .@i + "::OnResetTrap";
+	//	donpcevent "trapDmMal1-" + .@i + "::OnResetTrap";
+	//	donpcevent "trapDmAya1-" + .@i + "::OnResetTrap";
+	//	donpcevent "trapDmAya2-" + .@i + "::OnResetTrap";
+	//	donpcevent "trapDmMor1-" + .@i + "::OnResetTrap";
+	//}
+	
+	//reset addons
+	query_sql("DELETE FROM `dungeon_addons` WHERE `id` = " + getarg(0), .@count);
+	//reset monsters
+	query_sql("DELETE FROM `dungeon_monster` WHERE `guild_Id` = " + getarg(1), .@count);
+	//reset stocks
+	query_sql("DELETE FROM `dungeon_stocks` WHERE `id` = " + getarg(0), .@count);
+	
+	//hide npcs
+	query_sql("SELECT `famePoint` FROM `dungeon_master` WHERE `id` = " + getarg(0), .@fame);
+	set .@newAmount, .@fame[0] + .@addAmount;
+	query_sql("UPDATE `dungeon_master` SET `famePoint` = " + .@newAmount + " WHERE `id` = " + getarg(0), .@count);
+	callsub OnHideTownNpcs, getarg(0);	
+	return;
+	
+OnHideTownNpcs:
+	switch(getarg(0))
+	{
+		case 1:
+			set .@nameSuffix$, "Bras";
+			break;
+		case 2: //Dewata
+			set .@nameSuffix$, "Dew";
+			break;
+		case 3: //Eclage
+			set .@nameSuffix$, "Ecl";
+			break;
+		case 4: //El Dicastes
+			set .@nameSuffix$, "El";
+			break;
+		case 5: //Splendid
+			set .@nameSuffix$, "Spl";
+			break;
+		case 6: //Manuk
+			set .@nameSuffix$, "Man";
+			break;
+		case 7: //Malangdo
+			set .@nameSuffix$, "Mal";
+			break;
+		case 8: //Malaya
+			set .@nameSuffix$, "Aya";
+			break;
+		case 9: //Mora
+			set .@nameSuffix$, "Mor";
+			break;
+	}
+	
+	//update npc available according to fame	
+	//hide kafra
+	hideonnpc "kafDm" + .@nameSuffix$;
+	hideonnpc "guildDm" + .@nameSuffix$;
+	//hide trainer
+	hideonnpc "traDm" + .@nameSuffix$;
+	//hide craftsman
+	hideonnpc "craDm" + .@nameSuffix$;
+	//hide trapper
+	//hideonnpc "warpDm" + .@nameSuffix$;
+	//hide riddler
+	//hideonnpc "warpDm" + .@nameSuffix$;
+	//hide dealers
+	hideonnpc "toolDm" + .@nameSuffix$;
+	//hide warper
+	hideonnpc "warpDm" + .@nameSuffix$;
+	//hide stock
+	hideonnpc "stoDm" + .@nameSuffix$;
+	//hide refiner
+	hideonnpc "heiDm" + .@nameSuffix$;
+	hideonnpc "dieDm" + .@nameSuffix$;
+	hideonnpc "resDm" + .@nameSuffix$;
+	//hide pvp
+	hideonnpc "pvpDm" + .@nameSuffix$;
+	//hide healer
+	hideonnpc "healDm" + .@nameSuffix$;
+	//hide announcer
+	hideonnpc "annDm" + .@nameSuffix$;
+	//hide stylist
+	hideonnpc "stylDm" + .@nameSuffix$;
+	//hide restaurants
+	hideonnpc "tavDm" + .@nameSuffix$;
+	hideonnpc "bakDm" + .@nameSuffix$;
+	hideonnpc "restDm" + .@nameSuffix$;
+	//hide reset
+	hideonnpc "hoDm" + .@nameSuffix$;
+	return;
+	
+OnHideAllNpcs:
+	for(set .@i,1; .@i<10; set .@i,.@i+1)
+	{
+		callsub OnHideTownNpcs, .@i;
+	}
+	end;
+	
+OnUnhideNeededNpcs:
+	query_sql("SELECT `id`, `famePoint` FROM `dungeon_master` WHERE `guildId` = " + .@guild_Id, .@id, .@fame);
+	for(set .@i,1; .@i<10; set .@i,.@i+1)
+	{
+		callfunc "OnUnhideNpcAccordingToFame", .@i, .@fame[.@i];
+	}
+	close;
+	
+OnInvokBaseMonsters:
+	//Empty Guild Town
+	//Fields
+	killmonsterall "bra_dun01";
+	killmonsterall "bra_dun02";
+	killmonsterall "dew_dun01";
+	killmonsterall "dew_dun02";
+	killmonsterall "ecl_tdun01";
+	killmonsterall "ecl_tdun02";
+	killmonsterall "ecl_tdun03";
+	killmonsterall "dic_dun01";
+	killmonsterall "dic_dun02";
+	killmonsterall "nyd_dun01";
+	killmonsterall "nyd_dun02";
+	killmonsterall "1@nyd";
+	killmonsterall "2@nyd";
+	killmonsterall "mal_dun01";
+	killmonsterall "1@ma_b";
+	killmonsterall "1@ma_h";
+	killmonsterall "1@ma_c";
+	killmonsterall "1@mist";
+
+	query_sql("SELECT `id` FROM `dungeon_master` WHERE `guild_Id` IS NULL", .@id);
+	for(set .@i,0; .@i<getarraysize(.@id); set .@i,.@i+1)
+	{
+		switch(.@id[.@i])
+		{
+			case 1: //Brasilis
+				monster "bra_dun01",0,0,"--ja--",1084,1,"aladunmas::OnMonsterDead";
+				//monster "bra_dun01",0,0,"--ja--",1161,10,"aladunmas::OnMonsterDead";
+				//monster "bra_dun01",0,0,"--ja--",1141,10,"aladunmas::OnMonsterDead";
+				//monster "bra_dun01",0,0,"--ja--",1048,10,"aladunmas::OnMonsterDead";
+				//monster "bra_dun01",0,0,"--ja--",2069,60,"aladunmas::OnMonsterDead";
+				//monster "bra_dun01",0,0,"--ja--",2070,100,"aladunmas::OnMonsterDead";
+				
+				monster "bra_dun02",0,0,"--ja--",1084,1,"aladunmas::OnMonsterDead"; //20
+				//monster "bra_dun02",0,0,"--ja--",1161,10,"aladunmas::OnMonsterDead";
+				//monster "bra_dun02",0,0,"--ja--",1141,10,"aladunmas::OnMonsterDead";
+				//monster "bra_dun02",0,0,"--ja--",1048,20,"aladunmas::OnMonsterDead";
+				//monster "bra_dun02",0,0,"--ja--",2069,120,"aladunmas::OnMonsterDead";
+				//monster "bra_dun02",0,0,"--ja--",2070,80,"aladunmas::OnMonsterDead";
+				break;
+			case 2: //Dewata
+				monster "dew_dun01",0,0,"--ja--",1305,25,"aladunmas::OnMonsterDead";
+				monster "dew_dun01",0,0,"--ja--",1311,10,"aladunmas::OnMonsterDead";
+				monster "dew_dun01",0,0,"--ja--",2152,70,"aladunmas::OnMonsterDead";
+				
+				monster "dew_dun02",0,0,"--ja--",1311,20,"aladunmas::OnMonsterDead";
+				monster "dew_dun02",0,0,"--ja--",1309,30,"aladunmas::OnMonsterDead";
+				monster "dew_dun02",0,0,"--ja--",1675,50,"aladunmas::OnMonsterDead";
+				monster "dew_dun02",0,0,"--ja--",1072,30,"aladunmas::OnMonsterDead";
+				break;
+			case 3: //Eclage
+				monster "ecl_tdun01",0,0,"--ja--",1195,5,"aladunmas::OnMonsterDead";
+				monster "ecl_tdun01",0,0,"--ja--",1151,10,"aladunmas::OnMonsterDead";
+				monster "ecl_tdun01",0,0,"--ja--",1696,5,"aladunmas::OnMonsterDead";
+				
+				monster "ecl_tdun02",0,0,"--ja--",1195,10,"aladunmas::OnMonsterDead";
+				monster "ecl_tdun02",0,0,"--ja--",1151,10,"aladunmas::OnMonsterDead";
+				monster "ecl_tdun02",0,0,"--ja--",1696,15,"aladunmas::OnMonsterDead";
+				monster "ecl_tdun02",0,0,"--ja--",1693,5,"aladunmas::OnMonsterDead";
+				
+				monster "ecl_tdun03",0,0,"--ja--",1195,15,"aladunmas::OnMonsterDead";
+				monster "ecl_tdun03",0,0,"--ja--",1151,15,"aladunmas::OnMonsterDead";
+				monster "ecl_tdun03",0,0,"--ja--",1696,5,"aladunmas::OnMonsterDead";
+				monster "ecl_tdun03",0,0,"--ja--",1693,15,"aladunmas::OnMonsterDead";
+				monster "ecl_tdun03",0,0,"--ja--",1694,10,"aladunmas::OnMonsterDead";
+				monster "ecl_tdun03",0,0,"--ja--",1695,15,"aladunmas::OnMonsterDead";
+				break;
+			case 4: //El Dicastes
+				monster "dic_dun01",0,0,"--ja--",1300,50,"aladunmas::OnMonsterDead";
+				monster "dic_dun01",0,0,"--ja--",1618,45,"aladunmas::OnMonsterDead";
+				
+				monster "dic_dun02",0,0,"--ja--",1300,50,"aladunmas::OnMonsterDead";
+				monster "dic_dun02",0,0,"--ja--",1618,45,"aladunmas::OnMonsterDead";
+				break;
+			case 5: //Splendid
+				monster "nyd_dun01",0,0,"--ja--",2016,20,"aladunmas::OnMonsterDead";
+				monster "nyd_dun01",0,0,"--ja--",2013,40,"aladunmas::OnMonsterDead";
+				monster "nyd_dun01",0,0,"--ja--",2014,10,"aladunmas::OnMonsterDead";
+				monster "nyd_dun01",0,0,"--ja--",1189,4,"aladunmas::OnMonsterDead";
+				
+				monster "nyd_dun02",0,0,"--ja--",2016,15,"aladunmas::OnMonsterDead";
+				monster "nyd_dun02",0,0,"--ja--",2013,55,"aladunmas::OnMonsterDead";
+				monster "nyd_dun02",0,0,"--ja--",2014,25,"aladunmas::OnMonsterDead";
+				monster "nyd_dun02",0,0,"--ja--",2026,10,"aladunmas::OnMonsterDead";
+				break;
+			case 6: //Manuk
+				monster "1@nyd",0,0,"--ja--",2016,30,"aladunmas::OnMonsterDead";
+				monster "1@nyd",0,0,"--ja--",1671,30,"aladunmas::OnMonsterDead";
+				monster "1@nyd",0,0,"--ja--",1319,40,"aladunmas::OnMonsterDead";
+				monster "1@nyd",0,0,"--ja--",1317,36,"aladunmas::OnMonsterDead";
+				monster "1@nyd",0,0,"--ja--",1777,36,"aladunmas::OnMonsterDead";
+				
+				monster "2@nyd",0,0,"--ja--",2016,30,"aladunmas::OnMonsterDead";
+				monster "2@nyd",0,0,"--ja--",2021,30,"aladunmas::OnMonsterDead";
+				monster "2@nyd",0,0,"--ja--",2020,40,"aladunmas::OnMonsterDead";
+				monster "2@nyd",0,0,"--ja--",1317,36,"aladunmas::OnMonsterDead";
+				monster "2@nyd",0,0,"--ja--",1777,36,"aladunmas::OnMonsterDead";
+				break;
+			case 7: //Malangdo
+				monster "mal_dun01",0,0,"--ja--",1073,10,"aladunmas::OnMonsterDead";
+				monster "mal_dun01",0,0,"--ja--",1074,10,"aladunmas::OnMonsterDead";
+				monster "mal_dun01",0,0,"--ja--",1266,20,"aladunmas::OnMonsterDead";
+				monster "mal_dun01",0,0,"--ja--",1206,30,"aladunmas::OnMonsterDead";
+				monster "mal_dun01",0,0,"--ja--",1317,60,"aladunmas::OnMonsterDead";
+				monster "mal_dun01",0,0,"--ja--",2069,45,"aladunmas::OnMonsterDead";
+				break;
+			case 8: //Malaya
+				monster "1@ma_b",0,0,"--ja--",1627,4,"aladunmas::OnMonsterDead";
+				monster "1@ma_b",0,0,"--ja--",1867,10,"aladunmas::OnMonsterDead";
+				monster "1@ma_b",0,0,"--ja--",1382,9,"aladunmas::OnMonsterDead";
+				
+				monster "1@ma_c",0,0,"--ja--",1068,72,"aladunmas::OnMonsterDead";
+				monster "1@ma_c",0,0,"--ja--",1141,53,"aladunmas::OnMonsterDead";
+				
+				monster "1@ma_h",0,0,"--ja--",1374,2,"aladunmas::OnMonsterDead";
+				monster "1@ma_h",0,0,"--ja--",1148,39,"aladunmas::OnMonsterDead";
+				monster "1@ma_h",0,0,"--ja--",1505,24,"aladunmas::OnMonsterDead";
+				break;
+			case 9: //Mora
+				monster "1@mist",0,0,"--ja--",1304,37,"aladunmas::OnMonsterDead";
+				monster "1@mist",0,0,"--ja--",1294,39,"aladunmas::OnMonsterDead";
+				monster "1@mist",0,0,"--ja--",1311,43,"aladunmas::OnMonsterDead";
+				monster "1@mist",0,0,"--ja--",1294,23,"aladunmas::OnMonsterDead";
+				monster "1@mist",0,0,"--ja--",1308,19,"aladunmas::OnMonsterDead";
+				monster "1@mist",0,0,"--ja--",1614,15,"aladunmas::OnMonsterDead";
+				break;
+		}
+	}
+	//Bought ones
+	query_sql("SELECT `id` FROM `dungeon_master` WHERE `guild_Id` IS NOT NULL", .@id);
+	for(set .@i,0; .@i<getarraysize(.@id); set .@i,.@i+1)
+	{
+		callfunc "SummonMonsters",.@id[.@i],0,"";
+	}
+	end;
+
+OnNPCKillEvent:
+	set .@subdue, 0;
+	if (compare(.bossMonstersIds$, "" + killedrid) == 1 && isequipped(30247))
+	{
+		//MvP
+		set .@subdue, 3;
+		set .@baseMaxRand, 1000;
+	}
+	else if (compare(.miniBossMonstersIds$, "" + killedrid) == 1 && isequipped(30246))
+	{
+		//Mini Boss
+		set .@subdue, 2;
+		set .@baseMaxRand, 100;
+	}
+	else if (isequipped(30245))
+	{
+		//Monsters
+		set .@subdue, 1;
+		set .@baseMaxRand, 10;
+	}
+	set .@hp, getmonsterinfo(killedrid,2);
+	set .@lv, getmonsterinfo(killedrid,1);
+	set .@modulo, (BaseLevel / .@lv);	
+	if (.@subdue > 0)
+	{
+		//the higher the ratio lvl / hp, the toughest the subdue is
+		set .@maxRand, .@hp / .@baseMaxRand;
+		if (.@baseMaxRand > .@maxRand)
+		{
+			set .@maxRand, .@baseMaxRand;
+		}
+		set .@randSuccessSubdue, rand(0, .@maxRand);
+		if (.@randSuccessSubdue < .@modulo * 10)
+		{
+			specialeffect2 244; //Magic rod
+			dispbottom "You've subdued this monster.";
+			//insert in database
+			query_sql("SELECT `monster_id` FROM `dungeon_monsters` WHERE `guild_Id`=" + getcharid(2) + " AND `monster_id`=" + killedrid, .@id);
+			if(getarraysize(.@id) == 0)
+			{
+				query_sql("INSERT INTO `dungeon_monsters` (`guild_Id`,`monster_id`,`monster_type`) VAlUES (" + getcharid(2) + "," + killedrid + ","  + (.@subdue - 1) + ")", .@count);
+			}
+		}
+	}
+	end;
+	
+OnInit:
+	set $baseGuildTownPrice, 25000000;
+	set $dmMinimumEnterValue, 5000;
+	set $dmRentingBasePricePerMob, 1500;
+	set $dmRentingBasePricePerMvp, 100000;
+	set $dmRentingBasePricePerMiniBoss, 50000;
+	set $passId, 30251;
+	set $passPrice, 10000;
+	set $passDuration, 15;
+	set $famePointForKafra, 1;
+	set $famePointForCraftsman, 1;
+	set $famePointForTrainer, 1;
+	set $famePointForTrapper, 10;
+	set $famePointForRiddler, 20;
+	set $famePointForDealers, 50;	
+	set $famePointForHealer, 100;
+	set $famePointForWarper, 100;
+	set $famePointForStockManager, 150;
+	set $famePointForRefiner, 200;
+	set $famePointForPvp, 250;
+	set $famePointForAnnouncer, 400;
+	set $famePointForStylist, 450;
+	set $famePointForRestaurants, 500;
+	set $famePointForReset, 550;
+	set $treasureId, 1938;
+	set $summonChestDuration, 300;
+	
+	set .bossMonstersIds,"1511,1647,1785,1630,1039,1874,2068,1272,1719,1046,1389,1112,1115,1418,1871,1252,1768,1086,1885,1649,1802,1651,1832,1492,1734,1251,1779,1980,1688,2156,1646,1373,1147,1059,1150,1087,1190,1038,1157,1159,1623,1650,1583,1708,1312,1751,1685,1648,1917,1658,1956";
+	set .miniBossMonstersIds$,"1219,1096,1388,1268,1250,1283,1270,1302,1582,1091,1093,1205,1120,1299,1296,1259,1641,1873,1830,1839,1307,1783,1681,1626,1643,1645,1720,1833,1640,1090,1289,1262,1203,1870,1700,1295,1320,1702,1831,1701,1755,1754,1644,1703,1829,1710,1705,1707,1712,1711,1706,1704,1709,1960,1961,1959,1958,1204,1089,1092,1765,1642";
+	
+	//callsub OnHideAllNpcs;
+	//callsub OnUnhideNeededNpcs;
+	goto OnInvokBaseMonsters;
+	end;
+}
+
+prt_in,250,16,5	script	Maugre::aladmma	856,{
+	set .@npcname$, "[Maugre]";
+	mes .@npcname$;
+	mes "";
+	cutin "ep162_rds02", 2;
+	mes "What do you want?";
+	mes "I don't have time to lose with people like you.";
+	if (DMQUEST == 0)
+	{
+		next;
+		mes .@npcname$;
+		cutin "ep162_rds05", 2;
+		mes "For years now, midgard inhabitants hunt down monsters.";
+		mes "Without even trying to understand them.";
+		mes "All they do, they do it to save their home, their family.";
+		if(select("But they're monsters!","I want to help them") == 1)
+		{
+			next;
+			mes .@npcname$;
+			cutin "ep162_rds02", 2;
+			mes "Yes, and?";
+			mes "They're just fighting for their lifes!";
+		}
+		else
+		{
+			next;
+			mes .@npcname$;
+			mes "Don't try to fool me.";
+			cutin "ep162_rds04", 2;
+			mes "No Human beings want to help monsters.";
+			set DMQUEST, 1;
+		}
+	}
+	else
+	{
+		next;
+		mes .@npcname$;
+		cutin "ep162_rds01", 2;	
+		mes "Humpf...you don't give up easily hum?";
+		mes "You want to show me that you wanna help monsters, right?";
+		mes "Then...Show me.";
+		next;
+		mes .@npcname$;
+		mes "I got some pretty special powers.";
+		mes "I can make you become a Dungeon Master.";
+		mes "That mean that I can rent you a dungeon, for a while.";
+		mes "Interested?";
+		if (select("What is it about?","No, no need of that.") == 1)
+		{	
+			next;
+			mes .@npcname$;
+			mes "Hu! Let's talk about it then.";
+			mes "To understand the hard life of a monster, you should act like them.";
+			next;
+			mes .@npcname$;
+			mes "By ruling a Dungeon, you'll be able to create your own 'home' the way you like it.";
+			mes "You'll be able to add monsters, guardians, traps, or whatever.";
+			mes "But for that, you'll have to pay.";
+			next;
+			mes .@npcname$;
+			mes "First, you'll have to pay for the rent. And you have to belong to a guild.";
+			mes "Then, for the monsters, for the traps...";
+			next;
+			mes .@npcname$;
+			mes "Everything you'll add, you'll have to pay it.";
+			mes "And on top of that, you'll have to compose a chest, with a minimum value.";
+			next;
+			mes .@npcname$;
+			mes "Once all this done, you'll be able to advertise your dungeon.";
+			mes "Each fighter, adventurer, or whatever they call themselves,";
+			mes "will have to pay to enter.";
+			next;
+			mes .@npcname$;
+			mes "You'll earn every passage fee.";
+			mes "As long as your dungeon hasn't be defeat, you'll earn it.";
+			mes "But loose several times, and your monsters will throw you out themselves.";
+			mes "Still interested?";
+			if (select("Yes","No") == 1)
+			{
+				next;
+				mes .@npcname$;
+				mes "Hum...You looks like...interesting.";
+				mes "Perfect then. Let's see that!";
+				query_sql("SELECT `guild_Id` FROM `dungeon_master` WHERE `guild_Id`=" + getcharid(2), .@guildId);
+				if (getarraysize(.@guildId) > 0)
+				{
+					next;
+					mes .@npcname$;
+					mes "Sorry, but you can't rule more than one dungeon at a time. That's simply impossible...";
+					close;
+				}
+				goto OnRegisterDungeon;
+			}
+			else
+			{
+				next;
+				mes .@npcname$;
+				cutin "ep162_rds02", 2;
+				mes "Just as I thought...";
+				mes "Too hard for you, hey?";
+			}
+		}
+		else
+		{
+			next;
+			mes .@npcname$;
+			cutin "ep162_rds02", 2;
+			mes "Just as I thought...";
+			mes "Go away...";
+		}
+	}
+	next;
+	mes .@npcname$;
+	mes "Humpf...I've no more time to lose.";
+	cutin "", 255;
+	close;
+	
+OnRegisterDungeon:
+	set .@ncpname$, "[Maugre]";
+	next;
+	mes .@npcname$;
+	set .@gid, getcharid(2);
+	if (.@gid == 0) {
+		mes "Sorry you are not in a guild. You can't buy a Dungeon Hall.";
+		close;
+	}
+	if (strcharinfo(0) != getguildmaster(.@gid)) {
+		mes "Sorry, but only the Guild Master can rent a Dungeon Hall.";
+		close;
+	}
+	cutin "ep162_rds01", 2;	
+	mes "First of all, you need to choose a type of Dungeon Hall.";
+	query_sql("SELECT `id`,`dungeonName`,`chestZenyAmount`,`priorityGuildId`,`priorityExpiration` FROM `dungeon_master` WHERE `guild_Id` IS NULL AND `cleared`=1", .@id, .@dungeonName$, .@price, .@priorId, .@expireDate);
+	
+	if (getarraysize(.@dungeonName$) == 0)
+	{
+		next;
+		mes .@npcname$;
+		cutin "ep162_rds05", 2;	
+		mes "Sorry, but no Hall are available right now.";
+		mes "To buy one, it has to be cleaned from it's...inhabitants first.";
+		next;
+		mes .@npcname$;
+		mes "Once cleared, come back to me. And you'll be able to rent it.";
+		mes "But be careful. Clearing it doesn't mean you'll be the one to buy it.";
+		mes "Anybody coming first can rent it. On the other hand, if your guild clean it, you'll have a priority of 30 minutes to rent it.";
+		next;
+		mes "[" + strcharinfo(0) + "]";
+		mes "Can I have some infos about the dungeons?";
+		next;
+		mes .@npcname$;
+		cutin "ep162_rds01", 2;	
+		mes "Humpf. I guess so.";
+		mes "So, open your ears.";
+		query_sql("SELECT `dungeonName`,`chestZenyAmount` FROM `dungeon_master`", .@dungeonName$, .@price);
+		for (set .@i, 0; .@i < getarraysize(.@dungeonName$); set .@i, .@i+1)
+		{
+			if(.@i != 0)
+			{
+				next;
+				mes .@npcname$;
+			}
+			mes "The Dungeon Hall " + .@dungeonName$[.@i] + " cost " + .@price[.@i] + " zenies.";
+		}
+		next;
+		mes .@npcname$;
+		mes "Now go away...I've no more time to lose.";
+		cutin "", 255;
+		close;
+	}
+	
+	for (set .@i, 0; .@i < getarraysize(.@dungeonName$); set .@i, .@i+1)
+	{
+		set .@menu$, .@menu$ + ( .@i ? ":" : "" ) + .@dungeonName$[.@i] + " for " + (.@price[.@i]) + "z.";
+	}
+	set .@choiceMap, select(.@menu$) - 1;
+	if (.@choiceMap != 254)
+	{
+		next;
+		mes .@npcname$;	
+		cutin "ep162_rds02", 2;	
+		mes "So you wanna settle your Dungeon Hall on " + .@dungeonName$[.@choiceMap] + ", hu?";
+		mes "That's not a bad choice, you know.";
+		mes "It can be a pretty big dungeon, sincerely.";
+		mes "Let's see if you got what it needs to rule this.";
+
+		if (.@gid != .@priorId[.@choiceMap] && gettimetick(2) <= .@expireDate)
+		{
+			next;
+			mes .@npcname$;	
+			mes "Sorry, but another guild got the priority. On this one.";
+			mes "Come back a bit later, if they haven't use their priority rights, you'll be able to rent this one.";
+			next;
+			mes .@npcname$;
+			mes "Now go away...I've no more time to lose.";
+			cutin "", 255;
+			close;
+		}	
+				
+		if (Zeny >= .@price[.@choice])
+		{
+			next;
+			mes .@npcname$;	
+			set Zeny, Zeny - .@price[.@choice];
+			mes "Perfect.";
+			mes "You have what is needed for this dungeon.";
+			if (.@price[.@choice] < $baseGuildTownPrice)
+			{
+				mes "However, this isn't enough to fill the minimum Chest content.";
+				mes "You lack " + ($baseGuildTownPrice - .@price[.@choice]) + "z for that.";
+				mes "Do you want to complete?";
+				if (select("Yes","No") == 1)
+				{
+					if (Zeny >= ($baseGuildTownPrice - .@price[.@choice]))
+					{
+						next;
+						mes .@npcname$;	
+						mes "Perfect then, I'll take it.";
+						set Zeny, Zeny - ($baseGuildTownPrice - .@price[.@choice]);
+					}
+					else
+					{
+						next;
+						mes .@npcname$;	
+						cutin "ep162_rds03", 2;	
+						mes "Sorry, but you lack some money.";
+						next;
+						mes .@npcname$;
+						mes "Now go away...I've no more time to lose.";
+						cutin "", 255;
+						close;
+					}
+				}
+				else
+				{
+					next;
+					mes .@npcname$;	
+					cutin "ep162_rds05", 2;	
+					mes "Then you can't rent this Dungeon Hall...";
+					next;
+					mes .@npcname$;
+					mes "Now go away...I've no more time to lose.";
+					cutin "", 255;
+					close;
+				}
+			}
+			next;
+			mes .@npcname$;	
+			mes "Your guild now rules this Dungeon Hall.";
+			mes "What about giving it a name, hu?";
+			input .@dungeonName$;
+			next;
+			mes .@npcname$;	
+			mes "Go there, and find the Buttler.";
+			mes "He'll explain you how to become a good ruler.";
+			mes "Good luck.";
+			query_sql("UPDATE `dungeon_master` SET `guild_Id` = " + getcharid(2) + ", `dungeonName` = '" + .@dungeonName$ + "', `chestZenyAmount` = " + $baseGuildTownPrice + ", `priorityGuildId` = NULL, `priorityExpiration` = NULL, `cleared` = 0 WHERE `id` = " + .@id[.@choice], .@count);
+			callfunc "UpdateFameAmount", getcharid(2), 10;
+		}
+	}
+	next;
+	mes .@npcname$;
+	mes "Humpf...I've no more time to lose.";
+	cutin "", 255;
+	close;
+}
+
+function	script	OnUnhideNpcAccordingToFame	{
+	set .@dungeonId, getarg(0);
+	set .@fameAmout, getarg(1);
+	switch(.@dungeonId)
+	{
+		case 1:
+			set .@nameSuffix$, "Bras";
+			break;
+		case 2: //Dewata
+			set .@nameSuffix$, "Dew";
+			break;
+		case 3: //Eclage
+			set .@nameSuffix$, "Ecl";
+			break;
+		case 4: //El Dicastes
+			set .@nameSuffix$, "El";
+			break;
+		case 5: //Splendid
+			set .@nameSuffix$, "Spl";
+			break;
+		case 6: //Manuk
+			set .@nameSuffix$, "Man";
+			break;
+		case 7: //Malangdo
+			set .@nameSuffix$, "Mal";
+			break;
+		case 8: //Malaya
+			set .@nameSuffix$, "Aya";
+			break;
+		case 9: //Mora
+			set .@nameSuffix$, "Mor";
+			break;
+	}
+
+	hideoffnpc "ckafDm" + .@nameSuffix$;
+	hideoffnpc "cwarpDm" + .@nameSuffix$;
+	hideoffnpc "chealDm" + .@nameSuffix$;
+	
+	if (.@fameAmout >= $famePointForKafra)
+	{
+		//display kafra
+		hideoffnpc "kafDm" + .@nameSuffix$;
+		hideoffnpc "guildDm" + .@nameSuffix$;
+	}
+	if (.@fameAmout >= $famePointForInn)
+	{
+		//display heal
+		hideoffnpc "healDm" + .@nameSuffix$;
+	}
+	if (.@fameAmout >= $famePointForTrainer)
+	{
+		//display trainer
+		hideoffnpc "traDm" + .@nameSuffix$;
+	}
+	if (.@fameAmout >= $famePointForCraftsman)
+	{
+		//display craftsman
+		hideoffnpc "craDm" + .@nameSuffix$;
+	}
+	if (.@fameAmout >= $famePointForTrapper)
+	{
+		//display trapper
+	}
+	if (.@fameAmout >= $famePointForRiddler)
+	{
+		//display riddler
+	}
+	if (.@fameAmout >= $famePointForDealers)
+	{
+		//display dealers
+		hideoffnpc "toolDm" + .@nameSuffix$;
+	}
+	if (.@fameAmout >= $famePointForWarper)
+	{
+		//display warper
+		hideoffnpc "warpDm" + .@nameSuffix$;
+	}
+	if (.@fameAmout >= $famePointForStockManager)
+	{
+		//display stock
+		hideoffnpc "stoDm" + .@nameSuffix$;
+	}
+	if (.@fameAmout >= $famePointForRefiner)
+	{
+		//display refiner
+		hideoffnpc "heiDm" + .@nameSuffix$;
+		hideoffnpc "dieDm" + .@nameSuffix$;
+		hideoffnpc "resDm" + .@nameSuffix$;
+	}
+	if (.@fameAmout >= $famePointForPvp)
+	{
+		//display pvp
+		hideoffnpc "pvpDm" + .@nameSuffix$;
+	}
+	if (.@fameAmout >= $famePointForHealer)
+	{
+		//display healer
+		hideoffnpc "healDm" + .@nameSuffix$;
+	}
+	if (.@fameAmout >= $famePointForAnnouncer)
+	{
+		//display announcer
+		hideoffnpc "annDm" + .@nameSuffix$;
+	}
+	if (.@fameAmout >= $famePointForStylist)
+	{
+		//display stylist
+		hideoffnpc "stylDm" + .@nameSuffix$;
+	}
+	if (.@fameAmout >= $famePointForRestaurants)
+	{
+		//display restaurants
+		hideoffnpc "tavDm" + .@nameSuffix$;
+		hideoffnpc "bakDm" + .@nameSuffix$;
+		hideoffnpc "restDm" + .@nameSuffix$;
+	}
+	if (.@fameAmout >= $famePointForReset)
+	{
+		//display reset
+		hideoffnpc "hoDm" + .@nameSuffix$;
+	}
+	return;
+}
+
+function	script	UpdateFameAmount	{
+	set .@guild_Id, getarg(0);
+	set .@addAmount, getarg(1);
+	query_sql("SELECT `id`, `famePoint` FROM `dungeon_master` WHERE `guild_Id` = " + .@guild_Id, .@id, .@fame);
+	set .@newAmount, .@fame[0] + .@addAmount;
+	query_sql("UPDATE `dungeon_master` SET `famePoint` = " + .@newAmount + " WHERE `guild_Id` = " + .@guild_Id, .@count);
+	//update npc available according to fame	
+	
+	callfunc "OnUnhideNpcAccordingToFame", .@id[0], .@newAmount;
+	cutin "", 255;
+	close;
+}
+
+function	script	UpdateChestAmount	{
+	set .@guild_Id, getarg(0);
+	set .@addAmount, getarg(1);
+	query_sql("SELECT `chestZenyAmount` FROM `dungeon_master` WHERE `guild_Id` = " + .@guild_Id, .@chest);
+	query_sql("UPDATE `dungeon_master` SET `chestZenyAmount` = " + (.@chest[0] + .@addAmount) + " WHERE `guild_Id` = " + .@guild_Id, .@count);
+	return;
+}
+
+function	script	AddAmountToBank	{
+	set .@guildId, getarg(0);
+	set .@addAmount, getarg(1);
+	set .@direction, getarg(2);
+	query_sql("SELECT `guild_Id`,`bankAmount` FROM `dungeon_master` WHERE `guild_Id`=" + .@guildId, .@guildId, .@bankZenies);
+	if (getarraysize(.@guildId) > 0)
+	{
+		set .@newAmount, .@bankZenies[0] + .@direction * .@addAmount;
+		query_sql("UPDATE `dungeon_master` SET `bankAmount` = " + .@newAmount + " WHERE `guild_Id`=" + .@guildId, .@count);
+	}
+	return;
+}

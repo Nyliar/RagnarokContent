@@ -1,0 +1,22 @@
+//===== Hercules Script ======================================
+//= Eclage Dungeon Warp Script
+//===== By: ==================================================
+//= Chilly
+//===== Current Version: =====================================
+//= 1.0a
+//===== Description: =========================================
+//= Warp Portals for Eclage Dungeon
+//===== Additional Comments: =================================
+//= 1.0 First Version.
+//= 1.0a Corrected Warp Co-ordinates and
+//=      name of Warp Portal. [Dastgir]
+//============================================================
+
+1@nyd,33,34,0	warp	nyddun0001	1,1,man_in01,124,77
+man_in01,120,77,0	warp	nyddun0002	1,1,1@nyd,32,39
+
+1@nyd,288,288,0	warp	nyddun0003	1,1,2@nyd,199,17
+2@nyd,199,8,0	warp	nyddun0004	1,1,1@nyd,238,281
+
+2@nyd,199,252,0	warp	nyddun0005	1,1,2@nyd,200,169
+2@nyd,200,178,0	warp	nyddun0006	1,1,2@nyd,199,257

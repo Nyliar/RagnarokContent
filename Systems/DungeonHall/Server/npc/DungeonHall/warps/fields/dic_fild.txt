@@ -1,0 +1,17 @@
+//===== Hercules Script ======================================
+//= El Dicastes Field Warp Script
+//===== By: ==================================================
+//= Chilly, Muad_Dib
+//===== Current Version: =====================================
+//= 1.1
+//===== Description: =========================================
+//= Warp Points for El Dicastes Field
+//===== Additional Comments: =================================
+//= 1.0 First Version.
+//= 1.1 Updated to match the official script. [Joseph]
+//============================================================
+
+dic_fild01,69,23,0	warp	dic_field0003	1,1,dic_fild02,70,373
+dic_fild02,71,375,0	warp	dic_field0004	1,1,dic_fild01,69,25
+dicastes01,199,34,0	warp	dic_field0005	1,1,dic_fild01,149,279
+dic_fild01,149,281,0	warp	dic_field0006	1,1,dicastes01,199,40

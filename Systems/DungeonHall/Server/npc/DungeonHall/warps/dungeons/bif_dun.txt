@@ -1,0 +1,148 @@
+mora,182,74,0	warp	bifrost_dun0001	1,1,1@mist,88,29
+1@mist,81,42,0	warp	bifrost_dun0002	1,1,mora,177,74
+
+
+// Warp Portals
+//============================================================
+bif_fild01,38,374,0	script	Mysterious Flower#ep14_1	CLEAR_NPC,{
+	mes "It's a giant flower with mysterious energy.";
+	if (countitem(12561)) {
+		mes "It's reacting to the Mysterious Flower Seeds you have with you.";
+		next;
+		switch(select("Observe the reaction.:Stop the reaction.")) {
+		case 1:
+			mes "The flower started to shake violently";
+			mes "and swing forward as if trying to send the seeds as far away as possible!!!";
+			close2;
+			delitem 12561,1; //Mysterious_Seed
+			warp "bif_fild02",160,230;
+			end;
+		case 2:
+			mes "As you hold onto the Mysterious Flower Seeds tightly,";
+			mes "the flower shook violently and then became calm again.";
+			close;
+		}
+	}
+	mes "It looks like it has some special use, but you're not sure what.";
+	close;
+}
+
+1@mist,104,23,0	warp	#to_bif01	1,1,bif_fild01,160,352
+
+1@mist,109,70,0	script	a1_a2	WARPNPC,1,1,{
+	end;
+OnTouch:
+	if (!questprogress(7211,PLAYTIME))
+		setquest 7211;
+	warp instance_mapname("1@mist"),116,40;
+	end;
+}
+
+1@mist,113,40,0	warp	a2_a7	1,1,1@mist,90,81
+1@mist,93,81,0	warp	a7_a14	1,1,1@mist,108,152
+1@mist,111,154,0	warp	a14_a24	1,1,1@mist,236,108
+1@mist,236,110,0	warp	a24_a1	1,1,1@mist,106,69
+1@mist,161,67,0	warp	a18-1_a22	1,1,1@mist,159,85
+1@mist,180,116,0	warp	a23_a18-1	1,1,1@mist,164,66
+1@mist,180,63,0	warp	a18-2_a9	1,1,1@mist,141,90
+1@mist,116,84,0	warp	a8_a26	1,1,1@mist,222,133
+1@mist,220,133,0	warp	a26_a27-1	1,1,1@mist,200,64
+1@mist,197,64,0	warp	a27-1_a23	1,1,1@mist,177,116
+1@mist,146,194,0	warp	af1-2_a27-2	1,1,1@mist,225,96
+1@mist,133,195,0	warp	af1-1_af2-1	1,1,1@mist,202,110
+1@mist,202,107,0	warp	af2-1_af1-1	1,1,1@mist,134,189
+1@mist,217,110,0	warp	af2-2_a20-1	1,1,1@mist,240,56
+1@mist,240,54,0	warp	a20-1_af2-2	1,1,1@mist,214,110
+1@mist,234,67,0	warp	a20-2_a21	1,1,1@mist,239,80
+1@mist,242,77,0	warp	a21_a15-1	1,1,1@mist,153,137
+1@mist,156,139,0	warp	a15-1_a3	1,1,1@mist,123,55
+1@mist,124,51,0	warp	a3_a20-1	1,1,1@mist,240,56
+1@mist,48,41,0	warp	a4-1_a17	1,1,1@mist,174,165
+1@mist,171,165,0	warp	a17_a16	1,1,1@mist,168,143
+1@mist,169,141,0	warp	a16_a10	1,1,1@mist,101,107
+1@mist,99,107,0	warp	a10_a4-2	1,1,1@mist,57,38
+1@mist,65,113,0	warp	a11_a28	1,1,1@mist,218,151
+1@mist,221,151,0	warp	a28_a13	1,1,1@mist,117,126
+1@mist,114,126,0	warp	a13_a5	1,1,1@mist,36,62
+1@mist,61,88,0	warp	a6_a19	1,1,1@mist,189,139
+1@mist,186,140,0	warp	a19_a12	1,1,1@mist,98,126
+1@mist,101,126,0	warp	a12_a29-1	1,1,1@mist,238,151
+1@mist,235,152,0	warp	a29-1_af1-2	1,1,1@mist,144,194
+1@mist,254,151,0	warp	a29-2E_b1	1,1,1@mist,271,164
+1@mist,275,211,0	warp	b1_b13	1,1,1@mist,277,112
+1@mist,301,141,0	warp	b14_b24	1,1,1@mist,99,232
+1@mist,99,230,0	warp	b24_b25	1,1,1@mist,103,255
+1@mist,102,253,0	warp	b25_b4-1	1,1,1@mist,215,177
+1@mist,212,177,0	warp	b4-1_b1	1,1,1@mist,276,208
+1@mist,289,167,0	warp	b2_b19	1,1,1@mist,152,219
+1@mist,149,219,0	warp	b19_b20	1,1,1@mist,119,227
+1@mist,115,227,0	warp	b20_b23	1,1,1@mist,230,353
+1@mist,233,353,0	warp	b23_b7	1,1,1@mist,289,225
+1@mist,76,273,0	warp	bf1-2_b7	1,1,1@mist,289,225
+1@mist,61,282,0	warp	bf1-1_bf2-1	1,1,1@mist,256,220
+1@mist,252,220,0	warp	bf2-1_bf1-1	1,1,1@mist,65,282
+1@mist,267,213,0	warp	bf2-2_b28	1,1,1@mist,214,268
+1@mist,212,265,0	warp	b28_b12	1,1,1@mist,288,266
+1@mist,285,266,0	warp	b12_b21	1,1,1@mist,143,234
+1@mist,143,231,0	warp	b21_b29	1,1,1@mist,222,281
+1@mist,223,279,0	warp	b29_b31	1,1,1@mist,158,317
+1@mist,134,287,0	warp	b30_b3	1,1,1@mist,293,195
+1@mist,295,197,0	warp	b3_b10	1,1,1@mist,239,253
+1@mist,236,253,0	warp	b10_b12	1,1,1@mist,288,266
+1@mist,111,203,0	warp	b16_b34	1,1,1@mist,202,333
+1@mist,199,333,0	warp	b34_b27-1	1,1,1@mist,203,251
+1@mist,206,249,0	warp	b27-1_b22	1,1,1@mist,168,239
+1@mist,165,239,0	warp	b22_b15	1,1,1@mist,89,173
+1@mist,177,265,0	warp	b27-2_a14	1,1,1@mist,108,152
+1@mist,166,314,0	warp	bN-1_b27-3	1,1,1@mist,206,297
+1@mist,197,299,0	warp	bN-2_b17	1,1,1@mist,167,200
+1@mist,165,200,0	warp	b17_bN-2	1,1,1@mist,193,299
+1@mist,86,173,0	warp	b15_b32	1,1,1@mist,218,313
+1@mist,215,313,0	warp	b32_b28	1,1,1@mist,214,268
+1@mist,230,324,0	warp	b33_b6-1	1,1,1@mist,221,233
+1@mist,230,230,0	warp	b6-2_b11	1,1,1@mist,263,261
+1@mist,263,258,0	warp	b11_b9	1,1,1@mist,272,246
+1@mist,269,246,0	warp	b9_b26	1,1,1@mist,143,265
+1@mist,140,265,0	warp	b26_b5	1,1,1@mist,209,200
+1@mist,195,206,0	warp	b18_b35	1,1,1@mist,169,341
+1@mist,166,341,0	warp	b35_b36	1,1,1@mist,198,354
+1@mist,201,354,0	warp	b36_b37-1	1,1,1@mist,83,224
+1@mist,87,224,0	warp	b37-1_b35	1,1,1@mist,169,341
+1@mist,84,273,0	warp	b37-2_c1	1,1,1@mist,98,287
+1@mist,111,298,0	warp	c2_c3	1,1,1@mist,82,307
+1@mist,79,307,0	warp	c3_c7	1,1,1@mist,284,89
+1@mist,281,89,0	warp	c7_c12	1,1,1@mist,264,291
+1@mist,261,291,0	warp	c12_c2	1,1,1@mist,115,298
+1@mist,326,275,0	warp	c13-1_b13	1,1,1@mist,277,112
+1@mist,294,293,0	warp	c13-2_c5	1,1,1@mist,78,330
+1@mist,81,330,0	warp	c5_c17	1,1,1@mist,308,330
+1@mist,308,327,0	warp	c17_c10	1,1,1@mist,309,165
+1@mist,306,165,0	warp	c10_c13-2	1,1,1@mist,298,293
+1@mist,46,316,0	warp	c4_c6	1,1,1@mist,113,328
+1@mist,95,328,0	warp	c6_c9	1,1,1@mist,342,157
+1@mist,339,157,0	warp	c9_c16	1,1,1@mist,343,328
+1@mist,343,325,0	warp	c16_c8-2	1,1,1@mist,346,120
+1@mist,344,123,0	warp	c8-2_c19	1,1,1@mist,277,343
+1@mist,256,313,0	warp	c18_c15	1,1,1@mist,343,307
+1@mist,342,305,0	warp	c15_cKEY	1,1,1@mist,332,121
+1@mist,335,120,0	warp	cKEY_c18	1,1,1@mist,259,313
+1@mist,317,89,0	warp	c8-1_c14	1,1,1@mist,339,284
+1@mist,339,281,0	warp	c14_c11-1	1,1,1@mist,332,172
+1@mist,329,171,0	warp	c11-1_c8-2	1,1,1@mist,346,120
+1@mist,301,237,0	warp	b8_b2	1,1,1@mist,289,170
+
+
+1@mist,247,123,0	warp	a25_a18-1	1,1,1@mist,164,66	//Tom
+1@mist,225,98,0	warp	a27-2_af1-2	1,1,1@mist,144,194	//Tomba
+1@mist,159,184,0	warp	a15-2_a4-1	1,1,1@mist,49,37	//Remi
+1@mist,61,39,0	warp	a4-2_a11	1,1,1@mist,68,113	//Rem
+1@mist,230,179,0	warp	b4-2_b2	1,1,1@mist,289,170	//Ron
+1@mist,285,225,0	warp	b7_bf1-2	1,1,1@mist,72,274	//Rover
+1@mist,161,316,0	warp	b31_b16	1,1,1@mist,108,203	//Mona
+1@mist,204,299,0	warp	b27-3_bN-1	1,1,1@mist,169,314	//Namon
+1@mist,221,236,0	warp	b6-1_b33	1,1,1@mist,233,324	//Neoron
+1@mist,206,200,0	warp	b5_b14	1,1,1@mist,298,142	//Spyder
+1@mist,95,287,0	warp	c1_c13-1	1,1,1@mist,323,276	//Tito
+1@mist,324,325,0	warp	c13-3_c4	1,1,1@mist,49,316	//Pumba
+1@mist,280,344,0	warp	c19_c4	1,1,1@mist,49,316	//Tete
+1@mist,345,186,0	warp	#to_bif02	1,1,bif_fild02,151,121	//The Gardeners' Tree

@@ -1,0 +1,644 @@
+// [========================================================]
+// [============    Craftsman - Presentation     ===========]
+// [========================================================]
+// [ Version 1                                              ]
+// [========================================================]
+// [ Original script by: Alayne				    			]
+// [========================================================]
+// [ Description:                                           ]
+// [--------------------------------------------------------]
+// [                                                        ]
+// [ - The Craftsman			    	    				]
+// [========================================================]
+// [ Changelog: (5 last updates)                            ]
+// [--------------------------------------------------------]
+// [                                                        ]
+// [ v0: Creation                      			    		]
+// [                                                        ]
+// [                                                        ]
+// [========================================================]
+// [                                                        ]
+// [========================================================]
+
+bra_in01,142,65,3	script	Craftsman#1::craDmBras	859,{
+	set .@npcname$, "[Miurn]";
+	mes .@npcname$;
+	query_sql("SELECT `guild_id` FROM `dungeon_master` WHERE `guild_id`=" + getcharid(2) + " AND `id` = " + atoi(strnpcinfo(2)), .@guildId);
+	if (getarraysize(.@guildId) > 0 && .@guildId[0] == getcharid(2))
+	{
+		//dungeon master
+		if (strcharinfo(0) != getguildmaster(.@gid)) {
+			set .@title$, "sire";
+		}
+		else
+		{
+			set .@title$, "master";
+		}
+		mes "Welcome here, " + .@title$ + ".";
+		mes "What can I do for you?";
+		switch(select("What's your role here?","Which item can you create for me","Can you craft me one ring?"))
+		{
+			case 1:
+				next;
+				mes .@npcname$;
+				mes "I'm a Craftsman.";
+				mes "That mean that I can...craft. I guess.";
+				next;
+				mes .@npcname$;
+				mes "To be honest, the only thing I know how to create are rings.";
+				mes "But pretty special ones. The kind only Guild Members can use.";
+				break;
+			case 2:
+				next;
+				mes .@npcname$;
+				mes "As I've already said, I can create rings.";
+				next;
+				mes .@npcname$;
+				mes "There's several kind of rings. Which one do you wanna learn about?";
+				for (set .@i, 0; .@i < getarraysize($ringId); set .@i, .@i+1)
+				{
+					set .@menu$, .@menu$ + ( .@i ? ":" : "" ) + getitemname($ringId[.@i]);
+				}
+				set .@choice, select(.@menu$) - 1;
+				switch(.@choice)
+				{
+					case 0:
+						//Subdue Ring
+						next;
+						mes .@npcname$;		
+						mes "The " + getitemname($ringId[.@choice]) + ", hu?";
+						mes "That a powerfull ring, probably one of the most utile of them all.";
+						next;
+						mes .@npcname$;
+						mes "It allows you to subdue monsters, to make them join your army rank.";
+						mes "When you kill a monster, there's a small chance to 'capture' it.";
+						mes "Once captured, you can set it up in your dungeon.";
+						next;
+						mes .@npcname$;								
+						mes "To create it, I'll need:";
+						for(set .@i,0; .@i<getarraysize($ringCraftId0)-1; set .@i,.@i+2)
+						{
+							mes "	~ " + $ringCraftId0[.@i] + " " + getitemname($ringCraftId0[.@i + 1]);
+						}
+						mes "And a total of " + $ringCraftPrice[0] + "z.";
+						break;
+					case 1:
+						//Submission Ring
+						next;
+						mes .@npcname$;		
+						mes "The " + getitemname($ringId[.@choice]) + ", hu?";
+						mes "That a powerfull ring, probably one of the most utile of them all.";
+						next;
+						mes .@npcname$;
+						mes "It allows you to subdue mini bosses monsters, to make them join your army rank.";
+						mes "When you kill a monster, there's a small chance to 'capture' it.";
+						mes "Once captured, you can set it up in your dungeon.";
+						next;
+						mes .@npcname$;						
+						mes "To create it, I'll need:";
+						for(set .@i,0; .@i<getarraysize($ringCraftId1)-1; set .@i,.@i+2)
+						{
+							mes "	~ " + $ringCraftId1[.@i] + " " + getitemname($ringCraftId1[.@i + 1]);
+						}
+						mes "And a total of " + $ringCraftPrice[1] + "z.";	
+						break;
+					case 2:
+						//Mastery Ring
+						next;
+						mes .@npcname$;		
+						mes "The " + getitemname($ringId[.@choice]) + ", hu?";
+						mes "That a powerfull ring, probably one of the most utile of them all.";
+						next;
+						mes .@npcname$;
+						mes "It allows you to subdue bosses monsters, to make them join your army rank.";
+						mes "When you kill a monster, there's a small chance to 'capture' it.";
+						mes "Once captured, you can set it up in your dungeon.";
+						next;
+						mes .@npcname$;							
+						mes "To create it, I'll need:";
+						for(set .@i,0; .@i<getarraysize($ringCraftId2)-1; set .@i,.@i+2)
+						{
+							mes "	~ " + $ringCraftId2[.@i] + " " + getitemname($ringCraftId2[.@i + 1]);
+						}
+						mes "And a total of " + $ringCraftPrice[2] + "z.";
+						break;
+					case 3:
+						//Teleport Ring
+						next;
+						mes .@npcname$;		
+						mes "The " + getitemname($ringId[.@choice]) + ", hu?";
+						mes "That's a pretty usefull item for dungeon management.";
+						next;
+						mes .@npcname$;
+						mes "It allows anybody wearing it to quickly teleport to any part of the Dungeon Hall.";
+						mes "You'll just have to have the 'teleport' command.";
+						next;
+						mes .@npcname$;							
+						mes "To create it, I'll need:";
+						for(set .@i,0; .@i<getarraysize($ringCraftId3)-1; set .@i,.@i+2)
+						{
+							mes "	~ " + $ringCraftId3[.@i] + " " + getitemname($ringCraftId3[.@i + 1]);
+						}
+						mes "And a total of " + $ringCraftPrice[3] + "z.";
+						break;
+					case 4:
+						//Make a Wish Ring
+						next;
+						mes .@npcname$;		
+						mes "The " + getitemname($ringId[.@choice]) + ", hu?";
+						mes "This one is a bit...particular. Not that much people want it.";
+						next;
+						mes .@npcname$;
+						mes "It allow its wearer to activate a random skill, according to the amount of life they waste.";
+						mes "You'll just have to have the 'wish' command.";
+						next;
+						mes .@npcname$;							
+						mes "To create it, I'll need:";
+						for(set .@i,0; .@i<getarraysize($ringCraftId4)-1; set .@i,.@i+2)
+						{
+							mes "	~ " + $ringCraftId4[.@i] + " " + getitemname($ringCraftId4[.@i + 1]);
+						}
+						mes "And a total of " + $ringCraftPrice[4] + "z.";
+						break;
+					case 5:
+						//CopyCat Ring
+						next;
+						mes .@npcname$;		
+						mes "The " + getitemname($ringId[.@choice]) + ", hu?";
+						mes "This one is way too risky. I've almost never created one.";
+						next;
+						mes .@npcname$;
+						mes "It allow its wearer to copy a skill which ever kills him, and to use it once.";
+						mes "You'll just have to have the 'copycat' command.";
+						next;
+						mes .@npcname$;							
+						mes "To create it, I'll need:";
+						for(set .@i,0; .@i<getarraysize($ringCraftId5)-1; set .@i,.@i+2)
+						{
+							mes "	~ " + $ringCraftId5[.@i] + " " + getitemname($ringCraftId5[.@i + 1]);
+						}
+						mes "And a total of " + $ringCraftPrice[5] + "z.";
+						break;
+					case 254:
+						mes "Come back when you want!";
+						break;
+				}
+				break;
+			case 3:
+				next;
+				mes .@npcname$;
+				mes "Sure. Which one do you need?";
+				for (set .@i, 0; .@i < getarraysize($ringId); set .@i, .@i+1)
+				{
+					set .@menu$, .@menu$ + ( .@i ? ":" : "" ) + getitemname($ringId[.@i]);
+				}
+				set .@choice, select(.@menu$) - 1;
+						set .@okToCraft, 1;
+						set .@zenyOk, 1;
+				switch(.@choice)
+				{
+					case 0:
+						next;
+						mes .@npcname$;		
+						mes "The " + getitemname($ringId[.@choice]) + ", hu?";		
+						mes "To create it, I'll need:";
+						for(set .@i,0; .@i<getarraysize($ringCraftId0)-1; set .@i,.@i+2)
+						{
+							mes "	~ " + $ringCraftId0[.@i] + " " + getitemname($ringCraftId0[.@i + 1]);
+							if (countitem($ringCraftId0[.@i + 1]) < $ringCraftId0[.@i])
+							{
+								set .@okToCraft, 0;
+							}
+						}
+						mes "And a total of " + $ringCraftPrice[0] + "z.";
+						next;
+						mes .@npcname$;
+						if (Zeny < $ringCraftPrice[0])
+						{
+							set .@zenyOk, 0;
+						}
+						
+						if (.@zenyOk == 0)
+						{
+							mes "Sorry Sire, but you lack some zenies.";
+						}
+						else if (.@okToCraft == 0)
+						{
+							mes "Sorry Sire, but you lack some requirements.";
+						}
+						else
+						{
+							mes "Are you okay with that?";
+							if (select("Confirm","Cancel") == 1)
+							{
+								set Zeny, Zeny - $ringCraftPrice[0];
+								callfunc "UpdateChestAmount", getcharid(2), $ringCraftPrice[0];
+								for(set .@i,0; .@i<getarraysize($ringCraftId0)-1; set .@i,.@i+2)
+								{
+									delitem $ringCraftId0[.@i+1],$ringCraftId0[.@i]; 
+								}
+								getitem $ringId[.@choice], 1;
+							}
+						}
+						break;
+					case 1:
+						next;
+						mes .@npcname$;		
+						mes "The " + getitemname($ringId[.@choice]) + ", hu?";				
+						mes "To create it, I'll need:";
+						for(set .@i,0; .@i<getarraysize($ringCraftId1)-1; set .@i,.@i+2)
+						{
+							mes "	~ " + $ringCraftId1[.@i] + " " + getitemname($ringCraftId1[.@i + 1]);
+							if (countitem($ringCraftId1[.@i + 1]) < $ringCraftId1[.@i])
+							{
+								set .@okToCraft, 0;
+							}
+						}
+						mes "And a total of " + $ringCraftPrice[1] + "z.";
+						next;
+						mes .@npcname$;
+						if (Zeny < $ringCraftPrice[1])
+						{
+							set .@zenyOk, 0;
+						}
+						
+						if (.@zenyOk == 0)
+						{
+							mes "Sorry Sire, but you lack some zenies.";
+						}
+						else if (.@okToCraft == 0)
+						{
+							mes "Sorry Sire, but you lack some requirements.";
+						}
+						else
+						{
+							mes "Are you okay with that?";
+							if (select("Confirm","Cancel") == 1)
+							{
+								set Zeny, Zeny - $ringCraftPrice[1];
+								callfunc "UpdateChestAmount", getcharid(2), $ringCraftPrice[1];
+								for(set .@i,0; .@i<getarraysize($ringCraftId1)-1; set .@i,.@i+2)
+								{
+									delitem $ringCraftId1[.@i+1],$ringCraftId1[.@i]; 
+								}
+								getitem $ringId[.@choice], 1;
+							}
+						}	
+						break;
+					case 2:
+						next;
+						mes .@npcname$;		
+						mes "The " + getitemname($ringId[.@choice]) + ", hu?";			
+						mes "To create it, I'll need:";
+						for(set .@i,0; .@i<getarraysize($ringCraftId2)-1; set .@i,.@i+2)
+						{
+							mes "	~ " + $ringCraftId2[.@i] + " " + getitemname($ringCraftId2[.@i + 1]);
+							if (countitem($ringCraftId2[.@i + 1]) < $ringCraftId2[.@i])
+							{
+								set .@okToCraft, 0;
+							}
+						}
+						mes "And a total of " + $ringCraftPrice[2] + "z.";
+						next;
+						mes .@npcname$;
+						if (Zeny < $ringCraftPrice[2])
+						{
+							set .@zenyOk, 0;
+						}
+						
+						if (.@zenyOk == 0)
+						{
+							mes "Sorry Sire, but you lack some zenies.";
+						}
+						else if (.@okToCraft == 0)
+						{
+							mes "Sorry Sire, but you lack some requirements.";
+						}
+						else
+						{
+							mes "Are you okay with that?";
+							if (select("Confirm","Cancel") == 1)
+							{
+								set Zeny, Zeny - $ringCraftPrice[2];
+								callfunc "UpdateChestAmount", getcharid(2), $ringCraftPrice[2];
+								for(set .@i,0; .@i<getarraysize($ringCraftId2)-1; set .@i,.@i+2)
+								{
+									delitem $ringCraftId2[.@i+1],$ringCraftId2[.@i]; 
+								}
+								getitem $ringId[.@choice], 1;
+							}
+						}	
+						break;
+					case 3:
+						next;
+						mes .@npcname$;		
+						mes "The " + getitemname($ringId[.@choice]) + ", hu?";					
+						mes "To create it, I'll need:";
+						for(set .@i,0; .@i<getarraysize($ringCraftId3)-1; set .@i,.@i+2)
+						{
+							mes "	~ " + $ringCraftId3[.@i] + " " + getitemname($ringCraftId3[.@i + 1]);
+							if (countitem($ringCraftId3[.@i + 1]) < $ringCraftId3[.@i])
+							{
+								set .@okToCraft, 0;
+							}
+						}
+						mes "And a total of " + $ringCraftPrice[3] + "z.";
+						next;
+						mes .@npcname$;
+						if (Zeny < $ringCraftPrice[3])
+						{
+							set .@zenyOk, 0;
+						}
+						
+						if (.@zenyOk == 0)
+						{
+							mes "Sorry Sire, but you lack some zenies.";
+						}
+						else if (.@okToCraft == 0)
+						{
+							mes "Sorry Sire, but you lack some requirements.";
+						}
+						else
+						{
+							mes "Are you okay with that?";
+							if (select("Confirm","Cancel") == 1)
+							{
+								set Zeny, Zeny - $ringCraftPrice[3];
+								callfunc "UpdateChestAmount", getcharid(2), $ringCraftPrice[3];
+								for(set .@i,0; .@i<getarraysize($ringCraftId3)-1; set .@i,.@i+2)
+								{
+									delitem $ringCraftId3[.@i+1],$ringCraftId3[.@i]; 
+								}
+								getitem $ringId[.@choice], 1;
+							}
+						}	
+						break;
+					case 4:
+						next;
+						mes .@npcname$;		
+						mes "The " + getitemname($ringId[.@choice]) + ", hu?";					
+						mes "To create it, I'll need:";
+						for(set .@i,0; .@i<getarraysize($ringCraftId4)-1; set .@i,.@i+2)
+						{
+							mes "	~ " + $ringCraftId4[.@i] + " " + getitemname($ringCraftId4[.@i + 1]);
+							if (countitem($ringCraftId4[.@i + 1]) < $ringCraftId4[.@i])
+							{
+								set .@okToCraft, 0;
+							}
+						}
+						mes "And a total of " + $ringCraftPrice[4] + "z.";
+						next;
+						mes .@npcname$;
+						if (Zeny < $ringCraftPrice[4])
+						{
+							set .@zenyOk, 0;
+						}
+						
+						if (.@zenyOk == 0)
+						{
+							mes "Sorry Sire, but you lack some zenies.";
+						}
+						else if (.@okToCraft == 0)
+						{
+							mes "Sorry Sire, but you lack some requirements.";
+						}
+						else
+						{
+							mes "Are you okay with that?";
+							if (select("Confirm","Cancel") == 1)
+							{
+								set Zeny, Zeny - $ringCraftPrice[4];
+								callfunc "UpdateChestAmount", getcharid(2), $ringCraftPrice[4];
+								for(set .@i,0; .@i<getarraysize($ringCraftId4)-1; set .@i,.@i+2)
+								{
+									delitem $ringCraftId4[.@i+1],$ringCraftId4[.@i]; 
+								}
+								getitem $ringId[.@choice], 1;
+							}
+						}	
+						break;
+					case 5:
+						next;
+						mes .@npcname$;		
+						mes "The " + getitemname($ringId[.@choice]) + ", hu?";					
+						mes "To create it, I'll need:";
+						for(set .@i,0; .@i<getarraysize($ringCraftId5)-1; set .@i,.@i+2)
+						{
+							mes "	~ " + $ringCraftId5[.@i] + " " + getitemname($ringCraftId5[.@i + 1]);
+							if (countitem($ringCraftId5[.@i + 1]) < $ringCraftId5[.@i])
+							{
+								set .@okToCraft, 0;
+							}
+						}
+						mes "And a total of " + $ringCraftPrice[5] + "z.";
+						next;
+						mes .@npcname$;
+						if (Zeny < $ringCraftPrice[5])
+						{
+							set .@zenyOk, 0;
+						}
+						
+						if (.@zenyOk == 0)
+						{
+							mes "Sorry Sire, but you lack some zenies.";
+						}
+						else if (.@okToCraft == 0)
+						{
+							mes "Sorry Sire, but you lack some requirements.";
+						}
+						else
+						{
+							mes "Are you okay with that?";
+							if (select("Confirm","Cancel") == 1)
+							{
+								set Zeny, Zeny - $ringCraftPrice[5];
+								callfunc "UpdateChestAmount", getcharid(2), $ringCraftPrice[5];
+								for(set .@i,0; .@i<getarraysize($ringCraftId5)-1; set .@i,.@i+2)
+								{
+									delitem $ringCraftId5[.@i+1],$ringCraftId5[.@i]; 
+								}
+								getitem $ringId[.@choice], 1;
+							}
+						}	
+						break;
+					case 254:
+						mes "Come back when you want!";
+						break;
+				}
+				break;
+			case 4:
+				next;
+				mes .@npcname$;
+				mes "Well...I'm sorry Sire, but I don't know what to answer...";
+				mes "Maybe you should ask the Head Buttler...";
+				break;
+		}
+	}
+	else
+	{
+		mes "Sorry, my friend, but there's nothing I can do for you.";
+		mes "All my work belong to the Guild " + getguildname(.@guildId[0]);
+	}
+	close;
+
+OnMakeAWishRing:
+	if(getequipid(7) == $ringId[4] || getequipid(8) == $ringId[4])
+	{
+		setarray .@makeAWishRank1Skills[0], 2449,2450;
+		setarray .@makeAWishRank2Skills[0], 2446,2447;
+		setarray .@makeAWishRank3Skills[0], 2327,2320;
+		setarray .@makeAWishRank4Skills[0], 2309,2210;
+	
+		mes "Please choose a sacrifice you want to make.";
+		switch(select("90% hp","50% hp","30% hp","10% hp"))
+		{
+			case 1:
+				if (Hp * 100 / MaxHp >= 90)
+				{
+					set MAKEAWISHSKILL, .@makeAWishRank1Skills[rand(0,getarraysize(.@makeAWishRank1Skills)-1)];
+					set MAKEAWISHLVL, 9;
+					set MAKEAWISHDIS, 20;
+				}
+				break;
+			case 2:
+				if (Hp * 100 / MaxHp >= 50)
+				{
+					set MAKEAWISHSKILL, .@makeAWishRank2Skills[rand(0,getarraysize(.@makeAWishRank2Skills)-1)];
+					set MAKEAWISHLVL, 5;
+					set MAKEAWISHDIS, 15;
+				}
+				break;
+			case 3:
+				if (Hp * 100 / MaxHp >= 30)
+				{
+					set MAKEAWISHSKILL, .@makeAWishRank3Skills[rand(0,getarraysize(.@makeAWishRank3Skills)-1)];
+					set MAKEAWISHLVL, 3;
+					set MAKEAWISHDIS, 10;
+				}
+				break;
+			case 4:
+				if (Hp * 100 / MaxHp >= 10)
+				{
+					set MAKEAWISHSKILL, .@makeAWishRank4Skills[rand(0,getarraysize(.@makeAWishRank4Skills)-1)];
+					set MAKEAWISHLVL, 1;
+					set MAKEAWISHDIS, 5;
+				}
+				break;
+		}
+		addtimer MAKEAWISHDIS * 5000, strnpcinfo(3)+"::OnDelayElasped";
+		if(getequipid(7) == $ringId[4])
+		{
+			unequip 7;
+			equip $ringId[4];
+		}
+		else if(getequipid(8) == $ringId[4])
+		{
+			unequip 8;
+			equip $ringId[4];
+		}
+	}
+	close;
+
+OnDelayElasped:
+	percentheal -10 * MAKEAWISHLVL, 0;
+	set MAKEAWISHSKILL, -1;
+	set MAKEAWISHLVL, -1;
+	set MAKEAWISHDIS, -1;
+	if(getequipid(7) == $ringId[4])
+	{
+		unequip 7;
+		equip $ringId[4];
+	}
+	else if(getequipid(8) == $ringId[4])
+	{
+		unequip 8;
+		equip $ringId[4];
+	}
+	end;
+
+OnTeleportRing:
+	if(getequipid(7) == $ringId[3] || getequipid(8) == $ringId[3])
+	{
+		query_sql("SELECT `firstMapName` FROM `dungeon_master` WHERE `guild_id`=" + getcharid(2), .@firstMapName$);
+		if (getarraysize(.@firstMapName$) <= 0)
+		{
+			//error
+			logmes "An error occured during chest spawning.";
+			close;
+		}
+		if (getarraysize(.@firstMapName$) > 0)
+		{
+			set .@menu$, "";
+			query_sql("SELECT `startMap`,`secondMap`,`thirdMap`,`fourthMap`,`fifthMap` FROM `dungeon_maps` WHERE `startMap`='" + .@firstMapName$[0] + "'", .@startMap$, .@secondMap$, .@thirdMap$, .@fourthMap$, .@fifthMap$);
+			if (.@startMap$[0] != "")
+			{
+				//last map
+				set .@menu$, .@menu$ + .@startMap$[0];
+			}
+			if (.@secondMap$[0] != "")
+			{
+				//last map
+				set .@menu$, .@menu$ + ":" + .@secondMap$[0];
+			}
+			if (.@thirdMap$[0] != "")
+			{
+				//last map
+				set .@menu$, .@menu$ + ":" + .@thirdMap$[0];
+			}
+			if (.@fourthMap$[0] != "")
+			{
+				//last map
+				set .@menu$, .@menu$ + ":" + .@fourthMap$[0];
+			}
+			if (.@fifthMap$[0] != "")
+			{
+				//last map
+				set .@menu$, .@menu$ + ":" + .@fifthMap$[0];
+			}
+			
+			set .@choiceMap, select(.@menu$) - 1;
+			switch(.@choiceMap)
+			{
+				case 0:
+					set .@map$, .@startMap$[0];
+					break;
+				case 1:
+					set .@map$, .@secondMap$[0];
+					break;
+				case 2:
+					set .@map$, .@thirdMap$[0];
+					break;
+				case 3:
+					set .@map$, .@fourthMap$[0];
+					break;
+				case 4:
+					set .@map$, .@fifthMap$[0];
+					break;
+			}
+			if (.@map$ != "")
+			{
+				warp .@map$, 0, 0;
+			}
+		}	
+	}
+	end;
+	
+OnInit:
+	setarray $ringId[0],30245,30246,30247,30248,30249;
+	setarray $ringCraftPrice[0],250000,500000,1000000,100000,1500000,1666666;
+	deletearray $ringCraftId0[0], getarraysize($ringCraftId0);
+	deletearray $ringCraftId1[0], getarraysize($ringCraftId1);
+	deletearray $ringCraftId2[0], getarraysize($ringCraftId2);
+	deletearray $ringCraftId3[0], getarraysize($ringCraftId3);
+	deletearray $ringCraftId4[0], getarraysize($ringCraftId4);
+	deletearray $ringCraftId5[0], getarraysize($ringCraftId5);
+	setarray $ringCraftId0[0],1,2610,50,7293; //pattern: count, id
+	setarray $ringCraftId1[0],1,2610,50,7293,1,1970; //pattern: count, id
+	setarray $ringCraftId2[0],1,2610,50,7293,1,1970,5,7017; //pattern: count, id
+	setarray $ringCraftId3[0],1,2610,100,602,200,601; //pattern: count, id
+	setarray $ringCraftId4[0],1,2610,9,1630;
+	setarray $ringCraftId5[0],1,2610,250,7206,350,7263; //pattern: count, id
+	bindatcmd "wish", "craDmBras::OnMakeAWishRing";
+	bindatcmd "teleport", "craDmBras::OnTeleportRing";
+	end;
+}

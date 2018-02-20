@@ -1,0 +1,120 @@
+// [========================================================]
+// [========    Monster Fields - Presentation     ==========]
+// [========================================================]
+// [ Version 1                                              ]
+// [========================================================]
+// [ Original script by: Alayne				    			]
+// [========================================================]
+// [ Description:                                           ]
+// [--------------------------------------------------------]
+// [                                                        ]
+// [ - The fields monsters		    	   				 	]
+// [========================================================]
+// [ Changelog: (5 last updates)                            ]
+// [--------------------------------------------------------]
+// [                                                        ]
+// [ v0: Creation                      			    		]
+// [                                                        ]
+// [                                                        ]
+// [========================================================]
+// [                                                        ]
+// [========================================================]
+
+//==================================================
+// bra_fild01 - Brasilis Field
+//==================================================
+bra_fild01,0,0,0,0	monster	Curupira	2074,50,5000,0,0
+bra_fild01,0,0,0,0	monster	Dokebi	1110,10,5000,0,0
+bra_fild01,0,0,0,0	monster	Savage	1166,5,5000,0,0
+bra_fild01,0,0,0,0	monster	Headless Mule	2071,40,5000,0,0
+bra_fild01,0,0,0,0	monster	Red Mushroom	1085,5,5000,0,0
+bra_fild01,0,0,0,0	monster	Jaguar	2072,55,5000,0,0
+bra_fild01,0,0,0,0	monster	Toucan	2073,60,5000,0,0
+
+//==================================================
+// dew_fild01 - Dewata Field
+//==================================================				
+dew_fild01,0,0,0,0	monster	Argiope	1099,45,5000,0,0
+dew_fild01,0,0,0,0	monster	Dryad	1493,60,5000,0,0
+dew_fild01,0,0,0,0	monster	Savage	1385,10,5000,0,0
+
+//==================================================
+// ecl_fild01 - Eclage Field
+//==================================================			
+dew_fild01,0,0,0,0	monster	Bloody Butterfly	1408,70,5000,0,0
+dew_fild01,0,0,0,0	monster	Gryphon	1259,10,5000,0,0
+
+//==================================================
+// dic_fild01 - El Dicastes Field
+//==================================================	
+dic_fild01,0,0,0,0	monster	Giant Spider	1304,20,5000,0,0
+dic_fild01,0,0,0,0	monster	Arclouse	1194,30,5000,0,0
+dic_fild01,0,0,0,0	monster	Argiope	1099,60,5000,0,0
+dic_fild01,0,0,0,0	monster	Leib Olmai	1306,25,5000,0,0
+
+dic_fild02,0,0,0,0	monster	Giant Spider	1304,80,5000,0,0
+dic_fild02,0,0,0,0	monster	Arclouse	1194,10,5000,0,0
+dic_fild02,0,0,0,0	monster	Argiope	1099,35,5000,0,0
+dic_fild02,0,0,0,0	monster	Leib Olmai	1306,25,5000,0,0
+dic_fild02,0,0,0,0	monster	Clock	1269,3,5000,0,0
+
+//==================================================
+// spl_fild01 - Splendid Field
+//==================================================	
+spl_fild01,0,0,0,0	monster	Goat	1372,25,5000,0,0
+spl_fild01,0,0,0,0	monster	Spring Rabbit	1322,35,5000,0,0
+spl_fild01,0,0,0,0	monster	Mavka	1884,2,5000,0,0
+spl_fild01,0,0,0,0	monster	Wooden Golem	1497,50,5000,0,0
+
+spl_fild02,0,0,0,0	monster	Giant Hornet	1303,15,5000,0,0
+spl_fild02,0,0,0,0	monster	Dryad	1493,75,5000,0,0
+spl_fild02,0,0,0,0	monster	Mavka	1884,2,5000,0,0
+
+spl_fild02,0,0,0,0	monster	Goat	1372,25,5000,0,0
+spl_fild02,0,0,0,0	monster	Spring Rabbit	1322,20,5000,0,0
+spl_fild02,0,0,0,0	monster	Giant Hornet	1303,35,5000,0,0
+
+//==================================================
+// man_fild01 - Manuk Field
+//==================================================	
+man_fild01,0,0,0,0	monster	Muscipular	1780,105,5000,0,0
+man_fild01,0,0,0,0	monster	Arclouse	1194,30,5000,0,0
+man_fild01,0,0,0,0	monster	Baphomet Jr.	1101,10,5000,0,0
+
+man_fild02,0,0,0,0	monster	Leib Olmai	1306,25,5000,0,0
+man_fild02,0,0,0,0	monster	Arclouse	1194,35,5000,0,0
+man_fild02,0,0,0,0	monster	Clock	1269,50,5000,0,0
+
+man_fild03,0,0,0,0	monster	Leib Olmai	1306,25,5000,0,0
+man_fild03,0,0,0,0	monster	Arclouse	1194,25,5000,0,0
+man_fild03,0,0,0,0	monster	Baphomet Jr.	1101,25,5000,0,0
+
+//==================================================
+// ma_fild01 - Malaya Field
+//==================================================	
+ma_fild01,0,0,0,0	monster	Mini Demon	1292,50,5000,0,0
+ma_fild01,0,0,0,0	monster	Civil Servant	1513,50,5000,0,0
+ma_fild01,0,0,0,0	monster	Muscipular	1780,30,5000,0,0
+
+ma_fild02,0,0,0,0	monster	Orc Lady	1984,40,5000,0,0
+ma_fild02,0,0,0,0	monster	Agav	1769,25,5000,0,0
+ma_fild02,0,0,0,0	monster	Rybio	1201,30,5000,0,0
+ma_fild02,0,0,0,0	monster	Frus	1761,25,5000,0,0
+ma_fild02,0,0,0,0	monster	Muscipular	1780,20,5000,0,0
+
+//==================================================
+// bif_fild01 - Mora Field
+//==================================================	
+bif_fild01,0,0,0,0	monster	Goat	1372,17,5000,0,0
+bif_fild01,0,0,0,0	monster	Giant Hornet	1303,29,5000,0,0
+bif_fild01,0,0,0,0	monster	Giant Spider	1304,5,5000,0,0
+bif_fild01,0,0,0,0	monster	Killer Mantis	1294,5,5000,0,0
+bif_fild01,0,0,0,0	monster	Panzer Gobelin	1308,34,5000,0,0
+bif_fild01,0,0,0,0	monster	Mineral	1614,58,5000,0,0
+
+bif_fild02,0,0,0,0	monster	Goat	1372,16,5000,0,0
+bif_fild02,0,0,0,0	monster	Giant Hornet	1303,27,5000,0,0
+bif_fild02,0,0,0,0	monster	Giant Spider	1304,5,5000,0,0
+bif_fild02,0,0,0,0	monster	Killer Mantis	1294,5,5000,0,0
+bif_fild02,0,0,0,0	monster	Panzer Gobelin	1308,55,5000,0,0
+bif_fild02,0,0,0,0	monster	Mineral	1614,33,5000,0,0
