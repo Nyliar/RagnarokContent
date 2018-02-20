@@ -145,7 +145,6 @@ mal_in02,186,74,5	script	Bounty Hunter::alaprihun	4_MAL_CAPTAIN,{
 				mes .@npcname$;
 				mes "Here's a list of the most wanted peoples...";
 				set .@query$, "SELECT `id`, `name`, `prime`, `hunterCount` FROM `prime_char` WHERE `killer`=" + .@killer + " AND `name`!='" + strcharinfo(0) + "' ORDER BY `karma` DESC";
-				debugmes .@query$;
 				query_sql(.@query$, .@id, .@name$, .@prime, .@huntCount);
 				set .@menu$, "";
 				for (set .@i,0; .@i<getarraysize(.@name$); set .@i,.@i+1)
@@ -455,7 +454,6 @@ mal_in02,186,74,5	script	Bounty Hunter::alaprihun	4_MAL_CAPTAIN,{
 					}
 					set .@query$, .@query$ + " WHERE `name`='" + .@targetName$ + "'";	
 					//update killed karma and prime
-					debugmes "query: " + .@query$;
 					query_sql(.@query$, .@count);
 				}
 			}
