@@ -1,0 +1,504 @@
+// [========================================================]
+// [=============     System - Steel Soul     ============]
+// [========================================================]
+// [ Version 1                                              ]
+// [========================================================]
+// [ Original script by: Alayne				    ]
+// [========================================================]
+// [ Description:                                           ]
+// [--------------------------------------------------------]
+// [                                                        ]
+// [ - An evolving weapon system		    	   	    ]
+// [========================================================]
+// [ Changelog: (5 last updates)                            ]
+// [--------------------------------------------------------]
+// [                                                        ]
+// [ v0: Creation                      			    ]
+// [                                                        ]
+// [========================================================]
+// [                                                        ]
+// [========================================================]
+
+prontera,100,179,5	script	Soul Smith::ssman	63,{
+	set .@npcname$, "[Soul Smith]";
+	mes .@npcname$;
+	mes "";
+	mes "Hello, " + strcharinfo(0) + ".";
+	mes "I'm the Soul Smith. I'm the one you should talk to change your Soul Level.";
+	switch(select("Soul?","Create my Steel Soul","Change my Soul Level","I'll just leave you alone..."))
+	{
+		case 1:
+			next;
+			mes .@npcname$;
+			mes "Yes, your soul.";
+			mes "I can extract a part of your soul, to inject it in a weapon.";
+			mes "Once this done, you'll be able to fight the thrift of your soul for blood.";
+			mes "By fulfilling it, your soul will grow, and become stronger in the weapon.";
+			mes "Be careful, your Soul is bound to a weapon type.";
+			mes "This mean that if you change your weapon, for any reason, your Soul will follow.";
+			mes "On the other hand, you can make it grow ONLY with this kind of weapon.";
+			break;
+		case 2:
+			next;
+			mes .@npcname$;
+			if (STEELSOULID != 0)
+			{
+				mes "Sorry but you've already bound your soul.";
+				mes "Did you lost your initial soul?";
+				if(select("Yes","No"))
+				{
+					next;
+					mes .@npcname$;
+					mes "Well...You should pay more attention. This is dangerous to lose your own soul...";
+					mes "I can recreate it, but you'll have to restart all over.";
+					mes "That's the price for losing it...";
+					if(select("Go on","No way...") == 1)
+					{
+						next;
+						mes .@npcname$;
+						mes "Allright. Here you are...";
+						set STEELSOULID, 0;
+						set STEELLVL, 0;
+						set STEELKILLCOUNT, 0;
+						set STEELSOULCHANGED, 0;
+						mes "Fresh as a new born kid...";
+					}
+				}
+				close;
+			}
+			mes "You wanna bind your Soul to a weapon he?";
+			mes "Allright.";
+			mes "But that's not free.";
+			mes "It's pretty hard to extract a soul.";
+			mes "And even harder to bind it.";
+			mes "For these reason, know there's a price.";
+			mes "Plus, you can increase my chance by using a catalyst.";
+			next;
+			mes .@npcname$;
+			mes "Here's the items I need.";
+			set .@gotAll, 1;
+			for (set .@i,0; .@i<getarraysize(.itemListToSmith); set .@i,.@i+2)
+			{
+				if (countitem(.itemListToSmith[.@i]) < .itemListToSmith[.@i + 1])
+					set .@gotAll, 0;
+				mes "	~ " + .itemListToSmith[.@i + 1] + " " + getitemname(.itemListToSmith[.@i]);
+			}
+			if (.@gotAll)
+			{
+				next;
+				mes .@npcname$;
+				mes "Hey, you have everything I need.";
+				mes "Wanna bind your soul to your current weapon?";
+				if (select("Yes","No") == 1)
+				{
+					next;
+					mes .@npcname$;
+					mes "Keep in mind that my default success rate is " + .defaultSuccessRate + ".";
+					mes "To increase your chances, you can bring me one item in the following list.";
+					set .@menu$, "";
+					set .@atLeastOne, 0;
+					set .@possibleItem, 0;
+					setarray .@usableItemId[0], 0;
+					setarray .@usableItemRate[0], 0;
+					for (set .@i,0; .@i<getarraysize(.itemListIncreaseSuccess); set .@i,.@i+2)
+					{
+						if (countitem(.itemListIncreaseSuccess[.@i]) > 0)
+						{
+							set .@atLeastOne, 1;
+							set .@usableItemId[.@possibleItem], .itemListIncreaseSuccess[.@i];
+							set .@usableItemRate[.@possibleItem], .itemListIncreaseSuccess[.@i + 1];
+							set .@menu$, .@menu$ + ( .@i ? ":" : "" ) + getitemname(.@usableItemId[.@possibleItem]);
+							set .@possibleItem, .@possibleItem + 1;
+						}
+						mes "	~ " + getitemname(.itemListIncreaseSuccess[.@i]) + " for an increase success of " + .itemListIncreaseSuccess[.@i + 1] + "%";
+					}
+					set .@choice, -1;
+					if (.@atLeastOne)
+					{
+						next;
+						mes .@npcname$;
+						mes "You already have some. Wanna use one?";
+						set .@choice, select(.@menu$) - 2;
+						if (.@choice != 254)
+						{
+							next;
+							mes .@npcname$;
+							mes "You wanna use a " + getitemname(.@usableItemId[.@choice]) + "?";
+							set .@successRate, .defaultSuccessRate + .@usableItemRate[.@choice];
+							mes "Allright. You're success rate will then be " + .@successRate;
+						}
+					}
+					else
+					{
+						set .@successRate, .defaultSuccessRate;
+					}
+					
+					next;
+					mes .@npcname$;
+					mes "So. Do you wanna try?";
+					mes "Keep in mind that a failure will break your Soul, and your weapon.";
+					mes "On the other hand, I won't use the materials if I fail.";
+					mes "The failing part consist in extracting the soul, not building the weapon, so...";
+					if (select("Yes, let's go","No, I'm not ready") == 1)
+					{
+						if (getequipid(EQI_HAND_R) == -1)
+						{
+							next;
+							mes .@npcname$;
+							mes "You don't even have a weapon equipped...";
+							close;
+						}
+						next;
+						mes .@npcname$;
+						mes "Allright. Here we are then.";
+						set .@rand, rand(0,100);
+						if (.@rand <= .@successRate)
+						{
+							specialeffect 154;
+							set STEELSOULID, getequipid(EQI_HAND_R);
+							mes "I've succeed. You're now bound to death.";
+							emotion e_gg;
+							for (set .@i,0; .@i<getarraysize(.itemListToSmith); set .@i,.@i+2)
+							{
+								delitem .itemListToSmith[.@i], .itemListToSmith[.@i + 1];
+							}
+						}
+						else
+						{
+							specialeffect 155;
+							mes "Sorry...I failed...";
+							delequip EQI_HAND_R;
+							emotion e_sigh;
+						}
+						if (.@choice != 254 && .@choice > 0)
+						{
+							delitem .@usableItemId[.@choice], 1;
+						}
+					}
+					else
+					{
+						next;
+						mes .@npcname$;
+						mes "Your choice. After all, it's your soul, not mine.";
+					}
+				}
+				else
+				{
+					mes "Your choice. After all, it's your soul, not mine.";
+				}
+			}
+			break;
+		case 3:
+			next;
+			mes .@npcname$;
+			if (STEELLVL >= $maxSteelLvl )
+			{	
+				if (STEELSOULCHANGED == 0)
+				{
+					mes "Wow...You're on the max level.";
+					mes "I've never such a brilliant soul...";
+					mes "It...It makes me feel...";
+					mes "Strange....";
+					specialeffect 895;
+					setnpcdisplay(strnpcinfo(3),403);
+					next;
+					goto OnHighestLevel;
+				}
+				else
+				{
+					mes "Wow...You're on the max level.";
+					mes "I've never such a brilliant soul...";
+				}
+			}
+			else
+			{
+				if (STEELKILLCOUNT >= $lvlKillCount[STEELLVL])
+				{
+					if (.lvlBonus && (STEELLVL + 1) % .lvlLanding == 0)
+					{
+						mes "You've reach a special level, which allow you to add a feature to your Steel Soul.";
+						mes "Do you wanna add a bonus?";
+						if (select("Yes","No") == 1)
+						{
+							next;
+							mes .@npcname$;		
+							mes "Allright. Choose a bonus in the given list then.";
+							for (set .@i,0; .@i < getarraysize(.bonusDesc$); set .@i, .@i + 1)
+							{
+								set .@menu$, .@menu$ + ( .@i ? ":" : "" ) + .bonusDesc$[.@i];
+							}
+							set .@choice, select(.@menu$) - 1;
+							if (.@choice != 254)
+							{
+								next;
+								mes .@npcname$;
+								mes "Okay!";
+								mes "You've chosen a bonus of " + .bonusDesc$[.@choice];
+								next;
+								mes .@npcname$;
+								mes "Are you sure? Once smith, your soul won't support a change.";
+								mes "It can't be changed.";
+								if (select("Yes","No") == 1)
+								{
+									next;
+									mes .@npcname$;
+									mes "Allright.";
+									//item check
+									if (.lvlBonusItemRequired != 1)
+									{
+										next;
+										mes .@npcname$;
+										//bonus
+										setd("STEELBONUS" + (STEELLVL / .lvlLanding), .@choice);
+										set STEELLVL, STEELLVL + 1;
+										mes "Congratulations. Your Steel Soul is now level " + STEELLVL + ".";
+										
+										goto OnApplyBonus;
+									}
+									else if (.lvlBonusItemRequired == 1 && countitem(.itemBonusId[.@choice]) < 1)
+									{
+										next;
+										mes .@npcname$;
+										mes "Sorry, but you need a " + getitemname(.itemBonusId[.@choice]) + " to activate this bonus."; 
+									}
+									else
+									{
+										next;
+										mes .@npcname$;
+										delitem .itemBonusId[.@choice], 1;
+										//bonus
+										setd("STEELBONUS" + (STEELLVL / .lvlLanding), .@choice); 
+										specialeffect2 338;
+										set STEELLVL, STEELLVL + 1;
+										mes "Congratulations. Your Steel Soul is now level " + STEELLVL + ".";
+									}
+								}
+								else
+								{
+									next;
+									mes .@npcname$;
+									mes "Take your time.";
+								}
+							}
+						}
+						else
+						{
+							next;
+							mes .@npcname$;
+							mes "As you wish.";
+							mes "Do you wanna up your level anyway? You won't be able to add a bonus then...";
+							if (select("Yes","No") == 1)
+							{
+								next;
+								mes .@npcname$;
+								specialeffect2 338;
+								set STEELLVL, STEELLVL + 1;
+								mes "Congratulations. Your Steel Soul is now level " + STEELLVL + ".";
+							}
+						}
+					}
+					else
+					{
+						specialeffect2 338;
+						set STEELLVL, STEELLVL + 1;
+						mes "Congratulations. Your Steel Soul is now level " + STEELLVL + ".";
+					}
+				}
+				else
+				{
+					if (STEELSOULID == 0)
+					{
+						mes "You've not even bind your soul...";
+					}
+					else
+					{
+						mes "You're not ready.";
+						mes "You've only kill " + STEELKILLCOUNT + "/" + $lvlKillCount[STEELLVL] + " monsters.";
+					}
+				}
+			}
+			break;
+		case 4:
+			mes "See you soon then.";
+			break;
+	}
+	close;
+	
+OnApplyBonus:
+	if (.lvlBonus && STEELLVL >= .lvlLanding && getequipid(EQI_HAND_R) == STEELSOULID)
+	{
+		for(set .@i, 0; .@i < (STEELLVL / .lvlLanding); set .@i, .@i+1)
+		{
+			if(getequiprandomoption(EQI_HAND_R, .@i, ROA_ID) == 0)
+			{
+				//only apply bonus if none has been applied yet
+				
+				//"atk bonus","matk bonus","hp bonus","sp bonus","random status bonus","hit rate bonus","flee rate bonus","elemental weapon switch","aspd bonus"
+				switch(getd("STEELBONUS" + .@i))
+				{
+					case 0:
+						setrandomoption(EQI_HAND_R, .@i, RDMOPT_VAR_ATKPERCENT, rand(5), 0);
+						break;
+					case 1:
+						setrandomoption(EQI_HAND_R, .@i,  RDMOPT_VAR_MATKPERCENT, rand(5), 0);
+						break;
+					case 2:
+						setrandomoption(EQI_HAND_R, .@i,  RDMOPT_VAR_MAXHPPERCENT, rand(5), 0);
+						break;
+					case 3:
+						setrandomoption(EQI_HAND_R, .@i,  RDMOPT_VAR_MAXSPPERCENT, rand(5), 0);
+						break;
+					case 4:
+						setrandomoption(EQI_HAND_R, .@i,  rand(RDMOPT_VAR_STRAMOUNT, RDMOPT_VAR_LUKAMOUNT), rand(5), 0);
+						break;
+					case 5:
+						setrandomoption(EQI_HAND_R, .@i, RDMOPT_VAR_HITSUCCESSVALUE, rand(25), 0);
+						break;
+					case 6:
+						setrandomoption(EQI_HAND_R, .@i, RDMOPT_VAR_AVOIDSUCCESSVALUE, rand(25), 0);
+						break;
+					case 7:
+						setrandomoption(EQI_HAND_R, .@i,  rand(RDMOPT_WEAPON_ATTR_WATER, RDMOPT_WEAPON_ATTR_UNDEAD), 0, 0);
+						break;
+					case 8:
+						setrandomoption(EQI_HAND_R, .@i,  RDMOPT_VAR_PLUSASPD, rand(10), 0);
+						break;
+				}
+			}
+		}
+	}
+	end;
+
+OnWhisperGlobal:
+	set STEELLVL, 99;
+	set STEELKILLCOUNT, $lvlKillCount[STEELLVL];
+	set STEELSOULID, 1599;
+	end;
+	
+OnHighestLevel:
+	set .@npcname$, "[Valkyrja]";
+	mes .@npcname$;
+	mes "Congratulations, adventurer.";
+	mes "You've reached the highest point of your soul expansion.";
+	if (.highestChangeWeapon == 1)
+	{
+		next;
+		mes .@npcname$;
+		mes "As a reward, your Steel Soul will be changed for a Relic.";
+		mes "A Relic is dependant on the type of Steel Soul you've chosen, but it always powerfull.";
+		mes "Do you want your Soul to evolve?";
+		if(select("Yes","No") == 1)
+		{
+			next;
+			mes .@npcname$;
+			mes "Perfect. Now I need you to choose a path to walk on.";
+			mes "You can choose wether to walk on the Blessed path, or the Cursed one.";
+			mes "From this choice will depends the habilities you'll be able to unlock with your Relic.";
+			next;
+			mes .@npcname$;
+			mes "While walking on the Blessed Path, you'll be able to learn skills from the 3-1 classes path.";
+			mes "Otherwise, on Cursed Path, you'll be able to learn 3-2 skills.";
+			mes "So. What's your choice?";
+			set EVOLVEPATH, select("Blessed Path","Cursed Path");
+			next;
+			mes .@npcname$;
+			mes "Perfect. I will now raise your Soul to the next step.";
+			mes "Get ready.";
+			set .@weaponType, getiteminfo(STEELSOULID,11);
+			if (.@weaponType > 0 && .@weaponType < 9)
+			{
+				set .@weaponType, .@weaponType - 1;
+			}
+			else if (.@weaponType > 9 && .@weaponType < 23)
+			{
+				set .@weaponType, .@weaponType - 2;
+			}
+			set STEELSOULID, $relicItemId[.@weaponType];
+			getitem STEELSOULID, 1;
+			next;
+			mes .@npcname$;
+			mes "From now, you have to find Skaldi.";
+			mes "She's the one who can help you to increase your Soul's power.";
+			set STEELSOULCHANGED, 1;
+			delequip(EQI_HAND_R);
+		}
+	}
+	else
+	{
+		mes "As a reward, you'll be rewarded with " + .rewardCount + " " + getitemname(.rewardId);
+		getitem .rewardId, .rewardCount;
+	}
+	setnpcdisplay(strnpcinfo(3),63);
+	close;	
+	
+OnShowExp:
+	dispbottom "[SteelSoul] Your Soul is currently level " + STEELLVL + ".";
+	dispbottom "[SteelSoul] You've killed " + STEELKILLCOUNT + "/" + $lvlKillCount[STEELLVL ] + " monsters.";
+	if (.lvlBonus && STEELLVL >= .lvlLanding)
+	{
+		dispbottom "[SteelSoul] Here's the infos on the bonus you've got on your Steel Soul:";
+		for(set .@i, 0; .@i <= (STEELLVL / .lvlLanding); set .@i, .@i+1)
+		{
+			if (getd("STEELBONUS" + .@i) == -1)
+			{
+				set .@bonusDesc$, "None";
+			}
+			else
+			{
+				set .@bonusDesc$, .bonusDesc$[getd("STEELBONUS" + .@i)];
+			}
+			dispbottom "	" + .@i + " ~ " + .@bonusDesc$;
+		}
+	}
+	end;
+	
+OnNPCKillEvent:
+	set .@mlvl, getmonsterinfo(killedrid, MOB_LV);
+	set .@plvl, BaseLevel;
+	if((.lvlDifferenceType == 0
+		|| (.lvlDifferenceType == 1 && .@mlvl >= .@plvl)
+		|| (.lvlDifferenceType == 2 && .@mlvl >= .@plvl - .lvlDifferenceKill))
+		&& STEELKILLCOUNT < $lvlKillCount[STEELLVL]
+		&& getequipid(EQI_HAND_R) == STEELSOULID && STEELSOULID != 0)
+	{
+		set STEELKILLCOUNT, STEELKILLCOUNT + 1;
+		if(STEELKILLCOUNT >= $lvlKillCount[STEELLVL])
+		{
+			specialeffect2 910;
+			dispbottom "[SteelSoul] You're soul reached a new soul absorption landing. Talk to Soul Smith to increase its level.";
+		}
+	}
+	end;
+
+OnInit:
+	set $steelsoulon, 1;
+	set .debug, 1;
+	setarray $lvlKillCount[0],1,9,16,25,36,77,112,153,200,253,
+	320,385,490,585,700,830,970,1120,1260,
+	1420,1620,1860,1990,2140,2304,2550,2826,3034,
+	3274,3589,3795,3974,4225,4548,4967,5275,5478,5677,
+	5973,6243,6612,6965,7202,7523,7826,8219,8641,8892,
+	9173,9468,9654,9992,10184,10428,10784,11100,11498,
+	11779,11941,12288,12414,12824,13116,13490,13748,13991,
+	14278,14511,14888,15100,15446,15758,16128,16555,16940,
+	17313,17662,17917,18378,18660,18924,19272,19524,19780,
+	19940,20372,20700,20964,21364,21700,22220,22660,23520;
+	set .lvlBonus, 1; //activate or not
+	setarray .bonusDesc$[0],"atk bonus","matk bonus","hp bonus","sp bonus","random status bonus","hit rate bonus","flee rate bonus","elemental weapon switch","aspd bonus";
+	set .lvlBonusItemRequired, 0;
+	setarray .itemBonusId[0], 7812, 7810, 7816, 7817, 7025, 7305, 6087, 6088, 6027;
+	set .lvlLanding, 25; //level count to get a bonus, 25 by default, meaning 4 bonus max. Otherwise you'll need to increase MAX_ITEM_RDM_OPT in src
+	set .lvlDifferenceKill, 15; //lvl difference max authorized to get a kill count
+	set .lvlDifferenceType, 0; //0 none, 1 only higher, 2 higher or lower
+	set .defaultSuccessRate, 5;
+	setarray .itemListToSmith[0], 615, 10, 987, 1, 969, 5, 2282, 1; //items to have to get a soul smith. Pattern: id, percent
+	setarray .itemListIncreaseSuccess[0], 733, 5, 730, 10, 731, 15, 732, 20, 6087, 25, 6088, 25; //items to have to increase success. Pattern: id, percent
+	set $maxSteelLvl, 90;
+	//Dagger, One-H Sword, Two-H Sword, One-H Spear, Two-H Spear, One-H Axe, Two-H Axe, Mace, Staves, Bow, Knuckle, Instrument, Whip, Book, Katar, Revolver, Rifle, Gatling, Shotgun, Grenade, Huuma
+	setarray $relicItemId[0],30385,30386,30387,30388,30389,30390,30391,30392,30393,30394,30395,30396,30397,30398,30398,30399,30400,30401,30402,30403,30404,30405;
+	bindatcmd "steelsoul",strnpcinfo(3)+"::OnShowExp";
+	set .highestChangeWeapon, 1;
+	set .rewardCount, 100;
+	set .rewardId, 675;
+	end;
+}
