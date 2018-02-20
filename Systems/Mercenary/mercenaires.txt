@@ -1,0 +1,184 @@
+//bar
+casp_in01,59,187,4	script	Horm::caspho	455,{
+	set .@npcname$, "[Horm]";
+	mes .@npcname$;
+	mes "Us, Mercenary, only like some few things.";
+	mes "Gold, of course, but also alcohol and...Womens!";
+	mes "Arh arh arh!";
+	close;
+}
+
+//table2
+casp_in01,67,184,4	script	Jörn::caspjor	881,{
+	set .@npcname$, "[Jörn]";
+	mes .@npcname$;
+	mes "I'm more a lonely guy. I don't really like teams.";
+	mes "There's always more reward for me this way!";
+	close;
+}
+
+//table3
+casp_in01,65,186,6	script	Fran::caspfra	882,{
+	set .@npcname$, "[Fran]";
+	mes .@npcname$;
+	mes "Hey, Jörn, remember when we've fight against Drake?";
+	mes "That was pretty dangerous!";
+	close;
+}
+
+//table3
+casp_in01,74,193,6	script	Hermann::caspher	107,{
+	set .@npcname$, "[Hermann]";
+	mes "This Fran...Always lying about things he said he did...";
+	mes "But a pretty awesome treasure hunter!";
+	close;
+}
+
+
+casp_in01,48,188,6	script	Ork::caspork	817,{
+	set .@npcname$, "[Ork]";
+	mes .@npcname$;
+	mes "Did you ever hear about the Mercenary Treasure?";
+	mes "It's a hidden secret from our aside's world!";
+	mes "A secret place which is accessible only to the Mercenary,";
+	mes "and which grant access to rare items.";
+	close;
+}
+
+casp_in01,58,192,6	script	Belariam le Bleu::caspbel	474,{
+	set .@npcname$, "[Belariam]";
+	mes .@npcname$;
+	mes "I'm Belariam, nicknamed le Bleu. Why? I don't know.";
+	mes "Maybe cause I've travel all over the world seas.";
+	mes "I was looking for new places, sometimes found, sometimes lost.";
+	mes "But I was always looking for Marine Card, which bring you to a treasure place.";
+	close;
+}
+
+casp_in01,250,202,6	script	Alim le Rouge::caspali	451,{
+	set .@npcname$, "[Alim]";
+	mes .@npcname$;
+	mes "Do you know who I am?";
+	mes "Everybody know who I am!";
+	mes "Everybody, but me...";
+	mes "I felt on my last travel, recover here and since, I do not remember a single thing...";
+	close;
+}
+
+casp_in01,255,196,6	script	Rahn::caspra	419,{
+	set .@npcname$, "[Rahn]";
+	mes .@npcname$;
+	mes "Ahhhh Amber. Do you know her?";
+	mes "I found her so beautiful!";
+	mes "If only she would get angry at me...";
+	close;
+}
+
+//premiere place
+caspen,124,142,6	script	Mouarn::caspmoua	456,{
+	set .@npcname$, "[Mouarn]";
+	mes .@npcname$;
+	mes "Welcome to Caspen, the Desert City.";
+	mes "Is it your first visit here?";
+	mes "You'll find here very few people, but everyone got a story to tell.";
+	mes "You should take the time to speak to everybody.";
+	mes "Maybe you'll learn something interesting.";
+	close;
+}
+
+//premiere maison
+caspen,114,162,6	script	Vlane::caspvla	810,{
+	set .@npcname$, "[Vlane]";
+	mes .@npcname$;
+	mes "I don't really know how I've arrived here.";
+	mes "But this place is full of secret.";
+	mes "You're people are quite interesting for me.";
+	close;
+}
+
+//centre
+caspen,126,206,6	script	Baron::caspbar	984,{
+	set .@npcname$, "[Baron]";
+	mes .@npcname$;
+	mes "Baron's my name, not my title.";
+	mes "Even if I really was a baron some times ago.";
+	mes "But I let it all flee when the Adventure call my name.";
+	close;
+}
+
+//banc
+caspen,159,187,6	script	Prun::casppr	418,{
+	set .@npcname$, "[Prun]";
+	mes .@npcname$;
+	mes "Some times ago, I was a real Mercenary.";
+	mes "Killing, stealing, raping on demand.";
+	mes "But now...I just want to stay here, listening to birds.";
+	mes "Thanks to all the gold I won by selling my soul.";
+	close;
+}
+
+//marché
+caspen,179,183,6	script	Vlaj::caspvlaj	409,{
+	set .@npcname$, "[Vlaj]";
+	mes .@npcname$;
+	mes "This place is the city's market.";
+	mes "As you can see, there's nothing to sell, nothing to buy.";
+	mes "Peoples are affraid by us. Leaving in the middle of us is like betting on how long you'll live.";
+	close;
+}
+
+//devant le bar
+caspen,173,229,6	script	Berg::caspberg	585,{
+	set .@npcname$, "[Berg]";
+	mes .@npcname$;
+	mes "Zzzzzzzzz";
+	mes "Just another bier...Hips";
+	mes "*I don't think is in mood to answer my question*";
+	close;
+}
+
+//armurerie
+caspen,144,236,6	script	Vurn::caspvur	414,{
+	set .@npcname$, "[Vurn]";
+	mes .@npcname$;
+	mes "Hello to you.";
+	mes "You're in front of Caspen's Weapon and Armor Shop.";
+	mes "Sadly, I've got nothing to sell.";
+	mes "Caravans does not come here...";
+	close;
+}
+
+//eglise
+caspen,88,198,6	script	Bishop::caspbish	964,{
+	set .@npcname$, "[Bishop]";
+	mes .@npcname$;
+	mes "Wha...What? Me? Looking on the Sisters Side?";
+	mes "Not at all!";
+	mes "I...I was...Praying.";
+	mes "Yes, that's it. You to!";
+	mes "Pray the Gods.";
+	mes "*Even bishops are strange here...*";
+	close;
+}
+
+//jardin
+caspen,149,130,6	script	Garden Keeper::caspgk	460,{
+	set .@npcname$, "[Garden Keeper]";
+	mes .@npcname$;
+	mes "Good day to you!";
+	mes "I'm the Garden Keeper.";
+	mes "I am the one who feed all this bloody bastards.";
+	mes "And believe me, the eat a lot!";
+	close;
+}
+
+//port
+caspen,193,65,6	script	Pref::casppre	475,{
+	set .@npcname$, "[Pref]";
+	mes .@npcname$;
+	mes "How do you arrive here?!";
+	mes "Boats never come here...";
+	mes "You've arrived by the Ase Path? Seriously?";
+	mes "I think you should find Varys then. He's in the Bar!";
+	close;
+}

@@ -1,0 +1,110 @@
+ars_fild56,20,36,5	script	Jack	887,{
+	set .@npcname$,"^FF3333Jack^000000";	
+	
+	mes "[" + .@npcname$ + "]";
+
+	mes "Good day to you, " + (Sex?" m'lord,":" l'dy");
+	mes "I'Jack. 'ut that' ho' they call me in Villag'.";
+	mes "But now, there's no mor' V'llage so...";
+	mes "Wha' can he do for a World big one, Jack?";
+	next;
+	if (M_QUEST == 2)
+	{
+		switch(select("I wanna become a Mercenary:This one' goo':Nothing, simply walking"))
+		{
+			case 1:
+				goto L_QUEST;
+			case 2:
+				goto L_TRADE;
+			case 3:
+				goto L_QUIT;
+		}
+	}
+	else
+	{
+		switch(select("I wanna become a Mercenary:I'm here to offer an exchange:Nothing, simply walking"))
+		{
+			case 1:
+				goto L_QUEST;
+			case 2:
+				goto L_TRADE;
+			case 3:
+				goto L_QUIT;
+		}
+	}
+	close;	
+	
+L_QUIT:
+	mes "[" + .@npcname$ + "]";
+	mes "That, Jack, he can do!";
+	mes "Nothin' bette' when nothing's ask to Jack!";
+	close;
+	
+L_QUEST:
+	mes "[" + .@npcname$ + "]";
+	mes "A Merc'nary?";
+	mes "Dunno what's tha'.";
+	mes "Bad memory, these times...";
+	mes "Maybe with some help, I can rem'mber.";
+	close;
+
+L_TRADE:
+	if (M_QUEST == 1)
+	{
+		if (countitem(969) >= 2)
+		{
+			mes "[" + .@npcname$ + "]";
+			mes "Oh oh oh!";
+			mes "Look at tha'!";
+			mes "Ya kno' wha' we like, hu!";
+			delitem 969, 2;
+			mes "So, let's say that I can recommand you then.";
+			mes "But there's not only that in life.";
+			mes "Even if we don't have Honnor, you can't abuse a Mercenary.";
+			mes "You know what's better than gold, right?";
+			mes "Then bring me back some of our bounded brothers' one.";
+			mes "One of those level 1 Mercenary souls.";
+			set M_QUEST, 2;
+		}
+		else
+		{
+			mes "[" + .@npcname$ + "]";
+			mes "...";
+			mes "Y'know wha' we like, hu?";
+			mes "Then bring me back. 2 should do the job.";
+			mes "And I'll see after.";
+		}
+	}
+	else if (M_QUEST==2)
+	{
+		mes "[" + .@npcname$ + "]";
+		mes "Start tal'ing lik' Jack, hu!";
+		mes "Soon, you'll be as grea' ashim!";
+		mes "Let's see if you go' it all!";
+		if (countitem(12153) == 1 || countitem(12163) == 1 || countitem(12173) == 1)
+		{
+			next;
+			mes "[" + .@npcname$ + "]";
+			mes "Not just handsom', hu?!";
+			mes "Allright for Jack.";
+			mes "Tell it to Varys, he'll give you work!";
+			set M_QUEST, 3;
+		}
+		else
+		{
+			next;
+			mes "[" + .@npcname$ + "]";
+			mes "...";
+			mes "Didn't liste' or wha'?";
+			mes "A level 1! A f***ing paper!";
+			mes "Come back when you'll have one.";
+		}
+	}
+	else
+	{
+		mes "[" + .@npcname$ + "]";
+		mes "An exchange? Of what?";
+		mes "The only interesting thing, you'll never have enough...";
+	}
+	close;
+}

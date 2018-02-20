@@ -1,0 +1,17 @@
+casp_in01,84,192,6	script	Panneau d'information	111,{
+	mes " - Mercenary Guild Rules - ";
+	mes "";
+	mes "A Mercenary does not live for Glory,";
+	mes "does not fight for Glory,";
+	mes "does not work for self estime,";
+	mes "does not hope for Love,";
+	mes "owes nothing to nobody,";
+	mes "except the Guild and himself,";
+	mes "is still a Man (or a Woman),";
+	mes "and can so turn his(her) steps back.";
+	mes "A Mercenary live for money,";	
+	mes "and he can have some only by filling a Contract.";
+	mes "";
+	mes " - Varys le Noir, Mercenary Chief - ";
+	close;
+}

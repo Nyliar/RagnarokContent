@@ -1,0 +1,2 @@
+CREATE TABLE `mercenary_char` (id INT NOT NULL PRIMARY KEY AUTO_INCREMENT, name VARCHAR(255), mercenaryPoint INT, available INT);
+CREATE TABLE `mercenary_contract` (id INT NOT NULL PRIMARY KEY AUTO_INCREMENT, mercenaryId INT, state INT, description VARCHAR(255), ownerName VARCHAR(255), prime INT, contractType INT, delay INT, rewardId INT, rewardCount INT, requireId INT, requireCount INT, targetName VARCHAR(255));

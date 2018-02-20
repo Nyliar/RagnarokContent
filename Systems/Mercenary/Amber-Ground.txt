@@ -1,0 +1,884 @@
+// [========================================================]
+// [===========  	  Mercenaries - Core        ===========]
+// [========================================================]
+// [ Version 1                                              ]
+// [========================================================]
+// [ Original script by: Nyliar	                         ]
+// [========================================================]
+// [ Description:                                           ]
+// [--------------------------------------------------------]
+// [                                                        ]
+// [ - Mercenaries base implementation			    ]
+// [                                                        ]
+// [========================================================]
+// [                                                        ]
+// [  Based on Prime Hunter logic:                          ]
+// [  Killing a player on pvp maps make your karma decrease ]
+// [  Prime is calculated according to your karma           ]
+// [  A killer can be targeted twice, the reward increasing ]
+// [                                                        ]
+// [  Database structure Mercenaries                        ]
+// [     - id (INT PRIMARY KEY A_I)                         ]
+// [     - name (VARCHAR 255)                               ]
+// [     - mercenaryPoint (INT)                             ]
+// [     - available (INT)		                         ]
+// [                                                        ]
+// [  Database structure Mercenaries Contract               ]
+// [     - id (INT PRIMARY KEY A_I)                         ]
+// [     - mercenaryId (INT)                                ]
+// [     - state (INT)                            	    ]
+// [     - description (VARCHAR 255)               	    ]
+// [     - ownerName (VARCHAR 255)                          ]
+// [     - prime (INT)      		                  ]
+// [     - contractType (INT)      		           ]
+// [     - delay (INT)      		                  ]
+// [     - rewardId (INT)      		                  ]
+// [     - rewardCount (INT)                                ]
+// [     - requiredId (INT)      		                  ]
+// [     - requiredCount (INT)                              ]
+// [     - targetName (VARCHAR 255)                         ]
+// [                                                        ]
+// [========================================================]
+// [========================================================]
+// [ Changelog: (5 last updates)                            ]
+// [--------------------------------------------------------]
+// [                                                        ]
+// [ v0: Creation                      			    ]
+// [                                                        ]
+// [========================================================]
+// [                                                        ]
+// [========================================================]
+
+casp_in01,175,195,4	script	Amber Ground	747,{
+	set .@npcname$,"[^FF3333Amber Ground^000000]";	
+
+	mes .@npcname$;
+	set .@ombre$, strcharinfo(0);
+	mes "Hello, ^3333FF" + .@ombre$ + "^000000 !";
+	mes "Do you event know who I am?";
+	mes "I'm called Amber. ^FF3333" + strnpcinfo(0) + "^000000.";
+	mes "I know...So much funny. Nobody choose his own name.";
+	mes "On the other hand, we can choose our path.";
+	next;
+	mes .@npcname$;
+	mes "I'm called the Shadows Puppetter.";
+	mes "I'm the one leading the others into darkness.";
+	mes "I can bind anybody to anybody else.";
+	mes "The second become the Master,";
+	mes "and the other one, the Shadow, a Mercenary.";
+	next;
+	mes .@npcname$;
+	mes "Do you want to be bound to someone?";
+	set .@query$, "SELECT `id` FROM `mercenary_char` WHERE `name`='" + strcharinfo(0) + "'";
+	query_sql(.@query$, .@id);
+	set .@mercenary, 0;
+	if (getarraysize(.@id) > 0)
+		set .@mercenary, 1;
+	switch(select("Yes please","Cancel a contract","Manage contracts",.@mercenary == 1 ? "" : "Register as a Mercenary","No, I'm just wandering around"))
+	{
+		case 1:
+			goto OnBindContract;
+			break;
+		case 2:
+			goto OnCancelContract;
+			break;
+		case 3:
+			goto OnManage;
+			break;
+		case 4:
+			if (.@mercenary == 0)
+			{ goto OnRegister; }
+			else
+			{
+				next;
+				mes .@npcname$;		
+				mes "You're already a mercenary. Are you stupid?";
+			}
+			break;
+		case 5:
+			next;
+			mes .@npcname$;		
+			mes "Then, at least, don't make me loose my time...";
+			mes "Go away, you moron.";
+			break;
+	}
+	close;
+	
+OnCancelContract:
+	next;
+	mes .@npcname$;
+	query_sql("SELECT `id` FROM `mercenary_char` WHERE `name`='" + strcharinfo(0) + "'",.@mercenaryId);
+	set .@query$, "SELECT `id`,`description` FROM `mercenary_contract` WHERE `ownerName`='" + strcharinfo(0) +"'";
+	if (getarraysize(.@mercenaryId) > 0)
+	{
+		set .@query$, .@query$ + " OR `mercenaryId`=" + .@mercenaryId[0];
+	}
+	set .@query$, .@query$ + " AND `state`!=2";
+	query_sql(.@query$,.@contractId, .@contractDesc$);
+	if (getarraysize(.@contractId) > 0)
+	{
+		mes "Allright, choose a contract:";
+		for (set .@i,0; .@i<getarraysize(.@contractId); set .@i,.@i+1)
+		{
+			mes "Contract n°" + .@contractId[.@i] + " - " + .@contractDesc$[.@i];
+		}
+		input .@contractIdToCancel;
+		set .@ok, 0;
+		for (set .@i,0; .@i<getarraysize(.@contractId) && .@ok == 0; set .@i,.@i+1)
+		{
+			if(.@contractId[.@i] == .@contractIdToCancel)
+			{
+				set .@ok, 1;
+			}
+		}
+		if (.@ok)
+		{
+			next;
+			mes .@npcname$;		
+			mes "Allright. Keep in mind that you won't be refined for your contract wages if you were the owner.";
+			mes "If you're the Mercenary, you can't cancel. You'll simply leave it for others.";
+			if (select("Go on","I'll come back later"))
+			{
+				query_sql("SELECT `id`,`ownerName`,`mercenaryId`,`prime`,`rewardId`,`rewardCount` FROM `mercenary_contract` WHERE `id`=" + .@contractIdToCancel, 
+				.@contractId, .@contractOwner$, .@mercenaryId, .@contractPrime, .@contractRewardId, .@contractRewardCount);
+				if (getarraysize(.@contractId) > 0)
+				{
+					if (strcharinfo(0) == .@contractOwner$[0])
+					{
+						//owner
+						set Zeny, Zeny + .@contractPrime[0];
+						if(.@contractRewardCount[0] > 0)
+						{
+							getitem .@contractRewardId[0], .@contractRewardCount[0];
+						}
+						query_sql("DELETE FROM `mercenary_contract` WHERE `id`=" + .@contractIdToCancel, .@count);
+					}
+					else
+					{
+						//mercenary
+						query_sql("UPDATE `mercenary_contract` SET `state`=3 WHERE `id`=" + .@contractIdToCancel, .@count);
+					}
+					next;
+					mes .@npcname$;		
+					mes "The contract has been cancelled.";
+				}
+			}
+			else
+			{
+				mes "Okay.";
+			}
+		}
+		else
+		{
+			mes "Select an existing Id...";
+			goto OnCancelContract;
+		}
+	}
+	else
+	{
+		mes "You don't have any contract.";
+	}
+	close;
+	
+OnManage:
+	query_sql("SELECT `name`,`available`,`id` FROM `mercenary_char` WHERE `name`='" + strcharinfo(0) + "'", .@name$, .@available, .@id);
+	if (getarraysize(.@name$) != 0)
+	{
+		//Mercenary
+		if (select("See my contracts","Change my availability") == 1)
+		{
+			next;
+			mes .@npcname$;
+			mes "Allright. Here, you can see all contracts that have been asked to you.";
+			mes "You'll then be able to validate it or not.";
+			query_sql("SELECT `id`,`description`,`state`,`ownerName`,`prime`,`contractType`,`delay`,`rewardId`,`rewardCount`,`requireId`,`requireCount`,`targetName` FROM `mercenary_contract` WHERE `mercenaryId`=" + .@id[0] + " AND `state`=0 OR `state`=3", 
+			.@contractId, .@contractDesc$, .@state, .@contractOwner$, .@contractPrime, .@contractType, .@contractDelay, .@contractRewardId, .@contractRewardCount, .@contractRequireId, .@contractRequireCount, .@contratTargetName$);
+			if (getarraysize(.@contractId) > 0)
+			{
+				next;
+				mes .@npcname$;
+				mes "You actually have " + getarraysize(.@contractId) + " contract awaiting.";
+				for(set .@i,0; .@i<getarraysize(.@contractId); set .@i,.@i+1)
+				{
+					next;
+					mes .@npcname$;
+					mes "Contract Id: " + (.@contractId[.@i]);
+					mes "---------------------";
+					mes "Contract Owner Name: " + .@contractOwner$[.@i];
+					switch(.@contractType)
+					{
+						case 1:
+							set .@type$, "Drop";
+							break;
+						case 2:
+							set .@type$, "Support";
+							break;
+						case 3:
+							set .@type$, "Tanking";
+							break;
+						case 4:
+							set .@type$, "Pvp";
+							break;
+						case 5:
+							set .@type$, "War";
+							break;
+						case 6:
+							set .@type$, "Assassination";
+							break;
+					}
+					mes "Contract Type: " + .@contractType[.@i];
+					mes "Contract Description: " + .@contractDesc$[.@i];
+					mes "Contract Prime: " + .@contractPrime[.@i];
+					if (.@contractRewardCount[.@i] > 0)
+					{
+						mes "Contract additional Reward: " + .@contractRewardCount[.@i] + " " + getitemname(.@contractRewardId[.@i]);
+					}
+					if (.contractType[.@i] == 1)
+					{
+						set .@target$, .@contractRequireCount[.@i] + " " + getitemname(.@contractRequireId[.@i]);
+					}
+					else if (.contractType[.@i] == 6)
+					{
+						set .@target$, .@contractTargetName$[.@i];
+					}
+					if (.contractType[.@i] == 1 || .contractType[.@i] == 6)
+					{
+						mes "Contract target: " + .@target$;
+					}
+					mes "Contract delay: " + .@contractDelay[.@i];
+					next;
+					mes .@npcname$;
+					mes "Do you confirm you want to accept this contract?";
+					mes "In case of abandon, it will opened to all others mercenaries.";
+					if (select("Yes","No") == 1)
+					{
+						set .@query$, "UPDATE `mercenary_contract` SET `state`=1";
+						if (.@state[.@i] == 3)
+						{
+							set .@query$, .@query$ + ",`mercenaryId`=" + .@id[0];
+						}
+						set .@query$, .@query$ + " WHERE `id`=" + .@contractId[.@i];
+						query_sql(.@query$, .@count);
+						mes "Contract accepted.";
+					}
+					else
+					{
+						query_sql("UPDATE `mercenary_contract` SET `state`=3 WHERE `id`=" + .@contractId[.@i], .@count);
+						mes "Contract abandonned.";
+					}
+				}
+			}
+			else
+			{
+				mes "You don't have new contracts.";
+			}
+		}
+		else
+		{
+			next;
+			mes .@npcname$;
+			mes "Allright. As you want.";
+			mes "As long as your unavailable, you wont be able to validate, nor take new contracts.";
+			mes "Are you ok with that?";
+			if (select("Yes","No"))
+			{
+				next;
+				mes .@npcname$;
+				mes "Perfect.";
+				if (.@available[0] == 1)
+				{
+					query_sql("UPDATE `mercenary_char` SET `available`=0 WHERE `name`='" + strcharinfo(0) +"'", .@count);
+					mes "You're now known as unavailable.";
+				}
+				else
+				{
+					query_sql("UPDATE `mercenary_char` SET `available`=1 WHERE `name`='" + strcharinfo(0) +"'", .@count);
+					mes "You're now known as available.";
+				}				
+			}
+			else
+			{
+				next;
+				mes .@npcname$;
+				mes "Your choice.";
+			}
+		}
+	}
+	else
+	{
+		//owner?
+		mes "Allright. Here, you can see all contracts that you've created.";
+		mes "You'll then be able to see if a Mercenary has accepted it or not.";
+		mes "Keep in mind that once the wanted Mercenary rejected it, the contract is open to others.";
+		mes "Therefor, that might not be the one your first wanted who accepted it.";
+		query_sql("SELECT `id`,`description`,`state`,`mercenaryId`,`prime`,`contractType`,`delay`,`rewardId`,`rewardCount`,`requireId`,`requireCount`,`targetName` FROM `mercenary_contract` WHERE `ownerName`='" + strcharinfo(0) + "' AND `state`!=2", 
+		.@contractId, .@contractDesc$, .@state, .@mercenaryId, .@contractPrime, .@contractType, .@contractDelay, .@contractRewardId, .@contractRewardCount, .@contractRequireId, .@contractRequireCount, .@contratTargetName$);
+		if (getarraysize(.@contractId) > 0)
+		{
+			next;
+			mes .@npcname$;
+			for(set .@i,0; .@i<getarraysize(.@contractId); set .@i,.@i+1)
+			{
+				mes "Contract Id: " + (.@contractId[.@i]);
+				mes "---------------------";
+			    	if(.@mercenaryId[.@i] != 0)
+				{
+					query_sql("SELECT `name` FROM `mercenary_char` WHERE `id`=" + .@mercenaryId[.@i], .@mercenaryName$);
+					if (getarraysize(.@mercenaryName$) > 0)
+					{
+						set .@mercenary$, .@mercenaryName$[0];
+					}
+				}
+				mes "Contract Mercenary: " + .@mercenary$;
+				switch(.@contractType)
+				{
+					case 1:
+						set .@type$, "Drop";
+						break;
+					case 2:
+						set .@type$, "Support";
+						break;
+					case 3:
+						set .@type$, "Tanking";
+						break;
+					case 4:
+						set .@type$, "Pvp";
+						break;
+					case 5:
+						set .@type$, "War";
+						break;
+					case 6:
+						set .@type$, "Assassination";
+						break;
+				}
+				mes "Contract Type: " + .@type$;
+				mes "Contract Description: " + .@contractDesc$[.@i];
+				mes "Contract Prime: " + .@contractPrime[.@i];
+				set .@additional$, "Contract additional Reward: ";
+				if (.@contractRewardCount[.@i] > 0)
+				{
+				 	set .@additional$, .@additional$ + .@contractRewardCount[.@i] + " " + getitemname(.@contractRewardId[.@i]);
+				}
+				mes .@additional$;
+				if (.@contractType == 1)
+				{
+					set .@target$, .@contractRequireCount[.@i] + " " + getitemname(.@contractRequireId[.@i]);
+				}
+				else if (.@contractType == 6)
+				{
+					set .@target$, .@contractTargetName$[.@i];
+				}
+				mes "Contract target: " + .@target$;
+				mes "Contract delay: " + .@contractDelay[.@i];
+				mes "---------------------";
+				switch(.@state[.@i])
+				{
+					case 0:
+						set .@state$, "To validate by first Mercenary";
+						break;
+					case 1:
+						set .@state$, "Accepted";
+						break;
+					case 2:
+						set .@state$, "Completed";
+						break;
+					case 3:
+						set .@state$, "Free to take";
+						break;
+					case 4:
+						set .@state$, "Cancelled";
+						break;
+				}
+				mes "Contract state: " + .@state$;
+			}
+		}
+		else
+		{
+			next;
+			mes .@npcname$;
+			mes "You don't have new contracts.";
+		}
+	}
+	close;	
+	
+OnRegister:
+	next;
+	mes .@npcname$;
+	query_sql("SELECT `name` FROM `mercenary_char` WHERE `name`='" + strcharinfo(0) + "'", .@name$);
+	if (getarraysize(.@name$) == 0)
+	{
+		mes "If you wanna be a Mercenary, you'll have to pay " + .mercenaryWage;
+		mes "Plus, you have to make your proof to Varys.";
+		mes "Ok?";
+		if (select("Yes","No"))
+		{
+			if (Zeny >= .mercenaryWage && M_QUEST > 3)
+			{
+				next;
+				mes .@npcname$;
+				mes "Okay.";
+				set Zeny, Zeny - .mercenaryWage;
+				query_sql("INSERT INTO `mercenary_char` (`name`,`mercenaryPoint`,`available`) VALUE ('" + strcharinfo(0) + "',0,1)", .@count);
+				mes "Be the welcomed, my brother Mercenary.";
+			}
+			else
+			{
+				next;
+				mes .@npcname$;
+				mes "You don't meet the requirements.";
+			}
+		}
+		else
+		{
+			next;
+			mes .@npcname$;
+			mes "Your choice.";
+		}
+	}
+	else
+	{
+		mes "You're already a Mercenary, my friend.";
+	}
+	close;
+	
+OnBindContract:
+	next;
+	mes .@npcname$;		
+	if (.registeringContract == 1)
+	{
+		mes "Sorry, I'm a bit busy right now. Come back in a few moments.";
+		close;
+	}
+	
+	set .registeringContract, 1;
+	mes "Keep in mind that you can only establish a contract with a known Mercenary.";
+	mes "Here's a list of them all.";
+	mes "A Mercenary can establish several contract at a time. But you'll have to be aware that it can take him more time to fulfill your demand.";
+	mes "Keep it in mind for later.";
+	next;
+	mes .@npcname$;		
+	mes "So, first of all, choose a mercenary:";
+	set .@query$, "SELECT `name`, `id`, `mercenaryPoint` FROM `mercenary_char` WHERE `available`=1 AND `name`!='" + strcharinfo(0) + "' ORDER BY `mercenaryPoint`";
+	query_sql(.@query$, .@name$, .@id, .@point);
+	if (getarraysize(.@name$) > 0)
+	{
+		for(set .@i,0; .@i<getarraysize(.@name$); set .@i,.@i+1)
+		{
+			mes (.@i + 1) + " ~ " + " " + .@name$[.@i] + " (ranking - " + .@point[.@i] + ")";
+			set .@count, .@count + 1;
+			if (.@count >= 10)
+			{
+				next;
+				mes .@npcname$;
+			}
+		}
+		next;
+		mes .@npcname$;
+		mes "Which one do you want to hire? Input his number.";
+		input .@rank;
+		if (.@rank > getarraysize(.@name$) && .@rank > 0)
+		{
+			next;
+			mes .@npcname$;
+			mes "Stop playing with my nerves, you moron...";
+		}
+		else
+		{
+			mes "Perfect. So you wanna hire " + .@name$[.@rank - 1] + ", right?";
+			if (select("Yes","No"))
+			{
+				next;
+				mes .@npcname$;
+				mes "Allright.";
+				mes "The contract establishement cost is " + .contractPrice + "z.";
+				mes "But the Mercenary can still refuse your offer. On the other hand, the price will be lost.";
+				mes "Keep also in mind that the minimum prime will raised, according to the mercenary rank.";
+				mes "Basically, it will be " + .rankPointPrice + "z per point.";
+				mes "But the minimum prime is " + .minimumPrime;
+				mes "Still ok?";
+				if (select("Yes","No"))
+				{
+					set .@mercenaryName$, .@name$[.@rank - 1];
+					set .@mercenaryBasicPrime, .minimumPrime + .@point[.@rank - 1] * .rankPointPrice;
+					set .@mercenaryId, .@id[.@rank - 1];
+					next;
+					mes .@npcname$;
+					mes "Perfect then.";
+					if (Zeny >= .contractPrice)
+					{
+						goto OnChooseContractType;
+					}
+					else
+					{
+						next;
+						mes .@npcname$;
+						mes "You don't have this money...Without it, no contract.";
+					}
+				}
+				else
+				{
+					next;
+					mes .@npcname$;
+					mes "You better be ok with the Mercenary you wanna hire first.";
+				}
+			}
+			else
+			{
+				next;
+				mes .@npcname$;
+				mes "...Choose wisely.";
+				goto OnBindContract;
+			}
+		}	
+	}
+	else
+	{
+		next;
+		mes .@npcname$;	
+		mes "Sorry, but I don't have any mercenaries free right now.";
+	}
+		
+	set .registeringContract, 0;
+	close;
+	
+OnChooseContractType:
+	next;
+	mes .@npcname$;
+	mes "Let's start with the contract establishement then.";
+	mes "First of all, choose a contract type.";
+	set .type, select("Drop","Support","Tanking","Pvp","War","Assassination");
+	goto OnEnterPrime;
+	
+OnEnterPrime:
+	next;
+	mes .@npcname$;
+	mes "Next, enter the prime you offer for that contract.";
+	mes "The minimum prime for this Mercenary is " + .@mercenaryBasicPrime;
+	input .contractPrime;
+	if (.contractPrime < .@mercenaryBasicPrime)
+	{
+		mes "You can't enter a lower prime than the lowest.";
+		mes "The Mercenary won't even look at your offer.";
+	}
+	else
+	{
+		goto OnEnterDescription;
+	}	
+	set .registeringContract, 0;
+	close;
+	
+OnEnterDescription:
+	next;
+	mes .@npcname$;
+	mes "Now, enter a description for your request.";
+	mes "Keep it clear, less than 255 characters.";
+	input .desc$;
+	if (getstrlen(.desc$) > 255)
+	{
+		next;
+		mes .@npcname$;
+		mes "That's too long...";
+		mes "I've asked you to keep it clear.";
+		goto OnEnterDescription;
+	}
+	else
+	{
+		goto OnAddReward;
+	}
+	set .registeringContract, 0;
+	close;
+	
+OnAddReward:
+	next;
+	mes .@npcname$;
+	mes "Now, you'll have to enter the potential additionnal rewards.";
+	mes "An id, and a count.";
+	mes "You have to have it on you, or I can't register it.";
+	mes "If, for any reason, the contract has to be cancelled, you'll be able to get them back.";
+	mes "But, in case of success, they'll be automatically transfered to the Mercenary.";
+	mes "Let's start.";
+	if (select("Add an item","Continue") == 1)
+	{
+		next;
+		mes .@npcname$;
+		mes "First, input the reward item id.";
+		input .itemId;
+		if (getiteminfo(.itemId, 0) == -1)
+		{
+			next;
+			mes .@npcname$;
+			mes "That item doesn't exist...";
+			goto OnAddReward;
+		}
+		else
+		{
+			next;
+			mes .@npcname$;
+			mes "Now, input the reward item count.";
+			input .itemCount;
+			if (.itemCount <= 0)
+			{
+				next;
+				mes .@npcname$;
+				mes "You have to provide one...";
+				goto OnAddReward;
+			}
+			if (.itemCount > 0)
+			{
+				if (countitem(.itemId) < .itemCount)
+				{
+					next;
+					mes .@npcname$;
+					mes "You need the items you want to add as a reward, I've told you...";
+					goto OnAddReward;
+				}
+				else
+				{
+					if (.type == 1 || .type == 6)
+					{
+						goto OnProvideRequirement;
+					}
+					else
+					{
+						goto OnRecap;
+					}
+				}
+			}
+		}
+	}
+	else
+	{
+		goto OnProvideRequirement;
+	}
+	set .registeringContract, 0;
+	close;
+	
+OnProvideRequirement:
+	if (.type == 1 || .type == 6)
+	{
+		next;
+		mes .@npcname$;
+		mes "Finally, you'll have to enter the requirement.";
+		mes "That's not mandatory for all contracts, but if you ask for a Drop or Assassination contract,";
+		mes "You have to tell us what or who is the target.";
+		if (select("Add a requirement","Cancel the contract"))
+		{
+			if (.type == 1)
+			{
+				next;
+				mes .@npcname$;
+				mes "First, input the requirement item id.";
+				input .requireItemId;
+				if (getiteminfo(.requireItemId, 0) == -1)
+				{
+					next;
+					mes .@npcname$;
+					mes "That item doesn't exist...";
+					goto OnProvideRequirement;
+				}
+				else
+				{
+					next;
+					mes .@npcname$;
+					mes "Now, input the requirement item count.";
+					input .requireItemCount;
+					if (.requireItemCount <= 0)
+					{
+						mes "You have to provide one...";
+						goto OnProvideRequirement;
+					}
+					else
+					{
+						goto OnDelay;					
+					}
+				}
+			}
+			else if (.type == 6)
+			{
+				next;
+				mes .@npcname$;
+				mes "Allright, enter the target's name.";
+				input .targetName$;
+				query_sql("SELECT `char_id` FROM `char` WHERE `name`='" + .targetName$ + "'", .@id);
+				if (getarraysize(.@id) > 0)
+				{
+					goto OnDelay;
+				}
+				else
+				{
+					next;
+					mes .@npcname$;
+					mes "This person doesn't exists.";
+				}
+			}
+			else
+			{
+				mes "Hum...That's an error I think...";
+			}
+		}
+		else
+		{
+			mes "...Allright.";
+			close;
+		}
+	}
+	else
+	{
+		goto OnDelay;
+	}
+	set .registeringContract, 0;
+	close;
+	
+OnDelay:
+	next;
+	mes .@npcname$;
+	mes "Finally, you can, if you want, enter a delay.";
+	mes "This mean, you can provide a days count before the contract fulfilling.";
+	mes "But that will cost you an aditionnal " + .dayAdditionnalPrice + "z per day.";
+	if (select("Add delay","No need") == 1)
+	{
+		next;
+		mes .@npcname$;
+		mes "Allright.";
+		mes "Now, enter the delay in days you want to ask.";
+		input .delay;
+		if (.delay < 0)
+		{
+			mes "Are you dumb?";
+			goto OnDelay;
+		}
+		else
+		{
+			set .contractPrime, .contractPrime + (.delay * .dayAdditionnalPrice);
+			goto OnRecap;
+		}
+	}
+	else
+	{
+		goto OnRecap;
+	}
+	set .registeringContract, 0;
+	close;
+	
+OnRecap:
+	next;
+	mes .@npcname$;
+	mes "Perfect.";
+	mes "Here's your contract request.";
+	next;
+	mes .@npcname$;
+	set .@idContract, 0;
+	query_sql("SELECT `id` FROM `mercenary_contract` ORDER BY `id` DESC", .@id);
+	if (getarraysize(.@id) > 0)
+	{
+		set .@idContract, .@id[0];
+	}
+ 	mes "Contract Id: " + (.@idContract + 1);
+	mes "---------------------";
+	mes "Contract Owner Name: " + strcharinfo(0);
+	mes "Contract Mercenary Name: " + .@mercenaryName$;
+	switch(.type)
+	{
+		case 1:
+			set .@type$, "Drop";
+			break;
+		case 2:
+			set .@type$, "Support";
+			break;
+		case 3:
+			set .@type$, "Tanking";
+			break;
+		case 4:
+			set .@type$, "Pvp";
+			break;
+		case 5:
+			set .@type$, "War";
+			break;
+		case 6:
+			set .@type$, "Assassination";
+			break;
+	}
+	mes "Contract Type: " + .@type$;
+	mes "Contract Description: " + .desc$;
+	mes "Contract Prime: " + .contractPrime;
+	if (.itemCount > 0)
+	{
+		mes "Contract additional Reward: " + .itemCount + " " + getitemname(.itemId);
+	}
+	if (.type == 1)
+	{
+		set .@target$, .requireItemCount + " " + getitemname(.requireItemId);
+	}
+	else if (.type == 6)
+	{
+		set .@target$, .targetName$;
+	}
+	if (.type == 1 || .type == 6)
+	{
+		mes "Contract target: " + .@target$;
+	}
+	mes "Contract delay: " + .delay;
+	next;
+	mes .@npcname$;
+	mes "Do you confirm?";
+	if (select("Yes","No"))
+	{
+		next;
+		mes .@npcname$;
+		mes "Perfect.";
+		if (Zeny >= .contractPrime)
+		{
+			//register
+			set .@query$, "INSERT INTO `mercenary_contract` (`mercenaryId`,`state`,`description`,`ownerName`,`prime`,`contractType`,`delay`,`rewardId`,`rewardCount`,`requireId`,`requireCount`,`targetName`)";
+			set .@query$, .@query$ + " VALUES (" + .@mercenaryId + ",0,'" + .desc$ + "','" + strcharinfo(0) + "'," + .contractPrime + "," + .type + "," + .delay + "," + .itemId + "," + .itemCount + "," + .requireItemId + "," + .requireItemCount + ",'" + .targetName$ + "')";
+			query_sql(.@query$, .@count);
+			set Zeny, Zeny - .contractPrice;
+			set Zeny, Zeny - .contractPrime;
+			if (.itemCount > 0)
+			{
+				delitem .itemId, .itemCount;
+			}
+			mes "Your contract has been registered.";
+			mes "Now, the mercenary you wanna contact may confirm your offer.";
+			mes "If he doesn't want it, the contract will be open to any other mercenary.";
+			mes "If he accept it, he'll have the delay to complete it.";
+			mes "He then have to contact you to fulfill the request.";
+			next;
+			mes .@npcname$;
+			mes "Once this will be done, you'll have to go back to Sleip with the Mercenary.";
+			mes "He'll then be able to say if the mission is complete or no.";
+			mes "According to his answer, you'll be asked to confirm.";
+			mes "If you say so, he'll get the reward.";
+			mes "If that's not the case, you'll get it back.";
+			next;
+			mes .@npcname$;
+			mes "In case of conflict, you can also cancel a contract.";
+			mes "Just as the Mercenary.";
+			mes "If he cancels it, any other Mercenary can accept it.";
+			mes "If you do it, you'll be refilled.";
+			mes "In any case, the delay will be cancelled.";
+		}
+		else
+		{
+			mes "You don't have the required amount of money.";
+		}
+	}
+	else
+	{
+		mes "Allright...Come back later then.";
+		close;
+	}
+	set .registeringContract, 0;
+	close;
+	
+OnInit:
+	set .timeDelay,60000;
+	set .contractPrice, 25000;
+	set .dayAdditionnalPrice, 25000;
+	set .minimumPrime, 10000;
+	set $markId, 5100;
+	set .rankPointPrice, 1000;
+	set .registeringContract, 0;
+	set .mercenaryWage, 500000;
+	end;
+}

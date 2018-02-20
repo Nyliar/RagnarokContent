@@ -1,0 +1,89 @@
+casp_in01,97,190,6	script	Varys le Noir	810,{
+
+	set .@npcname$,"^FF3333Varys le Noir^000000";	
+	
+	mes "[" + .@npcname$ + "]";
+	mes "Hello ^3333FF" + strcharinfo(0) + "^000000 !";
+	mes "I am Varys, but I'm also called Varys le Noir.";
+	mes "I'm the Mercenary Chief.";
+	mes "Even if somes were much skilled than I was. What can I do for you?";
+	switch(select("I wanna become a Mercenary:Nothing, just walking by"))
+	{
+		case 1:
+			next;
+			goto L_QUEST;
+		case 2:
+			next;
+			goto L_QUIT;
+	}
+	end;
+	
+L_QUIT:
+	mes "[" + .@npcname$ + "]";	
+	mes "Don't make me loose my time!";
+	mes "Go away! Now!";
+	close;
+	
+L_QUEST:
+	if (M_QUEST == 0)
+	{
+		mes "[" + .@npcname$ + "]";
+		mes "So, you wanna be part of our Guild?";
+		mes "But we're souless beings, living only for money.";
+		mes "We're treasures hunter.";
+		mes "Still interested?";
+		next;
+		switch(select("Yes:No"))
+		{
+			case 1:
+				mes "Then look for Jack.";
+				mes "He's a brave one. He'll help you.";
+				mes "Ahr!";
+				set M_QUEST, 1;
+			case 2:
+				mes "You're right.";
+				mes "There'll be more for us! Arh Arh!";
+		}
+	}
+	else if (M_QUEST == 3)
+	{
+		mes "[" + .@npcname$ + "]";
+		mes "Looks like you found Jack.";
+		mes "He's strange, but nice, hu?";
+		mes "And he's a pretty good Treasure Hunter.";
+		mes "Well. Looks like it ok for him.";
+		if (callfunc("OnRegisterJob",getcharid(0),6) == 1)
+		{
+			mes "Then you're one of us!";
+			mes "Welcome home, Mercenary.";
+			set M_QUEST,4;
+		}
+		else
+		{
+			mes "Sorry but you're already registered on another Guild.";
+			mes "Do you want to switch to the Mercenary Guild?";
+			if (select("Yes","No") == 1)
+			{
+				if (callfunc("OnChangeJob",getcharid(0),6) == 1)
+				{
+					mes "Then you're one of us!";
+					mes "Welcome home, Mercenary.";
+					set M_QUEST,4;
+				}
+			}
+		}
+	}
+	else if (M_QUEST == 4)
+	{
+		mes "[" + .@npcname$ + "]";
+		mes "You're already one of us!";
+	}
+	else
+	{
+		mes "[" + .@npcname$ + "]";
+		mes "You should perseverate, boy!";
+		mes "Show your courage.";
+		mes "Come back with Jack's validation.";
+	}
+	close;
+}

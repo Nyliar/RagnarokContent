@@ -1,0 +1,238 @@
+casp_in01,184,190,4	script	Sleip	828,{
+	set .@npcname$,"[^FF3333Sleip^000000]";		
+	mes .@npcname$;
+	mes "Hello ^3333FF" + strcharinfo(0) + "^000000 !";
+	mes "I'm the Mercenary Guild's treasure keeper.";
+	mes "My name's Sleip.";
+	mes "What can I do for you?";
+	next;
+	switch(select("I'm here to claim a reward:Nothing, simply walking"))
+	{
+		case 1:
+			goto OnCompleteMission;
+		case 2:
+			goto OnQuit;
+	}
+	close;
+	
+OnCompleteMission:
+	query_sql("SELECT `name`,`id`,`mercenaryPoint` FROM `mercenary_char` WHERE `name`='" + strcharinfo(0) + "'", .@name$, .@id, .point);
+	if (getarraysize(.@name$) != 0)
+	{
+		set .mercenaryId, .@id[0];
+		//Mercenary
+		next;
+		mes .@npcname$;
+		mes "Allright. Here, you can see all contracts that have been asked to you.";
+		mes "You'll then be able to validate the fulfilling of a contract or not.";
+		mes "If so, I'll need a validation of the owner. So, be sure he's ready to accept a message.";
+		if (select("Continue","I'll come back later.") == 1)
+		{
+			query_sql("SELECT `id`,`description`,`state`,`ownerName`,`prime`,`contractType`,`delay`,`rewardId`,`rewardCount`,`requireId`,`requireCount`,`targetName` FROM `mercenary_contract` WHERE `mercenaryId`=" + .mercenaryId + " AND `state`=1", 
+			.contractId, .contractDesc$, .@state, .contractOwner$, .contractPrime, .contractType, .contractDelay, .contractRewardId, .contractRewardCount, .contractRequireId, .contractRequireCount, .contractTargetName$);
+			if (getarraysize(.contractId) > 0)
+			{
+				for(set .@i,0; .@i<getarraysize(.contractId); set .@i,.@i+1)
+				{
+					next;
+					mes .@npcname$;
+					mes "Contract Id: " + (.contractId[.@i]);
+					mes "---------------------";
+					mes "Contract Owner Name: " + .contractOwner$[.@i];
+					switch(.contractType)
+					{
+						case 1:
+							set .@type$, "Drop";
+							break;
+						case 2:
+							set .@type$, "Support";
+							break;
+						case 3:
+							set .@type$, "Tanking";
+							break;
+						case 4:
+							set .@type$, "Pvp";
+							break;
+						case 5:
+							set .@type$, "War";
+							break;
+						case 6:
+							set .@type$, "Assassination";
+							break;
+					}
+					mes "Contract Type: " + .contractType[.@i];
+					mes "Contract Description: " + .contractDesc$[.@i];
+					mes "Contract Prime: " + .contractPrime[.@i];
+					if (.contractRewardCount[.@i] > 0)
+						mes "Contract additional Reward: " + .contractRewardCount[.@i] + " " + getitemname(.contractRewardId[.@i]);
+					if (.contractType[.@i] == 1)
+					{
+						set .@target$, .contractRequireCount[.@i] + " " + getitemname(.contractRequireId[.@i]);
+					}
+					else if (.contractType[.@i] == 6)
+					{
+						set .@target$, .contractTargetName$[.@i];
+					}
+					if (.contractType[.@i] == 1 || .contractType[.@i] == 6)
+						mes "Contract target: " + .@target$;
+					mes "Contract delay: " + .contractDelay[.@i];
+					next;
+					mes .@npcname$;
+					mes "Do you confirm that this contract is completed?";
+					if (select("Yes","No") == 1)
+					{		
+						if (.contractType[.@i] == 1)
+						{
+							if (countitem(.contractRequireId[.@i]) >= .contractRequireCount[.@i])
+							{
+								query_sql("SELECT `account_id` FROM `char` WHERE `name`='" + .contractOwner$[.@i] + "' AND `online`=1", .@aId);
+								if (getarraysize(.@aId) > 0)
+								{
+									set .contractRank, .@i;
+									delitem .contractRequireId[.contractRank], .contractRequireCount[.contractRank];
+									set .@mercenaryName$, strcharinfo(0);
+									set .@mercenaryAId, getcharid(3);
+									close2;
+									attachrid(.@aId[0]);
+									mes .@npcname$;		
+									mes "The Mercenary " + .@mercenaryName$ + " has completed a mission you've asked.";
+									mes "The considered mission is: ";
+									mes "" + .contractId[.@i] + " - " + .contractDesc$[.@i];
+									mes "Here's the required item.";
+									getitem .contractRequireId[.contractRank], .contractRequireCount[.contractRank];
+									mes "Can you know confirm that the contract is fullfilled?";
+									set .@success, 0;
+									if(select("Yes","No") == 1)
+									{
+										set .@success, 1;
+									}
+									close2;
+									attachrid(.@mercenaryAId);
+									if (.@success == 1)
+									{
+										goto OnClaimReward;	
+									}
+									mes .@npcname$;
+									mes "Sorry my friend, but your owner refused to validate the contract...";
+									query_sql("UPDATE `mercenary_contract` SET `state`=2 WHERE `id`=" + .contractId[.contractRank], .@count);
+								}
+								else
+								{
+									next;
+									mes .@npcname$;		
+									mes "Sorry, but this name doesn't exist or the owner can't be found anywhere.";
+								}
+							}
+							else
+							{
+								next;
+								mes .@npcname$;
+								mes "Sorry, but you don't have the requirements.";
+							}
+						}
+						else if (.contractType[.@i] == 6)
+						{
+							if(getd("MERCENARY" + .contractId[.@i] + "Q") == 1)
+							{
+								goto OnClaimReward;
+							}
+							else
+							{
+								mes "...You shouldn't lie to me...";
+							}
+						}
+						else
+						{
+							mes "Allright. If it's completed for you, I'll need a validation of your contract owner.";
+							query_sql("SELECT `account_id` FROM `char` WHERE `name`='" + .contractOwner$[.@i] + "' AND `online`=1", .@aId);
+							if (getarraysize(.@aId) > 0)
+							{
+								set .@mercenaryName$, strcharinfo(0);
+								set .@mercenaryAId, getcharid(3);
+								close2;
+								attachrid(.@aId[0]);
+								mes .@npcname$;		
+								mes "The Mercenary " + .@mercenaryName$ + " want to complete a mission you've asked.";
+								mes "The considered mission is: ";
+								mes "" + .contractId[.@i] + " - " + .contractDesc$[.@i];
+								mes "Do you confirm the completion?";
+								set .@completeMission, select("Yes","No");
+								mes "Thanks.";
+								close2;
+								attachrid(.@mercenaryAId);
+								mes .@npcname$;		
+								mes "The owner has given his answer.";
+								if (.@completeMission == 1)
+								{
+									mes "For him, the mission is complete.";
+									set .contractRank, .@i;
+									callsub OnClaimReward;
+								}
+								else if (.@completeMission == 2)
+								{
+									mes "For him, the mission is uncomplete.";
+									mes "You can't claim your reward.";
+									mes "Sorry.";
+								}
+							}
+							else
+							{
+								next;
+								mes .@npcname$;		
+								mes "Sorry, but this name doesn't exist or the owner can't be found anywhere.";
+							}
+						}
+					}
+				}
+			}
+			else
+			{
+				next;
+				mes .@npcname$;		
+				mes "You don't have new contracts.";
+			}
+		}
+		else
+		{
+			next;
+			mes .@npcname$;		
+			mes "Sure, no problem.";
+		}
+	}
+	else
+	{
+		next;
+		mes .@npcname$;
+		//owner?
+		mes "Sorry, but only a Mercenary can complete a mission.";
+	}
+	close;
+	
+OnClaimReward:
+	mes "Perfect, the contract has been completed.";
+	mes "You can claim your reward.";
+	if (.contractRewardCount > 0)
+		getitem .contractRewardId[.contractRank], .contractRewardCount[.contractRank];
+	set Zeny, Zeny + .contractPrime[.contractRank];
+	query_sql("UPDATE `mercenary_contract` SET `state`=2 WHERE `id`=" + .contractId[.contractRank], .@count);
+	query_sql("UPDATE `mercenary_char` SET `mercenaryPoint`=" + (.point[0] + 1) + " WHERE `id`=" + .mercenaryId, .@count);
+	if (.guildReward > 0)
+	{
+		next;
+		mes .@npcname$;		
+		mes "Here's an additonnal reward for you. Thank the Guild.";
+		set Zeny, Zeny + .guildReward;
+	}	
+	mes "Here you are.";
+	close;
+	
+OnQuit:
+	next;
+	mes .@npcname$;
+	mes "Sure, come back when you'll need me.";
+	close;
+	
+OnInit:
+	set .guildReward, 0;
+	end;
+}
