@@ -1,0 +1,658 @@
+//===== Custom eAthena Script =======================================
+//= Fishing Script
+//===== By: =========================================================
+//= Alayne
+//===== Description =================================================
+//= Fishing spot with random prizes and monsters
+//===== Version =====================================================
+//= 1.0
+//===== Description =================================================
+//= $fishitem - Fishing Prize IDs
+//= $itemreq[0] - Fishing Rod ID (Currently set at Hypnotist's Staff[1])
+//= $itemreq[1] - Bait ID (Currently set at Fatty Chubby Earthworm)
+//= $itemreq[2] - Fishing Hat ID (Currently set at Fisherman's Hat)
+//= $emonster - Monster IDs
+//= @fishch - Fishing Item Chance
+//= $@fp$ - NPC Name
+//===================================================================
+//= If you want to add more events just add more cases in the second
+//= switch()
+//= Have fun!
+//===================================================================
+
+comodo,195,116,4	script	Fisherman::comfisher	4_M_SITDOWN,{
+	setarray .@spot$[0], "In Jawaii", "In Comodo", "On Hugel Field 5", "in the Sunken Ship", "Near the Sunken Ship";
+	setarray .@loot$[0], "Some food", "Some loot boxes (thunder, resentment...)", "Dead Wood", "Hats", "Old blue or purple boxes", "A strange golden piece";
+	setarray $@Array_Fishing_Rank$[0],"Fisherman Apprentice","Trained Fisherman","Fisherman Expert","Fisherman Artisan","Master Fisherman";
+	
+	set .@npcname$, "[Fisherman]";
+	
+	mes .@npcname$;
+	mes "Hi there, lil' boy.";
+	if (QFISH == 0)
+	{
+		set $@id, getcharid(0);
+
+		mes "Make less noise, you gonna make fishes escape.";
+		mes "And I don't have catch this much till mornin'...";
+		mes "Wanna help, said?";
+		set .@choice, select("Allright, but you have to teach me how to fish:Sorry, no time");
+		
+		switch(.@choice)
+		{
+			case 1:
+				next;
+				mes .@npcname$;
+				mes "That sounds clear. First, you got to be patient.";
+				
+				mes "Yeah, like that.";
+				set QFISH, 1;
+				mes "Then you need tools.";
+				mes "At least a rod and a bait.";
+				mes "There's lot differents, but I'll teach you later.";
+				mes "Then there's bonus. See that later too.";
+				mes "First, 'need a rod.";
+				mes "Can trade or sell one. Want?";
+				mes "Cost a " + .price + " Zeny, you know?";
+				switch(select("Allright, let's go:No time for that"))
+				{
+					case 1:
+						if (Zeny >= .price)
+						{
+							next;
+							mes .@npcname$;
+							mes "Allright, here's yours!";
+							getitem 2764, 1;
+							logmes "[FishingManager] Le joueur " + strcharinfo(0) + " obtient 1 " + getitemname(2746);
+							set #Fishing_Level, 1;
+							set #Fishing_Try,0;
+							set Zeny, Zeny-.price;
+						}
+						else
+						{
+							next;
+							mes .@npcname$;
+							mes "Don't have that much money boy...";
+						}
+						break;
+					case 2:
+						next;
+						mes .@npcname$;
+						mes "No rod, no fish.";
+						break;
+				}
+				break;
+			case 2:
+				next;
+				mes .@npcname$;
+				mes "Looks like you don't have the patience, he...";
+				break;
+		}
+	}
+	else if (QFISH == 1)
+	{
+		mes "Learnt your lessons, boy? What do you want?";
+		switch(select("infos", "A new rod", "Baits", "Learn patience", "Get rid of items", "What's my fishing level?", "Can I see the Rankin?"))
+		{
+			case 1:
+				next;
+				mes .@npcname$;
+				mes "Nothing easier. Which infos?";
+				next;
+				switch(select("Bonuses", "Baits", "Fishing spot", "What can be fished"))
+				{
+					case 1:
+						next;
+						mes .@npcname$;
+						mes "That, I can tell you for free.";
+						mes "Being a fisherman is a way of life.";
+						mes "But have some fisherman stuff can help, thought.";
+						mes "A knife helps.";
+						mes "But the best is still the fisherman hat!";
+						break;
+					case 2:
+						next;
+						mes .@npcname$;
+						mes "There, I help you for some money.";
+						mes "It's a fisherman secret, you know.";
+						mes "Tell ya for 10 " + getitemname(7150) + ". i make some rod with that. Ok?";
+						switch(select("Yeah please", "No way"))
+						{
+							case 1:
+								next;
+								mes .@npcname$;
+								if (countitem(7150)>=10)
+								{
+									mes "Allright. Higher the baits in this list, higher the chance to catch something. Here's what you can use to fish:";
+									for (set .@i,0; .@i<getarraysize(.baits);set.@i,.@i+1)
+									{
+										mes "^5555FF"+ getitemname(getelementofarray(.baits,.@i)) +"^000000";
+									}
+									delitem 7150,10;
+								}
+								else
+									mes "Don't have it!";
+								break;
+							case 2:
+								next;
+								mes .@npcname$;
+								mes "Then you'll have to find it yourself!";
+								break;
+						}
+						break;
+					case 3:
+						next;
+						mes .@npcname$;
+						mes "There, I help you for some money.";
+						mes "It's a fisherman secret, you know.";
+						mes "Tell ya for 25 "+getitemname(632)+". i make some baits with that. Ok?";
+						switch(select("Yeah please", "No way"))
+						{
+							case 1:
+								next;
+								mes .@npcname$;
+								if (countitem(632)>=25)
+								{
+									mes "Allright. Here's what I know:";
+									for (set .@i,0; .@i<2;set.@i,.@i+1)
+									{
+										mes "^5555FF"+ getelementofarray(.@spot$,rand(0,getarraysize(.@spot$))) +"^000000";
+									}
+									mes "That's only examples.";
+									mes "There, I told you everything I know.";
+									mes "Now, you pay or you search!";
+									delitem 632,25;
+								}
+								else
+									mes "Don't have it!";
+								break;
+							case 2:
+								next;
+								mes .@npcname$;
+								mes "Then you'll have to find it yourself!";
+								break;
+						}
+						break;
+					case 4:
+						next;
+						mes .@npcname$;
+						mes "There, I help you for some money.";
+						mes "It's a fisherman secret, you know.";
+						mes "Tell ya for 5 "+getitemname(2301)+". i make some lines with that. Ok?";
+						switch(select("Yeah please", "No way"))
+						{
+							case 1:
+								next;
+								mes .@npcname$;
+								if (countitem(2301)>=5)
+								{
+									mes "Here's things I've already fished:";
+									for (set .@i,0; .@i<getarraysize(.@loot$);set.@i,.@i+1)
+									{
+										mes "^5555FF"+ getelementofarray(.@loot$,.@i) +"^000000";
+									}
+									mes "And there's more, for sure.";
+									mes "Of course, you can also fish a rotten pan or a big monster...";	
+									delitem 2301,5;
+								}
+								else
+									mes "Don't have it!";
+								break;
+							case 2:
+								next;
+								mes .@npcname$;
+								mes "Then you'll have to find it yourself!";
+								break;
+						}
+						break;
+
+				}
+				break;
+			case 2:
+				next;
+				mes .@npcname$;
+				mes "I can trade or sell some. Want?";
+				mes "I cost a million, you know.";
+				switch(select("Yeah please", "No way"))
+				{
+					case 1:
+						next;
+						mes .@npcname$;
+						if (Zeny >= .price)
+						{
+							mes "Allright here's your rod!";
+							getitem 2764, 1;
+								logmes "[FishingManager] Le joueur " + strcharinfo(0) + " obtient 1 " + getitemname(2746);
+							set Zeny, Zeny-.price;
+						}
+						else
+						{
+							mes "Don't have enought boy...";
+						}
+						break;
+					case 2:
+						next;
+						mes .@npcname$;
+						mes "No rod, no fish.";
+						break;
+				}
+				break;
+			case 3:
+				next;
+				mes .@npcname$;
+				mes "For baits, I need some stuff to build some.";
+				mes "And it won't be free:";
+				mes "I need 5 " + getitemname(632) + ", and " + .priceBaitsBox + "z for a baits boxe.";
+				mes "Ok?";
+				next;
+				switch(select("Yes", "No"))
+				{
+					case 1:
+						next;
+						mes .@npcname$;
+						mes "Ok. Let's see if you have enought.";
+						if (countitem(632)>4 && Zeny>=.priceBaitsBox)
+						{
+							mes "Allright, what do you want?";
+							set .@getbait, 0;
+							set .@choice, select("Pumpkin Mojo:Animal Scroll:Chicken Egg:Ox Tail Egg:Spirit of Fish");
+							if (#Fishing_Level >= .@choice)
+							{
+								next;
+								mes .@npcname$;
+								mes "Here's for you";
+								getitem .baits[.@choice],.baitsBoxCount[.@choice];
+								logmes "[FishingManager] Le joueur " + strcharinfo(0) + " obtient " + .baitsBoxCount[.@choice] + " " + getitemname(.baits[.@choice]);
+								delitem 632,5;
+								set Zeny, Zeny - .priceBaitsBox;
+							}
+							else
+							{
+								next;
+								mes .@npcname$;
+								mes "Sorry, you're level's too low for that bait.";
+							}
+						}
+						else
+						{
+							next;
+							mes .@npcname$;
+							mes "Sorry, you don't have enough.";
+						}
+						break;
+					case 2:
+						next;
+						mes .@npcname$;
+						mes "But you can still have some by yourself.";
+						break;
+				}
+				break;
+			case 4:		
+				next;
+				mes .@npcname$;
+				mes "That's easy!";
+				sleep2 15000;
+				mes "There. Now you know!";
+				break;
+			case 5:
+				next;
+				mes .@npcname$;
+				mes "Here's what happen when you fish for to long.";
+				mes "Don't move now...";
+				delitem 7497,countitem(7497);
+				delitem 6075,countitem(6075);
+				break;
+			case 6:
+				next;
+				mes .@npcname$;
+				mes "He! You're actually a " + $@Array_Fishing_Rank$[#Fishing_Level];
+				set .@remainingFishing, $@Array_Fishing_Exp_lvlup[#Fishing_Level] - #Fishing_Try;
+				if (.@remainingFishing <= 0)
+				{
+					next;
+					mes .@npcname$;
+					mes "Hey! You've become stronger.";
+					set #Fishing_Level, #Fishing_Level + 1; 
+					mes "Right now, you've become a " + $@Array_Fishing_Rank$[#Fishing_Level];
+					set #Fishing_Try, 0;
+					set .@remainingFishing, $@Array_Fishing_Exp_lvlup[#Fishing_Level] - #Fishing_Try;
+				}
+				if (#Fishing_Level < 5)
+				{
+					next;
+					mes .@npcname$;
+					mes "Right now, you need " + .@remainingFishing + " to change your rank";
+					mes "After that, you'll get more chance to catch something.";
+					mes "You'll also be able to use a rarer bait.";
+				}
+				else
+				{
+					next;
+					mes .@npcname$;
+					mes "I've nothing more to learn to you. You're ready to use the strongest and rarest baits.";
+					mes "Go, and fish'em all.";	
+				}
+				break;
+			case 7:
+				next;
+				mes .@npcname$;
+				mes "So you wanna see the Ranking hu?";
+				mes "Here you go. Those are the best Fishermans I've trained.";
+				for(set .@i,0; .@i<getarraysize($fishingCount); set .@i,.@i+1)
+				{
+					if($fishingCount[.@i] > 0)
+					{
+						mes "	~" + $fishingRanking$[.@i] + " with " + $fishingCount[.@i] + " fishing try";
+					}
+				}
+				break;
+		}
+	}
+	close;
+	
+OnInit:
+	set .price, 10000;
+	set .priceBaitsBox, 50000;
+	setarray $@Array_Fishing_Exp_lvlup[0],50,350,1850,3850,8850;
+
+	setarray .baits[0], 632, 7609, 14345, 7605, 14469, 7083;
+	setarray .baitsBoxCount[0], 25, 20, 15, 10, 5, 1;
+	end;
+}
+
+alb2trea,95,98,4	script	Fishing Spot::fishing	1_SHADOW_NPC,{
+	set @fishch, 10 + #Fishing_Level + BaseLevel/83 + JobLevel/12; //max 10 + 6 + 3 + 4 = 23
+	set .bonuschance, 0;
+	set $@fp$, "[Fishing Spot]";
+	set .@ok, 1;
+	
+	if (.waitingTime == 0)
+	{
+		if(countitem($itemreq[0]) >= 1)
+		{
+			mes $@fp$;
+			mes "You see some fish right under you.";
+			mes "Do you wanna fish?";	
+			switch(select("Yes", "No"))
+			{
+				case 1:
+					next;
+					mes $@fp$;
+					mes "Which bait do you want to use?";
+					set .@choice, select("Fat Chubby Earthworm:Pumpkin Mojo:Animal Scroll:Chicken Egg:Ox Tail Egg:Spirit of Fish") - 1;
+					if (countitem ($fishbite[.@choice])>0)
+					{
+						delitem $fishbite[.@choice],1;
+						set .bonuschance, 10 * (.@choice + 1);
+					}
+					else
+					{
+						mes "You don't have what you need.";
+						set .@ok, 0;
+					}
+					
+					set FISHINGCOUNT, FISHINGCOUNT + 1;
+					callsub UpdateRanking;
+		
+					set .@rand, rand(0,100);
+					if (.@rand >= $defaultPercent)
+					{
+						getitem $defaultFishId, 1;
+						logmes "[FishingManager] Le joueur " + strcharinfo(0) + " obtient 1 " + getitemname($defaultFishId);
+					}
+					else
+					{
+						set #Fishing_Try, #Fishing_Try + 1;
+						mes "Here we go!";
+						switch(rand(1, 1))
+						{
+							case 1:
+								goto GotFish;
+								break;
+							case 2:
+							case 10:
+							case 11:
+							case 12:
+								next;
+								mes $@fp$;
+								mes "You almost catch it!";
+								close2;
+								specialeffect2 611;
+								end;
+								break;
+							case 3:
+								next;
+								mes $@fp$;
+								mes "You catch a Fugu! You've been poisonned.";
+								skilleffect 52,2000;
+								sc_start SC_POISON,600000,0;
+								close;
+								break;
+							case 4:
+								getmapxy $@fmap$,$@fmapx,$@fmapy,0;
+								set $@rn, rand(0, getarraysize($emonster) - 1);
+								next;
+								mes $@fp$;
+								mes "You catch a " + getmonsterinfo($emonster[$@rn], 0) + " ... Run!!!";
+								monster $@fmap$, $@fmapx, $@fmapy, getmonsterinfo($emonster[$@rn], 0) + " Leader", $emonster[$@rn], 1;
+								close2;
+								for(set .ctr,0; .ctr<=10; set .ctr, .ctr + 1)
+								{
+									if(rand(1, 10) <= 1)
+									{
+										npctalk "The " + getmonsterinfo($emonster[$@rn],0) + " called some help... Run!";
+										monster $@fmap$, $@fmapx, $@fmapy, getmonsterinfo($emonster[$@rn], 0), $emonster[$@rn], 1;
+									}
+								}
+								end;
+								break;
+							case 5:
+								next;
+								mes $@fp$;
+								mes "A Merman pull you in the water...";
+								close2;
+								sleep2 2000;
+								specialeffect2 611;
+								warp "iz_dun04", rand(1, 200), rand(1, 200);
+								end;
+								break;
+							case 6:
+								next;
+								mes $@fp$;
+								mes "You fish an Old Frying Pan...Heing?!";
+								getitem 7031,1;
+								logmes "[FishingManager] Le joueur " + strcharinfo(0) + " obtient 1 " + getitemname(7031);
+								close;
+								break;
+							case 7:
+								next;
+								mes $@fp$;
+								mes "You catch a Marine Sphere which blow you up...";
+								close2;
+								atcommand "@nuke "+strcharinfo(0);
+								end;
+								break;
+							case 8:
+								next;
+								mes $@fps$;
+								mes "Luck Dice...";
+								mes "Choose a number between 1 & 4";
+								set @chance,rand(1,4);
+								input @hisinput;
+								if(@hisinput==@chance)
+								{
+									set @fishch,@fishch+10;
+									goto GotFish;		
+								}
+								else
+									goto GotFish;
+							case 9:
+								goto GotFish;
+								break;
+						}
+					}
+				set .count, .count+1;
+				if (.count == 5)
+				{
+					set .waitingTime, 1;
+					initnpctimer;
+					startnpctimer;
+				}
+				break;
+				case 2:
+					next;
+					mes $@fp$;
+					mes "...You pass away...";
+					close;
+					break;
+			}	
+				close;
+		}
+		else
+		{
+			mes $@fp$;
+			mes "You need at least a "+getitemname($itemreq[0])+" and a "+getitemname($fishbite[0])+" to start fishing.";
+			close;
+		}
+	}
+	else
+	{
+		dispbottom "Nothing particular...But this place looks fishy.";
+	}
+end;
+
+OnInit:
+	setarray $fishitem[0], 
+		644, 603, 617, 604, 616,
+		12105, 969, 5380, 5447, 12508,
+		14559, 14556, 14553, 14562, 14565,
+		14568, 2404, 12118, 12119, 12120,
+		12121, 12027, 12028, 12029, 12030,
+		12031, 12032, 12033, 12034;
+
+	setarray $fishitemper[0], 
+		3, 2, 1, 10, 1,
+		7, 7, 8, 8, 5,
+		5, 5, 5, 5, 5, 
+		5, 8, 6, 6, 6,
+		6, 4, 4, 4, 4,
+		4, 4, 4, 4;
+
+	set $defaultFishId, 579;
+	set $defaultPercent, 60;
+
+	setarray $itemreq[0], 2764, 5317, 1249;
+	setarray $emonster[0], 1968;
+	setarray $fishbite[0], 632, 7609, 14345, 7605, 14469, 7083;
+	
+	setarray $fishingRanking$[0],"Juvia","Alayne","","","","","","","","";
+	setarray $fishingCount[0],10,11,0,0,0,0,0,0,0;
+	end;
+	
+UpdateRanking:
+	set .@rank, -1;
+	for(set .@i,0; .@i<getarraysize($fishingCount); set .@i,.@i+1)
+	{
+		if(FISHINGCOUNT > $fishingCount[.@i])
+		{
+			set .@rank, .@i;
+		}
+	}
+	if(.@rank != -1)
+	{
+		set .@previousName$, $fishingRanking$[.@rank];
+		set .@previousCount, $fishingCount[.@rank];
+		
+		set $fishingCount[.@rank], FISHINGCOUNT;
+		set $fishingRanking$[.@rank], strcharinfo(0);
+		
+		if(.@rank - 1 >= 0)
+		{
+			set $fishingRanking$[.@rank], .@previousName$;
+			set $fishingCount[.@rank], .@previousCount;
+		}
+	}
+	return;
+
+OnTimer300000:
+	stopnpctimer;
+	set .waitingTime, 0;
+	set .count, 0;
+	end;
+
+GotFish :
+	if(getequipid(1) == $itemreq[1]) set @fishch,@fishch + 10;
+	if(countitem($itemreq[2]) > 0) set @fishch,@fishch + 15;
+	set @fishch,@fishch+.bonuschance;
+	if(rand(1,110) <= @fishch)
+	{
+		next;
+		mes $@fp$;
+		mes "You free the fish";
+		mes "Luckily, it has an item stick on it.";
+		set .@itemper, rand(0,100);
+		set .@rank, rand(0,getarraysize($fishitem)-1);
+		while ( .@itemper < $fishitemper[.@rank] )
+			set .@rank, rand(0,getarraysize($fishitem)-1);
+		getitem $fishitem[.@rank],1;
+		logmes "[FishingManager] Le joueur " + strcharinfo(0) + " obtient 1 " + getitemname($fishitem[.@rank]);
+		close2;
+		specialeffect2 610;
+		end;
+	}
+	else if(rand(1, 100) <= 10 && countitem($itemreq[0]))
+	{
+		next;
+		mes $@fp$;
+		mes "You've catch something to heavy for your rod.";
+		mes "It's split in two...";
+		delitem $itemreq[0], 1;
+		close2;
+		specialeffect2 611;
+		end;
+	}
+	else
+	{
+		next;
+		mes $@fp$;
+		mes "You've catch something, but it run's away.";
+		close2;
+		specialeffect2 611;
+		end;
+	}
+	end;
+}
+
+hu_fild05,181,226,4	duplicate(fishing)	Fishing Spot	1_SHADOW_NPC
+jawaii.gat,146,105,1	duplicate(fishing)	Fishing Spot#10	1_SHADOW_NPC
+jawaii.gat,190,112,1	duplicate(fishing)	Fishing Spot#11	1_SHADOW_NPC
+jawaii.gat,185,137,1	duplicate(fishing)	Fishing Spot#12	1_SHADOW_NPC
+jawaii.gat,194,136,1	duplicate(fishing)	Fishing Spot#13	1_SHADOW_NPC
+jawaii.gat,244,117,1	duplicate(fishing)	Fishing Spot#14	1_SHADOW_NPC
+jawaii.gat,156,182,1	duplicate(fishing)	Fishing Spot#15	1_SHADOW_NPC
+jawaii.gat,105,181,1	duplicate(fishing)	Fishing Spot#16	1_SHADOW_NPC
+jawaii.gat,106,199,1	duplicate(fishing)	Fishing Spot#17	1_SHADOW_NPC
+jawaii.gat,123,219,1	duplicate(fishing)	Fishing Spot#18	1_SHADOW_NPC
+jawaii.gat,133,271,1	duplicate(fishing)	Fishing Spot#19	1_SHADOW_NPC
+jawaii.gat,104,235,1	duplicate(fishing)	Fishing Spot#20	1_SHADOW_NPC
+jawaii.gat,120,247,1	duplicate(fishing)	Fishing Spot#21	1_SHADOW_NPC
+jawaii.gat,159,185,1	duplicate(fishing)	Fishing Spot#22	1_SHADOW_NPC
+jawaii.gat,119,164,1	duplicate(fishing)	Fishing Spot#23	1_SHADOW_NPC
+comodo.gat,256,163,1	duplicate(fishing)	Fishing Spot#37	1_SHADOW_NPC
+comodo.gat,223,115,1	duplicate(fishing)	Fishing Spot#38	1_SHADOW_NPC
+comodo.gat,167,80,1	duplicate(fishing)	Fishing Spot#39	1_SHADOW_NPC
+comodo.gat,231,77,1	duplicate(fishing)	Fishing Spot#40	1_SHADOW_NPC
+comodo.gat,254,80,1	duplicate(fishing)	Fishing Spot#41	1_SHADOW_NPC
+alb2trea.gat,116,88,1	duplicate(fishing)	Fishing Spot#24	1_SHADOW_NPC
+alb2trea.gat,102,97,1	duplicate(fishing)	Fishing Spot#25	1_SHADOW_NPC
+treasure01.gat,68,113,1	duplicate(fishing)	Fishing Spot#26	1_SHADOW_NPC
+treasure01.gat,68,148,1	duplicate(fishing)	Fishing Spot#27	1_SHADOW_NPC
+treasure01.gat,52,154,1	duplicate(fishing)	Fishing Spot#28	1_SHADOW_NPC
+treasure01.gat,87,156,1	duplicate(fishing)	Fishing Spot#29	1_SHADOW_NPC
+treasure01.gat,68,168,1	duplicate(fishing)	Fishing Spot#30	1_SHADOW_NPC
+treasure02.gat,101,68,1	duplicate(fishing)	Fishing Spot#31	1_SHADOW_NPC
+hu_fild05.gat,187,186,1	duplicate(fishing)	Fishing Spot#42	1_SHADOW_NPC
+hu_fild05.gat,182,228,1	duplicate(fishing)	Fishing Spot#43	1_SHADOW_NPC
+hu_fild05.gat,143,127,1	duplicate(fishing)	Fishing Spot#44	1_SHADOW_NPC
+hu_fild05.gat,243,123,1	duplicate(fishing)	Fishing Spot#45	1_SHADOW_NPC
+hu_fild05.gat,169,201,1	duplicate(fishing)	Fishing Spot#46	1_SHADOW_NPC
