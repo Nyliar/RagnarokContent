@@ -1,0 +1,457 @@
+//===== Hercules Script =======================================
+//= GvG Betting NPC
+//===== By: ==================================================
+//= Alayne
+//===== Current Version: =====================================
+//= 1.0
+//===== Compatible With: ===================================== 
+//= Hercules
+//===== Description: =========================================
+//= Random hunting missions for party only (7 members min).
+//= Rewards are based on quest difficulty.
+//============================================================
+
+prontera,166,180,2	script	Lucky Guy::gvgbeluck	934,{
+	set .@npcname$, "[Lucky Guy]";
+	mes .@npcname$;
+	mes "";
+	mes "Hello, I am Lucky the one who manage Guild vs Guild challenge.";
+	mes "This feature will improved your WoE skill and speed up your team works.";
+	
+	if (.gvgFree == 1)
+	{
+		switch(select("Register our Team","Answer a provocation","Informations","Nervermind"))
+		{
+			case 1:
+				next;
+				mes .@npcname$;
+				if (getcharid(2) != 0)
+				{
+					mes "Allright. Fill this form please.";
+					next;
+					mes "-" + strcharinfo(0) + " is filling the form - ";
+					next;
+					mes .@npcname$;
+					mes "Perfect.";
+					mes "So you want to register your team, " + strcharinfo(1) + ", right?";
+					mes "Keep in mind that when you register a 4v4 (for instance) fight, your 4 members HAVE TO BE guildmates, and in a team.";
+					mes "This will be checked when you'll register, and when a team want to fight you.";
+					mes "If it's not the case, they simply can't fight your team.";
+					mes "Then you have to choose an option.";
+					set .@bet_value, 0;
+					set .@members_value, 0;
+					switch(select("Zeny bet","Free challenge"))
+					{
+						case 1:
+							set .@continue, 0;
+
+							do{
+								next;
+								mes .@npcname$;
+								mes "Allright, in a bet challenge, you'll have to give me a start bet.";
+								mes "The minimum value is " + .minimumBet + "z, and the maximum " + .maximumBet + "z.";
+								mes "Please, enter your bet value.";
+								input .@bet_value;
+								if (Zeny < .@bet_value)
+								{
+									next;
+									mes .@npcname$;
+									mes "Sorry, but you don't have that much money...";
+									mes "Stop making me losing my time...";
+									close;
+								}
+								else
+								{
+									next;
+									mes .@npcname$;
+									if (.@bet_value < .minimumBet || .@bet_value > .maximumBet)
+									{
+										mes "Please choose a bet in the given range.";
+									}
+									else
+									{
+										mes "Perfect.";
+										set .@continue, 1;
+									}
+								}
+							}while(.@continue == 0);
+							break;
+						case 2:
+							//nothing here
+							break;
+					}
+					next;
+					mes .@npcname$;
+					mes "Now, I need to know how many ennemies the opposite guild should have to compete with you.";
+					mes "Keep in mind that the limit is the max members per team limit.";
+					input .@members_count;
+					if (.@members_count < 0)
+					{
+						mes "Hum...Sorry but you must specified a value for the members count.";
+						mes "Stop making me losing my time...";
+						close;
+					}
+					next;
+					mes .@npcname$;
+					mes "Perfect.";
+					mes "I'll check then your guild and team requirements.";
+					mes "Wait a second.";
+				
+					set .@ok, 1;
+					set .@leaderaId, getcharid(3);
+					
+					getpartymember getcharid(1),1;
+					if ($@partymembercount < .@members_count)
+					{
+						mes "You lack some team members.";
+						close;
+					}
+					set .@guildId, getcharid(2);
+					for(set .@i,0; .@<$@partymembercount; set .@i,.@i+1)
+					{
+						query_sql("SELECT `guild_id`, `name` FROM `char` WHERE `char_id`='" + $@partymembercid[.@i] + "'", .@innerGuildId, .@innerCharName$);
+						if (getarraysize(.@innerGuildId) > 0 && .@innerGuildId[0] != .@guildId)
+						{
+							mes "" + .@innerCharName$[.@i] + " doesn't belong to you guild. I can't register your team.";
+							close;
+						}
+					}
+				
+					next;
+					mes .@npcname$;
+					if (.@bet_value > 0)
+					{
+						set Zeny, Zeny - .@bet_value;
+						if (.@members_count > 0)
+						{
+							announce "The Guild " + getguildname(getcharid(2)) + " is inviting you for a " + .@members_count + " members Guild vs Guild challenge for " + .@bet_value + "z bet, If you want to accept their invitation talk to Lucky Guy.",bc_red|bc_all;
+						}
+						else
+						{
+							announce "The Guild " + getguildname(getcharid(2)) + " is inviting you for a all members Guild vs Guild challenge for " + .@bet_value + "z bet, If you want to accept their invitation talk to Lucky Guy.",bc_red|bc_all;
+						}					
+					}
+					else
+					{
+						if (.@members_count > 0)
+						{
+							announce "The Guild " + getguildname(getcharid(2)) + " is inviting you for a " + .@members_count + " members Guild vs Guild challenge for free, If you want to accept their invitation, talk to Lucky Guy.",bc_red|bc_all;
+						}
+						else
+						{
+							announce "The Guild " + getguildname(getcharid(2)) + " is inviting you for a all members Guild vs Guild challenge for free, If you want to accept their invitation, talk to Lucky Guy.",bc_red|bc_all;
+						}
+					}
+					mes "You'll be contacted if a guild answer to your provocation.";
+					mes "Keep your team untouched to enable players to fight you.";
+					
+					set .registeredTeamId[getarraysize(.registeredTeamId)], getcharid(1);
+					set .registeredGuildId[getarraysize(.registeredGuildId)], getcharid(2);
+					set .registeredGuildBetValue[getarraysize(.registeredGuildBetValue)], .@bet_value;
+					set .registeredGuildCountValue[getarraysize(.registeredGuildCountValue)], .@members_count;
+				}
+				else
+				{
+					mes "You're not even in a guild...";
+				}
+				break;
+			case 2:
+				next;
+				mes .@npcname$;
+				mes "Ho! You're here to answer a provocation?";
+				set .@fightingId, getcharid(2);
+				set .@fightingTeamId, getcharid(1);
+				
+				if (.@fightingId != 0)
+				{
+					set .@check_start, 0;			
+					do
+					{
+						next;
+						mes .@npcname$;
+						mes "Perfect! Tell me, which one?";
+						
+						setarray .@availableTeamId[0], 0;
+						setarray .@availableGuildId[0], 0;
+						setarray .@availableGuildCount[0], 0;
+						setarray .@availableGuildBet[0], 0;
+						
+						for (set .@i,0; .@i < getarraysize(.registeredTeamId); set .@i, .@i+1)
+						{
+							//check valid teams
+							query_sql("SELECT `leader_id` FROM `party` WHERE `id`=' " + .registeredTeamId[.@i] + "'", .@leaderIds);
+							if (getarraysize(.@leaderIds) > 0)
+							{
+								set .@leaderId, .@leaderIds[0];
+								//check member count
+								getpartymember .@leaderId,1;
+								if ($@partymembercount >= .@members_count)
+								{
+									set .@guildId, .registeredGuildId[.@i];
+									set .@available, 1;
+									//check members guild
+									for(set .@i,0; .@<$@partymembercount && .@available == 1; set .@i,.@i+1)
+									{
+										query_sql("SELECT `guild_id` FROM `char` WHERE `char_id`='" + $@partymembercid[.@i] + "'", .@innerGuildId);
+										if (getarraysize(.@innerGuildId) > 0 && .@innerGuildId[0] != .@guildId)
+										{
+											set .@available, 0;
+										}
+									}
+									
+									if (.@available == 1)
+									{
+										set .@betValue, .registeredGuildBetValue[.@i];
+										if (.@betValue > 0)
+										{
+											set .@menu$, .@menu$ + ( .@i ? ":" : "" ) + "Guild " + getguildname(.registeredGuildId[.@i]) + ", bet value - " + .@betValue + ".";
+										}
+										else
+										{
+											set .@menu$, .@menu$ + ( .@i ? ":" : "" ) + "Guild " + getguildname(.registeredGuildId[.@i]) + ", bet value - for free.";
+										}	
+										set .@availableTeamId[getarraysize(.@availableTeamId[0])], .registeredTeamId[.@i];
+										set .@availableGuildId[getarraysize(.@availableGuildId[0])], .registeredGuildId[.@i];
+									}
+								}
+							}
+						}
+						
+						set .@choice, prompt(.@menu$) - 1;	
+						if (.@choice != 254)
+						{
+							next;
+							mes .@npcname$;
+							set .@registeredTeamId, .@availableTeamId[.@choice];
+							set .@registeredId, .@availableGuildId[.@choice];
+							set .@betValue, .@availableGuildBet[.@choice];
+							set .@guildCount, .@availableGuildCount[.@choice];
+							mes "You want to fight against " + getguildname(.@registredId) + ", on a " + .@guildCount + "vs" + .@guildCount + " fight, for " + .@betValue > 0 ? (.@betValue + "z") : "free" + " right?";
+							if (select("Yes","No") == 1)
+							{
+								set .@check_start, 1;
+								mes "Allright, let's check if everything's ok then.";
+							}
+						}
+						else
+						{
+							close;
+						}
+					}
+					while(.@check_start == 0);
+
+					next;
+					mes .@npcname$;
+			
+					if (Zeny < .@betValue)
+					{
+						mes "Sorry, but you lack some zeny.";
+						close;
+					}
+					
+					set .@ok, 1;
+					set .@leaderaId, getcharid(3);
+					
+					getpartymember getcharid(1),1;
+					if ($@partymembercount < .@members_count)
+					{
+						mes "You lack some team members.";
+						close;
+					}
+					set .@guildId, getcharid(2);
+					for(set .@i,0; .@<$@partymembercount; set .@i,.@i+1)
+					{
+						query_sql("SELECT `guild_id`, `name` FROM `char` WHERE `char_id`='" + $@partymembercid[.@i] + "'", .@innerGuildId, .@innerCharName$);
+						if (getarraysize(.@innerGuildId) > 0 && .@innerGuildId[0] != .@guildId)
+						{
+							mes "" + .@innerCharName$[.@i] + " doesn't belong to you guild. I can't register your team.";
+							close;
+						}
+					}
+					
+					if (.@registeredId == .@fightingId)
+					{
+						mes "You can't fight yourself...";	
+						close;
+					}
+
+					mes "Everything seems to be allright.";
+					mes "You'll be warped soon.";
+					
+					set $guild1Id, .@registeredId;
+					set $guild2Id, .@fightingId;
+					set $betValue, .@betValue;	
+	
+					set Zeny, Zeny - $betValue;				
+					
+					warpparty $mapname$, .startX[0], .startY[0], .@registeredTeamId;
+					warpparty $mapname$, .startX[1], .startY[1], .@fightingTeamId;
+					
+					//clean selected guild from selectable
+					deletearray .registeredGuildId[.@choice], 1;
+					deletearray .registeredGuildBetValue[.@choice], 1;
+					deletearray .registeredGuildCountValue[.@choice], 1;
+					
+					set .gvgFree, 0;
+					
+					donpcevent "gvgbeff::OnGuildFightEnter";
+					donpcevent "gvgbeff2::OnGuildFightEnter";
+					donpcevent "gvgbecor::OnGuildWarped";
+				}
+				else
+				{
+					mes "You're not even in a guild...";
+				}
+				
+				break;
+			case 3:
+				next;
+				mes .@npcname$;
+				mes "- Option [ Information ]";
+				mes "This is a GVG Feature event where you can challenge all guild on this server while using zeny for bet or free.";
+				mes "You can choose WoE and Normal supplies inside the Arena.";
+				mes "If you choose to play with zeny bet the 2 guild will play the amount of zeny they will bet and whoever win get the 80% of total zeny.";
+				mes "If you choose to play for free you will not lose anything.";
+				mes "Keep in mind that when you register a 4v4 (for instance) fight, your 4 members HAVE TO BE guildmates, and in a team.";
+				mes "This will be checked when you'll register, and when a team want to fight you.";
+				mes "If it's not the case, they simply can't fight your team.";
+				break;
+			case 4:
+				next;
+				mes .@npcname$;
+				mes "Allright, come back when you want.";
+				break;
+		}
+	}
+	else
+	{
+		mes "Sorry, somebody is already inside the area.";
+		mes "Try again in a moment please.";
+	}
+	close;
+	
+OnFightEnded:
+	set .gvgFree, 1;
+	donpcevent "gvgbeff::OnGuildFightEnded";
+	donpcevent "gvgbeff2::OnGuildFightEnded";
+	
+	//clear actual values to prevent errors on next fight
+	set $guild1Id, -1;
+	set $guild2Id, -1;
+	set $betValue, -1;
+	end;
+	
+OnInit:
+	setarray .registeredGuildId[0], 0;
+	setarray .registeredTeamId[0], 0;
+	setarray .registeredGuildBetValue[0], 0;
+	setarray .registeredGuildCountValue[0], 0;
+	set $mapname$, "pvp_n_1-5";
+	setarray .startX[0], 133,65,99,99;
+	setarray .startY[0], 100,99,134,65;
+	set .gvgFree, 1;
+	set .minimumBet, 2000;
+	set .maximumBet, 5000;
+	end;
+}
+
+pvp_n_1-5,83,117,6	script	GvGCore::gvgbecor	-1,{
+	end;
+	
+OnGuildWarped:
+	set .count, 0;
+	initnpctimer;
+	setcell strnpcinfo(4),79,101,79,98,cell_walkable,0;
+	setcell strnpcinfo(4),120,101,120,98,cell_walkable,0;
+	setcell strnpcinfo(4),100,81,98,81,cell_walkable,0;
+	setcell strnpcinfo(4),100,120,98,120,cell_walkable,0;
+	end;
+
+OnTimer1000:
+OnTimer2000:
+OnTimer3000:
+OnTimer4000:
+OnTimer5000:
+OnTimer6000:
+OnTimer7000:
+OnTimer8000:
+OnTimer9000:
+OnTimer10000:
+	set .count, .count + 1;
+	if (.count < 10)
+	{
+		announce "Fight starts in " + (10 - .count) + "s...",bc_npc|bc_map;
+	}
+	else
+	{
+		announce "FIGHT!",bc_npc|bc_map;
+		stopnpctimer;
+		setcell strnpcinfo(4),79,101,79,98,cell_walkable,1;
+		setcell strnpcinfo(4),120,101,120,98,cell_walkable,1;
+		setcell strnpcinfo(4),100,81,98,81,cell_walkable,1;
+		setcell strnpcinfo(4),100,120,98,120,cell_walkable,1;
+	}
+	end;	
+	
+OnPCDieEvent:
+	atcommand("@load");
+	atcommand("@alive");
+
+	query_sql("SELECT * FROM `char` WHERE guild_id=" + getcharid(2) + " AND online=1 AND last_map='" + strnpcinfo(4) + "'", .@guildAlive); 
+
+	if (.@guildAlive == 0)
+	{
+		//victory for the other team
+		set .@winningId, $guild1Id;
+		set .@losingId, $guild2Id;
+		if (getcharid(2) == .guild1Id)
+		{
+			set .@winningId, $guild2Id;
+			set .@losingId, $guild1Id;
+		}
+		//bet rewards
+		set .@leaderId, getguildmasterid(.@winningId);
+		query_sql("SELECT account_id FROM `char` WHERE char_id = ' " + .@leaderId + "'", .@account_id);
+		if (getarraysize(.@account_id) == 1)
+		{
+			set .@leaderAccountId, .@account_id[0];
+		}
+		if (isloggedin(.@leaderAccountId, .@leaderId) && $betValue > 0)
+		{
+			attachrid(.@leaderAccountId);
+			//only retrieve 80% of the total bet value
+			set Zeny, Zeny + ($betValue * 2 * 80 / 100);
+			dispbottom "You've won " + ($betValue * 2 * 80 / 100) + "z from bets. Congrats.";
+		}
+		//announce
+		set .@guild1Name$, getguildname(.@winningId);
+		set .@guild2Name$, getguildname(.@losingId);
+		announce "The Battle between " + .@guild1Name$ + " and " + .@guild2Name$ + " is done. " + .@guild1Name$ + " wins, Lucky Guy is now available again for registration.",bc_red|bc_all;
+		donpcevent "gvgbeluck::OnFightEnded";
+	}
+	end;
+}
+
+prontera,169,180,1	script	Fighting Flag::gvgbeff	722,{
+	end;
+	
+OnGuildFightEnter:
+	flagemblem $guild1Id;
+	end;
+	
+OnGuildFightEnded:
+	flagemblem -1;
+	end;	
+}
+
+prontera,166,177,1	script	Fighting Flag::gvgbeff2	722,{
+	end;
+	
+OnGuildFightEnter:
+	flagemblem $guild2Id;
+	end;
+	
+OnGuildFightEnded:
+	flagemblem -1;
+	end;	
+}

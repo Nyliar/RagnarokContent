@@ -1,0 +1,58 @@
+// [Lyyn] Shops de la capitale (prt_vilg02)
+prontera,141,231,5	shop	Tool Dealer#prt_vilg02	97,601:-1,602:-1,611:-1,717:-1,501:-1,502:-1,503:-1,504:-1,506:-1,645:-1,656:-1,657:-1
+prontera,140,226,5	shop	Ammo Dealer#prt_vilg02	50,1750:-1,1751:-1,1752:-1,1065:-1,13200:-1,13250:-1,13251:-1,13201:-1
+prontera,130,217,3	shop	Weapon Dealer#prt_vilg02	54,1750:-1,1751:-1,1701:-1,1201:-1,1204:-1,1207:-1,1601:-1,1101:-1,1104:-1,1107:-1,1110:-1,1113:-1,1122:-1,1119:-1,1123:-1,1126:-1,1129:-1,1116:-1,1301:-1
+prontera,127,214,3	shop	Armor Dealer#prt_vilg02	48,2101:-1,2103:-1,2401:-1,2403:-1,2501:-1,2503:-1,2220:-1,2226:-1,2301:-1,2303:-1,2305:-1,2328:-1,2307:-1,2309:-1,2312:-1,2314:-1,2628:-1,2627:-1
+
+// [Lyyn] NPC Manquants pour les gunsligers
+que_ng,187,149,3	duplicate(mdk)	Magazine Dealer Kenny::mdkng	83
+
+// [Lyyn] NPC Manquants pour les ninjas (du shops.txt de Hercules)
+// Ninja Shops
+que_ng,72,31,2	trader	Boonji#nin2	4_M_01,{
+OnInit:
+	sellitem Shuriken;
+	sellitem Nimbus_Shuriken;
+	sellitem Flash_Shuriken;
+	sellitem Sharp_Leaf_Shuriken;
+	sellitem Thorn_Needle_Shuriken;
+}
+
+que_ng,73,26,5	trader	Boonray#nin2	4_M_01,{
+OnInit:
+	sellitem Arm_Guard;
+	sellitem Flame_Stone;
+	sellitem Ice_Stone;
+	sellitem Wind_Stone;
+	sellitem Shadow_Orb;
+}
+
+// [Lyyn] Tool dealers à chaque spawn de ville pour les guildes
+
+alberta,22,242,5	shop	Tool Dealer::toolArtefact	97,601:-1,602:-1,611:-1,717:-1,610:-1,501:-1,502:-1,503:-1,504:-1,506:-1,645:-1,656:-1,657:-1,1750:-1,1751:-1,1752:-1,1065:-1,13200:-1,13250:-1,13251:-1,13201:-1
+aldebaran,145,117,5	duplicate(toolArtefact)	Tool Dealer#aldebaran	97
+amatsu,206,102,3	duplicate(toolArtefact)	Tool Dealer#amatsu	97
+ayothaya,155,113,3	duplicate(toolArtefact)	Tool Dealer#ayothata	97
+comodo,192,166,3	duplicate(toolArtefact)	Tool Dealer#comodo	97
+einbroch,70,199,5	duplicate(toolArtefact)	Tool Dealer#einbroch	97
+einbech,166,124,5	duplicate(toolArtefact)	Tool Dealer#einbech	97
+geffen,127,67,3	duplicate(toolArtefact)	Tool Dealer#geffen	97
+gonryun,166,115,3	duplicate(toolArtefact)	Tool Dealer#gonryun	97
+hugel,89,149,5	duplicate(toolArtefact)	Tool Dealer#hugel	97
+jawaii,216,211,7	duplicate(toolArtefact)	Tool Dealer#jawaii	97
+lighthalzen,154,88,7	duplicate(toolArtefact)	Tool Dealer#lighthalzen	97
+louyang,210,104,4	duplicate(toolArtefact)	Tool Dealer#louyang	97
+morocc,164,100,3	duplicate(toolArtefact)	Tool Dealer#morocc	97
+prontera,151,187,5	duplicate(toolArtefact)	Tool Dealer#prontera	97
+rachel,111,144,5	duplicate(toolArtefact)	Tool Dealer#rachel	97
+umbala,115,132,6	duplicate(toolArtefact)	Tool Dealer#umbala	97
+veins,209,128,6	duplicate(toolArtefact)	Tool Dealer#veins	97
+yuno,161,184,3	duplicate(toolArtefact)	Tool Dealer#yuno0	97
+//prt_vilg01,104,89,3	duplicate(toolArtefact)	Tool Dealer#prt_vilg01	97
+izlude,137,120,3	duplicate(toolArtefact)	Tool Dealer#izlude	97
+xmas,149,136,3	duplicate(toolArtefact)	Tool Dealer#xmas0	711
+
+// [Lyyn] Rectification des shops pour les quêtes XP répétables
+moc_ruins,93,53,2	shop	Item Collector#moc1_1	85,911:-1,528:-1,919:-1
+moc_ruins,81,113,0	shop	Item Collector#moc2_1	85,911:-1,528:-1,919:-1
+nif_in,145,23,1	shop	Tool Dealer#nif2	801,535:-1,1062:-1,902:-1,537:-1,7154:-1,1052:-1,934:-1

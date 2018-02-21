@@ -1,0 +1,2090 @@
+//===== Alayne Scripts =======================================
+//= Aincrad Guild Instance
+//===== By: ================================================== 
+//= Alayne
+//===== Current Version: ===================================== 
+//= 1.0
+//===== Compatible With: ===================================== 
+//= rAthena SVN
+//= hercules SVN
+//===== Description: ========================================= 
+//
+//= The adaptation of Aincrad from SAO as a guild instance
+//
+//===== Todo Remaining: ======================================
+//
+//===== Additional Comments: =================================
+//
+//
+//============================================================
+
+prontera,144,151,3	script	Scientist Marchesi::alaasm	4_M_MAYOR,{
+OnStart:
+	set .@bound_id, getcharid($aiInstanceBoundType);
+	if($aiInstanceBoundType == 2)
+	{
+		set .@ai_leader, ( strcharinfo(0) == getguildmaster(.@bound_id) );
+	}
+	else if($aiInstanceBoundType == 1)
+	{
+		set .@ai_leader, ( strcharinfo(0) == getpartyleader(.@bound_id) );
+	}
+
+	//RATHENA
+	set .@has_instance, $instance_ai_id == getcharid($aiInstanceBoundType);
+	//HERCULES
+	//set .@has_instance, has_instance(.map$[0], $instance_ai_id);
+	
+	set .@instance_delay, ( instance_delay_ain - gettimetick(2) );
+
+	set .@npcname$, "[Scientist Marchesi]";
+	mes .@npcname$;
+	mes "Did you ever heard about Aincrad, the Floating Castle?";
+	mes "That's known to be one of the toughest place in this world, and all the others.";
+	mes "When getting there, all the present members of your guild will be send there to fight this place.";
+	mes "Your goal will be to free the Floating Castle by reaching the highest point.";
+	mes "But be careful. A death is without return. You'll be send back, and therefor, the difficulty will increase.";
+	next;
+	switch( select( 
+		(( .@bound_id && .@ai_leader && !.@has_instance )?"Create " + .instance_name$:""),
+		(( .@bound_id && .@ai_leader && .@has_instance )?"Destroy " + .instance_name$:""),
+	"Nevermind."
+		)){
+	case 1:
+		if( .@instance_delay > 0 )
+		{
+			mes "You have to wait : ^FF0000"+.@instance_delay+" Seconds.^000000";
+			//close;
+		}
+		
+		if($aiInstanceBoundType == 1)
+		{
+			getpartymember .@bound_id,2;
+			if( .min_party_member >= 1 ){
+				set .@origin, getcharid(3);
+				set .@gettimetick, gettimetick(2);
+				for( set .@i, 0; .@i < $@partymembercount; set .@i, .@i+1 )
+					if( attachrid( $@partymemberaid[.@i] ) ){
+						set .@member_count, .@member_count + 1;
+						if( BaseLevel < .base_level[0] || BaseLevel > .base_level[1] ) set .@fail, .@fail|1;
+						if( Zeny < .instance_zeny ) set .@fail, .@fail|2;
+						if( instance_delay_ain > .@gettimetick ) set .@fail, .@fail|4;
+						if( .@fail ){
+							set .@name$, strcharinfo(0);
+							//break;
+						}
+					}
+				attachrid( .@origin );
+			}
+		}
+		else
+		{
+			getguildmember .@bound_id,2;
+			if( .min_party_member >= 1 ){
+				set .@origin, getcharid(3);
+				set .@gettimetick, gettimetick(2);
+				for( set .@i, 0; .@i < $@partymembercount; set .@i, .@i+1 )
+					if( attachrid( $@partymemberaid[.@i] ) ){
+						set .@member_count, .@member_count + 1;
+						if( BaseLevel < .base_level[0] || BaseLevel > .base_level[1] ) set .@fail, .@fail|1;
+						if( Zeny < .instance_zeny ) set .@fail, .@fail|2;
+						if( instance_delay_ain > .@gettimetick ) set .@fail, .@fail|4;
+						if( .@fail ){
+							set .@name$, strcharinfo(0);
+							//break;
+						}
+					}
+				attachrid( .@origin );
+			}
+		}
+		
+		freeloop(1);
+		
+		//check that nobody else is inside
+		for(set .@i,0; .@i<.map_size; set .@i,.@i+1)
+		{
+			if (getmapusers(instance_mapname(.@i + "@ain", instance_id())) > 0) {
+				mes "Another guild is already in the " + .instance_name$ + ". I can't send you there, sorry.";
+				close;
+			}
+		}
+		
+		//clean any previously remaining instance
+		if($ai_instance != -1)
+		{
+			instance_destroy $ai_instance;
+			set $ai_instance, -1;
+			set $instance_ai_id, -1;
+		}
+		
+		if( .@name$ != "" && .@fail ){
+			mes "^FF0000[ Failed ]^000000";
+			mes "^0055FF"+.@name$+"^000000, You cannot join right now.";
+			mes " ";
+			mes "^FF0000[ Reason: ]^000000";
+			if( .@fail & 1 ) mes "^777777You must be Level: "+.base_level[0]+" - "+.base_level[1]+"^000000";
+			if( .@fail & 2 ) mes "^777777You need "+ .instance_zeny +" Zeny^000000";
+			if( .@fail & 4 ) mes "^777777You still have cooldown.^000000";
+			//break;
+		}
+		
+		if (($aiInstanceBoundType == 2 && instance_check_guild(.@bound_id, .min_party_member, .base_level[0], .base_level[1]) == 0)
+			|| ($aiInstanceBoundType == 1 && instance_check_party(.@bound_id, .min_party_member, .base_level[0], .base_level[1]) == 0)) {
+			mes "^0055FF[ "+.instance_name$+" ]^000000";
+			mes "Make or join a group with at least "+.min_party_member+" member and try again, with level between " +.base_level[0] + " and " + .base_level[1] + ".";
+		}
+		else{	
+			//RATHENA
+			if($aiInstanceBoundType == 1)
+			{
+				set $ai_instance, instance_create( .instance_name$, IM_PARTY, .@bound_id );
+			}
+			else
+			{
+				set $ai_instance, instance_create( .instance_name$, IM_GUILD, .@bound_id );
+			}
+			//HERCULES
+			//if($aiInstanceBoundType == 1)
+			//{
+			//	set $ai_instance, instance_create( .instance_name$, .@bound_id, IOT_PARTY );
+			//}
+			//else
+			//{
+			//	set $ai_instance, instance_create( .instance_name$, .@bound_id, IOT_GUILD );
+			//}
+			if( $ai_instance < 0 ) {
+				npctalk .instance_name$ + " reservation failed.";
+				mes "^0000FF"+ .instance_name$ +" ^000000 - Reservation Failed!";
+				close;
+			}
+			mes "^0055FF[ "+.instance_name$+" ]^000000";
+			mes "^0000FF"+.instance_name$+" ^000000 - Reserved";
+				
+			attachrid( .@origin );
+			npctalk .instance_name$ + " has been generated for Group - " + ($aiInstanceBoundType == 2 ? getguildname( .@bound_id ) : getpartyname( .@bound_id ) );
+			
+			set $instance_ai_id, getcharid(1);
+			
+			//HERCULES
+			//for( set .@i, 0; .@i < getarraysize(.map$); set .@i,.@i+1 )
+			//{
+			//	if( instance_attachmap( .map$[.@i],$ai_instance ) == "" ){
+			//		setmapflag .map$[.@i],mf_zone,"Memorial Dungeon";
+			//		npctalk .instance_name$ + " reservation failed due to map attach failure.";
+			//		mes "- ^FF0000Reservation Failed!^000000";
+			//		instance_destroy( $ai_instance );
+			//		set $ai_instance, -1;
+			//		set $instance_ai_id, -1;
+			//		close;
+			//	}
+			//}
+			//instance_set_timeout .instance_delay,300,$ai_instance;
+			//instance_init($ai_instance);
+			
+			//disable unused npcs for now
+			
+			next;
+			mes "^0055FF[ Scientist Marchesi ]^000000";
+			mes "Get ready, it'll start now!";
+			
+			set .@gettimetick, gettimetick(2);
+			
+			if($aiInstanceBoundType == 2)
+			{
+				getguildmember .@bound_id,2;
+				copyarray .@memberaid[0], $@guildmemberaid[0], $@guildmembercount;
+			}
+			else
+			{
+				getpartymember .@bound_id,2;
+				copyarray .@memberaid[0], $@partymemberaid[0], $@partymembercount;
+			}
+			
+			for( set .@i, 0; .@i < getarraysize(.@memberaid); set .@i, .@i+1 )
+				if( attachrid( .@memberaid[.@i] ) && strcharinfo(3) == strnpcinfo(4) ){
+					set instance_delay_ain, ( .@gettimetick + ( .instance_delay ));
+					set Zeny, Zeny - .instance_zeny;
+					dispbottom "["+.instance_name$+"] -"+ .instance_zeny +" Zeny and Instance Cooldown Applied.";
+					getmapxy(.@map$, .@x, .@y, UNITTYPE_PC);
+					save .@map$, .@x, .@y;
+					
+					set AINCRADON, 1;
+				
+					//HERCULES
+					//if( has_instance( .map$[0] ) == "" ){
+					//	mes .instance_name$ + " doesnt exist for Party - "+getpartyname( .@party_id );
+					//}
+					//else{
+					//	warp .map$[0],56,68;
+					//	instance_announce $ai_instance, getpartyname(getcharid(1))+"  entered in the "+.instance_name$+"!",bc_map,"0x00ff99";
+					//}
+					
+					//RATHENA
+					switch(instance_enter(.instance_name$)) {
+						default:
+							mes "An unknown error has occurred.";
+							close;
+						case 2:
+							mes "The memorial dungeon " + .instance_name$ + " does not exist.";
+							mes "The party leader did not generate the dungeon yet.";
+							close;
+						case 1:
+							mes "You can enter the dungeon after making the party.";
+							close;
+						case 0:
+							instance_announce $ai_instance, strcharinfo(0)+" from party, " +getpartyname( .@party_id )+", is entering the dungeon, "+.instance_name$+".",bc_map,"0x00ff99",FW_NORMAL,12;
+							end;
+					}
+				}
+ 		}
+		
+		freeloop(0);
+		break;
+	case 2:
+		next;
+		mes .instance_name$ + " Destroyed.";
+		instance_destroy $ai_instance;
+		set $instance_ai_id, -1;
+		set $ai_instance, -1;
+		break;
+	default: 
+		break;
+}
+close;
+
+OnInit:
+	setarray .base_level[0],145,250;
+	set .firstmap$,"0@ain";
+	set .map_size, 10;
+	set .min_party_member, 1;
+	set .instance_zeny, 0;
+	set .instance_delay, 7200;
+	set $ai_timer_delay, 3600; //1 hour to clean the instance
+	set .instance_name$, "Aincrad";
+	set $ai_instance, -1;
+	set $instance_ai_id, -1;
+	
+	set $aiInstanceBoundType, 1; //1 for team, 2 for guild
+	end;
+}
+
+function	script	OnAinCrystalRadarUsed	{
+	doevent "::OnCheckNPCAround";
+	end;
+}
+
+0@ain,101,107,4	script	aincrad_floating_castle	HIDDEN_WARP_NPC,2,2,{
+function summon_normal;
+function summon_guardian;
+function summon_town;
+end;
+
+OnInstanceInit:
+	set .@map$, strnpcinfo(4);
+	set .@npc_name$, instance_npcname( strnpcinfo(0), $ai_instance );
+	
+	set 'instance_ai_level, 1;
+	set .randomPop, 0;
+	set 'ai_last_level, 71;
+	
+	set 'ainBossX, 0;
+	set 'ainBossY, 0;
+	set 'ainFinalX, 0;
+	set 'ainFinalY, 0;
+	
+	set 'crystalFirstId, 29500;
+	set 'crystalLastId, 29504;
+	set 'crystalPercent, 40;
+	set 'randMaxPercent, 1000;
+	
+	deletearray .killedPlayerAid[0], getarraysize(.killedPlayerAid);
+	deletearray .killedPlayerClass[0], getarraysize(.killedPlayerClass);
+	
+	set .timerCount, 0;
+	initnpctimer;
+	
+	setarray .aincradMvpId[0], 
+		1115, //Landing 1 Golden Thief Bug
+		1086, //Eddga
+		1150, //Moonlight
+		1583, //Tao
+		1112, //Landing 5 Drake
+		1252, //Garm
+		1251, //Stormy
+		1990, //Hardrock Mammoth
+		1312, //Turtle
+		1779, //Landing 10 Ktullanux
+		1885, //Gopinich
+		2476, //Amdarias
+		1719, //Detardeurus
+		2068, //Boitata
+		1832, //Landing 15 Ifrit
+		1389, //Dracula
+		1038, //Osiris
+		1871, //Fallen
+		1734, //Kiel
+		1373, //Landing 20 Lord of Death
+		1785, //Atroce
+		1039, //Baphomet	
+		1708, //Thanatos
+		2253, //Daehyon
+		1991, //Landing 25 Tendrilrion
+		1418, //Evil snake lord
+		1623, //RSX
+		1511, //Amon Ra
+		1685, //Vesper
+		2087, //Landing 30 Queen Scaraba
+		1492, //Incantation
+		1157, //Pharaoh
+		1046, //Doppelganger
+		1272, //Dark lord
+		1768, //Landing 35 Gloom
+		1688, //Lady Tanee
+		1147, //Maya
+		1190, //Orc Lord
+		1630, //Bacsojin
+		2022, //Landing 40 Nidhogur
+		1874, //Beelze
+		1751, //Randgris
+		2131, //Lost Dragon
+		2156, //Leak
+		2249, //Landing 45 Pyuriel
+		2476, //Amdarias
+		3073, //Grand Pere
+		2011, //RWC Boss
+		1956, //Nacht Sieger
+		1917, //Landing 50 Wounded Morocc
+		3000, //Morocc Necro
+		3254, //TWO
+		2996, //Celine Kimi
+		2320, //Bakonawa
+		3124, //Landing 55 Charleston 3
+		2564, //Fenrir
+		1871, //FBH
+		2202, //Kraken
+		2255, //Kades
+		1917, //Landing 60 Wounded Morocc
+		2251, //Gioia
+		2319, //Buwaya
+		2483, //Nightmare Bapho
+		2529, //Faceworm Queen
+		3092, //Landing 65 MuspelSkoll
+		3029, //Yanku
+		1502, //Bring it on
+		3091, //Brinaranea
+		3074, //Time Holder
+		3097; //Landing 70 God morroc
+	end;
+
+function	summon_normal	{
+	//Normal mobs
+	if('AinWarpMap$ == "1@ain")
+	{
+		setarray .@monster,1267,1474,1196,1149,1380;
+		//setarray .@amount,22,22,23,23,25;
+		setarray .@amount,1,1,1,1,1;
+
+		setarray .@coordinate,0,0,300,300;
+	}
+	if('AinWarpMap$ == "2@ain")
+	{
+		setarray .@monster,1632,1514,1687,1408,1303;
+		setarray .@amount,17,22,18,24,25;
+		setarray .@coordinate,0,0,300,300;
+	}
+	if('AinWarpMap$ == "3@ain")
+	{
+		setarray .@monster,1633,1194,1300,1372,1622;
+		setarray .@amount,17,22,18,24,25;
+		setarray .@coordinate,45,77,67,58;
+	}
+	if('AinWarpMap$ == "4@ain")
+	{
+		setarray .@monster,1512,1740,1735,1390;
+		setarray .@amount,24,25,26,27;
+		setarray .@coordinate,45,77,67,58;
+	}
+	if('AinWarpMap$ == "5@ain")
+	{
+		setarray .@monster,1306,1505,1300,1320,1321;
+		setarray .@amount,7,12,8,14,15;
+		setarray .@coordinate,45,77,67,58;
+	}
+	if('AinWarpMap$ == "7@ain")
+	{
+		setarray .@monster,1773,1206,1311,1316,1391;
+		setarray .@amount,10,15,8,13,15;
+		setarray .@coordinate,45,77,67,58;
+	}
+	if('AinWarpMap$ == "8@ain")
+	{
+		setarray .@monster,1632,1687,1303,1682;
+		setarray .@amount,10,15,8,13;
+		setarray .@coordinate,45,77,67,58;
+	}
+	if('AinWarpMap$ == "9@ain")
+	{
+		setarray .@monster,1740,1635,1412,1196;
+		setarray .@amount,20,25,18,23;
+		setarray .@coordinate,45,77,67,58;
+	}
+	if('AinWarpMap$ == "10@ain")
+	{
+		setarray .@monster,1682,1614,1259;
+		setarray .@amount,14,16,12;
+		setarray .@coordinate,45,77,67,58;
+	}
+	if('AinWarpMap$ == "11@ain")
+	{
+		setarray .@monster,1633,1194,1300,1372,1622;
+		setarray .@amount,13,16,14,17,15;
+		setarray .@coordinate,45,77,67,58;
+	}
+		//ICE mobs
+	if('AinWarpMap$ == "13@ain")
+	{		
+		setarray .@monster,1883,1515,1206,1317,1319;
+		setarray .@amount,8,10,12,14,20;
+		setarray .@coordinate,45,77,67,58;
+	}
+	if('AinWarpMap$ == "14@ain")
+	{
+		setarray .@monster,1889,1679,1671,1609,1170;
+		setarray .@amount,10,10,12,4,10;
+		setarray .@coordinate,45,77,67,58;
+	}
+	if('AinWarpMap$ == "15@ain")
+	{
+		setarray .@monster,1045,1789,1697,1108,1065;
+		setarray .@amount,8,12,20,10,14;
+		setarray .@coordinate,45,77,67,58;
+	}
+	if('AinWarpMap$ == "17@ain")
+	{
+		setarray .@monster,1882,1264,1323,1776,1789;
+		setarray .@amount,12,8,10,4,4;
+		setarray .@coordinate,45,77,67,58;
+	}
+	if('AinWarpMap$ == "18@ain")
+	{
+		setarray .@monster,1170,1065,1775,1697,1002;
+		setarray .@amount,20,25,12,5,15;
+		setarray .@coordinate,45,77,67,58;
+	}
+	if('AinWarpMap$ == "19@ain")
+	{
+		setarray .@monster,1777,1775,1778,1776,1789;
+		setarray .@amount,10,15,6,25,15;
+		setarray .@coordinate,45,77,67,58;
+	}
+	if('AinWarpMap$ == "20@ain")
+	{
+		setarray .@monster,1889,1679,1671,1609,1170;
+		setarray .@amount,4,10,12,4,10;
+		setarray .@coordinate,45,77,67,58;
+	}
+	if('AinWarpMap$ == "84@ain")
+	{
+		setarray .@monster,1777,1889,1778,1697,1317;
+		setarray .@amount,4,3,7,9,13;
+		setarray .@coordinate,45,77,67,58;
+	}
+		//Earth mobs
+	if('AinWarpMap$ == "22@ain")
+	{
+		setarray .@monster,1777,1889,1778,1697,1317;
+		setarray .@amount,14,6,7,9,13;
+		setarray .@coordinate,45,77,67,58;
+	}
+	if('AinWarpMap$ == "23@ain")
+	{
+		setarray .@monster,1099,1621,1216,1146;
+		setarray .@amount,8,12,20,10;
+		setarray .@coordinate,45,77,67,58;
+	}
+	if('AinWarpMap$ == "24@ain")
+	{
+		setarray .@monster,1696,1101,1615,1256,1622;
+		setarray .@amount,8,12,20,7,14;
+		setarray .@coordinate,45,77,67,58;
+	}
+	if('AinWarpMap$ == "26@ain")
+	{
+		setarray .@monster,1102,1402,1378;
+		setarray .@amount,16,24,20;
+		setarray .@coordinate,45,77,67,58;
+	}
+	if('AinWarpMap$ == "27@ain")
+	{
+		setarray .@monster,1029,1305,1615,1304,1256;
+		setarray .@amount,8,12,20,10,14;
+		setarray .@coordinate,45,77,67,58;
+	}
+	if('AinWarpMap$ == "28@ain")
+	{
+		setarray .@monster,1165,1881,1498;
+		setarray .@amount,6,12,16;
+		setarray .@coordinate,45,77,67,58;
+	}
+	if('AinWarpMap$ == "83@ain")
+	{
+		setarray .@monster,1382,1618,1300,1838,1072;
+		setarray .@amount,8,12,20,10,14;
+		setarray .@coordinate,45,77,67,58;
+	}
+		//Death and Demons
+	if('AinWarpMap$ == "30@ain")
+	{
+		setarray .@monster,1203,1257,1584,1304,1163;
+		setarray .@amount,3,12,20,10,14;
+		setarray .@coordinate,45,77,67,58;
+	}
+	if('AinWarpMap$ == "31@ain")
+	{
+		setarray .@monster,1276,1632,1503,1260,1773;
+		setarray .@amount,8,12,20,10,14;
+		setarray .@coordinate,45,77,67,58;
+	}
+	if('AinWarpMap$ == "32@ain")
+	{
+		setarray .@monster,1276,1632,1503,1260,1773;
+		setarray .@amount,8,12,20,5,14;
+		setarray .@coordinate,45,77,67,58;
+	}
+	if('AinWarpMap$ == "33@ain")
+	{
+		setarray .@monster,1205,1305,1752,1401,1510;
+		setarray .@amount,8,12,20,10,14;
+		setarray .@coordinate,45,77,67,58;
+	}
+	if('AinWarpMap$ == "34@ain")
+	{
+		setarray .@monster,1506,1207,1405,1415,1186;
+		setarray .@amount,8,12,20,10,14;
+		setarray .@coordinate,45,77,67,58;
+	}
+	if('AinWarpMap$ == "35@ain")
+	{
+		setarray .@monster,1620,1143,1061,1587,1693;
+		setarray .@amount,8,12,20,10,14;
+		setarray .@coordinate,45,77,67,58;
+	}
+	if('AinWarpMap$ == "36@ain")
+	{
+		setarray .@monster,1869,1707,1197,1140,1504;
+		setarray .@amount,8,12,20,10,14;
+		setarray .@coordinate,45,77,67,58;
+	}
+	if('AinWarpMap$ == "37@ain")
+	{
+		setarray .@monster,1098,1706,1117,1864,1875;
+		setarray .@amount,8,12,20,10,14;
+		setarray .@coordinate,45,77,67,58;
+	}
+	if('AinWarpMap$ == "39@ain")
+	{
+		setarray .@monster,1870,1704,1620,1506,1867;
+		setarray .@amount,8,12,20,10,14;
+		setarray .@coordinate,45,77,67,58;
+	}
+	if('AinWarpMap$ == "82@ain")
+	{
+		setarray .@monster,1298,1693,1865,1875,1870;
+		setarray .@amount,8,12,20,10,14;
+		setarray .@coordinate,45,77,67,58;
+	}
+		//Fire
+	if('AinWarpMap$ == "41@ain")
+	{
+		setarray .@monster,1135,1282,1129,1130,1140;
+		setarray .@amount,8,10,12,14,20;
+		setarray .@coordinate,45,77,67,58;
+	}
+	if('AinWarpMap$ == "42@ain")
+	{
+		setarray .@monster,1499,1495,1367,1214,1694;
+		setarray .@amount,8,10,12,14,20;
+		setarray .@coordinate,45,77,67,58;
+	}
+	if('AinWarpMap$ == "43@ain")
+	{
+		setarray .@monster,1413,1683,1383,1180,1310,1366;
+		setarray .@amount,4,10,12,4,10,10;
+		setarray .@coordinate,45,77,67,58;
+	}
+	if('AinWarpMap$ == "44@ain")
+	{
+		setarray .@monster,1369,1072,1309,1262,1381;
+		setarray .@amount,8,12,20,10,14;
+		setarray .@coordinate,45,77,67,58;
+	}
+	if('AinWarpMap$ == "45@ain")
+	{
+		setarray .@monster,1833,1283,1417,1837,1831;
+		setarray .@amount,12,8,10,14,4;
+		setarray .@coordinate,45,77,67,58;
+	}
+	if('AinWarpMap$ == "47@ain")
+	{
+		setarray .@monster,1694,1413,1495,1140,1072;
+		setarray .@amount,8,12,20,10,14;
+		setarray .@coordinate,45,77,67,58;
+	}
+	if('AinWarpMap$ == "48@ain")
+	{
+		setarray .@monster,1833,1262,1714,1837,1831;
+		setarray .@amount,6,4,5,2,2;
+		setarray .@coordinate,45,77,67,58;
+	}
+		//Forest / Light
+	if('AinWarpMap$ == "49@ain")
+	{
+		setarray .@monster,1165,1881,1498;
+		setarray .@amount,6,12,8;
+		setarray .@coordinate,45,77,67,58;
+	}
+	if('AinWarpMap$ == "51@ain")
+	{
+		setarray .@monster,1695,1493,1322,1189,1371;
+		setarray .@amount,12,8,10,4,4;
+		setarray .@coordinate,45,77,67,58;
+	}
+	if('AinWarpMap$ == "52@ain")
+	{
+		setarray .@monster,1410,1262,1701,1703,1717,1884;
+		setarray .@amount,12,8,10,4,4,20;
+		setarray .@coordinate,45,77,67,58;
+	}
+	if('AinWarpMap$ == "53@ain")
+	{
+		setarray .@monster,1294,1884,1388,1754;
+		setarray .@amount,12,8,2,8;
+		setarray .@coordinate,45,77,67,58;
+	}
+	if('AinWarpMap$ == "55@ain")
+	{
+		setarray .@monster,1702,1033,1495,1413;
+		setarray .@amount,4,10,10,10;
+		setarray .@coordinate,45,77,67,58;
+	}
+	if('AinWarpMap$ == "56@ain")
+	{
+		setarray .@monster,1402,1304,1755,1493,1884;
+		setarray .@amount,12,8,10,4,4;
+		setarray .@coordinate,45,77,67,58;
+	}
+	if('AinWarpMap$ == "57@ain")
+	{
+		setarray .@monster,1881,1262,1884,1703,1189;
+		setarray .@amount,12,8,20,4,4;
+		setarray .@coordinate,45,77,67,58;
+	}
+	if('AinWarpMap$ == "58@ain")
+	{
+		setarray .@monster,1717,1713,1701,1703,1702;
+		setarray .@amount,12,8,10,4,4;
+		setarray .@coordinate,45,77,67,58;
+	}
+	if('AinWarpMap$ == "80@ain")
+	{
+		setarray .@monster,1498,1322,1410,1294,1165;
+		setarray .@amount,12,8,10,8,8;
+		setarray .@coordinate,45,77,67,58;
+	}
+		//Wind
+	if('AinWarpMap$ == "60@ain")
+	{
+		setarray .@monster,1278,1699,1715,1314,1261;
+		setarray .@amount,12,8,10,8,4;
+		setarray .@coordinate,45,77,67,58;
+	}
+	if('AinWarpMap$ == "61@ain")
+	{
+		setarray .@monster,1377,1698,1365,1617,1275;
+		setarray .@amount,12,8,10,4,8;
+		setarray .@coordinate,45,77,67,58;
+	}
+	if('AinWarpMap$ == "62@ain")
+	{
+		setarray .@monster,1622,1977,1295,1148,1668;
+		setarray .@amount,12,8,10,4,8;
+		setarray .@coordinate,45,77,67,58;
+	}
+	if('AinWarpMap$ == "63@ain")
+	{
+		setarray .@monster,1615,1587,1516,1738,1692;
+		setarray .@amount,12,8,10,4,8;
+		setarray .@coordinate,45,77,67,58;
+	}
+	if('AinWarpMap$ == "64@ain")
+	{
+		setarray .@monster,1269,1774,1386,1366,1678;
+		setarray .@amount,12,8,10,4,8;
+		setarray .@coordinate,45,77,67,58;
+	}
+	if('AinWarpMap$ == "65@ain")
+	{
+		setarray .@monster,1672,1268,1714,1833,1633;
+		setarray .@amount,12,8,10,4,4;
+		setarray .@coordinate,45,77,67,58;
+	}
+		//Asg
+	if('AinWarpMap$ == "67@ain")
+	{
+		setarray .@monster,1268,1673,1681,1833,1203;
+		setarray .@amount,16,24,20,10,14;
+		setarray .@coordinate,45,77,67,58;
+	}
+	if('AinWarpMap$ == "68@ain")
+	{
+		setarray .@monster,1770,1315,1668,1839,1213;
+		setarray .@amount,8,12,20,10,14;
+		setarray .@coordinate,45,77,67,58;
+	}
+	if('AinWarpMap$ == "69@ain")
+	{
+		setarray .@monster,1276,1632,1503,1260,1773;
+		setarray .@amount,8,12,20,10,14;
+		setarray .@coordinate,45,77,67,58;
+	}
+	if('AinWarpMap$ == "70@ain")
+	{
+		setarray .@monster,1652,1653,1654,1655,1657;
+		setarray .@amount,8,12,20,10,14;
+		setarray .@coordinate,45,77,67,58;
+	}
+	if('AinWarpMap$ == "71@ain")
+	{
+		setarray .@monster,1867,1870,1098,1839,1875;
+		setarray .@amount,8,12,20,10,14;
+		setarray .@coordinate,45,77,67,58;
+	}
+	if('AinWarpMap$ == "72@ain")
+	{
+		setarray .@monster,1652,1657,1656,1653,1654,1655;
+		setarray .@amount,12,12,12,12,12,12;
+		setarray .@coordinate,45,77,67,58;
+	}
+		//Yggdrasil
+	if('AinWarpMap$ == "74@ain")
+	{
+		setarray .@monster,2363,2364,2365,2366;
+		setarray .@amount,10,15,10,20;
+		setarray .@coordinate,45,77,67,58;
+	}
+	if('AinWarpMap$ == "75@ain")
+	{
+		setarray .@monster,2309,2310,2315,2340,2313;
+		setarray .@amount,12,5,10,8,12;
+		setarray .@coordinate,45,77,67,58;
+	}
+	if('AinWarpMap$ == "76@ain")
+	{
+		setarray .@monster,2309,2310,2315,2340,2313;
+		setarray .@amount,12,5,10,8,12;
+		setarray .@coordinate,45,77,67,58;
+	}
+	if('AinWarpMap$ == "77@ain")
+	{
+		setarray .@monster,2309,2310,2315,2340,2313;
+		setarray .@amount,12,5,10,8,12;
+		setarray .@coordinate,45,77,67,58;
+	}
+	if('AinWarpMap$ == "78@ain")
+	{
+		setarray .@monster,2309,2310,2315,2340,2313;
+		setarray .@amount,12,5,10,8,12;
+		setarray .@coordinate,45,77,67,58;
+	}
+	if('AinWarpMap$ == "79@ain")
+	{
+		setarray .@monster,2309,2310,2315,2340,2313;
+		setarray .@amount,12,5,10,8,12;
+		setarray .@coordinate,45,77,67,58;
+	}
+	if('AinWarpMap$ == "85@ain")
+	{
+		setarray .@monster,2309,2310,2315,2340,2313;
+		setarray .@amount,12,5,10,8,12;
+		setarray .@coordinate,45,77,67,58;
+	}
+	
+	set .@map$, instance_mapname( 'AinWarpMap$ );
+	set .@npc_name$, instance_npcname( strnpcinfo(0), $ai_instance );	
+	
+	set .@label$, .@npc_name$ + "::OnNormalDied";
+	setarray .@coordinate,0,0,300,300;
+	
+	set .@monster_size, getarraysize( .@monster );
+	for( set .@i, 0; .@i < .@monster_size; set .@i,.@i+1 ){
+		areamonster .@map$,.@coordinate[0],.@coordinate[1],.@coordinate[2],.@coordinate[3],"--ja--",.@monster[.@i],.@amount[.@i],.@label$;
+	}
+	return;
+}
+
+function	summon_town	{
+	set .@map$, 'ain_town_map$;
+	set .@npcname$, instance_npcname( strnpcinfo(0), instance_id() );
+	set .@label$, .@npcname$ + "::OnTownMobsDied";
+	
+	set .@mobCount, 50 - mobcount(.@map$, .@label$);
+	
+	setarray .@monster,1287,1899,1285,1900;
+	setarray .@coordinate,0,0,0,0;
+	
+	set .@monster_size, getarraysize( .@monster );
+	for( set .@i, 0; .@i < .@monster_size; set .@i,.@i+1 ){
+		set .@cnt, .@mobCount / .@monster_size;
+		areamonster .@map$,.@coordinate[0],.@coordinate[1],.@coordinate[2],.@coordinate[3],"--ja--",.@monster[.@i],.@cnt,.@label$;
+	}
+	return;
+}
+
+function	summon_guardian	{	
+	set .@map$, instance_mapname( "86@ain" );
+	set .@npc_name$, instance_npcname( strnpcinfo(0), $ai_instance );
+	set .@label$, .@npcname$ + "::OnGuardianDied";
+	
+	if('instance_ai_level == 'ai_last_level)
+	{
+		//special end content level
+		set .@map$, instance_mapname( "87@ain" );
+		
+		//custom mvp
+		setarray .@monster, 1002;
+		setarray .@coordinate,0,0,0,0;
+		
+		areamonster .@map$,.@coordinate[0],.@coordinate[1],.@coordinate[2],.@coordinate[3],"Aincrad Guardian",.@monster[0],1,.@label$,2;
+		//RATHENA
+		set .@bossId, $@mobId[0];
+				
+		getunitdata(.@bossId, .@mobData);	
+		
+		//max hp: alive player fighting it by 10 Millions
+		setunitdata .@bossId, UMOB_MAXHP, 'ai_count_last * 10000000;
+		
+		//pop clones of dead members
+		for(set .@i, 0; .@i < getarraysize(.killedPlayerAid); set .@i,.@i+1)
+		{
+			if(attachrid(.killedPlayerAid[.@i]) == 1)
+			{
+				clone .@map$, .@mobData[UMOB_X], .@mobData[UMOB_Y], .@npc_name$ + "::OnCloneDied", getcharid(0);
+			}
+			else
+			{
+				switch(.@class[.@i])
+				{
+					case 7:
+					case 13:
+					case 4008:
+					case 4014:
+						//knight
+						//LK
+						set .@mobId, 1634;
+						break;
+					case 8:
+					case 4009:
+						//priest
+						//HP
+						set .@mobId, 1637;
+						break;
+					case 9:
+					case 4010:
+						//wizard
+						//HW
+						set .@mobId, 1639;
+						break;
+					case 10:
+					case 4011:
+						//Blacksmith
+						//White
+						set .@mobId, 1636;
+						break;
+					case 11:
+					case 4012:
+						//hunter
+						//Sniper
+						set .@mobId, 1638;
+						break;
+					case 12:
+					case 4013:
+						//Assassin
+						//AC
+						set .@mobId, 1635;
+						break;
+					case 14:
+					case 21:
+					case 4015:
+					case 4022:
+						//Crusader
+						//Pala
+						set .@mobId, 2221;
+						break;
+					case 15:
+					case 4016:
+						//Monk
+						//Champ
+						set .@mobId, 2224;
+						break;
+					case 16:
+					case 4017:
+						//Sage
+						//Prof
+						set .@mobId, 2223;
+						break;
+					case 17:
+					case 4018:
+						//Rogue
+						//Stalk
+						set .@mobId, 2225;
+						break;
+					case 18:
+					case 4019:
+						//alche
+						//Crea
+						set .@mobId, 2222;
+						break;
+					case 19:
+					case 4020:
+						//Bard
+						//Clown
+						set .@mobId, 2226;
+						break;
+					case 20:
+					case 4021:
+						//Dancer
+						//Gipsy
+						set .@mobId, 2227;
+						break;
+					case 4054:
+					case 4060:
+					case 4080:
+					case 4081:
+						//RK
+						set .@mobId, 3213;
+						break;
+					case 4055:
+					case 4061:
+						//Warlock
+						set .@mobId, 3216;
+						break;
+					case 4056:
+					case 4062:
+					case 4084:
+					case 4085:
+						//Ranger
+						set .@mobId, 3211;
+						break;
+					case 4057:
+					case 4063:
+						//AB
+						set .@mobId, 3215;
+						break;
+					case 4058:
+					case 4064:
+					case 4086:
+					case 4087:
+						//Mechanic
+						set .@mobId, 3212;
+						break;
+					case 4059:
+					case 4065:
+						//Glt
+						set .@mobId, 3214;
+						break;
+					case 4066:
+					case 4073:
+					case 4082:
+					case 4083:
+						//RG
+						set .@mobId, 3240;
+						break;
+					case 4067:
+					case 4074:
+						//Sorce
+						set .@mobId, 3228;
+						break;
+					case 4068:
+					case 4075:
+						//Minstrel
+						set .@mobId, 3231;
+						break;
+					case 4069:
+					case 4076:
+						//Wanderer
+						set .@mobId, 3232;
+						break;
+					case 4070:
+					case 4077:
+						//Sura
+						set .@mobId, 3229;
+						break;
+					case 4071:
+					case 4078:
+						//Genetic
+						set .@mobId, 3227;
+						break;
+					case 4072:
+					case 4079:
+						//Shadow Chaser
+						set .@mobId, 3230;
+						break;
+					default:
+						//baby, ninja, guns and others
+						//spawn a remover
+						set .@mobId, 1682;
+						break;
+				}
+				monster .@map$, .@mobData[UMOB_X], .@mobData[UMOB_Y], "--ja--", .@mobId, 1;
+			}
+		}			
+	}
+	else if('AiBossFight <= getarraysize(.aincradMvpId))
+	{
+		setarray .@monster,.aincradMvpId['AiBossFight];
+		setarray .@coordinate,0,0,300,300;
+		
+		set .@monster_size, getarraysize( .@monster );
+		for( set .@i, 0; .@i < .@monster_size; set .@i,.@i+1 ){
+			areamonster .@map$,.@coordinate[0],.@coordinate[1],.@coordinate[2],.@coordinate[3],"--ja--",.@monster[.@i],1,.@label$,2;
+		}
+	}
+	return;
+}
+
+OnLootCrystal:
+	set .@randCrys, rand(0,'randMaxPercent);
+	if (.@randCrys <= 'crystalPercent)
+	{
+		set .@id, rand('crystalFirstId, 'crystalLastId);
+		getitem .@id, 1;
+	}
+	return;
+
+OnCloneDied:
+	callsub OnLootCrystal;
+	//nothing, used to clean
+	end;
+
+OnNormalDied:
+	//auto warp back when all monsters have been killed
+	set .@map$, strcharinfo(3);
+	set .@npcname$, instance_npcname( strnpcinfo(0), instance_id() );
+	set .@label$, .@npcname$ + "::OnNormalDied";
+	
+	callsub OnLootCrystal;
+	
+	set .@mobCount, mobcount(.@map$, .@label$);
+	if(.@mobCount == 0)
+	{
+		instance_announce instance_id(), "[ Cardinal System ] All monsters have been killed. Auto warp back system started...", bc_map, 0xFF0000;
+		sleep2 1500;
+		getmapxy(.@bmap$, .@x, .@y, UNITTYPE_NPC, 'AinWarpBackNpc$);
+		getguildmember .@guild_id,2;
+		for( set .@i, 0; .@i < $@guildmembercount; set .@i, .@i+1 )
+				if( attachrid( $@guildmemberaid[.@i] ) && strcharinfo(3) == strnpcinfo(4) ){
+					warp .@bmap$, .@x, .@y;
+				}
+	}
+	end;
+	
+OnTownMobsDied:
+	set .@map$, strcharinfo(3);
+	set .@npcname$, instance_npcname( strnpcinfo(0), instance_id() );
+	set .@label$, .@npcname$ + "::OnTownMobsDied";
+	
+	callsub OnLootCrystal;
+	
+	set .@mobCount, mobcount(.@map$, .@label$);
+	if(.@mobCount == 0)
+	{
+		for( set .@i, 'crystalFirstId; .@i<'crystalLastId; set .@i,.@i+1 )
+		{
+			getitem .@i, rand(10);
+		}
+		instance_announce instance_id(), "[ Cardinal System ] " + strcharinfo(0) + " killed the last guardian.", bc_map, 0xFF0000;
+	}
+	end;
+	
+OnGuardianDied:
+	set .@map$, instance_mapname( "0@ain" );
+	set .@npc_name$, instance_npcname( strnpcinfo(0), $ai_instance );
+	
+	set .@mvp_dead_num, mobcount(.@map$,.@npc_name$+"::OnGuardianDied" );
+	
+	callsub OnLootCrystal;
+	
+	if( .@mvp_dead_num == 0 ){	
+		if('instance_ai_level == 'ai_last_level)
+		{
+			killmonster instance_mapname( "87@ain" ), "All";
+			instance_announce instance_id(), "[ Cardinal System ] Error...System failure......", bc_map, 0xFF0000;
+			sleep2 1000;
+			instance_announce instance_id(), "[ Cardinal System ] Destruction incoming......", bc_map, 0xFF0000;
+			sleep2 1000;
+			instance_announce instance_id(), "[ Cardinal System ] Floating Castle is falling.....", bc_map, 0xFF0000;
+			
+			sleep2 15000;
+			instance_destroy $ai_instance;
+			set $instance_ai_id, -1;
+			set $ai_instance, -1;
+			end;
+		}
+		else
+		{
+			if('AiBossFight == 'instance_ai_level - 1)
+			{
+				'instance_ai_level++;
+				instance_announce instance_id(), "[ Cardinal System ] Access to floor " + ('instance_ai_level + 1) + " granted.", bc_map, 0xFF0000;
+			}
+			
+			if($aiInstanceBoundType == 2)
+			{
+				getguildmember(getcharid(2), 2);
+				copyarray .@memberaid[0], $@guildmemberaid[0], $@guildmembercount;
+			}
+			else if($aiInstanceBoundType == 1)
+			{
+				getpartymember(getcharid(1), 2);
+				copyarray .@memberaid[0], $@partymemberaid[0], $@partymembercount;
+			}
+			
+			if('instance_ai_level < 6)
+			{
+				set .@mapOut$, instance_mapname( "0@ain", instance_id() );
+			}
+			else if('instance_ai_level < 11)
+			{
+				set .@mapOut$, instance_mapname( "6@ain", instance_id() );
+			}
+			else if('instance_ai_level < 14)
+			{
+				set .@mapOut$, instance_mapname( "12@ain", instance_id() );
+			}
+			else if('instance_ai_level < 18)
+			{
+				set .@mapOut$, instance_mapname( "16@ain", instance_id() );
+			}
+			else if('instance_ai_level < 22)
+			{
+				set .@mapOut$, instance_mapname( "21@ain", instance_id() );
+			}
+			else if('instance_ai_level < 26)
+			{
+				set .@mapOut$, instance_mapname( "25@ain", instance_id() );
+			}
+			else if('instance_ai_level < 36)
+			{
+				set .@mapOut$, instance_mapname( "29@ain", instance_id() );
+			}
+			else if('instance_ai_level < 41)
+			{
+				set .@mapOut$, instance_mapname( "38@ain", instance_id() );
+			}
+			else if('instance_ai_level < 44)
+			{
+				set .@mapOut$, instance_mapname( "40@ain", instance_id() );
+			}
+			else if('instance_ai_level < 47)
+			{
+				set .@mapOut$, instance_mapname( "81@ain", instance_id() );
+			}
+			else if('instance_ai_level < 52)
+			{
+				set .@mapOut$, instance_mapname( "54@ain", instance_id() );
+			}
+			else if('instance_ai_level < 58)
+			{
+				set .@mapOut$, instance_mapname( "59@ain", instance_id() );
+			}
+			else if('instance_ai_level < 64)
+			{
+				set .@mapOut$, instance_mapname( "66@ain", instance_id() );
+			}
+			else if('instance_ai_level < 70)
+			{
+				set .@mapOut$, instance_mapname( "73@ain", instance_id() );
+			}
+			else
+			{
+				set .@mapOut$, instance_mapname( "0@ain", instance_id() );
+				//prepare last fight battle
+				enablenpc instance_npcname( "alaaihsc", instance_id() );
+				donpcevent instance_npcname( "alaaihsc", instance_id() ) + "::OnStartLastLevel";
+			}
+			
+			for( set .@i, 0; .@i < getarraysize(.@memberaid); set .@i, .@i+1 )
+				if( attachrid( .@memberaid[.@i] ) && strcharinfo(3) == strnpcinfo(4) ){
+					warp .@mapOut$, 'ainBossX, 'ainBossY;
+				}
+		}
+	}
+	end;
+	
+OnTimer10000:
+	stopnpctimer;
+	//each 10s, increase timer
+	set .timerCount, .timerCount + 10;
+	if(.timerCount == $ai_timer_delay)
+	{
+		instance_announce $ai_instance, "[ Aincrad ] The Dimension collapse! I have to get you out of there!", bc_map, 0xFF0000;
+		sleep 5000;
+		instance_destroy $ai_instance;
+		set $instance_ai_id, -1;
+		set $ai_instance, -1;
+		stopnpctimer;
+	}
+	initnpctimer;
+	end;
+	
+OnPCDieEvent:
+	//when dying, auto expell
+	if(AINCRADON == 1)
+	{
+		charcommand "#load " + strcharinfo(0);
+		charcommand "#alive " + strcharinfo(0);
+		dispbottom "[ Cardinal System ]  You've been expelled.";
+		set AINCRADON, 0;
+		set .killedPlayerAid[getarraysize(.killedPlayerAid)], getcharid(3);
+		set .killedPlayerClass[getarraysize(.killedPlayerClass)], Class;
+	}
+	end;
+	
+OnPCLogoutEvent:
+	if(AINCRADON == 1)
+	{
+		set AINCRADON, 0;
+		set .killedPlayerAid[getarraysize(.killedPlayerAid)], getcharid(3);
+		set .killedPlayerClass[getarraysize(.killedPlayerClass)], Class;
+	}
+	end;
+	
+OnFloorOn:
+	//pop mobs
+	summon_normal( );
+	end;
+	
+OnPopTown:
+	//pop town mobs
+	summon_town( );
+	end;
+	
+OnGuardianCalled:
+	//pop mvp
+	summon_guardian( );
+	end;
+	
+OnLastFloorOn:
+	//pop mvp
+	summon_guardian( );	
+	end;	
+}
+
+0@ain,155,213,3	script	Human Scientist::alaaihsc	3484,{
+	if(.talking == 0)
+	{
+		if('instance_ai_level == 'ai_last_level)
+		{
+			set .talking, 1;
+			charcommand "#me " + strcharinfo(0) + " You're finally here again?";
+			
+			cutin "stephan_j_e_w", 2;
+			sleep2 1500;
+			npctalk "You've reached the highest point of this place.";
+			instance_announce $ai_instance, "You've reached the highest point of this place.", bc_map, 0x00FF00;
+			sleep2 1500;
+			npctalk "Get ready for your last ordeal.";
+			instance_announce $ai_instance, "Get ready for your last ordeal.", bc_map, 0x00FF00;
+			
+			set 'ai_count_last, 0;
+			
+			if($aiInstanceBoundType == 2)
+			{
+				getguildmember(getcharid(2), 2);
+				copyarray .@memberaid[0], $@guildmemberaid[0], $@guildmembercount;
+			}
+			else if($aiInstanceBoundType == 1)
+			{
+				getpartymember(getcharid(1), 2);
+				copyarray .@memberaid[0], $@partymemberaid[0], $@partymembercount;
+			}
+			
+			for( set .@i, 0; .@i < getarraysize(.@memberaid); set .@i, .@i+1 )
+				if( attachrid( .@memberaid[.@i] ) && strcharinfo(3) == strnpcinfo(4) ){
+					set 'ai_count_last, 'ai_count_last + 1;
+					warp instance_mapname( "87@ain", instance_id() ), 'ainFinalX, 'ainFinalX;
+				}
+				
+			donpcevent instance_npcname( "aincrad_floating_castle", instance_id() ) + "::OnLastFloorOn";	
+		}
+		else
+		{
+			set 'aiTalking, getcharid(3);
+			set .talking, 1;
+			charcommand "#me " + strcharinfo(0) + " Who are you? Isn't this place supposed to be 'extra tought'?";
+			
+			cutin "stephan_j_e_w", 2;
+			sleep2 1500;
+			npctalk "That's true...This is a hard place...";
+			instance_announce $ai_instance, "That's true...This is a hard place...", bc_map, 0x00FF00;
+			sleep2 1500;
+			npctalk "Where I died. Everybody died. Nobody's alive around here anymore...";
+			instance_announce $ai_instance, "Where I died. Everybody died. Nobody's alive around here anymore...", bc_map, 0x00FF00;
+			sleep2 1500;
+			npctalk "This will be my last word. You'll find around here all you need to progress.";
+			instance_announce $ai_instance, "This will be my last word. You'll find around here all you need to progress.", bc_map, 0x00FF00;
+			sleep2 1500;
+			npctalk "But don't expect for living being, or help.";
+			instance_announce $ai_instance, "But don't expect for living being, or help.", bc_map, 0x00FF00;
+			sleep2 1500;
+			npctalk "This will be your ordeal. Good luck.";
+			instance_announce $ai_instance, "This will be your ordeal. Good luck.", bc_map, 0x00FF00;
+			
+			cutin "", 255;
+			disablenpc strnpcinfo(3);
+			donpcevent instance_npcname( "aincrad_floating_castle", $ai_instance ) + "::OnFirstFloorOn";
+		}
+		
+		set .talking, 0;
+		end;
+	}
+	else
+	{
+		mes "I'm allready talking with someone, wait a bit.";
+		close;
+	}
+	
+OnStartLastLevel:
+	set .talking, 0;	
+	setnpcdisplay strnpcinfo(3), 4_ENERGY_BLACK;
+	end;
+	
+OnInstanceInit:
+OnInit:
+	enablenpc strnpcinfo(3);
+	set .talking, 0;
+	end;
+}
+
+
+0@ain,156,195,3	script	Energy Door#1::alaaied	4_ENERGY_WHITE,{
+	if(.talking == 0)
+	{
+		set .talking, 1;
+		mes "[Energy Door]";
+		mes "Do you wish to enter in fields?";
+		mes "The warp will be activate to one randomly chosen field.";
+		if(select("Yes","No") == 1)
+		{
+			next;
+			mes "[Energy Door]";
+			mes "To get out, you'll have to clean the map entirely. You'll then be auto-warped back.";
+			mes "Or you can find the Black Energy, as a White is always connected to a Black, and the other way around.";
+			mes "Finally, you can defeat the Boss to get back.";
+			goto OnWarp;
+		}
+	}
+	else
+	{
+		mes "The Door remains still...";
+		mes "You should wait a bit before trying again.";
+		close;
+	}
+	close;
+	
+OnWarp:
+	if($energydoorwarpcnt[atoi(strnpcinfo(2))] > 0)
+	{
+		//warp
+		set .@map$, getelementofarray(getd("$energydoorwarp" + strnpcinfo(2) + "$"), rand(0, $energydoorwarpcnt[atoi(strnpcinfo(2))] - 1));
+		set 'AinWarpMap$, .@map$;
+		set 'AinWarpBackNpc$, strnpcinfo(3);
+			
+		if($aiInstanceBoundType == 2)
+		{
+			getguildmember(getcharid(2), 2);
+			copyarray .@memberaid[0], $@guildmemberaid[0], $@guildmembercount;
+		}
+		else if($aiInstanceBoundType == 1)
+		{
+			getpartymember(getcharid(1), 2);
+			copyarray .@memberaid[0], $@partymemberaid[0], $@partymembercount;
+		}
+			
+		for( set .@i, 0; .@i < getarraysize(.@memberaid); set .@i, .@i+1 )
+				if( attachrid( .@memberaid[.@i] ) && strcharinfo(3) == strnpcinfo(4) ){
+					getmapxy(AINWARPBACK$, AINWARPBACKX, AINWARPBACKY, UNITTYPE_PC);
+					
+					warp instance_mapname('AinWarpMap$, instance_id()), 0, 0;
+				}
+		donpcevent instance_npcname( "aincrad_floating_castle", instance_id() ) + "::OnFloorOn";
+	}
+	else
+	{
+		//pop monsters
+		
+	}
+	end;
+	
+OnInstanceInit:
+OnInit:
+	enablenpc strnpcinfo(3);
+	set .talking, 0;
+	if(strnpcinfo(3) == "alaaied")
+	{
+		setarray $energydoorwarpcnt[0], 5, 5, 3, 5, 3, 4, 8, 2, 5, 2, 1, 3, 5, 6, 6, 7, 
+										0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0;
+		//prontera
+		setarray $energydoorwarp1$[0], "1@ain", "2@ain", "3@ain", "4@ain", "5@ain";
+		//geffen
+		setarray $energydoorwarp2$[0], "7@ain", "8@ain", "9@ain", "10@ain", "11@ain";
+		//dicastes
+		setarray $energydoorwarp3$[0], "13@ain", "14@ain", "15@ain";
+		//manuk
+		setarray $energydoorwarp4$[0], "17@ain", "18@ain", "19@ain", "20@ain", "84@ain";
+		//einbech
+		setarray $energydoorwarp5$[0], "22@ain", "23@ain", "24@ain";
+		//veins
+		setarray $energydoorwarp6$[0], "26@ain", "27@ain", "28@ain", "83@ain";
+		//niflheim
+		setarray $energydoorwarp7$[0], "30@ain", "31@ain", "32@ain", "33@ain", "34@ain", "35@ain", "36@ain", "37@ain";
+		//malaya
+		setarray $energydoorwarp8$[0], "39@ain", "82@ain";
+		//dewata
+		setarray $energydoorwarp9$[0], "41@ain", "42@ain", "43@ain", "44@ain", "45@ain";
+		//thor camp
+		setarray $energydoorwarp10$[0], "47@ain", "48@ain";
+		//eclage
+		setarray $energydoorwarp11$[0], "49@ain";
+		//splendid
+		setarray $energydoorwarp12$[0], "51@ain", "52@ain", "53@ain";
+		//payon
+		setarray $energydoorwarp13$[0], "55@ain", "56@ain", "57@ain", "58@ain", "80@ain";
+		//mid camp
+		setarray $energydoorwarp14$[0], "60@ain", "61@ain", "62@ain", "63@ain", "64@ain", "65@ain";
+		//gonryun
+		setarray $energydoorwarp15$[0], "67@ain", "68@ain", "69@ain", "70@ain", "71@ain", "72@ain";
+		//yggdrasil
+		setarray $energydoorwarp16$[0], "74@ain", "75@ain", "76@ain", "77@ain", "78@ain", "79@ain", "85@ain";
+	}
+	end;
+}
+
+6@ain,119,110,2	duplicate(alaaied)	Energy Door#2::alaaied2	4_ENERGY_WHITE
+12@ain,198,195,2	duplicate(alaaied)	Energy Door#3::alaaied3	4_ENERGY_WHITE
+16@ain,262,177,2	duplicate(alaaied)	Energy Door#4::alaaied4	4_ENERGY_WHITE
+21@ain,192,125,2	duplicate(alaaied)	Energy Door#5::alaaied5	4_ENERGY_WHITE
+25@ain,220,109,2	duplicate(alaaied)	Energy Door#6::alaaied6	4_ENERGY_WHITE
+29@ain,189,190,2	duplicate(alaaied)	Energy Door#7::alaaied7	4_ENERGY_WHITE
+38@ain,229,220,2	duplicate(alaaied)	Energy Door#8::alaaied8	4_ENERGY_WHITE
+40@ain,200,184,2	duplicate(alaaied)	Energy Door#9::alaaied9	4_ENERGY_WHITE
+46@ain,236,73,2	duplicate(alaaied)	Energy Door#10::alaaied10	4_ENERGY_WHITE
+81@ain,282,292,2	duplicate(alaaied)	Energy Door#11::alaaied11	4_ENERGY_WHITE
+50@ain,197,181,2	duplicate(alaaied)	Energy Door#12::alaaied12	4_ENERGY_WHITE
+54@ain,156,146,2	duplicate(alaaied)	Energy Door#13::alaaied13	4_ENERGY_WHITE
+59@ain,218,243,2	duplicate(alaaied)	Energy Door#14::alaaied14	4_ENERGY_WHITE
+66@ain,160,201,2	duplicate(alaaied)	Energy Door#15::alaaied15	4_ENERGY_WHITE
+73@ain,32,38,2	duplicate(alaaied)	Energy Door#16::alaaied16	4_ENERGY_WHITE
+
+//no warp, pop boss
+89@ain,140,133,2	duplicate(alaaied)	Energy Door#17::alaaied17	4_ENERGY_WHITE
+90@ain,168,175,2	duplicate(alaaied)	Energy Door#18::alaaied18	4_ENERGY_WHITE
+91@ain,208,276,2	duplicate(alaaied)	Energy Door#19::alaaied19	4_ENERGY_WHITE
+92@ain,196,218,2	duplicate(alaaied)	Energy Door#20::alaaied20	4_ENERGY_WHITE
+93@ain,189,163,2	duplicate(alaaied)	Energy Door#21::alaaied21	4_ENERGY_WHITE
+94@ain,178,166,2	duplicate(alaaied)	Energy Door#22::alaaied22	4_ENERGY_WHITE
+95@ain,92,165,2	duplicate(alaaied)	Energy Door#23::alaaied23	4_ENERGY_WHITE
+96@ain,127,163,2	duplicate(alaaied)	Energy Door#24::alaaied24	4_ENERGY_WHITE
+97@ain,177,171,2	duplicate(alaaied)	Energy Door#25::alaaied25	4_ENERGY_WHITE
+
+99@ain,150,150,2	duplicate(alaaied)	Energy Door#27::alaaied27	4_ENERGY_WHITE
+100@ain,150,150,2	duplicate(alaaied)	Energy Door#28::alaaied28	4_ENERGY_WHITE
+101@ain,150,150,2	duplicate(alaaied)	Energy Door#29::alaaied29	4_ENERGY_WHITE
+102@ain,150,150,2	duplicate(alaaied)	Energy Door#30::alaaied30	4_ENERGY_WHITE
+103@ain,150,150,2	duplicate(alaaied)	Energy Door#31::alaaied31	4_ENERGY_WHITE
+104@ain,150,150,2	duplicate(alaaied)	Energy Door#32::alaaied32	4_ENERGY_WHITE
+105@ain,150,150,2	duplicate(alaaied)	Energy Door#33::alaaied33	4_ENERGY_WHITE
+106@ain,150,150,2	duplicate(alaaied)	Energy Door#34::alaaied34	4_ENERGY_WHITE
+107@ain,150,150,2	duplicate(alaaied)	Energy Door#35::alaaied35	4_ENERGY_WHITE
+88@ain,150,150,2	duplicate(alaaied)	Energy Door#36::alaaied36	4_ENERGY_WHITE
+
+0@ain,151,192,6	script	Goddess Statue::alagostai	4_F_08_STATUE,2,2,{
+	set .@npcname$, "[Goddess Statue]";
+	mes .@npcname$;
+	mes "This looks like a statue of a goddess.";
+	mes "It looks almost alive...";
+	switch(select("Pray for Health","Pray for a Companion","Make an offering"))
+	{
+		case 1:
+			next;
+			mes .@npcname$;
+			mes "You can feel the Goddess love over you. Stay near the statue for complete restauration.";
+			close2;
+			set SANCTUHEALING, 1;
+			goto OnHeal;
+			break;
+		case 2:
+			close2;
+			goto OnBreed;
+			break;
+		case 3:
+			goto OnLottery;
+			break;
+	}
+	close;
+	
+OnLottery:
+	mes "Do you wish to use commonest Shards to try obtaining rewards?";
+	if(select("Yes","No") == 1)
+	{
+		next;
+		mes "[Shards Machine]";
+		mes "How many Shards? Each one will be trade for a random reward.";
+		mes "The highest you choose, you highest chance you have to obtain rare Crystals.";
+		input .@count;
+		if (.@count > countitem($shardIds[0]))
+		{
+			next;
+			mes "[Shards Machine]";
+			mes "Input a valid shard count.";
+			close;
+		}
+		set .@select, rand(0, .@count);
+		delitem $shardIds[0], .@select;
+		set Zeny, Zeny + 1000 * .@select;
+		set .@remaining, .@count - .@select;
+		if(.@remaining > 0)
+		{
+			set .@select, rand(0, .@remaining);
+			delitem $shardIds[0], .@select;
+			if(rand(0,1) == 0)
+			{
+				getitem $portalCrystalId, .@select;
+			}
+			else
+			{
+				getitem $returnCrystalId, .@select;
+			}
+			set .@remaining, .@remaining - .@select;
+			if(.@remaining > 0)
+			{
+				set .@cnt, 0;
+				delitem $shardIds[0], .@remaining;
+				//max 10 crystals
+				for(set .@i, 0; .@i<.@remaining && .@cnt < 10; set .@i,.@i+1)
+				{
+					getitem rand('crystalFirstId, 'crystalLastId), 1;
+					set .@cnt, .@cnt + 1;
+				}
+			}
+		}
+	}
+	close;
+	
+OnBreed:
+	if (ismounting()) {
+		message strcharinfo(0),"You must first remove your mount.";
+		end;
+	} else if (((eaclass()&EAJ_THIRDMASK)==EAJ_RANGER) && !countitem(6124)) {
+		if (!checkfalcon() && getskilllv("HT_FALCON") && !checkwug()) {
+			if(select(" ~ Falcon: ~ Warg")==1) setfalcon;
+			else getitem 6124,1; //Wolf's_Flute
+		} else getitem 6124,1; //Wolf's_Flute
+	} else if (((eaclass()&EAJ_THIRDMASK)==EAJ_MECHANIC) && !checkcart() && getskilllv("MC_PUSHCART")) {
+		if (!checkmadogear() && getskilllv("NC_MADOLICENCE")) {
+			if(select(" ~ Cart: ~ Mado")==1) setcart;
+			else setmadogear;
+		} else setcart;
+	} else if (!checkcart() && getskilllv("MC_PUSHCART")) setcart;
+	else if (!checkfalcon() && getskilllv("HT_FALCON") && !checkwug()) setfalcon;
+	else if (!checkriding() && !checkdragon() && getskilllv("KN_RIDING")) {
+		if ((eaclass()&EAJ_THIRDMASK)==EAJ_RUNE_KNIGHT) setdragon;
+		else setriding;
+	} else if (!checkmadogear() && getskilllv("NC_MADOLICENCE")) setmadogear;
+	else {
+		message strcharinfo(0),"You do not meet requirements to rent.";
+		end;
+	}
+	specialeffect2 EF_TEIHIT3;
+	end;	
+	
+OnHeal:
+	getmapxy(.@map$,.@mapx,.@mapy,UNITTYPE_PC);
+	getmapxy(.@nmap$,.@nmapx,.@nmapy,UNITTYPE_NPC);
+	if(SANCTUHEALING == 1 && .@map$ == strnpcinfo(4) 
+		&& .@mapx >= .@nmapx - 2 && .@mapx <= .@nmapx + 2 
+		&& .@mapy >= .@nmapy - 2 && .@mapy <= .@nmapy + 2)
+	{
+		percentheal 4, 4;
+		if(.specialEffect == 2 && SANCTUHEALCOUNT == 0)
+		{
+			specialeffect2 346; //221
+		}
+		set SANCTUHEALCOUNT, SANCTUHEALCOUNT + 1;
+		if(SANCTUHEALCOUNT % 5 == 0)
+		{
+			callsub OnReceiveBuff;
+		}
+		addtimer 1000, strnpcinfo(3) + "::OnHeal";
+	}	
+	else
+	{
+		set SANCTUHEALING, 0;
+		set SANCTUHEALCOUNT, 0;
+	}
+	end;
+	
+OnReceiveBuff:
+	if(SANCTUHEALCOUNT >= 5)
+	{
+		//Increase agility lv 10
+		//HERCULES
+		//sc_start(SC_INC_AGI, 600000, 10);
+		//RATHENA
+		sc_start(SC_INCAGI, 600000, 10);
+		
+		if( getbrokenid(1) ) repairall;
+		
+		if(VIP_PACKAGE > 0) {
+			switch ( BaseJob ) {     
+				case 18:    
+					.@spirit = 445; 
+					break;        
+				case 20:      
+				case 15:    
+					.@spirit = 447;
+					break;       
+				case 19:    
+					.@spirit = 455; 
+					break;       
+				case 4047:  
+					.@spirit = 448;
+					break;       
+				case 17:    
+					.@spirit = 456;
+					break;       
+				case 16:   
+					.@spirit = 449;
+					break;     
+				case 12:   
+					.@spirit = 457; 
+					break;       
+				case 14:    
+					.@spirit = 450;
+					break;       
+				case 10:  
+					.@spirit = 458; 
+					break;       
+				case 23:    
+					.@spirit = 451; 
+					break;     
+				case 11:  
+					.@spirit = 460;
+					break;      
+				case 7:     
+					.@spirit = 452;
+					break;        
+				case 4049:  
+					.@spirit = 461; 
+					break;       
+				case 8:   
+					.@spirit = 454;
+					break;      
+				case 9:     
+					.@spirit = 453; 
+					break;    
+			}  
+			
+			for( .@i = 0; .@i < getarraysize( .VIPBuffs ); .@i++ ) {  
+				if(VIP_PACKAGE > .BuffsVIPPackLevel[.@i])
+				{
+					if(.VIPBuffs[.@i] == SC_SOULLINK) {
+						if(VIP_BUFFS_OFF != 1)
+						{
+							stand (strcharinfo(0)); // <- Added this so characters dont get stuck when soul link is casting. 
+							sc_start4 .VIPBuffs[.@i], 240000, .BuffsVIPLevel[.@i], .@spirit, 0, 0;  
+							skilleffect .@spirit, .BuffsVIPLevel[.@i]; // Start Soul Link Effect.  
+						}
+					} else {
+						specialeffect2 .BuffsVIPEffect[.@i];
+						sc_start .VIPBuffs[.@i], 240000, .BuffsVIPLevel[.@i];
+					}
+				}				
+			}  
+		}
+	}
+	if(SANCTUHEALCOUNT >= 10)
+	{
+		//Blessing lv 10
+		sc_start(SC_BLESSING, 600000, 10);
+	}
+	if(SANCTUHEALCOUNT >= 15)
+	{
+		//Assoumptio lv 5
+		sc_start(SC_ASSUMPTIO, 600000, 5);		
+	}
+	if(SANCTUHEALCOUNT >= 20)
+	{
+		//Kerry Eleison lv 5
+		sc_start(SC_KYRIE, 600000, 5);		
+	}
+	if(SANCTUHEALCOUNT >= 25)
+	{
+		//Impositio manus lv 2	
+		sc_start(SC_IMPOSITIO, 600000, 2);		
+	}
+	if(SANCTUHEALCOUNT >= 30)
+	{
+		//Magnificat lv 5
+		sc_start(SC_MAGNIFICAT, 600000, 5);		
+	}
+	if(SANCTUHEALCOUNT >= 35)
+	{
+		if( getbrokenid(1) ) repairall;
+		sc_end SC_STONE;
+		sc_end SC_SLOWDOWN;
+		sc_end SC_FREEZE;
+		sc_end SC_SLEEP;
+		sc_end SC_CURSE;
+		sc_end SC_SILENCE;
+		sc_end SC_CONFUSION;
+		sc_end SC_BLIND;
+		sc_end SC_BLEEDING;
+		sc_end SC_DECREASEAGI;
+		sc_end SC_POISON;
+		sc_end SC_HALLUCINATION;
+		sc_end SC_STRIPWEAPON;
+		sc_end SC_STRIPARMOR;
+		sc_end SC_STRIPHELM;
+		sc_end SC_STRIPSHIELD;
+		sc_end SC_CHANGEUNDEAD;
+		sc_end SC_ORCISH;
+		sc_end SC_BERSERK;
+		sc_end SC_SKE;
+		sc_end SC_SWOO;
+		sc_end SC_SKA;	
+	}	
+	return;
+	
+OnInstanceInit:
+OnInit:	
+	set .healDelay, 1; //in seconds
+	set .buff, 1; //0 to disabled
+	set .specialEffect, 2; //0 none, 1 area, 2 self
+	initnpctimer;
+	
+	//setarray .VIPBuffs, SC_ENCHANTBLADE, SC_GIANTGROWTH, SC_STONEHARDSKIN, SC_STRIKING, SC_RECOGNIZEDSPELL, SC_SOULLINK; 
+	//setarray .BuffsVIPEffect, -1, -1, -1, EF_AURABLADE, EF_KYRIE, EF_SOULLINK;   
+	//setarray .BuffsVIPLevel, 3, 1, 1, 3, 1, 5; 
+	//setarray .BuffsVIPPackLevel, 3, 2, 2, 1, 1, 3;
+	end;
+}
+
+6@ain,114,106,2	duplicate(alagostai)	Goddess Statue::alagostai2	4_F_08_STATUE
+12@ain,194,192,2	duplicate(alagostai)	Goddess Statue::alagostai3	4_F_08_STATUE
+16@ain,220,119,2	duplicate(alagostai)	Goddess Statue::alagostai4	4_F_08_STATUE
+21@ain,182,125,2	duplicate(alagostai)	Goddess Statue::alagostai5	4_F_08_STATUE
+25@ain,220,119,2	duplicate(alagostai)	Goddess Statue::alagostai6	4_F_08_STATUE
+29@ain,197,180,2	duplicate(alagostai)	Goddess Statue::alagostai7	4_F_08_STATUE
+38@ain,219,225,2	duplicate(alagostai)	Goddess Statue::alagostai8	4_F_08_STATUE
+40@ain,204,190,2	duplicate(alagostai)	Goddess Statue::alagostai9	4_F_08_STATUE
+46@ain,231,76,2	duplicate(alagostai)	Goddess Statue::alagostai10	4_F_08_STATUE
+81@ain,288,288,2	duplicate(alagostai)	Goddess Statue::alagostai11	4_F_08_STATUE
+50@ain,188,187,2	duplicate(alagostai)	Goddess Statue::alagostai12	4_F_08_STATUE
+54@ain,150,239,2	duplicate(alagostai)	Goddess Statue::alagostai13	4_F_08_STATUE
+59@ain,213,238,2	duplicate(alagostai)	Goddess Statue::alagostai14	4_F_08_STATUE
+66@ain,153,189,2	duplicate(alagostai)	Goddess Statue::alagostai15	4_F_08_STATUE
+
+0@ain,161,192,0	script	Portal::alaportai	PORTAL,{ //623
+function Go;
+
+	set .@npcname$, "[Portal]";
+	mes .@npcname$;
+	mes " ";
+	mes "Welcome into the Teleport System.";
+	mes "You can choose here any destination you want to go to.";
+	next;
+	mes .@npcname$;
+	mes "You can also use the portal by standing near and saying out loud your destination: Teleport plus the seeked destination, as long as it's a town or the Last Warp option.";
+	mes "For instance, 'Teleport Prontera'";
+	mes "Will bring you to Prontera.";
+	next;
+	mes .@npcname$;
+	mes "Plus, if you have the correct item, you can use the 'return' command to be warped back to your last save point.";
+	mes "Keep in mind that all destination are not cities. Some places are simply a regroupement point...";
+	mes "Thus, there could be monsters.";
+	next;
+	goto OnTeleport;
+	close;
+
+OnReturnAsked:
+	if (countitem($returnCrystalId) >= .priceCount && $hidden_started != 1)
+	{
+		charcommand "#load " + strcharinfo(0);		
+		delitem $returnCrystalId, .priceCount;			
+	}
+	else
+	{
+		mes "Sorry, but you can't use the return teleport.";
+		mes "A teleportation cost is " + .priceCount + " " + getitemname($returnCrystalId) + ".";
+		close;
+	}
+	end;
+	
+function Go {
+	if('instance_ai_level < getarg(3, 0))
+	{
+		mes "You're not allowed to get in this area yet.";
+		mes "Clear the previous one first.";
+		close;
+	}
+	
+	set .@map$, instance_mapname( getarg(0), instance_id() );
+	
+	if(getarg(0) == "88@ain" || getarg(0) == "89@ain" || getarg(0) == "90@ain" 
+		|| getarg(0) == "91@ain" || getarg(0) == "92@ain" || getarg(0) == "93@ain" || getarg(0) == "94@ain" || getarg(0) == "96@ain"
+		|| getarg(0) == "97@ain" || getarg(0) == "98@ain" || getarg(0) == "99@ain" || getarg(0) == "100@ain" || getarg(0) == "101@ain"
+		|| getarg(0) == "102@ain" || getarg(0) == "103@ain" || getarg(0) == "104@ain" || getarg(0) == "105@ain" || getarg(0) == "106@ain"	
+		|| getarg(0) == "107@ain")
+	{
+		//unused town maps for landing, pop a no loot mvp on it
+		set 'ain_town_map$, getarg(0);
+		donpcevent instance_npcname( "aincrad_floating_castle", instance_id() ) + "::OnPopTown";
+	}
+	
+	lastwarp$ = .@map$;	
+	lastwarpx = getarg(1,0);
+	lastwarpy = getarg(2,0);
+	warp .@map$,getarg(1,0),getarg(2,0);
+	end;
+}
+
+OnTeleport:
+// --------------------------------------------------
+//	Main Menu:
+// --------------------------------------------------
+
+menu	"Last Warp ^777777["+lastwarp$+"]^000000",LastWarp,
+		" ~ Towns",Towns;
+	end;
+	
+LastWarp:
+	if (lastwarp$ == "")
+		message strcharinfo(PC_NAME),"You haven't warped anywhere yet.";
+	else
+		warp lastwarp$,lastwarpx,lastwarpy;	
+	end;
+
+// --------------------------------------------------
+	Towns:
+// --------------------------------------------------
+menu	"Prontera",T1, "Alberta",T2, "Aldebaran",T3, "Amatsu",T4, "Ayothaya",T5,
+		"Brasilis",T6, "Comodo",T7, "Dewata",T8, "Eclage",T9, "Einbech",T10,
+		"Einbroch",T11, "El Dicastes",T12, "Geffen",T13, "Gonryun",T14, "Hugel",T15,
+		"Izlude",T16, "Jawaii",T17, "Lighthalzen",T18, "Louyang",T19, "Lutie",T20,
+		"Malangdo",T21, "Malaya",T22, "Manuk",T23, "Midgarts Expedition Camp",T24,
+		"Mora",T25, "Morroc",T26, "Moscovia",T27,
+		"Niflheim",T29, "Payon",T30, "Rachel",T31, "Splendide",T32, "Thor Camp",T33,
+		"Umbala",T34, "Veins",T35, "Yuno",T36, "Yggdrasil",T37;
+
+T1: Go("0@ain",155,183);
+T2: Go("88@ain",28,234);
+T3: Go("89@ain",140,131);
+T4: Go("90@ain",198,84);
+T5: Go("91@ain",208,166);
+T6:	Go("92@ain",196,217);
+T7: Go("93@ain",209,143);
+T8: Go("40@ain",200,180);
+T9:	Go("81@ain",279,288);
+T10: Go("21@ain",63,35);
+T11: Go("94@ain",64,200);
+T12: Go("12@ain",198,187);
+T13: Go("6@ain",119,59);
+T14: Go("66@ain",160,120);
+T15: Go("96@ain",96,145);
+T16: Go("97@ain",128,146);
+T17: Go("98@ain",251,132);
+T18: Go("99@ain",158,92);
+T19: Go("100@ain",217,100);
+T20: Go("20@ain",147,134);
+T21: Go("101@ain",140,114);
+T22: Go("38@ain",231,200);
+T23: Go("16@ain",282,138);
+T24: Go("59@ain",210,288);
+T25: Go("102@ain",55,146);
+T26: Go("103@ain",156,93);
+T27: Go("104@ain",223,184);
+T29: Go("29@ain",202,174);
+T30: Go("54@ain",179,100);
+T31: Go("105@ain",130,110);
+T32: Go("50@ain",201,147);
+T33: Go("46@ain",246,68);
+T34: Go("106@ain",97,153);
+T35: Go("25@ain",216,123);
+T36: Go("107@ain",157,51);
+T37: Go("73@ain",64,63);
+
+OnInstanceInit:
+OnInit:
+	set .priceCount, 1;
+	set .activateOralTeleport, 1;
+	if (.activateOralTeleport)
+	{
+		defpattern 1, "([^:]+):.*Teleport Prontera.*", "T1";
+		activatepset 1;
+		defpattern 2, "([^:]+):.*Teleport Alberta.*", "T2";
+		activatepset 2;
+		defpattern 3, "([^:]+):.*Teleport Aldebaran.*", "T3";
+		activatepset 3;
+		defpattern 4, "([^:]+):.*Teleport Amatsu.*", "T4";
+		activatepset 4;
+		defpattern 5, "([^:]+):.*Teleport Ayothaya.*", "T5";
+		activatepset 5;
+		defpattern 6, "([^:]+):.*Teleport Brasilis.*", "T6";
+		activatepset 6;
+		defpattern 7, "([^:]+):.*Teleport Comodo.*", "T7";
+		activatepset 7;
+		defpattern 8, "([^:]+):.*Teleport Dewata.*", "T8";
+		activatepset 8;
+		defpattern 9, "([^:]+):.*Teleport Eclage.*", "T9";
+		activatepset 9;
+		defpattern 10, "([^:]+):.*Teleport Einbech.*", "T10";
+		activatepset 10;
+		defpattern 11, "([^:]+):.*Teleport Einbroch.*", "T11";
+		activatepset 11;
+		defpattern 12, "([^:]+):.*Teleport Dicastes.*", "T12";
+		activatepset 12;
+		defpattern 13, "([^:]+):.*Teleport Geffen.*", "T13";
+		activatepset 13;
+		defpattern 14, "([^:]+):.*Teleport Gonryun.*", "T14";
+		activatepset 14;
+		defpattern 15, "([^:]+):.*Teleport Hugel.*", "T15";
+		activatepset 15;
+		defpattern 16, "([^:]+):.*Teleport Izlude.*", "T16";
+		activatepset 16;
+		defpattern 17, "([^:]+):.*Teleport Jawaii.*", "T17";
+		activatepset 17;
+		defpattern 18, "([^:]+):.*Teleport Lighthalzen.*", "T18";
+		activatepset 18;
+		defpattern 19, "([^:]+):.*Teleport Louyang.*", "T19";
+		activatepset 19;
+		defpattern 20, "([^:]+):.*Teleport Lutie.*", "T20";
+		activatepset 20;
+		defpattern 21, "([^:]+):.*Teleport Malangdo.*", "T21";
+		activatepset 21;
+		defpattern 22, "([^:]+):.*Teleport Malaya.*", "T22";
+		activatepset 22;
+		defpattern 23, "([^:]+):.*Teleport Manuk.*", "T23";
+		activatepset 23;
+		defpattern 24, "([^:]+):.*Teleport Midgarts.*", "T24";
+		activatepset 24;
+		defpattern 25, "([^:]+):.*Teleport Mora.*", "T25";
+		activatepset 25;
+		defpattern 26, "([^:]+):.*Teleport Morroc.*", "T26";
+		activatepset 26;
+		defpattern 27, "([^:]+):.*Teleport Moscovia.*", "T27";
+		activatepset 27;
+		defpattern 28, "([^:]+):.*Teleport Nameless.*", "T28";
+		activatepset 28;
+		defpattern 29, "([^:]+):.*Teleport Niflheim.*", "T29";
+		activatepset 29;
+		defpattern 30, "([^:]+):.*Teleport Payon.*", "T30";
+		activatepset 30;
+		defpattern 31, "([^:]+):.*Teleport Rachel.*", "T31";
+		activatepset 31;
+		defpattern 32, "([^:]+):.*Teleport Splendide.*", "T32";
+		activatepset 32;
+		defpattern 33, "([^:]+):.*Teleport Thor Camp.*", "T33";
+		activatepset 33;
+		defpattern 34, "([^:]+):.*Teleport Umbala.*", "T34";
+		activatepset 34;
+		defpattern 35, "([^:]+):.*Teleport Veins.*", "T35";
+		activatepset 35;
+		defpattern 36, "([^:]+):.*Teleport Yuno.*", "T36";
+		activatepset 36;
+		defpattern 38, "([^:]+):.*Teleport Yggdrasil.*", "T37";
+		activatepset 38;
+		defpattern 37, "([^:]+):.*Teleport Last.*", "LastWarp";
+		activatepset 37;
+	}
+	bindatcmd "return",strnpcinfo(3)+"::OnReturnAsked";
+	end;
+}
+
+6@ain,125,105,2	duplicate(alaportai)	Portal::alaportai2	PORTAL
+12@ain,201,192,2	duplicate(alaportai)	Portal::alaportai3	PORTAL
+16@ain,266,182,2	duplicate(alaportai)	Portal::alaportai4	PORTAL
+21@ain,187,123,2	duplicate(alaportai)	Portal::alaportai5	PORTAL
+25@ain,222,114,2	duplicate(alaportai)	Portal::alaportai6	PORTAL
+29@ain,193,186,2	duplicate(alaportai)	Portal::alaportai7	PORTAL
+38@ain,235,226,2	duplicate(alaportai)	Portal::alaportai8	PORTAL
+40@ain,194,188,2	duplicate(alaportai)	Portal::alaportai9	PORTAL
+46@ain,241,77,2	duplicate(alaportai)	Portal::alaportai10	PORTAL
+81@ain,275,284,2	duplicate(alaportai)	Portal::alaportai11	PORTAL
+50@ain,209,186,2	duplicate(alaportai)	Portal::alaportai12	PORTAL
+54@ain,163,239,2	duplicate(alaportai)	Portal::alaportai13	PORTAL
+59@ain,224,235,2	duplicate(alaportai)	Portal::alaportai14	PORTAL
+66@ain,166,194,2	duplicate(alaportai)	Portal::alaportai15	PORTAL
+
+1@ain,206,231,3	script	Flowing Energy#0::alaaife	4_ENERGY_BLACK,{
+	mes "[Flowing Energy]";
+	mes "Please, make your decision.";
+	if(select("Fight the Guardian","Go back to White Energy") == 1)
+	{
+		if(atoi(strnpcinfo(2)) >= 'instance_ai_level)
+		{
+			mes "You canno't compete this guardian yet.";
+			close;
+		}
+		if($BOSSFIGHTON == 1)
+		{
+			mes "Another fight is allready going on.";
+			mes "Please wait for it to end before trying again...";
+		}
+		else
+		{
+			mes "When entering, all around players will be warped to fight the Guardian.";
+			mes "Enter will then be blocked until defeat or boss kill.";
+			mes "Do you want to enter?";
+			if(select("Yes","No") == 1)
+			{
+				if($aiInstanceBoundType == 2)
+				{
+					getguildmember(getcharid(2), 2);
+					copyarray .@memberaid[0], $@guildmemberaid[0], $@guildmembercount;
+				}
+				else if($aiInstanceBoundType == 1)
+				{
+					getpartymember(getcharid(1), 2);
+					copyarray .@memberaid[0], $@partymemberaid[0], $@partymembercount;
+				}
+			
+				for( set .@i, 0; .@i < getarraysize(.@memberaid); set .@i, .@i+1 )
+					if( attachrid( .@memberaid[.@i] ) && strcharinfo(3) == strnpcinfo(4) ){
+						warp instance_mapname( "86@ain", instance_id() ), 'ainBossX, 'ainBossY;
+					}
+				
+				set 'AiBossFight, atoi(strnpcinfo(2));
+				donpcevent instance_npcname( "aincrad_floating_castle", instance_id() ) + "::OnGuardianCalled";
+					
+				set 'AiBossFightON, 1;	
+			}
+		}
+	}
+	else
+	{
+		warp AINWARPBACK$, AINWARPBACKX, AINWARPBACKY;
+	}
+	close;
+	
+OnInstanceInit:
+OnInit:
+	set .opened, 0;
+	end;
+}
+
+2@ain,193,210,2	duplicate(alaaife)	Flowing Energy#1::alaaife1	4_ENERGY_BLACK
+3@ain,259,224,2	duplicate(alaaife)	Flowing Energy#2::alaaife2	4_ENERGY_BLACK
+4@ain,176,375,2	duplicate(alaaife)	Flowing Energy#3::alaaife3	4_ENERGY_BLACK
+5@ain,178,301,2	duplicate(alaaife)	Flowing Energy#4::alaaife4	4_ENERGY_BLACK
+

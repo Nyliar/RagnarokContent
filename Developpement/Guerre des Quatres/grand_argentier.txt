@@ -1,0 +1,89 @@
+-	script	Grand Argentier::Grand Argentier	-1,{
+	
+set .@npc$, "[^FF0000Grand Argentier^000000]";
+
+set @GID,getcharid(2);
+
+
+switch( atoi(strnpcinfo(2)) ) {
+	case 0:
+		set @amount, ICE_CHEST;
+		set @guildid, GetCastleData("ice_combat", 1);
+      		break;
+	case 1:
+		set @amount, FIRE_CHEST;
+		set @guildid, GetCastleData("fire_combat", 1);
+    	   break;
+	case 2:
+		set @amount, WIND_CHEST;
+		set @guildid, GetCastleData("combat01", 1);
+       	break;
+	case 3:
+		set @amount, EARTH_CHEST;
+		set @guildid, GetCastleData("combat02", 1);
+       	break;
+}
+
+if (@GID == @guildid)
+{
+	if(strcharinfo(0)==getguildmaster(@GID)) goto L_GuildMaster;
+	else goto L_GuildMember;
+}
+else
+{
+	mes .@npc$; 
+	mes "Soyez le bienvenue, voyageur.";
+	close;
+}
+
+L_GuildMaster:
+	mes .@npc$; 
+	mes "Soyez le bienvenu, votre Majesté.";
+	mes "Que puis-je faire pour vous?";
+	switch(select("Je voudrais connaître l'état des coffres du Royaume:J'ai besoin de vider les coffres"))
+	{
+		case 1:
+			mes "Alors...Le montant est de...";
+			mes "Ah! Voila. Il y a donc ^FF0000" + @amount + " Zeny ^000000";
+			mes "A bientôt, votre Majesté.";
+			close;
+		case 2: 
+			mes "Très bien.";
+			mes "Je vous transfert donc la totalité des Coffres.";
+			set Zeny, Zeny + @amount;
+			switch( atoi(strnpcinfo(2)) ) {
+				case 0:
+					set ICE_CHEST, 0;
+					break;
+				case 1:
+					set FIRE_CHEST, 0;
+					break;
+				case 2:
+					set WIND_CHEST, 0;
+					break;
+				case 3:
+					set EARTH_CHEST, 0;
+					break;
+			}
+			mes "A bientôt, votre Majesté.";
+			close;
+	}	
+
+L_GuildMember:
+	mes .@npc$; 
+	mes "Bonjour Lord "+ strcharinfo(0) + ".";
+	mes "Je ne pense pouvoir faire grand chose pour vous...";
+	mes "Voulez-vous connaître le montant du Coffre?";
+	switch(select("Oui:Non"))
+	{
+		case 1:
+			mes "Alors...Le montant est de...";
+			mes "Ah! Voila. Il y a donc ^FF0000" + @amount + " Zeny ^000000";
+			mes "A bientôt";
+			close;
+		case 2: 
+			mes "Très bien.";
+			mes "A bientôt alors.";
+			close;
+	}	
+}

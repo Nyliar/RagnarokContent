@@ -1,0 +1,169 @@
+function	script	YM_Solidity	{
+	if (callfunc("IsPlayerOn") || callfunc("IsPlayerOnTown"))
+	{
+		cutin "GI_SolidityCard", 4;
+		set .@userId, getcharid(0);
+		query_sql("UPDATE `ym_player` SET `protected`=1, `safe_count`=5 WHERE `id_char`=" + .@userId, .@count);	
+		specialeffect2 908;
+		charcommand "#me " + strcharinfo(0) + " Solidity activated!";
+	}
+	else
+	{
+		dispbottom "[Book] You can't used spell out of the System.";
+	}
+	cutin "", 255;
+	close;
+}
+
+function	script	YM_Purify	{
+	if (callfunc("IsPlayerOn") || callfunc("IsPlayerOnTown"))
+	{
+		cutin "GI_PurifyCard", 4;
+		set .@userId, getcharid(0);
+		query_sql("UPDATE `ym_player` SET `reflect`=1, `protected`=1, `safe_count`=3 WHERE `id_char` = " + .@userId, .@count);		
+		specialeffect2 885;
+		charcommand "#me " + strcharinfo(0) + " Purify activated!";
+	}
+	else
+	{
+		dispbottom "[Book] You can't used spell out of the System.";
+	}
+	cutin "", 255;
+	close;
+}
+
+function	script	YM_CastleGate	{
+	if (callfunc("IsPlayerOn") || callfunc("IsPlayerOnTown"))
+	{
+		cutin "GI_CastleGateCard", 4;
+		set .@userId, getcharid(0);
+		query_sql("UPDATE `ym_player` SET `safe_count`=3 WHERE `id_char` = " + .@userId, .@count);		
+		specialeffect2 782;
+		charcommand "#me " + strcharinfo(0) + " Castle Gate activated!";
+	}
+	else
+	{
+		dispbottom "[Book] You can't used spell out of the System.";
+	}
+	cutin "", 255;
+	close;
+}
+
+function	script	YM_BlackoutCurtain	{
+	if (callfunc("IsPlayerOn") || callfunc("IsPlayerOnTown"))
+	{
+		cutin "GI_BlackoutCurtainCard", 4;
+		set .@userId, getcharid(0);
+		query_sql("UPDATE `ym_player` SET `visible`=0 WHERE `id_char` = " + .@userId, .@count);	
+		specialeffect2 963;
+		charcommand "#me " + strcharinfo(0) + " Blackout Curtain activated!";	
+	}
+	else
+	{
+		dispbottom "[Book] You can't used spell out of the System.";
+	}
+	cutin "", 255;
+	close;
+}
+
+function	script	YM_DefensiveWall	{
+	if (callfunc("IsPlayerOn") || callfunc("IsPlayerOnTown"))
+	{
+		cutin "GI_DefensiveWallCard", 4;
+		set .@userId, getcharid(0);
+		query_sql("UPDATE `ym_player` SET `protected`=1 WHERE `id_char` = " + .@userId, .@count);	
+		specialeffect2 749;
+		charcommand "#me " + strcharinfo(0) + " Defensive Wall activated!";			
+	}
+	else
+	{
+		dispbottom "[Book] You can't used spell out of the System.";
+	}
+	cutin "", 255;
+	close;
+}
+
+function	script	YM_Reflection	{
+	if (callfunc("IsPlayerOn") || callfunc("IsPlayerOnTown"))
+	{
+		cutin "GI_ReflectionCard", 4;
+		set .@userId, getcharid(0);
+		query_sql("UPDATE `ym_player` SET `reflect`=1 WHERE `id_char` = " + .@userId, .@count);		
+		specialeffect2 811;
+		charcommand "#me " + strcharinfo(0) + " Reflexion activated!";	
+	}
+	else
+	{
+		dispbottom "[Book] You can't used spell out of the System.";
+	}
+	cutin "", 255;
+	close;
+}
+
+function	script	YM_Holy_Water	{
+	if (callfunc("IsPlayerOn") || callfunc("IsPlayerOnTown"))
+	{
+		cutin "GI_HolyWaterCard", 4;
+		set .@userId, getcharid(0);
+		query_sql("UPDATE `ym_player` SET `safe_count`=10 WHERE `id_char` = " + .@userId, .@count);		
+		specialeffect2 245;
+		charcommand "#me " + strcharinfo(0) + " Holy Water activated!";
+	}
+	else
+	{
+		dispbottom "[Book] You can't used spell out of the System.";
+	}
+	cutin "", 255;
+	close;
+}
+
+function	script	YM_Saint_Wall	{
+	if (callfunc("IsPlayerOn") || callfunc("IsPlayerOnTown"))
+	{
+		cutin "GI_SaintWallCard", 4;
+		set .@userId, getcharid(0);
+		query_sql("UPDATE `ym_player` SET `safe_count`=1 WHERE `id_char` = " + .@userId, .@count);
+		specialeffect2 315;
+		charcommand "#me " + strcharinfo(0) + " Saint Wall activated!";
+	}
+	else
+	{
+		dispbottom "[Book] You can't used spell out of the System.";
+	}
+	cutin "", 255;
+	close;
+}
+
+function	script	YM_Holy_Barrier	{
+	if (callfunc("IsPlayerOn") || callfunc("IsPlayerOnTown"))
+	{
+		cutin "GI_HolyBarrierCard", 4;
+		set .@userId, getcharid(0);
+		query_sql("UPDATE `ym_player` SET `safe_count`=5 WHERE `id_char` = " + .@userId, .@count);
+		specialeffect2 375;
+		charcommand "#me " + strcharinfo(0) + " Holy Barrier activated!";
+	}
+	else
+	{
+		dispbottom "[Book] You can't used spell out of the System.";
+	}
+	cutin "", 255;
+	close;
+}
+
+function	script	YM_Paladin_Necklace	{
+	if (callfunc("IsPlayerOn") || callfunc("IsPlayerOnTown"))
+	{
+		cutin "GI_PaladinNecklaceCard", 4;
+		set .@userId, getcharid(0);
+		query_sql("UPDATE `ym_player` SET `protected`=1 WHERE `id_char` = " + .@userId, .@count);	
+		specialeffect2 336;
+		charcommand "#me " + strcharinfo(0) + " Paladin's Necklace activated!";		
+	}
+	else
+	{
+		dispbottom "[Book] You can't used spell out of the System.";
+	}
+	cutin "", 255;
+	close;
+}

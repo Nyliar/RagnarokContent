@@ -1,0 +1,84 @@
+Battle Royal
+A free for all pvp map. Players earn point by killing other, the higher the killed in the ranking, 
+the more point they gain. Duration 5-10-15 minutes, with a reward for the three highest points earner.
+
+Captain
+A team pvp match. The aim is to kill all the captains of a team, which gives points to the team.
+When killed, a captain rebirth as a normal player, until there's no captain in his team.
+Duration 5-10-15 minutes, with a reward for the winning team
+
+Chaser
+A one against the world pvp. Each round, a player is chosen to became the Chaser. He gain powers, 
+according to the virus contained in the Chaser Spirit. He then have to kill all the others before the round
+ends. Each killed give 5 points to the Chaser. Each player surviving gains 15 points. If players kill the
+Chaser, they'll earn 30 points each. 5-10-15 minutes duration. Reward for the highest points earner.
+
+Clone Defense
+Pvp map where, when a player enters, he gain a clone (or mob) summon (~1 to 3). 
+The aim is to kill over players clones before getting his own killed. +5 per clone kill, +10 per player kill 
+(which kill the clones). 5-10-15 minutes duration. Reward for the highest points earner.
+
+King of the Hill
+Pvp fight where a point is designed as the Hill. Anyone standing in a range of 3 cells earn points by getting 
+in. 5-10-15 minutes duration. Reward for the highest points earner (no points in case of equality).
+
+Running Fight
+Pvp game where players have to run around a map, while being in pvp mode, to validate all the check points.
+Three first to ends the n turns needed win a price.
+
+Elemental Crystal
+Team match, where players are separated in team according to their number (up to 4, one for each element).
+Each team have to break the others crystal, which is elemental resistant (one fire, one water, one wind, one earth).
+Breaking a crystal kills the team. The remaining one gets the reward. 
+Each crystal being elemental resistant, they can be healed by using correct element over them.
+
+Death Match
+A team pvp match. The aim is to kill all the players of the other team, which gives points to the current team.
+Duration 5-10-15 minutes, with a reward for the winning team
+
+PvPvM
+Pvp match, where monsters pops randomly in the middle of the map.
+
+KoE
+Small WoE, during 30 minutes, in a small map where Guild have to break the Emperium, just as in woe.
+Reward for the winning Guild.
+
+Landmine
+Pvp match where landmine are dissimulated over the map, which blows when a player steps on it.
+Each mine have a random effect, Bleeding, Stun...up to immediate death, causing points loss.
++5 points per kill, -3 points per death.
+Each kills bring points. 5-10-15 minutes duration. Reward for the three highest points earner.
+
+Gvg Bet
+A Guild Leader can open a bet, with a default amount of Zeny, and call other guilds to fight his own.
+The more it continue, the more the Guild earn. Each kills bring a reward to the Guild. Those clearing the
+Guild get the initial bet. Guild members, once out of the game, can't get back until they all died 
+or until the delay runs out.
+
+Pvp Bet
+Same thing, but for a player to start.
+
+Rotative Hunt
+Pvp match where each round, a player is designated as the Lamb. Other players have to kill him to earn 
+more points. The more he lives, the more he earn points. Others get points from other players (5), and 
+bonus from the Lamb (30). 5-10-15 minutes duration. Reward for the highest points earner.
+
+Secret Power Case
+Pvp match where special magic cases pops out of nowhere, containing random powers.
+Each kills bring points. 5-10-15 minutes duration. Reward for the three highest points earner.
+
+Touch Down
+Based over an American Football game. Players are splitted in two teams, and have to bring a ball to the
+other team goal. Each goal gives points to the team (30), while each kill bring 5.
+Duration 5-10-15 minutes, with a reward for the winning team
+
+Vampire
+Pvp match where each kills, on top of bringing points, get a full restore + buffs for a small delay.
+Low chance to get immortality / invicibility for a small delay.
+5-10-15 minutes duration. Reward for the three highest points earner.
+
+Deus Ex Machina
+Pvp match where each kills, where each round has a random duration. If a player is the last survivor, 
+he won 50 points (+5 points per kill). If there's more than 1 player at the end of the round, a False God
+get down to Midgard to kill all alive players and take them a random amount of points (from 10-60)
+5-10-15 minutes duration. Reward for the three highest points earner.

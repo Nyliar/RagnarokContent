@@ -1,0 +1,258 @@
+// [========================================================]
+// [=============     System - Reborn     ============]
+// [========================================================]
+// [ Version 1                                              ]
+// [========================================================]
+// [ Original script by: Alayne				    ]
+// [========================================================]
+// [ Description:                                           ]
+// [--------------------------------------------------------]
+// [                                                        ]
+// [ - A reborn system, giving the possibility to up		    	   	    ]
+// [ and reborn to gain more stats points					]
+// [========================================================]
+// [ Changelog: (5 last updates)                            ]
+// [--------------------------------------------------------]
+// [                                                        ]
+// [ v0: Creation                      			    ]
+// [ initial idea - Hiero                                           ]
+// [                                                        ]
+// [========================================================]
+// [                                                        ]
+// [========================================================]
+
+prontera,65,117,5	script	Reborn Manager::reman	121,{
+	set .@npcname$, "[Reborn]";
+	mes .@npcname$;
+	mes "";
+	mes "Hello, " + strcharinfo(0) + ".";
+	mes "I'm the reborn manager. I'm the one you should talk to change your reborn.";
+	switch(select("Reborn?","Reborn level info.","Change my Reborn","I'll just leave you alone..."))
+	{
+		case 1:
+			next;
+			mes .@npcname$;
+			mes "Never heard about the Reborn before?";
+			mes "Do not mixed it with the Rebirth. It's completely different.";
+			mes "The Reborn is an exchange of experience for status point.";
+			mes "When you inexperience a Reborn, you return to level 1, but keep your job and gain a status bonus.";
+			mes "There's a total of 10 Reborn.";
+			mes "Each reborn needs a different level. For instance, reborn level 1 is accessible once you're level 60.";
+			mes "Level 2, on level 65, and so on.";
+			if (.minRebornLvlToTrans == 0)
+			{
+				mes "You can access to Rebirth normally.";
+			}
+			else
+			{
+				mes "You can access to Rebirth when you'll reached the " + .minRebornLvlToTrans + " Reborn level.";
+			}
+			mes "But once rebirth, the Reborn system is forbidden to you.";
+			break;
+		case 2:
+			next;
+			mes .@npcname$;
+			mes "Sure.";
+			mes "Which level are you interested in?";
+			set .@maxLevel, getarraysize(.rebornMinLevel);
+			mes "Keep in mind that Reborn goes from level 1 to " + .@maxLevel;
+			input .@level;
+			if (.@level < 1 || .@level > .@maxLevel)
+			{
+				mes "There's no reborn level like that.";
+			}
+			else
+			{
+				next;
+				mes .@npcname$;
+				mes "Allright.";
+				mes "Here's the infos you need.";
+				mes "The Reborn level " + .@level + " is accessible once you'll be level " + .rebornMinLevel[.@level - 1];
+				mes "By completing it, you'll earn a total of " + .bonusStatsPoint[.@level - 1] + " bonus status point.";
+				if (.minRebornLvlToTrans != 0 && .minRebornLvlToTrans < .@level)
+				{
+					mes "And you can access to Rebirth when you're beyond this Reborn level.";
+				}
+			}
+			break;
+		case 3:
+			next;
+			mes .@npcname$;
+			if (REBORNLVL == 10 && !Upper)
+			{
+				goto OnBecomeRegular;
+			}
+			if (READYTOREBORN && BaseLevel >= .rebornMinLevel[REBORNLVL])
+			{
+				mes "Hum. Looks like you're ready, hu?";
+				mes "Allright, I'll change you're reborn level.";
+				mes "It'll makes you return to level 1, remember?";
+				mes "Are you still ok with that?";
+				if (select("Yes","No") == 1)
+				{
+					next;
+					mes .@npcname$;
+					mes "Allright, let's go then.";
+					//reset stats
+					resetstatus;
+					//reset level
+					resetlvl 3;	
+					//start status point
+					set .@statsCount, 48;
+					for(set .@i,0; .@i<REBORNLVL; set .@i,.@i+1)
+					{
+						set .@statsCount, .@statsCount + .bonusStatsPoint[.@i];
+					}
+					set StatusPoint, .@statsCount;
+					set REBORNLVL, REBORNLVL + 1;
+
+					if (REBORNLVL >= .minRebornLvlToReborn && !Upper)
+					{
+						next;
+						mes .@npcname$;	
+						goto OnBecomeRegular;
+					}
+				}
+			}
+			else
+			{
+				mes "Sorry, but you're not ready yet.";
+				mes "You'll be able to change your Reborn once level " + .rebornMinLevel[REBORNLVL];
+			}
+			break;
+		case 4:
+			mes "See you soon then.";
+			break;
+	}
+	close;
+
+OnBecomeRegular:
+	mes "Hum...you've already fulfilled those conditions, he?!";
+	mes "Congratulations. You've now mastered your class.";
+	mes "You can therefor access to the Regular Job.";
+	mes "This is a great reward, meaning you're part of the highest skilled of your class.";
+	mes "But be careful. If you became a Regular, you can't rebirth anymore.";
+	mes "Plus, the choice is definitive, and more hard to use than a 'normal' rebirth.";
+	mes "On the other hand, unless the rebirth, Regular change is totally free.";
+	mes "You've worked enough for that.";
+	mes "You'll maybe step in something you can't handle.";
+	mes "Are you interested?";
+	if (select("Yes","No") == 1)
+	{
+		next;
+		mes .@npcname$;
+		mes "Perfect, then.";
+		mes "Give me a second, my friend.";
+		if (!Upper)
+		{
+			switch(Class)
+			{
+				case 7:
+				case 13:
+					//knight;
+					set .@newClass, 4054;
+					break;
+				case 8:
+					//priest;
+					set .@newClass, 4057;
+					break;
+				case 9:
+					//wiz;
+					set .@newClass, 4055;
+					break;
+				case 10:
+					//black;
+					set .@newClass, 4058;
+					break;
+				case 11:
+					//hunt;
+					set .@newClass, 4056;
+					break;
+				case 12:
+					//Assa;
+					set .@newClass, 4059;
+					break;
+				case 14:
+				case 21:
+					//Crus;
+					set .@newClass, 4066;
+					break;
+				case 15:
+					//Monk;
+					set .@newClass, 4070;
+					break;
+				case 16:
+					//sage;
+					set .@newClass, 4067;
+					break;
+				case 17:
+					//rog;
+					set .@newClass, 4072;
+					break;
+				case 18:
+					//alch;
+					set .@newClass, 4071;
+					break;
+				case 19:
+					//bard;
+					set .@newClass, 4068;
+					break;
+				case 20:
+					//danc;
+					set .@newClass, 4069;
+					break;
+			}
+			if (.@newClass != 0)
+			{
+				jobchange .@newClass;
+				mes "Welcome here, Regular!";
+			}
+			else
+			{
+				mes "Sorry, there's no Regular Class for your job...";
+			}
+		}					
+	}
+	else
+	{
+		next;
+		mes .@npcname$;
+		mes "Wise choice.";
+	}
+	close;
+
+OnWhisperGlobal:
+	dispbottom "lvl: " + REBORNLVL;
+	set READYTOREBORN, 1;
+	end;
+	
+OnPCBaseLvUpEvent:
+	if (.rebornActivated && !Upper && BaseLevel >= .rebornMinLevel[REBORNLVL] && REBORNLVL < getarraysize(.rebornMinLevel))
+	{
+		set READYTOREBORN, 1;
+		dispbottom "[Reborn] You're ready to access to next reborn level. Talk to the Reborn Manager to proceed.";
+	}
+	end;
+	
+OnInit:
+	set .rebornActivated, 1;
+	set .minRebornLvlToReborn, 5;
+	set .minRebornLvlToTrans, 0;
+	setarray .rebornMinLevel[0], 60, 65, 70, 75, 80, 85, 90, 92, 95, 98;
+	setarray .bonusStatsPoint[0], 3, 3, 3, 3, 3, 3, 3, 3, 5, 5;
+	end;
+}
+
+function	script	AffectRebornBonus	{
+	set .@accId, getarg(0);
+	attachrid(.@accId);
+	setarray .@rebornMinLevel[0], 60, 65, 70, 75, 80, 85, 90, 92, 95, 98;
+	setarray .@bonusStatsPoint[0], 5, 5, 7, 8, 10, 13, 15, 20, 25, 30;
+
+	for(set .@i,0; .@i<REBORNLVL; set .@i,.@i+1)
+	{
+		set .@statsCount, .@statsCount + .@bonusStatsPoint[.@i];
+	}
+	set StatusPoint, StatusPoint + .@statsCount;
+	end;
+}

@@ -1,0 +1,150 @@
+glastheim,54,82,7	script	The Father::alaodslq	702,{
+	set .@npcname$, "[The Father]";
+	mes .@npcname$;
+	mes "Hello to you, " + strcharinfo(0);
+	mes "Do you know who I am?";
+	if(select("Yes","No") == 1)
+	{
+		next;
+		mes .@npcname$;
+		mes "Then, what's my name?";
+		input .@name$;
+		if (.@names$ == "Odin")
+		{
+			goto OnSecondDialog;
+		}
+		goto OnFirstDialog;
+	}
+	else
+	{
+		goto OnFirstDialog;
+	}
+	close;
+	
+OnSecondDialog:
+	set .@playerName$, "[" + strcharinfo(0) + "]";
+	next;
+	mes .@npcname$;
+	mes "So...My name's Odin, your right.";
+	mes "That's one of the only things I can remember.";
+	next;
+	mes .@npcname$;
+	mes "I'm here to ask for your help.";
+	mes "I might be an allmighty God, some things can only be accomplished by humble peoples.";
+	mes "I can't move right now. My ennemies are legions, and Loki's their head.";
+	mes "This, I know it. Everything's over than that is gone.";
+	next;
+	mes .@npcname$;
+	mes "I don't know where we are.";
+	mes "I don't know why I'm here.";
+	mes "All my knowledge has disappeared, except for this particular point:";
+	mes "I can't leave this place.";
+	next;
+	mes .@npcname$;
+	mes "Will you help me?";
+	mes "I need to understand what happened...";
+	if(select("Yes","No") == 1)
+	{
+		next;
+		mes .@playerName$;
+		mes "I can't refuse something to the Father of all Things.";
+		mes "Order, and you'll be obeyed.";
+		next;
+		mes .@npcname$;
+		mes "Stop being so obsequious.";
+		mes "You don't owe me a thing. Not yet.";
+		mes "I need you to visit all Worlds to find some clues about what happened here.";
+		mes "Why I am here? Who am I waiting for?";
+		next;
+		mes .@playerName$;
+		mes "It will be done according to your willing, Sire.";
+		mes "Where should I go first?";
+		next;
+		mes .@npcname$;
+		mes "First of all, you should gain in strength.";
+		mes "This mission is to important to be stopped cause you'll die.";
+		next;
+		mes .@npcname$;
+		mes "I'll grant you with my benediction.";
+		mes "I'll use a rune over your destiny.";
+		mes "This will enables you to undie each time your destiny should finish.";
+		next;
+		mes .@playerName$;
+		mes "So...I'll be immortal?";
+		next;
+		mes .@npcname$;
+		mes "Don't think it's definitive.";
+		mes "This powerfull rune only allows you to get back a few moments back instead of dying.";
+		mes "But this will cost you a part of yourself.";
+		mes "Plus, it can't work endlessly.";
+		next;
+		mes .@npcname$;
+		mes "If you die more than " + $dieTotalCount + ", I won't be able to raise you again.";
+		mes "Your destiny will be sealed.";
+		mes "You'll get backed in an endless loop. You won't be mortal again, but you won't be able to enter anymore in the normal circle of life.";
+		mes "You'll become a Doomed.";
+		mes "And you'll go grow the Loki's army line.";
+		next;
+		mes .@npcname$;
+		mes "Here we go.";
+		specialeffect2 226;
+		mes "You're now ready. Go across the world. Find them. Bring me back the hint I need.";
+		mes "You need to go now.";
+		next;
+		mes "*Leave this place, and find Munin. The Memory Crow will lead you.*";
+		set RAGNAROK_Q, 1;
+	}
+	else
+	{
+		next;
+		mes .@playerName$;
+		mes "No, I don't think so.";
+		mes "I'm not in the mood to help you, one of those pride puffed up 'Gods'.";
+		next;
+		mes .@npcname$;
+		mes "So...You're already a Doomed...";
+		mes "Probably borned under Loki's power.";
+		mes "I have nothing to do with you...";
+		mes "We'll see each other on the Celestial Battle Fields.";
+		specialeffect2 450;
+		next;
+		mes "*Leave this place, and find Hugin. The Thought Crow will lead you.*";
+		set RAGNAROK_Q, 2; 
+	}
+	close;
+	
+OnPCDieEvent:
+	if(RAGNAROK_Q == 1)
+	{
+		set RAGNAROK_DEATH, RAGNAROK_DEATH + 1;
+		if(RAGNAROK_DEATH >= $dieTotalCount)
+		{
+			specialeffect2 450;
+			set RAGNAROK_Q, 2;
+			mes "*You've now becomed a Loki's Doomed Soul. Go find Hugin. The Thought Crow will lead you*";
+			close;
+		}
+	}
+	end;
+	
+OnFirstDialog:
+	next;
+	mes .@npcname$;
+	mes "My name's Odin.";
+	mes "I'm the chief of all Gods.";
+	mes "Some calls me the Father of All Things.";
+	mes "I'm the God of War and Death,";
+	mes "of Wisdom and Magic.";
+	next;
+	mes .@npcname$;
+	mes "I'll be the one who will lead this world to its end, when the Ragnarok will comes.";
+	close;
+	
+OnInit:
+	set $dieTotalCount, 75;
+	set $minStartLvl, 60;
+	set $memoriesId, 673; //Silver Coin
+	end;
+}
+
+

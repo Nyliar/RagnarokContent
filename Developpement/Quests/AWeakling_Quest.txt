@@ -1,0 +1,774 @@
+// [========================================================]
+// [=============    	Quest - Valentine   	============]
+// [========================================================]
+// [ Version 1                                              ]
+// [========================================================]
+// [ Original script by: Alayne				    ]
+// [========================================================]
+// [ Description:                                           ]
+// [--------------------------------------------------------]
+// [                                                        ]
+// [ - A quest for Valentine day	 		    ]
+// [========================================================]
+// [ Changelog: (5 last updates)                            ]
+// [--------------------------------------------------------]
+// [                                                        ]
+// [ v0: Creation                      			    ]
+// [                                                        ]
+// [========================================================]
+// [                                                        ]
+// [========================================================]
+
+aldebaran,226,92,4	script	A Weakling::alvalkje	4_M_JP_RUN,{
+	set .@npcname$, "[A Weakling]";
+	set .@playerName$, "[" + strcharinfo(0) + "]";
+	mes "";
+	if (ARES_Q$ != "")
+	{
+		if (ARES_Q$ == "4")
+		{
+			mes .@playerName$;
+			mes "Smithy clothes with a knight's helm... Hello, are you Kjelle?";
+			next;
+			mes .@npcname$;
+			mes "Huh? Oh, hello! How did yo- that hilt! Give it to me!";
+			next;
+			mes .@playerName$;
+			mes "*you handed the sword to Kjelle* There's still this piece of-";
+			delitem $areItem1Id,1;
+			next;
+			mes .@npcname$;
+			mes "HOW CAN THIS BE SHATTERED!? HOW STUPID OF HIM! OR WAS IT YOU?!";
+			emotion e_angry;
+			next;
+			mes .@playerName$;
+			mes "Please calm down. Ares asked me to bring this to you, in hopes that you could repair it. He couldn't come because he needs to rest. He was badly injured from yesterday's raid.";
+			//emote /an
+			next;
+			mes .@npcname$;
+			mes "He think he's THAT strong yet he fails to protect himself? How stupid of him. ";
+			next;
+			mes .@playerName$;
+			mes "Well, he shielded me from an attack... I was in the way. Please, do not insult Ares any further.";
+			next;
+			mes .@npcname$;
+			//emote ...
+			mes "...I see. His mother taught him well. Well, anyway, here's what we need to fix the sword.";
+			for(set .@i,0; .@i<getarraysize($requirementFixId); set .@i,.@i+1)
+			{
+				mes "	~ " + $requirementFixCount[.@i] + " " + getitemname($requirementFixId[.@i]);
+			}
+			next;
+			mes .@npcname$;
+			mes "That is pretty much everything for you to gather. My 'assistant' should be gathering the other items to make the repairs faster.";
+			next;
+			mes .@playerName$;
+			mes "Okay, I'll get you the items.";
+			set ARES_Q$, "4-1";
+		}
+		else if (ARES_Q$ == "4-1")
+		{
+			set .@ok, 1;
+			for(set .@i,0; .@i<getarraysize($requirementFixId); set .@i,.@i+1)
+			{
+				if(countitem($requirementFixId[.@i]) < $requirementFixCount[.@i])
+				{
+					set .@ok, 0;
+				}
+			}
+			if (.@ok == 1)
+			{
+				mes .@playerName$;
+				mes "Here are the items you asked me to bring you. *hands items*";
+				for(set .@i,0; .@i<getarraysize($requirementFixId); set .@i,.@i+1)
+				{
+					delitem $requirementFixId[.@i], $requirementFixCount[.@i];
+				}
+				next;
+				mes .@npcname$;
+				mes "Oh, thank you. My assistant hasn't returned yet. So I can't start the repairs. If you want to help him, so be it. He is out there somewhere, you can use #aeva and look for him. He is probably still gathering. I am going to start with the repairs immediately whenever he returns.";
+				mes "*Go back after 12 hours*";
+				set ARES_Q$, "4-2";
+				set kjelleq, gettimetick(2) + 43200;
+			}
+			else
+			{
+				mes .@npcname$;
+				mes "*(You can hear Kjelle talking to herself)*";
+				mes "Darn it, brother. Why would you act so reckless? It's best that mum won't hear about this.";
+				mes "(It's best you collect those items she needs right away)";
+				for(set .@i,0; .@i<getarraysize($requirementFixId); set .@i,.@i+1)
+				{
+					mes "	~ " + $requirementFixCount[.@i] + " " + getitemname($requirementFixId[.@i]);
+				}
+				close;
+			}
+		}
+		else if (ARES_Q$ == "4-2")
+		{
+			mes .@npcname$;
+			if (gettimetick(2) < kjelleq)
+			{
+				mes "Oh, thank you.My 'assistant' hasn't returned yet. So I can't start the repairs. If you want to help him, so be it. He is out there somewhere, you can use #aeva and look for him. He is probably still gathering. I am going to start with the repairs immediately whenever he returns.";
+				close;
+			}
+			mes "(You see Kjelle gloves have been tattered)";
+			mes "Hi, dear. Here is Ares' sword. I hope you'll give it back to him as it's quite an important item for uuuu--him.";
+			getitem $areRepairSwordId, 1;
+			next;
+			mes .@playerName$;
+			mes "Thank you for the effort, Kjelle, but I forgot to tell you about his armor...";
+			next;
+			mes .@npcname$;
+			mes "A-armor?! His armor was destroyed, too?! I swear I'm telling mummm.. his mom. Hand it to me, now.";
+			next;
+			mes .@playerName$;
+			mes "Here you go... If I may ask, are you related to Ares?";
+			delitem $areItem2Id,1;
+			next;
+			mes .@npcname$;
+			//emote ...
+			mes "I am to repair the armor. Not to answer impertinent questions. Let's see..";
+			mes "You'll need to get me these items for the repairs, I already halved the item requirement to be given to my 'assistant'.";
+			for(set .@i,0; .@i<getarraysize($requirement2FixId); set .@i,.@i+1)
+			{
+				mes "	~ " + $requirement2FixCount[.@i] + " " + getitemname($requirement2FixId[.@i]);
+			}
+			next;
+			mes .@playerName$;
+			mes "Okay, gotta go and get these now~";
+			set ARES_Q$, "4-3";
+			close;
+		}
+		else if (ARES_Q$ == "4-3")
+		{
+			set .@ok, 1;
+			for(set .@i,0; .@i<getarraysize($requirement2FixId); set .@i,.@i+1)
+			{
+				if(countitem($requirement2FixId[.@i]) < $requirement2FixCount[.@i])
+				{
+					set .@ok, 0;
+				}
+			}
+			if (.@ok == 1)
+			{
+				mes .@playerName$;
+				mes "Here you go, Kjelle! The items you needed.";
+				for(set .@i,0; .@i<getarraysize($requirement2FixId); set .@i,.@i+1)
+				{
+					delitem $requirement2FixId[.@i], $requirement2FixCount[.@i];
+				}
+				next;
+				mes .@npcname$;
+				mes "Good. Good. Now to start working...";
+				next;
+				mes .@playerName$;
+				mes "...did you just fit the ring?";
+				next;
+				mes .@npcname$;
+				mes "Of course, dear. I don't work for free.";
+				emotion e_no1;
+				next;
+				mes .@playerName$;
+				mes "(You left with disgust)";
+				set ARES_Q$, "4-4";
+				set kjelleq, gettimetick(2) + 21600;
+			}
+			else
+			{
+				mes .@npcname$;
+				emotion e_pif;
+				mes "Oomf. I swear that thirsty 'assistant' needs some hammering on his little head.";
+				for(set .@i,0; .@i<getarraysize($requirement2FixId); set .@i,.@i+1)
+				{
+					mes "	~ " + $requirement2FixCount[.@i] + " " + getitemname($requirement2FixId[.@i]);
+				}
+				close;
+			}
+		}
+		else if (ARES_Q$ == "4-4")
+		{
+			mes .@npcname$;
+			if (gettimetick(2) > kjelleq)
+			{
+				mes "(You can see Kjelle working on the armor)";
+				mes "Why... *klonk*";
+				next;
+				mes "...Can't... *klonk*";
+				next;
+				mes "...You ... *klonk*";
+				next;
+				mes "...Just... *clank*";
+				next;
+				mes "...Become... *clank*";
+				next;
+				mes "...Stronger... *clang-klonk*";
+				close;
+			}
+			mes "There you are! Here is the armor. Take it off my hands. It's ugly and I don't want to see it anymore.";
+			mes "(You noticed her hands full of bruises and cuts)";
+			next;
+			mes .@playerName$;
+			mes "Thank you, Kjelle. Ares will be happy and proud of your work. *You smile gently*";
+			next;
+			mes .@npcname$;
+			mes "He... won't. I can feel it. Anyway, off you go. Take it to him or he's a useless knight since he got no armor or weapon. ";
+			next;
+			mes .@playerName$;
+			mes "Anything else you want me to tell him? A regards, perhaps?";
+			getitem $areRepairarmordId, 1;
+			next;
+			mes .@npcname$;
+			mes "Nothing... Wait, tell him... I am stronger now, too. (Kjelle smiles gently, like her brother)";
+			set ARES_Q$, "5";
+			close;
+		}
+		else
+		{
+			mes .@npcname$;
+			mes "What are still doing here?";
+			mes "Go to Ares, now!";
+		}
+	}
+	else
+	{
+		if (Hp != MaxHp)
+		{
+			mes .@npcname$;
+			mes "Leave me alone, I have no time to waste with someone weaker than me.";
+		}
+		else
+		{
+			if (KJELLE_Q == 0)
+			{
+				mes .@npcname$;
+				mes "Haaah! Haaah! HAAATCHHOOO! Ugkk. How can I even train with this cold.";
+				next;
+				mes .@playerName$;
+				mes "Excuse me. I can't help but overhear you. Did you just say you are training?";
+				next;
+				mes .@npcname$;
+				mes "Yeah. I did. Why do you ask? You want to train, too?";
+				next;
+				mes .@playerName$;
+				mes "Oh, not at all. I just thought that you don't look the type who needs training.";
+				next;
+				mes .@npcname$;
+				mes "You think I am strong?";
+				if(select("Yes","No") == 1)
+				{
+					next;
+					mes .@playerName$;
+					mes "Well... (you made a fast evaluation) You have potential. ";
+					next;
+					mes .@npcname$;
+					mes "You think so? What do you think I need? Some more lifting? Sprinting? Mountain Climbing?";
+					next;
+					mes .@playerName$;
+					mes "You may want to look for a trainer if you want to become stronger.";
+					next;
+					mes .@npcname$;
+					mes "Heh. Who needs one? I can train on my own.";
+					set KJELLE_Q, 1;
+					set kjelletimer, gettimetick(2) + 54000;
+				}
+				else
+				{
+					next;
+					mes .@playerName$;
+					mes "No... I thought you'd fit to something that doesn't requires strength.";
+					next;
+					mes .@npcname$;
+					mes "Wow. Savage much? F.Y.I. , I am... Just get out of here you! *throws stone*";
+					percentheal -99, -99;
+				}
+			}
+			else if(KJELLE_Q == 1)
+			{
+				if(kjelletimer < gettimetick(2))
+				{
+					mes .@playerName$;
+					mes "(Odin, this girl is hopeless.)";
+				}
+				else
+				{
+					mes .@npcname$;
+					mes "Oh... *pant pant* It's you.. *pant pant* Can you please buy me something to drink. I need one, badly.";
+					emotion e_spin;
+					next;
+					mes .@playerName$;
+					mes "What did you say? I don't even kno---";
+					next;
+					mes .@npcname$;
+					mes "I am Kjelle, nice to meet you! Now please go get me something to drink. Maybe 5 bottles of Blue Potion will do. Pleeease!!";
+					set KJELLE_Q, 2;
+				}
+			}
+			else if(KJELLE_Q == 2)
+			{
+				if(countitem(505) >= 5)
+				{
+					mes .@playerName$;
+					mes "Here you go, enjoy~";
+					delitem 505, 3;
+					next;
+					mes .@npcname$;
+					mes "*Gulp gulp*";
+					next;
+					mes .@npcname$;
+					mes "*Gulp gulp gulp*";
+					next;
+					mes .@playerName$;
+					mes "By the way, my name is " + strcharinfo(0);
+					next;
+					mes .@npcname$;
+					mes "Aahh... *Gulp gulp gulp*";
+					next;
+					mes .@playerName$;
+					mes ".....";
+					next;
+					mes .@npcname$;
+					mes ".....what? *gulp gulp gulp*";
+					next;
+					mes .@npcname$;
+					mes "*gulp gulp gulp gulp gulp*";
+					next;
+					mes .@npcname$;
+					mes "AAAHhhh. That was refreshing! Thank you for the potions.";
+					next;
+					mes .@playerName$;
+					mes "Umm, no problem. Are you done with your training for today?";
+					next;
+					mes .@npcname$;
+					mes "Yes, I should rest. My body won't take too much training or stress. So.. yea.";
+					next;
+					mes .@playerName$;
+					mes "Is that so? Are you sick or something?";
+					next;
+					mes .@npcname$;
+					mes "None of your nosy business.";
+					next;
+					mes .@playerName$;
+					mes "Relax. I thought maybe you'd need a trainer...";
+					next;
+					mes .@npcname$;
+					mes "You think so?";
+					next;
+					mes .@playerName$;
+					mes "Yes. I can look for you one if you want (...since you look so frail).";
+					next;
+					mes .@npcname$;
+					mes "You'd go that far for me? Thanks. Let's go look for one. ";
+					next;
+					mes .@playerName$;
+					mes "No, no. You better rest first. I'll go and look for one while you're at it.";
+					next;
+					mes .@npcname$;
+					mes "Okay, then... thanks a lot.";
+					next;
+					mes "Look for Gracia";
+					set KJELLE_Q, 3;
+				}
+				else
+				{
+					mes .@npcname$;
+					mes "*Wheeze* *Cough* Hurry up, please. *Wheeze*";
+				}
+			}
+			else if (KJELLE_Q == 3)
+			{
+				mes .@npcname$;
+				mes "Ah, I need to get stronger.";
+				emotion e_sigh;
+			}
+			else if (KJELLE_Q == 4)
+			{
+				mes .@playerName$;
+				mes "Hey, Kjelle. I found you a Master, he's name is Garcia.";
+				next;
+				mes .@npcname$;
+				mes "You have? Sweeet. Thanks. So, what did he say?";
+				next;
+				mes .@playerName$;
+				mes "*murmur murmur*";
+				next;
+				mes .@npcname$;
+				mes "Okay, copy that. Well, see you there.";
+				next;
+				mes "Go to Mount Mjollnir after 12 hours";
+				set kjelletimer, gettimetick(2) + 43200;
+				set KJELLE_Q, 5;
+				hideonnpc strnpcinfo(3);
+				hideoffnpc "alvalkje2";
+			}
+			else if (KJELLE_Q == 7)
+			{
+				mes .@npcname$;
+				mes "Hello, " + strcharinfo(0) + ". I have a sword to repair. My... umm, someone... needed this sword fixed. Can you lend me a hand?";
+				next;
+				mes .@playerName$;
+				mes "Umm... (sounds like a romantic rival!) Sure.. what do you need?";
+				next;
+				mes .@npcname$;
+				mes "Sweet, I knew you'd agree! Here's a list of materials I need:";
+				for(set .@i,0; .@i<getarraysize($requirementKjFixId); set .@i,.@i+1)
+				{
+					mes "	~ " + $requirementKjFixCount[.@i] + " " + getitemname($requirementKjFixId[.@i]);
+				}
+				next;
+				mes .@playerName$;
+				mes "Okay, I'll bring you these items.";
+				set KJELLE_Q, 8;
+			}
+			else if (KJELLE_Q == 8)
+			{
+				set .@ok, 1;
+				for(set .@i,0; .@i<getarraysize($requirementKjFixId); set .@i,.@i+1)
+				{
+					if(countitem($requirementKjFixId[.@i]) < $requirementKjFixCount[.@i])
+					{
+						set .@ok, 0;
+					}
+				}
+				if (.@ok == 1)
+				{
+					mes .@npcname$;
+					mes "There you are! Quick! QUICK! Hand them to me!";
+					next;
+					mes .@playerName$;
+					mes "Relax! Here you go.";
+					for(set .@i,0; .@i<getarraysize($requirementKjFixId); set .@i,.@i+1)
+					{
+						delitem $requirementKjFixId[.@i], $requirementKjFixCount[.@i];
+					}
+					next;
+					mes .@npcname$;
+					mes "Thanks, " + strcharinfo(0) + ". Now, if you would be so kind to leave me alone to my work.";
+					next;
+					mes .@playerName$;
+					mes "Sure. Just look for me if you need anything else. (I swear someone else is courting her, now! *sob*)";
+					next;
+					mes "Go back after 12 hours";
+					set KJELLE_Q, 9;
+					set kjelletimer, gettimetick(2) + 43200;
+				}
+				else
+				{
+					mes .@npcname$;
+					mes "Sorry, but I can't work...";
+					mes "I need:";
+					for(set .@i,0; .@i<getarraysize($requirementKjFixId); set .@i,.@i+1)
+					{
+						mes "	~ " + $requirementKjFixCount[.@i] + " " + getitemname($requirementKjFixId[.@i]);
+					}
+				}
+			}
+			else if (KJELLE_Q == 9)
+			{
+				if(gettimetick(2) >= kjelletimer)
+				{
+					mes .@npcname$;
+					mes "Hello, " + strnpcinfo(0) + ". I need to ask you another favor.";
+					next;
+					mes .@playerName$;
+					mes "What?! (You see her gloves all tattered)";
+					mes "...Alright, but just this once.";
+					next;
+					mes .@npcname$;
+					mes "You see, there's this... armor. In need of repair. Can you get me these items please!";
+					for(set .@i,0; .@i<getarraysize($requirementKj2FixId); set .@i,.@i+1)
+					{
+						mes "	~ " + $requirementKj2FixCount[.@i] + " " + getitemname($requirementKj2FixId[.@i]);
+					}
+					set KJELLE_Q, 10;
+				}
+				else
+				{
+					mes .@npcname$;
+					mes "Ahh. This training somehow pays off. Thanks, Master Homie.";
+				}
+			}
+			else if (KJELLE_Q == 10)
+			{
+				set .@ok, 1;
+				for(set .@i,0; .@i<getarraysize($requirementKj2FixId); set .@i,.@i+1)
+				{
+					if(countitem($requirementKj2FixId[.@i]) < $requirementKj2FixCount[.@i])
+					{
+						set .@ok, 0;
+					}
+				}
+				if (.@ok == 1)
+				{
+					mes .@npcname$;
+					mes "Hi, " + strcharinfo(0) + "! Thanks for bringing them to me! If you could give me some time to finish the armor, I would appreciate it a lot.";
+					for(set .@i,0; .@i<getarraysize($requirementKj2FixId); set .@i,.@i+1)
+					{
+						delitem $requirementKj2FixId[.@i], $requirementKj2FixCount[.@i];
+					}
+					next;
+					mes "Go back after 6 hours";
+					set KJELLE_Q, 11;
+					set kjelletimer, gettimetick(2) + 21600;
+				}
+				else
+				{
+					mes .@npcname$;
+					mes "Sorry, but you lack some items.";
+				}
+			}
+			else if (KJELLE_Q == 11)
+			{
+				if(gettimetick(2) >= kjelletimer)
+				{
+					mes .@npcname$;
+					mes "Hi, " + strcharinfo(0) + "! I managed to finish both items and got it delivered to my brother.";
+					next;
+					mes .@playerName$;
+					mes "Ohh.. I thought it was something else... (You noticed the wounds, from smithing, on her hands).";
+					mes "You did great, don't you know that?";
+					next;
+					mes .@npcname$;
+					mes "Do you think so? I've been trying to get stronger all my life for something like this, and more.";
+					next;
+					mes .@playerName$;
+					mes "You already have gotten stronger.";
+					next;
+					mes .@npcname$;
+					mes "This is all because you helped me get here. Thank you for being a dear friend to me. So... I got you a present! Here...";
+					rentitem 29314, 60;
+					next;
+					mes .@playerName$;
+					mes "This is... I mean... Thank you. (OH, ODIN!)";
+					next;
+					mes .@npcname$;
+					mes "Well, I guess I'll see you whenever. I need to go on with my training. I hope our paths will cross again~ ";
+					next;
+					mes .@playerName$;
+					mes "What? Where are you off to?";
+					set KJELLE_Q, 12;
+				}
+				else
+				{
+					mes "(You can see Kjelle working on the armor)";
+					mes "Why... *klonk*";
+					next;
+					mes "...Can't... *klonk*";
+					next;
+					mes "...You... *klonk*";
+					next;
+					mes "...Just... *klonk*";
+					next;
+					mes "...Become... *klonk*";
+					next;
+					mes "...Stronger... *klonk*";
+				}
+			}
+			else
+			{
+				mes .@npcname$;
+				mes "Thanks for your help! Forging are waiting for me!";
+			}
+		}
+	}
+	close;
+	
+OnInit:
+	setarray $requirementKjFixId[0],1005,987,1003,998;
+	setarray $requirementKjFixCount[0],2,1,50,50;
+	setarray $requirementKj2FixId[0],1005,987,523,7115,7063,746;
+	setarray $requirementKj2FixCount[0],1,1,50,5,10,30;
+	end;
+}
+
+mjolnir_09,273,348,4	script	Kjelle::alvalkje2	4_M_JP_RUN,{
+	set .@npcname$, "[Kjelle]";
+	set .@playerName$, "[" + strcharinfo(0) + "]";
+	if (KJELLE_Q == 5)
+	{
+		if (gettimetick(2) < kjelletimer)
+		{
+			mes .@npcname$;
+			mes "La la dee. hum hum hum. Where did I place that hammer? ";
+			emotion e_sigh;
+			close;
+		}
+		set .@playerName$, "[" + strcharinfo(0) + "]";
+		mes "You found Kjelle passed out on her spot.";
+		next;
+		mes .@playerName$;
+		mes "Oh, Odin! Kjelle! What happened to you! What do I do?! Maybe I should...";
+		goto OnApplyTest;
+	}
+	else if (KJELLE_KILL == 4)
+	{
+		mes .@npcname$;
+		mes "Woooh! Such a good workout. I am done for the day! Thanks " + strcharinfo(0) + "! And here, a token of appreciation.";
+		getitem 12367, 1; //Empty Juice Bottle
+		set KJELLE_Q, 7;
+	}
+	else if (KJELLE_Q == 6)
+	{
+		if (KJELLE_KILL == 0)
+		{
+			mes .@playerName$;
+			mes "Hello, Kjelle! Up for training?";
+			next;
+			mes .@npcname$;
+			mes "Yes, I am about to start. I must push harder and prove that I am stronger than Niles!";
+			if(countitem(534) > 0)
+			{
+				next;
+				mes .@playerName$;
+				mes "Sounds awesome. By the way, I got you a Carrot Juice~";
+				next;
+				mes .@npcname$;
+				mes "For me? Thanks, [player name]. I am beginning to think you're a dear friend. Can you watch over me while I train, please?";
+				next;
+				mes .@playerName$;
+				mes "Sure. (NO friendzones, please!!)";
+				next;
+				mes .@npcname$;
+				mes "Here goes!";
+				next;
+				mes "Protect Kjelle while she is doing push ups!";
+				set KJELLE_BOTTLE, 1;
+			}
+			else
+			{
+				next;
+				mes .@playerName$;
+				mes "Sounds awesome.";
+				next;
+				mes .@npcname$;
+				mes "Thanks, " + strcharinfo(0) + ". I am beginning to think that you like me. Can you watch over me while I train, please?";
+				next;
+				mes .@playerName$;
+				mes "Sure. (This girl is crezi!)";
+				next;
+				mes .@npcname$;
+				mes "Here goes!";
+				next;
+				mes .@npcname$;
+				mes "Protect Kjelle while she's doing sit ups!";
+			}
+			getmapxy(.@map$,.@mapX,.@mapY,0);
+			monster .@map$,.@mapX,.@mapY,"Chonchon",1011,10,strnpcinfo(3)+"::OnChonchonKilled";
+			set KJELLE_KILL, 1;
+		}
+		else if (KJELLE_KILL == 1)
+		{
+			mes .@npcname$;
+			mes "Sorry, but we have to kill them all before talking!";
+		}
+		else if (KJELLE_KILL == 2)
+		{
+			mes .@npcname$;
+			mes "Let's continue!";
+			getmapxy(.@map$,.@mapX,.@mapY,0);
+			monster .@map$,.@mapX,.@mapY,"Poring",1002,10,strnpcinfo(3)+"::OnPoringKilled";
+			set KJELLE_KILL, 1;
+		}
+		else if (KJELLE_KILL == 3)
+		{
+			mes .@npcname$;
+			if (KJELLE_BOTTLE == 1)
+			{
+				mes "Let's continue!";
+				getmapxy(.@map$,.@mapX,.@mapY,0);
+				monster .@map$,.@mapX,.@mapY,"Lunatic",1063,6,strnpcinfo(3)+"::OnLunaticKilled";
+				set KJELLE_KILL, 1;
+			}
+			else
+			{
+				mes "Woooh! Such a good workout. I am done for the day! Thanks " + strcharinfo(0) + "! And here, a token of appreciation.";
+				getitem 7049, 1;
+				set KJELLE_Q, 7;
+			}
+		}
+	}
+	else if (KJELLE_Q == 7)
+	{
+		mes .@npcname$;
+		mes "I think this is enough training for today, let's go back to Aldebaran";
+		hideonnpc strnpcinfo(3);
+		hideoffnpc "alvalkje";
+	}
+	close;
+	
+OnPoringKilled:
+	if (mobcount(strnpcinfo(4),strnpcinfo(3) + "::OnPoringKilled") == 0)
+	{
+		set KJELLE_KILL, 3;
+	}
+	end;
+	
+OnLunaticKilled:
+	if (mobcount(strnpcinfo(4),strnpcinfo(3) + "::OnLunaticKilled") == 0)
+	{
+		set KJELLE_KILL, 4;
+	}
+	end;
+	
+OnChonchonKilled:
+	if (mobcount(strnpcinfo(4),strnpcinfo(3) + "::OnChonchonKilled") == 0)
+	{
+		set KJELLE_KILL, 2;
+	}
+	end;
+	
+OnApplyTest:
+	set .@answer, select("Smack her face","Ask likes from Facebook","Put her on her back on a firm surface");
+	next;
+	mes "Then what?";
+	set .@answer2, select("Smack her face","Push her chest","Smell here hair");
+	next;
+	mes "And then what?";
+	set .@answer3, select("Clear her airway","Look for a pro priest","Press Alt+F4");
+	next;
+	mes "And then?";
+	set .@answer4, select("Cry on floor","Give the rescue breath","Exit the game");
+	next;
+	if(.@answer == 3 && .@answer2 == 2 && .@answer3 == 1 && .@answer4 == 2)
+	{
+		mes .@npcname$;
+		mes "(She opens her eyes when you were about to give the rescue breath) What are you.. PERVERT!!";
+		next;
+		mes .@playerName$;
+		mes "Oh, no. It's not like that. You see, *murmur murmur*";
+		next;
+		mes .@npcname$;
+		mes "*murmur murmur*";
+		next;
+		mes .@playerName$;
+		mes "*more murmuring*";
+		next;
+		mes .@npcname$;
+		mes "*squint* I see. Well, that's what I get for training under some strong man, except that there's a jerk student as well. But, at least, master is big and strong. Exactly my type.";
+		emotion e_luv;
+		next;
+		mes .@playerName$;
+		mes "Riiiiight... Are you still off for some training?";
+		next;
+		mes .@npcname$;
+		mes "Not today, I am bushed. Maybe tomorrow.";
+		next;
+		mes "Come back after 12 hours, and bring her a Carrot Juice";
+		set KJELLE_Q, 6;
+		hideonnpc strnpcinfo(3);
+		initnpctimer;
+	}
+	else
+	{
+		mes "You seem to be doing your best but nothing is working. Try again.";	
+	}
+	close;
+	
+OnTimer720000:
+	hideoffnpc strnpcinfo(3);
+	end;
+	
+OnInit:
+	//hideonnpc strnpcinfo(3);
+	end;
+}

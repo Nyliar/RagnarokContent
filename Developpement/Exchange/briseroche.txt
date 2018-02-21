@@ -1,0 +1,281 @@
+prontera,164,167,4	script	Brise Roche::prtrokbrea	848,{
+
+	set .@npcname$,"^FF3333Brise Roche^000000";	
+	
+	mes "[" + .@npcname$ + "]";
+	mes "Hello ^3333FF" + strcharinfo(0) + "^000000 !";
+	mes "Let me introduce me, my name's " + .@npcname$ + ".";
+	mes "I live in this cavern for years,";
+	mes "collecting some precious metal,";
+	mes "and that without never ever see the end of this collect...";
+	next;
+	mes "[" + .@npcname$ + "]";
+	mes "That's why I decided long ago to ask help to every people which I will met.";
+	mes "Treasure hunting bring always more people, y'know?";
+	next;
+	mes "[" + .@npcname$ + "]";
+	mes "That's why I'm gonna ask your help, like the others.";
+	mes "Are you ready to help me? I'll give some money as a reward.";
+	next;
+
+	switch(select("Allright, I'll come back:I've bring you some rare metals:Sorry, but you're smelling like a goat..."))
+	{
+		case 1 :
+			mes "[" + .@npcname$ + "]";
+			mes "Allright I'll wait here.";
+			mes "Come back with lots of treasure.";
+			mes "My little precious! Kekekeke!";
+			close;
+		case 2 :
+			mes "[" + .@npcname$ + "]";
+			mes "Perfect! Let's see what you have!";
+			switch(select("Sell gold","Smith Rare Metal","Exchange Poring Coin","Nothing"))
+			{
+				case 1:
+					next;
+					mes "[" + .@npcname$ + "]";
+					mes "Gold, hu?";
+					mes "How many do you want to sell me?";
+					mes "I can buy 10, 20, 40 and 80";
+					next;
+					switch(select("10:20:40:80:You're dreaming. I'll keep it!"))
+					{
+						case 1:
+							if (countitem(969) >= 10)
+							{
+								mes "[" + .@npcname$ + "]";
+								mes "Kekekekeke!";
+								mes "Thanks a lot for you treasure.";
+								mes "Here's what you owe.";
+								delitem 969, 10;
+								set Zeny, Zeny + 1250000;
+								specialeffect2 10;
+								next;
+								mes "[" + .@npcname$ + "]";
+								mes "Come back soon!";
+							}
+							else
+							{
+								mes "[" + .@npcname$ + "]";
+								mes "You don't have that much!";								
+							}
+							close;
+						case 2:
+							if (countitem(969) >= 20)
+							{
+							mes "[" + .@npcname$ + "]";
+							mes "Kekekekeke!";
+							mes "Thanks a lot for this beautiful treasure.";
+							mes "Here's what you owe.";
+							delitem 969, 20;
+							set Zeny, Zeny + 3000000;
+							specialeffect2 10;
+							specialeffect2 10;
+							specialeffect2 10;
+							next;
+							mes "[" + .@npcname$ + "]";
+							mes "Come back soon!";
+							}
+							else
+							{
+								mes "[" + .@npcname$ + "]";
+								mes "You don't have that much!";								
+							}
+							close;
+						case 3:
+							if (countitem(969) >= 40)
+							{
+							mes "[" + .@npcname$ + "]";
+							mes "Kekekekeke!";
+							mes "Thanks a lot for you treasure.";
+							mes "Here's what you owe.";
+							delitem 969, 40;
+							set Zeny, Zeny + 8000000;
+							specialeffect2 10;
+							specialeffect2 10;
+							specialeffect2 10;
+							specialeffect2 10;
+							next;
+							mes "[" + .@npcname$ + "]";
+							mes "Come back soon!";
+							}
+							else
+							{
+								mes "[" + .@npcname$ + "]";
+								mes "You don't have that much!";								
+							}
+							close;
+						case 4:
+							if (countitem(969) >= 80)
+							{
+							mes "[" + .@npcname$ + "]";
+							mes "Kekekekeke!";
+							mes "Thanks a lot for you treasure.";
+							mes "Here's what you owe.";
+							delitem 969, 80;
+							set Zeny, Zeny + 20000000;
+							specialeffect2 10;
+							specialeffect2 10;
+							specialeffect2 10;
+							specialeffect2 10;
+							specialeffect2 10;
+							next;
+							mes "[" + .@npcname$ + "]";
+							mes "Come back soon!";
+							}
+							else
+							{
+								mes "[" + .@npcname$ + "]";
+								mes "You don't have that much!";								
+							}
+							close;
+						case 5:
+							mes "[" + .@npcname$ + "]";
+							mes "Peuh!";
+							mes "Go to hell!";
+							close;
+					}
+					break;
+				case 2:
+					next;
+					mes "[" + .@npcname$ + "]";
+					mes "Smith, hu?";
+					mes "Well, better if you know it.";
+					mes "I can only smith an ore to a coin, a 10 coin to a bullion.";
+					mes "Is it ok for you? What kind of metal do you want me to smith";
+					switch(select("Silver","Gold","Mythril"))
+					{
+						case 1:
+							mes "And which kind of smith?";
+							switch(select("Ore to Coin","Coin to Bullion","Bullion to Coin"))
+							{
+								case 1:
+									set .@idin, 7232;
+									set .@idout, 675;
+									set .@amount, 1;
+									set .@amountOut, 1;
+									break;
+								case 2:				
+									set .@idin, 675;
+									set .@idout, 7229;
+									set .@amountOut, 1;
+									set .@amount, 5;
+									break;
+								case 3:				
+									set .@idin, 7229;
+									set .@idout, 675;
+									set .@amount, 1;
+									set .@amountOut, 5;
+									break;
+							}
+							break;
+						case 2:
+							mes "And which kind of smith?";
+							switch(select("Ore to Coin","Coin to Bullion","Bullion to Coin"))
+							{
+								case 1:
+									set .@idin, 7231;
+									set .@idout, 671;
+									set .@amount, 1;
+									set .@amountOut, 1;
+									break;
+								case 2:				
+									set .@idin, 671;
+									set .@idout, 7228;
+									set .@amount, 5;
+									set .@amountOut, 1;
+									break;
+								case 3:				
+									set .@idin, 7228;
+									set .@idout, 671;
+									set .@amount, 1;
+									set .@amountOut, 5;
+									break;
+							}
+							break;
+						case 3:
+							mes "And which kind of smith?";
+							switch(select("Ore to Coin","Coin to Bullion","Bullion to Coin"))
+							{
+								case 1:
+									set .@idin, 7233;
+									set .@idout, 674;
+									set .@amount, 1;
+									set .@amountOut, 1;
+									break;
+								case 2:				
+									set .@idin, 674;
+									set .@idout, 7230;
+									set .@amount, 5;
+									set .@amountOut, 1;
+									break;
+								case 3:				
+									set .@idin, 7230;
+									set .@idout, 674;
+									set .@amount, 1;
+									set .@amountOut, 5;
+									break;
+							}
+							break;
+					}
+					next;
+					mes "[" + .@npcname$ + "]";
+					mes "Allright. Let's smith then.";
+					mes "How many of item do you want to smith?";
+					mes "To smith as much as you can, enter '0'";
+					input .@amountin;
+					if (.@amountin == 0)
+					{
+						if (countitem(.@idin) >= .@amount)
+						{
+							set .@calcout, countitem(.@idin)/.@amount;
+							getitem .@idout, .@calcout * .@amountOut;
+							delitem .@idin, .@calcout*.@amount;
+						}
+						else
+						{
+							mes "He! You don't even have enough of that to smith one out!";
+						}
+					}
+					else
+					{
+						if (countitem(.@idin) >= .@amount * .@amountin)
+						{
+							getitem .@idout, .@amountin * .@amountout;
+							delitem .@idin, .@amount * .@amountin;
+						}
+						else
+						{
+							mes "He! You don't even have enough of this! I can't smith like that!";
+						}
+					}
+					close;
+				case 3:
+					mes "[" + .@npcname$ + "]";
+					mes "I can trade you one Poring Coin for 5 Bullions of each kind.";
+					mes "Interested?";
+					if(select("Yes","No") == 1)
+					{
+						if (countitem(7539) >= 1)
+						{
+							getitem 7228, 5;
+							getitem 7229, 5;
+							getitem 7230, 5;
+							delitem 7539, 1;
+						}
+					}
+					break;
+				case 4:
+					mes "[" + .@npcname$ + "]";
+					mes "Peuh!";
+					mes "Go to hell!";
+					break;
+			}
+			
+		case 3 :
+			mes "[" + .@npcname$ + "]";
+			mes "Well, your problem!";
+			mes "Come back when you'll miss some gold!";
+			close;
+	}
+}

@@ -1,0 +1,123 @@
+// [========================================================]
+// [=============     DANMA - Manager      ============]
+// [========================================================]
+// [ Version 1                                              ]
+// [========================================================]
+// [ Original script by: Alayne				    ]
+// [========================================================]
+// [ Description:                                           ]
+// [--------------------------------------------------------]
+// [                                                        ]
+// [ - The DANMA main manager			    	    ]
+// [========================================================]
+// [ Changelog: (5 last updates)                            ]
+// [--------------------------------------------------------]
+// [                                                        ]
+// [ v0: Creation                      			    ]
+// [                                                        ]
+// [                                                        ]
+// [========================================================]
+// [                                                        ]
+// [========================================================]
+
+mellina,45,48,0	script	DANMA Manager::danman	739,{
+	end;
+
+OnNPCKillEvent:
+//danma
+	set .@foundMap, 0;
+	for(set .@i, 0; .@i < getarraysize($DANlevelMap$) && .@foundMap == 0; set .@i,.@i+1)
+	{	
+		if (strcharinfo(3) == $DANlevelMap$[.@i])
+		{
+			set .@foundMap, 1;
+		}
+	}
+	if(.@foundMap == 1)
+	{
+		//random loot
+		//check from rarest to commest shards drop
+		set .@randLootPercent, rand(0,100);
+		set .@monster_lvl, getmonsterinfo(killedrid, 1);
+		set .@continue, 1;
+
+		for(set .@i, getarraysize($shardsPercent) - 1; .@i >= 0 && .@continue == 1; set .@i,.@i-1)
+		{	
+			if (.@randLootPercent <= $shardsPercent[.@i] && $shardsMinLvlLoot[.@i] <= .@monster_lvl )
+			{
+				getitem $shardsId[.@i], 1;
+				set .@continue, 0;
+			}
+		}
+	}
+	
+	//Dan Faction
+	if( DANFACTIONID == $mostFamousFactionId )
+	{
+		set .@partyid,getcharid(1);
+		set .@mob_base_exp,(( getmonsterinfo( killedrid,MOB_BASEEXP ) / 100 ) * .rotd_exp_bonus );
+		set .@mob_job_exp,(( getmonsterinfo( killedrid,MOB_JOBEXP ) / 100 ) * .rotd_exp_bonus );
+		if( .@partyid )
+		{
+			set .@aid,getcharid(3);
+			set .@baselevel,BaseLevel;
+			set .@map$,strcharinfo(3);
+			getpartymember .@partyid,1;
+			getpartymember .@partyid,2;
+			while( .@i < $@partymembercount ){
+				if( isloggedin( $@partymemberaid[.@i],$@partymembercid[.@i] ) )
+					if( attachrid( $@partymemberaid[.@i] ) )
+						if( strcharinfo(3) == .@map$ && ( BaseLevel - .@baselevel ) <= .party_level_range && ( BaseLevel - .@baselevel ) >= ~.party_level_range ){	
+							set BaseExp,( BaseExp + .@mob_base_exp );
+							set JobExp,( JobExp + .@mob_job_exp );
+						}
+				set .@i,.@i + 1;
+			}
+			attachrid( .@aid );
+		}else
+		{
+			set BaseExp,( BaseExp + .@mob_base_exp );
+			set JobExp,( JobExp + .@mob_job_exp );
+		}
+	}
+	end;
+	
+OnInit:
+	setarray $DANlevelMap$[0], "danma_01","danma_02","danma_03","danma_04","danma_05","danma_06","danma_07","danma_08","danma_09","danma_10",
+	"danma_11","danma_12","danma_13","danma_14","danma_15","danma_16","danma_17","danma_18",
+	//Volcano
+	"danma_19","danma_20","danma_21","danma_22","danma_23",
+	//Flooded Temple
+	"danma_24","danma_25","danma_26","danma_27","danma_28","danma_29",
+	//Dwarves Mountain
+	"danma_32","danma_33","danma_34","danma_35","danma_36","danma_37","danma_38",
+	//Hazy Forest
+	"danma_39","danma_40","danma_41","danma_42","danma_43","danma_44","danma_45";
+
+	setarray $DANlevelMapName$[0], "Dungeon lvl 1","Dungeon lvl 2","Dungeon lvl 3","Dungeon lvl 4","Dungeon lvl 5","Dungeon lvl 6","Dungeon lvl 7","Dungeon lvl 8","Dungeon lvl 9","Dungeon lvl 10",
+	"Dungeon lvl 11", "Dungeon lvl 12", "Dungeon lvl 13", "Dungeon lvl 14", "Dungeon lvl 15", "Dungeon lvl 16", "Dungeon lvl 17", "Dungeon lvl 18",
+	"Volcano lvl 1", "Volcano lvl 2", "Volcano lvl 3", "Volcano lvl 4", "Volcano lvl 5",
+	"Flooded Temple lvl 1", "Flooded Temple lvl 2", "Flooded Temple lvl 3", "Flooded Temple lvl 4", "Flooded Temple lvl 5", "Flooded Temple lvl 6",
+	"Dwarves Mountain lvl 1", "Dwarves Mountain lvl 2", "Dwarves Mountain lvl 3", "Dwarves Mountain lvl 4", "Dwarves Mountain lvl 5", "Dwarves Mountain lvl 6", "Dwarves Mountain lvl 7",
+	"Hazy Forest lvl 1", "Hazy Forest lvl 2", "Hazy Forest lvl 3", "Hazy Forest lvl 4", "Hazy Forest lvl 5", "Hazy Forest lvl 6", "Hazy Forest lvl 7";
+
+	setarray $DANlevelMapX[0], 21,19,19,150,21,146,258,115,63,202,150,87,147,163,150,157,148,116,
+	21,78,35,126,47,
+	168,253,236,32,26,141,
+	289,27,267,291,135,381,
+	119,31,29,199,52,59,94;
+	setarray $DANlevelMapY[0], 180,33,63,147,185,56,268,30,159,261,284,358,17,190,289,288,179,28,
+	228,203,262,66,30,
+	168,252,204,63,27,187,
+	160,76,33,292,137,343,
+	38,318,269,92,22,221,191;
+	setarray $factionJoinPrice, 25000;
+	
+	//shards idn, percentloot, stats bonus and needed count for bonus, from rarest to commonest
+	setarray $shardsId[0], 29455, 29456, 29457;
+	setarray $shardsPercent[0], 100,50,25;
+	setarray $shardsMinLvlLoot[0], 1,50,90;
+	setarray $shardsStatsBonus[0], 0;
+	setarray $shardsCountForStatsBonus[0], 0;
+	end;
+}

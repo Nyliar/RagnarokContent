@@ -1,0 +1,226 @@
+// [========================================================]
+// [==============  	   Ase - Hugin	    ================]
+// [========================================================]
+// [ Version 1                                              ]
+// [========================================================]
+// [ Original script by: Alayne				    ]
+// [========================================================]
+// [ Description:                                           ]
+// [--------------------------------------------------------]
+// [                                                        ]
+// [ - Rune Midgard main story quest line    	   	    ]
+// [  This file contains explanation and base npcs 	    ]
+// [                                                        ]
+// [========================================================]
+// [ Changelog: (5 last updates)                            ]
+// [--------------------------------------------------------]
+// [                                                        ]
+// [ v0: Creation                      			    ]
+// [                                                        ]
+// [========================================================]
+// [                                                        ]
+// [========================================================]
+
+yuno_fild01,250,190,4	script	Hugin::Ase_1_1_1	4_SERVICE_30_M_01,{ //10145
+	set .@npcname$, "[Hugin]";
+	set .@pcname$, "[" + strcharinfo(0) + "]";
+	
+	mes .@npcname$;
+	//cutin Hugin
+	mes "Who are you, mortal?";
+	mes "I'm Hugin, one of the two crows of the Father of all Things.";
+	mes "Thanks to us, Odin is able to see everything accross Yggdrasil branches.";
+	query_sql("SELECT `sealId`,`generalState` FROM `verdandi_quests` WHERE `id`='1_1'", .@sealItem, .@generalState);
+	if(countitem(.@sealItem[0]) > 0 && .@generalState[0] == 2)
+	{
+		switch(rand(0,10))
+		{
+			case 0:
+			case 1:
+			case 2:
+				//nothing, stop talking from this point
+				break;
+			case 3:
+				next;
+				mes .@npcname$;
+				mes "You look a bit strange...Are you hidding something from me?";
+				break;
+			case 4:
+				next;
+				mes .@npcname$;
+				mes "When somebody tells you his name, it's polite to tell him yours, isn't it?";
+				break;
+			case 5:
+				next;
+				mes .@npcname$;
+				mes "...Are you sure I've never seen you before?";
+				break;
+			case 6:
+				next;
+				mes .@npcname$;
+				mes "There's a strange smell over you...What is it?";
+				break;
+			case 7:
+				next;
+				mes .@npcname$;
+				mes "There's a strange aura issuing from you...What is it?";
+				break;
+			case 8:
+				next;
+				mes .@npcname$;
+				mes "Go away. I'm a bit busy now.";
+				break;
+			case 9:
+				next;
+				mes .@npcname$;
+				mes "That's kinda strange you've been able to see me...Who are you?";
+				break;
+			case 10:
+				next;
+				cutin "", 255;
+				mes .@pcname$;
+				mes "What do you think about the War?";
+				next;
+				//cutin Hugin
+				mes .@npcname$;
+				mes "The Ragnarok? Soon we'll erase these filthy monsters of Loki's army from the Universe.";
+				mes "Soon...";
+				next;
+				cutin "", 255;
+				mes .@pcname$;
+				mes "Thanks...You remove my last hesitations.";
+				delitem .@sealItem[0], 1;
+				goto OnSealActivated;
+				break;
+		}
+	}
+	close;
+	
+OnSealActivated:
+	set .@skuname$, "[Skuld]";
+	cutin "shaloshi01",2;
+	mes .@skuname$;
+	mes "" + strcharinfo(0) + ", I've found he's weakness.";
+	mes "To seal him, you'll have to kill all monsters he invoked with the Thread on your inventory.";
+	mes "Once done, come back to Verdandi. She'll be able to Seal him completely by getting back to his initial Life Thread state.";
+	next;
+	cutin "", 255;
+	mes "[" + strcharinfo(0) + "]";
+	mes "I'm on it.";
+	close;
+	
+OnActivateTarget:
+	set .@activatedRank, rand(1,4);
+	cutin "shaloshi01",2;
+	set .@skuldName$, "[Skuld]";	
+	explode(.@id$, strnpcinfo(3), "_");
+	set .@realid$, .@id$[1] + "_"  + .@id$[2];
+	set .@npcname$, .@id$[0] + "_"  + .@realid$ + "_" + .@activatedRank;
+	hideoffnpc .@npcname$;
+	mes .@skuldName$;
+	mes "" + strcharinfo(0) + ", I've found him.";
+	mes "He's on Yuno Field 0" + .@activatedRank + ".";
+	next;
+	cutin "", 255;
+	mes "[" + strcharinfo(0) + "]";
+	mes "I'll get him.";
+	set .@query$, "UPDATE `verdandi_quests` SET `ActivatedNpc`=" + .@activatedRank + " WHERE `id`='" + .@realid$ + "'";
+	query_sql(.@query$, .@count);
+	close;
+	
+OnSealTarget:
+	specialeffect 910; //inspiration
+	hideonnpc strnpcinfo(3);
+	hideonnpc "Ase_1_1_2";
+	hideonnpc "Ase_1_1_3";
+	hideonnpc "Ase_1_1_4";
+	query_sql("UPDATE `verdandi_quests` SET `generalState`=3 WHERE `id`='1_1'", .@count);
+	announce " [Verdandi] The Ase Hugin has been Sealed successfully thanks to " + strcharinfo(0) + " and his team.",bc_all,"0x00FF99";
+	getpartymember getcharid(2),2;
+	for( set .@pt, 0; .@pt < $@partymembercount; set .@pt, .@pt+1 ){
+		if( attachrid( $@partymemberaid[.@pt] ) ){
+			callfunc("AddPoints", getcharid(3), $sealingPointAmount);
+			logmes "" + strcharinfo(0) + " obtains " + ($sealingPointAmount) + " points from sealing Hugin.";
+		}
+	}
+	close;
+	
+OnMyMobKilled:
+	query_sql("SELECT `generalState` FROM `verdandi_quests` WHERE `id`='1_1'", .@generalState);
+	if(.@generalState[0] != 3)
+	{
+		if(countitem($sealItemId) == 0)
+		{
+			monster .influencedMaps$[rand(0,getarraysize(.influencedMaps$) - 1)],0,0,"--ja--",.monsterIds[rand(0,getarraysize(.monsterIds) - 1)],1,"Ase_1_1_1::OnMyMobKilled";
+		}
+		else
+		{
+			for(set .@i,0; .@i<getarraysize(.influencedMaps$); set  .@i,.@i+1)
+			{
+				set .@map$, .influencedMaps$[.@i];
+				set .@mobCount, .@mobCount + mobcount( .@map$,"Ase_1_1_1::OnMyMobKilled" );
+			}
+			if (.@mobCount == 0)
+			{
+				//condition fullfilled
+				set .@skuname$, "[Skuld]";
+				cutin "shaloshi01",2;
+				mes .@skuname$;
+				mes "I got him! I found his Future Thread. Take it to Verdandi now!";
+				getitem $huginSealItemId, 1;
+				next;
+				mes "[" + strcharinfo(0) + "]";
+				mes "On my way!";
+				close;
+			}
+		}
+	}
+	end;
+	
+OnCallMonsters:
+	query_sql("SELECT `generalState` FROM `verdandi_quests` WHERE `id`='1_1'", .@generalState);
+	if(.@generalState[0] != 3)
+	{
+		set .@size, getarraysize(.monsterIds);
+		for(set .@i,0;.monsterInvoked < .monsterInvokLimit; set .@i,.@i+1)
+		{
+			set .@invokCount, rand(1,10);
+			set .@map$, .influencedMaps$[rand(0,getarraysize(.influencedMaps$) - 1)];
+			set .@mob, .monsterIds[rand(0,getarraysize(.monsterIds) - 1)];
+			monster .@map$,0,0,"--ja--",.@mob,.@invokCount,"Ase_1_1_1::OnMyMobKilled";
+			set .monsterInvoked, .monsterInvoked + .@invokCount;
+		}
+	}
+	end;
+
+OnTimer10000:
+	if (strnpcinfo(3) == "Ase_1_1_1")
+	{
+		query_sql("SELECT `ActivatedNpc`,`generalState` FROM `verdandi_quests` WHERE `id`='1_1'", .@npc$, .@generalState);
+		if(.@npc$[0] != "0" && .@generalState[0] == 2)
+		{
+			hideoffnpc "Ase_1_1_" + .@npc$[0];
+		}
+		stopnpctimer;
+	}
+	end;
+	
+OnInit:
+	hideonnpc strnpcinfo(3);
+	initnpctimer;
+	set .monsterInvokLimit, 145;
+	set .monsterInvoked, 0;
+	setarray .monsterIds[0], 1321, 2073, 1447, 1680;
+	setarray .influencedMaps$[0], "yuno_fild01", "yuno_fild02", "yuno_fild03", "yuno_fild04", "yuno_fild05", "yuno_fild06", "yuno_fild07", "yuno_fild08", "yuno_fild09", "yuno_fild10", "yuno_fild11", "yuno_fild12";
+	set $huginSealItemId, 27002;
+	if(strnpcinfo(3) == "Ase_1_1_1")
+	{
+		initnpctimer;
+		goto OnCallMonsters;
+	}
+	end;
+}
+
+yuno_fild02,124,206,4	duplicate(Ase_1_1_1)	Hugin::Ase_1_1_2	4_SERVICE_30_M_01
+yuno_fild03,73,32,4	duplicate(Ase_1_1_1)	Hugin::Ase_1_1_3	4_SERVICE_30_M_01
+yuno_fild04,176,41,4	duplicate(Ase_1_1_1)	Hugin::Ase_1_1_4	4_SERVICE_30_M_01

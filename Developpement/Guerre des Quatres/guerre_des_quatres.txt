@@ -1,0 +1,480 @@
+//===== eAthena Script =======================================
+//= Guerre des Quatre - Auto Start
+//===== By: ==================================================
+//= 1.0 by Eirel
+//===== Current Version: =====================================
+//= 1.0
+//===== Compatible With: =====================================
+//= eAthena SVN; RO Episode 4+
+//===== Description: =========================================
+//= Auto Start for Guerre des Quatre
+//=============================================
+//= Each day, 11h00 and 19h00
+//===== Additional Comments: =================================
+//= 
+//============================================================
+//
+//======================================
+-	script	Guerre_des_Quatres::Guerre_des_Quatres	-1,{
+	end;
+
+OnClock1000:
+OnClock1900:
+	goto L_prepareNPC;
+
+	//début des Guerre des Quatres
+	//heure comprise entre 11h et 11h30
+	goto L_argueNPC;
+	
+OnClock1020:
+OnClock1920:
+	goto L_KWIsEnd;
+
+L_KWIsEnd:
+	set .rand, rand(0,4);
+	initnpctimer;
+	end;
+
+//xh20
+OnTimer1000:
+	if (.rand == 0)
+	{
+		goto L_KWEnd;
+	}
+	else
+		end;
+
+//xh25
+OnTimer300000:
+	if (.rand == 1)
+	{
+		goto L_KWEnd;
+	}
+	else
+		end;
+
+//xh30
+OnTimer600000:
+	if (.rand == 2)
+	{
+		goto L_KWEnd;
+	}
+	else
+		end;
+
+//xh35
+OnTimer900000:
+	if (.rand == 3)
+	{
+		goto L_KWEnd;
+	}
+	else
+		end;
+
+//xh40
+OnTimer1200000:
+	if (.rand == 4)
+	{
+		goto L_KWEnd;
+	}
+	else
+		end;
+
+L_KWEnd:
+	donpcevent "4_War_Manager::OnWarEnd";
+	announce "La Guerre des Quatre est terminée!",8;
+	stopnpctimer;	
+	set $active, 0;
+	callsub S_DisplayOwners;
+	callsub L_endMapFlag;
+	goto L_resetNPC;
+
+OnDeclenchement:
+	set .rand, -1;
+	set $active, 1;
+	donpcevent "declenchement_choisi::OnBegin";
+	goto L_applyRandomFlag;
+	end;
+
+L_applyRandomFlag:	
+	set .rand, rand(0,6);
+	switch(.rand)
+	{
+		case 0:
+			setmapflag $kingdommap$, "mf_restricted", 6;
+			break;
+		case 1:
+			set .nude$, "true";
+			break;	
+		case 2:
+			set .weak$, "true";
+			break;
+		case 3:
+			set .sudden$, "true";
+			break;
+		case 4:
+			setmapflag $kingdommap$,"mf_restricted", 6;
+			set .nude$, "true";
+			break;
+		case 5:
+			setmapflag $kingdommap$,"mf_restricted", 6;
+			set .sudden$, "true";
+			set .weak$, "true";
+			break;
+		case 6:
+			setmapflag $kingdommap$,"mf_restricted", 6;
+			set .sudden$, "true";
+			set .weak$, "true";
+			set .nude$, "true";
+			break;
+	}
+	end;
+
+L_endMapFlag:
+	set .nude$, "false";
+	set .weak$, "false";
+	set .sudden$, "false";
+
+OnPCLoadMapEvent:
+	if (strcharinfo(3)=="combat02" || strcharinfo(3)=="fire_combat" || strcharinfo(3)=="ice_combat" || strcharinfo(3)=="combat01")
+	{
+	if (.nude$ == "true")
+	{
+		//unequip all stuff pieces
+		nude;
+
+	}
+	if (.weak$ == "true")
+	{
+		//increase weakness to the local element
+		if (strnpcinfo(3)=="combat02")
+		{
+			bonus2 bSubEle,Ele_Earth,-50;
+			bonus2 bAddEle,Ele_Wind,50;
+		}
+		else if (strnpcinfo(3)=="fire_combat")
+		{
+			bonus2 bSubEle,Ele_Fire,-50;
+			bonus2 bAddEle,Ele_Earth,50;
+		}
+		else if (strnpcinfo(3)=="ice_combat")
+		{
+			bonus2 bSubEle,Ele_Water,-50;
+			bonus2 bAddEle,Ele_Fire,50;
+		}
+		else if (strnpcinfo(3)=="combat01")
+		{
+			bonus2 bSubEle,Ele_Wind,-50;
+			bonus2 bAddEle,Ele_Water,50;
+		}
+	}
+	if (.sudden$ == "true")
+	{
+		//inflict damage all way long, according to map
+		if (strnpcinfo(3)=="combat02")
+		{
+			//earth, poison
+			sc_start SC_Poison,900000,0;
+		}
+		else if (strnpcinfo(3)=="fire_combat")
+		{
+			//fire, burning
+			sc_start SC_Burning,900000,0;
+		}
+		else if (strnpcinfo(3)=="ice_combat")
+		{
+			//ice, freezing
+			sc_start SC_Freezing,900000,0;
+		}
+		else if (strnpcinfo(3)=="combat01")
+		{
+			//wind, bleeding
+			sc_start SC_Bleeding,900000,0;
+		}
+	}
+	}
+	end;
+
+L_FKW:
+	sleep 2000;
+	announce "La Bataille Pour Un Royaume commence!",8;
+	switch($kingdom)
+	{
+		case 0:
+			set  $name$, "ice_combat";
+			set  $kingdomname$, "Gelé ";
+			break;
+		case 1:
+			set  $name$, "fire_combat";
+			set  $kingdomname$, "Brûlant ";
+			break;
+		case 2:
+			set  $name$, "combat01";
+			set  $kingdomname$, "Soufflant ";
+			break;
+		case 3:
+			set  $name$, "combat02";
+			set  $kingdomname$, "Dévorant ";
+			break;
+	}
+	sleep 1000;
+	announce "Elle se déroule sur le territoire " +  $kingdomname$, 8;
+	donpcevent "4_War_Manager::OnWarStart";
+	end;
+
+L_resetNPC:
+	end;
+
+L_prepareNPC:
+	set $kingdom, rand(0,3);
+	set $active, 1;
+	
+	//get all leader id
+	set $GID, GetCastleData("ice_combat", 1);
+	set $master1$, getguildmaster($GID);
+	set $GID, GetCastleData("fire_combat", 1);
+	set $master2$, getguildmaster($GID);
+	set $GID, GetCastleData("combat01", 1);
+	set $master3$, getguildmaster($GID);
+	set $GID, GetCastleData("combat02", 1);
+	set $master4$, getguildmaster($GID);
+	
+L_argueNPC:	
+	//set $COUNT_ALLY, 0;
+	//set $COUNT_FOE, 0;
+	switch($kingdom)
+	{
+		//ice kingdom
+		case 0:
+			set $mastername$, GetCastleData("ice_combat", 1);
+			set $kingdommap$, "ice_combat";
+			goto L_FKW;
+		//fire kingdom
+		case 1:
+			set $mastername$, GetCastleData("fire_combat", 1);
+			set $kingdommap$, "fire_combat";
+			goto L_FKW;
+		//wind kingdom
+		case 2:
+			set $mastername$, GetCastleData("combat01", 1);
+			set $kingdommap$, "combat01";
+			goto L_FKW;
+		//earth kindgom
+		case 3:
+			set $mastername$, GetCastleData("combat02", 1);
+			set $kingdommap$, "combat02";
+			goto L_FKW;
+	}	
+	
+S_DisplayOwners:
+	setarray  $maps$[0],"ice_combat","fire_combat","combat01","combat02";
+	for( set  $i, 0;  $i <= 3; set  $i,  $i+1 ) {
+		if (GetCastleData( $maps$[$i],1 )) {
+			announce "Le Royaume de [" + GetCastleName( $maps$[$i] ) + "] appartient à la Guilde [" + GetGuildName(GetCastleData( $maps$[$i],1 )) + "]!",bc_all|bc_woe;
+			
+			set $mastername$, GetCastleData( $name$, 1);
+			
+			if ($i == 0)
+			{
+				set $_ICE_GUILD_WINNER, GetGuildName(GetCastleData( $maps$[$i],1 ));
+			}
+			else if ($i == 1)
+			{
+				set $_FIRE_GUILD_WINNER, GetGuildName(GetCastleData( $maps$[$i],1 ));
+			}
+			else if ($i == 2)
+			{
+				set $_WIND_GUILD_WINNER, GetGuildName(GetCastleData( $maps$[$i],1 ));
+			}
+			else if ($i == 3)
+			{
+				set $_EARTH_GUILD_WINNER, GetGuildName(GetCastleData( $maps$[$i],1 ));
+			}
+		}	
+	}
+}
+
+//============================================================
+
+// War Manager Template
+//============================================================
+
+-	script	4_War_Manager::4_War_Manager	-1,{
+	end;
+
+// Load (or reload) specific information for a castle.
+OnInterIfInitOnce:
+	if (strnpcinfo(0) == "4_War_Manager") end;
+	GetCastleData $name$,0,strnpcinfo(0) + "::OnRecvCastle";
+	end;
+
+// War of Emperium has started.
+OnWarStart:
+	MapRespawnGuildID $name$,GetCastleData($name$,1),2;
+	GvgOn $name$;
+	setmapflag $name$, mf_gvg_castle;
+	goto OnStartArena;
+
+OnInitMonster:
+	// OnAgitStart will fall through and spawn the Emperium.
+	if ($name$ == "ice_combat" && $_ICE_GUILD_WINNER == -1) { 
+		setarray .@emproom[0],72,110; set .@mobid,1398; 
+	}
+	else if ($name$ == "fire_combat" && $_FIRE_GUILD_WINNER == -1) { 
+		setarray .@emproom[0],113,105; set .@mobid,1397; 
+	}
+	else if ($name$ == "combat01" && $_WIND_GUILD_WINNER == -1) { 
+		setarray .@emproom[0],114,95; set .@mobid,1395; 
+	}	
+	
+
+// Spawn (fall through), or respawn the Emperium once it has been broken.
+OnStartArena:
+	set .@break$, "no";
+	callsub OnInitMonster;
+	// OnAgitStart will fall through and spawn the Emperium.
+	if ($name$ == "ice_combat") { setarray .@emproom[0],72,110; set .@mobid,1398; }
+	else if ($name$ == "fire_combat") { setarray .@emproom[0],113,105; set .@mobid,1397; }
+	else if ($name$ == "combat01") { setarray .@emproom[0],114,95; set .@mobid,1395; }
+
+	if (!mobcount($name$,"4_War_Manager::OnEmpBreak")) {
+		//guardian should prevent belonging guildmens to attack their own emperium
+		monster $name$,.@emproom[0],.@emproom[1],"Noyau du Royaume",.@mobid,1,"4_War_Manager::OnEmpBreak";
+	}
+	end;
+
+// The Emperium has been broken.
+OnEmpBreak:
+	set .@GID,getcharid(2);
+	// Show and log error if an unguilded player breaks the Emperium. (Should NEVER happen)
+	if (.@GID <= 0) {
+		set .@notice$,"Character "+strcharinfo(0)+" ("+getcharid(0)+") broke the Emperium in Castle: "+$name$+" while guildless. No data will be saved and Emperium respawned.";
+ 		logmes .@notice$; debugmes .@notice$;
+		donpcevent "4_War_Manager::OnStartArena";
+		end;
+	}
+
+	// Set new Castle Occupant
+	SetCastleData $name$,1,.@GID;
+	set .@break$, "yes";
+
+	// announce that the Emperium is destroyed, and respawn all but new castle-occupants.
+	MapRespawnGuildID $name$,.@GID,2;
+
+	// Refresh castle data
+	GetCastleData $name$,0,strnpcinfo(0)+"::OnRecvCastle";
+
+	// Respawn the Emperium, and display new owners.
+	sleep 500; // Slow down script execution slightly.
+	donpcevent "4_War_Manager::OnStartArena";
+	sleep getbattleflag("gvg_eliminate_time");
+	announce "Le Royaume tombe. " + strcharinfo(0) + " de la guilde " + GetGuildName(.@GID) + " s'auto-proclame Roi / Reine.",bc_all|bc_woe;
+
+	if ($name$ == "ice_combat") { $_ICE_GUILD_WINNER = .@GID; }
+	else if ($name$ == "fire_combat") { $_FIRE_GUILD_WINNER = .@GID; }
+	else if ($name$ == "combat01") { $_WIND_GUILD_WINNER = .@GID; }
+
+	end;
+
+// War of Emperium has ended.
+OnWarEnd:
+	GvgOff $name$;
+	// If the castle has no owner at the end of WoE, do not kill Emperium.
+	if (GetCastleData($name$,1)) {
+		KillMonster $name$,strnpcinfo(0)+"::OnEmpBreak";
+	}
+	if (.@break$ == "no")
+	{
+		if (getCastleData ($name$,2) < 8)
+			setCastleData ($name$,2,GetCastleData ($name$,2) + 1);
+	}
+	killmonsterall $name$;
+	set .@GID, GetCastleData ($name$,1);
+	MapRespawnGuildID $name$,.@GID,2;
+	donpcevent "4_War_Treasure::OnLaunchTimer";
+	end;
+
+// Occupying Guild has been disbanded.
+OnGuildBreak:
+	if (strnpcinfo(0) == "4_War_Manager") end;
+	// Wait before refreshing guild information.
+	sleep getbattleflag("gvg_eliminate_time");
+	announce "La Guilde [" + GetCastleName($name$) + "] a abandonné son Royaume, et s'est dispersée.",0;
+	GetCastleData $name$,0,strnpcinfo(0)+"::OnRecvCastle";
+	end;
+
+OnRecvCastle:
+	RequestGuildInfo GetCastleData($name$,1);
+
+	set .@GID, GetCastleData($name$,1);
+	// Otherwise place the guild emblem on flags.
+	if ($name$ == "ice_combat") { donpcevent "::OnRecvCastleI"; }
+	else if ($name$ == "fire_combat") { donpcevent "::OnRecvCastleF"; }
+	else if ($name$ == "combat01") { donpcevent "::OnRecvCastleW"; }
+	end;
+}
+
+//============================================================
+
+// War Treasure Template
+//============================================================
+
+-	script	4_War_Treasure::4_War_Treasure	-1,{
+	end;
+
+OnLaunchTimer:
+	set .type, 0;
+	callsub OnInitMap;
+	initnpctimer;
+
+OnLaunchTimer2:
+	set .type, 1;
+	callsub OnInitMap;
+	initnpctimer;
+
+OnInitMap:
+	if ($name$ == "ice_combat") { setarray .map$[0], "ice_king", "manuk", "man_fild02", "dicastes01", "dicastes02", "dic_fild01", "ice_dun03", "ice_dun04"; }
+	else if ($name$ == "fire_combat") { setarray .map$[0], "fire_king", "thor_camp", "thor_v01", "thor_v03", "mag_dun01", "mag_dun02", "tur_dun06", "rachel"; }
+	else if ($name$ == "combat02") { setarray .map$[0], "earth_king", "morocc", "einbech", "einbroch", "veins", "ve_fild02", "ve_fild03", "ve_fild04"; }
+	else if ($name$ == "combat01") { setarray .map$[0], "wind_king", "spl_fild02", "spl_fild03", "2@nyd", "nyd_dun01", "yuno", "odin_tem03", "odin_tem02"; }
+	callsub OnPop;
+
+OnPop:
+	if (.type == 0)
+	{
+		//pop treasure chest
+		if ($name$ == "ice_combat") monster $name$,0,0,"Coffre "+$kingdomname$,1332,2,"Tribut::OnChestKilled";
+		else if ($name$ == "fire_combat") monster $name$,0,0,"Coffre "+$kingdomname$,1333,2,"Tribut::OnChestKilled";
+		else if ($name$ == "combat01") monster $name$,0,0,"Coffre "+$kingdomname$,1334,2,"Tribut::OnChestKilled";
+		else if ($name$ == "combat02") monster $name$,0,0,"Coffre "+$kingdomname$,1335,2,"Tribut::OnChestKilled";
+		set $wait, 1;
+		callsub OnPopRandom;
+	}
+
+//enable new manual launch after 1 hour
+OnTimer3600000:
+	set $wait, 0;
+	stopnpctimer;
+	end;
+
+OnPopRandom:
+	for (set .@i, 0; .@i < 2; set .@i, .@i+1)
+	{
+		set .@rand, rand(0,getarraysize(.@map));
+		if ($name$ == "ice_combat") monster .map$[.@rand],0,0,"Coffre "+$kingdomname$,1332,1,"Tribut::OnChestKilled";
+		else if ($name$ == "fire_combat") monster .map$[.@rand],0,0,"Coffre "+$kingdomname$,1333,1,"Tribut::OnChestKilled";
+		else if ($name$ == "combat01") monster .map$[.@rand],0,0,"Coffre "+$kingdomname$,1334,1,"Tribut::OnChestKilled";
+		else if ($name$ == "combat02") monster .map$[.@rand],0,0,"Coffre "+$kingdomname$,1335,1,"Tribut::OnChestKilled";
+		donpcevent "Tribut::OnInit";
+	}	
+	end;
+
+OnTimer5000:
+	if (.type == 1)
+	{
+		set $wait, 1;
+		callsub OnPopRandom;
+		initnpctimer;
+	}
+}
+

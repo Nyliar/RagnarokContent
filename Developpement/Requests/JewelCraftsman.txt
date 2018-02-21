@@ -1,0 +1,167 @@
+prontera,156,160,4	script	Craftsman::alacra	1_M_SMITH,{
+	set .@npcname$, "[Craftsman]";
+	mes .@npcname$;
+	mes "What can I do for you, young adventurer?";
+	if (select("Insert an Power Item","Power items?") == 1)
+	{
+		next;
+		mes .@npcname$;
+		mes "Sure.";
+		mes "Which kind of item do you wanna insert a gem in?";
+		set .@choice, select("An armor","A footgear","A shield","A garment") - 1;
+		next;
+		mes .@npcname$;
+		switch(.@choice)
+		{
+			case 0:
+				//armor
+				copyarray .@itemId[0], $quintsId[0], getarraysize($quintsId);
+				if(getequipid(EQI_ARMOR) == -1)
+				{
+					mes "Sorry, but you need an equiped armor for me to empower it.";
+					close;
+				}
+				set .@itemname$, getitemname(getequipid(EQI_ARMOR));
+				break;
+			case 1:
+				//footgear
+				copyarray .@itemId[0], $glyphsId[0], getarraysize($glyphsId);
+				if(getequipid(EQI_SHOES) == -1)
+				{
+					mes "Sorry, but you need an equiped footgear for me to empower it.";
+					close;
+				}
+				set .@itemname$, getitemname(getequipid(EQI_SHOES));
+				break;
+			case 2:
+				//shield
+				copyarray .@itemId[0], $sealsId[0], getarraysize($sealsId);
+				if(getequipid(EQI_HAND_L) == -1 || getequipweaponlv(EQI_HAND_L) != 0)
+				{
+					mes "Sorry, but you need an equiped armor for me to empower it.";
+					close;
+				}
+				set .@itemname$, getitemname(getequipid(EQI_HAND_L));
+				break;
+			case 3:
+				//garment
+				copyarray .@itemId[0], $marksId[0], getarraysize($marksId);
+				if(getequipid(EQI_GARMENT) == -1)
+				{
+					mes "Sorry, but you need an equiped garment for me to empower it.";
+					close;
+				}
+				set .@itemname$, getitemname(getequipid(EQI_GARMENT));
+				break;
+		}
+		mes "Allright. So which item do you want to insert?";
+		
+		set .@menu$, "";
+		for(set .@i,0; .@i<getarraysize(.@itemId); set .@i,.@i+1)
+		{
+			set .@menu$, .@menu$ + (.@i == 0 ? "" : ":") + getitemname(.@itemId[.@i]);			
+		}
+		set .@itemChoice, select(.@menu$) - 1;
+		
+		next;
+		mes .@npcname$;
+		mes "So, you wanna add a " + getitemname(.@itemId[.@itemChoice]) + ", on your " + .@itemname$  + " right?";
+		if(select("Yes","No") == 1)
+		{
+			if(countitem(.@itemId[.@itemChoice]) == 0)
+			{
+				next;
+				mes .@npcname$;
+				mes "Sorry but...You don't have this item. I need at least to be able to work.";
+				close;				
+			}
+		}
+		else
+		{
+			next;
+			mes .@npcname$;
+			mes "Oh...Thought so...";
+			close;
+		}	
+
+		//update
+		switch(.@choice)
+		{
+			case 0:
+				//armor
+				//retrieve compounded cards and refine
+				set .@cardId1, getequipcardid(EQI_ARMOR,0);
+				set .@refine, getequiprefinerycnt(EQI_ARMOR);
+				
+				next;
+				mes .@npcname$;
+				mes "Perfect. Wait a second.";
+				getitem2 getequipid(EQI_ARMOR), 1, 1, .@refine, 0, .@cardId1, .@itemId[.@itemChoice], 0, 0;
+				delitem .@itemId[.@itemChoice], 1;
+				delitem getequipid(EQI_ARMOR), 1;
+				break;
+			case 1:
+				//footgear
+				//retrieve compounded cards and refine
+				set .@cardId1, getequipcardid(EQI_SHOES,0);
+				set .@refine, getequiprefinerycnt(EQI_SHOES);
+				
+				next;
+				mes .@npcname$;
+				mes "Perfect. Wait a second.";
+				getitem2 getequipid(EQI_SHOES), 1, 1, .@refine, 0, .@cardId1, .@itemId[.@itemChoice], 0, 0;
+				delitem .@itemId[.@itemChoice], 1;
+				delitem getequipid(EQI_SHOES), 1;
+				break;
+			case 2:
+				//shield
+				//retrieve compounded cards and refine
+				set .@cardId1, getequipcardid(EQI_HAND_L,0);
+				set .@refine, getequiprefinerycnt(EQI_HAND_L);
+				
+				next;
+				mes .@npcname$;
+				mes "Perfect. Wait a second.";
+				getitem2 getequipid(EQI_HAND_L), 1, 1, .@refine, 0, .@cardId1, .@itemId[.@itemChoice], 0, 0;
+				delitem .@itemId[.@itemChoice], 1;
+				delitem getequipid(EQI_HAND_L), 1;
+				break;
+			case 3:
+				//garment
+				//retrieve compounded cards and refine
+				set .@cardId1, getequipcardid(EQI_GARMENT,0);
+				set .@refine, getequiprefinerycnt(EQI_GARMENT);
+				
+				next;
+				mes .@npcname$;
+				mes "Perfect. Wait a second.";
+				getitem2 getequipid(EQI_GARMENT), 1, 1, .@refine, 0, .@cardId1, .@itemId[.@itemChoice], 0, 0;
+				delitem .@itemId[.@itemChoice], 1;
+				delitem getequipid(EQI_GARMENT), 1;
+				break;
+		}		
+		next;
+		mes .@npcname$;
+		mes "Here you go.";
+		mes "Hope to see you soon again.";
+	}
+	else
+	{
+		next;
+		mes .@npcname$;
+		mes "I can carve some items which will grant you new powers directly into your armor pieces.";
+		mes "I can add a Quint into an Armor.";
+		mes "A Glyph into footgears.";
+		mes "A Seal into a shield.";
+		mes "Or a Mark into a garment.";
+		mes "Just talk to me with the correct Power Item in your inventory, and the item you wanna to engrave equiped.";
+	}
+	close;
+	
+OnInit:
+	setarray $quintsId[0],4001,4005,4033,4029,4082,4023;//30055,30056,30057,30058,30059,30060,30061,30062,30063,30064;
+	setarray $glyphsId[0],30055,30056,30057,30058,30059,30060,30061,30062,30063,30064;
+	setarray $sealsId[0],30055,30056,30057,30058,30059,30060,30061,30062,30063,30064;
+	setarray $marksId[0],30055,30056,30057,30058,30059,30060,30061,30062,30063,30064;
+	end;
+}

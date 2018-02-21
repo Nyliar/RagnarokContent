@@ -1,0 +1,20 @@
+script	function	DisplayRemainingDelay	{
+	.@delay = getarg(0);
+	set .@last,(.@delay - gettimetick(2));
+	set .@days,.@last / 60 / 60 / 24;
+	set .@hours,(.@last - .@days * 24 * 60 * 60) / 60 / 60 % 60;
+	set .@minutes,(.@last - .@days * 24 * 60 * 60 - .@hours * 60 * 60) / 60 % 60;
+	set .@seconds,(.@last - .@days * 24 * 60 * 60 - .@hours * 60 * 60 - .@minutes * 60) % 60;
+	.@message$ = "You have to wait for ";
+	if(.@days == 0)
+	{
+		.@message$ += "^FF0000"+.@hours+" hours "+.@minutes+" minutes "+.@seconds+" seconds^000000";
+	}
+	else
+	{
+		.@message$ += "^FF0000"+.@days+" days "+.@hours+" hours "+.@minutes+" minutes "+.@seconds+" seconds^000000";
+	}
+	mes .@message$;
+	
+	return;
+}

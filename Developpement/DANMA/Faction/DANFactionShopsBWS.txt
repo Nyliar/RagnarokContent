@@ -1,0 +1,380 @@
+// [========================================================]
+// [=============     DANMA - Faction Shops     ============]
+// [========================================================]
+// [ Version 1                                              ]
+// [========================================================]
+// [ Original script by: Alayne				    ]
+// [========================================================]
+// [ Description:                                           ]
+// [--------------------------------------------------------]
+// [                                                        ]
+// [ - The Faction Shops			    	    ]
+// [========================================================]
+// [ Changelog: (5 last updates)                            ]
+// [--------------------------------------------------------]
+// [                                                        ]
+// [ v0: Creation                      			    ]
+// [                                                        ]
+// [                                                        ]
+// [========================================================]
+// [                                                        ]
+// [========================================================]
+
+-	shop	BWSShop	-1,501:50;
+
+mellina_in,230,48,3	script	BlackSmith::danfbwss	63,{
+	set @i,0;
+	callshop "BWSShop",1;
+	npcshopattach "BWSShop";
+	end;
+
+OnBuyItem:
+	if(.BuildQuest) {
+		for(set .e,0; !compare(getarg(.e+1)+"", "Zeny"); set .e,.e+2) {}
+		npcshopadditem "BWSShop",getarg(.e+2),getarg(.e)*compare(getarg(.e+1)+"","SZeny");
+		setarray .Shop[.i],getarg(.e+2);
+		set .i,.i+1;
+		goto Quest_Setup;
+	}
+	if(.Shop[@i]!=@bought_nameid) for(set @i,1; 1; set @i,@i+1) if(.Shop[@i]==@bought_nameid) { set .i,@i; callsub Quest_Setup; }	
+	for(set @i,1; !@e; set @i,@i+1) if(.Shop[@i]==@bought_nameid) { set @e,1; set .i,@i; callsub Quest_Setup; }
+	mes "[Support]";
+	mes "I require the following:";
+	for(set @i,0; !compare(getarg(@i+1)+"","Zeny"); set @i,@i+2) mes "^FF0000" + ((countitem(getarg(@i))>=getarg(@i+1))? "^00FF00":"") + "" + getarg(@i+1) + " " + getitemname(getarg(@i)) + " [" + countitem(getarg(@i)) + "/" + getarg(@i+1) + "]";
+	if(getarg(@i)) mes "^FF0000" + ((Zeny>=getarg(@i))? "^00FF00":"") + "" + getarg(@i) + " Zeny";
+	mes "^000000In exchange, I will give you:^0000FF";
+	for(set @i,@i+2; getarg(@i+1,0); set @i,@i+2) mes getarg(@i+1) + " " + getitemname(getarg(@i));
+	switch(select("Exchange:No thanks")) {
+		case 1:
+			for(set @i,0; !compare(getarg(@i+1)+"","Zeny"); set @i,@i+2) if(countitem(getarg(@i)) < getarg(@i+1)) {
+				next;
+				mes "You have " + countitem(getarg(@i)) + " " + getitemname(getarg(@i)) + ", while I require " + getarg(@i+1) + ".";
+				mes "Please obtain ^FF0000" + (getarg(@i+1)-countitem(getarg(@i))) + " more " + getitemname(getarg(@i)) + "^000000.";
+				close;
+			}
+			if(Zeny < getarg(@i)) {
+				next;
+				mes "You do not have enough Zeny.";
+				mes "You need ^FF0000" + (getarg(@i)-Zeny) + " more Zeny^000000.";
+				close;
+			}
+			for(set @i,0; !compare(getarg(@i+1)+"","Zeny"); set @i,@i+2) delitem getarg(@i),getarg(@i+1);
+			set Zeny,Zeny-getarg(@i);
+			callfunc("OnUpdateFactionQuota","bwsCurrentQuota",getarg(@i));
+			for(set @i,@i+2; getarg(@i+1,0); set @i,@i+2) getitem getarg(@i),getarg(@i+1);
+			if (compare(getarg(@i,0)+"","announce")) announce strcharinfo(0) + " has just obtained " + getitemname(@bought_nameid) + "!",bc_all;
+			close;
+		case 2:
+			close;
+	}
+OnInit:
+	npcshopitem "BWSShop",0,0;
+	set .BuildQuest,1;
+	set .i,1;
+OnMinute00:
+Quest_Setup:
+	switch(.i) {
+		default: set .BuildQuest,0; set .e,0; set .i,0; end;
+		case 1: 
+			if(callfunc("OnCheckFactionQuota","bwsBaseQuota","bwsCurrentQuota") == 0)
+			{
+				//light Axe[0]
+				callsub OnBuyItem,getiteminfo(1303,0),"Zeny",1303,1,"";
+			}
+			else
+			{
+				//full Axe[3]
+				callsub OnBuyItem,5000,"Zeny",1301,1,"";
+			}
+			break;
+		case 2: 
+			if(callfunc("OnCheckFactionQuota","bwsBaseQuota","bwsCurrentQuota") == 0)
+			{
+				callsub OnBuyItem,getiteminfo(1109,0),"Zeny",1109,1,"";
+			}
+			else
+			{
+				callsub OnBuyItem,5000,"Zeny",1107,1,"";
+			}
+			break;
+		case 3: 
+			if(callfunc("OnCheckFactionQuota","bwsBaseQuota","bwsCurrentQuota") == 0)
+			{
+				//Cinquedea[1]
+				callsub OnBuyItem,getiteminfo(1245,0),"Zeny",1245,1,"";
+			}
+			else
+			{
+				//Cinquedea[2]
+				callsub OnBuyItem,75000,"Zeny",1246,1,"";
+			}
+			break;
+		case 4: 
+			if(callfunc("OnCheckFactionQuota","bwsBaseQuota","bwsCurrentQuota") == 0)
+			{
+				//Club[0]
+				callsub OnBuyItem,getiteminfo(1503,0),"Zeny",1503,1,"";
+			}
+			else
+			{
+				//Club[3]
+				callsub OnBuyItem,5000,"Zeny",1501,1,"";
+			}
+			break;
+		case 5: 
+			if(callfunc("OnCheckFactionQuota","bwsBaseQuota","bwsCurrentQuota") == 0)
+			{
+				//Cutter[0]
+				callsub OnBuyItem,getiteminfo(1206,0),"Zeny",1206,1,"";
+			}
+			else
+			{
+				//Cutter[3]
+				callsub OnBuyItem,7500,"Zeny",1203,1,"";
+			}
+			break;
+		case 6: 
+			if(callfunc("OnCheckFactionQuota","bwsBaseQuota","bwsCurrentQuota") == 0)
+			{
+				//Dagger[0]
+				callsub OnBuyItem,getiteminfo(1215,0),"Zeny",1215,1,"";
+			}
+			else
+			{
+				//Dagger[3]
+				callsub OnBuyItem,25000,"Zeny",1214,1,"";
+			}
+			break;
+		case 7: 
+			if(callfunc("OnCheckFactionQuota","bwsBaseQuota","bwsCurrentQuota") == 0)
+			{
+				//Dirk[0]
+				callsub OnBuyItem,getiteminfo(1212,0),"Zeny",1212,1,"";
+			}
+			else
+			{
+				//Dirk[2]
+				callsub OnBuyItem,18000,"Zeny",1211,1,"";
+			}
+			break;
+		case 8: 
+			if(callfunc("OnCheckFactionQuota","bwsBaseQuota","bwsCurrentQuota") == 0)
+			{
+				//Dragon Killer
+				callsub OnBuyItem,18500,"Zeny",13001,1,"";
+			}
+			else
+			{
+				//Dragon Killer[2]
+				callsub OnBuyItem,38000,"Zeny",13030,1,"";
+			}
+			break;
+		case 9: 
+			if(callfunc("OnCheckFactionQuota","bwsBaseQuota","bwsCurrentQuota") == 0)
+			{
+				//Falchion[0]
+				callsub OnBuyItem,getiteminfo(1106,0),"Zeny",1106,1,"";
+			}
+			else
+			{
+				//Falchion[2]
+				callsub OnBuyItem,7500,"Zeny",1104,1,"";
+			}
+			break;
+		case 10: 
+			if(callfunc("OnCheckFactionQuota","bwsBaseQuota","bwsCurrentQuota") == 0)
+			{
+				//Hypnotist Staff 1
+				callsub OnBuyItem,25000,"Zeny",1621,1,"";
+			}
+			else
+			{
+				//Hypnotist Staff 2
+				callsub OnBuyItem,45000,"Zeny",1622,1,"";
+			}
+			break;
+		case 11: 
+			if(callfunc("OnCheckFactionQuota","bwsBaseQuota","bwsCurrentQuota") == 0)
+			{
+				//Fisherman Dagger
+				callsub OnBuyItem,35000,"Zeny",13002,1,"";
+			}
+			else
+			{
+				//Ginnungagap
+				callsub OnBuyItem,45000,"Zeny",13019,1,"";
+			}
+			break;
+		case 12: 
+			if(callfunc("OnCheckFactionQuota","bwsBaseQuota","bwsCurrentQuota") == 0)
+			{
+				//Orcish Axe 4
+				callsub OnBuyItem,15000,"Zeny",1309,1,"";
+			}
+			else
+			{
+				//Fisherman Dagger
+				callsub OnBuyItem,32000,"Zeny",1249,1,"";
+			}
+			break;
+		case 13: 
+			if(callfunc("OnCheckFactionQuota","bwsBaseQuota","bwsCurrentQuota") == 0)
+			{
+				//Rapier 3
+				callsub OnBuyItem,15000,"Zeny",1111,1,"";
+			}
+			else
+			{
+				//jujube Dagger
+				callsub OnBuyItem,32000,"Zeny",13000,1,"";
+			}
+			break;
+		case 14: 
+			if(callfunc("OnCheckFactionQuota","bwsBaseQuota","bwsCurrentQuota") == 0)
+			{
+				//Rod 3
+				callsub OnBuyItem,15000,"Zeny",1601,1,"";
+			}
+			else
+			{
+				//Kindle Dagger
+				callsub OnBuyItem,32000,"Zeny",1247,1,"";
+			}
+			break;
+		case 15: 
+			if(callfunc("OnCheckFactionQuota","bwsBaseQuota","bwsCurrentQuota") == 0)
+			{
+				//Smasher 3
+				callsub OnBuyItem,15000,"Zeny",1508,1,"";
+			}
+			else
+			{
+				//Obsidian Dagger
+				callsub OnBuyItem,32000,"Zeny",1248,1,"";
+			}
+			break;
+		case 16: 
+			if(callfunc("OnCheckFactionQuota","bwsBaseQuota","bwsCurrentQuota") == 0)
+			{
+				//Kindle Dagger
+				callsub OnBuyItem,getiteminfo(1506,0),"Zeny",1506,1,"";
+			}
+			else
+			{
+				//Kindle Dagger
+				callsub OnBuyItem,5000,"Zeny",1504,1,"";
+			}
+			break;
+		case 17: 
+			if(callfunc("OnCheckFactionQuota","bwsBaseQuota","bwsCurrentQuota") == 0)
+			{
+				//Kindle Dagger
+				callsub OnBuyItem,getiteminfo(1124,0),"Zeny",1124,1,"";
+			}
+			else
+			{
+				//Kindle Dagger
+				callsub OnBuyItem,35000,"Zeny",1148,1,"";
+			}
+			break;
+		case 18: 
+			if(callfunc("OnCheckFactionQuota","bwsBaseQuota","bwsCurrentQuota") == 0)
+			{
+				//Town Sword 1
+				callsub OnBuyItem,getiteminfo(1506,0),"Zeny",1146,1,"";
+			}
+			else
+			{
+				//Town Sword 2
+				callsub OnBuyItem,55000,"Zeny",1147,1,"";
+			}
+			break;
+		case 19: 
+			if(callfunc("OnCheckFactionQuota","bwsBaseQuota","bwsCurrentQuota") == 0)
+			{
+				//Stiletto
+				callsub OnBuyItem,getiteminfo(1218,0),"Zeny",1218,1,"";
+			}
+			else
+			{
+				//Stiletto 3
+				callsub OnBuyItem,35000,"Zeny",1217,1,"";
+			}
+			break;
+		case 20: 
+			if(callfunc("OnCheckFactionQuota","bwsBaseQuota","bwsCurrentQuota") == 0)
+			{
+				//Wand 0
+				callsub OnBuyItem,getiteminfo(1606,0),"Zeny",1606,1,"";
+			}
+			else
+			{
+				//Wand 3
+				callsub OnBuyItem,15000,"Zeny",1605,1,"";
+			}
+			break;
+
+//Armors
+		case 1: 
+			if(callfunc("OnCheckFactionQuota","bwsBaseQuota","bwsCurrentQuota") == 0)
+			{
+				//light Axe[0]
+				callsub OnBuyItem,getiteminfo(1303,0),"Zeny",1303,1,"";
+			}
+			else
+			{
+				//full Axe[3]
+				callsub OnBuyItem,5000,"Zeny",1301,1,"";
+			}
+			break;
+		case 2: 
+			if(callfunc("OnCheckFactionQuota","bwsBaseQuota","bwsCurrentQuota") == 0)
+			{
+				callsub OnBuyItem,getiteminfo(1109,0),"Zeny",1109,1,"";
+			}
+			else
+			{
+				callsub OnBuyItem,5000,"Zeny",1107,1,"";
+			}
+			break;
+		case 3: 
+			if(callfunc("OnCheckFactionQuota","bwsBaseQuota","bwsCurrentQuota") == 0)
+			{
+				//Cinquedea[1]
+				callsub OnBuyItem,getiteminfo(1245,0),"Zeny",1245,1,"";
+			}
+			else
+			{
+				//Cinquedea[2]
+				callsub OnBuyItem,75000,"Zeny",1246,1,"";
+			}
+			break;
+		case 4: 
+			if(callfunc("OnCheckFactionQuota","bwsBaseQuota","bwsCurrentQuota") == 0)
+			{
+				//Club[0]
+				callsub OnBuyItem,getiteminfo(1503,0),"Zeny",1503,1,"";
+			}
+			else
+			{
+				//Club[3]
+				callsub OnBuyItem,5000,"Zeny",1501,1,"";
+			}
+			break;
+		case 5: 
+			if(callfunc("OnCheckFactionQuota","bwsBaseQuota","bwsCurrentQuota") == 0)
+			{
+				//Cutter[0]
+				callsub OnBuyItem,getiteminfo(1206,0),"Zeny",1206,1,"";
+			}
+			else
+			{
+				//Cutter[3]
+				callsub OnBuyItem,7500,"Zeny",1203,1,"";
+			}
+			break;
+
+	}
+	return;
+
+}

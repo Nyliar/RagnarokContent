@@ -1,0 +1,147 @@
+alberta,134,186,0	script	Hidden Chest#0::alhidch00	HIDDEN_WARP_NPC,{
+	mes "[Hidden Chest]";
+	if(.hidden == getcharid(0) && getd(strnpcinfo(3)) == 0)
+	{
+		mes "Hey! You've found a chest!";
+		switch(atoi(strnpcinfo(2)))
+		{
+			case 0:
+				//explosion
+				break;
+			case 1:
+				//fire
+				break;
+			case 2:
+				//water
+				break;
+			case 3:
+				//wind
+				break;
+			case 4:
+				//earth
+				break;
+			case 5:
+				//darkness
+				break;
+		}
+		getitem rand($crystalFirstId, $crystalLastId);
+		setd(strnpcinfo(3), 1);
+	}
+	else
+	{
+		mes "Don't be too greedy, Human.";
+	}
+	close;
+
+OnUnHide:
+	if(.hidden == 1)
+	{
+		set .hidden, getcharid(0);
+		setnpcdisplay 4_TREASURE_BOX;
+		initnpctimer;
+	}
+	end;
+	
+OnTimer10000:
+	if(.hidden == 1)
+	{
+		switch(atoi(strnpcinfo(2)))
+		{
+			case 0:
+				//explosion
+				break;
+			case 1:
+				//fire
+				break;
+			case 2:
+				//water
+				break;
+			case 3:
+				//wind
+				break;
+			case 4:
+				//earth
+				break;
+			case 5:
+				//darkness
+				break;
+		}
+		stopnpctimer;
+		initnpctimer;
+	}
+	end;
+	
+OnRadarActivated:
+	if(strcharinfo(3) == strnpcinfo(4))
+	{
+		dispbottom "A Fae is on this map.";
+		getmapxy(.@nmap$, .@nmapX, .@nmapY, UNITTYPE_NPC);
+		getmapxy(.@map$, .@mapX, .@mapY, UNITTYPE_PC);
+		
+		set .@xRad, 0;
+		set .@yRad, 0;
+		if(.@nmapX > .@mapX)
+		{
+			set .@xRad, .@nmapX - .@mapX;
+		}
+		else
+		{
+			set .@xRad, .@mapX - .@nmapX;
+		}
+		
+		if(.@nmapY > .@mapY)
+		{
+			set .@yRad, .@nmapY - .@mapY;
+		}
+		else
+		{
+			set .@yRad, .@mapY - .@nmapY;
+		}
+			
+		if(.@yRad > 50 || .@xRad > 50)
+		{
+			if(.@yRad < .@xRad)
+			{
+				dispbottom "It's hidden in a " + .@yRad + "m radius.";
+			}
+			else
+			{
+				dispbottom "It's hidden in a " + .@yRad + "m radius.";
+			}
+		}
+	}
+	end;
+	
+OnTimer30000:
+	set .hidden, 1;
+	setnpcdisplay HIDDEN_WARP_NPC;
+	stopnpctimer;
+	initnpctimer;
+	end;
+	
+OnInit:
+	set .hidden, 1;
+	initnpctimer;
+	end;
+}	
+
+alberta,134,186,0	duplicate(alhidch00)	Hidden Chest::alhidch01	HIDDEN_WARP_NPC
+alberta,134,186,0	duplicate(alhidch00)	Hidden Chest::alhidch02	HIDDEN_WARP_NPC
+alberta,134,186,0	duplicate(alhidch00)	Hidden Chest::alhidch03	HIDDEN_WARP_NPC
+alberta,134,186,0	duplicate(alhidch00)	Hidden Chest::alhidch04	HIDDEN_WARP_NPC
+alberta,134,186,0	duplicate(alhidch00)	Hidden Chest::alhidch05	HIDDEN_WARP_NPC
+alberta,134,186,0	duplicate(alhidch00)	Hidden Chest::alhidch06	HIDDEN_WARP_NPC
+alberta,134,186,0	duplicate(alhidch00)	Hidden Chest::alhidch07	HIDDEN_WARP_NPC
+alberta,134,186,0	duplicate(alhidch00)	Hidden Chest::alhidch08	HIDDEN_WARP_NPC
+alberta,134,186,0	duplicate(alhidch00)	Hidden Chest::alhidch09	HIDDEN_WARP_NPC
+alberta,134,186,0	duplicate(alhidch00)	Hidden Chest::alhidch10	HIDDEN_WARP_NPC
+alberta,134,186,0	duplicate(alhidch00)	Hidden Chest::alhidch11	HIDDEN_WARP_NPC
+alberta,134,186,0	duplicate(alhidch00)	Hidden Chest::alhidch12	HIDDEN_WARP_NPC
+alberta,134,186,0	duplicate(alhidch00)	Hidden Chest::alhidch13	HIDDEN_WARP_NPC
+alberta,134,186,0	duplicate(alhidch00)	Hidden Chest::alhidch14	HIDDEN_WARP_NPC
+alberta,134,186,0	duplicate(alhidch00)	Hidden Chest::alhidch15	HIDDEN_WARP_NPC
+alberta,134,186,0	duplicate(alhidch00)	Hidden Chest::alhidch16	HIDDEN_WARP_NPC
+alberta,134,186,0	duplicate(alhidch00)	Hidden Chest::alhidch17	HIDDEN_WARP_NPC
+alberta,134,186,0	duplicate(alhidch00)	Hidden Chest::alhidch18	HIDDEN_WARP_NPC
+alberta,134,186,0	duplicate(alhidch00)	Hidden Chest::alhidch19	HIDDEN_WARP_NPC
+alberta,134,186,0	duplicate(alhidch00)	Hidden Chest::alhidch20	HIDDEN_WARP_NPC

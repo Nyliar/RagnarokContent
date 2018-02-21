@@ -1,0 +1,56 @@
+mag_dun02,71,115,5	script	BloodCrystal#5::alabc22	OBJ_A2,{
+	end;
+
+OnTimer360000:
+	stopnpctimer;
+	set .loopCount, .loopCount + 1;
+	if(.loopCount >= $repopHourCount)
+	{
+		goto OnClearGauge;
+	}
+	initnpctimer;
+	end;
+
+OnClearGauge:
+	setnpcdisplay strnpcinfo(3), OBJ_A2;
+	set .fillPercent, 0;
+	set .fillItemCount, 0;
+	end;
+	
+OnPopMonsters:
+	callsub OnClearMonsters;
+//== F1 =============================
+	monster "mag_dun01", 0, 0, "--ja--", 1383, 50, "CardinalSystem::OnNormalDied";
+	monster "mag_dun01", 0, 0, "--ja--", 1366, 20, "CardinalSystem::OnNormalDied";
+	monster "mag_dun01", 0, 0, "--ja--", 1367, 20, "CardinalSystem::OnNormalDied";
+	monster "mag_dun01", 0, 0, "--ja--", 1072, 20, "CardinalSystem::OnNormalDied";
+	monster "mag_dun01", 0, 0, "--ja--", 1381, 10, "CardinalSystem::OnNormalDied";
+	
+//== F2 =============================
+	monster "mag_dun02", 0, 0, "--ja--", 1379, 46, "CardinalSystem::OnNormalDied";
+	monster "mag_dun02", 0, 0, "--ja--", 1385, 40, "CardinalSystem::OnNormalDied";
+	monster "mag_dun02", 0, 0, "--ja--", 1384, 38, "CardinalSystem::OnNormalDied";
+	monster "mag_dun02", 0, 0, "--ja--", 1367, 20, "CardinalSystem::OnNormalDied";
+	monster "mag_dun02", 0, 0, "--ja--", 1382, 15, "CardinalSystem::OnNormalDied";
+	monster "mag_dun02", 0, 0, "--ja--", 1387, 10, "CardinalSystem::OnNormalDied";
+	end;
+	
+OnClearMonsters:
+OnClock0000:
+	killmonsterall "mag_dun01";
+	killmonsterall "mag_dun02";
+	set .popAvailable, 1;
+	setd("$" + strnpcinfo(3), 0);
+	return;
+	
+OnInit:
+	set .fillPercent, 0;
+	if(getd("$" + strnpcinfo(3)) >= 1)
+	{
+		set .fillPercent, 100;
+	}
+	setarray .mapToCheck[0],1,2;
+	set .popAvailable, 1;
+	end;
+}
+

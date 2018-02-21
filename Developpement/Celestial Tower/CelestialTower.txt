@@ -1,0 +1,519 @@
+// [========================================================]
+// [==========     System - Celestial Tower     ============]
+// [========================================================]
+// [ Version 1                                              ]
+// [========================================================]
+// [ Original script by: Alayne				    ]
+// [========================================================]
+// [ Description:                                           ]
+// [--------------------------------------------------------]
+// [                                                        ]
+// [ - A pvp system, based on Celestial Tower in HxH	    ]
+// [ - Players have to climb a tower, step by step 	    ]
+// [ - each winning can be associated with a reward,	    ]
+// { betting, special or normal match...		    	    ]
+// [                                                        ]
+// [========================================================]
+// [                                                        ]
+// [ -Database structure: celestial_tower			    ]
+// [	- id	(INT)						    ]
+// [	- char_id	(INT)					    ]
+// [	- account_id	(INT)					    ]
+// [	- floor (TINYINT)					    ]
+// [	- winCount (TINYINT)					    ]
+// [	- lossCount (TINYINT)				    ]
+// [	- totalWinCount (TINYINT)				    ]
+// [	- totalLossCount (TINYINT)				    ]
+// [	- fightRefused (TINYINT)				    ]
+// [	- lastFightDay (INT)					    ]
+// [	- rewardRetrieveDay (INT)				    ]
+// [	- floorMaster	(INT)					    ]
+// [	- betCost	(DOUBLE)				    ]
+// [                                                        ]
+// [========================================================]
+// [                                                        ]
+// [ Changelog: (5 last updates)                            ]
+// [                                                        ]
+// [--------------------------------------------------------]
+// [                                                        ]
+// [ v0: Creation                      			    ]
+// [                                                        ]
+// [========================================================]
+// [                                                        ]
+// [========================================================]
+
+
+louyang,209,99,5	script	Celestial_Tower_Core::ctcore	-1,{
+	end;
+	
+OnStartFight:
+	set .@npcname$, "[Celestial Tower]";
+	set $enableBookmake, 0;
+	mapannounce $CTFightMap$, .@npcname$ + " Ready?", 0;
+	sleep 1000;
+	mapannounce $CTFightMap$, .@npcname$ + " FIGHT!", 0;	
+	setmapflag $CTFightMap$, mf_pvp;
+	end;
+	
+OnPCKillEvent:
+	if (strcharinfo(3) == $CTFightMap$)
+	{
+		attachrid killedrid;
+		warp "Save",0,0;
+		attachrid killerrid;
+		removemapflag $CTFightMap$, mf_pvp;
+		set .@npcname$, "[Celestial Tower]";
+		if (strcharinfo(0) == $fighter$)
+		{
+			set .winnerName$, $fighter$;
+			set .winnerId, $fighterId;
+			set .loserId, $challengerId;
+			set .loserName$, $challenger$;
+			goto OnRewardWinner;
+		}
+		else if (strcharinfo(0) == $challenger$)
+		{
+			set .winnerName$, $challenger$;
+			set .winnerId, $challengerId;
+			set .loserId, $fighterId;
+			set .loserName$, $fighter$;
+			goto OnRewardWinner;
+		}
+		else
+		{ 
+			//???
+		}
+		addtimer 10000, strnpcinfo(3) + "::OnWarpBack";
+	}
+	end;
+	
+OnRewardWinner:
+	mapannounce $CTAnnounceMap$, .@npcname$ + " And victory goes to " + .winnerName$ + "!", 0;
+	set .@query$, "SELECT `floor`,`winCount`,`lossCount`,`totalWinCount`,`totalLossCount`,`floorMaster` FROM `celestial_tower` WHERE `char_id`=" + .winnerId;
+	query_sql(.@query$, .@floor, .@win, .@loss, .@totalWin, .@totalLoss, .@floorMaster);
+	if (getarraysize(.@floor) > 0 || .@floor != 0)
+	{
+		set .@newFloor, .@floor[0] + 1;
+		set .@actualWin, .@win[0] + 1;
+		set .@totalWins, .@totalWin[0] + 1;
+		set .@totalLosses, .@totalLoss[0];
+		set .@actualLoss, .@loss[0];
+	
+		if (.@floor[0] < 50)
+		{
+			set .@minWin, 1;
+			set .@rewardFee, $50rewardFee;
+		}
+		else if (.@floor[0] < 100)
+		{
+			set .@minWin, $100WinDue;
+		}
+		else if (.@floor[0] < 150)
+		{
+			set .@minWin, $150WinDue;
+			set .@lossMax, $150LossDue;
+		}		
+		
+		if (.@actualWin >= .@minWin && .@actualLoss <= .@lossMax)
+		{
+			//ready to progress
+			set .@progress, 0;
+			if (.@floor[0] >= 100)
+			{
+				if (.@floorMaster[0] == 1 && $floorMasterFight == 0)
+				{
+					//floor master fighting to progress
+					set .@progress, 1;
+				}
+				else
+				{
+					if (.@actualWin > .@minWin)
+					{
+						//only possible case where actualWin can be higher than min required
+						dispbottom "You've become the floormaster for this floor.";
+						dispbottom "Congratulations.";	
+						set .@progress, 3;		
+					}
+					else
+					{
+						query_sql("SELECT `char_id` FROM `celestial_tower` WHERE `floorMaster`=1 AND `floor`=" + .@floor[0], .@char_id);
+						if (getarraysize(.@char_id) > 0)
+						{
+							dispbottom "You've earn the right to defy the FloorMaster.";
+							dispbottom "Congratulations.";
+							set .@progress, 2;
+						}
+						else
+						{
+							dispbottom "There's no floormaster registered. Therefor, you'll become the floormaster for this floor.";
+							dispbottom "Congratulations.";
+							set .@progress, 3;
+						}
+					}
+				}
+			}
+			else
+			{
+				set .@progress, 1;
+			}
+			set .@query$, "UPDATE `celestial_tower` SET `totalWinCount`=" + .@totalWins + ",`betCost`=" + (.@totalWins * 100 / (.@totalWins + .@totalLosses));
+			if (.@progress >= 1)
+			{				
+				if ($floorMasterFight == 1 || .@progress == 3)
+				{
+					set .@query$, .@query$ + ", `floormaster`=1,`winCount`=0,`rewardRetrieveDay`=" + gettimetick(2) + ",`lastFightDay`=" + gettimetick(2);
+				}
+				else if ($floorMasterFight == 0)
+				{
+					if (.@floorMaster[0] == 1)
+					{
+						set .@query$, .@query$ + ", `floorMaster`=0,`rewardRetrieveDay`=0,`lastFightDay`=0";
+					}
+				}
+				if (.@progress == 1)
+				{
+					//change floor only if needed
+					set .@query$, .@query$ + ",`floor`=" + .@newFloor;
+					set .@query$, .@query$ + ",`winCount`=0,`lossCount`=0"; 
+					mapannounce $CTFightMap$, .@npcname$ + " Congratulations " + .winnerName$ + "! You've granted access to floor " + .@newFloor, 0;
+				}
+			 	else if (.@progress == 2)
+				{
+					set .@query$, .@query$ + ",`winCount`=" + .@actualWin;
+				}
+				if (.@floor[0] >= 50 && .@floor[0] < 100)
+				{
+					set .@rewardFee, $100rewardFeeBase * (.@floor[0] - 50);
+					dispbottom .@npcname$ + " You earn " + .@rewardFee + " Zenies.";
+				}
+				set Zeny, Zeny + .@rewardFee;
+			}
+		}
+		else
+		{
+			//not yet, update counts
+			set .@query$, "UPDATE `celestial_tower` SET `totalWinCount`=" + .@totalWin + ",`winCount`=" + .@actualWin + ",`betCost`=" + (.@totalWins * 100 / (.@totalWins + .@totalLosses));
+			mapannounce $CTFightMap$, .@npcname$ + " You're victory count is " + .@actualWin + " wins for " + .@actualLoss + " defeats.", 0;
+			mapannounce $CTFightMap$, .@npcname$ + " You still have to win " + (.@minWin - .@actualWin) + " to progress to next floor.", 0;
+		}
+		set .@query$, .@query$ + " WHERE `char_id`=" + .winnerId;
+		query_sql(.@query$, .@count);
+		
+		goto OnPunishLoser;
+	}
+	close;
+	
+OnPunishLoser:
+	mapannounce $CTAnnounceMap$, .@npcname$ + " On the other hand, " + .loserName$ + " lose the fight. He'll gonna be punished!", 0;
+	query_sql("SELECT `floor`,`winCount`,`lossCount`,`totalWinCount`,`totalLossCount` FROM `celestial_tower` WHERE `char_id`=" + .loserId, .@floor, .@win, .@loss, .@totalWin, .@totalLoss);
+	if (getarraysize(.@floor) > 0)
+	{
+		set .@actualWin, .@win[0];
+		set .@totalWins, .@totalWin[0];
+		set .@totalLosses, .@totalLoss[0] + 1;
+		set .@actualLoss, .@loss[0] + 1;
+
+		if (.@floor[0] < 50)
+		{
+			set .@maxLoss, 1;
+		}
+		else if (.@floor[0] < 100)
+		{
+			set .@maxLoss, 1;
+			set .@backRange, $100BackRange;
+		}
+		else if (.@floor[0] < 150)
+		{
+			set .@maxLoss, $150LossDue;
+		}
+		
+		if (.@actualLoss >= .@maxLoss)
+		{
+			set .@newFloor, 1;
+			//ready to reduce
+			if (.@floor[0] > 2)
+			{
+				if (.@floor[0] >= 50 && .@floor[0] < 60)
+				{
+					set .@newFloor, 50;
+				}
+				else if (.@floor[0] >= 60 && .@floor[0] < 70)
+				{
+					set .@newFloor, 60;
+				}
+				else if (.@floor[0] >= 70 && .@floor[0] < 80)
+				{
+					set .@newFloor, 70;
+				}
+				else if (.@floor[0] >= 80 && .@floor[0] < 90)
+				{
+					set .@newFloor, 80;
+				}
+				else if (.@floor[0] >= 90 && .@floor[0] <= 100)
+				{
+					set .@newFloor, 90;
+				}
+				else
+				{
+					set .@newFloor, .@floor[0] - 1;
+				}
+				mapannounce $CTFightMap$, .@npcname$ + " Sorry, " + .loserName$ + ", but you have to go back to floor " + .@newFloor, 0;
+			}
+			set .@query$, "UPDATE `celestial_tower` SET `totalLossCount`=" + .@totalLosses + ",`floor`=" + .@newFloor + ",`winCount`=0,`lossCount`=0";
+			if ($floorMasterFight == 1)
+			{
+				set .@query$, .@query$ + ",`floorMaster`=0,`rewardRetrieveDay`=0,`lastFightDay`=0";
+			}
+		}
+		else
+		{
+			//not yet, update counts
+			set .@query$, "UPDATE `celestial_tower` SET `totalLossCount`=" + .@totalLosses + ",`lossCount`=" + .@actualLoss + ",`betCost`=" + (.@totalWins * 100 / (.@totalWins + .@totalLosses));
+			if ($floorMasterFight == 1)
+			{
+				set .@query$, .@query$ + ",`floorMaster`=0,`rewardRetrieveDay`=0,`lastFightDay`=0";
+			}
+			mapannounce $CTFightMap$, .@npcname$ + " Be careful! " + .loserName$ + ", " + (.@maxLoss - .@actualLoss) + " more loss, and you'll have to get back to previous floor.", 0;
+		}
+		set .@query$, .@query$ + " WHERE `char_id`=" + .loserId;
+
+		query_sql(.@query$, .@count);
+	}
+	addtimer 10000, strnpcinfo(3) + "::OnWarpBack";
+	goto OnUpdateBets;
+	end;
+	
+OnUpdateBets:
+	query_sql("UPDATE `celestial_bookmaker` SET `betClaimed`=1 WHERE `betName`='" + .loserName$ + "' AND `betFoeName`='" + .winnerName$ + "'", .@count);
+
+	query_sql("SELECT `id`,`betValue`,`betCost` FROM `celestial_bookmaker` WHERE `betName`='" + .winnerName$ + "' AND `betFoeName`='" + .loserName$ + "'", .@id, .@betValue, .@betCost);
+	if (getarraysize(.@id) > 0)
+	{
+		set .@gainAmount, 0;
+		set .@maxBet, 0;
+		for (set .@i,0; .@i<getarraysize(.@id); set .@i,.@i+1)
+		{
+			set .@gainAmount, .@gainAmount + .@betValue[.@i];
+			if (.@betValue[.@i] > .@maxBet)
+			{
+				set .@maxBet, .@betValue[.@i];
+			}
+		}
+		for (set .@i,0; .@i<getarraysize(.@id); set .@i,.@i+1)
+		{
+			if (.@betValue[.@i] == .@maxBet)
+			{
+				set .@betGain, .@gainAmount / .@betCost[.@i];
+			}
+			else
+			{
+				set .@betGain, (.@gainAmount / ((.@maxBet - .@betValue[.@i]) * .@betCost[.@i])) * 1000 + .@betValue[.@i];
+			}
+			query_sql("UPDATE `celestial_bookmaker` SET `betReward`=" + (.@betValue[.@i] + .@betGain) + " WHERE `id`=" + .@id[.@i], .@count);			
+		}
+	}
+	end;
+	
+OnWarpBack:
+	warp "Save",0,0;
+	end;
+	
+OnInit:
+	set $CTTimeLimit, 0;
+	set $CTFightMap$, "prt_pvp";
+	set $CTAnnounceMap$, "ars_fild21";
+	setarray $CTStartPointX[0], 13, 86;
+	setarray $CTStartPointY[0], 50, 50;
+	set $enableBookmake, 0;
+	set $fighter$, "";
+	set $challenger$, "";
+	set $fighterId, 0;
+	set $challengerId, 0;
+	set $fighterBetCote, 0;
+	set $challengerBetCote, 0;
+	set $winnerType, -1;
+	end;
+}
+
+function	script	LookForFighter	{
+	set $fighterId, getarg(0);
+	set .@startingAId, getarg(1);
+	set .@floorMaster, getarg(2);
+	if (callfunc("LookForFreeMap") == 1)
+	{
+		set .@query$, "SELECT `floor` FROM `celestial_tower` WHERE `char_id`=" + $fighterId;
+		query_sql(.@query$, .@floor);
+		if (getarraysize(.@floor) > 0)
+		{
+			if (.@floor[0] < 50)
+			{
+				set .minFloor, 1;
+				set .maxFloor, 50;
+				set .fightFee, $50fightFee;
+			}
+			else if (.@floor[0] < 100)
+			{
+				set .minFloor, 50;
+				set .maxFloor, 100;
+				set .fightFee, $100fightFee;
+			}
+			else if (.@floor[0] < 150)
+			{
+				set .minFloor, .@floor[0];
+				set .maxFloor, .@floor[0];
+				set .fightFee, $150fightFee;
+			}
+			else
+			{
+				//nothing, error?
+			}
+		}
+		set $floorMasterFight, 0;
+		set .@query$, "SELECT `char_id`,`account_id` FROM `celestial_tower` WHERE `char_id`!=" + $fighterId + " AND `floor` >= " + .minFloor + " AND `floor` <= " + .maxFloor;
+		if (.@floorMaster == 1)
+		{
+			set .@query$, .@query$ + " AND `floorMaster`=1";
+		}
+		query_sql(.@query$, .@availableId, .@availableAId);
+		if (getarraysize(.@availableId) > 0)
+		{
+			set .@found, 0;
+			set .@currentId, 0;
+			do
+			{
+				set .@query$, "SELECT `online` from `char` WHERE `char_id`=" + .@availableId[.@currentId];
+				query_sql(.@query$, .@online);
+				if (getarraysize(.@online) > 0 && .@online[0] == 1 || .@online == 1)
+				{
+					attachrid(.@availableAId[.@currentId]);
+					mes "[Celestial Tower]";
+					if (.@floorMaster == 1)
+					{
+						mes "A challenger wish to defy you as FloorMaster.";
+						mes "Do you want to compete?";
+					}
+					else
+					{
+						mes "A fight is available for you in the Celestial Tower.";
+						mes "Do you want to compete?";
+						mes "It'll cost you " + .fightFee + "z.";
+					}
+					if (select("Yes","No") == 1)
+					{
+						if (Zeny >= .fightFee || .@floorMaster == 1)
+						{
+							if (.@floorMaster == 0)
+								set Zeny, Zeny - .fightFee;
+							mes "Perfect.";
+							mes "You'll be warped soon.";
+							set $challengerId, .@availableId[.@currentId];
+							set .@found, 1;
+							set $challenger$, strcharinfo(0);
+							if (.@floorMaster == 1)
+								set $floorMasterFight, 1;
+
+							if (.minFloor > 100)
+							{
+								query_sql("SELECT `lastFightDay`,`rewardRetrieveDay` FROM `celestial_tower` WHERE `char_id`=" + .@availableId[.@currentId], .@lastFightDay, .@rewardDay);
+								set .@query$, "UPDATE `celestial_tower` SET `lastFightDay`=" + gettimetick(2);
+								set .@query$, .@query$ + ", `fightRefused`=0 WHERE `char_id`=" + .@availableId[.@currentId];
+								query_sql(.@query$, .@count);
+							}
+						}
+						else
+						{
+							mes "You don't have that amount of Zenies.";
+						}
+					}
+					else
+					{
+						if (.minFloor > 100)
+						{
+							query_sql("SELECT `fightRefused` FROM `celestial_tower` WHERE `char_id`=" + .@availableId[.@currentId], .@fightRefused);
+							query_sql("UPDATE `celestial_tower` SET `fightRefused`=" + (.@fightRefused[0] + 1) + " WHERE `char_id`=" + .@availableId[.@currentId], .@count);
+							if (.@fightRefused[0] + 1 >= 2)
+							{
+								mes "You won't be paid anymore as a Floor Master.";
+							}	
+							else
+							{
+								mes "Perfect, good day to you.";
+							}	
+						}
+						else
+						{
+							mes "Perfect, good day to you.";
+						}
+					}
+					close2;
+				}
+				set .@currentId, .@currentId + 1;
+			}
+			while(.@found == 0 && .@currentId < getarraysize(.@availableId));
+			attachrid(.@startingAId);
+			set $fighter$, strcharinfo(0);
+			if (.@found == 1)
+			{
+				mes "[Celestial Tower]";
+				mes "A challenger has been found.";
+				if (callfunc("LookForFreeMap") == 1)
+				{
+					callfunc "StartFight";
+					warpchar $CTFightMap$, $CTStartPointX[1], $CTStartPointY[1], $challengerId;
+					warp $CTFightMap$, $CTStartPointX[0], $CTStartPointY[0];
+					set Zeny, Zeny - CTFIGHTFEE;
+				}
+				else
+				{
+					next;
+					mes "[Celestial Tower]";		
+					mes "Sorry, but there's no available fight room right now.";		
+					attachrid(.@availableAId[.@currentId]);
+					mes "[Celestial Tower]";		
+					mes "Sorry, but there's no available fight room right now.";	
+				}
+			}
+			else
+			{
+				mes "[Celestial Tower]";		
+				mes "Sorry, but there's no available fighter for you right now.";					
+			}
+		}
+		else
+		{
+			mes "[Celestial Tower]";
+			mes "Sorry, but there's no available fighter for you're level right now.";
+		}
+	}
+	else
+	{
+		mes "[Celestial Tower]";
+		mes "Sorry, there's no free room to start a fight.";
+	}
+	close;
+}
+
+function	script	StartFight	{
+	set .@npcname$, "[Celestial Tower]";
+	mapannounce $CTAnnounceMap$, .@npcname$ + " Welcome on Celestial Tower fight!", 0;
+	set .@announce$, .@npcname$ + " Today, a fight between " + $fighter$ + " and " + $challenger$;
+	if ($floorMasterFight == 1)
+	{
+		set .@announce$, .@npcname$ + " Today, a fight between " + $fighter$ + " and the FloorMaster, " + $challenger$;
+	}
+	mapannounce $CTAnnounceMap$, .@announce$, 0;
+	if ($floorMasterFight == 1)
+		mapannounce $CTAnnounceMap$, .@npcname$ + " If the challenger win, he will become the new FloorMaster!",0;
+	mapannounce $CTAnnounceMap$, .@npcname$ + " No time limits. The fight will start in 5 minutes! Time to see the bookmakers!", 0;
+	addtimer 3000, "ctcore::OnStartFight";
+	set $enableBookmake, 1;
+	return;
+}
+
+function	script	LookForFreeMap	{
+	if (getmapusers($CTFightMap$) > 0)
+	{
+		return 0;
+	}
+	return 1;
+} 

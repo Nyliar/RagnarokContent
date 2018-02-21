@@ -1,0 +1,231 @@
+/////////////////////////////////////////////
+//NPC Créé par Lyyn - lyyn@bewoopi.com
+//Pour Tradition Online
+//////--------------------------------------
+//Date de création :
+// 24 juillet 2009
+//////--------------------------------------
+//Description du script :
+//Healer original avec système de fatigue.
+//////--------------------------------------
+//Suivi des modifications :
+//-------------------------
+//06-07-2014	:	Suppression des prompt + remaniement du code
+//24-07-2009	:	Création du NPC
+////////////////////////////////////////////
+
+function	script	F_recup	{
+	
+	// CONFIGURATION
+	.msRecup = 7500;		// Toutes les X millisecondes le healer récupère 1 point de fatigue [Défaut : 5500]
+	
+	set $@regen[getarg(0)],1;
+	goto L_regen;
+	end;
+	
+	L_regen:
+		while($@regen[getarg(0)]){
+			if ($@fatigue[getarg(0)] == 0){
+				sleep 5000; // vérification toutes les 5 secondes
+				continue;
+			}
+			else {
+				sleep .msRecup; // 1p/30sec
+				set $@fatigue[getarg(0)],$@fatigue[getarg(0)]-1;
+				continue;
+			}
+		}
+} // function
+
+function	script	F_fatigue	{
+	set @med_occup,0;
+	mes "[Doctor]";
+	mes "Sorry, I'm too exhausted to heal. Sorry.";
+	close;
+}
+
+// La fonction.
+
+function	script	F_menuheal	{
+
+
+// CONFIGURATION
+	set .debug,0;			// Affichage des messages de debug
+	set .parler,0;			// Décider si le npc parle. (npctalk)
+	set .gmlevel,10;		// Détermine à partir de quel gm level on peut voir la fatigue du healer
+	set .fatiguemax,100;	// valeur max de fatigue
+	set .healhp,3;			// fatigue ajoutée à chaque heal HP only (utilisé si .onlyHP == 1)
+	set .healsp,2;			// Pareil pour les SP
+	set .healtotal,3;		// Pareil pour un soin total (HP + SP)
+	set .variation,5;		// % de variation sur les heals
+	set .onlyHP,0;			// Si 1 : le healer ne propose pas de soin SP
+	set .cooldown,300;		// Temps de blocage personnel sur le healer (en secondes)
+	set .noHealWOE,1;		// Si 1, pas de heal en WOE.
+	set .temp, 60;	// BITCH
+// CONFIGURATION [Fin]
+	
+	// Est-on GM ?
+	.@isGM = (getgmlevel() >= .gmlevel) ? 1 : 0;
+	
+	if(.noHealWOE) {
+		if(agitcheck() || agitcheck2()) {
+			mes "^919191The Doctor looks somewhere else. He doesn't even notice you.^000000";
+			close;
+		}
+	}
+	
+	// Protection anti-spam (cf. Asura Strike)	
+	if((gettimetick(2) - stampHeal) < .cooldown) {
+		if(.debug) dispbottom stampHeal + " ~ " + (gettimetick(2) - stampHeal);
+		mes "[Doctor]";
+		mes "Hey, " + strcharinfo(0) + ". Do not use my powers too much !";
+		mes "Come back later.";
+		if (.@isGM) mes "^919191Fatigue : "+$@fatigue[getarg(0)]+" / " + .fatiguemax;
+		close;
+	}
+
+	if (@med_occup == 1) {
+		if(.debug) message strcharinfo(0), "@med_occup = 1 !";
+		end;
+	}
+	
+	mes "[Doctor]";
+
+	if($@fatigue[getarg(0)] <= 20) {
+		mes "I'm full of energy right now !";
+		mes "What can I do for you ?";
+	}
+	else if($@fatigue[getarg(0)] <= 40) {
+		mes "Isn't it a bit warm today? Arf...";
+		mes "Need help ?";
+	}
+	else if($@fatigue[getarg(0)] <= 75) {
+		mes "^919191*Yawn*^000000";
+		mes "Sorry...I'm a bit tired...";
+		mes "What is it ?";
+	}
+	else {
+		mes "I... Water... Arrrhhh !";
+		mes "";
+		mes "^919191The Doctor really looks tired...^000000";
+	}
+
+	if (.@isGM) mes "Fatigue : "+$@fatigue[getarg(0)]+" / " + .fatiguemax;
+	next;
+	
+	switch(select("I need heal.","Nothing.")){
+		case 1:
+			if ($@fatigue[getarg(0)] >= .fatiguemax) {
+				mes "[Doctor]";
+				mes "I'm too tired right now. Wait a moment please...";
+				close;
+			}
+			if ((!.onlyHP && Hp == MaxHp && Sp == MaxSp) || (.onlyHP && Hp == MaxHp)) {
+				mes "[Doctor]";
+				mes "You looks like in full health..";
+				close;
+			}
+			
+			// définition du % de heal
+			set .@fatigue,$@fatigue[getarg(0)]*(100 / .fatiguemax);	// Fatigue du Doctor remise sur une base de 100
+			set .@randmax,100 - .@fatigue;	// Max % de heal
+			
+			// Valeur minimale du heal
+			set .@randmin, ((.@randmax - .variation) >= 0) ? .@randmax - .variation : 0;
+			
+			set .@pourcentheal,rand(.@randmin,.@randmax);
+			if(.debug) message strcharinfo(0),"[Healer Debug] @fatigue : " + .@fatigue + " | @randmax : " + .@randmax + " | @randmin : " + .@randmin + " | % heal : " + .@pourcentheal;
+			
+			mes "[Doctor]";
+			
+			if(!.onlyHP) mes "What kind of heal ?";
+			else mes "Do you really wanna use my healing power ?";
+			
+			if (.@isGM) mes "% de heal : "+.@pourcentheal;
+			next;
+			
+			.@tempResult = 0;
+			if(!.onlyHP) {
+				.@soinhp$  = (Hp < MaxHp) ? "Health." : "";
+				.@soinsp$  = (Sp < MaxSp && BaseLevel <= .temp) ? "Spiritual." : "";
+				.@sointot$ = (Hp < MaxHp && Sp < MaxSp && BaseLevel <= .temp) ? "Full Heal." : "";
+			}
+			else {
+				.@soinhp$ = "Oui !";
+			}
+			
+			.@typeSoin = select(.@sointot$,.@soinhp$,.@soinsp$, "Au revoir.");
+			if(.debug) message strcharinfo(0),"[Healer Debug] @typeSoin (menu) = " + .@typeSoin;
+
+			//	.@verif = dans quel état de fatigue sera le healer après les soins
+			//	si .@verif dépasse fatigue max, le Doctor refusera de soigner.
+			//  .@tempType retient le type de soin (la valeur de fatigue à ajouter au soin s'il est lancé)
+			switch(.@typeSoin) {
+				case 1:
+					.@verif = $@fatigue[getarg(0)] + .healtotal;
+					.@tempType = .healtotal;
+					.@idEffect = 325;	// Heal
+					break;
+				case 2:
+					.@verif = $@fatigue[getarg(0)] + .healhp;
+					.@tempType = .healhp;
+					.@idEffect = 325;	// Heal
+					break;
+				case 3:
+					.@verif = $@fatigue[getarg(0)] + .healsp;
+					.@tempType = .healsp;
+					.@idEffect = 14;	// Une aura bleue
+					break;
+				case 4:
+					mes "[Doctor]";
+					mes "À la prochaine fois !";
+					close;
+			}
+			
+			if(.debug) message strcharinfo(0), "[Healer Debug] .@verif : " + .@verif + " | .fatiguemax : " + .fatiguemax;
+			if(.@verif > .fatiguemax) {
+				// Plus assez d'énergie pour lancer le soin
+				callfunc "F_fatigue";
+			}
+			else {
+				mes "[Doctor]";
+				mes "Allright. Here we go !";
+				close2;
+				
+				@med_occup = 1;		// Antiflood personnel
+				$@fatigue[getarg(0)] += .@tempType;		// .@tempType = valeur du soin choisi
+				
+				if(.parler) npctalk "Ahh...";
+				specialeffect 58;
+				specialeffect 546;
+				sleep2 2000;
+				
+				if(.parler) npctalk (.@typeSoin == 2) ? "Spiritual Heal !" : "Heal !";
+				specialeffect2 .@idEffect;
+				
+				// Soin effectif
+				switch(.@typeSoin) {
+					case 1:
+						percentheal .@pourcentheal,.@pourcentheal;
+						break;
+					case 2:
+						percentheal .@pourcentheal,0;
+						break;
+					case 3:
+						percentheal 0,.@pourcentheal;
+				}
+				stampHeal = gettimetick(2);	// timestamp classique
+				
+				// Fin du soin, on vide les variables
+			}
+			
+			// Fin du blocage antiflood
+			@med_occup = 0;
+			end; // fin des soins
+
+		case 2:
+			mes "[Doctor]";
+			mes "Good luck, see you.";
+			close;
+	}
+} // function

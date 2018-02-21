@@ -1,0 +1,22 @@
+//===== eAthena Script =======================================
+//= Wizarding School Main script
+//===== Par: =================================================
+//= Alayne
+//===== Version du Script: ===================================
+//= 1.0 
+//===== Compatible Avec: =====================================
+//= eAthena TxT & SQL
+//===== Commentaires =========================================
+//
+//= base skeleton manager
+//
+//============================================================
+
+-	script	WizardingSchool::alaws	HIDDEN_WARP_NPC,{
+	end;
+
+OnInit:
+	set .requiredId, 512;
+	set .wwmap$, "kh_school";
+	end;
+}

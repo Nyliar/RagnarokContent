@@ -1,0 +1,103 @@
+//mal_in02,186,57,3	script	Card Merchant::ymcarmer	4_M_DEWWOMAN,{
+prontera,137,226,6	script	Card Merchant::ymcarmer	4_M_DEWWOMAN,{
+	set .@npcname$, "[Card Merchant]";
+	
+	mes .@npcname$;
+	mes "";
+		mes "Salutations, " + strcharinfo(0);
+		if (callfunc("IsPlayerOn") || callfunc("IsPlayerOnTown"))
+		{
+			set COUNTMERCHANTENTRY, COUNTMERCHANTENTRY + 1;
+			if (COUNTMERCHANTENTRY < 50)
+			{
+				goto SellCards;
+			}
+			else
+			{
+				mes "How are you today?";
+				mes "You're often coming here. I've got some rare cards, do you wanna see them?";
+				switch(select("Of course I do!","No, thanks"))
+				{
+					case 1:
+						goto SpecialCards;
+						break;
+					case 2:
+						goto SellCards;
+						break;
+				}
+			}
+		}
+		else
+		{
+			mes "Have a good day!";
+		}
+	close;
+
+SpecialCards:
+	next;
+	mes .@npcname$;
+	mes "Here you are. Choose what you want:";
+	//retrieve cards
+	query_sql("SELECT `id_card`, `actual_count`, `sell_price` FROM `ym_cards` WHERE `rank` <= 6 AND `actual_count` < `max_count`", .@idCards, .@actualCount, .@sellPrice);
+	
+	for (set .@i,0; .@i<getarraysize(.@idCards); set .@i,.@i+1)
+	{
+		set .@menu$, .@menu$ + ( .@i ? ":" : "" ) + getitemname(.@idCards[.@i]);	
+	}
+
+	set .@choice, prompt(.@menu$) - 1;
+
+	if (.@choice != 254)
+	{
+		mes "This one costs " + .@sellPrice[.@choice] + ".";
+		mes "Do you still want it?";
+		if (select("Yes","No") == 1)
+		{
+			if (Zeny > .@sellPrice[.@choice])
+			{
+				getitem .@idCards[.@choice], 1;
+				set Zeny, Zeny - .@sellPrice[.@choice];
+			}
+			else
+			{
+				mes "Sorry but you lack some money...";
+				mes "Come back later.";
+			}
+		}
+	}
+	else
+		mes "As you wish.";
+	close;
+
+SellCards:
+	next;
+	mes .@npcname$;
+	mes "I can sell you some cards blisters.";
+	mes "Each one costs " + $blister_price + " Zeny and contains " + $blister_card_count + " cards.";
+	mes "Most of them are commons, but with a bit luck, you can have a rare one.";
+	mes "But this is pretty rare, I must warn you...";
+	next;
+	mes .@npcname$;
+	mes "So, how many blisters do you want?";
+	input .@count;
+	if (.@count != 0)
+	{
+		if (Zeny > .@count * $blister_price)
+		{
+			mes "Perfect, here's for you!";
+			set Zeny, Zeny - .@count * $blister_price;
+			getitem $YMBlisterId, .@count;							
+		}
+		else
+		{
+			mes "Sorry but you lack some money...";
+			mes "Come back later.";
+		}
+	}
+	else
+	{
+		mes "Sorry, I can't do that.";
+		goto SellCards;
+	}
+	close;	
+}

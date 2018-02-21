@@ -1,0 +1,203 @@
+//Subclassing Master
+//casp_dun02,153,185,5	script	Aeliam::alamulcla	578,{
+green,11,22,5	script	Aeliam::alamulcla	578,{
+	set .@npcname$, "[Aeliam]";
+	mes .@npcname$;
+	mes "";
+	mes "Hello to you, " + strcharinfo(0);
+	mes "My name is Aeliam. I'm the first Double Master here in Midgard.";
+	mes "What? What's a double master? You've never heard about that?";
+	switch(select("No, sorry","Haaa, Double Master! Well...No","Of Course I do!","Can I know my actuals level?"))
+	{
+		case 1:
+			next;
+			mes .@npcname$;
+			mes "";
+			mes "A Double Master is a man (or a woman) which earn the right to learn two classes.";
+			mes "When you've mastered one class, you can start learning skills from a second one.";
+			mes "Of course, there's a counterpart. You'll need twice the price in term of xp point.";
+			mes "Actually, two classes aren't the limit. You can learn as much classes as you want.";
+			mes "But the counterpart is heavier each time. Fof three classes, each level on each classes";
+			mes "over the first one will cost you 4 time more xp. For four classes, 16 times.";
+			mes "And so on.";
+			mes "Of course, there's some limits.";
+			mes "Some skills are forbidden, the xp line is different from initial one (harder, of course),";
+			mes "but you're free from skills trees in these classes.";
+			mes "Which mean you can for example learn Jupitel Thunder without know Lightning Bolt.";
+			mes "On the other hand, once you've refused a path, you can't come back on it.";
+			mes "This mean you can't learn Paladin's path as Lord Knight or higher, nore learn High Wizard if you've learned Professor's path.";
+			next;
+			mes .@npcname$;
+			mes "";
+			mes "So. Are you interested?";
+			if (select("Yes, of course","No, too hard") == 1)
+			{
+				mes "Good! Let's start then.";
+				goto OnStartMultiClassing;
+			}
+			else
+			{
+				mes "I understand. Come back when you'll be ready.";
+				close;
+			}
+			break;
+		case 2:
+			mes "You're stupid. And I don't like stupid guys.";
+			close;
+		case 3:
+			mes "Allright. If you know it, you don't need me anymore.";
+			goto OnStartMultiClassing;
+			break;
+		case 4:
+			if (MULTI_CLASS_COUNT > 0)
+			{
+				mes "Surely. So, you are:";
+				for (set .@i,1; .@i<=MULTI_CLASS_COUNT; set .@i,.@i+1)
+				{
+					mes "Level " + getd("MULTI_LEVEL_"+.@i) + " for class " + .@i;
+
+					if(getd("MULTI_LEVEL_"+.@i) >= 125)
+					{
+						mes "Ho. Tu as donc fini une de tes sous classes. Intéressant.";
+						mes "Je vais donc te révéler le secret sous le secret.";
+						mes "Une fois atteint le plus haut niveau d'une sous classe,";
+						mes "tu obtiens de ma part une représentation physique de ta classe.";
+						mes "Tant que tu la porteras, tu obtiendras le symbole même de ta classe.";
+						mes "Essaye et tu comprendras. Je prends ta perle et je te donne le symbole.";
+						switch(getd ("MULTI_CLASS_" + .@i))
+						{
+							case 4060: 
+								set .@idIn, 21774;
+								set .@idOut, 22007;
+								break;
+							case 4061: 
+								set .@idIn, 21779;
+								set .@idOut, 22012;
+								break;
+							case 4062: 
+								set .@idIn, 21782;
+								set .@idOut, 22005;
+								break;
+							case 4063: 
+								set .@idIn, 21776;
+								set .@idOut, 22000;
+								break;
+							case 4064: 
+								set .@idIn, 21780;
+								set .@idOut, 22003;
+								break;
+							case 4065: 
+								set .@idIn, 21785;
+								set .@idOut, 22002;
+								break;
+							case 4073: 
+								set .@idIn, 21775;
+								set .@idOut, 22006;
+								break;
+							case 4074: 
+								set .@idIn, 21778;
+								set .@idOut, 22009;
+								break;
+							case 4075: 
+								set .@idIn, 21783;
+								set .@idOut, 22004;
+								break;
+							case 4076: 
+								set .@idIn, 21784;
+								set .@idOut, 22011;
+								break;
+							case 4077: 
+								set .@idIn, 21777;
+								set .@idOut, 22010;
+								break;
+							case 4078: 
+								set .@idIn, 21781;
+								set .@idOut, 22001;
+								break;
+							case 4079: 
+								set .@idIn, 21786;
+								set .@idOut, 22008;
+								break;
+						}
+						if (countitem(.@idIn) >= 1)		
+						{
+							delitem .@idIn, 1;
+							getitem .@idOut, 1;
+						}
+					}
+				}
+			}
+			else
+				mes "Sorry, but you're not a double master...";
+			close;
+	}
+
+OnStartMultiClassing:
+	if (BaseLevel == 175 && JobLevel == 50 || JobLevel == 70)
+	{
+		next;
+		mes .@npcname$;
+		mes "So you wanna become a Double Master?";
+		switch(select("Yes, please","No, not at all"))
+		{
+			case 1:
+				mes "First of all, you should mastered your first class. That's ok.";
+				mes "Next, you should show strength, and solid mental.";
+				mes "This should show that you're ready to become a double master.";
+				next;
+				mes "To do that, and to become a double master, you'll need a certain item.";
+				mes "These items are Pearl. But special kind of Pearl.";
+				mes "They're called Wise Pearl.";
+				mes "These Pearl can contain the wisdom needed to learn a new class.";				
+				next;
+				mes "Therefor, each Pearl represents a class you've decided to learn.";
+				mes "While you have this pearl in your inventory, you can use skills.";
+				mes "Be careful, these Pearls are not tradable, vendable, nor dropable.";
+				mes "Each pearl is a lost place in your inventory.";
+				next;
+				mes "But to have a Pearl, you'll have to find how to create it.";
+				mes "Travel around the world. You'll find someone who knows how to do, sooner or later.";
+				set MULTI_CLASS, 1;
+				set MULTI_CLASS_COUNT, 0;
+				break;
+			case 2:
+				mes "Allright. Come back when you'll be ready.";
+				break;
+		}
+	}
+	else
+	{
+		mes "Sorry, but you're not yet a master in your first class.";
+	}
+	close;
+
+OnInit:
+	setarray .class_xp[0],
+//50 base
+106000,112000,355000,615000,917000,1253000,1595000,2007000,2430000,2868000,
+3420000,3863000,4504000,4998000,5769000,6321000,7254000,7870000,9015000,9530000,
+11072000,11848000,13467000,14337000,16243000,17216000,19446000,20781000,23070000,24453000,
+27568000,29118000,31820000,34125000,37048000,40204000,42972000,45937000,49110000,52696000,
+57158000,61305000,67167000,72285000,77647000,83624000,91113000,98548000,107630000,119077000,
+
+//70 trans
+120267768,121470444,122685151,123912002,125151118,126402630,127666657,128943321,130232751,131535078,
+132850429,134178935,135520724,136875925,138244677,139627117,141023389,142433624,143857966,145296546,
+146749508,148216997,149699160,151196158,152708120,154235207,155777550,157335326,158908679,160497757,
+162102736,163723761,165360996,167014600,168684736,170371581,172075298,173796047,175534006,177289338,
+179062235,180852860,182661390,184488004,186332878,188196207,190078168,191978955,193898747,195837737,
+197796119,199774071,201771802,203789524,205827413,207885680,209964534,212064171,214184815,216326662,
+218489920,220674817,222881562,225110381,227361485,229635100,231931452,234250768,236593273,238959210,
+
+//50 third
+535001099,540351093,545754609,551212165,556724276;
+end;
+
+OnStartNewClass:
+	if (MULTI_CLASS >= 4)
+	{
+		setd("MULTI_LEVEL_"+ MULTI_CLASS_COUNT, 0);
+		setd("MULTI_XP_"+ MULTI_CLASS_COUNT, 0);
+	}
+	end;
+}

@@ -1,0 +1,36 @@
+glastheim,54,82,7	script	Donation Bowl::aladobo	702,{
+	set .@npcname$, "[Donation Bowl]";
+	mes .@npcname$;
+	mes "Do you wish to make an Offer?";
+	if(select("Yes","No") == 1)
+	{
+		next;
+		mes .@npcname$;
+		set .@donation, 0;
+		set .@tryCount, 0;
+		while(.@donation <= 0 && .@donation >= countitem($memoriesId) && .@tryCount < 3)
+		{
+			next;
+			mes .@npcname$;
+			mes "How many " + getitemname($memoriesId) + " do you wish to offer?";
+			input .@donation;
+		}
+		if (.@tryCount == 3)
+		{
+			next;
+			mes .@npcname$;
+			mes "Come back when you'll have some Coins.";
+			close;
+		}
+		set COINDONATIONCOUNT, COINDONATIONCOUNT + .@donation;
+		if(COINDONATIONCOUNT >= $donationCountPerMemory[CURRENTMEMORY])
+		{
+			donpcevent "alahuslq::OnUnlockedMemory";
+		}
+		else
+		{
+			//specialeffect x
+		}
+	}
+	close;
+}

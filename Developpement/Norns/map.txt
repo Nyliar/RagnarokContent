@@ -1,0 +1,95 @@
+staggs wood ==> um_dun02
+Nfalgar Wreck ==> treasure02, treasure01, alb2trea
+
+Heimdall ==> kh_dun02
+Tyr ==> schg_dun01
+Njord ==> ice_dun02
+Freyja ==> kh_kiehl02
+Thor ==> gld2_ald
+Odin ==> odin_tem02
+
+//Fenrir Howl
+1@fh.gnd#1@tnm2.gnd#
+1@fh.gat#1@tnm2.gat#
+1@fh.rsw#1@tnm2.rsw#
+À¯ÀúÀÎÅÍÆäÀÌ½º\map\1@fh.bmp#À¯ÀúÀÎÅÍÆäÀÌ½º\map\1@tnm2.bmp#
+//Jormungand Lair
+1@jl.gnd#1@nyd.gnd#
+1@jl.gat#1@nyd.gat#
+1@jl.rsw#1@nyd.rsw#
+À¯ÀúÀÎÅÍÆäÀÌ½º\map\1@jl.bmp#À¯ÀúÀÎÅÍÆäÀÌ½º\map\1@nyd.bmp#
+//Hel Realm
+1@hr.gnd#1@cata.gnd#
+1@hr.gat#1@cata.gat#
+1@hr.rsw#1@cata.rsw#
+À¯ÀúÀÎÅÍÆäÀÌ½º\map\1@hr.bmp#À¯ÀúÀÎÅÍÆäÀÌ½º\map\1@cata.bmp#
+2@hr.gnd#2@cata.gnd#
+2@hr.gat#2@cata.gat#
+2@hr.rsw#2@cata.rsw#
+À¯ÀúÀÎÅÍÆäÀÌ½º\map\2@hr.bmp#À¯ÀúÀÎÅÍÆäÀÌ½º\map\2@cata.bmp#
+//Fafnir Mountain
+1@fm.gnd#bra_fild01.gnd#
+1@fm.gat#bra_fild01.gat#
+1@fm.rsw#bra_fild01.rsw#
+À¯ÀúÀÎÅÍÆäÀÌ½º\map\1@fm.bmp#À¯ÀúÀÎÅÍÆäÀÌ½º\map\bra_fild01.bmp#
+2@fm.gnd#mosk_in.gnd#
+2@fm.gat#mosk_in.gat#
+2@fm.rsw#mosk_in.rsw#
+À¯ÀúÀÎÅÍÆäÀÌ½º\map\2@fm.bmp#À¯ÀúÀÎÅÍÆäÀÌ½º\map\mosk_in.bmp#
+3@fm.gnd#lou_in01.gnd#
+3@fm.gat#lou_in01.gat#
+3@fm.rsw#lou_in01.rsw#
+À¯ÀúÀÎÅÍÆäÀÌ½º\map\3@fm.bmp#À¯ÀúÀÎÅÍÆäÀÌ½º\map\lou_in01.bmp#
+//Staggs Woods
+1@sw.gnd#um_dun02.gnd#
+1@sw.gat#um_dun02.gat#
+1@sw.rsw#um_dun02.rsw#
+À¯ÀúÀÎÅÍÆäÀÌ½º\map\1@sw.bmp#À¯ÀúÀÎÅÍÆäÀÌ½º\map\um_dun02.bmp#
+//Nalfgar Wreck
+1@nw.gnd#treasure02.gnd#
+1@nw.gat#treasure02.gat#
+1@nw.rsw#treasure02.rsw#
+À¯ÀúÀÎÅÍÆäÀÌ½º\map\1@nw.bmp#À¯ÀúÀÎÅÍÆäÀÌ½º\map\treasure02.bmp#
+2@nw.gnd#treasure01.gnd#
+2@nw.gat#treasure01.gat#
+2@nw.rsw#treasure01.rsw#
+À¯ÀúÀÎÅÍÆäÀÌ½º\map\2@nw.bmp#À¯ÀúÀÎÅÍÆäÀÌ½º\map\treasure01.bmp#
+3@nw.gnd#alb2trea.gnd#
+3@nw.gat#alb2trea.gat#
+3@nw.rsw#alb2trea.rsw#
+À¯ÀúÀÎÅÍÆäÀÌ½º\map\3@nw.bmp#À¯ÀúÀÎÅÍÆäÀÌ½º\map\alb2trea.bmp#
+//Heimdall Control
+1@hc.gnd#kh_dun02.gnd#
+1@hc.gat#kh_dun02.gat#
+1@hc.rsw#kh_dun02.rsw#
+À¯ÀúÀÎÅÍÆäÀÌ½º\map\1@hc.bmp#À¯ÀúÀÎÅÍÆäÀÌ½º\map\kh_dun02.bmp#
+//Tyr Strength
+1@ts.gnd#schg_dun01.gnd#
+1@ts.gat#schg_dun01.gat#
+1@ts.rsw#schg_dun01.rsw#
+À¯ÀúÀÎÅÍÆäÀÌ½º\map\1@ts.bmp#À¯ÀúÀÎÅÍÆäÀÌ½º\map\schg_dun01.bmp#
+//Njord Deeps
+1@nd.gnd#ice_dun02.gnd#
+1@nd.gat#ice_dun02.gat#
+1@nd.rsw#ice_dun02.rsw#
+À¯ÀúÀÎÅÍÆäÀÌ½º\map\1@nd.bmp#À¯ÀúÀÎÅÍÆäÀÌ½º\map\ice_dun02.bmp#
+//Freyja Mercy
+1@fm.gnd#kh_kiehl02.gnd#
+1@fm.gat#kh_kiehl02.gat#
+1@fm.rsw#kh_kiehl02.rsw#
+À¯ÀúÀÎÅÍÆäÀÌ½º\map\1@fm.bmp#À¯ÀúÀÎÅÍÆäÀÌ½º\map\kh_kiehl02.bmp#
+//Thor Bravery
+1@tb.gnd#gld2_ald.gnd#
+1@tb.gat#gld2_ald.gat#
+1@tb.rsw#gld2_ald.rsw#
+À¯ÀúÀÎÅÍÆäÀÌ½º\map\1@tb.bmp#À¯ÀúÀÎÅÍÆäÀÌ½º\map\gld2_ald.bmp#
+//Odin Wisdom
+1@ow.gnd#odin_tem02.gnd#
+1@ow.gat#odin_tem02.gat#
+1@ow.rsw#odin_tem02.rsw#
+À¯ÀúÀÎÅÍÆäÀÌ½º\map\1@ow.bmp#À¯ÀúÀÎÅÍÆäÀÌ½º\map\odin_tem02.bmp#
+
+kh_kiehl02
+prt_lib
+prt_prison
+rockmi2

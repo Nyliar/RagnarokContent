@@ -1,0 +1,378 @@
+// [========================================================]
+// [============    Battle Arena - Rotative Hunt   ==========]
+// [========================================================]
+// [ Version 1                                              ]
+// [========================================================]
+// [ Original script by: Alayne				    ]
+// [========================================================]
+// [ Description:                                           ]
+// [--------------------------------------------------------]
+// [                                                        ]
+// [ - The Rotative Hunt System				    ]
+// [========================================================]
+// [ Changelog: (5 last updates)                            ]
+// [--------------------------------------------------------]
+// [                                                        ]
+// [ v0: Creation                      			    ]
+// [                                                        ]
+// [                                                        ]
+// [========================================================]
+// [                                                        ]
+// [========================================================]
+pvp_n_1-4	mapflag	loadevent
+
+pvp_n_1-4,50,49,0	script	BattleRoyalManager::alabaroh	HIDDEN_WARP_NPC,2,2,{
+	close;
+
+OnPCLoadMapEvent:
+	if (strcharinfo(3) == $rotativeHuntMap$)
+	{
+		//finally, check if event should start
+		if (getarraysize($@RoHMembers) == $maxRoHMemberCount && $rotativehunton != 2)
+		{
+			goto StartRoH;
+		}
+	}
+	end;
+
+StartRoH:
+	pvpon $rotativeHuntMap$;
+	mapannounce $rotativeHuntMap$, "[Rotative Hunt] The Rotative Hunt starts!", bc_red;
+	initnpctimer;
+	set $rotativehunton, 2;
+	set .totalCount, 0;
+	goto OnSelectTarget;
+	end;
+
+OnTimer10000:
+	set .totalCount, .totalCount + 1;
+	if (.totalCount == $battleDuration)
+	{
+		callsub OnCheckVictory;
+	}
+
+	setnpctimer 0;
+	end;
+
+OnCheckVictory:
+	//every minute, check for members
+	set .@winner, -1;
+	set .@highest, 0;
+	for(set .@i,0; .@i<getarraysize($@RoHMembers); set .@i,.@i+1)
+	{
+		set .@attached, attachrid($@RoHMembers[.@i]);
+		if (getarraysize($@RoHMembers[.@i]) == 0 || .@attached == 0)
+		{
+			deletearray $@RoHMembers[.@i], 1;
+		}
+		else
+		{
+			if(RoHPOINTS > .@highest)
+			{
+				set .@highest, RoHPOINTS;
+				set .@winner, getcharid(3);
+			}
+		}
+	}
+
+	if(.@winner != -1)
+	{
+		attachrid(.@winner);
+		pvpoff $rotativeHuntMap$;
+		announce "[Rotative Hunt] " + strcharinfo(0) + " just win the Rotative Hunt!", bc_red|bc_all;
+		mapannounce $rotativeHuntMap$, "[Rotative Hunt] Congratulations, " + strcharinfo(0) + "!", bc_red;
+		mapannounce $rotativeHuntMap$, "[Rotative Hunt] you will now be rewarded.", bc_red;
+		
+		for(set .@i,0; .@i<getarraysize($@RoHMembers); set .@i,.@i+1)
+		{
+			if(getcharid(3) != .@winner)
+			{
+				if(.@cnt < .rewardMin[2])
+					set .@cnt, .rewardMin[2];
+				getitem 7773, .@cnt;
+			}
+			else
+			{
+				set .@cnt, CPOINTS / .rewardCnt[1];
+				if(.@cnt < .rewardMin[1])
+					set .@cnt, .rewardMin[1];
+				getitem 7773, .@cnt;
+				set RoHPOINTS, RoHPOINTS + .pointPerVictory;
+				set Zeny, Zeny + RoHPOINTS * 10000;
+				set Zeny, Zeny + $RoHEntryPrice * ($maxRoHMemberCount - 1);
+				//callfunc("AddPoints",getcharid(3),.pointPerVictory);
+			}
+		}
+		
+		set $rotativehunton, 0;
+	}
+	else
+	{
+		announce "[Rotative Hunt] ends without winner...", bc_red|bc_all;
+		set $rotativehunton, 0;
+	}
+	return;
+	
+OnBoardAsked:
+	set .@caller, getcharid(3);
+	dispbottom "!!Rotative Hunt Points Board!!";
+	for(set .@i,0; .@i<getarraysize($@RoHMembers); set .@i,.@i+1)
+	{
+		set .@attached, attachrid($@RoHMembers[.@i]);
+		if (.@attached == 0)
+		{
+			deletearray $@RoHMembers[.@i], 1;
+		}
+		else
+		{
+			set .@message$, "	~" + strcharinfo(0) + ": " + RoHPOINTS;
+			if(attachrid(.@caller))
+				dispbottom .@message$;
+		}
+	}
+	end;
+	
+OnPCLoginEvent:
+	set RoHPOINTS, 0;
+	end;
+	
+OnSelectTarget:
+	set .@rand, rand(0,getarraysize($@RoHMembers) - 1);
+	set .@targetId, $@RoHMembers[.@rand];
+	if(.targetId == .@targetId)
+	{
+		goto OnSelectTarget;
+	}
+	set .targetId, .@targetId;
+	if(attachrid(.targetId))
+	{
+		//special effect
+		charcommand "#speed " + strcharinfo(0) + " 2";
+		mapannounce $rotativeHuntMap$, "[Rotative Hunt] " + strcharinfo(0) + " is now the Target!", bc_blue;
+	}	
+	else
+	{
+		deletearray $@RoHMembers[.@rand], 1;
+		goto OnSelectTarget;
+	}
+	end;
+
+OnPCDieEvent:
+	if (strcharinfo(3) == $rotativeHuntMap$)
+	{
+		set RoHPOINTS, RoHPOINTS - .pointPerDeath;
+		dispbottom "You've lost " + .pointPerDeath + " points for being killed. Your current balance is " + RoHPOINTS;
+		
+		if(getcharid(3) == .targetId)
+		{		
+			charcommand "#speed " + strcharinfo(0) + " 1";
+		}
+		
+		addtimer 5000, strnpcinfo(3) + "::OnHealAfterDeath";
+		
+		attachrid(killerrid);
+		
+		set .@points, .pointPerKill;
+		if(getcharid(3) == .targetId)
+		{
+			set .@points, .@points + .pointPerKill;
+		}
+		
+		set RoHPOINTS, RoHPOINTS + .@points;
+		dispbottom "You've earn " + .@points + " points. Your current balance is " + RoHPOINTS;
+	}
+	end;
+
+OnHealAfterDeath:
+	dispbottom "[Valkyrie] You received the War Goddess benediction!";
+	percentheal 100, 100;
+	if(.buffs == 1)
+	{
+		specialeffect2 EF_INCAGILITY; sc_start SC_INC_AGI,240000,10;
+		specialeffect2 EF_BLESSING; sc_start SC_BLESSING,240000,10;
+	}
+	end;
+
+OnInit:
+	set $rotativeHuntMap$, "pvp_n_1-4";
+	set $maxRoHMemberCount, 3;
+	set $RoHEntryPrice, 0;//5000;
+	setarray $RoHDuration[0],5,10,15; //minutes range
+	set $rotativehunton, 0;
+	set .pointPerKill, 10;
+	set .pointPerTargetKill, 25;
+	set .pointPerDeath, 5;
+	set .pointPerVictory, 100;
+	setarray .rewardCnt[0], 10, 20;
+	setarray .rewardMin[0], 5, 1;
+	bindatcmd "rohboard", strnpcinfo(3) + "::OnBoardAsked";
+	set .buffs, 1;
+	end;
+}
+
+prontera,119,166,4	script	Rotative Hunt::alarohent	4_MAN_GALTUN1,{
+	set .@npcname$, "[Zod]";
+	mes .@npcname$;
+	mes "Hello to you, " + strcharinfo(0);
+	mes "I'm the Rotative Hunt Manager.";
+	mes "When you talk to me, you'll be able to setup or join an existing Rotative Hunt.";
+	next;
+	mes .@npcname$;
+	if ($rotativehunton == 2)
+	{
+		goto OnEnterAgain;
+	}
+	if ($rotativehunton == 1)
+	{
+		if(callfunc("CheckRoHPlayers") == 1)
+		{
+			next;
+			mes .@npcname$;
+			mes "Be patient please. The Rotative Hunt will start soon.";
+			close;
+		}
+		
+		mes "So. Are you interested?";
+		if (select("Join the currently running Rotative Hunt","No, thanks") == 1)
+		{
+			callsub OnJoin, 1;
+		}
+		else
+		{
+			goto OnLeave;
+		}
+	}
+	else if ($rotativehunton == 0)
+	{
+		mes "So. Are you interested?";
+		if (select("Start a new Rotative Hunt","No, thanks") == 1)
+		{
+			callsub OnJoin, 0;
+		}
+		else
+		{
+			goto OnLeave;
+		}
+	}
+	else
+	{
+		next;
+		mes .@npcname$;
+		mes "Sorry, it's too late for this battle. Come back later.";
+	}
+	close;
+
+OnJoin:
+	set .@npcname$, "[Zod]";
+	set .@mode, getarg(0);
+	next;
+	mes .@npcname$;
+	mes "Sure!";
+	mes "It'll cost you " + $RoHEntryPrice + "z to enter.";
+	if (Zeny < $RoHEntryPrice)
+	{
+		next;
+		mes .@npcname$;
+		mes "Sorry, but you lack some money...";
+		close;
+	}
+	if (select("Here you are.","I'll get back") == 1)
+	{
+		next;
+		mes .@npcname$;
+		set Zeny, Zeny - $RoHEntryPrice;
+		mes "Allright.";
+		mes "The Rotative Hunt is pretty simple.";
+		mes "When starting, a player will be designated as the Target.";
+		mes "Kill him to get " + .pointPerTargetKill + " points. Normal players bring only " + .pointPerKill + " points.";
+		mes "Death will takes " + .pointPerDeath + " points. The highest points pool win the match.";
+		mes "On the other hand, killing while being the Target doubles the points you'll get!";
+		next;
+		mes .@npcname$;
+		mes "The reward will be the total amount paid by all players.";
+		mes "I'll just keep a little part for me.";
+		mes "The fight will starts when " + $maxRoHMemberCount + " members will join.";
+		if (.@mode == 0)
+		{
+			next;
+			mes .@npcname$;
+			mes "Now, choose a duration.";
+			set .@message$, "It can last for ";
+			set .@menu$, "";
+			for(set .@i,0; .@i<getarraysize($RoHDuration); set .@i,.@i+1)
+			{
+				set .@message$, .@message$ + (.@i == 0 ? "" : (.@i == getarraysize($RoHDuration) - 1 ? ", or " : ", ")) + $RoHDuration[.@i] + " minutes";
+				set .@menu$, .@menu$ + (.@i == 0 ? "" : ":") + $RoHDuration[.@i] + " minutes";
+			} 
+			set .@message$, .@message$ + ".";
+			mes .@message$;
+			mes "What's your choice?";
+			set .@duration, select(.@menu$) - 1;
+			next;
+			mes .@npcname$;
+			mes "Allright, let's go for " + $RoHDuration[.@choice] + " minutes then.";
+			next;
+			mes .@npcname$;
+		}
+		mes "Good luck.";
+		next;
+		getmapxy(.@map$, .@x, .@y, 0);
+		savepoint(.@map$, .@x, .@y);
+		set RoHPOINTS, 0;
+		warp $rotativeHuntMap$, 0, 0;
+		if (.@mode == 0)
+		{
+			deletearray $@RoHMembers[0], getarraysize($@RoHMembers);
+			set $@RoHMembers[0], getcharid(3);
+			
+			set $rotativehunton, 1;
+			set $battleDuration, $RoHDuration[.@choice];
+			announce "[Rotative Hunt] " + strcharinfo(0) + " just join the Rotative Hunt. Who will come to fight him?", bc_red|bc_all;
+		}
+		else
+		{
+			set $@RoHMembers[getarraysize($@RoHMembers)], getcharid(3);
+			if (getarraysize($@RoHMembers) < $maxRoHMemberCount)
+			{
+				announce "[Rotative Hunt] " + strcharinfo(0) + " just join the Rotative Hunt. Still " + ($maxRoHMemberCount - getarraysize($@RoHMembers)) + " fighters needed to begin!", bc_red|bc_all;
+			}
+		}
+	}
+	else
+	{
+		goto OnLeave;
+	}
+	close;
+
+OnEnterAgain:
+	set .@found, callfunc("CheckRoHPlayers");
+	if(.@found == 1)
+	{
+		mes "Get ready, I'll send you back.";
+		warp $rotativeHuntMap$, 0, 0;
+	}
+	else
+	{
+		mes "You're not part of this Rotative Hunt.";
+		mes "Wait for another to begin, please.";
+	}
+	close;
+
+OnLeave:
+	set .@npcname$, "[Zod]";
+	next;
+	mes .@npcname$;
+	mes "Your choice!";
+	close;
+}
+
+function	script	CheckRoHPlayers	{
+	for(set .@i,0; .@i<getarraysize($@RoHMembers) && .@found == 0; set .@i,.@i+1)
+	{
+		if($@RoHMembers[.@i] == getcharid(3))
+		{
+			return 1;
+		}
+	}
+	return 0;
+}

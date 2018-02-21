@@ -1,0 +1,424 @@
+// [========================================================]
+// [===========      The Lonely Mountain         ===========]
+// [========================================================]
+// [ Version 1                                              ]
+// [========================================================]
+// [ Original script by: Alayne                             ]
+// [========================================================]
+// [ Description:                                           ]
+// [--------------------------------------------------------]
+// [                                                        ]
+// [ - The Lonely Mountain Quest			           ]
+// [ - Based on the Hobbit - I See Fire		           ]
+// [ - Based on Far Over the Misty Mountain		    ]
+// [========================================================]
+// [ Changelog: (5 last updates)                            ]
+// [--------------------------------------------------------]
+// [                                                        ]
+// [ v0: Creation                      			    ]
+// [                                                        ]
+// [========================================================]
+// [                                                        ]
+// [========================================================]
+
+prontera,168,177,2	script	DwarfQuestCore::dwaqcore	-1,{	
+	end;
+	
+OnDwarvesKilled:
+	unitskilluseid 'boss_id,"NPC_INVINCIBLEOFF",1;
+	mapannounce .fightMap$, "[Magician] The Dragon...Become weak...Fast!";
+	set .dwarvesKilledCount, .dwarvesKilledCount + 1;
+	if (.dwarvesKilledCount < 7)
+	{
+		set .delayCount, 0;
+		initnpctimer;
+	}
+	end;
+	
+OnTimer60000:
+	set .delayCount, .delayCount + 1;
+	if (.delayCount >= .dwarvesKilledCount)
+	{
+		if (mobcount(.fightMap$,"dwaqcore::OnDwarvesKilled") != 0)
+		{
+			mapannounce .fightMap$, "[Magician] He's...Too strong...";
+			unitskilluseid 'boss_id,"NPC_INVINCIBLE",1;	
+			sleep 1000;
+			mapannounce .fightMap$, "[Dragon] I'll kill you all!";
+		}
+		stopnpctimer;
+	}
+	else
+	{
+		//1 minutes, then 2, then 3 and so on...
+		stopnpctimer;
+		initnpctimer;
+	}
+	end;
+	
+OnDragonKilled:
+	mapannounce .fightMap$, "[Dragon] That's...Not possible!";
+	set .@mainId, getcharid(3);
+	getpartymember getcharid(1),2;
+	set .@partymemberCount, $@partymembercount;
+	copyarray .@partymemberAid[0], $@partymemberaid[0], .@partymemberCount;
+	for( .@pt = 0; .@pt < .@partymemberCount; .@pt++ ){
+		if( attachrid( .@partymemberAid[.@pt] ) ){
+			set DWARVES_KILLED, .dwarvesKilledCount;
+		}
+	}
+	attachrid(.@mainId);
+	//reset dwarves
+	if (.dwarvesKilledCount < 7)
+	{
+		donpcevent "prtdwa11-3::OnShowOnDwarfs";
+	}
+	if (.dwarvesKilledCount < 6)
+	{
+		donpcevent "prtdwa10-3::OnShowOnDwarfs";
+	}
+	if (.dwarvesKilledCount < 5)
+	{
+		donpcevent "prtdwa9-3::OnShowOnDwarfs";
+	}
+	if (.dwarvesKilledCount < 4)
+	{
+		donpcevent "prtdwa8-3::OnShowOnDwarfs";
+	}
+	if (.dwarvesKilledCount < 3)
+	{
+		donpcevent "prtdwa7-3::OnShowOnDwarfs";
+	}
+	if (.dwarvesKilledCount < 2)
+	{
+		donpcevent "prtdwa6-3::OnShowOnDwarfs";
+	}
+	donpcevent "prtdwachi-2::OnShowOnDwarfs";
+	end;
+	
+OnFightDwarves:
+	donpcevent "prtdwachi-2::OnShowOffDwarfs";
+	donpcevent "prtdwa6-3::OnShowOffDwarfs";
+	donpcevent "prtdwa7-3::OnShowOffDwarfs";
+	donpcevent "prtdwa8-3::OnShowOffDwarfs";
+	donpcevent "prtdwa9-3::OnShowOffDwarfs";
+	donpcevent "prtdwa10-3::OnShowOffDwarfs";
+	donpcevent "prtdwa11-3::OnShowOffDwarfs";
+	mapannounce .fightMap$, "[Magician] The gold broke their mind...",0;
+	mapannounce .fightMap$, "[Magician] Dwarves are...Weak against...This evil...",0;	
+	mapannounce .fightMap$, "[Dragon] And that's my chance!",0;
+	mapannounce .fightMap$, "[Dragon] Cause without them...You can't kill me...",0;	
+	mapannounce .fightMap$, "[Dragon] On the other hand...Kill them, and you'll loose a Treasure part...",0;	
+	
+	set .dwarvesKilledCount, 0;
+	
+	'boss_id = bg_monster(0,.fightMap$,0,0,"Mountain Dragon",$DragonSummonId,"dwaqcore::OnDragonKilled" );
+	unitskilluseid 'boss_id,"NPC_INVINCIBLE",1;
+	monster .fightMap$, 0, 0, "--ja--", $DwarvesSummonId, 7, "dwaqcore::OnDwarvesKilled";
+	end;
+	
+OnInit:
+	set $LostKeyId, 0;
+	set $SealStoneId, 0;
+	set .fightMap$, "";
+	set $DragonSummonId, 0;
+	set $DwarvesSummonId, 0;
+	setarray $Rewards[0], 7808, 1, 7806, -1; //pattern: Id, Amount, if -1, depends on dwarves killed
+	end;
+}
+
+//Oh, misty eye of the mountain below
+//Keep careful watch of my brothers' souls
+//And should the sky be filled with fire and smoke
+//Keep watching over Durin's sons
+prontera,168,177,2	script	Hidden Door::prthiddor	741,{
+	set .@npcname$, "[Hidden Door]";
+	mes .@npcname$;
+	mes " ";
+	close;
+}
+
+//If this is to end in fire
+//Then we should all burn together
+//Watch the flames climb high into the night
+prontera,168,177,2	script	Seal Stone::prtseasto	741,{
+	set .@npcname$, "[Seal Stone]";
+	mes .@npcname$;
+	mes " ";
+	close;
+}
+
+//Calling out father, oh,
+//Stand by and we will
+//Watch the flames burn auburn on
+//The mountain side high
+prontera,168,177,2	script	Mountain Heart::prtmouhea	741,{
+	set .@npcname$, "[Mountain Heart]";
+	mes .@npcname$;
+	mes " ";
+	close;
+}
+
+//Dwarves on the mountain
+prontera,168,177,2	script	Dwarf Chief Yhiur::prtdwachi-2	741,{	
+	set .@npcname$, "[Yhiur]";
+	mes .@npcname$;
+	if (MOUNTAIN_Q == 8)
+	{
+		mes "My friend...Something really bad happened...";
+		mes "As you can see it...We're only 7 here.";
+		mes "Our friends...Goij, Fulo, Edni, Triul, Morl and Dilr...";
+		mes "We've been attacked in the woods.";
+		mes "We haven't been able to do anything.";
+		mes "They've been killed...";
+		next;
+		mes .@npcname$;
+		mes "I'm sorry to ask something more.";
+		mes "But I need your help one more time.";
+		mes "The Stones, the Key...All that doesn't matter.";
+		mes "If we're this few, we won't be able to fight the Dragon.";
+		mes "We need another fighters alongs us...";
+		next;
+		mes .@npcname$;
+		mes "I beg you to find fighters for us. Each of the missing dwarves had a particular role.";
+		mes "Goij was a Fighter.";
+		mes "Fulo was an Archer.";
+		mes "Edni was a Healer.";
+		mes "Triul was a Smith.";
+		mes "Morl was a silent Assassin.";
+		mes "And Dilr was our Potions supplier.";
+		mes "Come back with theses roles.";
+		mes "We'll wait here.";
+		set MOUNTAIN_Q, 9;
+	}
+	else if (MOUNTAIN_Q == 9)
+	{
+		set .checking, 1;
+		getpartymember getcharid(1), 2;
+		copyarray .@partyAid[0], $@partymemberaid[0], getarraysize($@partymemberaid);
+		set .@swordy, 0;
+		set .@thievy, 0;
+		set .@smithy, 0;
+		set .@acoly, 0;
+		set .@archy, 0;
+		set .@alchy, 0;
+		set .@concernedId, getcharid(3);
+		for (set .@i,0; .@i < getarraysize(.@partyAid); set .@i, .@i+1)
+		{
+			attachrid(.@partyAid[.@i]);
+			if (BaseClass == Job_Archer)
+			{
+				set .@archy, 1;
+			}
+			if (BaseClass == Job_Swordman)
+			{
+				set .@swordy, 1;
+			}
+			if (BaseClass == Job_Thief)
+			{
+				set .@thievy, 1;
+			}
+			if (BaseClass == Job_Acolyte)
+			{
+				set .@acoly, 1;
+			}
+			if (BaseClass == Job_Merchant)
+			{
+				if (Class == Job_Alchemist || Class == Job_Creator || Class == Job_Creator_T
+				|| Class == Job_Genetic || Class == Job_Genetic_T)
+				{
+					set .@alchy, 1;
+				}
+				else if (Class == Job_Blacksmith || Class == Job_MasterSmith || Class == Job_MasterSmith_T
+				|| Class == Job_Mechanic || Class == Job_Mechanic_T)
+				{
+					set .@smithy, 1;
+				}
+			}
+		}
+		attachrid(.@concernedId);
+		if (.@swordy && .@archy && .@alchy && .@alchy && .@thievy && .@acoly && .@smithy)
+		{
+			mes "Perfect. We're ready then.";
+			mes "At least if you have the needed objects.";
+			set MOUNTAIN_Q, 10;
+		}
+		else
+		{
+			mes "We can't go fight the dragon this way...";
+		}
+	}
+	else if (MOUNTAIN_Q == 10)
+	{
+		if (countitem($LostKeyId) > 0 && countitem($SealStoneId) > 0)
+		{
+			mes "Perfect. You've find them all.";
+			mes "Congratulations.";
+			mes "We're now ready too...";
+			mes "Get our...home...back...";
+			mes "And...You...Won't...Steal us...";
+			mes "You...Filthy...Traitor...!";
+			doncevent "dwaqcore::OnFightDwarves";
+		}
+		set MOUNTAIN_Q, 11;
+	}
+	else if (MOUNTAIN_Q == 10)
+	{
+		mes "...What have I done...";
+		mes "So much friends died because of me...";
+		mes "Goij, Fulo, Edni, Triul, Morl and Dilr...";
+		set .@deadNames$, "And now ";
+		if (.dwarvesKilledCount >= 7)
+		{
+			if (.@deadNames$ == "And now ")
+			{
+				set .@deadNames$, .@deadNames$ + "Rumor";
+			}
+			else
+			{
+				set .@deadNames$, .@deadNames$ + ", Rumor";
+			}
+		}
+		if (.dwarvesKilledCount >= 6)
+		{
+			if (.@deadNames$ == "And now ")
+			{
+				set .@deadNames$, .@deadNames$ + "Bufor";
+			}
+			else
+			{
+				set .@deadNames$, .@deadNames$ + ", Bufor";
+			}
+		}
+		if (.dwarvesKilledCount >= 5)
+		{
+			if (.@deadNames$ == "And now ")
+			{
+				set .@deadNames$, .@deadNames$ + "Duil";
+			}
+			else
+			{
+				set .@deadNames$, .@deadNames$ + ", Duil";
+			}
+		}
+		if (.dwarvesKilledCount >= 4)
+		{
+			if (.@deadNames$ == "And now ")
+			{
+				set .@deadNames$, .@deadNames$ + "Buil";
+			}
+			else
+			{
+				set .@deadNames$, .@deadNames$ + ", Buil";
+			}
+		}
+		if (.dwarvesKilledCount >= 3)
+		{
+			if (.@deadNames$ == "And now ")
+			{
+				set .@deadNames$, .@deadNames$ + "Ruil";
+			}
+			else
+			{
+				set .@deadNames$, .@deadNames$ + ", Ruil";
+			}
+		}
+		set .@deadName$, .@deadName$ + "...";
+		mes .@deadNames$;
+		next;
+		mes .@npcname$;
+		mes "I don't think I can go on.";
+		mes "Finding back our home doesn't have any sense if our friends aren't with us.";
+		mes "We've been blinded by gold, and fortune promise.";
+		mes "But we've lost what's really important.";
+		mes "The Dragon's dead, but it doesn't really matter anymore...";
+		next;
+		mes .@npcname$;
+		mes "Here's something which appeared in my pocket.";
+		mes "It's something we called a Dragon Power Crystallisation.";
+		mes "It's...Created when a Dwarf Soul is burnt by a Dragon's Power...";
+		mes "Use them to produce some special items, right.";
+		mes "I'm sorry, but I have to bring one to each of those Dwarves family...But you can have the others.";
+		mes "Share it between you all.";
+		set .@rewardCount, (10 - DWARVES_KILLED);
+		getpartymember getcharid(1),2;
+		set .@partymemberCount, $@partymembercount;
+		if (.@partymemberCount < .@rewardCount)
+		{
+			set .@rewardCount, .@partymemberCount;
+		}
+		for(set .@i,0; .@i<getarraysize($Rewards), set .@i,.@i+2)
+		{
+			set .@count, $Rewards[.@i + 1];
+			if ($Rewards[.@i + 1] == -1)
+				set .@count, .@rewardCount;
+			getitem $Rewards, .@count;
+		}
+		set MOUNTAIN_Q, 12;
+		next;
+		mes .@npcname$;
+		mes "Goodbye, my friend.";
+		mes "May the Gods bless your path.";
+		donpcevent "prtdwachi-2::OnShowOffDwarfs";
+		donpcevent "prtdwa6-3::OnShowOffDwarfs";
+		donpcevent "prtdwa7-3::OnShowOffDwarfs";
+		donpcevent "prtdwa8-3::OnShowOffDwarfs";
+		donpcevent "prtdwa9-3::OnShowOffDwarfs";
+		donpcevent "prtdwa10-3::OnShowOffDwarfs";
+		donpcevent "prtdwa11-3::OnShowOffDwarfs";
+	}
+	else
+	{
+		mes "We're a bit busy right now. Sorry.";
+	}
+	close;	
+	
+OnShowOnDwarfs:
+	hideoffnpc strnpcinfo(3);
+	end;
+
+OnShowOffDwarfs:
+	hideonnpc strnpcinfo(3);
+	end;
+	
+OnInit:
+	hideonnpc strnpcinfo(3);
+	end;
+}
+
+prontera,168,177,2	script	Dwarf Dilr::prtdwa6-3	741,{
+	set .@npcname$, "[Dwarf]";
+	mes .@npcname$;
+	if (MOUNTAIN_Q == 8)
+	{
+		mes "Go back to Yhuir. He...He has something to say to you...";
+	}
+	else if (MOUNTAIN_Q == 11)
+	{
+		mes "Sorry but...I don't feel I can laught with you today...";
+		mes "It's a sad day for Erudor's Dwarves...";
+	}
+	else
+	{
+		mes "We're a bit busy right now. Sorry.";
+	}
+	close;
+
+OnShowOnDwarfs:
+	hideoffnpc strnpcinfo(3);
+	end;
+
+OnShowOffDwarfs:
+	hideonnpc strnpcinfo(3);
+	end;
+	
+OnInit:
+	hideonnpc strnpcinfo(3);
+	end;
+}
+
+scaphis,61,69,0	duplicate(prtdwa6-3)	Dwarf Ruil::prtdwa7-3	709
+scaphis,61,69,0	duplicate(prtdwa6-3)	Dwarf Buil::prtdwa8-3	709
+scaphis,61,69,0	duplicate(prtdwa6-3)	Dwarf Duil::prtdwa9-3	709
+scaphis,61,69,0	duplicate(prtdwa6-3)	Dwarf Bufor::prtdwa10-3	709
+scaphis,61,69,0	duplicate(prtdwa6-3)	Dwarf Rumor::prtdwa11-3	709

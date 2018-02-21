@@ -1,0 +1,226 @@
+//Light Elf Master
+ars_fild04,351,191,3	script	Light Alfe Beauty::lab	1630,{
+
+	set .@npcname$, "[Oneal]";
+	if(degoe == 1)goto OtherQuest_Started;
+	if(legoe == 1)goto LEGo_Etheria;
+	if(hagoe == 1)goto OtherQuest_Started;
+	if(mwgoe == 1)goto OtherQuest_Started;
+	if(oagoe == 1)goto OtherQuest_Started;
+	if(dsgoe == 1)goto OtherQuest_Started;
+	if(deqstart == 1)goto OtherQuest_Started;
+	if(leqstart >= 1)goto LEQuest_Started;
+	if(haqstart == 1)goto OtherQuest_Started;
+	if(mwqstart == 1)goto OtherQuest_Started;
+	if(oaqstart == 1)goto OtherQuest_Started;
+	if(dsqstart == 1)goto OtherQuest_Started;
+	if(deqdone == 1)goto OtherQuest_Done;
+	if(leqdone == 1)goto LEQuest_Done;
+	if(haqdone == 1)goto OtherQuest_Done;
+	if(mwqdone == 1)goto OtherQuest_Done;
+	if(oaqdone == 1)goto OtherQuest_Done;
+	if(dsqdone == 1)goto OtherQuest_Done;
+	if(BaseLevel < 50 || JobLevel < 50) goto L_LowLevel;
+      
+	mes .@npcname$;
+	mes "Hello to you, traveler. I'm Oneal. I'm a Light Alfe.";
+	mes "Us, the Light Alfes, live in Alfheim, the Light Realm, right under Asgard.";
+	next;
+	menu "Can you tell me more?.",LEInfo,"I'd like to become one of yours!",-,"I'm not interested.",LENo;
+
+	mes .@npcname$;
+	mes "To become a Light Alfe, you'll have to prove you deserve it.";
+	next;
+	mes .@npcname$;
+	mes "Light Alfes have acquired the skills of Empathy. They understand their surroundings with instinct.";
+	mes "It allows us to renforce our body and mind with those surrounding us. You'll be able of that too.";
+	next;
+	mes .@npcname$;
+	mes "But for that, you'll have to prove me you deserver it.";
+	next;
+	mes .@npcname$;
+	mes "There's somewhere in the world a replica of Bilfrost.";
+	next;
+	mes .@npcname$;
+	mes "You'll find there a man, who will talk you a bit more about us.";
+	next;
+	mes .@npcname$;
+	mes "Once you know more, you'll be able to walk on the Light Path.";
+	set leqstart,1;
+	close;
+
+LEQuest_Started:
+	mes .@npcname$;
+	mes "So. What did you learnt?";
+	next;
+	menu "I'd like to abandon",L_sure,"I've got all I need!",LEQuest_AlmostDone,"I working on it.",LENo;
+
+	L_sure:
+		mes .@npcname$;
+		mes "Humpf? Are you sure?";
+		next;
+		menu "No...No I want to continue.",L_conti,"I...I'm sure!",L_quit;
+
+		L_conti:
+			mes .@npcname$;
+			mes "Good. You should not let go. A Mist Alfe wouldn't.";
+			close;
+
+		L_quit:
+			mes .@npcname$;
+			mes "Allright. You'll be able to start again.";
+			mes "But don't talk about us. To no one.";
+			set leqstart,0;
+			set leqdone,0;
+			set legoe,0;
+			close;
+
+		L_LowLevel:
+			mes .@npcname$;
+			mes "I'm Oneal, a Light Alfe. You can't become one of us.";
+			mes "For that, you'll need a higher level. In both base and job, you're required to be lvl 50.";
+			next;
+			mes .@npcname$;
+			mes "Do you wish to learn more?";
+			next;
+			menu "Yes please.",LEInfo,"No thanks!",Quit;
+
+//Light Elf Information
+		LEInfo:
+		mes .@npcname$;
+		mes "Light Alfes have acquired the skills of Empathy. They understand their surroundings with instinct.";
+		mes "We're not known for your strength, but it enables us to counter our delicate constitution.";
+		next;
+		mes .@npcname$;
+		mes "The Empathy allows us to feel the incoming attacks.";
+		next;
+		mes .@npcname$;
+		mes "It allows us to flee them. Some can even turn them back.";
+		close;
+
+//Dialogues
+
+		LENo:
+		mes .@npcname$;
+		mes "Allright, as you wish.";
+		close;
+
+		LEQuest_Done:
+			mes .@npcname$;
+			mes "Hello to you, Light Alfe. May the Empathy guide your steps.";
+			close;
+
+		LEQuest_AlmostDone:
+			if(countitem(1041)<100 || countitem(7938)<10 || countitem(2645)<1) goto LEQuest_NotEnuf;
+			mes .@npcname$;
+			mes "I can feel that you've finally completed this quest.";
+			next;
+			mes .@npcname$;
+			mes "You're now ready to become one of us.";
+			mes "Go find the Etherian Angel. She'll guide you in this ultimate ordeal.";
+			mes "Once you'll be one of us, seek Aliut. He'll teach you more about the Light Orbs.";
+			set legoe,1;
+			delitem 1024, 100;
+			delitem 7938, 10;
+			delitem 2645, 1;
+			close;
+		
+		LEGo_Etheria:
+			mes .@npcname$;
+			mes "Go find the Etherian Angel. She'll guide you in this ultimate ordeal.";
+			close;
+
+		OtherQuest_Done:
+			mes .@npcname$;
+			mes "Leave this place. You now belong to another race.";
+			close;
+
+		OtherQuest_Started:
+			mes .@npcname$;
+			mes "Leave this place. You've started to work for another race. Cancel it, and come back to me, if you change your mind.";
+			close;
+
+		LEQuest_NotEnuf:
+			mes .@npcname$;
+			mes "Sorry but you lack some items. Here's what I need:";
+			next;
+			mes .@npcname$;
+			mes "- ^5555FF100 Lantern^000000.";
+			mes "- ^5555FF10 Particles of Light^000000.";
+			mes "- ^5555FF1 Moonlight Ring^000000.";
+			close;
+
+	Quit:
+		mes "That's your choice.";
+		close;
+}
+
+ars_dun64,217,72,5	script	Light Alfe:la	1685,{
+	set .@npcname$, "[Elblan]";
+
+	mes .@npcname$;
+	mes "...";
+	if (leqstart == 1)
+	{
+		mes "So you've decided to become one of us.";
+		mes "Do you really now what you've chosen?";
+		mes "The Empathy is a strong power.";
+		mes "It allows you to understand the others. Their strength, but also their wounds.";
+		mes "Are you ready for that? If so, start walking over the Empathy path.";
+		next;
+		mes .@npcname$;
+		mes "The Alfes must learn to rely on everyone, and everybody.";
+		mes "The Mist world is cold, and dangerous.";
+		mes "Without help, you may not be able to do anything.";
+		mes "Prove me you deserve to join us. Then, go see the Beauty.";
+		mes "- ^5555FF100 Lantern^000000.";
+		mes "- ^5555FF10 Particles of Light^000000.";
+		mes "- ^5555FF1 Moonlight Ring^000000.";
+		next;
+		mes .@npcname$;	
+		mes "If you succeed, you'll learnt the Empathy.";
+		mes "It'll help to escape your foes attacks, and even maybe return it back to them.";
+		mes "But it won't always be enough.";
+		mes "On top of that, you'll also be able to learn to use the Light Orbs.";
+		mes "They'll learnt you how to command the Light smartly.";
+		set leqstart, 2;
+	}
+	close;
+}
+
+ars_dun31,60,226,5	script	Light Alfe Aliut::laa	1751,{
+	set .@npcname$, "[Aliut]";
+
+	mes .@npcname$;
+	mes "...";
+	if (leqdone > 0 && leqdone <= 1 || leqstart == 1)
+	{
+		mes "You're not ready. Leave!";
+	}
+	else if (leqdone == 3)
+	{
+		mes "The Empathy tells me you've joined us recently.";
+		mes "We live for ages, and our power grow with time.";
+		next;
+		mes .@npcname$;
+		mes "But you're not here for that, isn't it?";
+		mes "You're here for the Light Orbs.";
+		mes "Each ones can be used separately, one at a time.";
+		mes "You can only find them in Alfheim.";
+		next;
+		mes "The first one, the 'Seeing Wave',";
+			//NPC_WIDESIGHT, 669
+		mes "allows you to see though your foes shadows.";
+		mes "The second one, the 'Controlling Light',";
+			//WM_VOICEOFSIREN, 2420
+		mes "enables you to change your image on your foes heart to prevent them from attacking you.";
+		mes "Finally, the last one and rarest, the 'Moon Light',";
+			//OB_AKAITSUKI, 3029
+		mes "reverse some healing skills.";
+		next;
+		mes "These are the Light Orbs. Only our race can use them. We're a kind of...Anti-Priest I guess.";
+	}
+	else
+		mes "I don't speak to other races.";
+	close;	
+}

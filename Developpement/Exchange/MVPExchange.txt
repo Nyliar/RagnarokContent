@@ -1,0 +1,91 @@
+//===== eAthena Script ======================================= 
+//= Banker Script 
+//===== By: ================================================== 
+//= Syrus22 (1.0)
+//===== Current Version: ===================================== 
+//= 1.0
+//===== Compatible With: ===================================== 
+//= Any eAthena version with Account variables.
+//===== Description: ========================================= 
+//= An account wide Banker to store Zeny
+//===== Additional Comments: ================================= 
+//= Syrus22 - There's an optional transaction fee at the top of
+//= the script. To use it simply change the first set command
+//= to set the cost variable to whatever you want the fee to be.
+//============================================================ 
+prontera,140,152,5	script	MvPExchanger::prtmvpexch	524,{
+	set .@npcname$, "[MvP Exchanger]";
+
+	setarray .MVP[0],4143,4145,4148,4137,4123,4131,4132,4134,4135,4168,4236,4263,4276,4302,
+4305,4318,4324,4330,4372,4374,4376,4386,4403,4407,4408,4419,4425,4430,4441,4352,4144,4147,4142,4128,
+4146,4342,4357,4359,4399,4456,4520,4507,4525,4121;
+
+	setarray .MVPSealed[0],4492,4486,4489,4496,4504,4490,4484,4483,4500,4488,4495,4499,4540,4493,
+4494,4497,4543,4544,4538,4503,4498,4542,4480,4535,4485,4481,4536,4487,4539,4482,21500,21501,21502,21503,21504,
+21505,21506,21507,21508,21509,21510,21511,21512,4537;
+	
+	mes .@npcname$;
+	mes "Good day to you, " + strcharinfo(0);
+	mes "I'm the MvP card exchanger.";
+	mes "I can get you Sealed MvP Cards, which can be used during WoE";
+	mes "The only thing I need is the original MvP card, and 1 bullion of each kind.";
+	mes "Are you interested?";
+	switch(select("Yeah! Give it to me","No thanks."))
+	{
+		case 1:
+			mes "Allright. Which one do you want to trade?";
+
+ 			// On créé un menu dynamique
+    			for ( set .@i, 0; .@i<getarraysize(.MVP); set .@i, .@i+1 )
+			{
+        			set .@menu$, .@menu$ + ( .@i ? ":" : "" ) + getitemname(.MVP[.@i]);
+			}
+			// On récupère le choix de l'utilisateur
+    			set .@choice, prompt(.@menu$) - 1;
+
+			if (.@choice != 255)
+			{
+				if(select("De normal à Sealed","De Sealed à normal") == 1)
+				{
+					set .@sealedCard, .MVPsealed[.@choice];
+					set .@MvPCard, .MVP[.@choice];
+				}
+				else
+				{
+					set .@MvPCard, .MVPsealed[.@choice];
+					set .@sealedCard, .MVP[.@choice];
+				}
+				if (countitem(.MVP[.@choice]) > 0)
+				{
+					mes "There's no return for that. Are you still allright?";
+					switch(select("Yep","No, give me back my card."))
+					{
+						case 1:
+							if (countitem(7228) > 0 && countitem(7229) > 0 && countitem(7230) > 0)
+							{
+								mes "Allright, here's you're card.";
+								getitem .@sealedCard, 1;
+								delitem .@MvPCard, 1;
+							}
+							else
+							{
+								mes "Sorry but you miss a kind of bullion.";
+							}
+							break;
+						case 2:
+							mes "Wiser, hu?";
+							break;
+					}
+				}
+				else
+				{
+					mes "You don't have that card, sorry.";
+				}
+			}
+			break;
+		case 2:
+			mes "Your choice.";
+			break;
+	}
+	close;
+}

@@ -1,0 +1,87 @@
+prontera,159,177,4	script	Pillar::cappill1	406,{
+	donpcevent "firstpillar::OnNpcEnabled";
+	end;
+
+OnInit:
+	hideonnpc strnpcinfo(3);
+	end;
+
+OnCloseEvent:
+	//one hour delay
+	npcwalkto 126,189;
+	set $nyddhog_killed, 0;
+	hideonnpc strnpcinfo(3);
+	end;
+
+OnAllMvpKilled:
+	npcwalkto 134,181;
+	hideonnpc strnpcinfo(3);
+	donpcevent "firstpillar::OnNpcEnabled";
+	end;
+}
+
+prontera,152,177,4	script	Pillar::cappill2	406,{
+	donpcevent "secondpillar::OnNpcEnabled";
+	end;
+
+OnInit:
+	hideonnpc strnpcinfo(3);
+	end;
+
+OnCloseEvent:
+	//one hour delay
+	npcwalkto 126,171;
+	set $ifrit_killed, 0;
+	hideonnpc strnpcinfo(3);
+	end;
+
+OnAllMvpKilled:
+	npcwalkto 134,181;
+	hideonnpc strnpcinfo(3);
+	donpcevent "secondpillar::OnNpcEnabled";
+	end;
+}
+
+prontera,152,172,4	script	Pillar::cappill3	406,{
+	donpcevent "thirdpillar::OnNpcEnabled";
+	end;
+
+OnInit:
+	hideonnpc strnpcinfo(3);
+	end;
+
+OnCloseEvent:
+	//one hour delay
+	npcwalkto 141,189;
+	set $hatii_killed, 0;
+	hideonnpc strnpcinfo(3);
+	end;
+
+OnAllMvpKilled:
+	npcwalkto 134,181;
+	hideonnpc "cappill3";
+	donpcevent "thirdpillar::OnNpcEnabled";
+	end;
+}
+
+prontera,159,172,4	script	Pillar::cappill4	406,{
+	donpcevent "fourthpillar::OnNpcEnabled";
+	end;
+
+OnInit:
+	hideonnpc strnpcinfo(3);
+	end;
+
+OnCloseEvent:
+	//one hour delay
+	npcwalkto 141,171;
+	set $scaraba_killed, 0;
+	hideonnpc strnpcinfo(3);
+	end;
+
+OnAllMvpKilled:
+	npcwalkto 134,181;
+	hideonnpc  strnpcinfo(3);
+	donpcevent "fourthpillar::OnNpcEnabled";
+	end;
+}

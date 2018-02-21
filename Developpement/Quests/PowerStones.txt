@@ -1,0 +1,402 @@
+-	script	powertone_man::pow_man	-1,{
+	end;
+	
+OnWhisperGlobal:
+OnMinute00:
+	for(set .@i,0; .@i<getarraysize($powerdunOn); set .@i,.@i+1)
+	{
+		set $powerdunOn[.@i], -1;
+		enablenpc $powerdunNpc$[.@i];
+		hideonnpc "pow_gua" + .@i;
+		if(rand(0,1) == 1)
+		{
+			set $powerdunOn[.@i], 1;
+			disablenpc $powerdunNpc$[.@i];
+			hideoffnpc "pow_gua" + .@i;
+		}
+	}
+	end;
+	
+OnInit:
+	setarray $powerStoneId[0],512,512,512,512,512,512;
+	
+	//Payon Dun: Zombie, Eggyra, Soldier Skel, Munak, Hydra, Sohee, Nine Tail, Dokebi, Cat'o, Nine Tail
+	setarray $powerdunid0[0],1015,1116,1028,1026,1068,1170,1180,1110,1307,1150;
+	setarray $powerduncnt0[0],15,5,25,20,10,40,2,15,5,3;
+	deletearray $powerdunmap0$[0], getarraysize($powerdunmap0$);
+	setarray $powerdunmap0$[0],"pay_dun00","pay_dun01","pay_dun02","pay_dun03","pay_dun04";
+	
+	//Pyra Dun: Familiar, Mummy, Isis, Minotorous, Pasana, Marduck, Osiris, Pharaoh
+	setarray $powerdunid1[0],1005,1041,1029,1149,1154,1140,1038,1157;
+	setarray $powerduncnt1[0],25,15,30,20,15,30,1,1;
+	setarray $powerdunmap1$[0],"moc_pryd01","moc_pryd02","moc_pryd03","moc_pryd04";
+	
+	//Turtle Dun: Freezer, Heater, Permeter, Solider, Assaulter, Turtle Gene
+	setarray $powerdunid2[0],1319,1318,1314,1316,1315,1312;
+	setarray $powerduncnt2[0],15,15,20,20,30,1;
+	setarray $powerdunmap2$[0],"tur_dun02","tur_dun03";
+	
+	//Louyang Dun: Gajomart, Grizzly, Hyegun, Dancing Dragon, Mao Guai, Jing Guai, Bacsojin
+	setarray $powerdunid3[0],1309,1381,1512,1514,1513,1517,1518;
+	setarray $powerduncnt3[0],5,15,25,30,15,25,1;
+	setarray $powerdunmap3$[0],"lou_dun01","lou_dun02","lou_dun03";
+	
+	//Juperos Dun: Venatu, Dimik, Archdam, Vesper
+	setarray $powerdunid4[0],1675,1676,1677,1678,1679,1669,1670,1671,1672,1673,1684,1685;
+	setarray $powerduncnt4[0],5,5,5,5,5,5,5,5,5,5,5,1;
+	setarray $powerdunmap4$[0],"juperos_01","juperos_02","jupe_core";
+	
+	//Thanatos Tower Dun: 
+	setarray $powerdunid5[0],1191,1195,1695,1703,1377,1698,1699,1701,1320,1700,1701,1702;
+	setarray $powerduncnt5[0],10,15,5,15,25,15,15,10,15,10,10,10;
+	setarray $powerdunmap5$[0],"tha_t01","tha_t02","tha_t03","tha_t04","tha_t05","tha_t06","tha_t07","tha_t08","tha_t09","tha_t10";
+	
+	setarray $powerdunOn[0],-1,-1,-1,-1,-1,-1;
+	setarray $powerdunCharId[0],-1,-1,-1,-1,-1,-1;
+	setarray $powerdunPrice[0],10000,15000,30000,70000,150000,430000;
+	setarray $powerdunNpc$[0],"payonwarp048","moc006","ttl01","lou_dun1-1","jupwrp03","WarpThana0a";
+	
+	setarray $powerdunMap$[0],"pay_dun00","moc_pryd01","tur_dun02","lou_dun01","juperos_01","tha_t01";
+	setarray $powerdunMapX[0],21,192,148,218,53,149;
+	setarray $powerdunMapY[0],183,9,264,195,247,38;
+	
+	set $psBossId, 1917;
+	setarray $psStoneSpiritIds[0], 7430,7428,7429,7426,7427,6927; //29148, 29149, 29152
+	end;
+}
+
+pay_arche,39,131,5	script	Power Guardian#0::pow_gua0	4_F_SHADOWCHASER,{
+	set .@npcname$, "[Power Guardian]";
+	set .@pcname$, "[" + strcharinfo(0) + "]";
+	mes .@npcname$;
+	mes "Sorry, I can't let you in.";
+	mes "This dungeon is currently under the power of a Power Stone.";
+	mes "It's too dangerous.";
+	next;
+	mes .@pcname$;
+	mes "Come on, let me in.";
+	mes "I've got things to do inside...";
+	next;
+	mes .@npcname$;
+	mes "I told you I can't.";
+	if($powerdunOn[atoi(strnpcinfo(2))] == 1 && $powerdunCharId[atoi(strnpcinfo(2))] == -1)
+	{
+		next;
+		mes .@pcname$;
+		mes "And for...Let's say " + $powerdunPrice[atoi(strnpcinfo(2))] + " zenies?";
+		next;
+		mes .@npcname$;
+		mes "Hergh...";
+		if(Zeny < $powerdunPrice[atoi(strnpcinfo(2))])
+		{
+			mes "You don't even have those money...";
+			close;
+		}
+		mes "One hour. Nothing more.";
+		mes "Hum...I need...Did you just heard a noise back there, just as me?";
+		set Zeny, Zeny - $powerdunPrice[atoi(strnpcinfo(2))];
+		set $powerdunOn[atoi(strnpcinfo(2))], 1;
+		warp $powerdunMap$[atoi(strnpcinfo(2))], $powerdunMapX[atoi(strnpcinfo(2))], $powerdunMapY[atoi(strnpcinfo(2))];
+		set $powerdunCharId[atoi(strnpcinfo(2))], getcharid(3);
+		
+		switch(atoi(strnpcinfo(2)))
+		{
+			case 0:
+				copyarray .@monsterIds[0], $powerdunid0[0], getarraysize($powerdunid0);
+				copyarray .@monsterCnt[0], $powerduncnt0[0], getarraysize($powerduncnt0);
+				copyarray .@monsterMap$[0], $powerdunmap0$[0], getarraysize($powerdunmap0$);
+				break;
+			case 1:
+				copyarray .@monsterIds[0], $powerdunid1[0], getarraysize($powerdunid1);
+				copyarray .@monsterCnt[0], $powerduncnt1[0], getarraysize($powerduncnt1);
+				copyarray .@monsterMap$[0], $powerdunmap1$[0], getarraysize($powerdunmap1$);
+				break;
+			case 2:
+				copyarray .@monsterIds[0], $powerdunid2[0], getarraysize($powerdunid2);
+				copyarray .@monsterCnt[0], $powerduncnt2[0], getarraysize($powerduncnt2);
+				copyarray .@monsterMap$[0], $powerdunmap2$[0], getarraysize($powerdunmap2$);
+				break;
+			case 3:
+				copyarray .@monsterIds[0], $powerdunid3[0], getarraysize($powerdunid3);
+				copyarray .@monsterCnt[0], $powerduncnt3[0], getarraysize($powerduncnt3);
+				copyarray .@monsterMap$[0], $powerdunmap3$[0], getarraysize($powerdunmap3$);
+				break;
+			case 4:
+				copyarray .@monsterIds[0], $powerdunid4[0], getarraysize($powerdunid4);
+				copyarray .@monsterCnt[0], $powerduncnt4[0], getarraysize($powerduncnt4);
+				copyarray .@monsterMap$[0], $powerdunmap4$[0], getarraysize($powerdunmap4$);
+				break;
+			case 5:
+				copyarray .@monsterIds[0], $powerdunid5[0], getarraysize($powerdunid5);
+				copyarray .@monsterCnt[0], $powerduncnt5[0], getarraysize($powerduncnt5);
+				copyarray .@monsterMap$[0], $powerdunmap5$[0], getarraysize($powerdunmap5$);
+				break;
+		}
+		
+		set .@goodOne, rand(0,getarraysize(.@monsterIds) - 1);
+		for(set .@i,0; .@i<getarraysize(.@monsterIds); set .@i,.@i+1)
+		{
+			if(.@monsterEvt$ == "")
+			{
+				set .@monsterEvt$, strnpcinfo(3) + "::OnNormalDied";
+			}
+			if(.@goodOne == .@i)
+			{
+				set .@map$, .@monsterMap$[rand(0,getarraysize(.@monsterMap$) - 1)];
+debugmes "poping " + .@monsterIds[.@i] + " on " + .@map$;
+				monster .@map$, 0, 0, "--ja--", .@monsterIds[.@i], 1, strnpcinfo(3) + "::OnGoodOneDied";
+			}
+			monster .@monsterMap$[rand(0,getarraysize(.@monsterMap$) - 1)], 0, 0, "--ja--", .@monsterIds[.@i], .@monsterCnt[.@i], .@monsterEvt$[.@i];
+		}
+		
+		initnpctimer;
+	}
+	close;
+	
+OnNormalDied:
+	//nothing, used to clear
+	end;
+	
+OnGoodOneDied:
+	switch(atoi(strnpcinfo(2)))
+	{
+		case 0:
+			copyarray .@monsterMap$[0], $powerdunmap0$[0], getarraysize($powerdunmap0$);
+			break;
+		case 1:
+			copyarray .@monsterMap$[0], $powerdunmap1$[0], getarraysize($powerdunmap1$);
+			break;
+		case 2:
+			copyarray .@monsterMap$[0], $powerdunmap2$[0], getarraysize($powerdunmap2$);
+			break;
+		case 3:
+			copyarray .@monsterMap$[0], $powerdunmap3$[0], getarraysize($powerdunmap3$);
+			break;
+		case 4:
+			copyarray .@monsterMap$[0], $powerdunmap4$[0], getarraysize($powerdunmap4$);
+			break;
+		case 5:
+			copyarray .@monsterMap$[0], $powerdunmap5$[0], getarraysize($powerdunmap5$);
+			break;
+	}
+	for(set .@i,0; .@i<getarraysize(.@monsterMap$); set .@i,.@i+1)
+	{
+		killmonster .@monsterMap$, strnpcinfo(3) + "::OnNormalDied";
+	}
+	if($powerStoneId[atoi(strnpcinfo(2))] == 512 || countitem($powerStoneId[atoi(strnpcinfo(2))]) == 0)
+	{
+		getitem $powerStoneId[atoi(strnpcinfo(2))], 1;
+		message strcharinfo(0), "[ Power Stone ] You can feel an immense power flowing through this stone...";
+		warp "Save", 0, 0;
+		set $powerdunOn[atoi(strnpcinfo(2))], -1;
+		set $powerdunCharId[atoi(strnpcinfo(2))], -1;
+	}
+	end;
+
+OnTimer3600000:
+	//clear and force rewarp
+	attachrid($powerdunCharId[atoi(strnpcinfo(2))]);
+	warp "Save",0,0;
+	set $powerdunOn[atoi(strnpcinfo(2))], -1;
+	set $powerdunCharId[atoi(strnpcinfo(2))], -1;
+	end;
+	
+OnInit:
+	hideonnpc strnpcinfo(3);
+	end;
+}
+
+moc_ruins,58,161,0	duplicate(pow_gua0)	Power Guardian#1::pow_gua1	4_M_JP_DISH
+tur_dun01,154,237,0	duplicate(pow_gua0)	Power Guardian#2::pow_gua2	4_M_REDSWORD
+louyang,41,272,0	duplicate(pow_gua0)	Power Guardian#3::pow_gua3	4_M_KNIGHT_BLACK
+jupe_cave,29,52,0	duplicate(pow_gua0)	Power Guardian#4::pow_gua4	4_M_KNIGHT_GOLD
+tha_scene01,141,197,0	duplicate(pow_gua0)	Power Guardian#5::pow_gua5	4_M_KNIGHT_SILVER
+
+
+prontera,173,78,5	script	Power Jeweller::pow_jew	4_M_BRZ_MAN1,{
+	set .@npcname$, "[Power Jeweller]";
+	set .@pcname$, "[" + strcharinfo(0) + "]";
+	mes .@npcname$;
+	mes "Welcome in my small office, my little child.";
+	mes "What can I do for you?";
+	next;
+	mes .@pcname$;
+	mes "Did you ever header about the Power Stones?";
+	next;
+	mes .@npcname$;
+	mes "No. What is it?";
+	next;
+	mes .@pcname$;
+	mes "Really? According to your office's name, I was supposing...";
+	next;
+	mes .@npcname$;
+	mes "Well, you supposed wrong.";
+	if(POWERSTONE == 0)
+	{
+		next;
+		mes .@pcname$;
+		mes "Wooo. No need to be so bittery...";
+		next;
+		mes .@npcname$;
+		mes "You don't event know what you're talking about, right?";
+		set POWERSTONE, 1;
+	}
+	else if(POWERSTONE == 1)
+	{
+		next;
+		mes .@pcname$;
+		mes "Come on...That can't be a coincidence...";
+		next;
+		mes .@npcname$;
+		mes "You don't event know what you're talking about, right?";
+		mes "The Power Stones aren't things you can treat lightly.";
+		mes "These 6 Stones...They rule the entire world.";
+		mes "Only one is as powerfull as the strongest runes, alltogether.";
+		next;
+		mes .@pcname$;
+		mes "Six, you said?";
+		next;
+		mes .@npcname$;
+		mes "Yes, six.";
+		mes "Time, Soul, Space, Reality, Spirit, and Wisdom.";
+		mes "One alone is a wonderfull power.";
+		mes "But alltogether...You don't have any idea what they're capable of.";
+		set .@count, 0;
+		for(set .@i,0; .@i<getarraysize($powerStoneId); set .@i,.@i+1)
+		{
+			if(countitem($powerStoneId[.@i]) > 0)
+			{
+				set .@count, .@count + 1;
+			}
+		}
+		if(.@count > 0)
+		{
+			next;
+			mes .@pcname$;
+			mes "What if I tell you that I have some of those Stones?";
+			next;
+			mes .@npcname$;
+			mes "You...You found some?";
+			next;
+			mes .@pcname$;
+			mes "Yep. I risked my life for those stones.";
+			mes "I'd like to understand what to do with them...";
+			next;
+			mes .@npcname$;
+			mes "Well...If you've allready found some...";
+			mes "I guess everything's different...";
+			mes "Allright.";
+			mes "To use those Stones, it's told that you need to bring them into the highest point of Odin's Temple.";
+			next;
+			mes .@pcname$;
+			mes "Odin's Temple? But there's...The Valkyries there...";
+			next;
+			mes .@npcname$;
+			mes "Yep. Why do you think those monsters will stay there?";
+			mes "They're keeping this place safe...";
+			mes "Once there, let it on the pedestal you'll found.";
+			mes "But...You'll need the Six to activate their powers.";
+			set POWERSTONE, 2;
+		}
+	}
+	close;
+}
+
+odin_tem03,173,78,5	script	Pedestal::pow_ped	2_MONEMUS,{
+	set .@npcname$, "[Pedestal]";
+	mes .@npcname$;
+	if(.guardianAlive == 1)
+	{
+			mes "Only one Guardian can active at a time.";
+			close;
+	}
+	set .@count, 0;
+	set .@menu$, "";
+	for(set .@i,0; .@i<getarraysize($powerStoneId); set .@i,.@i+1)
+	{
+		set .@menu$, .@menu$ + (.@i == 0 ? "":":") + getitemname($powerStoneId[.@i]);
+		if(countitem($powerStoneId[.@i]) > 0)
+		{
+			set .@count, .@count + 1;
+		}
+	}
+	if(.@count > 0 && POWERSTONE == 2)
+	{
+		mes "Do you wish to lay a Power Stone?";
+		if(select("Yes","No") == 1)
+		{
+			next;
+			mes .@npcname$;
+			mes "Which one?";
+			set .@choice, select(.@menu$) - 1;
+			if(countitem($powerStoneId[.@choice]) > 0)
+			{
+				next;
+				mes .@npcname$;
+				mes "The Stone has been inserted into the Pedestal.";
+				if(PSPEDESTAL0 == 1 && PSPEDESTAL1 == 1 && PSPEDESTAL2 == 1
+					&& PSPEDESTAL3 == 1 && PSPEDESTAL4 == 1 && PSPEDESTAL5 == 1)
+				{
+					//last boss
+					getmapxy(.@map$, .@mapx, .@mapy, UNITTYPE_NPC);
+					set .bossAlive, 1;
+					set $psBossId, monster(.@map$, .@mapx, .@mapy, "Infinity Golem", $psBossId, strnpcinfo(3) + "::OnBossDied");
+					unitskilluseid $psBossId,"NPC_INVINCIBLE",1;
+				}
+				else
+				{
+					monster .@map$, .@mapx, .@mapy, "Power Stone Golem", $psStoneSpiritIds[.@choice], strnpcinfo(3) + "::OnGuardianDied";
+					set .currentGuardian, .@choice;
+					set .guardianAlive, 1;
+					initnpctimer;
+				}
+			}
+			else
+			{
+				next;
+				mes .@npcname$;
+				mes "You don't have this item.";
+			}
+		}
+	}
+	else
+	{
+		mes "There's nothing for you here right now.";
+	}
+	close;
+	
+OnTimer360000:
+	//one hour delay
+	killmonster strnpcinfo(4), strnpcinfo(3) + "::OnGuardianDied";
+	killmonster strnpcinfo(4), strnpcinfo(3) + "::OnBossDied";
+	set .guardianAlive, 0;
+	end;
+	
+OnGuardianDied:
+	if(POWERSTONE == 2)
+	{
+		setd("PSPEDESTAL" + .currentGuardian, 1);
+		message strcharinfo(0), "The Power Stone Golem has been defeated. You can feel the Athmosphere trembling.";
+	}
+	set .guardianAlive, 0;
+	end;
+	
+OnBossDied:
+	set PSPEDESTAL0, 0;
+	set PSPEDESTAL1, 0;
+	set PSPEDESTAL2, 0;
+	set PSPEDESTAL3, 0;
+	set PSPEDESTAL4, 0;
+	set PSPEDESTAL5, 0;
+	set POWERSTONE, 0;
+	getitem .rewardId;
+	dispbottom "The Power Stone has been released. The World come back to his initial state.";
+	end;
+	
+OnInit:
+	set .bossAlive, 0;
+	set .guardianAlive, 0;
+	set .currentGuardian, 0;
+	set .rewardId, 29344;
+	end;
+}

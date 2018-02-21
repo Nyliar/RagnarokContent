@@ -1,0 +1,1180 @@
+//===== Alayne Scripts =======================================
+//= Fafnir Mountain Instance
+//===== By: ================================================== 
+//= Alayne
+//===== Current Version: ===================================== 
+//= 1.0
+//===== Compatible With: ===================================== 
+//= rAthena SVN
+//= hercules SVN
+//===== Description: ========================================= 
+//
+//= An instance based over Fafnir, the dragon
+//
+//===== Todo Remaining: ======================================
+//
+//===== Additional Comments: =================================
+//
+//============================================================
+
+prontera,123,163,5	script	Fafnir Mountain::alafmen	4_M_BARD,{
+OnStart:
+	set .@party_id, getcharid(1);
+	set .@fm_leader, ( getcharid(0) == getpartyleader(.@party_id,2) );
+
+	set $instance_fm_id, -1;
+	
+	//HERCULES
+	//set .@has_instance, has_instance($fmMap$[0], $fm_instance);
+	//RATHENA
+	set .@has_instance, $instance_fm_id == getcharid(1);
+	
+	set .@instance_delay, ( instance_delay_fm - gettimetick(2) );
+
+	set .@npcname$, "[" + .instance_name$ + "]";
+	mes .@npcname$;
+	mes "This is the entrance of " + .instance_name$ + ".";
+	mes "The more you look at it, the more you feel disturb. Something's wrong happening in there.";
+	if( .@instance_delay > 0 )
+	{
+		set .@hours, .@instance_delay / (60 * 60);
+		set .@remaining, .@instance_delay - .@hours * (60 * 60);
+		set .@minutes, .@remaining / (60);
+		set .@remaining, .@remaining - .@minutes * (60);
+		set .@seconds, .@remaining;
+		mes "You have to wait : ^FF0000"+ .@hours +" Hours, " + .@minutes + " Minutes and " + .@seconds + " Seconds.^000000";
+		//close;
+	}
+	if (.requiredItem != -1  && countitem(.requiredItem) < 1)
+	{
+		mes "You decide to step back.";
+		mes "At no cost you'll enter in that place without being well prepared.";
+		close;
+	}
+	switch( select( 
+		(( .@party_id && .@fm_leader && !.@has_instance )?"Create " + .instance_name$:""),
+		(( .@party_id && .@has_instance )?"Enter " + .instance_name$:""),
+		(( .@party_id && .@fm_leader && .@has_instance )?"Destroy " + .instance_name$:""),
+	"Nevermind."
+		)){
+	case 1:
+		getpartymember .@party_id,2;
+		if( .min_party_member >= 1 ){
+			set .@origin, getcharid(3);
+			set .@gettimetick, gettimetick(2);
+			for( set .@i, 0; .@i < $@partymembercount; set .@i, .@i+1 )
+				if( attachrid( $@partymemberaid[.@i] ) ){
+					set .@member_count, .@member_count + 1;
+					if( BaseLevel < .base_level[0] || BaseLevel > .base_level[1] ) set .@fail, .@fail|1;
+					if( Zeny < .instance_zeny ) set .@fail, .@fail|2;
+					if( instance_delay_fm > .@gettimetick ) set .@fail, .@fail|4;
+					if( .@fail ){
+						set .@name$, strcharinfo(0);
+						break;
+					}
+				}
+			attachrid( .@origin );
+		}
+		
+		//check that nobody else is inside
+		for(set .@i,1; .@i<=getarraysize($fmMap$); set .@i,.@i+1)
+		{
+			if (getmapusers(instance_mapname($fmMap$[.@i], $fm_instance)) > 0) {
+				mes "Another team is already in the " + .instance_name$ + ". I can't send you there, sorry.";
+				//close;
+			}
+		}
+		
+		//clean any previously remaining instance
+		if($fm_instance != -1)
+		{
+			instance_destroy $fm_instance;
+			set $fm_instance, -1;
+			set $instance_fm_id, -1;
+		}
+		
+		if( .@name$ != "" && .@fail ){
+			mes "^FF0000[ Failed ]^000000";
+			mes "^0055FF"+.@name$+"^000000, You cannot join right now.";
+			mes " ";
+			mes "^FF0000[ Reason: ]^000000";
+			if( .@fail & 1 ) mes "^777777You must be Level: "+.base_level[0]+" - "+.base_level[1]+"^000000";
+			if( .@fail & 2 ) mes "^777777You need "+ .instance_zeny +" Zeny^000000";
+			if( .@fail & 4 ) mes "^777777You still have cooldown.^000000";
+			//break;
+		}
+		
+		getpartymember getcharid(1),0;
+		if (instance_check_party(.@party_id, .min_party_member, .base_level[0], .base_level[1]) == 0) {
+			mes "^0055FF[ "+.instance_name$+" ]^000000";
+			mes "Make or join a party with at least "+.min_party_member+" member and try again, with level between " +.base_level[0] + " and " + .base_level[1] + ".";
+		}
+		else{
+			//RATHENA
+			set $fm_instance, instance_create( .instance_name$ );
+			//HERCULES
+			//set $fm_instance, instance_create(.instance_name$, .@party_id, IOT_PARTY);
+			if( $fm_instance < 0 ) {
+				npctalk .instance_name$ + " reservation failed.";
+				mes "^0000FF"+ .instance_name$ +" ^000000 - Reservation Failed!";
+				close;
+			}
+			mes "^0055FF[ "+.instance_name$+" ]^000000";
+			mes "^0000FF"+.instance_name$+" ^000000 - Reserved";
+			set .@gettimetick, gettimetick(2);
+			getpartymember .@party_id,2;
+			for( set .@i, 0; .@i < $@partymembercount; set .@i, .@i+1 )
+				if( attachrid( $@partymemberaid[.@i] ) ){
+					set instance_delay_lastr, ( .@gettimetick + ( .instance_delay ));
+					set Zeny, Zeny - .instance_zeny;
+					dispbottom "["+.instance_name$+"] -"+ .instance_zeny +" Zeny and Instance Cooldown Applied.";
+				}
+			attachrid( .@origin );
+			npctalk .instance_name$ + " has been generated for Party - " + getpartyname( .@party_id );
+			
+			set $instance_fm_id, getcharid(1);
+			
+			//HERCULES
+			//for( set .@i, 0; .@i < getarraysize($fmMap$); set .@i,.@i+1 )
+			//{
+			//	if( instance_attachmap( $fmMap$[.@i],$fm_instance ) == "" ){
+			//		setmapflag $fmMap$[.@i],mf_zone,"Memorial Dungeon";
+			//		setmapflag $fmMap$[.@i],mf_monster_noteleport;
+			//		npctalk .instance_name$ + " reservation failed due to map attach failure.";
+			//		mes "- ^FF0000Reservation Failed!^000000";
+			//		instance_destroy( $fm_instance );
+			//		set $fm_instance, -1;
+			//		set $instance_fm_id, -1;
+			//		close;
+			//	}
+			//}
+			//instance_set_timeout .instance_delay,300,$fm_instance;
+			//instance_init($fm_instance);
+			
+			//disable unused npcs for now
+			disablenpc instance_npcname( "fmwarp#0", $fm_instance );
+			disablenpc instance_npcname( "fmwarp#1", $fm_instance );
+ 		}
+	case 2:
+		if( $instance_fm_id != getcharid(1)){
+			mes .instance_name$ + " doesn't exist for Party - "+getpartyname( .@party_id );
+		}
+		else{
+			//RATHENA
+			switch(instance_enter(.instance_name$)) {
+				default:
+					mes "An unknown error has occurred.";
+					close;
+				case 2:
+					mes "The memorial dungeon " + .instance_name$ + " does not exist.";
+					mes "The party leader did not generate the dungeon yet.";
+					close;
+				case 1:
+					mes "You can enter the dungeon after making the party.";
+					close;
+				case 0:
+					mapannounce $fmMap$[0], strcharinfo(0)+" from party, " +getpartyname( .@party_id )+", lr entering the dungeon, "+.instance_name$+".",bc_map,"0x00ff99",FW_NORMAL,12;
+					end;
+			}
+			
+			//HERCULES
+			//if( has_instance( $fmMap$[0] ) == "" ){
+			//	mes "Fafnir Mountain doesnt exist for Party - "+getpartyname( .@party_id );
+			//}
+			//else{
+			//	warp $fmMap$[0],74,33;
+			//	instance_announce $fm_instance, getpartyname(getcharid(1))+"  entered in the "+.instance_name$+"!",bc_map,"0x00ff99";
+			//}
+		}
+		break;
+	case 3:
+		mes .instance_name$ + " Destroyed.";
+		instance_destroy $fm_instance;
+		set $fm_instance, -1;
+		set $instance_fm_id, -1;
+		break;
+	default: 
+		break;
+}
+close;
+
+OnInit:
+	setarray .base_level[0],80,99;
+	setarray $fmMap$[0],"1@fm","2@fm","3@fm";
+	set .map_size, getarraysize( $fmMap$ );
+	set .min_party_member, 1;
+	set .instance_zeny, 0;
+	set .instance_delay, 7200;
+	set $fm_timer_delay, 3600; //1 hour to clean the instance
+	set .instance_name$, "Fafnir Mountain";
+	set $fm_instance, -1;
+	set $instance_fm_id, -1;
+	set .requiredItem, -1; //define the required item to enter in the instance. Leave to -1 to disable
+	set $fmRingId, 6650;
+	set $fmGoldId, 969;
+	set $fmKeyId, 6267;
+	end;
+}
+
+
+1@fm,101,107,4	script	fafnir_mountain	HIDDEN_WARP_NPC,2,2,{
+function summon_normal;
+function summon_guardian;
+end;
+
+OnInstanceInit:
+	set .@map$, strnpcinfo(4);
+	set .@npc_name$, instance_npcname( strnpcinfo(0), $fm_instance );
+	
+	set $instance_fm_level, 0;
+	set .max_fm_level, 3;
+	
+	set $FafnirId, -1;
+	
+	set .timerCount, 0;
+	set $openableChest, 0;
+	set $openedChest, 0;
+	set .prisonOpened, 0;
+	set $fmInvicible, -1;
+	set $fmInvicibleOffCount, 0;
+	
+	set $fafnirSecretFound, 0;
+	 
+	initnpctimer;
+	end;
+
+function	summon_normal	{
+	set .@map$, getarg(0);
+	set .@npcname$, getarg(1);
+	set .@increaseFloor, getarg(2);
+	
+	if(.@increaseFloor == 1)
+	{
+		$instance_fm_level++;
+	}
+	
+	switch( $instance_fm_level ){
+		case 1:
+			//Sea Otter
+			setarray .@monster,1323,2668,1323;
+			setarray .@amount,1,1,1; //49, 10, 1
+			setarray .@coordinate,84,251,327,36;
+			setarray .@label$,"::OnNormalDied","::OnNormalDied","::OnGoodOneDied";
+			break;
+		case 2:
+			//Dwarf Guards
+			setarray .@monster,2083;
+			setarray .@amount,25;
+			setarray .@coordinate,96,111,136,70;
+			break;
+		case 3:
+			//Prison Guards
+			setarray .@monster,2084;
+			setarray .@amount,25;
+			setarray .@coordinate,82,167,119,114;
+			break;
+	}
+	
+	set .@monster_size, getarraysize( .@monster );
+	for( set .@i, 0; .@i < .@monster_size; set .@i,.@i+1 ){
+		set .@target_amount, ( .@amount[.@i] );
+		set .@size, 0;
+		set .@clabel$, .@npcname$ + "::OnNormalDied";
+		if(getarraysize(.@label$) > 0)
+		{
+			set .@clabel$, .@npcname$ + .@label$[.@i];
+		}
+		areamonster(.@map$,.@coordinate[0],.@coordinate[1],.@coordinate[2],.@coordinate[3],"--ja--",.@monster[.@i],.@target_amount,.@clabel$,.@size);
+	}
+	return;
+}
+
+function	summon_guardian	{
+	set .@map$, getarg(0);
+	set .@npcname$, getarg(1);
+	set .@label$, .@npcname$ + "::OnGuardianDied";
+	
+	switch( $instance_fm_level ){
+		case 2:
+			//Andraimnis
+			setarray .@monster,1980;
+			setarray .@amount,1;
+			setarray .@coordinate,96,111,136,70;
+			break;
+		case 3:
+			//Fafnir
+			setarray .@monster,1817;
+			setarray .@amount,1;
+			setarray .@coordinate,82,167,119,114;
+			break;
+		default: 
+			mapannounce .@map$,"[ Fafnir Mountain ] : Cleared!! Congratulation!!",bc_map,0x00FF99;
+			return;
+	}
+	set .@monster_size, getarraysize( .@monster );
+	for( set .@i, 0; .@i < .@monster_size; set .@i,.@i+1 ){
+		set .@target_amount, 1;
+		if($instance_fm_level == 3)
+		{
+			//RATHENA
+			areamonster(.@map$,.@coordinate[0],.@coordinate[1],.@coordinate[2],.@coordinate[3],"Fafnir",.@monster[.@i],.@target_amount,.@label$);
+			set $FafnirId, $@mobId[0];
+			unitskilluseid $FafnirId, 685, 1; 
+			//HERCULES
+			//set $FafnirId, areamonster(.@map$,.@coordinate[0],.@coordinate[1],.@coordinate[2],.@coordinate[3],"Fafnir",.@monster[.@i],.@target_amount,.@label$);
+			//unitskilluseid $FafnirId, NPC_INVINCIBLE, 1; 
+			set $fmInvicible, 1;
+		}
+		else
+		{
+			areamonster(.@map$,.@coordinate[0],.@coordinate[1],.@coordinate[2],.@coordinate[3],"Fafnir",.@monster[.@i],.@target_amount,.@label$);
+		}
+	}
+	return;
+}
+
+OnGoodOneDied:
+	set .@map$, instance_mapname( $fmMap$[$instance_fm_level - 1], $fm_instance );
+	set .@npc_name$, instance_npcname( strnpcinfo(0), $fm_instance );
+	set .@mob_dead_num, mobcount(.@map$,.@npc_name$+"::OnGoodOneDied" );
+	
+	if( .@mob_dead_num == 0 ){		
+		killmonster instance_mapname( $fmMap$[0], $fm_instance ), "All";
+		
+		enablenpc instance_npcname( "alafmod", $fm_instance );
+		enablenpc instance_npcname( "alafmlo", $fm_instance );
+		enablenpc instance_npcname( "alafmho", $fm_instance );
+		
+		donpcevent instance_npcname( "alafmod", $fm_instance ) + "::OnTalkAgain";
+		
+		instance_announce $fm_mountain, "[ Odin ] Loki! No! Not this one!", bc_map, 0x0000FF;
+	}
+	end;
+
+OnNormalDied:
+	set .@map$, instance_mapname( $fmMap$[$instance_fm_level - 1], $fm_instance );
+	set .@npc_name$, instance_npcname( strnpcinfo(0), $fm_instance );
+	set .@mob_dead_num, mobcount(.@map$,.@npc_name$+"::OnNormalDied" );
+	
+	if( $instance_fm_level == 3 )
+	{
+		if( .@mob_dead_num == 0 )
+		{
+			summon_normal( .@map$, .@npc_name$, 0 );
+			unitskilluseid $FafnirId, 686, 1; 
+			//unitskilluseid $FafnirId, NPC_INVINCIBLEOFF, 1; 
+			set $fmInvicible, 3;
+			instance_announce $fm_instance, "[ Odin ] He's vulnerable, but it won't last. Hurry up, before the Guards raise again.", bc_map, 0x00FF00;
+		}
+		else
+		{
+			if(rand(0,100) < 10)
+			{
+				rentitem $fmKeyId, 30;
+			}
+		}
+	}
+	end;
+	
+OnGuardianDied:
+	set .@map$, instance_mapname( $fmMap$[$instance_fm_level - 1], $fm_instance );
+	set .@npc_name$, instance_npcname( strnpcinfo(0), $fm_instance );
+	set .@mob_dead_num, mobcount(.@map$,.@npc_name$+"::OnGuardianDied" );
+	set .@party_id, getcharid(1);
+	
+	if( !.@mob_dead_num ){
+		if ($instance_fm_level == 2)
+		{						
+			killmonsterall .@map$, "All";
+			
+			set $openableChest, rand(3,10);
+			
+			enablenpc instance_npcname( "alafmch1", $fm_instance );
+			enablenpc instance_npcname( "alafmch2", $fm_instance );
+			enablenpc instance_npcname( "alafmch3", $fm_instance );	
+			enablenpc instance_npcname( "alafmch4", $fm_instance );	
+			enablenpc instance_npcname( "alafmch5", $fm_instance );	
+			enablenpc instance_npcname( "alafmch6", $fm_instance );	
+			enablenpc instance_npcname( "alafmch7", $fm_instance );	
+			enablenpc instance_npcname( "alafmch8", $fm_instance );				
+			enablenpc instance_npcname( "alafmch9", $fm_instance );	
+			enablenpc instance_npcname( "alafmch10", $fm_instance );	
+			
+			instance_announce $fm_instance, "[ Andraimnis ] No! My treasure! Don't...Don't touch it!", bc_map, 0x00FF00;
+			end;
+		}
+		if ($instance_fm_level == .max_fm_level)
+		{					
+			killmonsterall .@map$, "All";
+			
+			enablenpc instance_npcname( "alafmve2", $fm_instance );
+			enablenpc instance_npcname( "alafmur2", $fm_instance );
+			enablenpc instance_npcname( "alafmsk2", $fm_instance );
+		}
+		
+		sleep2 5000;
+		summon_normal( .@map$,.@npc_name$ );
+	}
+	end;
+	
+OnTimer10000:
+	//each 10s, increase timer
+	set .timerCount, .timerCount + 10;
+	if(.timerCount == $fm_timer_delay)
+	{
+		instance_announce $fm_instance, "[ Fafnir Mountain ] The Dimension collapse! You have to flee, right now!", bc_map, 0xFF0000;
+		sleep2 5000;
+		instance_destroy $fm_instance;
+		set $fm_instance, -1;
+		set $instance_fm_id, -1;
+		stopnpctimer;
+	}
+	if($fmInvicible == 2 || $fmInvicible == 3)
+	{
+		set $fmInvicibleOffCount, $fmInvicibleOffCount + 10;
+		if($fmInvicibleOffCount >= 60)
+		{
+			//unitskilluseid $FafnirId, NPC_INVINCIBLE, 1;
+			unitskilluseid $FafnirId, 685, 1;
+			set $fmInvicible, 1;
+		}
+	}
+	setnpctimer 0;
+	end;
+	
+OnFirstFloorOn:
+	set .@map$, strnpcinfo(4);
+	set .@npc_name$, instance_npcname( strnpcinfo(0), $fm_instance );
+	//pop monsters
+	summon_normal( .@map$,.@npc_name$, 1 );
+	end;
+	
+OnSecondFloorOn:
+	set .@map$, instance_mapname( $fmMap$[1], $fm_instance );
+	set .@npc_name$, instance_npcname( strnpcinfo(0), $fm_instance );
+	instance_announce $fm_instance, "[ Andraimnis ] Guards! To your positions!!", bc_map, 0x00FF000;
+	sleep2 500;
+	instance_announce $fm_instance, "[ Andraimnis ] We're at war!!", bc_map, 0x00FF000;
+		
+	//pop monsters
+	summon_normal( .@map$,.@npc_name$, 1 );
+	summon_guardian( .@map$,.@npc_name$ );
+	end;	
+	
+OnThirdFloorOn:
+	set .@map$, instance_mapname( $fmMap$[2], $fm_instance );
+	set .@npc_name$, instance_npcname( strnpcinfo(0), $fm_instance );
+	instance_announce $fm_instance, "[ Odin ] Adventurers! Some of those monsters are the ancient guards, transformed by the curse!", bc_map, 0x00FF00;
+	sleep2 500;
+	instance_announce $fm_instance, "[ Odin ] One of them got the key. Help us, find it, and I'll help us in return.", bc_map, 0x00FF00;
+	sleep2 500;
+	instance_announce $fm_instance, "[ Odin ] You can't defeat this dragon by yourself.", bc_map, 0x00FF00;
+	sleep2 500;
+		
+	//pop monsters
+	summon_normal( .@map$,.@npc_name$, 1 );
+	summon_guardian( .@map$,.@npc_name$ );
+	end;	
+}
+
+1@fm,194,297,5	script	Odin::alafmod	4_EP16_GRANZ,3,3,{
+	end;
+	
+OnTouch:	
+	if(.talking == 0)
+	{
+		if($instance_fm_level == 0)
+		{
+			set $fmTalkingId, getcharid(3);
+			set .talking, 1;	
+	
+			npctalk "It's been a long trip...";
+			instance_announce $jl_instance, "[Odin] It's been a long trip...", bc_map, 0x00FF00;
+			sleep2 500;
+			npctalk "We should make a small pause here, near this cascade.";
+			instance_announce $jl_instance, "[Odin] We should make a small pause here, near this cascade.", bc_map, 0x00FF00;
+			sleep2 500;
+			npctalk "We'll soon reach Hreidmar's home. The Dwarves might await us with anxiety.";
+			instance_announce $jl_instance, "[Odin] We'll soon reach Hreidmar's home. The Dwarves might await us with anxiety.", bc_map, 0x00FF00;
+			sleep2 500;
+		
+			donpcevent instance_npcname( "alafmlo", $fm_instance ) + "::OnDialog2_2";
+		}
+		else if($instance_fm_level == 1)
+		{
+			set $fmTalkingId, getcharid(3);
+			set .talking, 1;	
+	
+			npctalk "You shouldn't have done that. You're not as wise as you think...";
+			instance_announce $jl_instance, "[Odin] You shouldn't have done that. You're not as wise as you think...", bc_map, 0x00FF00;
+			
+			donpcevent instance_npcname( "alafmlo", $fm_instance ) + "::OnDialog3_2";
+		}
+	}
+	end;
+	
+OnDialog3_5:
+	npctalk "It was an accident. Loki was a bit...Too energic. I'm sorry...";
+	instance_announce $jl_instance, "[Odin] It was an accident. Loki was a bit...Too energic. I'm sorry...", bc_map, 0x00FF00;
+	sleep2 500;	
+	npctalk "Nothing I can do or say will bring your son. But we'll bring you a paiement as an excuse...";
+	instance_announce $jl_instance, "[Odin] Nothing I can do or say will bring your son. But we'll bring you a paiement as an excuse...", bc_map, 0x00FF00;
+	sleep2 500;
+	
+	donpcevent instance_npcname( "alafmhe", $fm_instance ) + "::OnDialog3_6";
+	end;
+	
+OnDialog3_7:
+	npctalk "Allright, if it can calm your pain.";
+	instance_announce $jl_instance, "[Odin] Allright, if it can calm your pain.", bc_map, 0x00FF00;
+	sleep2 500;	
+	npctalk "Loki, we'll wait for you. You shouldn't stay away for long.";
+	instance_announce $jl_instance, "[Odin] Loki, we'll wait for you. You shouldn't stay away for long.", bc_map, 0x00FF00;
+	sleep2 500;
+	
+	donpcevent instance_npcname( "alafmlo", $fm_instance ) + "::OnDialog3_8";
+	end;
+	
+OnTalkAgain:
+	set .talking, 0;
+	end;
+
+OnInstanceInit:
+	set .talking, 0;
+	disablenpc strnpcinfo(3);
+	end;
+}
+
+1@fm,200,295,1	script	Loki::alafmlo	4_M_EISEN,{
+	end;
+	
+OnDialog2_2:
+	npctalk "Especially Odin. You're the Father of Everything after all, right?";
+	instance_announce $jl_instance, "[Loki] Especially Odin. You're the Father of Everything after all, right?", bc_map, 0x00FF00;
+	sleep2 500;
+	donpcevent instance_npcname( "alafmho", $fm_instance ) + "::OnDialog2_3";
+	end;	
+	
+OnDialog2_4:
+	npctalk "Envious? Not at all. I'm stronger and have a greater dexterity than my brother, Thor. I'm wiser than lots, maybe even you, Odin?";
+	instance_announce $jl_instance, "[Loki] Envious? Not at all. I'm stronger and have a greater dexterity than my brother, Thor. I'm wiser than lots, maybe even you, Odin?", bc_map, 0x00FF00;
+	sleep2 500;
+	npctalk "No, I'm just willing to prove my valor!";
+	instance_announce $jl_instance, "[Loki] No, I'm just willing to prove my valor!", bc_map, 0x00FF00;
+	sleep2 500;
+	npctalk "Oh look! An otter! I have to kill it by myself. Look, you'll soon see how great I am!";
+	instance_announce $jl_instance, "[Loki] Oh look! An otter! I have to kill it by myself. Look, you'll soon see how great I am!", bc_map, 0x00FF00;
+	sleep2 500;
+
+	disablenpc strnpcinfo(3);
+	disablenpc instance_npcname( "alafmod", $fm_instance );
+	disablenpc instance_npcname( "alafmho", $fm_instance );
+	
+	donpcevent instance_npcname( "fafnir_mountain", $fm_instance ) + "::OnFirstFloorOn";
+	end;	
+
+OnDialog3_2:
+	npctalk "Oh come on. It was just an otter, right?";
+	instance_announce $jl_instance, "[Loki] Oh come on. It was just an otter, right?", bc_map, 0x00FF00;
+	sleep2 500;
+	
+	instance_announce $jl_instance, "NOOOOOOOOOOOOOOOOOOOOOO! Brother!", bc_map, 0xFF0000;
+	sleep2 500;
+	
+	enablenpc instance_npcname( "alafmhe", $fm_instance );
+	enablenpc instance_npcname( "alafmfa", $fm_instance );
+	
+	donpcevent instance_npcname( "alafmhe", $fm_instance ) + "::OnDialog3_3";
+	end;
+	
+OnDialog3_8:
+	npctalk "*Gloups* Allright. I'll be back soon.";
+	instance_announce $jl_instance, "[Loki] *Gloups* Allright. I'll be back soon.", bc_map, 0x00FF00;
+	sleep2 500;
+	
+	enablenpc instance_npcname( "fmwarp#0", $fm_instance );
+	enablenpc instance_npcname( "alafmlo2", $fm_instance );
+	enablenpc instance_npcname( "alafman", $fm_instance );
+	
+	disablenpc instance_npcname( "alafmod", $fm_instance );
+	disablenpc instance_npcname( "alafmho", $fm_instance );
+	disablenpc instance_npcname( "alafmhe", $fm_instance );
+	disablenpc instance_npcname( "alafmfa", $fm_instance );
+	
+	disablenpc strnpcinfo(3);
+	end;
+
+OnInstanceInit:
+	disablenpc strnpcinfo(3);
+	end;
+}
+
+1@fm,191,294,5	script	Hoenir::alafmho	4_M_PHILOFONTES,{
+	end;
+	
+OnDialog2_3:
+	npctalk "You're a bit bitter these time Loki...Might be a bit...envious??";
+	instance_announce $jl_instance, "[Hoenir] You're a bit bitter these time Loki...Might be a bit...envious??", bc_map, 0x00FF00;
+	sleep2 500;
+	donpcevent instance_npcname( "alafmlo", $fm_instance ) + "::OnDialog2_4";
+	end;
+	
+OnDialog3_4:
+	npctalk "Your son? You mean Otr?";
+	instance_announce $jl_instance, "[Hoenir] Your son? You mean Otr?", bc_map, 0x00FF00;
+	sleep2 500;
+	donpcevent instance_npcname( "alafmfa", $fm_instance ) + "::OnDialog3_5";
+	end;
+
+OnInstanceInit:
+	disablenpc strnpcinfo(3);
+	end;
+}
+
+1@fm,194,289,1	script	Hreidmar::alafmhe	4_M_REKENBER,{
+	end;
+	
+OnDialog3_3:
+	npctalk "Why, Odin? Why did you have to kill my son??";
+	instance_announce $jl_instance, "[Hreidmar] Why, Odin? Why did you have to kill my son??", bc_map, 0x00FF00;
+	sleep2 500;
+	donpcevent instance_npcname( "alafmho", $fm_instance ) + "::OnDialog3_4";
+	end;
+	
+OnDialog3_6:
+	npctalk "Yeah, i'm sure you will. Why wouldn't the great gods do that?";
+	instance_announce $jl_instance, "[Hreidmar] Yeah, i'm sure you will. Why wouldn't the great gods do that?", bc_map, 0x00FF00;
+	sleep2 500;
+	npctalk "No way. Two of you will stay here, while the younger will go to find the gold.";
+	instance_announce $jl_instance, "[Hreidmar] No way. Two of you will stay here, while the younger will go to find the gold.", bc_map, 0x00FF00;
+	sleep2 500;
+	npctalk "Enough to fill up the otter skin. Even more! You'll stay in jail while we'll be waiting for Loki to come back!";
+	instance_announce $jl_instance, "[Hreidmar] Enough to fill up the otter skin. Even more! You'll stay in jail while we'll be waiting for Loki to come back!", bc_map, 0x00FF00;
+	sleep2 500;
+	donpcevent instance_npcname( "alafmod", $fm_instance ) + "::OnDialog3_7";
+	end;
+
+OnInstanceInit:
+	disablenpc strnpcinfo(3);
+	end;
+}
+
+1@fm,190,287,1	script	Fafnir::alafmfa	4_M_TATIO,{
+	end;
+	
+OnDialog3_5:
+	npctalk "Yes, Otr! My young brother, who changed to an otter to hunt in those lac and cascade. Why?";
+	instance_announce $jl_instance, "[Fafnir] Yes, Otr! My young brother, who changed to an otter to hunt in those lac and cascade. Why?", bc_map, 0x00FF00;
+	sleep2 500;
+	donpcevent instance_npcname( "alafmod", $fm_instance ) + "::OnDialog3_5";
+	end;
+
+OnInstanceInit:
+	disablenpc strnpcinfo(3);
+	end;
+}
+
+2@fm,126,92,6	script	Loki::alafmlo2	4_M_EISEN,3,3,{
+	end;
+		
+OnTouch:	
+	if(.talking == 0)
+	{
+		set $fmTalkingId, getcharid(3);
+		set .talking, 1;	
+
+		npctalk "Andraimnis. I need your assistance.";
+		instance_announce $jl_instance, "[Loki] Andraimnis. I need your assistance.", bc_map, 0x00FF00;
+		sleep2 500;
+	
+		donpcevent instance_npcname( "alafman", $fm_instance ) + "::OnDialog4_2";
+	}
+	end;
+	
+OnDialog4_3:
+	npctalk "Odin has been captured by Hreidmar and his sons. I need your gold to free them.";
+	instance_announce $jl_instance, "Odin has been captured by Hreidmar and his sons. I need your gold to free them.", bc_map, 0x00FF00;
+	sleep2 500;
+	donpcevent instance_npcname( "alafman", $fm_instance ) + "::OnDialog4_4";
+	end;
+
+OnDialog4_5:
+	npctalk "You leave me no choice...Prepare yourself!";
+	instance_announce $jl_instance, "You leave me no choice...Prepare yourself!", bc_map, 0x00FF00;
+	sleep2 500;
+	
+	donpcevent instance_npcname( "fafnir_mountain", $fm_instance ) + "::OnSecondFloorOn";
+	disablenpc instance_npcname( "alafman", $fm_instance );
+	disablenpc strnpcinfo(3);
+	end;
+	
+OnInstanceInit:
+	set .talking, 0;
+	disablenpc strnpcinfo(3);
+	end;
+}	
+
+2@fm,130,92,1	script	Andraimnis::alafman	4_M_IAN,3,3,{
+	end;
+	
+OnDialog4_2:
+	npctalk "Loki. What can I do for you?";
+	instance_announce $jl_instance, "[Andraimnis] Loki. What can I do for you?", bc_map, 0x00FF00;
+	sleep2 500;
+	donpcevent instance_npcname( "alafmlo2", $fm_instance ) + "::OnDialog4_3";
+	end;
+	
+OnDialog4_4:
+	npctalk "There's no way I can let it to you. I've worked hard for this gold. On top of that, some of this items are cursed. You can't take them.";
+	instance_announce $jl_instance, "[Andraimnis] There's no way I can let it to you. I've worked hard for this gold. On top of that, some of this items are cursed. You can't take them.", bc_map, 0x00FF00;
+	sleep2 500;
+	donpcevent instance_npcname( "alafmlo2", $fm_instance ) + "::OnDialog4_5";
+	end;
+
+OnInstanceInit:
+	disablenpc strnpcinfo(3);
+	end;
+}	
+
+2@fm,103,124,5	script	Treasure Chest::alafmch1	4_TREASURE_BOX,{
+	mes "[Treasure Chest]";
+	set $openedChest, $openedChest + 1;
+	mes "You've found a part of Andraimnis treasure.";
+	getitem $fmGoldId, 1;
+	if($openedChest == $openableChest)
+	{
+		next;
+		mes "[Treasure Chest]";
+		mes "You almost missed it, but there's a small ring in the bottom of the chest.";	
+		getitem $fmRingId, 1;
+		
+		instance_announce $jl_instance, "[Loki] Good. Now, let's go back to Hreidmar house.", bc_map, 0x00FF00;
+		sleep2 500;
+	
+		enablenpc instance_npcname( "fmwarp#1", $fm_instance );
+		enablenpc instance_npcname( "alafmlo3", $fm_instance );
+		enablenpc instance_npcname( "alafmfa2", $fm_instance );
+		enablenpc instance_npcname( "alafmhe2", $fm_instance );
+		enablenpc instance_npcname( "alafmod2", $fm_instance );
+		enablenpc instance_npcname( "alafmho2", $fm_instance );
+		
+		disablenpc instance_npcname( "alafmch2", $fm_instance );
+		disablenpc instance_npcname( "alafmch3", $fm_instance );
+		disablenpc instance_npcname( "alafmch4", $fm_instance );
+		disablenpc instance_npcname( "alafmch5", $fm_instance );
+		disablenpc instance_npcname( "alafmch6", $fm_instance );
+		disablenpc instance_npcname( "alafmch7", $fm_instance );
+		disablenpc instance_npcname( "alafmch8", $fm_instance );
+		disablenpc instance_npcname( "alafmch9", $fm_instance );
+		disablenpc instance_npcname( "alafmch10", $fm_instance );
+		disablenpc instance_npcname( "alafmch1", $fm_instance );
+	}
+	close;
+
+OnInstanceInit:
+	disablenpc strnpcinfo(3);
+	end;
+}	
+
+2@fm,139,62,3	duplicate(alafmch1)	Treasure Chest::alafmch2	4_TREASURE_BOX
+2@fm,109,62,3	duplicate(alafmch1)	Treasure Chest::alafmch3	4_TREASURE_BOX
+2@fm,108,125,3	duplicate(alafmch1)	Treasure Chest::alafmch4	4_TREASURE_BOX
+2@fm,114,125,3	duplicate(alafmch1)	Treasure Chest::alafmch5	4_TREASURE_BOX
+2@fm,120,125,3	duplicate(alafmch1)	Treasure Chest::alafmch6	4_TREASURE_BOX
+2@fm,126,125,3	duplicate(alafmch1)	Treasure Chest::alafmch7	4_TREASURE_BOX
+2@fm,133,62,3	duplicate(alafmch1)	Treasure Chest::alafmch8	4_TREASURE_BOX
+2@fm,127,62,3	duplicate(alafmch1)	Treasure Chest::alafmch9	4_TREASURE_BOX
+2@fm,121,62,3	duplicate(alafmch1)	Treasure Chest::alafmch10	4_TREASURE_BOX
+
+3@fm,100,155,1	script	Loki::alafmlo3	4_M_EISEN,3,3,{
+	end;
+		
+OnTouch:	
+	if(.talking == 0)
+	{
+		set $fmTalkingId, getcharid(3);
+		set .talking, 1;	
+
+		npctalk "As promised, I came back with your treasure.";
+		instance_announce $jl_instance, "[Loki] As promised, I came back with your treasure.", bc_map, 0x00FF00;
+		sleep2 500;
+		npctalk "There's enough here to pay the ransom.";
+		instance_announce $jl_instance, "[Loki] There's enough here to pay the ransom.", bc_map, 0x00FF00;
+		sleep2 500;
+	
+		donpcevent instance_npcname( "alafmhe2", $fm_instance ) + "::OnDialog5_2";
+	}
+	end;
+	
+OnDialog5_6:
+	attachrid($fmTalkingId);
+	npctalk "There's a little thing I might warn you about...";
+	instance_announce $jl_instance, "[Loki] There's a little thing I might warn you about...", bc_map, 0x00FF00;
+	sleep2 500;
+	npctalk "Andraimnis told me that some items might be cursed!";
+	instance_announce $jl_instance, "[Loki] Andraimnis told me that some items might be cursed!", bc_map, 0x00FF00;
+	sleep2 500;
+	
+	donpcevent instance_npcname( "alafmfa2", $fm_instance ) + "::OnDialog5_7";
+	end;
+	
+OnDialog5_10:
+	attachrid($fmTalkingId);
+	npctalk "Apparently, it's for me to go.";
+	instance_announce $jl_instance, "[Loki] Apparently, it's for me to go.", bc_map, 0x00FF00;
+	sleep2 500;
+	npctalk "Sorry Odin and Hoenir. You'll have to escape by yourself!";
+	instance_announce $jl_instance, "[Loki] Sorry Odin and Hoenir. You'll have to escape by yourself!", bc_map, 0x00FF00;
+	sleep2 500;
+
+	disablenpc instance_npcname( "alafmfa2", $fm_instance );
+	disablenpc strnpcinfo(3);
+	
+	donpcevent instance_npcname( "fafnir_mountain", $fm_instance ) + "::OnThirdFloorOn";
+	end;
+	
+OnInstanceInit:
+	set .talking, 0;
+	disablenpc strnpcinfo(3);
+	end;
+}	
+
+3@fm,99,159,5	script	Hreidmar::alafmhe2	4_M_REKENBER,{
+	end;
+	
+OnDialog5_2:
+	attachrid($fmTalkingId);
+	npctalk "Excuse me to not believe you by words. Fafnir, check it.";
+	instance_announce $jl_instance, "[Hreidmar] Excuse me to not believe you by words. Fafnir, check it.", bc_map, 0x00FF00;
+	sleep2 500;
+	
+	donpcevent instance_npcname( "alafmfa2", $fm_instance ) + "::OnDialog5_3";
+	end;
+	
+OnDialog5_4:
+	attachrid($fmTalkingId);
+	npctalk "Right. Bring it to me now.";
+	instance_announce $jl_instance, "[Hreidmar] Right. Bring it to me now.", bc_map, 0x00FF00;
+	sleep2 500;
+	
+	donpcevent instance_npcname( "alafmfa2", $fm_instance ) + "::OnDialog5_5";
+	end;
+	
+OnDialog5_8:
+	attachrid($fmTalkingId);
+	specialeffect 512;
+	npctalk "Fa...Fafnir?! Why?!";
+	instance_announce $jl_instance, "[Hreidmar] Fa...Fafnir?! Why?!", bc_map, 0x00FF00;
+	sleep2 500;
+	
+	donpcevent instance_npcname( "alafmfa2", $fm_instance ) + "::OnDialog5_9";
+	disablenpc strnpcinfo(3);
+	end;
+	
+OnInstanceInit:
+	disablenpc strnpcinfo(3);
+	end;
+}	
+
+3@fm,97,162,5	script	Fafnir::alafmfa2	4_M_TATIO,{
+	end;
+	
+OnDialog5_3:
+	attachrid($fmTalkingId);
+	npctalk "So much gold...Everything looks ok.";
+	instance_announce $jl_instance, "[Hreidmar] So much gold...Everything looks ok.", bc_map, 0x00FF00;
+	sleep2 500;
+	
+	donpcevent instance_npcname( "alafmhe2", $fm_instance ) + "::OnDialog5_4";
+	end;
+	
+OnDialog5_5:
+	attachrid($fmTalkingId);
+	npctalk "I...It's so bright...Yes...Father.";
+	instance_announce $jl_instance, "[Hreidmar] I...It's so bright...Yes...Father.", bc_map, 0x00FF00;
+	sleep2 500;
+	
+	donpcevent instance_npcname( "alafmlo3", $fm_instance ) + "::OnDialog5_6";
+	end;
+	
+OnDialog5_7:
+	attachrid($fmTalkingId);
+	movenpc (strnpcinfo(4), 139, 32);
+	npctalk "Father...I...I'll keep that for me!";
+	instance_announce $jl_instance, "[Fafnir] I...It's so bright...Yes...Father.", bc_map, 0x00FF00;
+	sleep2 500;
+	
+	donpcevent instance_npcname( "alafmhe2", $fm_instance ) + "::OnDialog5_8";
+	end;
+	
+OnDialog5_9:
+	attachrid($fmTalkingId);
+	movenpc (strnpcinfo(4), 139, 32);
+	npctalk "Now everything around here belongs to me!";
+	instance_announce $jl_instance, "[Fafnir] Now everything around here belongs to me.", bc_map, 0x00FF00;
+	sleep2 500;
+	npctalk "And you're not welcomed! Leave! Now!";
+	instance_announce $jl_instance, "[Fafnir] And you're not welcomed! Leave! Now.", bc_map, 0x00FF00;
+	sleep2 500;
+	
+	donpcevent instance_npcname( "alafmlo3", $fm_instance ) + "::OnDialog5_10";
+	end;
+	
+OnInstanceInit:
+	disablenpc strnpcinfo(3);
+	end;
+}	
+
+3@fm,86,161,5	script	Odin::alafmod2	4_EP16_GRANZ,{
+	mes "[Odin]";
+	if($instance_fm_level == 2)
+	{
+		mes "Hreidmar, you can't keep us.";
+		mes "I don't want to destroy your house, while Loki is responsible of all this mess...";
+	}
+	else
+	{
+		if(countitem($fmKeyId) == 1)
+		{
+			delitem $fmKeyId, 1;
+			set $fafnirSecretFound, 1;
+			mes "Thank you adventurer.";
+			mes "You can't hurt the Dragon. His scales are too strong.";
+			mes "You can on the overhand lure it to a place, and hide in a hole.";
+			mes "There's some around the room. Hit it from under to raise his defense for a while.";
+			next;
+			mes "[Odin]";
+			mes "Good luck!";
+			enablenpc instance_npcname( "alafmhol", $fm_instance );
+			enablenpc instance_npcname( "alafmhol2", $fm_instance );
+			enablenpc instance_npcname( "alafmhol3", $fm_instance );
+			enablenpc instance_npcname( "alafmhol4", $fm_instance );
+			enablenpc instance_npcname( "alafmhol5", $fm_instance );
+			disablenpc strnpcinfo(3);
+			disablenpc instance_npcname( "alafmho2", $fm_instance );
+		}
+		else
+		{
+			mes "We're trapped here, due to a spell Hreidmar sent over us...";
+			mes "We can't move anymore, not as long as the spell doesn't broke.";
+			mes "We need a key for that, but I don't know where it is.";
+			mes "A guard have it...";
+		}
+	}
+	close;
+	
+OnInstanceInit:
+	disablenpc strnpcinfo(3);
+	end;
+}	
+
+3@fm,85,157,2	script	Hoenir::alafmho2	4_M_PHILOFONTES,{
+	mes "[Hoenir]";
+	if($instance_fm_level == 2)
+	{
+		mes "Hreidmar, let us out now.";
+	}
+	else
+	{
+		mes "Come on...We can't stay in that cell Odin...";
+		mes "We're Gods!";
+	}
+	close;
+	
+OnInstanceInit:
+	disablenpc strnpcinfo(3);
+	end;
+}	
+
+3@fm,112,139,5	script	Hole::alafmhol	CLEAR_NPC,3,3,{
+	mes "[Hole]";
+	mes "Do you want to hide here?";
+	if(select("Yes","No") == 1)
+	{
+		set .holeFilled, 1;
+		charcommand "#hide " + strcharinfo(0);
+		pcblockmove(getcharid(0), true);
+		addtimer 15000, strnpcinfo(3) + "::OnUnHide";
+		if(countitem($fmGoldId) >= 1)
+		{
+			next;
+			mes "[Hole]";
+			mes "Do you want to send a lure?";
+			if(select("Yes","No") == 1)
+			{
+				delitem $fmGoldId, 1;
+				//move fafnir to this place
+				getmapxy(.@map$, .@x, .@y, UNITTYPE_NPC);
+				unitwalk $FafnirId, .@x, .@y;
+			}
+			set .holeFilled, 1;
+		}
+	}
+	close;
+	
+OnUnHide:
+	charcommand "#hide " + strcharinfo(0);	
+	set .holeFilled, 0;
+	pcblockmove(getcharid(0), false);
+	end;
+	
+OnTouchNPC:
+	getmapxy(.@map$, .@x, .@y, UNITTYPE_NPC);
+	getmapxy(.@map$, .@mx, .@my, UNITTYPE_MOB, $FafnirId);
+	if(.holeFilled == 1 && (.@mx >= .@x-10 && .@mx <= .@x + 10)
+		&& (.@my >= .@y-10  && .@my <= .@y+10))
+	{
+		instance_announce $fm_mountain, "[ Odin ] Now! Stab him in the stomach!", bc_map, 0x00FF00;
+		set $fmInvicible, 2;
+		//unitskilluseid $FafnirId, NPC_INVINCIBLEOFF, 1;
+		unitskilluseid $FafnirId, 686, 1;
+	}
+	end;
+	
+OnInstanceInit:
+	disablenpc strnpcinfo(3);
+	set .holeFilled, 0;
+	end;
+}	
+
+3@fm,112,139,5	duplicate(alafmhol)	Hole::alafmhol2	CLEAR_NPC,3,3
+3@fm,100,156,5	duplicate(alafmhol)	Hole::alafmhol3	CLEAR_NPC,3,3
+3@fm,109,124,5	duplicate(alafmhol)	Hole::alafmhol4	CLEAR_NPC,3,3
+3@fm,86,141,5	duplicate(alafmhol)	Hole::alafmhol5	CLEAR_NPC,3,3
+
+1@fm,88,33,3	script	Verdandi::alafmve	4_F_NYDHOG,2,2,{
+	end;
+		
+OnTouch:	
+	if(.talking == 0)
+	{
+		set $fmTalkingId, getcharid(3);
+		set .talking, 1;	
+
+		cutin "ep14_nyd01",2;
+		npctalk "This is Fafnir's mountain...";
+		instance_announce $jl_instance, "[Verdandi] This is Fafnir's mountain...", bc_map, 0x00FF00;
+		sleep2 500;
+		npctalk "The Dragon lives in there since he changed. He rules over his gold and treasures.";
+		instance_announce $jl_instance, "[Verdandi] The Dragon lives in there since he changed. He rules over his gold and treasures.", bc_map, 0x00FF00;
+		sleep2 500;
+		npctalk "He one's was a proud dwarf. But...He changed. You might need to understand how and why.";
+		instance_announce $jl_instance, "[Verdandi] He one's was a proud dwarf. But...He changed. You might need to understand how and why.", bc_map, 0x00FF00;
+		sleep2 500;
+		npctalk "Urd?";
+		instance_announce $jl_instance, "[Verdandi] Urd?", bc_map, 0x00FF00;
+		sleep2 500;
+	
+		donpcevent instance_npcname( "alafmur", $fm_instance ) + "::OnDialog1_2";
+	}
+	end;
+
+OnInstanceInit:
+	set .talking, 0;
+	enablenpc strnpcinfo(3);
+	end;
+}
+
+1@fm,89,36,3	script	Urd::alafmur	4_F_PINKWOMAN,{
+	end;
+		
+OnDialog1_2:			
+	attachrid($fmTalkingId);
+	cutin "bu_maggi1", 2;
+	npctalk "I'm looking for his story. I might find it soon.";
+	instance_announce $fm_instance, "[Urd] I'm looking for his story. I might find it soon.", bc_map, 0x00FF00;
+	sleep2 500;
+	npctalk "Ah! Here it is. Get ready, it'll start soon.";
+	instance_announce $fm_instance, "[Urd] Ah! Here it is. Get ready, it'll start soon.", bc_map, 0x00FF00;
+	sleep2 500;
+	
+	specialeffect 512;
+	
+	cutin "", 255;
+	
+	disablenpc strnpcinfo(3);
+	disablenpc instance_npcname( "alafmve", $fm_instance );
+	disablenpc instance_npcname( "alafmsk", $fm_instance );
+	
+	enablenpc instance_npcname( "alafmod", $fm_instance );
+	enablenpc instance_npcname( "alafmlo", $fm_instance );
+	enablenpc instance_npcname( "alafmho", $fm_instance );
+	end;	
+	
+OnInstanceInit:
+	enablenpc strnpcinfo(3);
+	end;
+}
+
+1@fm,91,32,3	script	Skuld::alafmsk	4_F_SHALOSH,{
+	end;
+
+OnInstanceInit:
+	enablenpc strnpcinfo(3);
+	end;
+}
+
+3@fm,100,155,3	script	Verdandi::alafmve2	4_F_NYDHOG,2,2,{
+	end;
+		
+OnTouch:	
+	if(.talking == 0)
+	{
+		set $fmTalkingId, getcharid(3);
+		set .talking, 1;	
+
+		cutin "ep14_nyd01",2;
+		npctalk "Congratulations! You've defeated Fafnir. This Dragon was a real plague. All dragons are, especially the agressive ones.";
+		instance_announce $fm_instance, "[Verdandi] Congratulations! You've defeated Fafnir. This Dragon was a real plague. All dragons are, especially the agressive ones.", bc_map, 0x00FF00;
+		sleep2 500;
+	
+		donpcevent instance_npcname( "alafmur2", $fm_instance ) + "::OnDialog2_2";
+	}
+	end;
+
+OnInstanceInit:
+	set .talking, 0;
+	disablenpc strnpcinfo(3);
+	end;
+}
+
+3@fm,102,157,5	script	Urd::alafmur2	4_F_PINKWOMAN,{
+	end;
+		
+OnDialog2_2:			
+	attachrid($fmTalkingId);
+	cutin "bu_maggi1", 2;
+	npctalk "Especially him, you mean. He lived on his gold since he murdered his father and reject his brother...";
+	instance_announce $fm_instance, "[Urd] Especially him, you mean. He lived on his gold since he murdered his father and reject his brother...", bc_map, 0x00FF00;
+	sleep2 500;
+	
+	donpcevent instance_npcname( "alafmsk2", $fm_instance ) + "::OnDialog2_3";
+	end;
+	
+OnInstanceInit:
+	disablenpc strnpcinfo(3);
+	end;
+}
+
+3@fm,97,157,5	script	Skuld::alafmsk2	4_F_SHALOSH,{
+	end;
+		
+OnDialog2_3:			
+	attachrid($fmTalkingId);
+	cutin "shaloshi01", 2;
+	npctalk "Well anyway. Congratulations, adventurer. We're almost done now.";
+	instance_announce $fm_instance, "[Skuld] Well anyway. Congratulations, adventurer. We're almost done now.", bc_map, 0x00FF00;
+	sleep2 500;
+	instance_destroy( $fm_instance );
+	set $fm_instance, -1;
+	set $instance_fm_id, -1;
+	end;
+	
+OnInstanceInit:
+	disablenpc strnpcinfo(3);
+	end;
+}
+
+1@fm,196,295	warp	fmwarp#0	2,2,2@fm,95,91
+2@fm,93,91	warp	fmwarp#1	2,2,3@fm,101,118
+

@@ -1,0 +1,456 @@
+// [========================================================]
+// [=============    	Sad Popstar   	============]
+// [========================================================]
+// [ Version 1                                              ]
+// [========================================================]
+// [ Original script by: Alayne				    ]
+// [========================================================]
+// [ Description:                                           ]
+// [--------------------------------------------------------]
+// [                                                        ]
+// [ - A quest for Valentine day	 		    ]
+// [========================================================]
+// [ Changelog: (5 last updates)                            ]
+// [--------------------------------------------------------]
+// [                                                        ]
+// [ v0: Creation                      			    ]
+// [                                                        ]
+// [========================================================]
+// [                                                        ]
+// [========================================================]
+
+cmd_in02,152,205,4	script	Sad Popstar::alvalsp	4_F_WANDERER,{
+	set .@npcname$, "[Ayra]";
+	set .@playerName$, "[" + strcharinfo(0) + "]";
+	
+	if (.disabled == 0)
+	{
+		if (SOPHIA_Q == 1)
+		{
+			mes "What do you want, dear? Autographs are done hours ago.";
+			next;
+			mes .@playerName$;
+			mes "Hello, umm, Ayra. I am not here for the autograph, I am here to... deliver a message.";
+			next;
+			mes .@npcname$;
+			mes "A message? From who? A die hard fan, perhaps?";
+			next;
+			mes .@playerName$;
+			mes "From someone named Olivia.";
+			next;
+			mes .@npcname$;
+			mes "Olivia... (Ayra paused and stares at the window) How are you related to Olivia?";
+			next;
+			mes .@playerName$;
+			mes "Well, we aren't really related. She's here, just so you--";
+			next;
+			mes .@npcname$;
+			mes "None sense. You are just one of the guys who's trying to manipulate me. If you could please leave. Now.";
+			next;
+			mes .@playerName$;
+			mes "Wait! She has been longing to be with you ever since!";
+			next;
+			mes .@npcname$;
+			//emote (/!)
+			mes "Don't you dare! You are a roood fellow. Leave! NOW!";
+			next;
+			mes .@playerName$;
+			mes "Olivia, help me out here!";
+			next;
+			mes "[Olivia]";
+			mes "She can not see me without Sophia's powers.";
+			next;
+			mes .@playerName$;
+			mes "What should we do?";
+			next;
+			mes .@npcname$;
+			mes "Can you even hear yourself? Why are you talking to yourself? GTFO!";
+			next;
+			mes "[Olivia]";
+			mes "It's okay, " + strcharinfo(0) + ". I will just stay here for the time being. I couldn't have peace since I can see how Ayra has fallen into despair. You should tell Sophia what happened.";
+			set SOPHIA_Q, 2;
+		}
+		else if (AYRA_Q == 0)
+		{
+			set .@npcname$, "[Sad Popstar]";
+			mes .@npcname$;
+			mes "Hello, love. Are you lost?";
+			next;
+			mes .@playerName$;
+			if(select("OMG!OMG!OMG!","No, I'm not") == 1)
+			{
+				mes .@playerName$;
+				mes "Oh, my gosh. OMG! OMG! OMG!! It's actually you! The all so famous Ayra! *Hysterically runs in circles*";
+				next;
+				mes .@npcname$;
+				mes "...I think I'll just... leave you be.";
+			}
+			else
+			{
+				mes .@playerName$;
+				mes "No, I am not. Just wandering around. Checking stuff out. Why do you ask?";
+				next;
+				mes .@npcname$;
+				mes "You do not seem to know me. Which is nice, are you an adventurer?";
+				next;
+				mes .@playerName$;
+				mes "Yes, I do not know who you are. How come you know I am an adventurer?";
+				next;
+				mes .@npcname$;
+				mes "Because adventurers do not seem to get their minds on who or what the latest trends are. I am Ayra. Let's say I am.. in the show business.";
+				next;
+				mes .@playerName$;
+				mes "Nice to meet you, Ayra. I am " + strcharinfo(0) + ", and... I am an adventurer. I never heard about you though, are you new in the show business?";
+				next;
+				mes .@npcname$;
+				mes "I am, I have been running for a while now. Maybe 4 years. I am a songstress. ";
+				next;
+				mes .@playerName$;
+				mes "4 years... (Have I been living under a rock?) That is quite long. I never heard any of your works, though.";
+				next;
+				mes .@npcname$;
+				mes "You... have been living under a rock?";
+				next;
+				mes .@playerName$;
+				mes "I guess, so. If you count ruins as a rock, then yes.";
+				next;
+				mes .@npcname$;
+				mes "Then I guess you might want to familiarize yourself with this. It's a cover of somebody else's song, though. But it's a start~";
+				getitem $lyricsBookId, 1;
+				next;
+				mes .@npcname$;
+				mes "Maybe that will help you to catch up to what is happening. Catch you later, love~ I have to work.";
+				next;
+				mes "Come back in 12 hours.";
+				set AYRA_Q, 1;
+				set ayratimer, gettimetick(2) + 43200;
+			}
+		}
+		else if (AYRA_Q == 1)
+		{
+			if(gettimetick(2) < ayratimer)
+			{
+				mes .@npcname$;
+				mes "Olivia...";
+			}
+			else
+			{
+				mes .@npcname$;
+				mes "Hello, " + strcharinfo(0) + ". Did you like the song?";
+				next;
+				mes .@playerName$;
+				mes "I did. It is very beautiful. It felt like... there's a deep emotion in it.";
+				next;
+				mes .@npcname$;
+				mes "....right. Well, if you really telling the truth. Sing it with me!";
+				next;
+				mes .@npcname$;
+				mes "~God that was strange to see you again";
+				mes "Introduced by a friend of a friend";
+				mes "Smiled and said 'yes I think we've met before";
+				next;
+				mes "Input next line of the lyric";
+				input .@lyrics$;
+				next;
+				if (.@lyrics$ == "In that instant it started to pour" || .@lyrics$ == "in that instant it started to pour")
+				{
+					mes .@playerName$;
+					mes "In that instant it started to pour";
+					mes "Captured a taxi despite all the rain";
+					mes "We drove in silence across Pont Champlain";
+					mes "And all of the time you thought I was sad";
+					mes "I was trying to remember your name...";
+					next;
+					mes .@npcname$;
+					mes "This scar is a fleck on my porcelain skin";
+					mes "Tried to reach deep but you couldn't get in";
+					mes "Now you're outside me";
+					mes "You see all the beauty";
+					mes "Repent all your sin~";
+					next;
+					mes "Input next line of the lyric";
+					input .@lyrics$;
+					next;
+					if (.@lyrics$ == "It is nothing but time and a face that you lose" || .@lyrics$ == "it is nothing but time and a face that you lose")
+					{
+						next;
+						mes .@playerName$;
+						mes "It is nothing but time and a face that you lose";
+						mes "I chose to feel it and you couldn't choose";
+						mes "I'll write you a postcard";
+						mes "I'll send you the news";
+						mes "From a house down the road from real love...";
+						next;
+						mes .@npcname$;
+						mes "There's one thing I want to say, so I'll be brave";
+						mes "You were what I wanted";
+						mes "I gave what I gave";
+						mes "I'm not sorry I met you";
+						mes "I'm not sorry it's over";
+						mes "I'm not sorry there's nothing to say....";
+						next;
+						mes .@npcname$;
+						mes "You actually have a beautiful voice. Thank you for the time, but I need you to leave.";
+						set AYRA_Q, 3;
+						next;
+						mes "Look for Olivia";
+						hideoffnpc "alvalol";
+					}
+					else
+					{
+						mes .@npcname$;
+						mes "So you were lying to me...";
+					}
+				}
+				else
+				{
+					mes .@npcname$;
+					mes "So you were lying to me...";
+				}
+			}
+		}
+		else if (AYRA_Q == 3)
+		{
+			mes .@npcname$;
+			mes "I need a time to myself, love. Please come back later.";
+		}
+		else if (AYRA_Q == 5)
+		{
+			mes .@npcname$;
+			mes "Oh, it's you... How have you been? Sorry I was rather mean the last time. I just wasn't able to hold it.";
+			next;
+			mes .@playerName$;
+			mes "It's alright, Ayra. I got you a gift from... someone.";
+			delitem 12031, 1;
+			next;
+			mes .@npcname$;
+			mes "T-thanks, love. What is it? Who was it from?";
+			next;
+			mes .@playerName$;
+			mes "It's from someone you know... ";
+			next;
+			mes .@npcname$;
+			mes "(Ayra opens the box, full of excitement) ...what is this? Some kind of joke,  " + strcharinfo(0) + "? This is not funny.";
+			next;
+			mes .@playerName$;
+			mes "It is from Olivia, she.. talked to me. Remember I live under a rock? It made me see stuff.";
+			next;
+			mes .@npcname$;
+			mes "(Ayra was silent and reminiscing the times with Olivia) I... need to go on a vacation. Maybe the beach will calm me down.";
+			hideonnpc strnpcinfo(3);
+			next;
+			mes "Look for Ayra somewhere, Olivia might know where to look";
+			set AYRA_Q, 6;
+			hideoffnpc "alvalsp2";
+		}
+	}
+	else
+	{
+		mes "Oh, busy busy busy~";
+	}
+	close;
+
+OnClock0500:
+OnClock1700:
+	set .disabled, 0;
+	end;
+	
+OnClock1200:
+OnClock0000:
+	set .disabled, 1;
+	end;
+	
+OnInit:
+	set .disabled, 1;
+	setarray $requirementFixIdAy[0],12622,2608,730;
+	setarray $requirementFixCountAy[0],10,1,5;	
+	set $lyricsBookId, 512;
+	end;
+}
+
+cmd_fild07,69,172,4	script	Sad Popstar::alvalsp2	4_F_WANDERER,{
+	set .@npcname$, "[Ayra the Songstress]";
+	set .@playerName$, "[" + strcharinfo(0) + "]";
+	
+	mes .@npcname$;
+	if (.disabled == 0)
+	{
+		if (AYRA_Q == 6)
+		{
+			mes "Oh... " + strcharinfo(0) + ", how did you find me? No, don't answer. It's Olivia, isn't it? (Ayra smiles faintly). We used to come here for vacations. This place is perfect. Where the desert meets the sea. It's like me and Olivia...";
+			next;
+			mes .@playerName$;
+			mes "...I am sorry about Olivia.";
+			next;
+			mes .@npcname$;
+			mes "Has she ever told you how she died? It's quite sad. If only I bargained the deal a little more. Maybe I could have saved her and Pogogo.";
+			mes "I was blinded by ambition. She left because she thinks Pordo was taken by my manager.";
+			next;
+			mes .@npcname$;
+			mes "I didn't know what to believe. Olivia was from Morocc. She... was one of the victims when the devil was resurrected. If only I talked to her on staying with me in Comodo then I could have saved her.";
+			next;
+			mes .@npcname$;
+			mes "Thank you for everything, " + strcharinfo(0) + ". I think I am ready to let go, now. I might even write you and Olivia a song. For the time being, you can have this. It's from me and Olivia.";
+			getitem 18546, 1;
+			getitem 29420, 1;
+			next;
+			mes .@playerName$;
+			mes "Ohh... This is for me? You're very sweet.";
+			next;
+			mes .@npcname$;
+			mes "Hi hi. (Ayra kisses you on the cheek) I will see you again someday. I need to travel so I can write beautiful songs. Be sure to listen to them, okay?";
+			set AYRA_Q, 7;
+			hideonnpc strnpcinfo(3);
+			hideoffnpc "alvalsp";
+			hideonnpc "alvalol";
+		}
+		else
+		{
+			mes .@npcname$;
+			mes "Who are you? You want an autograph?";
+		}
+	}
+	else
+	{
+		mes "Oh, busy busy busy~";
+	}
+	close;
+
+OnClock0800:
+	set .disabled, 0;
+	end;
+	
+OnClock1800:
+	set .disabled, 1;
+	end;
+	
+OnInit:
+	set .disabled, 1;
+	hideonnpc strnpcinfo(3);
+	end;
+}
+
+cmd_in02,104,205,4	script	Olivia::alvalol	4_F_NFDEADKAFRA,{
+	set .@npcname$, "[Olivia]";
+	set .@playerName$, "[" + strcharinfo(0) + "]";
+	if (AYRA_Q == 3)
+	{
+		mes .@npcname$;
+		mes "You... made Ayra cry...";
+		next;
+		mes .@playerName$;
+		mes "Who are you?";
+		next;
+		mes .@npcname$;
+		mes "I am Olivia, the dead ex-lover of Ayra.";
+		next;
+		mes .@playerName$;
+		mes "Wha- WHAT?! Don't you troll me, you ghost. That's not very nice.";
+		next;
+		mes .@npcname$;
+		mes "I am not 'trolling' you, dear. Ever since I got reunited with her, all she do is sing that song and cry afterwards.";
+		next;
+		mes .@playerName$;
+		mes "I find it hard to believe... ";
+		next;
+		mes .@npcname$;
+		mes "You are not the first to hear this, dear. But you aren't like the others who flee ones they see me.";
+		next;
+		mes .@playerName$;
+		mes "Well... living under a rock seems to have its perks. What do we do to make her feel better?";
+		next;
+		mes .@npcname$;
+		mes "She... is still in love. But she has to let me go. She won't believe you if you said you talked to me... I know! Collect these items and then I will teach you how to make one of our personal items.";
+		for(set .@i,0; .@i<getarraysize($requirementFixIdAy); set .@i,.@i+1)
+		{
+			mes "	~ " + $requirementFixCountAy[.@i] + " " + getitemname($requirementFixIdAy[.@i]);
+		}
+		next;
+		mes .@playerName$;
+		mes "If this will help... Then I will get them. Wait for me here.";
+		set AYRA_Q, 4;
+	}
+	else if(AYRA_Q == 4)
+	{
+		set .@ok, 1;
+		for(set .@i,0; .@i<getarraysize($requirementFixIdAy); set .@i,.@i+1)
+		{
+			if(countitem($requirementFixIdAy[.@i]) < $requirementFixCountAy[.@i])
+			{
+				set .@ok, 0;
+			}
+		}
+		if(countitem($lyricsBookId) == 0)
+		{
+			set .@ok, 0;
+		}
+		if (.@ok == 1)
+		{
+			mes .@playerName$;
+			mes "Here are the items, Olivia. Now, tell me what to do with em.";
+			for(set .@i,0; .@i<getarraysize($requirementFixIdAy); set .@i,.@i+1)
+			{
+				delitem $requirementFixIdAy[.@i], $requirementFixCountAy[.@i];
+			}
+			next;
+			mes .@npcname$;
+			mes "(Olivia instructs you what to do with the items she asked you to bring and then asked you to close your eyes while holding the song book)";
+			getitem 12031, 1;
+			next;
+			mes .@playerName$;
+			mes "(You feel a little dazed) Ughhh.. What happened?";
+			next;
+			mes .@npcname$;
+			mes "You did it, dear. You were able to work on the item.";
+			set AYRA_Q, 5;
+		}
+		else
+		{
+			mes .@npcname$;
+			mes "Bring the song book and the items to me, dear...";
+			for(set .@i,0; .@i<getarraysize($requirementFixIdAy); set .@i,.@i+1)
+			{
+				mes "	~ " + $requirementFixCountAy[.@i] + " " + getitemname($requirementFixIdAy[.@i]);
+			}
+			close;
+		}
+	}
+	else if (AYRA_Q == 6)
+	{
+		mes .@npcname$;
+		switch(gettime(4))
+		{
+			case 0:
+				mes "Ayra loves chiffon cakes.";
+				break;
+			case 1:
+				mes "We used to go out to beaches and sleep in a hammock together...";
+				break;
+			case 2:
+				mes "I remember the time I accidentally fell over her sand castle. She was crying like a baby. *smiles*";
+				break;
+			case 3:
+				mes "Those lighthouses... I wonder if they got fixed.";
+				break;
+			case 4:
+				mes "We had a pet Galapago before... until that evil contractor took him away. (Sophia emits a dark aura)";
+				break;
+			case 5:
+				mes "Ayra is afraid to cross foot bridges. I wonder if she's able to overcome it.";
+				break;
+			case 6:
+				mes "We always go on a vacation in that place where the dessert meets the sea...";
+				break;
+		}
+	}
+	else
+	{
+		mes .@npcname$;
+		mes "Bouhhhh!";
+	}
+	close;
+	
+OnInit:
+	hideonnpc strnpcinfo(3);
+	end;
+}

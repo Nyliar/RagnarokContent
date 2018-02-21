@@ -1,0 +1,131 @@
+//
+// [========================================================]
+// [===========       Metalimie - Hemallurgie    ===========]
+// [========================================================]
+// [ Version 1                                              ]
+// [========================================================]
+// [ Original script by: Alayne                             ]
+// [========================================================]
+// [ Description:                                           ]
+// [--------------------------------------------------------]
+// [                                                        ]
+// [ - Ferrochimie functions			           ]
+// [ - Enable to store or use a Hemallurgie bonus           ]
+// [========================================================]
+// [ Changelog: (5 last updates)                            ]
+// [--------------------------------------------------------]
+// [                                                        ]
+// [ v0: Creation                      			    ]
+// [                                                        ]
+// [========================================================]
+// [                                                        ]
+// [========================================================]
+
+prontera,97,190,6	script	Inquisitor::prtheminq	810,{
+
+	//Gold Ring,Silver Ring,Steel,Iron,Oridecon,Elunium,Bradium,Carnium,Ring of Water,Fire,Wind,Earth
+	setarray .@HemaMetalId[0],2610,2611,999,998,984,985,6224,6223,2682,2683,2684,2685;
+	setarray .@HemaMetalCount[0],2,5,10,10,5,5,2,2,1,1,1,1;
+	setarray .@HemaMetalName$[0],"Gold","Silver","Steel","Iron","Oridecon","Elunium","Bradium","Carnium","Watery","Firy","Windy","Earthy";
+	//Lucifer's Lament, Bloody Edge
+	setarray .@HemaItems[0],7025,7024;
+	setarray .@HemaItemsSlots[0],2,5,6,7,9;
+
+	set .@npcname$, "[March]";
+	mes .@npcname$;
+
+	if (METALIMIE == 1)
+	{
+		mes "Have you ever feel faith?";
+		mes "My name's " + .@npcname$;
+		mes "I'm a Ravage's priest.";
+		mes "It should be your god too.";
+	}
+	if (METALIMIE == 5)
+	{
+		mes "Right now, I'm sorry, but I can't do anything more for you.";
+		mes "Yeah, I'm the one you're looking for.";
+		mes "But I can't create nails for ya at this moment.";
+		mes "First of all, you're not yet an Hemallurgist.";
+		mes "You'll have to know a Fall.";
+		mes "To know that, you have to go back where everything started.";
+		mes "The man you'll find here will help to Fall.";
+		set METALIMIE, 6;
+	}
+	if (HEMALLURGIE == 1)
+	{
+		mes "Ho! So you've become an Hemallurgist!";
+		mes "Nice to be able to count on you, brother!";
+		mes "At work, then.";
+		mes "Here's what I can do for you.";
+		mes "I can create Hemallurgie nails.";
+		mes "By using them, you'll be able to acquire new powers.";
+		mes "But you know how it works.";
+		mes "Let's see what I can do for you!";
+		next;
+		mes .@npcname$;
+		set .@foundOne, 0;
+		for(set .@i,0; .@i<getarraysize(.@HemaMetalId); set .@i,.@i+1)
+		{
+			if (countitem(.@HemaMetalId[.@i]) >= .@HemaMetalCount[.@i])
+			{
+				set .@menu$, .@menu$ + ( .@i ? ":" : "" ) + getitemname(.@HemaMetalId[.@i]); 
+				set .@possessedItemsRank[getarraysize(.@possessedItemsRank)],.@i;
+				if (.@foundOne == 0)
+					set .@foundOne, 1;
+			}
+		}
+		if (.@foundOne == 1)
+		{
+			mes "Here's the Metals I can work with:";
+			set .@choice, select(.@menu)-1;
+			if (.@choice != 254)
+			{
+				mes "Let's go for the metal " + .@HemaMetalName[.@possessedItemsRank[.@choice]] + "!";
+				next;
+				mes .@npcname$;
+				mes "Which Nails do you want?";
+				switch(select("Shoulder","Foot","Ear","Wrist","Body"))
+				{
+					case 1:
+						set .@itemId, x;
+						break;
+					case 2:
+						set .@itemId, x;
+						break;
+					case 3:
+						set .@itemId, x;
+						break;
+					case 4:
+						set .@itemId, x;
+						break;
+					case 5:
+						set .@itemId, x;
+						break;
+				}
+				mes "Ok!";
+				mes "I'll also need a Lucifer's Lament and a Bloody Edge.";
+				if (countitem(7025) > 0 && countitem(7024) > 0)
+				{
+					delitem .@HemaMetalId[.@possessedItemsRank[.@choice]], .@HemaMetalCount[.@possessedItemsRank[.@choice]];
+					delitem 7025, 1;
+					delitem 7024, 1;
+					getitem .@itemId, 1;
+				}
+			}
+		}
+		else
+		{
+			mes "Sorry, but you don't have what I need to work.";
+			mes "Here's what I need:";
+			for(set .@i,0; .@i<getarraysize(.@HemaMetalId); set .@i,.@i+1)
+			{
+				mes "Either " + .@HemaMetalCount[.@i] + " " + getitemname(.@HemaMetalId[.@i]);
+			}
+			mes "I'll also need a Lucifer's Lament and a Bloody Edge.";
+			mes "Come back with one of these, ok?";
+		}
+	}
+	close;
+}
+

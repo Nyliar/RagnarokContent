@@ -1,0 +1,757 @@
+//===== Alayne Scripts =======================================
+//= Njord Deeps Instance
+//===== By: ================================================== 
+//= Alayne
+//===== Current Version: ===================================== 
+//= 1.0
+//===== Compatible With: ===================================== 
+//= rAthena SVN
+//= hercules SVN
+//===== Description: ========================================= 
+//
+//= An instance based over Njord, the Ase of deep sea
+//
+//===== Todo Remaining: ======================================
+//
+//===== Additional Comments: =================================
+//
+//============================================================
+
+un_myst,163,38,5	script	Njord Deeps::alahren	CLEAR_NPC,{
+OnStart:
+	set .@party_id, getcharid(1);
+	set .@nd_leader, ( getcharid(0) == getpartyleader(.@party_id,2) );
+
+	set $instance_nd_id, -1;
+	
+	//RATHENA
+	set .@has_instance, $instance_nd_id == getcharid(1);
+	//HERCULES
+	//set .@has_instance, has_instance(.map$[0], $instance_nd_id);
+	
+	set .@instance_delay, ( instance_delay_hr - gettimetick(2) );
+
+	set .@npcname$, "[" + .instance_name$ + "]";
+	mes .@npcname$;
+	mes "This is the entrance of " + .instance_name$ + ".";
+	mes "The more you look at it, the more you feel disturb. Something's wrong happening in there.";
+	if( .@instance_delay > 0 )
+	{
+		set .@hours, .@instance_delay / (60 * 60);
+		set .@remaining, .@instance_delay - .@hours * (60 * 60);
+		set .@minutes, .@remaining / (60);
+		set .@remaining, .@remaining - .@minutes * (60);
+		set .@seconds, .@remaining;
+		mes "You have to wait : ^FF0000"+ .@hours +" Hours, " + .@minutes + " Minutes and " + .@seconds + " Seconds.^000000";
+		//close;
+	}
+	if (.requiredItem != -1  && countitem(.requiredItem) < 1)
+	{
+		mes "You decide to step back.";
+		mes "At no cost you'll enter in that place without being well prepared.";
+		close;
+	}
+	switch( select( 
+		(( .@party_id && .@nd_leader && !.@has_instance )?"Create " + .instance_name$:""),
+		(( .@party_id && .@has_instance )?"Enter " + .instance_name$:""),
+		(( .@party_id && .@nd_leader && .@has_instance )?"Destroy " + .instance_name$:""),
+	"Nevermind."
+		)){
+	case 1:
+		getpartymember .@party_id,2;
+		if( .min_party_member >= 1 ){
+			set .@origin, getcharid(3);
+			set .@gettimetick, gettimetick(2);
+			for( set .@i, 0; .@i < $@partymembercount; set .@i, .@i+1 )
+				if( attachrid( $@partymemberaid[.@i] ) ){
+					set .@member_count, .@member_count + 1;
+					if( BaseLevel < .base_level[0] || BaseLevel > .base_level[1] ) set .@fail, .@fail|1;
+					if( Zeny < .instance_zeny ) set .@fail, .@fail|2;
+					if( instance_delay_hr > .@gettimetick ) set .@fail, .@fail|4;
+					if( .@fail ){
+						set .@name$, strcharinfo(0);
+						break;
+					}
+				}
+			attachrid( .@origin );
+		}
+		
+		//check that nobody else is inside
+		for(set .@i,1; .@i<=getarraysize($ndMap$); set .@i,.@i+1)
+		{
+			if (getmapusers(instance_mapname($ndMap$[.@i], $nd_instance)) > 0) {
+				mes "Another team is already in the " + .instance_name$ + ". I can't send you there, sorry.";
+				close;
+			}
+		}
+		
+		//clean any previously remaining instance
+		if($nd_instance != -1)
+		{
+			instance_destroy $nd_instance;
+			set $nd_instance, -1;
+			set $instance_nd_id, -1;
+		}
+		
+		if( .@name$ != "" && .@fail ){
+			mes "^FF0000[ Failed ]^000000";
+			mes "^0055FF"+.@name$+"^000000, You cannot join right now.";
+			mes " ";
+			mes "^FF0000[ Reason: ]^000000";
+			if( .@fail & 1 ) mes "^777777You must be Level: "+.base_level[0]+" - "+.base_level[1]+"^000000";
+			if( .@fail & 2 ) mes "^777777You need "+ .instance_zeny +" Zeny^000000";
+			if( .@fail & 4 ) mes "^777777You still have cooldown.^000000";
+			break;
+		}
+		
+		getpartymember getcharid(1),0;
+		if (instance_check_party(.@party_id, .min_party_member, .base_level[0], .base_level[1]) == 0) {
+			mes "^0055FF[ "+.instance_name$+" ]^000000";
+			mes "Make or join a party with at least "+.min_party_member+" member and try again, with level between " +.base_level[0] + " and " + .base_level[1] + ".";
+		}
+		else{
+			//RATHENA
+			set $nd_instance, instance_create( .instance_name$ );
+			//HERCULES
+			//set $nd_instance, instance_create(.instance_name$, .@party_id, IOT_PARTY);
+			if( $nd_instance < 0 ) {
+				npctalk .instance_name$ + " reservation failed.";
+				mes "^0000FF"+ .instance_name$ +" ^000000 - Reservation Failed!";
+				close;
+			}
+			mes "^0055FF[ "+.instance_name$+" ]^000000";
+			mes "^0000FF"+.instance_name$+" ^000000 - Reserved";
+			set .@gettimetick, gettimetick(2);
+			getpartymember .@party_id,2;
+			for( set .@i, 0; .@i < $@partymembercount; set .@i, .@i+1 )
+				if( attachrid( $@partymemberaid[.@i] ) ){
+					set instance_delay_lastr, ( .@gettimetick + ( .instance_delay ));
+					set Zeny, Zeny - .instance_zeny;
+					dispbottom "["+.instance_name$+"] -"+ .instance_zeny +" Zeny and Instance Cooldown Applied.";
+				}
+			attachrid( .@origin );
+			npctalk .instance_name$ + " has been generated for Party - " + getpartyname( .@party_id );
+			
+			set $instance_nd_id, getcharid(1);
+			
+			//HERCULES
+			//for( set .@i, 0; .@i < getarraysize($ndMap$); set .@i,.@i+1 )
+			//{
+			//	if( instance_attachmap( $ndMap$[.@i],$nd_instance ) == "" ){
+			//		setmapflag $ndMap$[.@i],mf_zone,"Memorial Dungeon";
+			//		npctalk .instance_name$ + " reservation failed due to map attach failure.";
+			//		mes "- ^FF0000Reservation Failed!^000000";
+			//		instance_destroy( $nd_instance );
+			//		set $nd_instance, -1;
+			//		set $instance_nd_id, -1;
+			//		close;
+			//	}
+			//}
+			//instance_set_timeout .instance_delay,300,$nd_instance;
+			//instance_init($nd_instance);
+ 		}
+	case 2:
+		if( $instance_nd_id != getcharid(1)){
+			mes .instance_name$ + " doesn't exist for Party - "+getpartyname( .@party_id );
+		}
+		else{
+			//RATHENA
+			switch(instance_enter(.instance_name$)) {
+				default:
+					mes "An unknown error has occurred.";
+					close;
+				case 2:
+					mes "The memorial dungeon " + .instance_name$ + " does not exist.";
+					mes "The party leader did not generate the dungeon yet.";
+					close;
+				case 1:
+					mes "You can enter the dungeon after making the party.";
+					close;
+				case 0:
+					mapannounce $ndMap$[0], strcharinfo(0)+" from party, " +getpartyname( .@party_id )+", lr entering the dungeon, "+.instance_name$+".",bc_map,"0x00ff99",FW_NORMAL,12;
+					end;
+			}
+			
+			//HERCULES
+			//if( has_instance( $ndMap$[0] ) == "" ){
+			//	mes "Njord Deeps doesnt exist for Party - "+getpartyname( .@party_id );
+			//}
+			//else{
+			//	warp $ndMap$[0],141,24;
+			//	instance_announce $nd_instance, getpartyname(getcharid(1))+"  entered in the "+.instance_name$+"!",bc_map,"0x00ff99";
+			//}
+		}
+		break;
+	case 3:
+		mes .instance_name$ + " Destroyed.";
+		instance_destroy $nd_instance;
+		set $nd_instance, -1;
+		set $instance_nd_id, -1;
+		break;
+	default: 
+		break;
+}
+close;
+
+OnInit:
+	setarray .base_level[0],130, 175;
+	setarray $ndMap$[0],"1@nd";
+	set .map_size, getarraysize( $ndMap$ );
+	set .min_party_member, 1;
+	set .instance_zeny, 0;
+	set .instance_delay, 7200;
+	set $nd_timer_delay, 3600; //1 hour to clean the instance
+	set .instance_name$, "Njord Deeps";
+	set $nd_instance, -1;
+	set $instance_nd_id, -1;
+	set .requiredItem, -1; //define the required item to enter in the instance. Leave to -1 to disable
+	set $hrStoneId, 6658;
+	set $hrTearsId, 512;
+	end;
+}
+
+
+1@nd,101,107,4	script	nord_deeps	HIDDEN_WARP_NPC,2,2,{
+function summon_normal;
+function summon_next;
+function summon_guardian;
+end;
+
+OnInstanceInit:
+	set .@map$, strnpcinfo(4);
+	set .@npc_name$, instance_npcname( strnpcinfo(0), $nd_instance );
+	
+	set $instance_nd_level, 0;
+	set .max_nd_level, 5;
+	
+	set .timerCount, 0;
+	 
+	initnpctimer;
+	end;
+
+function	summon_normal	{
+	set .@map$, getarg(0);
+	set .@npcname$, getarg(1);
+	set .@increaseFloor, getarg(2);
+	
+	setarray .@coordX[0], $ndNX - 5, $ndNX + 5; //2 x for each mob to define an area
+	setarray .@coordY[0], $ndNY - 5, $ndNY + 5; //2 x for each mob to define an area
+	
+	if(.@increaseFloor == 1)
+	{
+		$instance_nd_level++;
+	}
+	
+	switch( $instance_nd_level ){
+		case 1:
+			switch($ndActiveNPC)
+			{
+				case 0:
+					setarray .@monster,3251;
+					setarray .@amount,20;
+					break;
+				case 1:
+					setarray .@monster,3251;
+					setarray .@amount,20;
+					break;
+				case 2:
+					setarray .@monster,3251;
+					setarray .@amount,20;
+					break;
+				case 3:
+					setarray .@monster,3251;
+					setarray .@amount,20;
+					break;
+				case 4:
+					setarray .@monster,3251;
+					setarray .@amount,20;
+					break;
+				case 5:
+					setarray .@monster,3251;
+					setarray .@amount,20;
+					break;
+				case 6:
+					setarray .@monster,3251;
+					setarray .@amount,20;
+					break;
+				case 7:
+					setarray .@monster,3251;
+					setarray .@amount,20;
+					break;
+				case 8:
+					setarray .@monster,3251;
+					setarray .@amount,20;
+					break;
+				case 9:
+					setarray .@monster,3251;
+					setarray .@amount,20;
+					break;
+				case 10:
+					setarray .@monster,3251;
+					setarray .@amount,20;
+					break;
+			}
+			break;
+	}
+	set .@monster_size, getarraysize( .@monster );
+	for( set .@i, 0; .@i < .@monster_size; set .@i,.@i+1 ){
+		if(getarraysize(.@coordX) > 0)
+		{
+			set .@coordinate[0], .@coordX[0];
+			set .@coordinate[1], .@coordY[0];
+			set .@coordinate[2], .@coordX[1];
+			set .@coordinate[3], .@coordY[1];
+		}
+		set .@target_amount, ( .@amount[.@i] );
+		set .@clabel$, .@npcname$ + "::OnNormalDied";
+		areamonster(.@map$,.@coordinate[0],.@coordinate[1],.@coordinate[2],.@coordinate[3],"--ja--",.@monster[.@i],.@target_amount,.@clabel$);
+	}
+	return;
+}
+
+function	summon_next	{
+	set .@map$, getarg(0);
+	set .@npcname$, getarg(1);
+	set .@increaseFloor, getarg(2);
+	
+	setarray .@coordX[0], $ndNX - 5, $ndNX + 5; //2 x for each mob to define an area
+	setarray .@coordY[0], $ndNY - 5, $ndNY + 5; //2 x for each mob to define an area
+	
+	if(.@increaseFloor == 1)
+	{
+		$instance_nd_level++;
+	}
+	
+	switch( $instance_nd_level ){
+		case 1:
+			switch($ndActiveNPC)
+			{
+				case 0:
+					setarray .@monster,3251;
+					setarray .@amount,20;
+					break;
+				case 1:
+					setarray .@monster,3251;
+					setarray .@amount,20;
+					break;
+				case 2:
+					setarray .@monster,3251;
+					setarray .@amount,20;
+					break;
+				case 3:
+					setarray .@monster,3251;
+					setarray .@amount,20;
+					break;
+				case 4:
+					setarray .@monster,3251;
+					setarray .@amount,20;
+					break;
+				case 5:
+					setarray .@monster,3251;
+					setarray .@amount,20;
+					break;
+				case 6:
+					setarray .@monster,3251;
+					setarray .@amount,20;
+					break;
+				case 7:
+					setarray .@monster,3251;
+					setarray .@amount,20;
+					break;
+				case 8:
+					setarray .@monster,3251;
+					setarray .@amount,20;
+					break;
+				case 9:
+					setarray .@monster,3251;
+					setarray .@amount,20;
+					break;
+				case 10:
+					setarray .@monster,3251;
+					setarray .@amount,20;
+					break;
+			}
+			break;
+		case 2:
+			break;
+	}
+	set .@monster_size, getarraysize( .@monster );
+	for( set .@i, 0; .@i < .@monster_size; set .@i,.@i+1 ){
+		if(getarraysize(.@coordX) > 0)
+		{
+			set .@coordinate[0], .@coordX[0];
+			set .@coordinate[1], .@coordY[0];
+			set .@coordinate[2], .@coordX[1];
+			set .@coordinate[3], .@coordY[1];
+		}
+		set .@target_amount, ( .@amount[.@i] );
+		set .@clabel$, .@npcname$ + "::OnNextFloorMobDied";
+		areamonster(.@map$,.@coordinate[0],.@coordinate[1],.@coordinate[2],.@coordinate[3],"--ja--",.@monster[.@i],.@target_amount,.@clabel$);
+	}
+	return;
+}
+
+function	summon_guardian	{
+	set .@map$, getarg(0);
+	set .@npcname$, getarg(1);
+	set .@label$, .@npcname$ + "::OnGuardianDied";
+	
+	setarray .@coordinate,216,225,216,225;
+			
+	switch( $instance_nd_level ){
+		case 2:
+			//Kraken
+			setarray .@monster,3254;
+			break;
+		case 3:
+			//Njord
+			setarray .@monster,3254;
+			break;
+	}
+	set .@monster_size, getarraysize( .@monster );
+	for( set .@i, 0; .@i < .@monster_size; set .@i,.@i+1 ){
+		set .@target_amount, 1;
+		set .@name$, "--ja--";
+		if($instance_nd_level == .max_nd_level)
+		{
+			set .@name$, "Njord";
+		}
+		areamonster(.@map$,.@coordinate[0],.@coordinate[1],.@coordinate[2],.@coordinate[3],.@name$,.@monster[.@i],.@target_amount,.@label$);
+	}
+	return;
+}
+
+OnNextFloorMobDied:
+	set .@map$, strnpcinfo(4);
+	set .@npc_name$, instance_npcname( strnpcinfo(0), $nd_instance );
+	set .@mob_dead_num, mobcount(.@map$,.@npc_name$+"::OnNormalDied" );
+	
+	if( .@mob_dead_num == 0 ){		
+		if($instance_nd_level == 1)
+		{
+			instance_announce $nd_instance, "[ Njord ] You're going even deeper in the cold seas.", bc_map, 0x0000FF;
+			sleep2 500;
+			
+			disablenpc instance_npcname( "alandfc", $nd_instance );
+			disablenpc instance_npcname( "alandfc1", $nd_instance );
+			disablenpc instance_npcname( "alandfc2", $nd_instance );
+			disablenpc instance_npcname( "alandfc3", $nd_instance );
+			disablenpc instance_npcname( "alandfc4", $nd_instance );
+			disablenpc instance_npcname( "alandfc5", $nd_instance );
+			disablenpc instance_npcname( "alandfc6", $nd_instance );
+			disablenpc instance_npcname( "alandfc7", $nd_instance );
+			disablenpc instance_npcname( "alandfc8", $nd_instance );
+			disablenpc instance_npcname( "alandfc9", $nd_instance );
+			disablenpc instance_npcname( "alandfc10", $nd_instance );
+			
+			donpcevent instance_npcname( "alandsw", $nd_instance ) + "::OnEnableNpc";
+			donpcevent instance_npcname( "alandsw1", $nd_instance ) + "::OnEnableNpc";
+			donpcevent instance_npcname( "alandsw2", $nd_instance ) + "::OnEnableNpc";
+			donpcevent instance_npcname( "alandsw3", $nd_instance ) + "::OnEnableNpc";
+			donpcevent instance_npcname( "alandsw4", $nd_instance ) + "::OnEnableNpc";
+			donpcevent instance_npcname( "alandsw5", $nd_instance ) + "::OnEnableNpc";	
+
+			set $nd_instance, $nd_instance + 1;			
+		}
+	}
+	end;
+	
+OnNormalDied:
+	//nothing
+	end;
+	
+OnGuardianDied:
+	set .@map$, strnpcinfo(4);
+	set .@npc_name$, instance_npcname( strnpcinfo(0), $nd_instance );
+	set .@mob_dead_num, mobcount(.@map$,.@npc_name$+"::OnGuardianDied" );
+	set .@party_id, getcharid(1);
+	
+	if( !.@mob_dead_num ){
+		if ($instance_nd_level == 2)
+		{
+			killmonster strnpcinfo(4), "All";
+			
+			getpartymember getcharid(1), 2;
+			set .@count, $@partymembercount;
+			copyarray .@memberAid[0], $@partymemberaid[0], .@count;
+			for( set .@i, 0; .@i < .@count; set .@i, .@i+1 )
+				if( attachrid( .@memberAid[.@i] ) && strcharinfo(3) == strnpcinfo(4) ){
+					sc_start SC_BLIND, 2400000, 0;
+				}
+				
+			instance_announce $nd_instance, "[ Njord ] Welcome in the deepest point.", bc_map, 0x0000FF;
+			sleep2 500;
+			instance_announce $nd_instance, "[ Njord ] It's now time for my projection to fight you.", bc_map, 0x0000FF;
+			sleep2 500;
+			instance_announce $nd_instance, "[ Njord ] Get ready.", bc_map, 0x0000FF;
+			sleep2 500;
+			goto OnPopNextMonster;
+		}
+		else if ($instance_nd_level == .max_nd_level)
+		{						
+			killmonsterall .@map$, "All";
+			enablenpc instance_npcname( "alandve", $nd_instance );
+			enablenpc instance_npcname( "alandur", $nd_instance );
+			enablenpc instance_npcname( "alandsk", $nd_instance );				
+			end;
+		}
+	}
+	end;
+	
+OnTimer10000:
+	//each 10s, increase timer
+	set .timerCount, .timerCount + 10;
+	if(.timerCount == $nd_timer_delay)
+	{
+		instance_announce $nd_instance, "[ Njord Deeps ] The Dimension collapse! You have to flee, right now!", bc_map, 0xFF0000;
+		sleep2 15000;
+		instance_destroy $nd_instance;
+		set $nd_instance, -1;
+		set $instance_nd_id, -1;
+		stopnpctimer;
+	}
+	setnpctimer 0;
+	end;
+	
+OnPopMonster:
+	set .@map$, strnpcinfo(4);
+	set .@npc_name$, instance_npcname( strnpcinfo(0), $nd_instance );
+	//pop monsters
+	summon_normal( .@map$,.@npc_name$, 0 );
+	end;
+	
+OnPopNextMonster:
+	set .@map$, strnpcinfo(4);
+	set .@npc_name$, instance_npcname( strnpcinfo(0), $nd_instance );
+	if($instance_nd_level == 1)
+	{
+		//pop monsters
+		summon_next( .@map$,.@npc_name$, 0 );
+	}
+	else if($instance_nd_level >= 2)
+	{
+		//pop monsters
+		summon_guardian( .@map$,.@npc_name$ );
+	}
+	end;
+}
+
+1@nd,141,34,3	script	Frozen Corpse#0::alandfc	4_F_NYDHOG,{
+	mes "[Frozen Corpse]";
+	mes "You can see a frozen body inside the ice.";
+	mes "Do you want to use your body heat to try to melt the ice?";
+	percentheal -10, -10;
+	addtimer 5000, strnpcinfo(3) + "::OnHeatDecline";
+	close;
+	
+OnHeatDecline:
+	if(rand(0,3) == 1)
+	{
+		sc_end SC_ALL;
+		set $ndActiveNPC, strnpcinfo(2);
+		if(strnpcinfo(2) == $ndFrozenBodyNext)
+		{
+			getmapxy(.@map$, $ndNX, $ndNY, UNITTYPE_NPC);
+			donpcevent instance_npcname( "njord_deeps", $nd_instance ) + "::OnPopNextMonster";
+		}
+		else
+		{
+			donpcevent instance_npcname( "njord_deeps", $nd_instance ) + "::OnPopMonster";
+		}
+	}
+	sc_start SC_CRYSTALIZE,15000,0;
+	percentheal -10, -10;
+	addtimer 5000, strnpcinfo(3) + "::OnHeatDecline";
+	end;
+	
+OnInstanceInit:
+OnDisable:
+	set .talking, 0;
+	disablenpc strnpcinfo(3);
+	end;
+}
+
+1@nd,141,34,3	duplicate(alandfc)	Frozen Corpse#1::alandfc1	CLEAR_NPC
+1@nd,141,34,3	duplicate(alandfc)	Frozen Corpse#2::alandfc2	CLEAR_NPC
+1@nd,141,34,3	duplicate(alandfc)	Frozen Corpse#3::alandfc3	CLEAR_NPC
+1@nd,141,34,3	duplicate(alandfc)	Frozen Corpse#4::alandfc4	CLEAR_NPC
+1@nd,141,34,3	duplicate(alandfc)	Frozen Corpse#5::alandfc5	CLEAR_NPC
+1@nd,141,34,3	duplicate(alandfc)	Frozen Corpse#6::alandfc6	CLEAR_NPC
+1@nd,141,34,3	duplicate(alandfc)	Frozen Corpse#7::alandfc7	CLEAR_NPC
+1@nd,141,34,3	duplicate(alandfc)	Frozen Corpse#8::alandfc8	CLEAR_NPC
+1@nd,141,34,3	duplicate(alandfc)	Frozen Corpse#8::alandfc9	CLEAR_NPC
+1@nd,141,34,3	duplicate(alandfc)	Frozen Corpse#10::alandfc10	CLEAR_NPC
+
+
+1@nd,141,34,3	script	Warp#0::alandsw	CLEAR_NPC,1,1,{
+	end;
+	
+OnTouch:
+	if(.hidden == 1)
+	{
+		if(rand(0,5) != 1)
+		{
+			set .@rand, rand(90,110);
+			percentheal 0-.@rand, 0-.@rand;
+			if(.@rand >= 100)
+			{
+				dispbottom "[ Njord Deeps] You drown while trying to entering the next floor";
+			}
+			else
+			{
+				dispbottom "[ Njord Deeps] You nearly drown while trying to entering the next floor";
+			}
+			donpcevent instance_npcname( "njord_deeps", $nd_instance ) + "::OnPopMonster";
+		}
+		else
+		{
+			//start third floor
+			donpcevent instance_npcname( "njord_deeps", $nd_instance ) + "::OnPopNextMonster";		
+		}
+	}
+	end;
+	
+OnEnableNpc:
+	enablenpc strnpcinfo(3);
+OnMoveNPC:	
+	setnpcdisplay strnpcinfo(3), CLEAR_NPC;
+	set .hidden, 1;
+	do
+	{		
+			set .@movex,rand(0,150);
+			set .@movey,rand(0,150);
+			set .@map$,strnpcinfo(4);
+	}
+	while(!checkcell(.@map$,.@movex,.@movey,cell_chkpass));
+	movenpc strnpcinfo(4),.@movex,.@movey;
+	
+	initnpctimer;
+	end;
+	
+OnTimer15000:
+	setnpcdisplay strnpcinfo(3), WARP_NPC;
+	set .hidden, 0;
+	end;
+	
+OnInstanceInit:
+OnDisable:
+	disablenpc strnpcinfo(3);
+	end;
+}
+
+1@nd,141,34,3	script	Njord::alandn	CLEAR_NPC,4,4,{
+	end;
+	
+OnTouch:	
+	if(.talking == 0)
+	{
+		set $ndTalkingId, getcharid(3);
+		set .talking, 1;	
+
+		npctalk "Welcome to my place, mortals. You're here in the highest point of the Deeps...";
+		instance_announce $nd_instance, "[ Njord ] Welcome to my place, mortals. You're here in the highest point of the Deeps...", bc_map, 0x00FF00;
+		sleep2 500;
+		npctalk "As long as you'll be in here, you'll be my puppets. Everything in the deeps is ruled by my will.";
+		instance_announce $nd_instance, "[ Njord ] As long as you'll be in here, you'll be my puppets. Everything in the deeps is ruled by my will.", bc_map, 0x00FF00;
+		sleep2 500;
+		npctalk "And you should know it, the sea doesn't give back what she took.";
+		instance_announce $nd_instance, "[ Njord ] And you should know it, the sea doesn't give back what she took.", bc_map, 0x00FF00;
+		sleep2 500;
+		npctalk "Now, you'll have to fight. Fight to find your way back to the surface. Cause you're now under water.";
+		instance_announce $nd_instance, "[ Njord ] Now, you'll have to fight. Fight to find your way back to the surface. Cause you're now under water.", bc_map, 0x00FF00;
+		sleep2 500;
+		
+		set $ndFrozenBodyNext, rand(0,10);
+		set $instance_nd_level, 1;
+			
+		disablenpc strnpcinfo(3);
+		enablenpc instance_npcname( "alandfc", $nd_instance );
+		enablenpc instance_npcname( "alandfc1", $nd_instance );
+		enablenpc instance_npcname( "alandfc2", $nd_instance );
+		enablenpc instance_npcname( "alandfc3", $nd_instance );
+		enablenpc instance_npcname( "alandfc4", $nd_instance );
+		enablenpc instance_npcname( "alandfc5", $nd_instance );
+		enablenpc instance_npcname( "alandfc6", $nd_instance );
+		enablenpc instance_npcname( "alandfc7", $nd_instance );
+		enablenpc instance_npcname( "alandfc8", $nd_instance );
+		enablenpc instance_npcname( "alandfc9", $nd_instance );
+		enablenpc instance_npcname( "alandfc10", $nd_instance );
+	}
+	end;
+	
+OnInstanceInit:	
+	enablenpc strnpcinfo(3);
+	set .talking, 0;
+	end;
+}
+
+1@nd,141,34,3	script	Verdandi::alandve	4_F_NYDHOG,2,2,{
+	//cutin "ep14_nyd01",2;
+	end;
+		
+OnTouch:	
+	if(.talking == 0)
+	{
+		set $ndTalkingId, getcharid(3);
+		set .talking, 1;	
+
+		cutin "ep14_nyd01",2;
+		npctalk "Njord...You was once so respectable...";
+		instance_announce $jl_instance, "[Verdandi] Njord...You was once so respectable...", bc_map, 0x00FF00;
+		sleep2 500;
+	
+		donpcevent instance_npcname( "alandsk", $nd_instance ) + "::OnDialog1_2";
+	}
+	end;
+
+OnInstanceInit:
+	set .talking, 0;
+	disablenpc strnpcinfo(3);
+	end;
+}
+
+1@nd,139,32,5	script	Urd::alandr	4_F_PINKWOMAN,{
+	//cutin "bu_maggi1",0;
+	end;
+		
+OnDialog1_3:			
+	attachrid($ndTalkingId);
+	cutin "bu_maggi1", 2;
+	npctalk "We'd probably never know...Life is strange.";
+	instance_announce $nd_instance, "[Urd] We'd probably never know...Life is strange.", bc_map, 0x00FF00;
+	
+	cutin "", 255;
+	
+	sleep2 15000;
+	instance_destroy $nd_instance;
+	set $nd_instance, -1;
+	set $instance_nd_id, -1;
+	end;	
+	
+OnInstanceInit:
+	disablenpc strnpcinfo(3);
+	end;
+}
+
+1@nd,139,32,5	script	Skuld::alandsk	4_F_SHALOSH,{
+	//cutin "shaloshi01",2;
+	end;
+		
+OnDialog1_2:			
+	attachrid($ndTalkingId);
+	cutin "shaloshi01", 2;
+	npctalk "What can have bring him to change that much?";
+	instance_announce $nd_instance, "[Skuld] What can have bring him to change that much?", bc_map, 0x00FF00;
+	sleep2 500;
+	npctalk "The seas can be dangerous, but it's first of all the source of all birth, of all life...";
+	instance_announce $nd_instance, "[Skuld] The seas can be dangerous, but it's first of all the source of all birth, of all life...", bc_map, 0x00FF00;
+	sleep2 500;
+	
+	donpcevent instance_npcname( "alandur", $nd_instance ) + "::OnDialog1_3";
+	end;
+	
+OnInstanceInit:
+	disablenpc strnpcinfo(3);
+	end;
+}
+

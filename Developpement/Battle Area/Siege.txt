@@ -1,0 +1,548 @@
+// [========================================================]
+// [============    Battle Arena - Siege   ==========]
+// [========================================================]
+// [ Version 1                                              ]
+// [========================================================]
+// [ Original script by: Alayne				    ]
+// [========================================================]
+// [ Description:                                           ]
+// [--------------------------------------------------------]
+// [                                                        ]
+// [ - The Siege System				    ]
+// [========================================================]
+// [ Changelog: (5 last updates)                            ]
+// [--------------------------------------------------------]
+// [                                                        ]
+// [ v0: Creation                      			    ]
+// [                                                        ]
+// [                                                        ]
+// [========================================================]
+// [                                                        ]
+// [========================================================]
+
+pvp_n_5-1	mapflag	battleground	2
+
+pvp_n_5-1,50,49,0	script	Siege#1::alabass1	HIDDEN_WARP_NPC,2,2,{
+	end;
+	
+OnTouch:
+	addtimer 1000, strnpcinfo(3) + "::OnCheckAreaTake";
+	end;
+	
+OnCheckAreaTake:
+	getmapxy(.@pmap$, .@px, .@py, 0);
+	getmapxy(.@map$, .@x, .@y, 1);
+	set .@xRange, (.@x - .@px);
+	set .@yRange, (.@y - .@py);
+	if(.@pmap$ == .@map$ 
+		&& .@xRange >= (0-.areaRange) && .@xRange <= .areaRange 
+		&& .@yRange >= (0-.areaRange) && .@yRange <= .areaRange)
+	{
+		if(getcharid(3) != .taker && .taken == 0)
+		{
+			set .taker, getcharid(3);
+			set .counter, 0;
+			set .taken, 1;
+		}
+		set .counter, .counter + 1;
+		if(.counter >= $takeDuration)
+		{
+			goto OnAreaTaken;
+		}
+		else
+		{
+			addtimer 1000, strnpcinfo(3) + "::OnCheckAreaTake";			
+		}
+	}
+	end;
+	
+OnAreaTaken:
+	mapannounce $siegeMap$, "[Siege] The Area " + strnpcinfo(2) + " has been taken by " + strcharinfo(0) + "!!", bc_blue;
+	set SPOINTS, SPOINTS + $pointPerSiegeTaken;
+	if(callfunc("CheckTeamRedPlayer") == 1)
+	{
+		set .teamRedScore, .teamRedScore + $pointPerSiegeTaken;
+		set .cSkillEffect, .skilleffect[1];
+	}
+	else if(callfunc("CheckTeamBluePlayer") == 1)
+	{
+		set .teamBlueScore, .teamBlueScore + $pointPerSiegeTaken;
+		set .cSkillEffect, .skilleffect[2];
+	}
+	dispbottom "You've earn " + $pointPerSiegeTaken + " points. Your current balance is " + SPOINTS;
+	//drop floor item?
+	set .taken, 0;
+	
+	bg_updatescore($siegeMap$, .teamRedScore, .teamBlueScore);
+	end;
+	
+OnStartEffect:	
+OnTimer1000:
+	if($siegeon == 2)
+	{
+		specialeffect .cSkillEffect; //BASILICA
+		setnpctimer 0;
+	}
+	end;
+	
+OnReset:	
+OnInit:
+	set .counter, 0;
+	set .taker, 0;
+	set .taken, 0;
+	setarray .skilleffect[0], 374, 847, 848;
+	set .cSkillEffect, .skilleffect[0];
+	set .areaRange, 5;
+	end;
+}
+
+pvp_n_5-1,50,49,5	duplicate(alabass1)	Siege#2::alabass2	HIDDEN_WARP_NPC,2,2
+pvp_n_5-1,50,49,5	duplicate(alabass1)	Siege#3::alabass3	HIDDEN_WARP_NPC,2,2
+
+pvp_n_5-1,50,49,0	script	Siege::alabas	HIDDEN_WARP_NPC,2,2,{
+	end;
+
+OnStartS:
+	mapannounce $sMap$, "[Siege] The Siege starts!", bc_red;
+	initnpctimer;
+	set $siegeon, 2;
+	set .totalCount, 0;
+	goto OnPopSiegeArea;
+	end;
+		
+OnPopSiegeArea:
+	if($siegeon == 2)
+	{
+		donpcevent "alabass1::OnStartEffect";
+		donpcevent "alabass2::OnStartEffect";
+		donpcevent "alabass3::OnStartEffect";
+	}
+	end;
+
+OnTimer10000:
+	set .totalCount, .totalCount + 1;
+	if (.totalCount == $battleDuration)
+	{
+		callsub OnCheckVictory;
+	}
+	setnpctimer 0;
+	end;
+
+OnCheckVictory:
+	//every minute, check for members
+	if (.teamBlueScore == .teamRedScore)
+	{
+		announce "[Siege] It's a Draw with a score of " + .teamBlueScore + " to " + .teamRedScore + "! Congratulations everybody!", bc_all|bc_yellow;
+		
+		for(set .@i,0; .@i<getarraysize($@sTeamBlue); set .@i,.@i+1)
+		{
+			if(attachrid($@sTeamBlue[.@i]))
+			{
+				charcommand "#fakename " + strcharinfo(0);
+				bg_leave;
+				set .@cnt, SPOINTS / .rewardCnt[2];
+				if(.@cnt < .rewardMin[2])
+					set .@cnt, .rewardMin[2];
+				getitem 7773, .@cnt;
+				set Zeny, Zeny + $CEntryPrice * (maxCMemberCount - 1) / (getarraysize($@sTeamBlue) + getarraysize($@sTeamRed));
+			}
+		}
+		for(set .@i,0; .@i<getarraysize($@sTeamRed); set .@i,.@i+1)
+		{
+			if(attachrid($@sTeamRed[.@i]))
+			{
+				charcommand "#fakename " + strcharinfo(0);
+				bg_leave;
+				set .@cnt, SPOINTS / .rewardCnt[2];
+				if(.@cnt < .rewardMin[2])
+					set .@cnt, .rewardMin[2];
+				getitem 7773, .@cnt;
+				set Zeny, Zeny + $CEntryPrice * (maxCMemberCount - 1) / (getarraysize($@sTeamBlue) + getarraysize($@sTeamRed));
+			}
+		}
+	}
+	else if (.teamBlueScore > .teamRedScore)
+	{
+		announce "[Siege] Blue Team wins the Siege with a score of " + .teamBlueScore + " to " + .teamRedScore + "! Congratulations!", bc_all|bc_yellow;
+		for(set .@i,0; .@i<getarraysize($@sTeamBlue); set .@i,.@i+1)
+		{
+			if(attachrid($@sTeamBlue[.@i]))
+			{
+				charcommand "#fakename " + strcharinfo(0);
+				bg_leave;
+				set .@cnt, SPOINTS / .rewardCnt[0];
+				if(.@cnt < .rewardMin[0])
+					set .@cnt, .rewardMin[0];
+				getitem 7773, .@cnt;
+				//share zeny price
+				set Zeny, Zeny + $CEntryPrice * (maxCMemberCount - 1) / getarraysize($@sTeamBlue);
+				set SPOINTS, SPOINTS + .pointPerVictory;
+				set Zeny, Zeny + SPOINTS * 10000;
+			}
+		}
+		for(set .@i,0; .@i<getarraysize($@sTeamRed); set .@i,.@i+1)
+		{
+			if(attachrid($@sTeamRed[.@i]))
+			{
+				charcommand "#fakename " + strcharinfo(0);
+				bg_leave;
+				set .@cnt, SPOINTS / .rewardCnt[1];
+				if(.@cnt < .rewardMin[1])
+					set .@cnt, .rewardMin[1];
+				getitem 7773, .@cnt;
+			}
+		}
+	}
+	else
+	{
+		announce "[Siege] Red Team wins the Siege with a score of " + .teamRedScore + " to " + .teamBlueScore + "! Congratulations!", bc_all|bc_yellow;
+		for(set .@i,0; .@i<getarraysize($@sTeamRed); set .@i,.@i+1)
+		{
+			if(attachrid($@sTeamRed[.@i]))
+			{
+				charcommand "#fakename " + strcharinfo(0);
+				bg_leave;
+				set .@cnt, SPOINTS / .rewardCnt[0];
+				if(.@cnt < .rewardMin[0])
+					set .@cnt, .rewardMin[0];
+				getitem 7773, .@cnt;
+				//share zeny price
+				set Zeny, Zeny + $CEntryPrice * (maxCMemberCount - 1) / getarraysize($@sTeamRed);
+				getitem 7773, SPOINTS / 10;
+				set SPOINTS, SPOINTS + .pointPerVictory;
+				set Zeny, Zeny + SPOINTS * 10000;
+			}
+		}
+		for(set .@i,0; .@i<getarraysize($@sTeamBlue); set .@i,.@i+1)
+		{
+			if(attachrid($@sTeamBlue[.@i]))
+			{
+				charcommand "#fakename " + strcharinfo(0);
+				bg_leave;
+				set .@cnt, SPOINTS / .rewardCnt[1];
+				if(.@cnt < .rewardMin[1])
+					set .@cnt, .rewardMin[1];
+				getitem 7773, .@cnt;
+			}
+		}
+	}
+	bg_destroy $@redTeam; 
+	bg_destroy $@blueTeam; 
+	set $siegeon, 0;
+	return;
+	
+OnBoardAsked:
+	set .@caller, getcharid(3);
+	dispbottom "!!Siege Points Board!!";
+	dispbottom "";
+	dispbottom "Team Red total Points ==> " + .teamRedScore;
+	for(set .@i,0; .@i<getarraysize($@sTeamRed); set .@i,.@i+1)
+	{
+		set .@attached, attachrid($@sTeamRed[.@i]);
+		if (.@attached == 0)
+		{
+			deletearray $@sTeamRed[.@i], 1;			
+		}
+		else
+		{
+			set .@message$, "	~" + strcharinfo(0) + ": " + CPOINTS;
+			if(attachrid(.@caller))
+				dispbottom .@message$;
+		}
+	}
+	
+	dispbottom "";
+	dispbottom "Team Blue total Points ==> " + .teamBlueScore;
+	for(set .@i,0; .@i<getarraysize($@sTeamBlue); set .@i,.@i+1)
+	{
+		set .@attached, attachrid($@sTeamBlue[.@i]);
+		if (.@attached == 0)
+		{
+			deletearray $@sTeamBlue[.@i], 1;			
+		}
+		else
+		{
+			set .@message$, "	~" + strcharinfo(0) + ": " + CPOINTS;
+			if(attachrid(.@caller))
+				dispbottom .@message$;
+		}
+	}
+	end;
+	
+OnPCLoginEvent:
+	set SPOINTS, 0;
+	end;
+
+OnPCDieEvent:
+	if (strcharinfo(3) == $sMap$)
+	{
+		if (callfunc("CheckTeamRedPlayer") == 1)
+		{
+			set .teamBlueScore, .teamBlueScore + .pointPerKill;
+		}
+		else if (callfunc("CheckTeamBluePlayer") == 1)
+		{
+			set .teamRedScore, .teamRedScore + .pointPerKill;
+		}
+		
+		addtimer 5000, strnpcinfo(3) + "::OnHealAfterDeath";
+		
+		attachrid(killerrid);
+		
+		set SPOINTS, SPOINTS + .pointPerKill;
+		dispbottom "You've earn " + .pointPerKill + " points. Your current balance is " + SPOINTS;
+		
+		bg_updatescore($siegeMap$, .teamRedScore, .teamBlueScore);
+	}
+	end;
+
+OnHealAfterDeath:
+	dispbottom "[Valkyrie] You received the War Goddess benediction!";
+	percentheal 100, 100;
+	if(.buffs == 1)
+	{
+		specialeffect2 EF_INCAGILITY; sc_start SC_INC_AGI,240000,10;
+		specialeffect2 EF_BLESSING; sc_start SC_BLESSING,240000,10;
+	}
+	end;
+
+OnInit:
+	set $sMap$, "pvp_n_5-1";
+	set $maxSMemberCount, 2;
+	set $SEntryPrice, 0;//5000;
+	setarray $SDuration[0],5,10,15; //minutes range
+	set $siegeon, 0;
+	set .pointPerKill, 10;
+	set .pointPerVictory, 100;
+	set $pointPerSiegeTaken, 50;
+	setarray .rewardCnt[0], 10, 20;
+	setarray .rewardMin[0], 5, 1;
+	set .maxSpokenCount, 3;
+	bindatcmd "sboard", strnpcinfo(3) + "::OnBoardAsked";
+	set .buffs, 1;
+	end;
+}
+
+prontera,119,166,4	script	Siege::alasent	734,{
+	set .@npcname$, "[Pal]";
+	mes .@npcname$;
+	mes "Hello to you, " + strcharinfo(0);
+	mes "I'm the Siege Manager.";
+	mes "When you talk to me, you'll be able to setup or join an existing Siege.";
+	next;
+	mes .@npcname$;
+	if ($siegeon == 2)
+	{
+		goto OnEnterAgain;
+	}
+	if ($siegeon == 1)
+	{
+		if(callfunc("CheckSPlayers") == 1)
+		{
+			next;
+			mes .@npcname$;
+			mes "Be patient please. The Siege Mode will start soon.";
+			close;
+		}
+		
+		mes "So. Are you interested?";
+		if (select("Join the currently running Siege","No, thanks") == 1)
+		{
+			callsub OnJoin, 1;
+		}
+		else
+		{
+			goto OnLeave;
+		}
+	}
+	else if ($siegeon == 0)
+	{
+		mes "So. Are you interested?";
+		if (select("Start a new Siege","No, thanks") == 1)
+		{
+			callsub OnJoin, 0;
+		}
+		else
+		{
+			goto OnLeave;
+		}
+	}
+	else
+	{
+		next;
+		mes .@npcname$;
+		mes "Sorry, it's too late for this battle. Come back later.";
+	}
+	close;
+
+OnJoin:
+	set .@npcname$, "[Pal]";
+	set .@mode, getarg(0);
+	next;
+	mes .@npcname$;
+	mes "Sure!";
+	mes "It'll cost you " + $SEntryPrice + "z to enter.";
+	if (Zeny < $SEntryPrice)
+	{
+		next;
+		mes .@npcname$;
+		mes "Sorry, but you lack some money...";
+		close;
+	}
+	if (select("Here you are.","I'll get back") == 1)
+	{
+		next;
+		mes .@npcname$;
+		set Zeny, Zeny - $SEntryPrice;
+		mes "Allright.";
+		mes "The Siege Mode is a Team Fight area.";
+		mes "On the Siege map, you may find 3 area known as Siege Area.";
+		mes "At start, those area are free, neutral. If a player stands in it for more than " + $takeDuration + " seconds,";
+		mes "he'll gain the ownership over this area, and bring points to his team.";
+		next;
+		mes .@npcname$;
+		mes "If the Area belong to a team, the other one can take it back by the same process.";
+		mes "Standing for " + $takeDuration + " seconds in the area to take it.";
+		mes "The other method to get points is, of course, to kill opposite team players.";
+		next;
+		mes .@npcname$;
+		mes "The team with the highest point range will win.";
+		mes "The reward will be the total amount paid by all players.";
+		mes "I'll just keep a little part for me.";
+		mes "The fight will starts when " + $maxSMemberCount + " members will join.";
+		if (.@mode == 0)
+		{
+			next;
+			mes .@npcname$;
+			mes "Now, choose a duration.";
+			set .@message$, "It can last for ";
+			set .@menu$, "";
+			for(set .@i,0; .@i<getarraysize($SDuration); set .@i,.@i+1)
+			{
+				set .@message$, .@message$ + (.@i == 0 ? "" : (.@i == getarraysize($SDuration) - 1 ? ", or " : ", ")) + $SDuration[.@i] + " minutes";
+				set .@menu$, .@menu$ + (.@i == 0 ? "" : ":") + $SDuration[.@i] + " minutes";
+			} 
+			set .@message$, .@message$ + ".";
+			mes .@message$;
+			mes "What's your choice?";
+			set .@duration, select(.@menu$) - 1;
+			next;
+			mes .@npcname$;
+			mes "Allright, let's go for " + $SDuration[.@choice] + " minutes then.";
+		}
+		mes "Good luck.";
+		next;
+		if (.@mode == 0)
+		{
+			deletearray $@SMembers[0], getarraysize($@SMembers);
+			deletearray $@sTeamBlue[0], getarraysize($@sTeamBlue);
+			deletearray $@sTeamRed[0], getarraysize($@sTeamRed);
+			set $@SMembers[0], getcharid(3);
+			
+			set $siegeon, 1;
+			set $battleDuration, $SDuration[.@choice];
+			announce "[Siege] " + strcharinfo(0) + " just join the Siege. Who will come to fight him?", bc_all|bc_yellow;
+		}
+		else
+		{
+			set $@SMembers[getarraysize($@SMembers)], getcharid(3);
+			if (getarraysize($@SMembers) < $maxSMemberCount)
+			{
+				announce "[Siege] " + strcharinfo(0) + " just join the Siege. Still " + ($maxSMemberCount - getarraysize($@SMembers)) + " fighters needed to begin!", bc_all|bc_yellow;
+			}
+			else
+			{
+				//start
+				//build teams
+				set .teamCount, $maxSMemberCount / 2;
+				//warp first char
+				announce "[Siege] The fight begins!", bc_all|bc_yellow;
+				set .@warped, 0;
+				set $@blueTeam, bg_create_team($siegeMap$, $warpPointBlue[0], $warpPointBlue[1]);
+				set $@redTeam, bg_create_team($siegeMap$, $warpPointRed[0], $warpPointRed[1]);
+				for(set .@i,0; .@i<getarraysize($@SMembers); set .@i,.@i+1)
+				{
+					if (attachrid($@SMembers[.@i]) == 1)
+					{	
+						set SPOINTS, 0;
+						getmapxy(.@map$, .@x, .@y, 0);
+						savepoint .@map$, .@x, .@y;
+						
+						if (getarraysize($@sTeamRed) < .teamCount)
+						{
+							set $@sTeamRed[getarraysize($@sTeamRed)], $@SMembers[.@i];
+							bg_join_team($@redTeam);
+							warp $sMap$, $warpPointRed[0], $warpPointRed[1];
+						}
+						else
+						{
+							set $@sTeamBlue[getarraysize($@sTeamBlue)], $@SMembers[.@i];
+							bg_join_team($@sTeamBlue);
+							warp $sMap$, $warpPointBlue[0], $warpPointBlue[1];
+						}
+					}
+				}
+				donpcevent "alabas::OnStartS";
+			}
+		}
+	}
+	else
+	{
+		goto OnLeave;
+	}
+	close;
+
+OnEnterAgain:
+	set .@found, callfunc("CheckSPlayers");
+	if(.@found == 1)
+	{
+		mes "Get ready, I'll send you back.";
+		warp $sMap$, 0, 0;
+	}
+	else
+	{
+		mes "You're not part of this Siege.";
+		mes "Wait for another to begin, please.";
+	}
+	close;
+
+OnLeave:
+	set .@npcname$, "[Pal]";
+	next;
+	mes .@npcname$;
+	mes "Your choice!";
+	close;
+}
+
+function	script	CheckTeamRedPlayer	{
+	for(set .@i,0; .@i<getarraysize($@sTeamRed) && .@found == 0; set .@i,.@i+1)
+	{
+		if($@sTeamRed[.@i] == getcharid(3))
+		{
+			return 1;
+		}
+	}
+	return 0;
+}
+
+function	script	CheckTeamBluePlayer	{
+	for(set .@i,0; .@i<getarraysize($@sTeamBlue) && .@found == 0; set .@i,.@i+1)
+	{
+		if($@sTeamBlue[.@i] == getcharid(3))
+		{
+			return 1;
+		}
+	}
+	return 0;
+}
+
+function	script	CheckSPlayers	{
+	for(set .@i,0; .@i<getarraysize($@SMembers) && .@found == 0; set .@i,.@i+1)
+	{
+		if($@SMembers[.@i] == getcharid(3))
+		{
+			return 1;
+		}
+	}
+	return 0;
+}

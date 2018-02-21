@@ -1,0 +1,149 @@
+//===== eAthena Script =======================================================
+//= PVP ladder script ( SQL only )
+//===== By: ==================================================================
+//= ~AnnieRuru~ repris par Genesis
+//===== Current Version: =====================================================
+//= 2.6
+//============================================================================
+//==== MODIFIER par Genesis pour LOST IN SORROW
+
+//--------------------------------------------------------- NPC PVP CLASSEMENT -------------------------------------
+pvp_n_2-5,96,71,6	script	Exit::sortiePvpDan	468,{
+
+	if(getmapusers(strcharinfo(3)) == 1) goto continuer;
+
+
+	mes "[PvP Survey]";
+	mes "Be brave "+strcharinfo(0)+" your not alone in the arena.";
+	next;
+	mes "[PvP Survey]";
+	mes "FIGHT !";
+	close;
+
+
+	continuer:
+
+	mes "[PvP Survey]";
+	mes "Look like nothing can survive after you.";
+	next;
+	mes "[PvP Survey]";
+	mes "Wanna leave ?";
+	next;
+	menu "Yes",allez,"No",reste;
+
+		allez:
+			warp "Save",0,0;
+			close;
+
+		reste:
+			mes "[PvP Survey]";
+			mes "As you wish.";
+			close;
+
+}
+
+mellina,85,89,4	script	PvP Room::PvP_DAN	588,{
+
+	set .@npcname$, strnpcinfo(1);
+	do {
+		deletearray .@name$, 128;
+		deletearray .@kills, 128;
+		deletearray .@deaths, 128;
+		deletearray .@streak, 128;
+		deletearray .@owned, 128;
+		deletearray .@time$, 128;
+		set .@gid, 0;
+		set .@cid, 0;
+		set .@currentown, 0;
+		mes "["+ .@npcname$ +"]";
+		mes "Hello ^FF0000"+strcharinfo(0)+"^000000 ! WHat can I do for you ?";
+		menu "I want to fight",combat,"Leave",partir;
+partir:
+	mes "["+ .@npcname$ +"]";
+	mes "Sure. See you soon !";
+	close;
+
+combat:
+	next;
+	mes "["+ .@npcname$ +"]";
+	mes "Where do you wanna fight ?";
+	mes " ";
+	switch(select("Carnage Arena [^FF0000"+getmapusers("pvp_n_2-5")+"^000000 players]", "Normal Arena [^FF0000"+getmapusers("pvp_n_2-3")+"^000000 players]", "Duel Arena [^FF0000"+getmapusers("guild_vs2")+"^000000 players]", "GvG Arena [^FF0000"+getmapusers("guild_vs4")+"^000000 players]")){
+		case 1:
+			mes "Do you wanna join the Carnage Arena ?";
+			//if(getmapusers("guild_vs3") == 0) goto annonce;
+			if (select("Yes:No")==2) close;
+			switch( rand(4) ) {
+				case 0:	warp "pvp_n_2-5",100,134;	end;	// Nord
+				case 1:	warp "pvp_n_2-5",133,99;	end;	// Est
+				case 2:	warp "pvp_n_2-5",99,66;		end;	// Sud
+				case 3:	warp "pvp_n_2-5",66,100;	end;	// Ouest
+			}
+		case 2:
+			mes "Do you wanna join the Normal Arena ?";
+			if (select("Yes:No")==2) close;
+			switch( rand(4) ) {
+				//announce "[ "+strcharinfo(0)+" ] a rejoint la PvP Room.",0;
+				case 0:	warp "pvp_n_2-3",65,100;	end;	// Ouest
+				case 1:	warp "pvp_n_2-3",100,133;	end;	// Nord
+				case 2:	warp "pvp_n_2-3",133,100;	end;	// Est
+				case 3:	warp "pvp_n_2-3",100,65;	end;	// Sud
+			}
+			
+
+		case 3:
+			mes "Do you wanna join the Dual Arena ?";
+			if (select("Yes:No")==2) close;
+			switch( rand(4) ) {
+				//announce "[ "+strcharinfo(0)+" ] a rejoint l'arène Carnage.",0;
+				case 0:	warp "guild_vs2",49,84;	end;		// Nord
+				case 1:	warp "guild_vs2",15,51;	end;		// Ouest
+				case 2:	warp "guild_vs2",49,18;	end;		// Sud
+				case 3:	warp "guild_vs2",84,51;	end;		// Est
+			}
+
+		case 4:
+			mes "Do you wanna join the GvG Arena ?";
+			if (select("Yes:No")==2) close;
+			switch( rand(4) ) {
+				//announce "[ "+strcharinfo(0)+" ] a rejoint l'arène Carnage.",0;
+				case 0:	warp "guild_vs4",49,84;	end;		// Nord
+				case 1:	warp "guild_vs4",15,51;	end;		// Ouest
+				case 2:	warp "guild_vs4",49,18;	end;		// Sud
+				case 3:	warp "guild_vs4",84,51;	end;		// Est
+			}
+	}
+	close;
+	}while (1);
+}
+
+
+pvp_n_2-5	mapflag	gvg	on
+pvp_n_2-5	mapflag	pvp_noparty	off
+pvp_n_2-5	mapflag	noreturn
+pvp_n_2-5	mapflag	nowarp
+pvp_n_2-5	mapflag	nopenalty
+pvp_n_2-5	mapflag	nobranch
+pvp_n_2-5	mapflag	pvp_nightmaredrop	off
+//pvp_n_2-5	mapflag	pvp_noguild
+//pvp_n_2-5	mapflag	pvp
+
+
+pvp_n_2-3	mapflag	pvp_nightmaredrop	off
+pvp_n_2-3	mapflag	nopenalty
+pvp_n_2-3	mapflag	nobranch
+      
+pvp_n_2-5	mapflag	pvp_nightmaredrop	off
+pvp_n_2-5	mapflag	nopenalty
+pvp_n_2-5	mapflag	nobranch
+
+
+guild_vs4	mapflag	pvp_nightmaredrop	off
+guild_vs4	mapflag	gvg	off
+guild_vs4	mapflag	pvp_noparty	off
+guild_vs4	mapflag	noreturn
+guild_vs4	mapflag	nowarp
+guild_vs4	mapflag	pvp_noguild
+guild_vs4	mapflag	pvp
+guild_vs4	mapflag	nopenalty
+guild_vs4	mapflag	nobranch

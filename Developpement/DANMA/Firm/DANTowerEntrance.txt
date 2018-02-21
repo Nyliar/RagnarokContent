@@ -1,0 +1,233 @@
+// [========================================================]
+// [=============     DANMA - Presentation      ============]
+// [========================================================]
+// [ Version 1                                              ]
+// [========================================================]
+// [ Original script by: Alayne				    ]
+// [========================================================]
+// [ Description:                                           ]
+// [--------------------------------------------------------]
+// [                                                        ]
+// [ - The DANMA Dungeon Entrance			    	    ]
+// [========================================================]
+// [ Changelog: (5 last updates)                            ]
+// [--------------------------------------------------------]
+// [                                                        ]
+// [ v0: Creation                      			    ]
+// [                                                        ]
+// [                                                        ]
+// [========================================================]
+// [                                                        ]
+// [========================================================]
+
+mellina,82,145,3	script	Dungeon Guard::dang	4_M_CRU_KNT,2,2,{
+	set .@npcname$, "[Guard]";
+	
+	mes .@npcname$;
+	mes "We guard this here Dungeon!";
+	mes "This ain't no place for anyone but seasoned adventurers, ya see!";
+	mes "Be careful not to wander around here too much!";
+	mes "Monsters can still escape from there...";
+	next;
+
+OnTouch:
+	set .@npcname$, "[Guard]";
+	if (DANDUNQ > 1)
+	{
+		mes .@npcname$;
+		mes "So I heard you're offically registered with the DEO!";
+		mes "What do you wanna do?";
+		if (select("Enter","Just stand around' around") == 1)
+		{
+			next;
+			mes .@npcname$;
+			mes "Sure. Where do you wanna go?";
+			
+			if (select("First floor","To the last floor I've visited") == 1)
+			{
+				next;
+				mes .@npcname$;
+				mes "Allright. You know there's several direction on first floor. Where do you wanna go?";
+				switch (select("First tunnel","Second tunnel","Third tunnel","Fourth tunnel"))
+				{
+					case 1:
+						warp $DANlevelMap$[0], $DANlevelMapX[0], $DANlevelMapY[0];
+						break;
+					case 2:
+						warp $DANlevelMap$[18], $DANlevelMapX[18], $DANlevelMapY[18];
+						break;
+					case 3:
+						warp $DANlevelMap$[23], $DANlevelMapX[23], $DANlevelMapY[23];
+						break;
+					case 4:
+						warp $DANlevelMap$[29], $DANlevelMapX[29], $DANlevelMapY[29];
+						break;
+				}
+			}
+			else
+			{
+				warp $DANlevelMap$[DANDUNLVL], $DANlevelMapX[DANDUNLVL], $DANlevelMapY[DANDUNLVL];				
+			}
+		}
+		else
+		{
+			next;
+			mes .@npcname$;
+			mes "Bah! Some adventurer you are!";
+			mes "This isn't a damn picnic!";
+			mes "If you wanna stand around do it elsewhere!";
+			close;
+		}
+	}
+	else
+	{
+		mes .@npcname$;
+		mes "Hey! You there!";
+		next;
+		
+		mes "[" + strcharinfo(0) + "]"; 
+		mes "Are you talking to me?";
+		next;
+		
+		mes .@npcname$;
+		mes "Yes you! Do you see anyone else here?!";
+		next;
+		
+		mes "[" + strcharinfo(0) + "]"; 
+		mes "Well I-";
+		next;
+		
+		mes .@npcname$;
+		mes "Don't answer that!";
+		next;
+		
+		mes "[" + strcharinfo(0) + "]"; 
+		mes "O-okay...";
+		next;
+		
+		mes .@npcname$;
+		mes "Well anyway. Are you trying to enter the Dungeon?";
+		mes "Well, you can't! Not until you're registered anyway.";
+		mes "You must go to the Dungeon Exploration Office and register!";
+		mes "Nobody can enter without their approval!";
+		mes "Go to the center of town and you'll find the DEO there!";
+		mes "Come back once you're approved!";
+		set DANDUNQ, 1;
+	}
+	close;
+}
+
+mellina,89,145,5	duplicate(dang)	Dungeon Guard::dang2	4_M_CRU_KNT,2,2
+
+mellina_in,45,102,0	script	Firm Guard::danfg	4_M_KY_SOLD,2,2,{
+	set .@npcname$, "[Guard]";
+	mes .@npcname$;
+	mes "Welcome to the Dungeon Exploration Office.";
+	mes "What can I do for you?";
+	if (select("What's this place?","I'd like to register!") == 1)
+	{
+		next;
+		mes .@npcname$;
+		mes "This 'PLACE', as you call it, is the Dungeon Exploration Office.";
+		mes "We are the official organization that lets adventurers advance into the dungeons!";
+		mes "You cannot enter the dungeon unless you register with us!";
+	}
+	else
+	{
+		next;
+		mes .@npcname$;
+		mes "Talk to the receptionist over there!";
+		mes "She'll help you get started.";
+		mes "Though you look like you wouldn't last a minute in there. HAHAHA!";
+		
+	}
+	close;
+}
+
+mellina_in,127,69,0	duplicate(danfg)	Dungeon Guard::danfg2	4_M_KY_HEAD,2,2
+mellina_in,59,169,0	duplicate(danfg)	Dungeon Guard::danfg3	4_M_CRU_KNT,2,2
+
+mellina_in,38,105,5	script	Firm Reception::danfr	1_F_04,2,2,{
+	set .@npcname$, "[Hyild]";
+	mes .@npcname$;
+	mes "Welcome to the Dungeon Exploration Office!";
+	if (DANDUNQ <= 1)
+	{
+		mes "I guess you're here to register as an Adventurer, right?";
+		mes "You probably know that without being registered, you can't enter the Dungeon.";
+		mes "When you register with us, you'll be able to enter the Dungeon, collect and sell Shards, and even join Factions!";
+		.@loop = 1;
+		while (.@loop) {
+			next;
+			mes .@npcname$;
+			mes "Anyways! What can I help you with?";
+			switch(select("Factions?","Shards?","I'd like to register!"))
+			{
+				case 1:
+					next;
+					mes .@npcname$;
+					mes "Yup! Factions!";
+					mes "They are pretty much the leaders of this town and highly praised adventurers!";
+					mes "Each Faction specialise in their own unique abilities and jobs!";
+					mes "Once you join a Faction, you'll be able to craft items or gain special abilities!";
+					mes "There's other advantages, such as bank loans or reputation, but you'll have to talk to a Faction Leader about that stuff.";
+					mes "Not really my job to explain their nonsense. Hahaha!";
+					break;
+				case 2:
+					next;
+					mes .@npcname$;
+					mes "You don't know about Shards? Have you been living under a rock?";
+					mes "You know, Shards? From monsters?";
+					mes "They're used for almost everything!";
+					mes "You sell them to make money, use them for crafting and such!";
+					next;
+					mes .@npcname$;
+					mes "Ring any bells?";
+					mes "No?";
+					next;
+					mes .@npcname$;
+					mes "Oh boy...Well Shards are part of a monster's core.";
+					mes "The Dungeon creates monsters which carry these cores and when you kill a monster, you get a Shard of its core!";
+					mes "They're used for a lot of things! Mostly to craft and make money!";
+					next;
+					mes .@npcname$;
+					mes "...";
+					next;
+					mes .@npcname$;
+					mes "You'll figure it out I guess...";
+					break;
+				case 3:
+					next;
+					mes .@npcname$;
+					mes "So, you wanna register.";
+					mes "Perfect!";
+					mes "That's quite easy. You just have to sign this here form.";
+					mes "Once that's done, you'll be able to venture into the Dungeon.";
+					mes "From there you can fight monsters and find awesome treasures!";
+					next;
+					mes .@npcname$;
+					mes "I can see that you want to explore already!";
+					mes "Here's the Form.";
+					mes "Fill in your name here.";
+					mes "No...Your name. Here.";
+					next;
+					mes .@npcname$;
+					mes "Right. Now sign the bottom line.";
+					mes "No no no! We need a signature!";
+					mes "Yes, you can cross it out.";
+					next;
+					mes .@npcname$;
+					mes "Perfect...'" + strcharinfo(0) + "'. You're now a registered Adventurer.";
+					mes "Thanks for signing up!";
+					mes "I'll let the guard in front know you're on of us now!";
+					mes "They should let you enter.";
+					mes "Good Luck and be careful, please.";
+					set DANDUNQ, 2;
+					close2;
+					.@loop = 0;
+					break;
+			}
+		}
+	}
+	close;
+}

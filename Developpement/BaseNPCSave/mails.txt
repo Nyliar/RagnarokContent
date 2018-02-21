@@ -1,0 +1,11 @@
+// Prontera Village
+//============================================================
+// Villes offi
+amatsu,211,100,0	duplicate(MailBox)	Mailbox#amatsu	888
+ayothaya,157,110,0	duplicate(MailBox)	Mailbox#ayothaya	888
+hugel,108,148,0	duplicate(MailBox)	Mailbox#hugel	888
+jawaii,212,203,0	duplicate(MailBox)	Mailbox#jawaii	888
+xmas,137,128,0	duplicate(MailBox)	Mailbox#lutie	888
+morocc,149,107,0	duplicate(MailBox)	Mailbox#morocc	888
+payon,149,91,0	duplicate(MailBox)	Mailbox#payon	888
+umbala,125,122,0	duplicate(MailBox)	Mailbox#umbala	888

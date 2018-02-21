@@ -1,0 +1,784 @@
+//===== Alayne Scripts =======================================
+//= Freyja Mercy Instance
+//===== By: ================================================== 
+//= Alayne
+//===== Current Version: ===================================== 
+//= 1.0
+//===== Compatible With: ===================================== 
+//= rAthena SVN
+//= hercules SVN
+//===== Description: ========================================= 
+//
+//= An instance based over Freyja, the dead and mercy goddess
+//
+//===== Todo Remaining: ======================================
+//
+//===== Additional Comments: =================================
+//
+//============================================================
+
+un_myst,163,38,5	script	Freyja Mercy::alahren	CLEAR_NPC,{
+OnStart:
+	set .@party_id, getcharid(1);
+	set .@frm_leader, ( getcharid(0) == getpartyleader(.@party_id,2) );
+
+	set $instance_frm_id, -1;
+	
+	//RATHENA
+	set .@has_instance, $instance_frm_id == getcharid(1);
+	//HERCULES
+	//set .@has_instance, has_instance(.map$[0], $instance_fm);
+	
+	set .@instance_delay, ( instance_delay_frm - gettimetick(2) );
+
+	set .@npcname$, "[" + .instance_name$ + "]";
+	mes .@npcname$;
+	mes "This is the entrance of " + .instance_name$ + ".";
+	mes "The more you look at it, the more you feel disturb. Something's wrong happening in there.";
+	if( .@instance_delay > 0 )
+	{
+		set .@hours, .@instance_delay / (60 * 60);
+		set .@remaining, .@instance_delay - .@hours * (60 * 60);
+		set .@minutes, .@remaining / (60);
+		set .@remaining, .@remaining - .@minutes * (60);
+		set .@seconds, .@remaining;
+		mes "You have to wait : ^FF0000"+ .@hours +" Hours, " + .@minutes + " Minutes and " + .@seconds + " Seconds.^000000";
+		//close;
+	}
+	if (.requiredItem != -1  && countitem(.requiredItem) < 1)
+	{
+		mes "You decide to step back.";
+		mes "At no cost you'll enter in that place without being well prepared.";
+		close;
+	}
+	switch( select( 
+		(( .@party_id && .@frm_leader && !.@has_instance )?"Create " + .instance_name$:""),
+		(( .@party_id && .@has_instance )?"Enter " + .instance_name$:""),
+		(( .@party_id && .@frm_leader && .@has_instance )?"Destroy " + .instance_name$:""),
+	"Nevermind."
+		)){
+	case 1:
+		getpartymember .@party_id,2;
+		if( .min_party_member >= 1 ){
+			set .@origin, getcharid(3);
+			set .@gettimetick, gettimetick(2);
+			for( set .@i, 0; .@i < $@partymembercount; set .@i, .@i+1 )
+				if( attachrid( $@partymemberaid[.@i] ) ){
+					set .@member_count, .@member_count + 1;
+					if( BaseLevel < .base_level[0] || BaseLevel > .base_level[1] ) set .@fail, .@fail|1;
+					if( Zeny < .instance_zeny ) set .@fail, .@fail|2;
+					if( instance_delay_frm > .@gettimetick ) set .@fail, .@fail|4;
+					if( .@fail ){
+						set .@name$, strcharinfo(0);
+						break;
+					}
+				}
+			attachrid( .@origin );
+		}
+		
+		//check that nobody else is inside
+		for(set .@i,1; .@i<=getarraysize($frmMap$); set .@i,.@i+1)
+		{
+			if (getmapusers(instance_mapname($frmMap$[.@i], $frm_instance)) > 0) {
+				mes "Another team is already in the " + .instance_name$ + ". I can't send you there, sorry.";
+				close;
+			}
+		}
+		
+		//clean any previously remaining instance
+		if($frm_instance != -1)
+		{
+			instance_destroy $frm_instance;
+			set $frm_instance, -1;
+			set $instance_frm_id, -1;
+		}
+		
+		if( .@name$ != "" && .@fail ){
+			mes "^FF0000[ Failed ]^000000";
+			mes "^0055FF"+.@name$+"^000000, You cannot join right now.";
+			mes " ";
+			mes "^FF0000[ Reason: ]^000000";
+			if( .@fail & 1 ) mes "^777777You must be Level: "+.base_level[0]+" - "+.base_level[1]+"^000000";
+			if( .@fail & 2 ) mes "^777777You need "+ .instance_zeny +" Zeny^000000";
+			if( .@fail & 4 ) mes "^777777You still have cooldown.^000000";
+			break;
+		}
+		
+		getpartymember getcharid(1),0;
+		if (instance_check_party(.@party_id, .min_party_member, .base_level[0], .base_level[1]) == 0) {
+			mes "^0055FF[ "+.instance_name$+" ]^000000";
+			mes "Make or join a party with at least "+.min_party_member+" member and try again, with level between " +.base_level[0] + " and " + .base_level[1] + ".";
+		}
+		else{
+			//RATHENA
+			set $frm_instance, instance_create( .instance_name$ );
+			//HERCULES
+			//set $frm_instance, instance_create(.instance_name$, .@party_id, IOT_PARTY);
+			if( $frm_instance < 0 ) {
+				npctalk .instance_name$ + " reservation failed.";
+				mes "^0000FF"+ .instance_name$ +" ^000000 - Reservation Failed!";
+				close;
+			}
+			mes "^0055FF[ "+.instance_name$+" ]^000000";
+			mes "^0000FF"+.instance_name$+" ^000000 - Reserved";
+			set .@gettimetick, gettimetick(2);
+			getpartymember .@party_id,2;
+			for( set .@i, 0; .@i < $@partymembercount; set .@i, .@i+1 )
+				if( attachrid( $@partymemberaid[.@i] ) ){
+					set instance_delay_lastr, ( .@gettimetick + ( .instance_delay ));
+					set Zeny, Zeny - .instance_zeny;
+					dispbottom "["+.instance_name$+"] -"+ .instance_zeny +" Zeny and Instance Cooldown Applied.";
+				}
+			attachrid( .@origin );
+			npctalk .instance_name$ + " has been generated for Party - " + getpartyname( .@party_id );
+			
+			set $instance_frm_id, getcharid(1);
+			
+			//HERCULES
+			//for( set .@i, 0; .@i < getarraysize($frmMap$); set .@i,.@i+1 )
+			//{
+			//	if( instance_attachmap( $frmMap$[.@i],$frm_instance ) == "" ){
+			//		setmapflag $frmMap$[.@i],mf_zone,"Memorial Dungeon";
+			//		npctalk .instance_name$ + " reservation failed due to map attach failure.";
+			//		mes "- ^FF0000Reservation Failed!^000000";
+			//		instance_destroy( $frm_instance );
+			//		set $frm_instance, -1;
+			//		set $instance_frm_id, -1;
+			//		close;
+			//	}
+			//}
+			//instance_set_timeout .instance_delay,300,$frm_instance;
+			//instance_init($frm_instance);
+			
+			//disable unused npcs for now
+ 		}
+	case 2:
+		if( $instance_frm_id != getcharid(1)){
+			mes .instance_name$ + " doesn't exist for Party - "+getpartyname( .@party_id );
+		}
+		else{
+			//RATHENA
+			switch(instance_enter(.instance_name$)) {
+				default:
+					mes "An unknown error has occurred.";
+					close;
+				case 2:
+					mes "The memorial dungeon " + .instance_name$ + " does not exist.";
+					mes "The party leader did not generate the dungeon yet.";
+					close;
+				case 1:
+					mes "You can enter the dungeon after making the party.";
+					close;
+				case 0:
+					mapannounce $frmMap$[0], strcharinfo(0)+" from party, " +getpartyname( .@party_id )+", lr entering the dungeon, "+.instance_name$+".",bc_map,"0x00ff99",FW_NORMAL,12;
+					end;
+			}
+			
+			//HERCULES
+			//if( has_instance( $frmMap$[0] ) == "" ){
+			//	mes "Freyja Mercy doesnt exist for Party - "+getpartyname( .@party_id );
+			//}
+			//else{
+			//	warp $frmMap$[0],141,24;
+			//	instance_announce $frm_instance, getpartyname(getcharid(1))+"  entered in the "+.instance_name$+"!",bc_map,"0x00ff99";
+			//}
+		}
+		break;
+	case 3:
+		mes .instance_name$ + " Destroyed.";
+		instance_destroy $frm_instance;
+		set $frm_instance, -1;
+		set $instance_frm_id, -1;
+		break;
+	default: 
+		break;
+}
+close;
+
+OnInit:
+	setarray .base_level[0],130, 175;
+	setarray $frmMap$[0],"1@frm";
+	set .map_size, getarraysize( $frmMap$ );
+	set .min_party_member, 1;
+	set .instance_zeny, 0;
+	set .instance_delay, 7200;
+	set $fm_timer_delay, 3600; //1 hour to clean the instance
+	set .instance_name$, "Freyja Mercy";
+	set $frm_instance, -1;
+	set $instance_frm_id, -1;
+	set .requiredItem, -1; //define the required item to enter in the instance. Leave to -1 to disable
+	set $frmNjordItem, 512;
+	end;
+}
+
+
+1@frm,101,107,4	script	freyja_mercy	HIDDEN_WARP_NPC,2,2,{
+function summon_normal;
+function summon_guardian;
+end;
+
+OnInstanceInit:
+	set .@map$, strnpcinfo(4);
+	set .@npc_name$, instance_npcname( strnpcinfo(0), $frm_instance );
+	
+	set $instance_frm_level, 0;
+	set .max_fm_level, 1;
+	
+	set $FreyjaId, -1;
+	
+	set $frmMaxReplacedAllowed, 2; //max number of rafflesia you can save by taking their place
+	set $frmRaf1, 0;
+	set $frmRaf2, 0;
+	set $frmRaf3, 0;
+	set $frmRaf4, 0;
+	set $frmRaf5, 0;
+	
+	set .timerCount, 0;
+	set .popCount, 0;
+	 
+	initnpctimer;
+	end;
+
+function	summon_normal	{
+	set .@map$, getarg(0);
+	set .@npcname$, getarg(1);
+	set .@increaseFloor, getarg(2);
+	
+	//setarray .@coordX[0], 143, 225, 143, 225, 229, 178, 229, 178, 184, 225, 184, 225; //2 x for each mob to define an area
+	//setarray .@coordY[0], 107, 84, 107, 84, 65, 52, 65, 52, 38, 26, 38, 26; //2 x for each mob to define an area
+	
+	if(.@increaseFloor == 1)
+	{
+		$instance_frm_level++;
+	}
+	
+	switch( $instance_frm_level ){
+		case 1:
+			set .@map$, strnpcinfo(4);
+			set .@npc_name$, instance_npcname( strnpcinfo(0), $frm_instance );
+			set .@mob_dead_num, mobcount(.@map$,.@npc_name$+"::OnNormalDied" );
+			//Troubles Monsters
+			setarray .@monster,3251;
+			setarray .@amount,20 - .@mob_dead_num;
+			break;
+	}
+	set .@monster_size, getarraysize( .@monster );
+	for( set .@i, 0; .@i < .@monster_size; set .@i,.@i+1 ){
+		set .@target_amount, ( .@amount[.@i] );
+		set .@size, 0;
+		set .@clabel$, .@npcname$ + "::OnNormalDied";
+		set .@tempFreyjaId, areamonster(.@map$,.@coordinate[0],.@coordinate[1],.@coordinate[2],.@coordinate[3],"--ja--",.@monster[.@i],.@target_amount,.@clabel$,.@size);
+	}
+	return;
+}
+
+function	summon_guardian	{
+	set .@map$, getarg(0);
+	set .@npcname$, getarg(1);
+	set .@label$, .@npcname$ + "::OnGuardianDied";
+	
+	setarray .@coordinate,216,225,216,225;
+			
+	switch( $instance_frm_level ){
+		case 2:
+			//Freyja
+			setarray .@monster,3254,3254;
+			break;
+	}
+	set .@monster_size, getarraysize( .@monster );
+	for( set .@i, 0; .@i < .@monster_size; set .@i,.@i+1 ){
+		set .@target_amount, 1;
+		set $FreyjaId, areamonster(.@map$,.@coordinate[0],.@coordinate[1],.@coordinate[2],.@coordinate[3],"Freyja",.@monster[.@i],.@target_amount,.@label$);
+	}
+	return;
+}
+
+OnNormalDied:
+	set .@map$, strnpcinfo(4);
+	set .@npc_name$, instance_npcname( strnpcinfo(0), $frm_instance );
+	set .@mob_dead_num, mobcount(.@map$,.@npc_name$+"::OnNormalDied" );
+	
+	if( .@mob_dead_num == 0 ){
+		if($instance_frm_level == 1)
+		{
+			//pop monsters
+			summon_normal( .@map$,.@npc_name$, 0 );
+		}
+	}
+	end;
+	
+OnGuardianDied:
+	set .@map$, strnpcinfo(4);
+	set .@npc_name$, instance_npcname( strnpcinfo(0), $frm_instance );
+	set .@mob_dead_num, mobcount(.@map$,.@npc_name$+"::OnGuardianDied" );
+	set .@party_id, getcharid(1);
+	
+	if( !.@mob_dead_num ){
+		if ($instance_frm_level == .max_fm_level)
+		{						
+			killmonsterall .@map$, "All";
+
+			enablenpc instance_npcname( "alafrmve2", $frm_instance );
+			enablenpc instance_npcname( "alafrmur2", $frm_instance );
+			enablenpc instance_npcname( "alafrmsk2", $frm_instance );				
+			end;
+		}
+	}
+	end;
+	
+OnTimer10000:
+	//each 1s, increase timer
+	set .timerCount, .timerCount + 10;
+	if(.timerCount == $fm_timer_delay)
+	{
+		instance_announce $frm_instance, "[ Freyja Realm ] The Dimension collapse! You have to flee, right now!", bc_map, 0xFF0000;
+		sleep2 15000;
+		instance_destroy $frm_instance;
+		set $frm_instance, -1;
+		set $instance_frm_id, -1;
+		stopnpctimer;
+	}
+	if($instance_frm_level == 1)
+	{
+		set .popCount, .popCount + 10;
+		if(.popCount == 30)
+		{
+			set .@map$, strnpcinfo(4);
+			set .@npc_name$, instance_npcname( strnpcinfo(0), $frm_instance );
+			summon_normal( .@map$, .@npc_name$, 0 );
+		}
+	}
+	setnpctimer 0;
+	end;
+	
+OnFirstFloorOn:
+	set .@map$, strnpcinfo(4);
+	set .@npc_name$, instance_npcname( strnpcinfo(0), $frm_instance );
+	//pop monsters
+	summon_normal( .@map$,.@npc_name$, 1 );
+	
+	//start current level riddle
+	goto OnStartNextRiddle;
+	end;
+	
+OnStartNextRiddle:
+	disablenpc instance_npcname( "alafrmb1", $frm_instance );
+	disablenpc instance_npcname( "alafrmb2", $frm_instance );
+	disablenpc instance_npcname( "alafrmb3", $frm_instance );
+	disablenpc instance_npcname( "alafrmb4", $frm_instance );
+	disablenpc instance_npcname( "alafrmb5", $frm_instance );
+	disablenpc instance_npcname( "alafrmb6", $frm_instance );
+	disablenpc instance_npcname( "alafrmb7", $frm_instance );
+	disablenpc instance_npcname( "alafrmb8", $frm_instance );
+	disablenpc instance_npcname( "alafrmb9", $frm_instance );
+	disablenpc instance_npcname( "alafrmb10", $frm_instance );
+	
+	disablenpc instance_npcname( "alafrmfp1", $frm_instance );
+	disablenpc instance_npcname( "alafrmfp2", $frm_instance );
+	disablenpc instance_npcname( "alafrmfp3", $frm_instance );
+	disablenpc instance_npcname( "alafrmfp4", $frm_instance );
+	disablenpc instance_npcname( "alafrmfp5", $frm_instance );
+	
+	switch($instance_frm_level)
+	{
+		case 1:
+			donpcevent instance_npcname( "alafrmb1", $frm_instance ) + "::OnEnable";
+			donpcevent instance_npcname( "alafrmfp1", $frm_instance ) + "::OnEnable";
+			break;
+		case 2:
+			donpcevent instance_npcname( "alafrmb1", $frm_instance );
+			break;
+		case 3:
+			donpcevent instance_npcname( "alafrmb1", $frm_instance );
+			break;
+		case 4:
+			donpcevent instance_npcname( "alafrmb1", $frm_instance );
+			break;
+		case 5:
+			donpcevent instance_npcname( "alafrmb1", $frm_instance );
+			break;
+	}
+	end;
+	
+OnCheckRaf:
+	set .@replaced, 0;
+	set .@killed, 0;
+	set .@saved, 0;
+	set .@unmoved, 0;
+	set .@cnt, 0;
+	for(set .@i, 1; .@i<= 5; set .@i, .@i+1)
+	{
+		switch(getd("$frmRaf" + .@i))
+		{
+			case -1:
+				set .@killed, .@killed + 1;
+				break;
+			case 0:
+				set .@unmoved, .@unmoved + 1;
+				break;
+			case 1:
+				set .@saved, .@saved + 1;
+				break;
+			case 2:
+				set .@replaced, .@replaced + 1;
+				break;
+		}
+		set .@cnt, .@cnt + 1;
+	}
+	if(.@cnt == 5)
+	{
+		if(.@replaced >= $frmMaxReplacedAllowed)
+		{
+			instance_announce $frm_instance, "[ Freyja Mercy ] You choose the easy path, but it won't lead you anywhere.", bc_map, 0x0000FF;
+			sleep2 500;
+			instance_announce $frm_instance, "[ Freyja Mercy ] I lost all interest in you. Leave this place, now.", bc_map, 0x0000FF;
+			sleep2 500;		
+			instance_destroy $frm_instance;
+			set $frm_instance, -1;
+			set $instance_frm_id, -1;	
+		}
+		else if(.@saved > .@killed && .@replaced < $frmMaxReplacedAllowed)
+		{
+			instance_announce $frm_instance, "[ Freyja Mercy ] Allright. You fought against all the difficulties I put in your path.", bc_map, 0x0000FF;
+			sleep2 500;
+			instance_announce $frm_instance, "[ Freyja Mercy ] You earn the right to fight me. Get ready now.", bc_map, 0x0000FF;
+			sleep2 500;		
+			
+			donpcevent instance_npcname( "freyja_mercy", $frm_instance ) + "::OnLastFloorOn";
+		}
+		else if(.@killed > .@saved && .@replaced < $frmMaxReplacedAllowed)
+		{
+			instance_announce $frm_instance, "[ Freyja Mercy ] You didn't have enough mercy in you to help those creatures properly.", bc_map, 0x0000FF;
+			sleep2 500;
+			instance_announce $frm_instance, "[ Freyja Mercy ] I lost all interest in you. Leave this place, now.", bc_map, 0x0000FF;
+			sleep2 500;		
+			instance_destroy $frm_instance;
+			set $frm_instance, -1;
+			set $instance_frm_id, -1;
+		}
+	}
+	end;
+	
+OnLastFloorOn:
+	set .@map$, strnpcinfo(4);
+	set .@npc_name$, instance_npcname( strnpcinfo(0), $frm_instance );
+	//pop monsters
+	killmonster .@map$, "All";
+	summon_guardian( .@map$, .@npc_name$ );
+	end;
+}
+
+1@frm,141,34,3	script	Rafflesia#1::alafrmr1	4_F_NYDHOG,{
+	mes "[Rafflesia]";
+	mes "Please help me to join back the other spot.";
+	mes "And help my family to cross this land of traps...";
+	if(MOVINGRAF == 0)
+	{
+		next;
+		mes "[Rafflesia]";
+		mes "Do you wanna start the test?";
+		if(select("Yes","No") == 1)
+		{
+			getmapxy(.@map$, .@x, .@y, UNITTYPE_PC);
+			movenpc strnpcinfo(3), .@x, .@y;
+			set MOVINGRAF, strcharinfo(2);
+			attachrid 1000, strnpcinfo(3) + "::OnMoveRaf";
+		}
+		else
+		{
+			next;
+			mes "[Rafflesia]";
+			mes "Also, you take my place if you want. It'll free me...But you'll be stucked then.";
+			if(select("Ok, leave me your place","No way, I have things to do") == 1)
+			{
+				setd("$frmRaf" + strnpcinfo(2), 2);
+				disablenpc strnpcinfo(3);
+				getmapxy(.@map$, .@x, .@y, UNITTYPE_NPC);
+				charcommand "#jump " + strcharinfo(0) + " " + .@x + " " + .@y;
+			}
+			else
+			{
+				next;
+				mes "[Rafflesia]";
+				mes "I...I understand...";
+			}
+		}
+	}
+	close;
+	
+OnMoveRaf:
+	getmapxy(.@map$, .@x, .@y, UNITTYPE_PC);
+	npcwalkto .@x, .@y;
+	attachrid 1000, strnpcinfo(3) + "::OnMoveRaf";	
+	end;
+	
+OnInstanceInit:
+OnDisable:
+	disablenpc strnpcinfo(3);
+	end;
+}
+
+1@frm,141,34,3	duplicate(alafrmr1)	Rafflesia#2::alafrmr2	4_F_NYDHOG
+1@frm,141,34,3	duplicate(alafrmr1)	Rafflesia#3::alafrmr3	4_F_NYDHOG
+1@frm,141,34,3	duplicate(alafrmr1)	Rafflesia#4::alafrmr4	4_F_NYDHOG
+1@frm,141,34,3	duplicate(alafrmr1)	Rafflesia#5::alafrmr5	4_F_NYDHOG
+
+1@frm,141,34,3	script	Blower#y_5::alafrmb1	4_F_NYDHOG,1,4,{
+	mes "[Blower]";
+	mes "Do you want to stop the blower?";
+	if(select("Yes","No") == 1)
+	{
+		hideonnpc strnpcinfo(3);
+		set .disabled, 1;
+	}
+	end;	
+	
+OnTouch:
+	getmapxy(.@map$, .@x, .@y, UNITTYPE_PC);
+	explode(.@infos$, strnpcinfo(2), "_");
+	if(.@infos[0] == "y")
+	{
+		movenpc instance_npcname( "alafrmr" + MOVINGRAF, $frm_instance ), .@x, .@y + atoi(.@infos[1]);	
+	}
+	else if(.@infos[0] == "x")
+	{
+		movenpc instance_npcname( "alafrmr" + MOVINGRAF, $frm_instance ), .@x + atoi(.@infos[1]), .@y;	
+	}
+	else
+	{
+		switch(rand(5))
+		{
+			case 0:
+				movenpc instance_npcname( "alafrmr" + MOVINGRAF, $frm_instance ), .@x + atoi(.@infos[0]), .@y;	
+				break;
+			case 1:
+				movenpc instance_npcname( "alafrmr" + MOVINGRAF, $frm_instance ), .@x, .@y + atoi(.@infos[0]);	
+				break;
+			case 2:
+				movenpc instance_npcname( "alafrmr" + MOVINGRAF, $frm_instance ), .@x - atoi(.@infos[0]), .@y;	
+				break;
+			case 3:
+				movenpc instance_npcname( "alafrmr" + MOVINGRAF, $frm_instance ), .@x, .@y- atoi(.@infos[0]);	
+				break;
+			case 4:
+				movenpc instance_npcname( "alafrmr" + MOVINGRAF, $frm_instance ), .@x + atoi(.@infos[0]), .@y + atoi(.@infos[0]);	
+				break;
+			case 5:
+				movenpc instance_npcname( "alafrmr" + MOVINGRAF, $frm_instance ), .@x - atoi(.@infos[0]), .@y - atoi(.@infos[0]);	
+				break;
+		}
+	}
+	end;
+	
+OnTimer5000:
+	if(.disabled == 1)
+	{
+		hideoffnpc strnpcinfo(3);
+	}
+	specialeffect 512;
+	setnpctimer 0;
+	end;
+	
+OnEnable:
+	enablenpc strnpcinfo(3);
+	initnpctimer;
+	specialeffect 512;
+	end;
+	
+OnInstanceInit:
+OnDisable:
+	disablenpc strnpcinfo(3);
+	set .disabled, 0;
+	end;
+}
+
+1@frm,141,34,3	duplicate(alafrmb1)	Blower#y_2::alafrmb2	4_F_NYDHOG,1,4
+1@frm,141,34,3	duplicate(alafrmb1)	Blower#y_2::alafrmb3	4_F_NYDHOG,1,4
+1@frm,141,34,3	duplicate(alafrmb1)	Blower#x_2::alafrmb4	4_F_NYDHOG,1,4
+1@frm,141,34,3	duplicate(alafrmb1)	Blower#x_2::alafrmb5	4_F_NYDHOG,1,4
+1@frm,141,34,3	duplicate(alafrmb1)	Blower#x_2::alafrmb6	4_F_NYDHOG,1,4
+1@frm,141,34,3	duplicate(alafrmb1)	Blower#2::alafrmb7	4_F_NYDHO,1,4
+1@frm,141,34,3	duplicate(alafrmb1)	Blower#2::alafrmb8	4_F_NYDHO,1,4
+1@frm,141,34,3	duplicate(alafrmb1)	Blower#2::alafrmb9	4_F_NYDHO,1,4
+1@frm,141,34,3	duplicate(alafrmb1)	Blower#2::alafrmb10	4_F_NYDHO,1,4
+
+1@frm,141,34,3	script	Fire Pit::alafrmfp1	4_F_NYDHOG,2,2,{
+	end;
+		
+OnTouch:
+	if(countitem($frmNjordItem) > 0)
+	{
+		mes "[Fire Pit]";
+		mes "Do you want to use a " + getitemname($frmNjordItem) + " to extinct the fire?";
+		if(select("Yes","No") == 1)
+		{
+			set .extinct, 1;
+			setnpcdisplay HIDDEN_WARP_NPC;
+		}
+	}
+	else if(.extinct == 1)
+	{
+		getmapxy(.@map$, .@x, .@y, UNITTYPE_PC);
+		if(MOVINGRAF != 0)
+		{
+			disablenpc instance_npcname( "alafrmr" + MOVINGRAF, $frm_instance );
+			instance_announce $frm_instance, "[ Freyja Mercy ] You just lead this poor creature to a Fire Pit...He died in pain!", bc_map, 0x0000FF;
+			setd("$frmRaf" + MOVINGRAF, -1);
+			set MOVINGRAF, 0;
+		}
+		else
+		{
+			sc_start SC_BURNING, 15000, 1;
+			getmapxy(.@map$, .@nx, .@ny, UNITTYPE_NPC);
+			set .@diffx, .@nx - .@x;
+			set .@diffy, .@ny - .@y;
+			movenpc strnpcinfo(3), .@nx + .@diffx, .@ny + .@diffy;
+		}
+	}
+	end;
+	
+OnEnable:
+	enablenpc strnpcinfo(3);	
+OnMoveNpc:
+	do
+	{		
+		set .@movex,rand(0,150);
+		set .@movey,rand(0,150);
+		set .@map$,strnpcinfo(4);
+	}
+	while(!checkcell(.@map$,.@movex,.@movey,cell_chkpass));
+	movenpc strnpcinfo(4),.@movex,.@movey;
+	
+	initnpctimer;
+	end;
+
+OnTimer15000:
+	stopnpctimer;
+	goto OnMoveNpc;
+	end;
+	
+OnInstanceInit:
+OnDisable:
+	set .extinct, 0;
+	disablenpc strnpcinfo(3);
+	end;
+}
+
+1@frm,141,34,3	duplicate(alafrmfp1)	Fire Pit::alafrmfp2	4_F_NYDHOG,2,2
+1@frm,141,34,3	duplicate(alafrmfp1)	Fire Pit::alafrmfp3	4_F_NYDHOG,2,2
+1@frm,141,34,3	duplicate(alafrmfp1)	Fire Pit::alafrmfp4	4_F_NYDHOG,2,2
+1@frm,141,34,3	duplicate(alafrmfp1)	Fire Pit::alafrmfp5	4_F_NYDHOG,2,2
+
+1@frm,141,34,3	script	Freyja::alahrhe	CLEAR_NPC,4,4,{
+	end;
+	
+OnTouch:	
+	if(.talking == 0 && $instance_frm_level < 1)
+	{
+		set $frmTalkingId, getcharid(3);
+		set .talking, 1;	
+
+		cutin "",2;
+		npctalk "Welcome on my land, mortal. My name's Freyja.";
+		instance_announce $frm_instance, "[Freyja] Welcome on my land, mortal. My name's Freyja.", bc_map, 0x00FF00;
+		sleep2 500;
+		npctalk "Lots of peoples know me as the goddess of deads, but I'm also the one that bring mercy, peace over suffering.";
+		instance_announce $frm_instance, "[Freyja] Lots of peoples know me as the goddess of deads, but I'm also the one that bring mercy, peace over suffering.", bc_map, 0x00FF00;
+		sleep2 500;
+		npctalk "If you want to fight me, you'll have to prove me you're forth it.";
+		instance_announce $frm_instance, "[Freyja] If you want to fight me, you'll have to prove me you're forth it.", bc_map, 0x00FF00;
+		sleep2 500;
+		npctalk "Strength isn't everything. Use your head.";
+		instance_announce $frm_instance, "[Freyja] Strength isn't everything. Use your head.", bc_map, 0x00FF00;
+		sleep2 500;
+			
+		enablenpc instance_npcname( "alafrmr1", $frm_instance );
+		enablenpc instance_npcname( "alafrmr2", $frm_instance );
+		enablenpc instance_npcname( "alafrmr3", $frm_instance );
+		enablenpc instance_npcname( "alafrmr4", $frm_instance );
+		enablenpc instance_npcname( "alafrmr5", $frm_instance );
+	
+		donpcevent instance_npcname( "freyja_mercy", $frm_instance ) + "::OnFirstFloorOn";
+	}
+	else if($instance_frm_level >= 1)
+	{
+		if(MOVINGRAF != 0)
+		{
+			mes "[Freyja]";
+			mes "Allright. You saved this one.";
+			setd("$frmRaf" + MOVINGRAF, 1);
+			set MOVINGRAF, 0;
+			donpcevent instance_npcname( "freyja_mercy", $frm_instance ) + "::OnCheckRaf";
+		}
+	}
+	end;
+	
+OnInstanceInit:	
+	enablenpc strnpcinfo(3);
+	set .talking, 0;
+	end;
+}
+
+1@frm,141,34,3	script	Verdandi::alafrmve	4_F_NYDHOG,2,2,{
+	//cutin "ep14_nyd01",2;
+	end;
+		
+OnTouch:	
+	if(.talking == 0)
+	{
+		set $frmTalkingId, getcharid(3);
+		set .talking, 1;	
+
+		cutin "ep14_nyd01",2;
+		npctalk "Brrr...I've always hated Freyjaheim...";
+		instance_announce $jl_instance, "[Verdandi] Brrr...I've always hated Freyjaheim...", bc_map, 0x00FF00;
+		sleep2 500;
+	
+		donpcevent instance_npcname( "alafrmsk", $frm_instance ) + "::OnDialog1_2";
+	}
+	end;
+
+OnInstanceInit:
+	set .talking, 0;
+	disablenpc strnpcinfo(3);
+	end;
+}
+
+1@frm,139,32,5	script	Urd::alafrmur	4_F_PINKWOMAN,{
+	//cutin "bu_maggi1",0;
+	end;
+		
+OnDialog1_3:			
+	attachrid($frmTalkingId);
+	cutin "bu_maggi1", 2;
+	npctalk "On the other hand, Deads will obey to their master, Freyja, whatever happens...";
+	instance_announce $frm_instance, "[Urd] On the other hand, Deads will obey to their master, Freyja, whatever happens...", bc_map, 0x00FF00;
+	sleep2 500;
+	
+	cutin "", 255;
+	end;	
+	
+OnInstanceInit:
+	disablenpc strnpcinfo(3);
+	end;
+}
+
+1@frm,139,32,5	script	Skuld::alafrmsk	4_F_SHALOSH,{
+	//cutin "shaloshi01",2;
+	end;
+		
+OnDialog1_3:			
+	attachrid($frmTalkingId);
+	cutin "shaloshi01", 2;
+	npctalk "I know what you mean. Deads are just...dead. Demons are commonly known as bad.";
+	instance_announce $frm_instance, "[Skuld] I know what you mean. Deads are just...dead. Demons are commonly known as bad.", bc_map, 0x00FF00;
+	sleep2 500;
+	
+	donpcevent instance_npcname( "alafrmur", $frm_instance ) + "::OnDialog1_3";
+	end;
+	
+OnInstanceInit:
+	disablenpc strnpcinfo(3);
+	end;
+}
+

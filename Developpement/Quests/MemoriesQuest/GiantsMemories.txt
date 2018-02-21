@@ -1,0 +1,172 @@
+glastheim,54,82,7	script	Skoll::alamemgi0	702,{
+	set .@npcname$, "[Skoll]";
+	set .@pcname$, "[" + strcharinfo(0) + "]";
+	mes .@npcname$;
+	mes "Who are you?";
+	next;
+	mes .@pcname$;
+	mes "No, you, who are you?";
+	next;
+	mes .@npcname$;
+	mes "*Growl*";
+	mes "What do you want, mortal?";
+	mes "I'm Sköll, son of Fenrir, the Great Wolf.";
+	mes "I can't wait to drip my fang inside those filthy bastards flesh and blood.";
+	mes "Soon, our hate will be released...";
+	next;
+	mes .@npcname$;
+	mes "But then...I...I can't remember...The only thing remaining is my hate other these bastards";
+	mes "The only thing I can remember is those words...They turn, again and again, in my head...";
+	mes "The Ice Howler.";
+	if(countitem($memoryId[3]) >= 1)
+	{
+		next;
+		mes .@pcname$;
+		mes "Do you remember this?";
+		next;
+		mes .@npcname$;
+		mes "No. What is....";
+		mes "GRAAAAAAAAAAAAAAAAAAAAAA";
+		mes "My head!";
+		mes "Take that away!";
+		next;
+		mes .@pcname$;
+		mes "Sorry, I didn't thought it will...";
+		next;
+		mes .@npcname$;
+		mes "Well you were wrong!";
+		mes "Leave!";
+	}
+	else
+	{
+		next;
+		mes .@pcname$;
+		mes "Looks like all of you have memories loss.";
+		mes "You shouldn't try to think of it to hard.";
+		mes "It'll come back later...";
+	}
+	close;
+	
+OnUnhide:
+	hideoffnpc strnpcinfo(3);
+	end;
+	
+OnInit:
+	hideonnpc strnpcinfo(3);
+	close;
+}
+
+glastheim,54,82,7	script	Hel::alamemgi1	702,{
+	set .@npcname$, "[Hel]";
+	set .@pcname$, "[" + strcharinfo(0) + "]";
+	mes .@npcname$;
+	mes "Who are you?";
+	next;
+	mes .@pcname$;
+	mes "No, you, who are you?";
+	next;
+	mes .@npcname$;
+	mes "What do you want, mortal?";
+	mes "My name is Hel. I'm the sister of Fenrir and Jormungandr, daughter of Loki.";
+	mes "I'm the Guardian of Hell.";
+	mes "I was once as beautiful as Freya or Frigg.";
+	mes "but Thor, to punish my father, burned my face with his thunder.";
+	next;
+	mes .@npcname$;
+	mes "But then...I...I can't remember...The only thing remaining is that I think I can't be more impatient to kill this bastard.";
+	mes "The only thing I can remember is those words...They turn, again and again, in my head...";
+	mes "The Hellish Witch.";
+	if(countitem($memoryId[4]) >= 1)
+	{
+		next;
+		mes .@pcname$;
+		mes "Do you remember this?";
+		next;
+		mes .@npcname$;
+		mes "No. What is....";
+		mes "GRAAAAAAAAAAAAAAAAAAAAAA";
+		mes "My head!";
+		mes "Take that away!";
+		next;
+		mes .@pcname$;
+		mes "Sorry, I didn't thought it will...";
+		next;
+		mes .@npcname$;
+		mes "Well you were wrong!";
+		mes "Leave!";
+	}
+	else
+	{
+		next;
+		mes .@pcname$;
+		mes "Looks like all of you have memories loss.";
+		mes "You shouldn't try to think of it to hard.";
+		mes "It'll come back later...";
+	}
+	close;
+	
+OnUnhide:
+	hideoffnpc strnpcinfo(3);
+	end;
+	
+OnInit:
+	hideonnpc strnpcinfo(3);
+	close;
+}
+
+glastheim,54,82,7	script	Duneyrr::alamemgi2	702,{
+	set .@npcname$, "[Duneyrr]";
+	set .@pcname$, "[" + strcharinfo(0) + "]";
+	mes .@npcname$;
+	mes "Who are you?";
+	next;
+	mes .@pcname$;
+	mes "No, you, who are you?";
+	next;
+	mes .@npcname$;
+	mes "What do you want, mortal?";
+	mes "I'm Duneyrr, The Stagg. I live by eating the leaves of Yggdrasil.";
+	mes "I can't wait to drip my fang inside those filthy bastards flesh and blood.";
+	mes "Soon, our hate will be released...";
+	next;
+	mes .@npcname$;
+	mes "But then...I...I can't remember...";
+	mes "The only thing I can remember is those words...They turn, again and again, in my head...";
+	mes "The Demonic Stagg.";
+	if(countitem($memoryId[5]) >= 1)
+	{
+		next;
+		mes .@pcname$;
+		mes "Do you remember this?";
+		next;
+		mes .@npcname$;
+		mes "No. What is....";
+		mes "GRAAAAAAAAAAAAAAAAAAAAAA";
+		mes "My head!";
+		mes "Take that away!";
+		next;
+		mes .@pcname$;
+		mes "Sorry, I didn't thought it will...";
+		next;
+		mes .@npcname$;
+		mes "Well you were wrong!";
+		mes "Leave!";
+	}
+	else
+	{
+		next;
+		mes .@pcname$;
+		mes "Looks like all of you have memories loss.";
+		mes "You shouldn't try to think of it to hard.";
+		mes "It'll come back later...";
+	}
+	close;
+	
+OnUnhide:
+	hideoffnpc strnpcinfo(3);
+	end;
+	
+OnInit:
+	hideonnpc strnpcinfo(3);
+	close;
+}

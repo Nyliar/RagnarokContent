@@ -1,0 +1,203 @@
+//29368 -> Sleeping Girl
+//ars_fild21,147,348,5	script	Sleeping Girl::giquest38	584,{
+xmas_in,109,109,5	script	Sleeping Girl::giquest38	584,{
+	set .@npcname$, "[Sleeping Girl]";
+	mes .@npcname$;
+	mes "";
+	mes "...";
+	mes "*She's sleeping.*";
+	if (callfunc("IsPlayerOn") && SLEEPINGQ >= 1 && SLEEPINGQ < 5) 
+	{
+		mes "Repeat the lullaby.";
+		mes "One note at a time.";
+		set .@sleepTime, (6 - SLEEPINGQ);
+		set .startId, getcharid(3);
+		close2;
+		switch(SLEEPINGQ)
+		{
+			case 1:
+				copyarray .@note$[0], .lullabyNote1$[0], getarraysize(.lullabyNote1$);
+				break;
+			case 2:
+				copyarray .@note$[0], .lullabyNote2$[0], getarraysize(.lullabyNote2$);
+				break;
+			case 3:
+				copyarray .@note$[0], .lullabyNote3$[0], getarraysize(.lullabyNote3$);
+				break;
+			case 4:
+				copyarray .@note$[0], .lullabyNote4$[0], getarraysize(.lullabyNote4$);
+				break;
+			case 5:
+				copyarray .@note$[0], .lullabyNote5$[0], getarraysize(.lullabyNote5$);
+				break;
+		}
+		for(set .@i,0; .@i < getarraysize(.@note$); set .@i,.@i+1)
+		{
+			npctalk .@note$[.@i];
+			sleep 100 * .@sleepTime;
+		}
+		for(set .@i,0; .@i < getarraysize(.@note$); set .@i,.@i+1)
+		{
+			switch(rand(0,4))
+			{
+				case 0:
+					npctalk "";
+					break;
+				case 1:
+					npctalk "She turns while sleeping.";
+					break;
+				case 2:
+					npctalk "You can hear her snore.";
+					break;
+				case 3:
+					npctalk "ZZZZZZZzzzzzzzzzzzzzzz";
+					break;
+				case 4:
+					npctalk "";
+					break;
+			}
+			sleep 100 * .@sleepTime;
+		}
+		attachrid(.startId);
+		mes "She's listening.";
+		set .@ok, 1;
+		for(set .@i,0; .@i < getarraysize(.@note$); set .@i,.@i+1)
+		{
+			input .@note$;
+			if (.@note$ != .@note$[.@i])
+			{
+				set .@ok, 0;
+			}
+		}
+		if (.@ok == 0)
+		{
+			mes "You've failed somewhere.";
+			
+			set SLEEPINGQ, 1;
+		}
+		else
+		{
+			set SLEEPINGQ, SLEEPINGQ + 1;
+		}
+		if (SLEEPINGQ == 5)
+		{
+			mes "*She opens her eyes.";
+			mes "You've freed her from her curse.*";
+			mes "Thank you...Thank you so much...";
+			rentitem 29368, 60;
+			logmes "[Yggdrasil Memories] " + strcharinfo(0) + " obtains a rental " + getitemname(29368) + ".";
+			set SLEEPINGQ, 0;
+		}
+	}
+	close;
+
+OnInit:
+	setarray .lullabyNote1$[0], "Fa","La","Si","Sol","Do";
+	setarray .lullabyNote2$[0], "Re","Do","Si","La","Fa","Re","Mi","Do";
+	setarray .lullabyNote3$[0], "Fa","La","Si","Sol","Do","Re","Do","Si","La","Fa","Re","Mi","Do";
+	setarray .lullabyNote4$[0], "Mi","Re#","Sol","La","Do#","Si","La","Do b","Mi","Re#";
+	setarray .lullabyNote5$[0], "Fa","La","Mi","Do","Re#","La","Mi","Do","Re","Sol#","Si","La","Re","Mi","Fa","La","Do","Re","Sol","Mi","Re","Fa";
+	end;
+}
+
+//ars_fild21,370,116,5	script	Musician::giquest38-1	78,{
+xmas,157,128,5	script	Musician::giquest38-1	78,{
+	set .@npcname$, "[Musician]";
+	mes .@npcname$;
+	mes "Have you ever met a sleeping girl?";
+	mes "She's been cursed by a powerful witch.";
+	mes "Nothing can awake her. Except a specific lullaby.";
+	mes "But this music has been lost long ago.";
+	if (callfunc("IsPlayerOn"))
+	{
+		set SLEEPINGQ, 1;
+	}
+	close;
+}
+
+//29367 -> 777
+//invek,159,61,1	script	Machine Game::giquest39	563,{
+que_job,91,91,1	script	Machine Game::giquest39	563,{
+	set .@npcname$, "[Machine Game]";
+	mes .@npcname$;
+	mes "";
+	mes "Try to get 777 to get your bet multiplied by 10.";
+	mes "Starting price: " + .price;
+	next;
+	mes .@npcname$;
+	mes "Do you wanna pull the trigger?";
+	if (select("Yes","No") == 1)
+	{
+		set .@minValue, 0;
+		if (Zeny >= .price)
+		{
+			set Zeny, Zeny - .price;
+			if (GMLUCK == 1)
+			{
+				set .@minValue, 7;
+				set GMLUCK, 0;
+			}
+			set .@maxValue, 9;
+			if (TESTTRIGGER > 30)
+			{
+				set .@maxValue, 7;
+			}
+			else if (TESTTRIGGER > 15)
+			{
+				set .@maxValue, 8;
+			}
+			else if (TESTTRIGGER > 5)
+			{
+				set .@maxValue, 9;
+			}
+			set .@firstValue, rand(.@minValue,.@maxValue);
+			set .@secondValue, rand(.@minValue,.@maxValue);
+			set .@thirdValue, rand(.@minValue,.@maxValue);
+			set .@trigger$, "" + .@firstValue + " " + .@secondValue + " " + .@thirdValue;
+			next;
+			mes "First Value: " + .@firstValue;
+			next;
+			mes "Second Value: " + .@secondValue;
+			next;
+			mes "Third Value: " + .@thirdValue;
+			next;
+			mes "You've obtained: ";
+			mes .@trigger$;
+			if (callfunc("IsPlayerOn"))
+			{
+				if (.@trigger$ == "7 7 7")
+				{
+					mes "Congratulations!";
+					rentitem 29367, 60;
+					logmes "[Yggdrasil Memories] " + strcharinfo(0) + " obtains a rental " + getitemname(29367) + ".";
+					set Zeny, Zeny + (.price * 10);
+				}
+				else
+				{
+					set TESTTRIGGER, TESTTRIGGER + 1;
+				}
+			}
+			else
+			{
+				if (.@trigger$ == "7 7 7")
+				{
+					mes "Congratulations!";
+					set Zeny, Zeny + (.price * 10);
+				}
+			}
+		}
+		else
+		{
+			mes "You lack some money.";
+		}
+	}
+	else
+	{
+		mes "Come back later.";
+	}
+	close;
+	
+OnInit:
+	set .price, 15000;
+	end;
+}

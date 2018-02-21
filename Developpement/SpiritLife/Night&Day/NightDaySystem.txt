@@ -1,0 +1,40 @@
+prt_church,91,127,5	script	NightDaySystem	HIDDEN_WARP_NPC,{
+	end;
+
+OnMinute00:
+	if(gettime(2) == $dayduration)
+	{
+		if(!isnight())
+		{
+			night();
+			goto OnDisableMemories;
+		}
+	}
+	else if(gettime(GETTIME_HOUR) == 0)
+	{
+		//midnight, start day duration
+		day();
+		goto OnEnableMemories;
+	}
+	end;
+	
+OnWhisperGlobal:
+	debugmes "current day: " + $dayduration;
+	end;
+	
+OnReinit:
+	set $dayduration, 0; //0 for no day, otherwise, the hour it is supposed to switch to day mode (european type)
+	end;
+	
+OnDisableMemories:
+	//Disable day content / enable night content
+	end;
+	
+OnEnableMemories:
+	//Disable night content / enable day content
+	end;
+	
+OnInit:
+	night();
+	end;
+}

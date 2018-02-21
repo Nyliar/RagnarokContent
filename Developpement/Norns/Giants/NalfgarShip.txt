@@ -1,0 +1,1123 @@
+//===== Alayne Scripts =======================================
+//= Nalfgar Wreck Instance
+//===== By: ================================================== 
+//= Alayne
+//===== Current Version: ===================================== 
+//= 1.0
+//===== Compatible With: ===================================== 
+//= rAthena SVN
+//= hercules SVN
+//===== Description: ========================================= 
+//
+//= An instance based over Nalfgar, the Ship leaded by Loki
+//
+//===== Todo Remaining: ======================================
+//
+//===== Additional Comments: =================================
+//
+//============================================================
+
+un_myst,163,38,5	script	Nalfgar Wreck::alahren	CLEAR_NPC,{
+OnStart:
+	set .@party_id, getcharid(1);
+	set .@nw_leader, ( getcharid(0) == getpartyleader(.@party_id,2) );
+
+	set $instance_nw_id, -1;
+	
+	//RATHENA
+	//set .@has_instance, $instance_nw_id == getcharid(1);
+	//HERCULES
+	set .@has_instance, has_instance(.map$[0], $nw_instance);
+	
+	set .@instance_delay, ( instance_delay_nw - gettimetick(2) );
+
+	set .@npcname$, "[" + .instance_name$ + "]";
+	mes .@npcname$;
+	mes "This is the entrance of " + .instance_name$ + ".";
+	mes "The more you look at it, the more you feel disturb. Something's wrong happening in there.";
+	if( .@instance_delay > 0 )
+	{
+		set .@hours, .@instance_delay / (60 * 60);
+		set .@remaining, .@instance_delay - .@hours * (60 * 60);
+		set .@minutes, .@remaining / (60);
+		set .@remaining, .@remaining - .@minutes * (60);
+		set .@seconds, .@remaining;
+		mes "You have to wait : ^FF0000"+ .@hours +" Hours, " + .@minutes + " Minutes and " + .@seconds + " Seconds.^000000";
+		//close;
+	}
+	if (.requiredItem != -1  && countitem(.requiredItem) < 1)
+	{
+		mes "You decide to step back.";
+		mes "At no cost you'll enter in that place without being well prepared.";
+		close;
+	}
+	switch( select( 
+		(( .@party_id && .@nw_leader && !.@has_instance )?"Create " + .instance_name$:""),
+		(( .@party_id && .@has_instance )?"Enter " + .instance_name$:""),
+		(( .@party_id && .@nw_leader && .@has_instance )?"Destroy " + .instance_name$:""),
+	"Nevermind."
+		)){
+	case 1:
+		getpartymember .@party_id,2;
+		if( .min_party_member >= 1 ){
+			set .@origin, getcharid(3);
+			set .@gettimetick, gettimetick(2);
+			for( set .@i, 0; .@i < $@partymembercount; set .@i, .@i+1 )
+				if( attachrid( $@partymemberaid[.@i] ) ){
+					set .@member_count, .@member_count + 1;
+					if( BaseLevel < .base_level[0] || BaseLevel > .base_level[1] ) set .@fail, .@fail|1;
+					if( Zeny < .instance_zeny ) set .@fail, .@fail|2;
+					if( instance_delay_nw > .@gettimetick ) set .@fail, .@fail|4;
+					if( .@fail ){
+						set .@name$, strcharinfo(0);
+						break;
+					}
+				}
+			attachrid( .@origin );
+		}
+		
+		//check that nobody else is inside
+		for(set .@i,1; .@i<=getarraysize($nwMap$); set .@i,.@i+1)
+		{
+			if (getmapusers(instance_mapname($nwMap$[.@i], $nw_instance)) > 0) {
+				mes "Another team is already in the " + .instance_name$ + ". I can't send you there, sorry.";
+				close;
+			}
+		}
+		
+		//clean any previously remaining instance
+		if($nw_instance != -1)
+		{
+			instance_destroy $nw_instance;
+			set $nw_instance, -1;
+			set $instance_nw_id, -1;
+		}
+		
+		if( .@name$ != "" && .@fail ){
+			mes "^FF0000[ Failed ]^000000";
+			mes "^0055FF"+.@name$+"^000000, You cannot join right now.";
+			mes " ";
+			mes "^FF0000[ Reason: ]^000000";
+			if( .@fail & 1 ) mes "^777777You must be Level: "+.base_level[0]+" - "+.base_level[1]+"^000000";
+			if( .@fail & 2 ) mes "^777777You need "+ .instance_zeny +" Zeny^000000";
+			if( .@fail & 4 ) mes "^777777You still have cooldown.^000000";
+			//break;
+		}
+		
+		getpartymember getcharid(1),0;
+		if (instance_check_party(.@party_id, .min_party_member, .base_level[0], .base_level[1]) == 0) {
+			mes "^0055FF[ "+.instance_name$+" ]^000000";
+			mes "Make or join a party with at least "+.min_party_member+" member and try again, with level between " +.base_level[0] + " and " + .base_level[1] + ".";
+		}
+		else{
+			//RATHENA
+			//set $nw_instance, instance_create( .instance_name$ );
+			//HERCULES
+			set $nw_instance, instance_create(.instance_name$, .@party_id, IOT_PARTY);
+			if( $nw_instance < 0 ) {
+				npctalk .instance_name$ + " reservation failed.";
+				mes "^0000FF"+ .instance_name$ +" ^000000 - Reservation Failed!";
+				close;
+			}
+			mes "^0055FF[ "+.instance_name$+" ]^000000";
+			mes "^0000FF"+.instance_name$+" ^000000 - Reserved";
+			set .@gettimetick, gettimetick(2);
+			getpartymember .@party_id,2;
+			for( set .@i, 0; .@i < $@partymembercount; set .@i, .@i+1 )
+				if( attachrid( $@partymemberaid[.@i] ) ){
+					set instance_delay_lastr, ( .@gettimetick + ( .instance_delay ));
+					set Zeny, Zeny - .instance_zeny;
+					dispbottom "["+.instance_name$+"] -"+ .instance_zeny +" Zeny and Instance Cooldown Applied.";
+				}
+			attachrid( .@origin );
+			npctalk .instance_name$ + " has been generated for Party - " + getpartyname( .@party_id );
+			
+			set $instance_nw_id, getcharid(1);
+			
+			//HERCULES
+			for( set .@i, 0; .@i < getarraysize($nwMap$); set .@i,.@i+1 )
+			{
+				if( instance_attachmap( $nwMap$[.@i],$nw_instance ) == "" ){
+					setmapflag $nwMap$[.@i],mf_zone,"Memorial Dungeon";
+					npctalk .instance_name$ + " reservation failed due to map attach failure.";
+					mes "- ^FF0000Reservation Failed!^000000";
+					instance_destroy( $nw_instance );
+					set $nw_instance, -1;
+					set $instance_nw_id, -1;
+					close;
+				}
+			}
+			instance_set_timeout .instance_delay,300,$nw_instance;
+			instance_init($nw_instance);
+			
+			//disable unused npcs for now
+ 		}
+	case 2:
+		if( $instance_nw_id != getcharid(1)){
+			mes .instance_name$ + " doesn't exist for Party - "+getpartyname( .@party_id );
+		}
+		else{
+			//RATHENA
+			//switch(instance_enter(.instance_name$)) {
+			//	default:
+			//		mes "An unknown error has occurred.";
+			//		close;
+			//	case 2:
+			//		mes "The memorial dungeon " + .instance_name$ + " does not exist.";
+			//		mes "The party leader did not generate the dungeon yet.";
+			//		close;
+			//	case 1:
+			//		mes "You can enter the dungeon after making the party.";
+			//		close;
+			//	case 0:
+			//		mapannounce $nwMap$[0], strcharinfo(0)+" from party, " +getpartyname( .@party_id )+", lr entering the dungeon, "+.instance_name$+".",bc_map,"0x00ff99",FW_NORMAL,12;
+			//		end;
+			//}
+			
+			//HERCULES
+			if( has_instance( $nwMap$[0] ) == "" ){
+				mes "Nalfgar Wreck doesnt exist for Party - "+getpartyname( .@party_id );
+			}
+			else{
+				warp $nwMap$[0],141,24;
+				instance_announce $nw_instance, getpartyname(getcharid(1))+"  entered in the "+.instance_name$+"!",bc_map,"0x00ff99";
+			}
+		}
+		break;
+	case 3:
+		mes .instance_name$ + " Destroyed.";
+		instance_destroy $nw_instance;
+		set $nw_instance, -1;
+		set $instance_nw_id, -1;
+		break;
+	default: 
+		break;
+}
+close;
+
+OnInit:
+	setarray .base_level[0],130, 175;
+	setarray $nwMap$[0],"1@nw","2@nw","3@nw";
+	set .map_size, getarraysize( $nwMap$ );
+	set .min_party_member, 1;
+	set .instance_zeny, 0;
+	set .instance_delay, 7200;
+	set $nw_timer_delay, 3600; //1 hour to clean the instance
+	set .instance_name$, "Nalfgar Wreck";
+	set $nw_instance, -1;
+	set $instance_nw_id, -1;
+	set .requiredItem, -1; //define the required item to enter in the instance. Leave to -1 to disable
+	end;
+}
+
+
+1@nw,101,107,4	script	nalfgar_wreck	HIDDEN_WARP_NPC,2,2,{
+function summon_normal;
+function summon_guardian;
+end;
+
+OnInstanceInit:
+	set .@map$, strnpcinfo(4);
+	set .@npc_name$, instance_npcname( strnpcinfo(0), $nw_instance );
+	
+	set $instance_nw_level, 0;
+	set .max_nw_level, 7;
+	set $nalfgarId, -1;
+	
+	set .timerCount, 0;
+	set $iceSecretFound, 0;
+	set $fireSecretFound, 0;
+	set $dragonsSecretFound, 0;
+	set $wolfsSecretFound, 0;
+	set $snakesSecretFound, 0;
+	
+	set .invicibleDeactivationCount, -1;
+	 
+	initnpctimer;
+	end;
+
+function	summon_normal	{
+	set .@map$, getarg(0);
+	set .@npcname$, getarg(1);
+	set .@increaseFloor, getarg(2);
+	
+	setarray .@coordinate,216,225,216,225;
+	
+	if(.@increaseFloor == 1)
+	{
+		$instance_nw_level++;
+	}
+	
+	switch( $instance_nw_level ){
+		case 1:
+			//Invincible dead monsters
+			setarray .@monster,3251,3252,3251,3252,3253;
+			setarray .@amount,20,5,20,5,1;
+			break;
+		case 2:
+			//Ice Giants
+			setarray .@monster,3251,3252,3251,3252,3253;
+			setarray .@amount,20,5,20,5,1;
+			break;
+		case 3:
+			//Fire Giants
+			setarray .@monster,3251,3252,3251,3252,3253;
+			setarray .@amount,20,5,20,5,1;
+			break;
+		case 4:
+			//Dragons
+			setarray .@monster,3251,3252,3251,3252,3253;
+			setarray .@amount,20,5,20,5,1;
+			break;
+		case 5:
+			//Wolfs
+			setarray .@monster,3251,3252,3251,3252,3253;
+			setarray .@amount,20,5,20,5,1;
+			break;
+		case 6:
+			//Snakes
+			setarray .@monster,3251,3252,3251,3252,3253;
+			setarray .@amount,20,5,20,5,1;
+			break;
+		default:
+			mapannounce .@map$, "[ Nalfgar Wreck ] : All Floors has been cleared, congratulation. Champions Arena close in 30 seconds.",bc_map,"0x00FF99";
+			sleep2 15000;
+			instance_destroy $nw_instance;
+			set $nw_instance, -1;
+			set $instance_nw_id, -1;
+			return;
+	}
+	
+	set .@monster_size, getarraysize( .@monster );
+	for( set .@i, 0; .@i < .@monster_size; set .@i,.@i+1 ){
+		set .@target_amount, ( .@amount[.@i] );
+		set .@size, 0;
+		set .@clabel$, .@npcname$ + "::OnNormalDied";
+		areamonster(.@map$,.@coordinate[0],.@coordinate[1],.@coordinate[2],.@coordinate[3],"--ja--",.@monster[.@i],.@target_amount,.@clabel$,.@size);
+	}
+	
+	return;
+}
+
+function	summon_guardian	{
+	set .@map$, getarg(0);
+	set .@npcname$, getarg(1);
+	set .@label$, .@npcname$ + "::OnGuardianDied";
+	
+	setarray .@coordinate,216,225,216,225;
+			
+	switch( $instance_nw_level ){
+		case 2:
+			//Hrym
+			setarray .@monster,3254,3254;
+			set .@secretFound, $iceSecretFound;
+			break;
+		case 3:
+			//Surt
+			setarray .@monster,3254;
+			set .@secretFound, $fireSecretFound;
+			break;
+		case 4:
+			//Nydd
+			setarray .@monster,3254;
+			set .@secretFound, $dragonsSecretFound;
+			break;
+		case 5:
+			//Jormungand
+			setarray .@monster,3254;
+			set .@secretFound, $snakesSecretFound;
+			break;
+		case 6:
+			//Fenrir
+			setarray .@monster,3254;
+			set .@secretFound, $wolfsSecretFound;
+			break;
+		case 7:
+			//Loki
+			setarray .@monster,3254;
+			set .@secretFound, 0;
+			set .invicibleDeactivationCount, 0;
+			break;
+		default: 
+			mapannounce .@map$,"[ Nalfgar Wreck ] : Cleared!! Congratulation!!",bc_map,0x00FF99;
+			return;
+	}
+	set .@monster_size, getarraysize( .@monster );
+	for( set .@i, 0; .@i < .@monster_size; set .@i,.@i+1 ){
+		set .@target_amount, 1;
+		set $nalfgarId, areamonster(.@map$,.@coordinate[0],.@coordinate[1],.@coordinate[2],.@coordinate[3],"Hel",.@monster[.@i],.@target_amount,.@label$);
+		if(.@secretFound == 0)
+		{
+			set .invicibleDeactivationCount, 0;
+			unitskilluseid($nalfgarId, NPC_INVINCIBLE, 1);
+		}
+	}
+	return;
+}
+
+OnCloneDied:
+	set .@map$, strnpcinfo(4);
+	set .@npc_name$, instance_npcname( strnpcinfo(0), $nw_instance );
+	set .@mob_dead_num, mobcount(.@map$,.@npc_name$+"::OnCloneDied" );
+	if(.hiding == 1)
+	{
+		unitskilluseid($nalfgarId, TF_HIDING, 1);
+	}
+	end;
+
+OnNormalDied:
+	set .@map$, strnpcinfo(4);
+	set .@npc_name$, instance_npcname( strnpcinfo(0), $nw_instance );
+	set .@mob_dead_num, mobcount(.@map$,.@npc_name$+"::OnNormalDied" );
+	
+	if( .@mob_dead_num == 0 ){
+		detachrid;
+		sleep2 1500;
+		
+		if($nw_instance != 1 && $nw_instance != 7)
+		{
+			//repop
+			summon_normal( .@map$, .@npc_name$, 0 );
+		}
+	}
+	end;
+	
+OnGuardianDied:
+	set .@map$, strnpcinfo(4);
+	set .@npc_name$, instance_npcname( strnpcinfo(0), $nw_instance );
+	set .@mob_dead_num, mobcount(.@map$,.@npc_name$+"::OnGuardianDied" );
+	set .@party_id, getcharid(1);
+	
+	if( !.@mob_dead_num ){
+		if ($instance_nw_level == 2)
+		{			
+			instance_announce $nw_instance, "[ Loki ] You defeated the Ice Giants? Wonderfull! Let's see what Surt can do now!", bc_map, 0xFF0000;
+			sleep2 15000;
+			set .@map$, strnpcinfo(4);
+			set .@npc_name$, instance_npcname( strnpcinfo(0), $nw_instance );
+			//pop monsters
+			summon_normal( .@map$,.@npc_name$, 1 );
+			summon_guardian( .@map$,.@npc_name$ );	
+		}
+		else if ($instance_nw_level == 3)
+		{			
+			instance_announce $nw_instance, "[ Loki ] Hum...The Fire Giants aren't enough either, hu? How about Dragons?", bc_map, 0xFF0000;
+			sleep2 15000;
+			set .@map$, strnpcinfo(4);
+			set .@npc_name$, instance_npcname( strnpcinfo(0), $nw_instance );
+			//pop monsters
+			summon_normal( .@map$,.@npc_name$, 1 );
+			summon_guardian( .@map$,.@npc_name$ );	
+		}
+		else if ($instance_nw_level == 4)
+		{			
+			instance_announce $nw_instance, "[ Loki ] W...The Dragons too? What about the Snakes? Jormungand! You're turn, son!", bc_map, 0xFF0000;
+			sleep2 15000;
+			set .@map$, strnpcinfo(4);
+			set .@npc_name$, instance_npcname( strnpcinfo(0), $nw_instance );
+			//pop monsters
+			summon_normal( .@map$,.@npc_name$, 1 );
+			summon_guardian( .@map$,.@npc_name$ );	
+		}
+		else if ($instance_nw_level == 5)
+		{			
+			instance_announce $nw_instance, "[ Loki ] Seriously? There's no one to stop them? Wolves, Fenrir, you're turn!", bc_map, 0xFF0000;
+			sleep2 15000;
+			set .@map$, strnpcinfo(4);
+			set .@npc_name$, instance_npcname( strnpcinfo(0), $nw_instance );
+			//pop monsters
+			summon_normal( .@map$,.@npc_name$, 1 );
+			summon_guardian( .@map$,.@npc_name$ );	
+		}
+		else if ($instance_nw_level == 6)
+		{			
+			instance_announce $nw_instance, "[ Loki ] I'm surrounded by weaks! I'll handle that myself! Get ready, humans!!", bc_map, 0xFF0000;
+			sleep2 15000;
+			set .@map$, strnpcinfo(4);
+			set .@npc_name$, instance_npcname( strnpcinfo(0), $nw_instance );
+			$instance_nw_level++;
+			summon_guardian( .@map$,.@npc_name$ );
+		}
+		else if ($instance_nw_level == .max_nw_level)
+		{						
+			killmonsterall .@map$, "All";
+			enablenpc instance_npcname( "alanwve2", $nw_instance );
+			enablenpc instance_npcname( "alanwur2", $nw_instance );
+			enablenpc instance_npcname( "alanwsk2", $nw_instance );				
+			end;
+		}
+		
+		sleep2 15000;
+		summon_normal( .@map$,.@npc_name$ );
+	}
+	end;
+	
+OnTimer10000:
+	//each 10s, increase timer
+	set .timerCount, .timerCount + 10;
+	if(.timerCount == $nw_timer_delay)
+	{
+		instance_announce $nw_instance, "[ Nalfgar Wreck ] The Dimension collapse! You have to flee, right now!", bc_map, 0xFF0000;
+		sleep2 15000;
+		instance_destroy $nw_instance;
+		set $nw_instance, -1;
+		set $instance_nw_id, -1;
+		stopnpctimer;
+	}
+	if(.invicibleDeactivationCount >= 0)
+	{
+		set .invicibleDeactivationCount, .invicibleDeactivationCount + 10;
+		if($instance_nw_level < .max_nw_level)
+		{
+			if(.invicibleDeactivationCount >= 60)
+			{
+				unitskilluseid($nalfgarId, NPC_INVINCIBLEOFF, 1);
+				set .invicibleDeactivationCount, -1;
+			}
+		}
+		else
+		{
+			if(.invicibleDeactivationCount >= 60)
+			{
+				//each minute, Loki will play a new trick
+				unitskilluseid($nalfgarId, TF_HIDING, 1);
+				set .hiding, 0;
+				
+				if(.reduced == 1)
+				{
+					getpartymember .@party_id,2;
+					set .@npc_name$, instance_npcname( strnpcinfo(0), $nw_instance );
+					getmapxy(.@map$, .@x, .@y, UNITTYPE_MOB, $nalfgarId);
+					for( set .@i, 0; .@i < $@partymembercount; set .@i, .@i+1 )
+						if( attachrid( $@partymemberaid[.@i] ) && strnpcinfo(4) == .@map$ ){
+							charcommand "#size " + strcharinfo(0) + " 0";
+						}	
+					instance_announce $nw_instance, "[Loki] How, you came back?!", bc_map, 0xFF0000;
+				}
+				switch(rand(1,7))
+				{
+					case 1:
+						//duplicate + hide
+						set .hiding, 1;
+						unitskilluseid($nalfgarId, TF_HIDING, 10);
+						set .@npc_name$, instance_npcname( strnpcinfo(0), $nw_instance );
+						getmapxy(.@map$, .@x, .@y, UNITTYPE_MOB, $nalfgarId);
+						set .@label$, .@npc_name$ + "::OnCloneDied";
+						set $tempLokiId, areamonster(.@map$,.@x-10,.@y-10,.@x+10,.@y+10,"Loki",.@monster[.@i],10,.@label$);
+						for(set .@i,0; .@i<10; set .@i,.@i+1)
+						{
+							setunitdata($tempLokiId[.@i], UDT_HP, 10);
+						}
+						instance_announce $nw_instance, "[Loki] I'm the master of tricks!", bc_map, 0xFF0000;
+						break;
+					case 2:
+						//players clones
+						getpartymember .@party_id,2;
+						set .@npc_name$, instance_npcname( strnpcinfo(0), $nw_instance );
+						getmapxy(.@map$, .@x, .@y, UNITTYPE_MOB, $nalfgarId);
+						for( set .@i, 0; .@i < $@partymembercount; set .@i, .@i+1 )
+							if( attachrid( $@partymemberaid[.@i] ) && strnpcinfo(4) == .@map$ ){
+								clone(.@map$, .@x, .@y, .@npc_name$ + "::OnCloneDied", $@partymembercid);
+							}	
+						instance_announce $nw_instance, "[Loki] You all belong to me!", bc_map, 0xFF0000;
+						break;
+					case 3:
+						//magic mirror + physical mirror
+						unitskilluseid($nalfgarId, NPC_MAGICMIRROR, 10);
+						unitskilluseid($nalfgarId, LG_REFLECTDAMAGE, 5);
+						instance_announce $nw_instance, "[Loki] You wont touch me anymore now!", bc_map, 0xFF0000;
+						break;
+					case 4:
+						//specific skill splash use
+						unitskilluseid($nalfgarId, SR_WINDMILL, 1);	
+						instance_announce $nw_instance, "[Loki] Your place is on floor, next to my feets!", bc_map, 0xFF0000;					
+						break;
+					case 5:
+						//size reduction for players
+						set .reduced, 1;
+						getpartymember .@party_id,2;
+						set .@npc_name$, instance_npcname( strnpcinfo(0), $nw_instance );
+						getmapxy(.@map$, .@x, .@y, UNITTYPE_MOB, $nalfgarId);
+						for( set .@i, 0; .@i < $@partymembercount; set .@i, .@i+1 )
+							if( attachrid( $@partymemberaid[.@i] ) && strnpcinfo(4) == .@map$ ){
+								charcommand "#size " + strcharinfo(0) + " 1";
+							}	
+						instance_announce $nw_instance, "[Loki] You all belong to me!", bc_map, 0xFF0000;
+						break;
+					case 6:
+						//confusion + slow cast for players
+						unitskilluseid($nalfgarId, NPC_SLOWCAST, 5);
+						unitskilluseid($nalfgarId, NPC_WIDECONFUSE, 5);
+						instance_announce $nw_instance, "[Loki] Will you do something usefull?!", bc_map, 0xFF0000;
+						break;
+					case 7:
+						//stuff failure
+						getpartymember .@party_id,2;
+						set .@npc_name$, instance_npcname( strnpcinfo(0), $nw_instance );
+						getmapxy(.@map$, .@x, .@y, UNITTYPE_MOB, $nalfgarId);
+						for( set .@i, 0; .@i < $@partymembercount; set .@i, .@i+1 )
+							if( attachrid( $@partymemberaid[.@i] ) && strnpcinfo(4) == .@map$ ){
+								set .@rand, rand(5);
+								for(.@i = 0; .@i<.@rand; .@i++)
+									unequip(rand(EQI_HEAD_TOP,EQI_HEAD_LOW));
+							}	
+						instance_announce $nw_instance, "[Loki] You all belong to me!", bc_map, 0xFF0000;
+						break;
+				}
+			}
+		}
+	}
+	setnpctimer 0;
+	end;
+	
+OnFirstFloorOn:
+	set .@map$, strnpcinfo(4);
+	set .@npc_name$, instance_npcname( strnpcinfo(0), $nw_instance );
+	//pop monsters
+	summon_normal( .@map$,.@npc_name$, 1 );
+	instance_announce $nw_instance, "[Nalfgar Wreck] All species living here have a weak point.", bc_map, 0xFF0000;
+	sleep2 1500;	
+	instance_announce $nw_instance, "[Nalfgar Wreck] Your goal is to find it.", bc_map, 0xFF0000;
+	sleep2 1500;	
+	end;
+	
+OnSecondFloorOn:
+	set .@map$, strnpcinfo(4);
+	set .@npc_name$, instance_npcname( strnpcinfo(0), $nw_instance );
+	//pop monsters
+	summon_normal( .@map$,.@npc_name$, 1 );
+	summon_guardian( .@map$,.@npc_name$ );
+	end;
+}
+
+1@nw,141,34,3	script	Frost Crystal#1249::alanwfc	4_F_NYDHOG,{
+	mes "[Frost Crystal]";
+	mes "There's a strange coffin in the middle of the room.";
+	
+	progressbar "ffff00",1;
+	set .@mobId, atoi(strcharinfo(2));
+	set .@mob_id_transform, getstatus(SC_MONSTER_TRANSFORM,1);
+	if (.@mob_id_transform == .@mobId || .@mob_id_transform < 1) {
+		montransform .@mobId,180000;
+		//RATHENA
+		//transform .@mobId,180000; //
+		//HERCULES
+		montransform .@mobId,180000;
+		close;
+	}
+	mes "^ff0000In transformation";
+	mes "You are allready disguised.^000000";
+	close;
+	
+OnInstanceInit:
+OnEnable:
+	enablenpc strnpcinfo(3);
+	end;
+}
+
+1@nw,141,34,3	duplicate(alanwfc)	Lava Stone#1249::alanwls	4_F_NYDHOG
+1@nw,141,34,3	duplicate(alanwfc)	Ghost Veil#1249::alanwgv	4_F_NYDHOG
+1@nw,141,34,3	duplicate(alanwfc)	Wolf Bone#1249::alanwwb	4_F_NYDHOG
+1@nw,141,34,3	duplicate(alanwfc)	Snake Scale#1249::alanwss	4_F_NYDHOG
+
+1@nw,10,24,0	script	alert#1246::alanwal	HIDDEN_WARP_NPC,10,10,{
+OnTouch_:
+	if (getstatus(SC_MONSTER_TRANSFORM,1) != 1246 
+			&& getstatus(SC_MONSTER_TRANSFORM,1) != 1246  
+			&& getstatus(SC_MONSTER_TRANSFORM,1) != 1246 
+			&& getstatus(SC_MONSTER_TRANSFORM,1) != 1246 
+			&& getstatus(SC_MONSTER_TRANSFORM,1) != 1246 ) 
+	{
+		set .@count, rand(100) % 10;
+		getmapxy .@map$, .@x, .@y, 0;
+		set .@npc_name$, instance_npcname( "nalfgar_wreck", $nw_instance );
+		set .@event$, .@npc_name$ + "::OnAlertMobDead";
+		
+		specialeffect atoi(strnpcinfo(2));
+		disablenpc strnpcinfo(3);
+		
+		killmonster strnpcinfo(4), .@event$;
+		areamonster strnpcinfo(4),(.@x-10),(.@y-10),(.@x+10),(.@y+10), "Giants Guards",atoi(strnpcinfo(2)),.@count, .@event$;
+		
+		initnpctimer;
+	}
+	end;
+
+OnTimer45000:
+	enablenpc strnpcinfo(3);
+	killmonster strnpcinfo(4), instance_npcname( "nalfgar_wreck", $nw_instance ) +"::OnAlertMobDead";
+	stopnpctimer;
+	end;
+}
+
+1@nw,10,24,0	duplicate(alanwal)	alert#1246::alanwal2	HIDDEN_WARP_NPC,10,10
+1@nw,10,24,0	duplicate(alanwal)	alert#1246::alanwal3	HIDDEN_WARP_NPC,10,10
+1@nw,10,24,0	duplicate(alanwal)	alert#1246::alanwal4	HIDDEN_WARP_NPC,10,10
+1@nw,10,24,0	duplicate(alanwal)	alert#1246::alanwal5	HIDDEN_WARP_NPC,10,10
+1@nw,10,24,0	duplicate(alanwal)	alert#1246::alanwal6	HIDDEN_WARP_NPC,10,10
+1@nw,10,24,0	duplicate(alanwal)	alert#1246::alanwal7	HIDDEN_WARP_NPC,10,10
+1@nw,10,24,0	duplicate(alanwal)	alert#1246::alanwal8	HIDDEN_WARP_NPC,10,10
+1@nw,10,24,0	duplicate(alanwal)	alert#1246::alanwal9	HIDDEN_WARP_NPC,10,10
+1@nw,10,24,0	duplicate(alanwal)	alert#1246::alanwal10	HIDDEN_WARP_NPC,10,10
+
+1@nw,141,34,3	script	Hrym::alanwhr	4_F_NYDHOG,{
+	mes "[Hrym]";
+	mes "What are you doing here?";
+	mes "Don't you think you have something else to do?";
+	if(select("What's our weak point again?","What should I do?","It's hot in there, isn't it?"))
+	{
+		case 0:
+			next;
+			mes "[Hrym]";
+			mes "What? Alert! A spy has ventured!";
+			
+			set .@count, rand(100) % 10;
+			getmapxy .@map$, .@x, .@y, 0;
+			set .@npc_name$, instance_npcname( "nalfgar_wreck", $nw_instance );
+			set .@event$, .@npc_name$ + "::OnAlertMobDead";
+			
+			//specialeffect atoi(strnpcinfo(2));
+			disablenpc strnpcinfo(3);
+			
+			killmonster strnpcinfo(4), .@event$;
+			areamonster strnpcinfo(4),(.@x-10),(.@y-10),(.@x+10),(.@y+10), "Giants Guards",atoi(strnpcinfo(2)),.@count, .@event$;
+			break;
+		case 1:
+			next;
+			mes "[Hrym]";
+			mes "What? Do you think I know everything everyone of you should do?";
+			mes "We're preparing to battle. I don't know what you should do, this is not my duty.";
+			percentheal -50, -50;
+			next;
+			mes "[Hrym]";			
+			mes "Feel the Frost. It'll makes you stronger than anything else.";
+			mes "Now go, and get prepared.";
+			set $iceSecretFound, 1;
+			break;
+		case 2:
+			next;
+			mes "[Hrym]";
+			mes "Hum...Kind of. We, Ice giants, aren't weak enough to melt at this warm air.";
+			mes "Don't you know that?";
+			break;
+	}
+	close;
+	
+OnInstanceInit:
+OnEnable:
+	enablenpc strnpcinfo(3);
+	end;
+}
+
+1@nw,141,34,3	script	Surt::alanwsu	4_F_NYDHOG,{
+	mes "[Surt]";
+	mes "What are you doing here?";
+	mes "Don't you think you have something else to do?";
+	if(select("What's our weak point again?","What should I do?","It's cold in there, isn't it?"))
+	{
+		case 0:
+			next;
+			mes "[Surt]";
+			mes "What? Alert! A spy has ventured!";
+			
+			set .@count, rand(100) % 10;
+			getmapxy .@map$, .@x, .@y, 0;
+			set .@npc_name$, instance_npcname( "nalfgar_wreck", $nw_instance );
+			set .@event$, .@npc_name$ + "::OnAlertMobDead";
+			
+			//specialeffect atoi(strnpcinfo(2));
+			disablenpc strnpcinfo(3);
+			
+			killmonster strnpcinfo(4), .@event$;
+			areamonster strnpcinfo(4),(.@x-10),(.@y-10),(.@x+10),(.@y+10), "Giants Guards",atoi(strnpcinfo(2)),.@count, .@event$;
+			break;
+		case 1:
+			next;
+			mes "[Surt]";
+			mes "What? Do you think I know everything everyone of you should do?";
+			mes "We're preparing to battle. I don't know what you should do, this is not my duty.";
+			percentheal -50, -50;
+			next;
+			mes "[Surt]";			
+			mes "Feel the Warm. It'll makes you stronger than anything else.";
+			mes "Now go, and get prepared.";
+			set $fireSecretFound, 1;
+			break;
+		case 2:
+			next;
+			mes "[Surt]";
+			mes "Hum...Kind of. We, Fire giants, aren't weak enough to cringe if the temperature isn't hot enough.";
+			mes "Don't you know that?";
+			break;
+	}
+	close;
+	
+OnInstanceInit:
+OnEnable:
+	enablenpc strnpcinfo(3);
+	end;
+}
+
+1@nw,141,34,3	script	Nydhogg::alanwny	4_F_NYDHOG,{
+	mes "[Nydhogg]";
+	mes "What are you doing here?";
+	mes "Don't you think you have something else to do?";
+	if(select("What's our weak point again?","What should I do?","Don't you feel a bit...oppressed here?"))
+	{
+		case 0:
+			next;
+			mes "[Nydhogg]";
+			mes "What? Alert! A spy has ventured!";
+			
+			set .@count, rand(100) % 10;
+			getmapxy .@map$, .@x, .@y, 0;
+			set .@npc_name$, instance_npcname( "nalfgar_wreck", $nw_instance );
+			set .@event$, .@npc_name$ + "::OnAlertMobDead";
+			
+			//specialeffect atoi(strnpcinfo(2));
+			disablenpc strnpcinfo(3);
+			
+			killmonster strnpcinfo(4), .@event$;
+			areamonster strnpcinfo(4),(.@x-10),(.@y-10),(.@x+10),(.@y+10), "Giants Guards",atoi(strnpcinfo(2)),.@count, .@event$;
+			break;
+		case 1:
+			next;
+			mes "[Nydhogg]";
+			mes "What? Do you think I know everything everyone of you should do?";
+			mes "We're preparing to battle. I don't know what you should do, this is not my duty.";
+			percentheal -50, -50;
+			break;
+		case 2:
+			next;
+			mes "[Nydhogg]";
+			mes "Hum...Kind of. We, Dragons, need big places to venture. But it's a needed harm.";
+			mes "Don't you know that?";
+			set $dragonsSecretFound, 1;
+			break;
+	}
+	close;
+	
+OnInstanceInit:
+OnEnable:
+	enablenpc strnpcinfo(3);
+	end;
+}
+
+1@nw,141,34,3	script	Jormungand::alanwjo	4_F_NYDHOG,{
+	mes "[Jormungand]";
+	mes "What are you doing here?";
+	mes "Don't you think you have something else to do?";
+	if(select("What's our weak point again?","What should I do?","It's cold in there, isn't it?"))
+	{
+		case 0:
+			next;
+			mes "[Jormungand]";
+			mes "What? Alert! A spy has ventured!";
+			
+			set .@count, rand(100) % 10;
+			getmapxy .@map$, .@x, .@y, 0;
+			set .@npc_name$, instance_npcname( "nalfgar_wreck", $nw_instance );
+			set .@event$, .@npc_name$ + "::OnAlertMobDead";
+			
+			//specialeffect atoi(strnpcinfo(2));
+			disablenpc strnpcinfo(3);
+			
+			killmonster strnpcinfo(4), .@event$;
+			areamonster strnpcinfo(4),(.@x-10),(.@y-10),(.@x+10),(.@y+10), "Giants Guards",atoi(strnpcinfo(2)),.@count, .@event$;
+			break;
+		case 1:
+			next;
+			mes "[Jormungand]";
+			mes "What? Do you think I know everything everyone of you should do?";
+			mes "We're preparing to battle. I don't know what you should do, this is not my duty.";
+			mes "As long as we don't encounter a too cold weather, we should be okay...";
+			set $snakesSecretFound
+			break;
+		case 2:
+			next;
+			mes "[Jormungand]";
+			mes "Hum...Kind of. We, Snakes, need some hot weather to ensure we won't get asleep at fight.";
+			mes "Darkness is also a friend to us.";
+			percentheal -50, -50;
+			break;
+	}
+	close;
+	
+OnInstanceInit:
+OnEnable:
+	enablenpc strnpcinfo(3);
+	end;
+}
+
+1@nw,141,34,3	script	Fenrir::alanwfe	4_F_NYDHOG,{
+	mes "[Fenrir]";
+	mes "What are you doing here?";
+	mes "Don't you think you have something else to do?";
+	if(select("What's our weak point again?","What should I do?","It's hot in there, isn't it?"))
+	{
+		case 0:
+			next;
+			mes "[Fenrir]";
+			mes "I'm tired to repeat it over and over...";
+			mes "We don't have weak point. We are beasts. We feast over fear and flesh.";
+			mes "And darkness is our real strong point, as we see in the darks.";
+			set $wolfsSecretFound, 1;
+			break;
+		case 1:
+			next;
+			mes "[Fenrir]";
+			mes "What? Do you think I know everything everyone of you should do?";
+			mes "We're preparing to battle. I don't know what you should do, this is not my duty.";
+			percentheal -50, -50;
+			next;
+			mes "[Fenrir]";			
+			mes "And don't think of sleeping again!";
+			break;
+		case 2:
+			next;
+			mes "[Fenrir]";
+			mes "What? Alert! A spy has ventured!";
+			
+			set .@count, rand(100) % 10;
+			getmapxy .@map$, .@x, .@y, 0;
+			set .@npc_name$, instance_npcname( "nalfgar_wreck", $nw_instance );
+			set .@event$, .@npc_name$ + "::OnAlertMobDead";
+			
+			//specialeffect atoi(strnpcinfo(2));
+			disablenpc strnpcinfo(3);
+			
+			killmonster strnpcinfo(4), .@event$;
+			areamonster strnpcinfo(4),(.@x-10),(.@y-10),(.@x+10),(.@y+10), "Giants Guards",atoi(strnpcinfo(2)),.@count, .@event$;
+			break;
+	}
+	close;
+	
+OnInstanceInit:
+OnEnable:
+	enablenpc strnpcinfo(3);
+	end;
+}
+
+1@nw,141,34,3	script	Loki::alanwlo	4_M_LOKI,4,4,{
+	end;
+	
+OnTouch:	
+	if(.talking == 0)
+	{
+		set $hrTalkingId, getcharid(3);
+		set .talking, 1;	
+
+		cutin "",2;
+		npctalk "Who are you? What are you doing here?";
+		instance_announce $nw_instance, "[Loki] Who are you? What are you doing here?", bc_map, 0x00FF00;
+		sleep2 1500;
+		npctalk "Don't try to fool me. I'm the god of dissimulation and treason, do you really think I don't see through your disguise?";
+		instance_announce $nw_instance, "[Loki] Don't try to fool me. I'm the god of dissimulation and treason, do you really think I don't see through your disguise?", bc_map, 0x00FF00;
+		sleep2 1500;
+		npctalk "You've been sent here to slow us down, right?";
+		instance_announce $nw_instance, "[Loki] You've been sent here to slow us down, right?", bc_map, 0x00FF00;
+		sleep2 1500;
+		npctalk "You can't. We're ready now. Nalfgar will soon fly again.";
+		instance_announce $nw_instance, "[Loki] You can't. We're ready now. Nalfgar will soon fly again.", bc_map, 0x00FF00;
+		sleep2 1500;
+		npctalk "I can see you've encounter my leader...How could they let you pass...HRYM!!!";
+		instance_announce $nw_instance, "[Loki] I can see you've encounter my leader...How could they let you pass...HRYM!!!", bc_map, 0x00FF00;
+		sleep2 1500;
+		npctalk "Prove your obedience, and kill this fly you've let flee!";
+		instance_announce $nw_instance, "[Loki] Prove your obedience, and kill this fly you've let flee!", bc_map, 0x00FF00;
+		sleep2 1500;
+		
+		donpcevent instance_npcname( "nalfgar_wreck", $nw_instance ) + "::OnSecondFloorOn";
+		disablenpc strnpcinfo(3);
+	}
+	end;
+	
+OnInstanceInit:	
+OnDisable:
+	disablenpc strnpcinfo(3);
+	set .talking, 0;
+	end;
+OnEnable:
+	enablenpc strnpcinfo(3);
+	end;
+}
+
+1@nw,141,34,3	script	Verdandi::alanwve	4_F_NYDHOG,2,2,{
+	//cutin "ep14_nyd01",2;
+	end;
+		
+OnTouch:	
+	if(.talking == 0)
+	{
+		set $hrTalkingId, getcharid(3);
+		set .talking, 1;	
+
+		cutin "ep14_nyd01",2;
+		npctalk "Hush!! *muttering*";
+		instance_announce $jl_instance, "[Verdandi] Hush!! *muttering*", bc_map, 0x00FF00;
+		sleep2 1500;
+		npctalk "We're on the wreck of Nalfgar. This is the ship the Giants leader, Loki, will lead to bring them to Vildir, the last plain.";
+		instance_announce $jl_instance, "[Verdandi] We're on the wreck of Nalfgar. This is the ship the Giants leader, Loki, will lead to bring them to Vildir, the last plain.", bc_map, 0x00FF00;
+		sleep2 1500;
+	
+		donpcevent instance_npcname( "alanwur", $nw_instance ) + "::OnDialog1_2";
+	}
+	end;
+
+OnInstanceInit:
+	set .talking, 0;
+	enablenpc strnpcinfo(3);
+	end;
+}
+
+1@nw,139,32,5	script	Urd::alanwur	4_F_PINKWOMAN,{
+	//cutin "bu_maggi1",0;
+	end;
+		
+OnDialog1_2:			
+	attachrid($hrTalkingId);
+	cutin "bu_maggi1", 2;
+	npctalk "All the species in there are more dangerous than the others.";
+	instance_announce $nw_instance, "[Urd] All the species in there are more dangerous than the others.", bc_map, 0x00FF00;
+	sleep2 1500;
+	npctalk "Frost and Fire Giants, Loki and his monstruous kids...";
+	instance_announce $nw_instance, "[Urd] Frost and Fire Giants, Loki and his monstruous kids...", bc_map, 0x00FF00;
+	sleep2 1500;
+	
+	donpcevent instance_npcname( "alanwsk", $nw_instance ) + "::OnDialog1_3";
+	end;	
+	
+OnInstanceInit:
+	enablenpc strnpcinfo(3);
+	end;
+}
+
+1@nw,139,32,5	script	Skuld::alanwsk	4_F_SHALOSH,{
+	//cutin "shaloshi01",2;
+	end;
+		
+OnDialog1_3:			
+	attachrid($hrTalkingId);
+	cutin "shaloshi01", 2;
+	npctalk "This is gonna be one of the toughest of all the ordeal you may encounter.";
+	instance_announce $nw_instance, "[Skuld] This is gonna be one of the toughest of all the ordeal you may encounter.", bc_map, 0x00FF00;
+	sleep2 1500;
+	npctalk "You should be really careful. If they find you, they'll kill you, believe me. I saw it.";
+	instance_announce $nw_instance, "[Skuld] You should be really careful. If they find you, they'll kill you, believe me. I saw it.", bc_map, 0x00FF00;
+	sleep2 1500;
+	
+	cutin "", 255;
+	
+	disablenpc strnpcinfo(3);
+	disablenpc instance_npcname( "alanwve", $nw_instance );
+	disablenpc instance_npcname( "alanwsk", $nw_instance );
+	
+	donpcevent instance_npcname( "nalfgar_wreck", $nw_instance ) + "::OnFirstFloorOn";
+	end;
+	
+OnInstanceInit:
+	enablenpc strnpcinfo(3);
+	end;
+}
+
+1@nw,141,34,3	script	Verdandi::alanwve2	4_F_NYDHOG,2,2,{
+	//cutin "ep14_nyd01",2;
+	end;
+		
+OnTouch:	
+	if(.talking == 0)
+	{
+		set $hrTalkingId, getcharid(3);
+		set .talking, 1;	
+
+		cutin "ep14_nyd01",2;
+		npctalk "Congratulations! You've defeated Hel, the Hell's Guardian.";
+		instance_announce $nw_instance, "[Verdandi] Congratulations! You've defeated Hel, the Hell's Guardian.", bc_map, 0x00FF00;
+		sleep2 1500;
+	
+		donpcevent instance_npcname( "alanwur2", $nw_instance ) + "::OnDialog2_2";
+	}
+	end;
+
+OnInstanceInit:
+	set .talking, 0;
+	disablenpc strnpcinfo(3);
+	end;
+}
+
+1@nw,139,32,5	script	Urd::alanwur2	4_F_PINKWOMAN,{
+	//cutin "bu_maggi1",0;
+	end;
+		
+OnDialog2_2:			
+	attachrid($hrTalkingId);
+	cutin "bu_maggi1", 2;
+	npctalk "You know, it's not a small victory. She's very powerfull...";
+	instance_announce $nw_instance, "[Urd] You know, it's not a small victory. She's very powerfull...", bc_map, 0x00FF00;
+	sleep2 1500;
+	
+	donpcevent instance_npcname( "alanwsk2", $nw_instance ) + "::OnDialog2_3";
+	end;
+	
+OnInstanceInit:
+	disablenpc strnpcinfo(3);
+	end;
+}
+
+1@nw,139,32,5	script	Skuld::alanwsk2	4_F_SHALOSH,{
+	//cutin "shaloshi01",2;
+	end;
+		
+OnDialog2_3:			
+	attachrid($hrTalkingId);
+	cutin "shaloshi01", 2;
+	npctalk "Anyway, there's still plenty of Ases and Giants, right?";
+	instance_announce $nw_instance, "[Skuld] Anyway, there's still plenty of Ases and Giants, right?", bc_map, 0x00FF00;
+	sleep2 1500;
+	npctalk "You should be prepared for the next one you'll encounter.";
+	instance_announce $nw_instance, "[Skuld] You should be prepared for the next one you'll encounter.", bc_map, 0x00FF00;
+	sleep2 15000;
+	instance_destroy( $nw_instance );
+	set $nw_instance, -1;
+	set $instance_nw_id, -1;
+	end;
+	
+OnInstanceInit:
+	disablenpc strnpcinfo(3);
+	end;
+}
+
+2@nw,112,164,0	warp	nwwarp01	1,4,2@nw,97,164
+2@nw,125,161,0	warp	nwwarp02	1,3,2@nw,144,161
+2@nw,142,161,0	warp	nwwarp02-1	1,3,2@nw,123,161
+2@nw,164,114,0	warp	nwwarp03	3,1,2@nw,164,88
+2@nw,164,91,0	warp	nwwarp03-1	5,1,2@nw,164,116
+2@nw,99,164,0	warp	nwwarp01-1	1,4,2@nw,114,164
+2@nw,76,111,0	warp	nwwarp10	1,3,2@nw,100,111
+2@nw,38,164,0	warp	nwwarp04-1	1,4,2@nw,25,164
+2@nw,40,111,0	warp	nwwarp05	1,3,2@nw,67,112
+2@nw,62,111,0	warp	nwwarp05-1	1,3,2@nw,38,111
+2@nw,27,164,0	warp	nwwarp04	1,4,2@nw,40,164
+2@nw,69,75,0	warp	nwwarp07	2,1,2@nw,69,106
+2@nw,69,125,0	warp	nwwarp08	4,1,2@nw,69,142
+2@nw,69,140,0	warp	nwwarp08-1	4,1,2@nw,69,123
+2@nw,98,111,0	warp	nwwarp10-1	1,3,2@nw,74,111
+2@nw,69,177,0	warp	nwwarp002	3,1,1@nw,102,27
+2@nw,41,37,0	warp	nwwarp06	1,3,2@nw,61,37
+2@nw,58,37,0	warp	nwwarp06-1	1,3,2@nw,39,37
+2@nw,69,102,0	warp	nwwarp07-1	2,1,2@nw,69,77
+2@nw,79,37,0	warp	nwwarp09	1,3,2@nw,98,37
+2@nw,96,37,0	warp	nwwarp09-1	1,3,2@nw,77,37
+2@nw,69,22,0	warp	nwwarp001	4,1,3@nw,85,107
+1@nw,102,103,0	warp	nwwarp11	5,1,1@nw,102,120
+1@nw,102,118,0	warp	nwwarp11-1	5,1,1@nw,102,101
+1@nw,155,128,0	warp	nwwarp13-1	1,1,1@nw,155,97
+1@nw,155,99,0	warp	nwwarp13	1,1,1@nw,155,130
+1@nw,49,99,0	warp	nwwarp14-1	1,1,1@nw,49,130
+1@nw,102,24,0	warp	nwwarp003	3,1,2@nw,69,179
+1@nw,123,72,0	warp	nwwarp12	1,4,1@nw,140,72
+1@nw,138,72,0	warp	nwwarp12-1	1,4,1@nw,121,72
+1@nw,49,128,0	warp	nwwarp14	1,1,1@nw,49,97
+1@nw,65,72,0	warp	nwwarp15	1,4,1@nw,82,72
+1@nw,80,72,0	warp	nwwarp15-1	1,4,1@nw,63,72
+

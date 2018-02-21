@@ -1,0 +1,514 @@
+// [========================================================]
+// [============= 	Season Event    	============]
+// [========================================================]
+// [ Version 1                                              ]
+// [========================================================]
+// [ Original script by: Alayne				    ]
+// [========================================================]
+// [ Description:                                           ]
+// [--------------------------------------------------------]
+// [                                                        ]
+// [ - A quest event	 		    	  	    ]
+// [========================================================]
+// [ Changelog: (5 last updates)                            ]
+// [--------------------------------------------------------]
+// [                                                        ]
+// [ v0: Creation                      			    ]
+// [                                                        ]
+// [========================================================]
+// [                                                        ]
+// [========================================================]
+
+prontera,162,326,4	script	Puru::alseahalgp	4_M_KNIGHT_GOLD,{
+	set .@npcname$, "[Puru]";
+	set .@playerName$, "[" + strcharinfo(0) + "]";
+	mes .@npcname$;
+	if(SEAHALQ < 4)
+	{
+		mes "Please investigate the Owl guild annihilation!";
+		mes "IF YOU FIND SOMETHING FISHY, DON’T HESITATE TO FOLLOW YOUR HEART!";
+		mes "Start by looking at Prontera WoE Map!";
+	}
+	else if(SEAHALQ == 4)
+	{
+		if(countitem($halMessageId) >= 1)
+		{
+			mes "Congratulations for making it this far!";
+			next;
+			mes "*Owl’s Message Disappeared*";
+			delitem $halMessageId, 1;
+			next;
+			mes .@npcname$;
+			mes "What will you do now?";
+			if(select("Trick","Treat") == 1)
+			{
+				next;
+				mes .@playerName$;
+				mes "Trick!";
+				next;
+				mes .@npcname$;
+				mes "I see, you want revenge.";
+				mes "Prepare yourself as I will warp you unto Spy area!";
+				mes "Are you ready?";
+				set SEAHALQ, 5;
+				if(select("Yes","Not yet") == 1)
+				{
+					next;
+					mes .@npcname$;
+					mes "Goodluck!";
+					warp .mapTest$, 0, 0;
+					goto OnPopMonsters;
+				}
+			}
+			else
+			{
+				next;
+				mes .@playerName$;
+				mes "Treat!";
+				next;
+				mes .@npcname$;
+				mes "I don't think so...";
+				set SEAHALQ, -1;
+				//*Gives reward*
+				getitem 29408, 1;
+				mes "Tip: Do the quest on another char if you want to get more rewards!";
+			}
+		}
+		else
+		{
+			mes "Don't you have anything for me?";
+		}
+	}
+	else if(SEAHALQ == 5)
+	{
+		mes "Are you ready?";
+		if(select("Yes","Not yet") == 1)
+		{
+			if(getmapusers(.mapTest$) > 0)
+			{
+				if(mobcount(.mapTest$, strnpcinfo(3) + "::OnSpyMobKill") == 0)
+				{
+					//force load
+					mapwarp .mapTest$, "SavePoint", 0, 0;
+				}
+				else
+				{
+					next;
+					mes .@npcname$;
+					mes "Sorry I can't send you right now, there's allready someone there.";
+					mes "Come back in a while.";
+					close;
+				}
+			}
+			next;
+			mes .@npcname$;
+			mes "Goodluck!";
+			warp .mapTest$, 0, 0;
+			goto OnPopMonsters;
+		}
+	}
+	close;
+	
+OnPopMonsters:
+	killmonster .mapTest$, strnpcinfo(3) + "::OnSpyMobKill";
+	killmonster .mapTest$, strnpcinfo(3) + "::OnSpyMobKill2";
+	// Target Monsters
+	monster .mapTest$,0,0,"Spy",1015,1,strnpcinfo(3) + "::OnSpyMobKill";
+	monster .mapTest$,0,0,"Spy",1015,1,strnpcinfo(3) + "::OnSpyMobKill";
+	monster .mapTest$,0,0,"Spy",1002,1,strnpcinfo(3) + "::OnSpyMobKill";
+	monster .mapTest$,0,0,"Spy",1041,1,strnpcinfo(3) + "::OnSpyMobKill";
+	monster .mapTest$,0,0,"Spy",1016,1,strnpcinfo(3) + "::OnSpyMobKill";
+	monster .mapTest$,0,0,"Spy",1015,1,strnpcinfo(3) + "::OnSpyMobKill";
+	// Decoy Monsters
+	monster .mapTest$,0,0,"Psy",1016,1,strnpcinfo(3) + "::OnSpyMobKill2";
+	monster .mapTest$,0,0,"Psy",1041,1,strnpcinfo(3) + "::OnSpyMobKill2";
+	monster .mapTest$,0,0,"Psy",1015,1,strnpcinfo(3) + "::OnSpyMobKill2";
+	monster .mapTest$,0,0,"Spice",1002,1,strnpcinfo(3) + "::OnSpyMobKill2";
+	monster .mapTest$,0,0,"Spice",1015,1,strnpcinfo(3) + "::OnSpyMobKill2";
+	monster .mapTest$,0,0,"Spice",1016,1,strnpcinfo(3) + "::OnSpyMobKill2";
+	monster .mapTest$,0,0,"Spice",1015,1,strnpcinfo(3) + "::OnSpyMobKill2";
+	monster .mapTest$,0,0,"Spice",1002,1,strnpcinfo(3) + "::OnSpyMobKill2";
+	monster .mapTest$,0,0,"Spicy",1015,1,strnpcinfo(3) + "::OnSpyMobKill2";
+	monster .mapTest$,0,0,"Spicy",1015,1,strnpcinfo(3) + "::OnSpyMobKill2";
+	monster .mapTest$,0,0,"Spicy",1015,1,strnpcinfo(3) + "::OnSpyMobKill2";
+	monster .mapTest$,0,0,"Spicy",1016,1,strnpcinfo(3) + "::OnSpyMobKill2";
+	monster .mapTest$,0,0,"Spice Girl",1015,1,strnpcinfo(3) + "::OnSpyMobKill2";
+	monster .mapTest$,0,0,"Spice Girl",1015,1,strnpcinfo(3) + "::OnSpyMobKill2";
+	monster .mapTest$,0,0,"Spice Girl",1015,1,strnpcinfo(3) + "::OnSpyMobKill2";
+	monster .mapTest$,0,0,"Spice Girl",1041,1,strnpcinfo(3) + "::OnSpyMobKill2";
+	monster .mapTest$,0,0,"Spice Girl",1002,1,strnpcinfo(3) + "::OnSpyMobKill2";
+	monster .mapTest$,0,0,"Job Transfer Monster",1015,1,strnpcinfo(3) + "::OnSpyMobKill2";
+	monster .mapTest$,0,0,"Job Transfer Monster",1015,1,strnpcinfo(3) + "::OnSpyMobKill2";
+	monster .mapTest$,0,0,"Job Transfer Monster",1015,1,strnpcinfo(3) + "::OnSpyMobKill2";
+	monster .mapTest$,0,0,"Binnie",1015,1,strnpcinfo(3) + "::OnSpyMobKill2";
+	monster .mapTest$,0,0,"Darrel",1015,1,strnpcinfo(3) + "::OnSpyMobKill2";
+	monster .mapTest$,0,0,"Rex",1015,1,strnpcinfo(3) + "::OnSpyMobKill2";
+	monster .mapTest$,0,0,"Anselmo",1015,1,strnpcinfo(3) + "::OnSpyMobKill2";
+	monster .mapTest$,0,0,"Anolian",1015,1,strnpcinfo(3) + "::OnSpyMobKill2";
+	monster .mapTest$,0,0,"Monster Sample",1002,1,strnpcinfo(3) + "::OnSpyMobKill2";
+	monster .mapTest$,0,0,"Not Me",1015,1,strnpcinfo(3) + "::OnSpyMobKill2";
+	monster .mapTest$,0,0,"Help Me",1015,1,strnpcinfo(3) + "::OnSpyMobKill2";
+	monster .mapTest$,0,0,"Do Not Hit Me",1015,1,strnpcinfo(3) + "::OnSpyMobKill2";
+	monster .mapTest$,0,0,"Attack Speed 184",1015,1,strnpcinfo(3) + "::OnSpyMobKill2";	
+	end;
+	
+OnSpyMobKill2:
+	//nothing, used to clean
+	end;
+	
+OnSpyMobKill:
+	if(mobcount(.mapTest$, strnpcinfo(3) + "::OnSpyMobKill") == 0)
+	{
+		set SEAHALQ, 6;
+		set .@npcname$, "[Puru]";
+		mes .@npcname$;
+		mes "Thank you for your help...";
+		mes "Here's a reward for you. The Owl Guild can now rest in peace.";
+		//*Gives reward*
+		getitem 29408, 1;
+		set Zeny, Zeny + 1000000;
+		killmonster .mapTest$, strnpcinfo(3) + "::OnSpyMobKill2";
+	}
+	close;
+	
+OnInit:
+	set $halMessageId, 1072;
+	set .mapTest$, "moro_cav";
+	end;
+}
+
+prt_gld,151,126,4	script	Owl Survivor::alseahalos	4_M_GEF_SOLDIER,{
+	set .@npcname$, "[Owl Survivor]";
+	set .@playerName$, "[" + strcharinfo(0) + "]";
+	if (SEAHALQ == 0)
+	{
+		mes "Are you an adventurer? Pl-pl-ea-ease-se! Help us!";
+		if(select("I have no time","Tell me what happened...") == 1)
+		{
+			next;
+			mes .@playerName$;
+			mes "I have no time";
+			next;
+			mes .@npcname$;
+			mes "You’re so… cr-cr-ue-uel!";
+			set SEAHALQ, -1;
+		}
+		else
+		{
+			next;
+			mes .@playerName$;
+			mes "Tell me what happened...";
+			next;
+			mes .@npcname$;
+			mes "We are OWL guild, we conquer monsters and sometimes fall… but we all treasured those memories…";
+			mes "This should have been our first War of Emperium… but…";
+			
+			next;
+			mes .@playerName$;
+			mes "But..?";
+			
+			next;
+			mes .@npcname$;
+			mes "The Dark Army of monsters arrived and should never be here…";
+			if(select("Dark Army?..","“Cancel”") == 1)
+			{
+				next;
+				mes .@playerName$;
+				mes "Dark Army?";
+				next;
+				mes .@npcname$;
+				mes "As we are regrouping outside the castle …. That da-da-dark monster came to us and summoned his army…!";
+				mes "Gather the clues in each guild member so we can trace it,";
+				mes "Please help me find the culprit and kill it!";
+				next;
+				mes "*[Puru] Talk to each dead Owl guild member to find a clue*";
+				set SEAHALQ, 1;
+			}
+			else
+			{
+				next;
+				mes .@playerName$;
+				mes "I have no time for that.";
+				next;
+				mes .@npcname$;
+				mes "Huh?!";
+				set SEAHALQ, -1;
+			}
+		}
+	}
+else if(SEAHALQ == 1)
+		{
+			if(countitem($itemMasterId) >= 1 && countitem($itemSageId) >= 1 && countitem($itemMonkId) >= 1 &&
+				countitem($itemHunterId) >= 1 && countitem($itemSinxId) >= 1 && countitem($itemPaldId) >= 1)
+			{
+				mes "Th-thank yo-ou-u! Now hand it to me….";
+				if(select("Why should I?","Here!") == 1)
+				{
+					next;
+					mes .@playerName$;
+					mes "Why should I?";
+					next;
+					mes .@npcname$;
+					mes "What do you mean?";
+					next;
+					mes .@playerName$;
+					mes "Why do you need this?";
+					next;
+					mes .@npcname$;
+					mes "It’s for us to investigate the…";
+					next;
+					mes .@playerName$;
+					mes "All of these are cursed items, How will you investigate using this?";
+					next;
+					mes .@npcname$;
+					mes "I see so you’re no peabrain! Then why don’t you find out what are those cursed items for?";
+					next;
+					mes .@playerName$;
+					mes "Wha-what?";
+					next;
+					mes "*[Puru] Find the Cursed Pope in Nifleheim*";
+					set SEAHALQ, 2;
+				}
+				else
+				{
+					next;
+					mes .@playerName$;
+					mes "Here!";
+					next;
+					mes .@npcname$;
+					mes "*Evil Laugh*";
+					mes "Thank you!";
+					//give reward
+					delitem $itemMasterId, 1;
+					delitem $itemSageId, 1;
+					delitem $itemHunterId, 1;
+					delitem $itemSinxId, 1;
+					delitem $itemMonkId, 1;
+					delitem $itemPaldId, 1;
+					hideonnpc strnpcinfo(3);
+					initnpctimer;
+				}
+				
+			}
+			else
+			{
+				mes "Hu...Hurry u-up...";
+			}
+		}
+	else
+	{
+		mes "...";
+		mes "*He doesn't answer*";
+	}
+	close;
+	
+OnTimer60000:
+	hideoffnpc strnpcinfo(3);
+	end;
+	
+OnMessageRead:
+	dispbottom "We are on our way to first War of Emperium but it’s too late until I found out that there’s a spy in the guild who summon the dark army using dead branch. Give this to GM Puru, she’ll know what to do.";
+	end;
+	
+OnNPCKillEvent:
+	if(SEAHALQ == 1)
+	{
+		if(rand(0,100) <= .lootMasterRate && killedrid == .mobMasterId)
+		{
+			getitem $itemMasterId, 1;
+		}
+		else if(rand(0,100) <= .lootSageRate && killedrid == .mobSageId)
+		{
+			getitem $itemSageId, 1;
+		}
+		else if(rand(0,100) <= .lootHunterRate && killedrid == .mobHunterId)
+		{
+			getitem $itemHunterId, 1;
+		}
+		else if(rand(0,100) <= .lootMonkRate && killedrid == .mobMonkId)
+		{
+			getitem $itemMonkId, 1;
+		}
+		else if(rand(0,100) <= .lootSinxRate && killedrid == .mobSinxId)
+		{
+			getitem $itemSinxId, 1;
+		}
+		else if(rand(0,100) <= .lootPaldRate && killedrid == .mobPaldId)
+		{
+			getitem $itemPaldId, 1;
+		}
+	}
+	end;
+	
+OnInit:
+	set .mobMasterId, 1219; //Abysmal
+	set $itemMasterId, 7109;
+	set .lootMasterRate, 10;
+	
+	set .mobSageId, 1109; //devi
+	set $itemSageId, 1009;
+	set .lootSageRate, 5;
+	
+	set .mobHunterId, 1148; //medusa
+	set $itemHunterId, 5066;
+	set .lootHunterRate, 5;
+	
+	set .mobMonkId, 1257; //injustice
+	set $itemMonkId, 950;
+	set .lootMonkRate, 5;
+	
+	set .mobSinxId, 1202; //phendark
+	set $itemSinxId, 1015;
+	set .lootSinxRate, 5;
+	
+	set .mobPaldId, 1310; //Majoruros
+	set $itemPaldId, 941;
+	set .lootPaldRate, 5;
+	end;
+}
+
+prt_gld,153,126,4	script	Owl Guildmaster::alseahalog	4_M_TRISTAN,{
+	mes "[Owl Guildmaster]";
+	if(SEAHALQ == 1)
+	{
+		mes "*The Owl  guildmaster has been slain by an Abyssmal Knight";
+		mes "Kill Abyssmal Knights until you find cursed spear blade*";
+	}
+	else
+	{
+		mes "He won't answer anymore now...";
+	}
+	close;
+}
+
+prt_gld,157,126,4	script	Owl Sage::alseahalosa	4_TOWER_06,{
+	mes "[Owl Sage]";
+	if(SEAHALQ == 1)
+	{
+		mes "*The owl sage has been slain by Deviruchi";
+		mes "Kill Deviruchi until you find Cursed Hand*";
+	}
+	else
+	{
+		mes "She won't answer anymore now...";
+	}
+	close;
+}
+
+prt_gld,157,128,4	script	Owl Hunter::alseahaloh	4_TOWER_08,{
+	mes "[Owl Hunter]";
+	if(SEAHALQ == 1)
+	{
+		mes "*The owl hunter has been slain by Medusa”";
+		mes "Kill Medusa until you find Cursed Horn*";
+	}
+	else
+	{
+		mes "She won't answer anymore now...";
+	}
+	close;
+}
+
+prt_gld,155,128,4	script	Owl Monk::alseahalom	4_TOWER_03,{
+	mes "[Owl Monk]";
+	if(SEAHALQ == 1)
+	{
+		mes "*The owl monk has been slain by Injustice";
+		mes "Kill Injustice until you find Cursed Heart*";
+	}
+	else
+	{
+		mes "She won't answer anymore now...";
+	}
+	close;
+}
+
+prt_gld,153,128,4	script	Owl SinX::alseahalosi	4_TOWER_11,{
+	mes "[Owl SinX]";
+	if(SEAHALQ == 1)
+	{
+		mes "*The owl sinx has been slain by Phendark";
+		mes "Kill Phendark until you find Cursed Tongue*";
+	}
+	else
+	{
+		mes "She won't answer anymore now...";
+	}
+	close;
+}
+
+prt_gld,151,128,4	script	Owl Paladin::alseahalop	4_TOWER_13,{
+	mes "[Owl Paladin]";
+	if(SEAHALQ == 1)
+	{
+		mes "*The owl paladin has been slain by Majoruros";
+		mes "Kill Majoruros until you find Cursed Nose Ring*";
+	}
+	else
+	{
+		mes "She won't answer anymore now...";
+	}
+	close;
+}
+ 
+niflheim,206,178,4	script	Cursed Pope::alseahalcp	4_F_ARUNA_POP,{
+	set .@npcname$, "[Cursed Pope]";
+	set .@playerName$, "[" + strcharinfo(0) + "]";
+	mes .@npcname$;
+	if(SEAHALQ == 2)
+	{
+		mes "Oh my! Why did you have those cursed items!";
+		next;
+		mes "*You tells everything about Owl Annihilation*";
+		next;
+		mes .@npcname$;
+		mes "I see.. Those cursed items are required to summon Lord Of Death and Dark Lord.";
+		next;
+		mes .@playerName$;
+		mes "What should I do with these?";
+		next;
+		mes .@npcname$;
+		mes "Bring me 100 Holy water and those cursed items, for I shall lift the curse!";
+		set SEAHALQ, 3;
+	}
+	else if(SEAHALQ == 3)
+	{
+		if(countitem($itemMasterId) >= 1 && countitem($itemSageId) >= 1 && countitem($itemMonkId) >= 1 &&
+				countitem($itemHunterId) >= 1 && countitem($itemSinxId) >= 1 && countitem($itemPaldId) >= 1
+				&& countitem(523) >= 100)
+		{
+			delitem $itemMasterId, 1;
+			delitem $itemSageId, 1;
+			delitem $itemHunterId, 1;
+			delitem $itemSinxId, 1;
+			delitem $itemMonkId, 1;
+			delitem $itemPaldId, 1;
+			delitem 523, 100;
+			mes "You have it all, Let me start the ritual!";
+			mes "Du-wa-duwa- rip-dap, duwarip-dap,";
+			mes "Du-wa-duwa- rip-dap, duwarip-dap,";
+			mes "Du-wa-duwa- rip-dap, duwarip-dap,";
+			mes "Du-wa-duwa- rip-dap, duwarip-dap";
+			mes "Murder that dance floor, dance flo~";
+			mes "Mu-mu-murder, Mu-mu murder,";
+			mes "Murder that, Murder that dance floor!";
+			mes "There’s a message from these cursed items left behind by the OWL guild";
+			next;
+			mes "*You've obtained an Owl’s Message*";
+			getitem $halMessageId, 1;
+			next;
+			mes .@npcname$;
+			mes "That’s all I can do for you…";
+			set SEAHALQ, 4;
+		}
+		else
+		{
+			mes "I also need the cursed items.";
+		}
+	}
+	else
+	{
+		mes "Sorry, I'm a bit busy right now...";
+	}
+	close;
+}

@@ -1,0 +1,91 @@
+gefenia04,206,97,5	script	BloodCrystal#7::alabc16	HIDDEN_WARP_NPC,{
+	end;
+	
+OnTimer360000:
+	stopnpctimer;
+	set .loopCount, .loopCount + 1;
+	if(.loopCount >= $repopHourCount)
+	{
+		goto OnClearGauge;
+	}
+	initnpctimer;
+	end;
+
+OnClearGauge:
+	//setnpcdisplay strnpcinfo(3), OBJ_A2;
+	set .fillPercent, 0;
+	set .fillItemCount, 0;
+	end;
+	
+OnPopMonsters:
+	callsub OnClearMonsters;
+//== F1 =============================
+	monster "gefenia01", 0, 0, "--ja--", 1371, 60, "CardinalSystem::OnNormalDied";
+	monster "gefenia01", 0, 0, "--ja--", 1390, 30, "CardinalSystem::OnNormalDied";
+	monster "gefenia01", 0, 0, "--ja--", 1292, 20, "CardinalSystem::OnNormalDied";
+	monster "gefenia01", 0, 0, "--ja--", 1219, 10, "CardinalSystem::OnNormalDied";
+	monster "gefenia01", 0, 0, "--ja--", 1374, 10, "CardinalSystem::OnNormalDied";
+	monster "gefenia01", 0, 0, "--ja--", 1370, 10, "CardinalSystem::OnNormalDied";
+	monster "gefenia01", 0, 0, "--ja--", 1268, 1, "CardinalSystem::OnNormalDied";
+	monster "gefenia01", 0, 0, "--ja--", 1203, 1, "CardinalSystem::OnNormalDied";
+	monster "gefenia01", 0, 0, "--ja--", 1205, 1, "CardinalSystem::OnNormalDied";
+	monster "gefenia01", 0, 0, "--ja--", 1204, 1, "CardinalSystem::OnNormalDied";
+	
+//== F2 =============================
+	monster "gefenia02", 0, 0, "--ja--", 1390, 40, "CardinalSystem::OnNormalDied";
+	monster "gefenia02", 0, 0, "--ja--", 1292, 30, "CardinalSystem::OnNormalDied";
+	monster "gefenia02", 0, 0, "--ja--", 1371, 35, "CardinalSystem::OnNormalDied";
+	monster "gefenia02", 0, 0, "--ja--", 1370, 20, "CardinalSystem::OnNormalDied";
+	monster "gefenia02", 0, 0, "--ja--", 1219, 10, "CardinalSystem::OnNormalDied";
+	monster "gefenia02", 0, 0, "--ja--", 1374, 10, "CardinalSystem::OnNormalDied";
+	monster "gefenia02", 0, 0, "--ja--", 1268, 1, "CardinalSystem::OnNormalDied";
+	monster "gefenia02", 0, 0, "--ja--", 1203, 1, "CardinalSystem::OnNormalDied";
+	monster "gefenia02", 0, 0, "--ja--", 1205, 1, "CardinalSystem::OnNormalDied";
+	monster "gefenia02", 0, 0, "--ja--", 1204, 1, "CardinalSystem::OnNormalDied";
+	
+//== F3 =============================
+	monster "gefenia03", 0, 0, "--ja--", 1371, 40, "CardinalSystem::OnNormalDied";
+	monster "gefenia03", 0, 0, "--ja--", 1390, 40, "CardinalSystem::OnNormalDied";
+	monster "gefenia03", 0, 0, "--ja--", 1292, 30, "CardinalSystem::OnNormalDied";
+	monster "gefenia03", 0, 0, "--ja--", 1374, 20, "CardinalSystem::OnNormalDied";
+	monster "gefenia03", 0, 0, "--ja--", 1219, 10, "CardinalSystem::OnNormalDied";
+	monster "gefenia03", 0, 0, "--ja--", 1370, 10, "CardinalSystem::OnNormalDied";
+	monster "gefenia03", 0, 0, "--ja--", 1268, 1, "CardinalSystem::OnNormalDied";
+	monster "gefenia03", 0, 0, "--ja--", 1203, 1, "CardinalSystem::OnNormalDied";
+	monster "gefenia03", 0, 0, "--ja--", 1205, 1, "CardinalSystem::OnNormalDied";
+	monster "gefenia03", 0, 0, "--ja--", 1204, 1, "CardinalSystem::OnNormalDied";
+	
+//== F4 =============================
+	monster "gefenia04", 0, 0, "--ja--", 1371, 30, "CardinalSystem::OnNormalDied";
+	monster "gefenia04", 0, 0, "--ja--", 1390, 30, "CardinalSystem::OnNormalDied";
+	monster "gefenia04", 0, 0, "--ja--", 1292, 20, "CardinalSystem::OnNormalDied";
+	monster "gefenia04", 0, 0, "--ja--", 1219, 10, "CardinalSystem::OnNormalDied";
+	monster "gefenia04", 0, 0, "--ja--", 1374, 10, "CardinalSystem::OnNormalDied";
+	monster "gefenia04", 0, 0, "--ja--", 1370, 10, "CardinalSystem::OnNormalDied";
+	monster "gefenia04", 0, 0, "--ja--", 1268, 1, "CardinalSystem::OnNormalDied";
+	monster "gefenia04", 0, 0, "--ja--", 1203, 1, "CardinalSystem::OnNormalDied";
+	monster "gefenia04", 0, 0, "--ja--", 1205, 1, "CardinalSystem::OnNormalDied";
+	monster "gefenia04", 0, 0, "--ja--", 1204, 1, "CardinalSystem::OnNormalDied";
+	end;
+	
+OnClearMonsters:	
+OnClock0000:
+	killmonsterall "gefenia01";
+	killmonsterall "gefenia02";
+	killmonsterall "gefenia03";
+	killmonsterall "gefenia04";
+	set .popAvailable, 1;
+	setd("$" + strnpcinfo(3), 0);
+	return;
+	
+OnInit:
+	set .fillPercent, 0;
+	if(getd("$" + strnpcinfo(2)) >= 1)
+	{
+		set .fillPercent, 100;
+	}
+	setarray .mapToCheck[0],1,4;
+	set .popAvailable, 1;
+	end;
+}
+

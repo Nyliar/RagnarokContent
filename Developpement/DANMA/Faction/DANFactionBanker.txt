@@ -1,0 +1,537 @@
+// [========================================================]
+// [=============     DANMA - Faction Banker     ============]
+// [========================================================]
+// [ Version 1                                              ]
+// [========================================================]
+// [ Original script by: Alayne				    ]
+// [========================================================]
+// [ Description:                                           ]
+// [--------------------------------------------------------]
+// [                                                        ]
+// [ - The Faction Banker			    	    ]
+// [========================================================]
+// [ Changelog: (5 last updates)                            ]
+// [--------------------------------------------------------]
+// [                                                        ]
+// [ v0: Creation                      			    		]
+// [ v1: Add account management                      		]
+// [ v2: Add loan management                      			]
+// [                                                        ]
+// [                                                        ]
+// [========================================================]
+// [                                                        ]
+// [========================================================]
+
+mellina_in,230,48,3	script	Bank#1::danfbwsb	57,{
+	set .@cost,500;
+	set .@maxLoan, 10000;
+	set .@loanPercentage, 10;
+	
+	set .@npc$,"[Banker]";
+	mes .@npc$;	
+
+	mes "Hello! Welcome to our bank! What can I do for you?";
+	set .@currentdate$, gettimestr("%d",11);
+	set .@count, atoi(.@currentdate$) - atoi(#lastvisit$);
+	if (.@count > 0)
+	{
+		set @interet,#bankstorage*#contract/100;
+		set #bankstorage,#bankstorage+(.@count*@interet);
+		set #lastvisit$,.@currentdate$;
+	}
+	else
+	{
+		set .@count, 30 - atoi(#lastvisit$) + atoi(.@currentdate$);
+		set @interet,#bankstorage*(#contract/100);
+		set #bankstorage,#bankstorage+(.@count*@interet);
+		set #lastvisit$,.@currentdate$;
+	}
+	if ("" + DANFACTIONID != strnpcinfo(2))
+	{
+		mes "Oh, sorry but...I can only work for my own House.";
+		mes "You'll better see the Banker of your own one.";
+		mes "Have a good day.";
+		close;
+	}
+	else if (BANKBAN == 2 && 
+		((gettime(6) > BANKFORBIDMONTH && gettime(5) > BANKFORBIDDAY)
+		|| (gettime(6) > BANKFORBIDMONTH + 1 && gettime(5) <= BANKFORBIDDAY)))
+	{
+		//ban suspend
+		set BANKBAN, 0;
+		set BANKFORBIDDAY, 0;
+		set BANKFORBIDMONTH, 0;
+		mes "Your suspension have been suppressed.";
+		mes "Welcome back.";
+		next;
+		mes .@npc$;
+	}
+	else if (BANKBAN == 1 && BANKFORBIDDAY > 0 || BANKFORBIDMONTH > 0)
+	{
+		next;
+		mes .@npc$;
+		mes "Hum...You've been banned from our bank...";
+		menu "I'd like to repay my loan",LLoanBackForbid,"Nothing, thanks",Lcancel;
+	}
+	next;
+	menu "I'd like to make a deposit",Ldeposit,"I need to withdraw some money",Lwithdrawl,"How many gold do I have in my balance?",Lbalance,"I'd like to open a new account.",LCompte,"I...I need a loan...",LLoan,"I'd like to repay my loan",LLoanBack,"Nothing, thanks",Lcancel;
+	
+Ldeposit:
+	mes .@npc$;
+	if (#contract == 0)
+	{	
+		mes "I see that this is your first deposit.";
+		mes "To be able to make a deposit, you need to open an account.";
+		mes "According to the account type, your money will make more or less interest.";
+		mes "There are three different types of accounts:";
+		next;
+		mes .@npc$;
+		mes "The ^FF0000Gold Account^000000, which let's you earn 1% interest a day.";
+		mes "The ^FF0000Platinium Account^000000, which let's you earn 3% interest a day.";
+		mes "The ^FF0000Diamond Account^000000, which let's you earn 7% interest a day.";
+		mes "Of course, the price of these account depends on which one you choose.";
+		mes "Here's the amount you need:";
+		next;
+		mes .@npc$;
+		mes "A Gold account cost ^FF0000 2,500 Zeny^000000";
+		mes "A Platinum account cost ^FF0000 250,000 Zeny^000000";
+		mes "A Diamond account cost ^FF0000 2,500,000 Zeny^000000";
+		mes "You can change your account type at any time.";
+		mes "But the amount used to open the account will be lost, so withdraw it all before you setup a new account!";
+		next;
+		mes "So what type of account would you like to open?";
+		switch(select("The Gold Account","The Platinium Account","The Diamond Account","Actually, none of them... I'm too poor"))
+		{
+			case 1:
+				mes "Alright, that'll be 2,500 Zeny.";
+				if (Zeny < 2500)
+				{
+					mes "Are you kidding me? You don't even have enough money to open a Gold account?!";
+					mes "Come back when you have enough Zeny!";
+				}
+				else
+				{
+					mes "Perfect!";
+					mes "You're now a Gold account owner!";
+					mes "Welcome to our bank, dear customer.";
+					set Zeny, Zeny-2500;
+					set #contract, 1;
+				}
+				break;
+			case 2:
+				mes "Alright, that'll be 250,000 Zeny.";
+				if (Zeny < 250000)
+				{
+					mes "Are you kidding me? You don't have enough money to open a Platinium account!";
+					mes "Come back when you have enough Zeny!";
+				}
+				else
+				{
+					mes "Perfect!";
+					mes "You're now a Platinium account owner!";
+					mes "Welcome to our bank, dear customer.";
+					set Zeny, Zeny-250000;
+					set #contract, 3;
+				}
+				break;
+			case 3:	
+				mes "Alright, that'll be 2,500,000 Zeny.";
+				if (Zeny < 2500000)
+				{
+					mes "Are you kidding me? You don't have enough money to open a Diamond account!";
+					mes "Come back when you have enough Zeny!";
+				}
+				else
+				{
+					mes "Perfect!";
+					mes "You're now a Diamond account owner!";
+					mes "Welcome to our bank, dear customer.";
+					set Zeny, Zeny-2500000;
+					set #contract, 7;
+				}
+				break;
+			case 4:
+				mes "Well...Time is money and you're just wasted mine. Good day to you!!";
+				break;
+		}
+		next;
+		menu "I'd like to make a deposit",Ldeposit,"I need to withdraw some money",Lwithdrawl,"How many gold do I have in my balance?",Lbalance,"I'd like to open a new account.",LCompte,"Nothing, thanks",Lcancel;
+	}
+	else
+	{
+		mes "Sure thing! How much Zeny would you like to deposit?";
+		if (.@cost > 0) goto Ldepocost;
+		goto Ldepocont;
+	}
+
+Ldepocost:
+	next;
+	mes .@npc$;
+	mes "And don't forget about the banking fee. " + .@cost + "z goes to me! ";
+	next;
+	goto Ldepocont;
+
+LCompte:
+	next;
+	mes .@npc$;
+	mes "Change your account? Of course!!";
+	mes "I'll keep a record of your new account!";
+	mes "There are three different types:";
+	next;
+	mes .@npc$;
+	mes "The ^FF0000Gold Account^000000, which let's you earn 1% interest a day.";
+	mes "The ^FF0000Platinium Account^000000, which let's you earn 3% interest a day.";
+	mes "The ^FF0000Diamond Account^000000, which let's you earn 7% interest a day.";
+	mes "Of course, the price of these account depends on which one you choose.";
+	mes "Here's the amount you need:";
+	next;
+	mes .@npc$;
+	mes "A Gold account cost ^FF0000 2,500 Zeny^000000";
+	mes "A Platinum account cost ^FF0000 250,000 Zeny^000000";
+	mes "A Diamond account cost ^FF0000 2,500,000 Zeny^000000";
+	mes "You can change your account type at any time.";
+	mes "But the amount used to open the account will be lost, so withdraw it all before you setup a new account!";
+	next;
+	mes "So? What do you choose?";
+	switch(select("The Gold Account","The Platinium Account","The Diamond Account","Actually, none of them..."))
+	{
+		case 1:
+				mes "Alright, that'll be 2,500 Zeny.";
+				if (Zeny < 2500)
+				{
+					mes "Are you kidding me? You don't even have enough money to open a Gold account?!";
+					mes "Come back when you have enough Zeny!";
+				}
+				else
+				{
+					mes "Perfect!";
+					mes "You're now a Gold account owner!";
+					mes "Welcome to our bank, dear customer.";
+					set Zeny, Zeny-2500;
+					set #contract, 1;
+				}
+				break;
+			case 2:
+				mes "Alright, that'll be 250,000 Zeny.";
+				if (Zeny < 250000)
+				{
+					mes "Are you kidding me? You don't have enough money to open a Platinium account!";
+					mes "Come back when you have enough Zeny!";
+				}
+				else
+				{
+					mes "Perfect!";
+					mes "You're now a Platinium account owner!";
+					mes "Welcome to our bank, dear customer.";
+					set Zeny, Zeny-250000;
+					set #contract, 3;
+				}
+				break;
+			case 3:	
+				mes "Alright, that'll be 2,500,000 Zeny.";
+				if (Zeny < 2500000)
+				{
+					mes "Are you kidding me? You don't have enough money to open a Diamond account!";
+					mes "Come back when you have enough Zeny!";
+				}
+				else
+				{
+					mes "Perfect!";
+					mes "You're now a Diamond account owner!";
+					mes "Welcome to our bank, dear customer.";
+					set Zeny, Zeny-2500000;
+					set #contract, 7;
+				}
+				break;
+			case 4:
+				mes "Well...Time is money and you're just wasted mine. Good day to you!!";
+				break;
+		}
+		next;
+	menu "I'd like to make a deposit",Ldeposit,"I need to withdraw some money",Lwithdrawl,"How many gold do I have in my balance?",Lbalance,"I'd like to open a new account.",LCompte,"Nothing, thanks",Lcancel;
+		
+Ldepocont:
+	switch(select("All","Partial deposit"))
+	{
+		case 1:
+			set .@deposit, Zeny - .@cost;
+			break;
+		case 2:
+			input .@deposit;
+			break;
+	}
+
+	if (.@deposit < 1) goto Lwrongamount;
+	if (.@deposit > Zeny) goto Lneedzeny;
+	if (.@deposit > (Zeny - .@cost)) goto Lneedzeny2;
+	set Zeny, Zeny - .@deposit;
+	set Zeny, Zeny - .@cost;
+	set #bankstorage,#bankstorage + .@deposit;
+	next;
+	mes .@npc$;
+	mes "Thanks a lot! Your money is in good hands!";
+	mes "Do not forget that the Bank is here for you.";
+
+	//update quota
+	
+	if (DANFACTIONID == 1)
+	{
+		set .@query$, "SELECT `bwsCurrentQuota` FROM `dan_economy` WHERE `id`=1";
+		query_sql(.@query$, .@quota);
+		if (getarraysize(.@quota) == 1)
+		{
+			set .@newCount, .@quota[0] + (.@deposit / $depositPercentage);
+			set .@query$, "UPDATE `dan_economy` set `bwsCurrentQuota`=" + .@newCount + " WHERE `id`=1";
+			query_sql(.@query$, .@count);
+		}
+	}
+	else if (DANFACTIONID == 2)
+	{
+		set .@query$, "SELECT `sbhCurrentQuota` FROM `dan_economy` WHERE `id`=1";
+		query_sql(.@query$, .@quota);
+		if (getarraysize(.@quota) == 1)
+		{
+			set .@newCount, .@quota[0] + (.@deposit / $depositPercentage);
+			set .@query$, "UPDATE `dan_economy` set `sbhCurrentQuota`=" + .@newCount + " WHERE `id`=1";
+			query_sql(.@query$, .@count);
+		}
+	}
+	else if (DANFACTIONID == 3)
+	{
+		set .@query$, "SELECT `pmCurrentQuota` FROM `dan_economy` WHERE `id`=1";
+		query_sql(.@query$, .@quota);
+		if (getarraysize(.@quota) == 1)
+		{
+			set .@newCount, .@quota[0] + (.@deposit / $depositPercentage);
+			set .@query$, "UPDATE `dan_economy` set `pmCurrentQuota`=" + .@newCount + " WHERE `id`=1";
+			query_sql(.@query$, .@count);
+		}
+	}
+	close;
+
+Lwithdrawl:	
+	next;
+	mes .@npc$;
+	mes "Make a withdrawl? Of course! How much?";
+	next;
+	if (.@cost > 0) goto Lwithcost;
+	goto Lwithcont;
+
+Lwithcost:
+	next;
+	mes .@npc$;
+	mes "And don't forget my tip. " + .@cost + "z will go towards me!";
+	next;
+	goto Lwithcont;
+
+Lwithcont:
+	switch(select("As much as possible","Partial withdraw"))
+	{
+		case 1:
+			if (#bankstorage > 1000000000)
+				set .@withdrawl, 1000000000;
+			else
+				set .@withdrawl, #bankstorage;
+			break;
+		case 2:
+			input .@withdrawl;
+			break;
+	}
+
+	if (.@withdrawl < 1) goto Lrealamount;
+	if (.@withdrawl > #bankstorage) goto Lneedzeny3;
+	if ((.@cost > Zeny) && ((Zeny + .@withdrawl) > .@cost)) goto Lcostask; 
+	if (.@cost > Zeny) goto Lneedzeny2;
+	goto Lwithcont2;
+
+Lcostask:
+	next;
+	mes .@npc$;
+	mes "You don't have enough money to pay me? May I take my tip from your withdrawl?";
+	next;
+	menu "...Do as you wish.",Lwithtake,"No way! It's my money",Lcancel;
+
+Lwithtake:
+	next;
+	mes .@npc$;
+	mes "Perfect";
+	set .@withdrawl, .@withdrawl - .@cost;
+	set #bankstorage,#bankstorage - .@cost;
+	set .@cost,0;
+	next;
+	goto Lwithcont2;
+
+Lwithcont2:
+	set Zeny,Zeny - .@cost;
+	set Zeny,Zeny + .@withdrawl;
+	set #bankstorage,#bankstorage - .@withdrawl;
+	next;
+	mes .@npc$;
+	mes "Here's your money. Come back again soon! Like ASAP!";
+	close;
+
+Lbalance:
+	next;
+	mes .@npc$;
+	mes "Hmmm...Let me pull up your account.";
+	next;
+	mes "*Rummage*";
+	next;
+	mes .@npc$;
+	mes "As far as I can see here, you have " + #bankstorage + " Zeny.";
+	close;
+
+Lwrongamount:
+	next;
+	mes .@npc$;
+	mes "I thinks there's a problem. I can't do that, sorry.";
+	close;
+	
+Lrealamount:
+	next;
+	mes .@npc$;
+	mes "Don't try to steal the bank! You don't have that kind of money!";
+	close;
+
+Lneedzeny:
+	next;
+	mes .@npc$;
+	mes "Don't make me laugh! You don't have that much money!";
+	close;
+
+Lneedzeny2:
+	next;
+	mes .@npc$;
+	mes "You don't have enough to pay for my services.";
+	close;
+
+Lneedzeny3:
+	next;
+	mes .@npc$;
+	mes "You don't have any zeny at our bank.";
+	close;
+
+Lcancel:
+	next;
+	mes .@npc$;
+	mes "Perfect...Come back soon!";
+	close;
+
+OnUpdateBank:
+	if (#contract == 0)
+	{
+		//nthing
+	}
+	else
+		set #bankstorage, #bankstorage + (#bankstorage * #contract / 100);
+	set #wait_update_bank, 0;
+	end;
+	
+LLoan:
+	next;
+	mes .@npc$;
+	mes "You need a little help to meet the month's quota?";
+	mes "Of course we can help you.";
+	mes "But there are some rules.";
+	mes "The maximum amount for a loan is " + .@maxLoan + ".";
+	mes "Plus, there is a percentage to return us. It's " + .@loanPercentage + "% of the total loan.";
+	mes "Finally, you'll have a month to repay the money to us.";
+	mes "Otherwise, you'll never be able to get a loan again in our bank.";
+	mes "Well, not for a month at least, as soon as you return the money.";
+	mes "Still interested?";
+	if (select("Yes","No") == 1)
+	{
+		while(.@loan < 0 || .@loan > .@maxLoan)
+		{
+			if (.@maxLoan < .@loan)
+			{
+				next;
+				mes .@npc$;
+				mes "Sorry, I can't do that.";
+			}
+			next;
+			mes .@npc$;
+			mes "How many do you need?";
+			input .@loan;
+		}
+		
+		next;
+		mes .@npc$;
+		mes "Alright, so you need " + .@loan + ".";
+		mes "That's gonna make a total of " + (.@loan + (10 * .@loan / 100)) + "z to return us.";
+		mes "Perfect.";
+		set Zeny, Zeny + .@loan;
+		set BANKLOAN, (.@loan + (10 * .@loan / 100));
+		set BANKLOANRETURNDAY, gettime(5);
+		set BANKLOANRETURNMONTH, gettime(6) + 1;
+		mes "Here you are. You now have a month to repay the money.";
+		mes "See you soon.";
+	}
+	else
+	{
+		next;
+		mes .@npc$;
+		mes "Wise decision, I think.";
+		mes "You'll be okay.";
+	}
+	close;
+	
+LLoanBackForbid:
+	next;
+	mes .@npc$;
+	mes "Oh, you're here to give us our money back!";
+	mes "Of course, of course.";
+	mes "Here we go.";
+	mes "You owe us " + BANKLOAN + "z.";
+	if (Zeny < BANKLOAN)
+	{
+		mes "But...you don't even have the money...";
+		mes "Your loan is still due, sorry.";
+		mes "I can't suspend your ban...";
+	}
+	else
+	{
+		mes "Perfect, we're clear.";
+		mes "On the other hand, your ban will last till the end of month.";
+		mes "Thank you, come back soon!";
+		set BANKBAN, 2;
+	}
+	set Zeny, Zeny - BANKLOAN;
+	close;
+	
+LLoanBack:
+	next;
+	mes .@npc$;
+	mes "Oh, you're here to give us our money back!";
+	mes "Of course, my friend.";
+	mes "Here we go.";
+	mes "You owe us " + BANKLOAN + "z.";
+	if (Zeny < BANKLOAN)
+	{
+		mes "But...you don't even have the money...";
+		mes "Your loan is still due, sorry.";
+	}
+	else
+	{
+		if ((gettime(6) > BANKLOANRETURNMONTH + 1)
+			|| (gettime(6) <= BANKLOANRETURNMONTH && gettime(5) > BANKLOANRETURNDAY))
+		{
+			mes "Sorry but you're payment is late.";
+			mes "I must block your account for a month...";
+			mes "And I'll take our money back.";
+			set BANKFORBIDDAY, gettime(5);
+			set BANKFORBIDMONTH, gettime(6);
+			set BANKBAN, 1;
+		}
+		else
+		{
+			mes "Perfect, we're clear.";
+			mes "Thank you, come back soon.";
+		}
+	}
+	set Zeny, Zeny - BANKLOAN;
+	close;
+}
+
+mellina_in,139,150,0	duplicate(danfbwsb)	Bank#2::danfsbhb	57
+mellina_in,52,65,0	duplicate(danfbwsb)	Bank#3::danfpmb	57

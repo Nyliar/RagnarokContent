@@ -1,0 +1,123 @@
+//===== eAthena Script =======================================
+//= Year one Main script
+//===== Par: =================================================
+//= Alayne
+//===== Version du Script: ===================================
+//= 1.0 
+//===== Compatible Avec: =====================================
+//= eAthena TxT & SQL
+//===== Commentaires =========================================
+//
+//= Year one skeleton
+//
+//============================================================
+
+-	script	WizardingSchool::alawsyo	HIDDEN_WARP_NPC,2,2,{
+	end;
+	
+OnTouch:
+	set .@mobCount, mobcount(.wwmap$, strnpcinfo(3) + "::OnCerbereDeath");
+	set .@mobCount, .@mobCount + mobcount(.wwmap$, strnpcinfo(3) + "::OnFilletDeath");
+	set .@mobCount, .@mobCount + mobcount(.wwmap$, strnpcinfo(3) + "::OnTrollDeath");
+	set .@mobCount, .@mobCount + mobcount(.wwmap$, strnpcinfo(3) + "::OnKeyDeath");
+	set .@mobCount, .@mobCount + mobcount(.wwmap$, strnpcinfo(3) + "::OnGoodKeyDeath");
+	set .@mobCount, .@mobCount + mobcount(.wwmap$, strnpcinfo(3) + "::OnMirrorBroke");
+	set .@mobCount, .@mobCount + mobcount(.wwmap$, strnpcinfo(3) + "::OnProfessorDeath");
+	
+	if(.@mobCount == 0)
+	{
+		monster .wwmap$, x, y, "Cerbere", 1, strnpcinfo(3) + "::OnCerbereDeath";
+		areamonster .wwmap$, x, y, x, y, "Hell Fillet", 100, strnpcinfo(3) + "::OnFilletDeath";
+		monster .wwmap$, x, y, "Troll", 1, strnpcinfo(3) + "::OnTrollDeath";
+		areamonster .wwmap$, x, y, x, y, "Keys Thief", 25, strnpcinfo(3) + "::OnKeyDeath";
+		areamonster .wwmap$, x, y, x, y, "Keys Thief", 1, strnpcinfo(3) + "::OnGoodKeyDeath";
+		monster .wwmap$, x, y, "Cursed Mirror", 1, strnpcinfo(3) + "::OnMirrorBroke";
+		
+		set .wsFirstYearId, getcharid(3);
+	}
+	dispbottom "[ Wizarding School ] There's a strange odor here...Like...Like a wet dog...";
+	end;
+
+OnPCLogoutEvent:
+	if(getcharid(3) == .wsFirstYearId)
+	{
+		//clean current test datas
+		
+		killmonster .wwmap$, strnpcinfo(3) + "::OnCerbereDeath";
+		killmonster .wwmap$, strnpcinfo(3) + "::OnFilletDeath";
+		killmonster .wwmap$, strnpcinfo(3) + "::OnTrollDeath";
+		killmonster .wwmap$, strnpcinfo(3) + "::OnKeyDeath";
+		killmonster .wwmap$, strnpcinfo(3) + "::OnGoodKeyDeath";
+		killmonster .wwmap$, strnpcinfo(3) + "::OnMirrorBroke";
+		killmonster .wwmap$, strnpcinfo(3) + "::OnProfessorDeath";	
+	}
+	end;
+	
+OnCerbereDeath:
+	enablenpc "yearOne1-2";
+	enablenpc "yearOne2-1";
+	
+	enablenpc "yearOne2-3";
+	enablenpc "yearOne3-2";
+	end;
+	
+OnFilletDeath:
+	//nothing, used to clean
+	end;
+	
+OnTrollDeath:
+	enablenpc "yearOne3-4";
+	enablenpc "yearOne4-3";
+	end;
+	
+OnKeyDeath:
+	set .@mobCount, mobcount(.wwmap$, strnpcinfo(3) + "::OnKeyDeath");
+	if(.@mobCount < 25 * 2)
+	{
+		areamonster .wwmap$, x, y, x, y, "Keys Thief", 2, strnpcinfo(3) + "::OnKeyDeath";
+	}
+	end;
+	
+OnGoodKeyDeath:
+	killmonster .wwmap$, strnpcinfo(3) + "::OnKeyDeath";
+	enablenpc "yearOne4-5";
+	enablenpc "yearOne5-4";
+	end;
+	
+OnMirrorBroke:
+	enablenpc "yearOne5-6";
+	enablenpc "yearOne6-5";
+	monster .wwmap$, x, y, "Devoted Professor", 1, strnpcinfo(3) + "::OnProfessorDeath";
+	end;
+	
+OnProfessorDeath:	
+	dispbottom "[ Wizarding School ] Congratulations! This was the last ordeal for your first year here!";
+	set WIZARDINGSCQ, 2;
+	end;
+
+OnInit:
+	set .wwmap$, "kh_school";
+	disablenpc "yearOne1-2";
+	disablenpc "yearOne2-1";
+	disablenpc "yearOne2-3";
+	disablenpc "yearOne3-2";
+	disablenpc "yearOne3-4";
+	disablenpc "yearOne4-3";
+	disablenpc "yearOne4-5";
+	disablenpc "yearOne5-4";
+	disablenpc "yearOne5-6";
+    disablenpc "yearOne6-5";
+	end;
+}
+				
+				
+kh_school,100,150,0	warp	yearOne1-2	1,1,kh_school,128,150
+kh_school,100,150,0	warp	yearOne2-1	1,1,kh_school,128,150
+kh_school,100,150,0	warp	yearOne2-3	1,1,kh_school,128,150
+kh_school,100,150,0	warp	yearOne3-2	1,1,kh_school,128,150
+kh_school,100,150,0	warp	yearOne3-4	1,1,kh_school,128,150
+kh_school,100,150,0	warp	yearOne4-3	1,1,kh_school,128,150
+kh_school,100,150,0	warp	yearOne4-5	1,1,kh_school,128,150
+kh_school,100,150,0	warp	yearOne5-4	1,1,kh_school,128,150
+kh_school,100,150,0	warp	yearOne5-6	1,1,kh_school,128,150
+kh_school,100,150,0	warp	yearOne6-5	1,1,kh_school,128,150

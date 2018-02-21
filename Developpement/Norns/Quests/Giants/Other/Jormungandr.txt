@@ -1,0 +1,285 @@
+// [========================================================]
+// [===========  	 Giant - Jormungandr	============]
+// [========================================================]
+// [ Version 1                                              ]
+// [========================================================]
+// [ Original script by: Alayne				    ]
+// [========================================================]
+// [ Description:                                           ]
+// [--------------------------------------------------------]
+// [                                                        ]
+// [ - Rune Midgard main story quest line    	   	    ]
+// [  This file contains explanation and base npcs 	    ]
+// [                                                        ]
+// [========================================================]
+// [ Changelog: (5 last updates)                            ]
+// [--------------------------------------------------------]
+// [                                                        ]
+// [ v0: Creation                      			    ]
+// [                                                        ]
+// [========================================================]
+// [                                                        ]
+// [========================================================]
+
+um_dun01,214,223,4	script	Jormungandr::Giant_4_2_1	4_M_BELIEVER01,{ //10021
+	set .@npcname$, "[Jormungandr]";
+	set .@pcname$, "[" + strcharinfo(0) + "]";
+	
+	mes .@npcname$;
+	//cutin Jormungandr
+	mes "What do you want, mortal?";
+	mes "I am Jormungandr, the Great Snake.";
+	mes "I surround everything with my body, Yggdrasil belongs to me...I'll swallow everything!";
+	query_sql("SELECT `sealId`,`generalState` FROM `verdandi_quests` WHERE `id`='4_2'", .@sealItem, .@generalState);
+	if(countitem(.@sealItem[0]) > 0 && .@generalState[0] == 2)
+	{
+		switch(rand(0,10))
+		{
+			case 0:
+			case 1:
+			case 2:
+				//nothing, stop talking from this point
+				break;
+			case 3:
+				next;
+				mes .@npcname$;
+				mes "You look a bit strange...Are you hidding something from me?";
+				break;
+			case 4:
+				next;
+				mes .@npcname$;
+				mes "I can smell the Fear on you. Are you affraid, tiny mortal?";
+				break;
+			case 5:
+				next;
+				mes .@npcname$;
+				mes "...Are you sure I've never seen you before?";
+				break;
+			case 6:
+				next;
+				mes .@npcname$;
+				mes "There's a strange smell over you...What is it?";
+				break;
+			case 7:
+				next;
+				mes .@npcname$;
+				mes "There's a strange aura issuing from you...What is it?";
+				break;
+			case 8:
+				next;
+				mes .@npcname$;
+				mes "Go away. I'm a bit busy now.";
+				break;
+			case 9:
+				next;
+				mes .@npcname$;
+				mes "That's kinda strange you've been able to see me...Who are you?";
+				break;
+			case 10:
+				next;
+				cutin "", 255;
+				mes .@pcname$;
+				mes "What do you think about the War?";
+				next;
+				//cutin Jormungandr
+				mes .@npcname$;
+				mes "SSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSooonnnnnnnnn!";
+				next;
+				cutin "", 255;
+				mes .@pcname$;
+				mes "Thanks...You remove my last hesitations.";
+				delitem .@sealItem[0], 1;
+				goto OnSealActivated;
+				break;
+		}
+	}
+	close;
+	
+OnSealActivated:
+	next;
+	set .@skuldName$, "[Skuld]";
+	cutin "shaloshi01",2;
+	mes .@skuldName$;
+	mes "" + strcharinfo(0) + ", I've found he's weakness.";
+	mes "To seal him, you'll have to kill the correct monster hidden somewhere on the Influence Area.";
+	mes "Once done, come back to me. She'll be able to Seal him completely.";
+	next;
+	cutin "", 255;
+	mes "[" + strcharinfo(0) + "]";
+	mes "I'm on it.";
+	close;
+	
+OnActivateTarget:
+	set .@activatedRank, rand(1,4);
+	cutin "shaloshi01",2;
+	set .@skuldName$, "[Skuld]";	
+	explode(.@id$, strnpcinfo(3), "_");
+	set .@realid$, .@id$[1] + "_"  + .@id$[2];
+	set .@npcname$, .@id$[0] + "_"  + .@realid$ + "_" + .@activatedRank;
+	hideoffnpc .@npcname$;
+	mes .@skuldName$;
+	mes "" + strcharinfo(0) + ", I've found him.";
+	switch(.@activatedRank)
+	{
+		case 1:
+			mes "He's on Umbala Dungeon 01.";
+			break;
+		case 2:
+			mes "He's on Umbala Dungeon 02.";
+			break;
+		case 3:
+			mes "He's on Umbala Field 03.";
+			break;
+		case 4:
+			mes "He's on Umbala Field 04.";
+			break;
+	}
+	next;
+	cutin "", 255;
+	mes "[" + strcharinfo(0) + "]";
+	mes "I'll get him.";
+	set .@query$, "UPDATE `verdandi_quests` SET `ActivatedNpc`=" + .@activatedRank + " WHERE `id`='" + .@realid$ + "'";
+	query_sql(.@query$, .@count);
+	close;
+	
+OnSealTarget:
+	hideonnpc strnpcinfo(3);
+	hideonnpc "Giant_4_2_2";
+	hideonnpc "Giant_4_2_3";
+	hideonnpc "Giant_4_2_4";
+	query_sql("UPDATE `verdandi_quests` SET `generalState`=3 WHERE `id`='4_2'", .@count);
+	announce " [Verdandi] The Giant Jormungandr has been Sealed successfully thanks to " + strcharinfo(0) + " and his team.",bc_all,"0x00FF99";
+	getpartymember getcharid(2),2;
+	for( set .@pt, 0; .@pt < $@partymembercount; set .@pt, .@pt+1 ){
+		if( attachrid( $@partymemberaid[.@pt] ) ){
+			callfunc("AddPoints", getcharid(3), $sealingPointAmount);
+			logmes "" + strcharinfo(0) + " obtains " + ($sealingPointAmount) + " points from sealing Jormungandr.";
+		}
+	}
+	close;
+	
+OnSealMonsterKilled:	
+	query_sql("SELECT `generalState`,`sealId` FROM `verdandi_quests` WHERE `id`='4_2'", .@generalState, .@sealId);
+	if(.@generalState[0] != 3)
+	{
+		if(countitem(.@sealId[0]) == 0)
+		{
+			monster .influencedMaps$[rand(0,getarraysize(.influencedMaps$) - 1)],0,0,"--ja--",.monsterIds[getarraysize(.monsterIds) - 1],1,"Giant_4_2_1::OnSealMonsterKilled";
+		}
+		else
+		{
+			mes "[Jormungandr]";
+			mes "You shouldn't defy me. Those are my childrens...I'll avenge them myself!";
+			
+			getmapxy(.@map$, .@x, .@y, UNITTYPE_PC);
+			hideonnpc strnpcinfo(3);
+			monster .@map$, .@x, .@y, "Jormungandr", x, 1, strnpcinfo(3) + "::OnJormungandrDied";
+		}
+	}
+	end;
+	
+OnJormungandrDied:
+	//condition fullfilled
+	set .@skuname$, "[Skuld]";
+	cutin "shaloshi01",2;
+	mes .@skuname$;
+	mes "I got him! I found his Future Thread. Take it to Verdandi now!";
+	getitem $JormungandrSealItemId, 1;
+	next;
+	cutin "", 255;
+	mes "[" + strcharinfo(0) + "]";
+	mes "On my way!";
+	close;	
+	
+OnMyMobKilled:
+	query_sql("SELECT `generalState` FROM `verdandi_quests` WHERE `id`='4_2'", .@generalState);
+	if(.@generalState[0] != 3)
+	{
+		monster .influencedMaps$[rand(0,getarraysize(.influencedMaps$) - 1)],0,0,"--ja--",.monsterIds[getarraysize(.monsterIds) - 1],1,"Giant_4_2_1::OnSealMonsterKilled";
+	}
+	end;
+	
+OnCallMonsters:
+	query_sql("SELECT `generalState` FROM `verdandi_quests` WHERE `id`='4_2'", .@generalState);
+	if(.@generalState[0] != 3)
+	{
+		set .@size, getarraysize(.monsterIds) - 1;
+		for(set .@i,0; .@i<.@size && .monsterInvoked < .monsterInvokLimit; set .@i,.@i+1)
+		{
+			set .@invokCount, 1;
+			monster .influencedMaps$[rand(0,getarraysize(.influencedMaps$) - 1)],0,0,"--ja--",.monsterIds[rand(0,getarraysize(.monsterIds) - 1)],.@invokCount,"Giant_4_2_1::OnMyMobKilled";
+			set .monsterInvoked, .monsterInvoked + .@invokCount;
+		}
+		monster .influencedMaps$[rand(0,getarraysize(.influencedMaps$) - 1)],0,0,"--ja--",.monsterIds[getarraysize(.monsterIds) - 1],1,"Giant_4_2_1::OnSealMonsterKilled";
+	}
+	end;
+	
+OnPCLoadMapEvent:
+	query_sql("SELECT `generalState` FROM `verdandi_quests` WHERE `id`='4_2'", .@generalState);
+	if (.@generalState[0] != 3)
+	{	
+		set .@found, 0;
+		for(set .@i,0; .@i<getarraysize(.influencedMaps$) && .@found == 0; set .@i,.@i+1)
+		{
+			if(strcharinfo(3) == .influencedMaps$[.@i])
+				set .@found, 1;
+		}
+		if (.@found == 1 && JORWARNED == 0)
+		{
+			addtimer 60000, strnpcinfo(3)+"::On1Min";
+			dispbottom " [ Jormungandr ] I fell it...You're blood isn't hot enough to be one of ours...";
+			set JORWARNED, 1;
+		}
+	}
+	end;
+
+On1Min:
+	if(JORWARNED == 1)
+	{
+		specialeffect2 136;
+		sc_start SC_BURNING, 60000;
+	}
+	end;
+	
+OnInitMalusSpread:
+	for(set .@i,0; .@i<getarraysize(.influencedMaps$); set .@i,.@i+1)
+	{
+		setmapflag .influencedMaps$[.@i], mf_loadevent;
+	}
+	return;
+
+OnTimer10000:
+	if (strnpcinfo(3) == "Giant_4_2_1")
+	{
+		query_sql("SELECT `ActivatedNpc`,`generalState` FROM `verdandi_quests` WHERE `id`='4_2'", .@npc$, .@generalState);
+		if(.@npc$[0] != "0" && .@generalState[0] == 2)
+		{
+			hideoffnpc "Giant_4_2_" + .@npc$[0];
+		}
+		stopnpctimer;
+	}
+	
+	unitwarp strnpcinfo(3), strnpcinfo(4), rand(150), rand(150);
+	unitskilluseid strnpcinfo(3), MG_STORMGUST, 10; //21
+	setnpctimer 0;
+	end;
+	
+OnInit:
+	hideonnpc strnpcinfo(3);
+	initnpctimer;
+	set .monsterInvokLimit, 5;
+	set .monsterInvoked, 0;
+	set $JormungandrSealItemId, 27008;
+	setarray .monsterIds[0], 1885, 1720, 2319, 1181, 1719; //last one should be a monster from original dungeon
+	setarray .influencedMaps$[0], "abyss01", "abyss02", "abyss03";
+	if(strnpcinfo(3) == "Giant_4_2_1")
+	{
+		initnpctimer;
+		goto OnCallMonsters;
+	}
+	end;
+}
+
+um_dun02,33,121,4	duplicate(Giant_4_2_1)	Jormungandr::Giant_4_2_2	4_M_BELIEVER01
+um_fild03,230,266,4	duplicate(Giant_4_2_1)	Jormungandr::Giant_4_2_3	4_M_BELIEVER01
+um_fild04,247,46,4	duplicate(Giant_4_2_1)	Jormungandr::Giant_4_2_4	4_M_BELIEVER01

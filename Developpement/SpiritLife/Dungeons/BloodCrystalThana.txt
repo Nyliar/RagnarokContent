@@ -1,0 +1,300 @@
+tha_t12,130,51,5	script	BloodCrystal#15::alabc35	OBJ_A2,{
+	set .@npcname$, "[Blood Crystal]";
+	mes .@npcname$;
+	mes "Current fill level: " + .fillPercent + "%"; 
+	mes "Would do you want to do?";
+	switch(select("Fill the Crystal","Retrieve a Spirit Life","Nothing"))
+	{
+		case 1:
+			next;
+			mes .@npcname$;
+			mes "You're about to fill Life in Blood Crystal.";
+			mes "How many Shards do you wish to give to the Crystal?";
+			mes "'0' means 'as much as possible'.";
+			input .@shardCount;
+			if(.@shardCount == 0)
+			{
+				set .@shardCount, countitem($shardIds[0]);
+			}
+			if(.@shardCount > countitem($shardIds[0]))
+			{
+				next;
+				mes .@npcname$;
+				mes "You don't have those items.";
+				close;
+			}
+			if(.popAvailable != 1)
+			{
+				next;
+				mes .@npcname$;
+				mes "The Guardian has allready been killed. Wait for " + $repopHourCount + " hours to summon it again.";
+				close;
+			}
+			delitem $shardIds[0], .@shardCount;
+			set .@fillRequired, 1000 + atoi(strnpcinfo(2)) * 50;
+			set .fillItemCount, .fillItemCount + .@shardCount;
+			set .fillPercent,  .fillItemCount * 100 / .@fillRequired;
+			if(.fillPercent >= 100)
+			{
+				set .fillPercent, 100;
+				next;
+				mes .@npcname$;
+				mes "The Crystal has been filled.";
+				for(set .@i,.mapToCheck[0]; .@i<.mapToCheck[1]; set .@i,.@i+1)
+				{
+					set .@mobCount, .@mobCount + mobcount("tha_t" + (.@i > 9 ? "" : "0") + .@i, "CardinalSystem::OnNormalDied");
+				}
+				if(.@mobCount == 0)
+				{
+					set .@percentHeal, 0 - atoi(strnpcinfo(2));
+					percentheal .@percentHeal, .@percentHeal;
+					set .popAvailable, 0;	
+					setnpcdisplay strnpcinfo(3), OBJ_B2, 1;
+					//special effect
+					specialeffect 862;
+					//summon boss
+					monster strnpcinfo(4), 0, 0, "--ja--", .bossId, 1, "CardinalSystem::OnGuardianDied";
+					initnpctimer;
+					set .loopCount, 0;
+				}
+				else
+				{
+					mes "The Guardian will appears after total dungeon cleaning.";
+				}
+				setd("$" + strnpcinfo(3), 1);
+			}
+			else
+			{
+				next;
+				mes .@npcname$;
+				mes "The Crystal has been filled up to " + .fillPercent + "%";
+			}
+			break;
+		case 2:
+			next;
+			mes .@npcname$;
+			if(SPIRITLIFE == $maxSpiritLife)
+			{
+				mes "You can't get more than " + $maxSpiritLife + " Spirit Lifes.";
+				close;
+			}
+			if(SPIRIT == 0)
+			{
+				mes "You can't retrieve a Spirit Life while you're not in Spirit mode.";
+				close;
+			}
+			if(.fillPercent > $minFillPercentToRetrieveLife)
+			{
+				set .fillPercent, 0;
+				set SPIRITLIFE, SPIRITLIFE + 1;
+				set SPIRIT, 0;
+				specialeffect2 372;
+				undisguise();
+				mes "The Crystal has been emptied. You've raised from the dead.";
+			}
+			else
+			{
+				mes "The Crystal isn't filled enough to allow Spirit Life retrieve.";
+			}
+			break;
+		case 3:
+			next;
+			mes .@npcname$;
+			mes "Action cancelled.";
+			break;
+	}
+	close;
+
+OnTimer360000:
+	stopnpctimer;
+	set .loopCount, .loopCount + 1;
+	if(.loopCount >= $repopHourCount)
+	{
+		goto OnClearGauge;
+	}
+	initnpctimer;
+	end;
+
+OnClearGauge:
+	setnpcdisplay strnpcinfo(3), OBJ_A2;
+	set .fillPercent, 0;
+	set .fillItemCount, 0;
+	end;
+	
+OnPopMonsters:
+	callsub OnClearMonsters;
+//== tha_t01 - Thanatos Tower F1 ===========================
+	monster "tha_t01",0,0,"--ja--",1275,5,"CardinalSystem::OnNormalDied";
+	monster "tha_t01",0,0,"--ja--",1695,20,"CardinalSystem::OnNormalDied";
+	monster "tha_t01",0,0,"--ja--",1195,20,"CardinalSystem::OnNormalDied";
+	monster "tha_t01",0,0,"--ja--",1191,20,"CardinalSystem::OnNormalDied";
+	monster "tha_t01",0,0,"--ja--",1703,4,"CardinalSystem::OnNormalDied";
+
+//== tha_t02 - Thanatos Tower F2 ===========================
+	monster "tha_t02",0,0,"--ja--",1275,10,"CardinalSystem::OnNormalDied";
+	monster "tha_t02",0,0,"--ja--",1697,20,"CardinalSystem::OnNormalDied";
+	monster "tha_t02",0,0,"--ja--",1191,30,"CardinalSystem::OnNormalDied";
+	monster "tha_t02",0,0,"--ja--",1699,80,"CardinalSystem::OnNormalDied";
+	monster "tha_t02",0,0,"--ja--",1195,10,"CardinalSystem::OnNormalDied";
+	monster "tha_t02",0,0,"--ja--",1698,10,"CardinalSystem::OnNormalDied";
+	monster "tha_t02",0,0,"--ja--",1377,10,"CardinalSystem::OnNormalDied";
+	monster "tha_t02",0,0,"--ja--",1702,4,"CardinalSystem::OnNormalDied";
+
+//== tha_t03 - Thanatos Tower F3 ===========================
+	monster "tha_t03",0,0,"--ja--",1696,20,"CardinalSystem::OnNormalDied";
+	monster "tha_t03",0,0,"--ja--",1195,30,"CardinalSystem::OnNormalDied";
+	monster "tha_t03",0,0,"--ja--",1698,80,"CardinalSystem::OnNormalDied";
+	monster "tha_t03",0,0,"--ja--",1191,10,"CardinalSystem::OnNormalDied";
+	monster "tha_t03",0,0,"--ja--",1699,10,"CardinalSystem::OnNormalDied";
+	monster "tha_t03",0,0,"--ja--",1377,10,"CardinalSystem::OnNormalDied";
+	monster "tha_t03",0,0,"--ja--",1701,4,"CardinalSystem::OnNormalDied";
+
+//== tha_t04 - Thanatos Tower F4 ===========================
+	monster "tha_t04",0,0,"--ja--",1694,20,"CardinalSystem::OnNormalDied";
+	monster "tha_t04",0,0,"--ja--",1195,20,"CardinalSystem::OnNormalDied";
+	monster "tha_t04",0,0,"--ja--",1698,20,"CardinalSystem::OnNormalDied";
+	monster "tha_t04",0,0,"--ja--",1191,20,"CardinalSystem::OnNormalDied";
+	monster "tha_t04",0,0,"--ja--",1699,20,"CardinalSystem::OnNormalDied";
+	monster "tha_t04",0,0,"--ja--",1377,20,"CardinalSystem::OnNormalDied";
+	monster "tha_t04",0,0,"--ja--",1295,10,"CardinalSystem::OnNormalDied";
+	monster "tha_t04",0,0,"--ja--",1320,10,"CardinalSystem::OnNormalDied";
+	monster "tha_t04",0,0,"--ja--",1700,4,"CardinalSystem::OnNormalDied";
+
+//== tha_t05 - Thanatos Tower F5 ===========================
+	monster "tha_t05",0,0,"--ja--",1377,5,"CardinalSystem::OnNormalDied";
+	monster "tha_t05",0,0,"--ja--",1697,10,"CardinalSystem::OnNormalDied";
+	monster "tha_t05",0,0,"--ja--",1698,10,"CardinalSystem::OnNormalDied";
+	monster "tha_t05",0,0,"--ja--",1699,10,"CardinalSystem::OnNormalDied";
+	monster "tha_t05",0,0,"--ja--",1320,20,"CardinalSystem::OnNormalDied";
+	monster "tha_t05",0,0,"--ja--",1295,5,"CardinalSystem::OnNormalDied";
+	monster "tha_t05",0,0,"--ja--",1377,5,"CardinalSystem::OnNormalDied";
+	monster "tha_t05",0,0,"--ja--",1695,10,"CardinalSystem::OnNormalDied";
+	monster "tha_t05",0,0,"--ja--",1698,10,"CardinalSystem::OnNormalDied";
+	monster "tha_t05",0,0,"--ja--",1699,10,"CardinalSystem::OnNormalDied";
+	monster "tha_t05",0,0,"--ja--",1320,20,"CardinalSystem::OnNormalDied";
+	monster "tha_t05",0,0,"--ja--",1295,5,"CardinalSystem::OnNormalDied";
+	monster "tha_t05",0,0,"--ja--",1377,5,"CardinalSystem::OnNormalDied";
+	monster "tha_t05",0,0,"--ja--",1696,10,"CardinalSystem::OnNormalDied";
+	monster "tha_t05",0,0,"--ja--",1698,10,"CardinalSystem::OnNormalDied";
+	monster "tha_t05",0,0,"--ja--",1699,10,"CardinalSystem::OnNormalDied";
+	monster "tha_t05",0,0,"--ja--",1320,20,"CardinalSystem::OnNormalDied";
+	monster "tha_t05",0,0,"--ja--",1295,5,"CardinalSystem::OnNormalDied";
+	monster "tha_t05",0,0,"--ja--",1377,5,"CardinalSystem::OnNormalDied";
+	monster "tha_t05",0,0,"--ja--",1694,10,"CardinalSystem::OnNormalDied";
+	monster "tha_t05",0,0,"--ja--",1698,10,"CardinalSystem::OnNormalDied";
+	monster "tha_t05",0,0,"--ja--",1699,10,"CardinalSystem::OnNormalDied";
+	monster "tha_t05",0,0,"--ja--",1320,20,"CardinalSystem::OnNormalDied";
+	monster "tha_t05",0,0,"--ja--",1295,5,"CardinalSystem::OnNormalDied";
+	monster "tha_t05",0,0,"--ja--",1707,2,"CardinalSystem::OnNormalDied";
+
+//== tha_t06 - Thanatos Tower F6 ===========================
+	monster "tha_t06",0,0,"--ja--",1377,5,"CardinalSystem::OnNormalDied";
+	monster "tha_t06",0,0,"--ja--",1697,10,"CardinalSystem::OnNormalDied";
+	monster "tha_t06",0,0,"--ja--",1698,10,"CardinalSystem::OnNormalDied";
+	monster "tha_t06",0,0,"--ja--",1699,10,"CardinalSystem::OnNormalDied";
+	monster "tha_t06",0,0,"--ja--",1295,10,"CardinalSystem::OnNormalDied";
+	monster "tha_t06",0,0,"--ja--",1320,10,"CardinalSystem::OnNormalDied";
+	monster "tha_t06",0,0,"--ja--",1377,5,"CardinalSystem::OnNormalDied";
+	monster "tha_t06",0,0,"--ja--",1695,10,"CardinalSystem::OnNormalDied";
+	monster "tha_t06",0,0,"--ja--",1698,10,"CardinalSystem::OnNormalDied";
+	monster "tha_t06",0,0,"--ja--",1699,10,"CardinalSystem::OnNormalDied";
+	monster "tha_t06",0,0,"--ja--",1295,10,"CardinalSystem::OnNormalDied";
+	monster "tha_t06",0,0,"--ja--",1320,10,"CardinalSystem::OnNormalDied";
+	monster "tha_t06",0,0,"--ja--",1377,5,"CardinalSystem::OnNormalDied";
+	monster "tha_t06",0,0,"--ja--",1696,10,"CardinalSystem::OnNormalDied";
+	monster "tha_t06",0,0,"--ja--",1698,10,"CardinalSystem::OnNormalDied";
+	monster "tha_t06",0,0,"--ja--",1699,10,"CardinalSystem::OnNormalDied";
+	monster "tha_t06",0,0,"--ja--",1295,10,"CardinalSystem::OnNormalDied";
+	monster "tha_t06",0,0,"--ja--",1320,10,"CardinalSystem::OnNormalDied";
+	monster "tha_t06",0,0,"--ja--",1377,5,"CardinalSystem::OnNormalDied";
+	monster "tha_t06",0,0,"--ja--",1694,10,"CardinalSystem::OnNormalDied";
+	monster "tha_t06",0,0,"--ja--",1698,10,"CardinalSystem::OnNormalDied";
+	monster "tha_t06",0,0,"--ja--",1699,10,"CardinalSystem::OnNormalDied";
+	monster "tha_t06",0,0,"--ja--",1295,10,"CardinalSystem::OnNormalDied";
+	monster "tha_t06",0,0,"--ja--",1320,10,"CardinalSystem::OnNormalDied";
+	monster "tha_t06",0,0,"--ja--",1706,2,"CardinalSystem::OnNormalDied";
+
+//== tha_t07 - Thanatos Tower F7 ===========================
+	monster "tha_t07",0,0,"--ja--",1698,10,"CardinalSystem::OnNormalDied";
+	monster "tha_t07",0,0,"--ja--",1699,10,"CardinalSystem::OnNormalDied";
+	monster "tha_t07",0,0,"--ja--",1703,7,"CardinalSystem::OnNormalDied";
+	monster "tha_t07",0,0,"--ja--",1701,7,"CardinalSystem::OnNormalDied";
+	monster "tha_t07",0,0,"--ja--",1702,15,"CardinalSystem::OnNormalDied";
+	monster "tha_t07",0,0,"--ja--",1700,7,"CardinalSystem::OnNormalDied";
+	monster "tha_t07",0,0,"--ja--",1705,2,"CardinalSystem::OnNormalDied";
+
+//== tha_t08 - Thanatos Tower F8 ===========================
+	monster "tha_t08",0,0,"--ja--",1698,10,"CardinalSystem::OnNormalDied";
+	monster "tha_t08",0,0,"--ja--",1699,10,"CardinalSystem::OnNormalDied";
+	monster "tha_t08",0,0,"--ja--",1703,5,"CardinalSystem::OnNormalDied";
+	monster "tha_t08",0,0,"--ja--",1701,5,"CardinalSystem::OnNormalDied";
+	monster "tha_t08",0,0,"--ja--",1702,20,"CardinalSystem::OnNormalDied";
+	monster "tha_t08",0,0,"--ja--",1700,5,"CardinalSystem::OnNormalDied";
+	monster "tha_t08",0,0,"--ja--",1704,2,"CardinalSystem::OnNormalDied";
+
+//== tha_t09 - Thanatos Tower F9 ===========================
+	monster "tha_t09",0,0,"--ja--",1694,5,"CardinalSystem::OnNormalDied";
+	monster "tha_t09",0,0,"--ja--",1703,20,"CardinalSystem::OnNormalDied";
+	monster "tha_t09",0,0,"--ja--",1702,5,"CardinalSystem::OnNormalDied";
+	monster "tha_t09",0,0,"--ja--",1701,5,"CardinalSystem::OnNormalDied";
+	monster "tha_t09",0,0,"--ja--",1700,5,"CardinalSystem::OnNormalDied";
+	monster "tha_t09",0,0,"--ja--",1707,1,"CardinalSystem::OnNormalDied";
+	monster "tha_t09",0,0,"--ja--",1712,3,"CardinalSystem::OnNormalDied";
+
+//== tha_t10 - Thanatos Tower F10 ==========================
+	monster "tha_t10",0,0,"--ja--",1697,5,"CardinalSystem::OnNormalDied";
+	monster "tha_t10",0,0,"--ja--",1702,20,"CardinalSystem::OnNormalDied";
+	monster "tha_t10",0,0,"--ja--",1703,5,"CardinalSystem::OnNormalDied";
+	monster "tha_t10",0,0,"--ja--",1701,5,"CardinalSystem::OnNormalDied";
+	monster "tha_t10",0,0,"--ja--",1700,5,"CardinalSystem::OnNormalDied";
+	monster "tha_t10",0,0,"--ja--",1706,1,"CardinalSystem::OnNormalDied";
+	monster "tha_t10",0,0,"--ja--",1711,3,"CardinalSystem::OnNormalDied";
+
+//== tha_t11 - Thanatos Tower F11 ==========================
+	monster "tha_t11",0,0,"--ja--",1695,5,"CardinalSystem::OnNormalDied";
+	monster "tha_t11",0,0,"--ja--",1701,20,"CardinalSystem::OnNormalDied";
+	monster "tha_t11",0,0,"--ja--",1703,5,"CardinalSystem::OnNormalDied";
+	monster "tha_t11",0,0,"--ja--",1702,5,"CardinalSystem::OnNormalDied";
+	monster "tha_t11",0,0,"--ja--",1700,5,"CardinalSystem::OnNormalDied";
+	monster "tha_t11",0,0,"--ja--",1705,1,"CardinalSystem::OnNormalDied";
+	monster "tha_t11",0,0,"--ja--",1710,3,"CardinalSystem::OnNormalDied";
+
+//== tha_t12 - Thanatos Tower F12 ==========================
+	monster "tha_t12",0,0,"--ja--",1693,5,"CardinalSystem::OnNormalDied";
+	monster "tha_t12",0,0,"--ja--",1700,13,"CardinalSystem::OnNormalDied";
+	monster "tha_t12",0,0,"--ja--",1703,5,"CardinalSystem::OnNormalDied";
+	monster "tha_t12",0,0,"--ja--",1701,5,"CardinalSystem::OnNormalDied";
+	monster "tha_t12",0,0,"--ja--",1702,5,"CardinalSystem::OnNormalDied";
+	monster "tha_t12",0,0,"--ja--",1709,4,"CardinalSystem::OnNormalDied";
+	end;
+	
+OnClearMonsters:	
+OnClock0000:
+	killmonsterall "tha_t01";
+	killmonsterall "tha_t02";
+	killmonsterall "tha_t03";
+	killmonsterall "tha_t04";
+	killmonsterall "tha_t05";
+	killmonsterall "tha_t06";
+	killmonsterall "tha_t07";
+	killmonsterall "tha_t08";
+	killmonsterall "tha_t09";
+	killmonsterall "tha_t10";
+	killmonsterall "tha_t11";
+	killmonsterall "tha_t12";
+	set .popAvailable, 1;
+	setd("$" + strnpcinfo(3), 0);
+	return;
+	
+OnInit:
+	set .fillPercent, 0;
+	if(getd("$" + strnpcinfo(3)) >= 1)
+	{
+		set .fillPercent, 100;
+	}
+	setarray .mapToCheck[0],1,12;
+	set .bossId, 1708;
+	set .popAvailable, 1;
+	end;
+}
+

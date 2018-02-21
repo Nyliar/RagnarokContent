@@ -1,0 +1,333 @@
+moc_pryd04,99,119,5	script	BloodCrystal#6::alabc29	OBJ_A2,{
+	set .@npcname$, "[Blood Crystal]";
+	mes .@npcname$;
+	mes "Current fill level: " + .fillPercent + "%"; 
+	mes "Would do you want to do?";
+	switch(select("Fill the Crystal","Retrieve a Spirit Life","Nothing"))
+	{
+		case 1:
+			next;
+			mes .@npcname$;
+			mes "You're about to fill Life in Blood Crystal.";
+			mes "How many Shards do you wish to give to the Crystal?";
+			mes "'0' means 'as much as possible'.";
+			input .@shardCount;
+			if(.@shardCount == 0)
+			{
+				set .@shardCount, countitem($shardIds[0]);
+			}
+			if(.@shardCount > countitem($shardIds[0]))
+			{
+				next;
+				mes .@npcname$;
+				mes "You don't have those items.";
+				close;
+			}
+			if(.popAvailable != 1)
+			{
+				next;
+				mes .@npcname$;
+				mes "The Guardian has allready been killed. Wait for " + $repopHourCount + " hours to summon it again.";
+				close;
+			}
+			delitem $shardIds[0], .@shardCount;
+			set .@fillRequired, 1000 + atoi(strnpcinfo(2)) * 50;
+			set .fillItemCount, .fillItemCount + .@shardCount;
+			set .fillPercent,  .fillItemCount * 100 / .@fillRequired;
+			if(.fillPercent >= 100)
+			{
+				set .fillPercent, 100;
+				next;
+				mes .@npcname$;
+				mes "The Crystal has been filled.";
+				for(set .@i,.mapToCheck[0]; .@i<=.mapToCheck[1]; set .@i,.@i+1)
+				{
+					set .@mobCount, .@mobCount + mobcount("moc_pryd0" + .@i, "CardinalSystem::OnNormalDied");
+				}
+				if(.@mobCount == 0)
+				{
+					set .@percentHeal, 0 - atoi(strnpcinfo(2));
+					percentheal .@percentHeal, .@percentHeal;
+					set .popAvailable, 0;	
+					setnpcdisplay strnpcinfo(3), OBJ_B2, 1;
+					//special effect
+					specialeffect 862;
+					//summon boss
+					monster strnpcinfo(4), 0, 0, "--ja--", .bossId, 1, "CardinalSystem::OnGuardianDied";
+					initnpctimer;
+					set .loopCount, 0;
+				}
+				else
+				{
+					mes "The Guardian will appears after total dungeon cleaning.";
+				}
+				setd("$" + strnpcinfo(3), 1);
+			}
+			else
+			{
+				next;
+				mes .@npcname$;
+				mes "The Crystal has been filled up to " + .fillPercent + "%";
+			}
+			break;
+		case 2:
+			next;
+			mes .@npcname$;
+			if(SPIRITLIFE == $maxSpiritLife)
+			{
+				mes "You can't get more than " + $maxSpiritLife + " Spirit Lifes.";
+				close;
+			}
+			if(SPIRIT == 0)
+			{
+				mes "You can't retrieve a Spirit Life while you're not in Spirit mode.";
+				close;
+			}
+			if(.fillPercent > $minFillPercentToRetrieveLife)
+			{
+				set .fillPercent, 0;
+				set SPIRITLIFE, SPIRITLIFE + 1;
+				set SPIRIT, 0;
+				specialeffect2 372;
+				undisguise();
+				mes "The Crystal has been emptied. You've raised from the dead.";
+			}
+			else
+			{
+				mes "The Crystal isn't filled enough to allow Spirit Life retrieve.";
+			}
+			break;
+		case 3:
+			next;
+			mes .@npcname$;
+			mes "Action cancelled.";
+			break;
+	}
+	close;
+
+OnTimer360000:
+	stopnpctimer;
+	set .loopCount, .loopCount + 1;
+	if(.loopCount >= $repopHourCount)
+	{
+		goto OnClearGauge;
+	}
+	initnpctimer;
+	end;
+
+OnClearGauge:
+	setnpcdisplay strnpcinfo(3), OBJ_A2;
+	set .fillPercent, 0;
+	set .fillItemCount, 0;
+	end;
+	
+OnPopMonsters:
+	callsub OnClearMonsters;
+//== F1 =============================
+	monster "moc_pryd01", 0, 0, "--ja--", 1005, 50, "CardinalSystem::OnNormalDied";
+	monster "moc_pryd01", 0, 0, "--ja--", 1031, 20, "CardinalSystem::OnNormalDied";
+	
+//== F2 =============================
+	monster "moc_pryd02", 0, 0, "--ja--", 1041, 30, "CardinalSystem::OnNormalDied";
+	monster "moc_pryd02", 0, 0, "--ja--", 1028, 30, "CardinalSystem::OnNormalDied";
+	monster "moc_pryd02", 0, 0, "--ja--", 1016, 30, "CardinalSystem::OnNormalDied";
+	monster "moc_pryd02", 0, 0, "--ja--", 1111, 20, "CardinalSystem::OnNormalDied";
+	monster "moc_pryd02", 0, 0, "--ja--", 1031, 20, "CardinalSystem::OnNormalDied";
+	monster "moc_pryd02", 0, 0, "--ja--", 1029, 5, "CardinalSystem::OnNormalDied";
+
+//== F3 =============================
+	monster "moc_pryd03", 0, 0, "--ja--", 1041, 70, "CardinalSystem::OnNormalDied";
+	monster "moc_pryd03", 0, 0, "--ja--", 1032, 20, "CardinalSystem::OnNormalDied";
+	monster "moc_pryd03", 0, 0, "--ja--", 1146, 10, "CardinalSystem::OnNormalDied";
+	monster "moc_pryd03", 0, 0, "--ja--", 1111, 5, "CardinalSystem::OnNormalDied";
+	monster "moc_pryd03", 0, 0, "--ja--", 1191, 5, "CardinalSystem::OnNormalDied";
+
+//== F4 =============================
+	monster "moc_pryd04", 0, 0, "--ja--", 1029, 50, "CardinalSystem::OnNormalDied";
+	monster "moc_pryd04", 0, 0, "--ja--", 1041, 25, "CardinalSystem::OnNormalDied";
+	monster "moc_pryd04", 0, 0, "--ja--", 1146, 20, "CardinalSystem::OnNormalDied";
+	monster "moc_pryd04", 0, 0, "--ja--", 1191, 15, "CardinalSystem::OnNormalDied";
+	monster "moc_pryd04", 0, 0, "--ja--", 1297, 3, "CardinalSystem::OnNormalDied";
+	end;
+	
+OnClearMonsters:	
+OnClock0000:
+	killmonsterall "moc_pryd01";
+	killmonsterall "moc_pryd02";
+	killmonsterall "moc_pryd03";
+	killmonsterall "moc_pryd04";
+	set .popAvailable, 1;
+	setd("$" + strnpcinfo(3), 0);
+	return;
+	
+OnInit:
+	set .fillPercent, 0;
+	if(getd("$" + strnpcinfo(3)) >= 1)
+	{
+		set .fillPercent, 100;
+	}
+	setarray .mapToCheck[0],1,4;
+	set .bossId, 1038;
+	set .popAvailable, 1;
+	end;
+}
+
+moc_pryd06,102,119,5	script	BloodCrystal#6::alabc30	OBJ_A2,{
+	set .@npcname$, "[Blood Crystal]";
+	mes .@npcname$;
+	mes "Current fill level: " + .fillPercent + "%"; 
+	mes "Would do you want to do?";
+	switch(select("Fill the Crystal","Retrieve a Spirit Life","Nothing"))
+	{
+		case 1:
+			next;
+			mes .@npcname$;
+			mes "You're about to fill Life in Blood Crystal.";
+			mes "How many Shards do you wish to give to the Crystal?";
+			mes "'0' means 'as much as possible'.";
+			input .@shardCount;
+			if(.@shardCount == 0)
+			{
+				set .@shardCount, countitem($shardIds[0]);
+			}
+			if(.@shardCount > countitem($shardIds[0]))
+			{
+				next;
+				mes .@npcname$;
+				mes "You don't have those items.";
+				close;
+			}
+			if(.popAvailable != 1)
+			{
+				next;
+				mes .@npcname$;
+				mes "The Guardian has allready been killed. Wait for " + $repopHourCount + " hours to summon it again.";
+				close;
+			}
+			delitem $shardIds[0], .@shardCount;
+			set .@fillRequired, 1000 + atoi(strnpcinfo(2)) * 50;
+			set .fillItemCount, .fillItemCount + .@shardCount;
+			set .fillPercent,  .fillItemCount * 100 / .@fillRequired;
+			if(.fillPercent >= 100)
+			{
+				set .fillPercent, 100;
+				next;
+				mes .@npcname$;
+				mes "The Crystal has been filled.";
+				for(set .@i,.mapToCheck[0]; .@i<=.mapToCheck[1]; set .@i,.@i+1)
+				{
+					set .@mobCount, .@mobCount + mobcount("moc_pryd0" + .@i, "CardinalSystem::OnNormalDied");
+				}
+				if(.@mobCount == 0)
+				{
+					set .@percentHeal, 0 - atoi(strnpcinfo(2));
+					percentheal .@percentHeal, .@percentHeal;
+					set .popAvailable, 0;	
+					setnpcdisplay strnpcinfo(3), OBJ_B2, 1;
+					//special effect
+					specialeffect 862;
+					//summon boss
+					monster strnpcinfo(4), 0, 0, "--ja--", .bossId, 1, "CardinalSystem::OnGuardianDied";
+					initnpctimer;
+					set .loopCount, 0;
+				}
+				else
+				{
+					mes "The Guardian will appears after total dungeon cleaning.";
+				}
+				setd("$" + strnpcinfo(3), 1);
+			}
+			else
+			{
+				next;
+				mes .@npcname$;
+				mes "The Crystal has been filled up to " + .fillPercent + "%";
+			}
+			break;
+		case 2:
+			next;
+			mes .@npcname$;
+			if(SPIRITLIFE == $maxSpiritLife)
+			{
+				mes "You can't get more than " + $maxSpiritLife + " Spirit Lifes.";
+				close;
+			}
+			if(SPIRIT == 0)
+			{
+				mes "You can't retrieve a Spirit Life while you're not in Spirit mode.";
+				close;
+			}
+			if(.fillPercent > $minFillPercentToRetrieveLife)
+			{
+				set .fillPercent, 0;
+				set SPIRITLIFE, SPIRITLIFE + 1;
+				set SPIRIT, 0;
+				specialeffect2 372;
+				undisguise();
+				mes "The Crystal has been emptied. You've raised from the dead.";
+			}
+			else
+			{
+				mes "The Crystal isn't filled enough to allow Spirit Life retrieve.";
+			}
+			break;
+		case 3:
+			next;
+			mes .@npcname$;
+			mes "Action cancelled.";
+			break;
+	}
+	close;
+
+OnTimer360000:
+	stopnpctimer;
+	set .loopCount, .loopCount + 1;
+	if(.loopCount >= $repopHourCount)
+	{
+		goto OnClearGauge;
+	}
+	initnpctimer;
+	end;
+
+OnClearGauge:
+	setnpcdisplay strnpcinfo(3), OBJ_A2;
+	set .fillPercent, 0;
+	set .fillItemCount, 0;
+	end;
+	
+OnPopMonsters:
+	callsub OnClearMonsters;
+//== B1 =============================
+	monster "moc_pryd05", 0, 0, "--ja--", 1149, 60, "CardinalSystem::OnNormalDied";
+	monster "moc_pryd05", 0, 0, "--ja--", 1032, 50, "CardinalSystem::OnNormalDied";
+	monster "moc_pryd05", 0, 0, "--ja--", 1041, 10, "CardinalSystem::OnNormalDied";
+	
+//== B2 =============================
+	monster "moc_pryd06", 0, 0, "--ja--", 1191, 30, "CardinalSystem::OnNormalDied";
+	monster "moc_pryd06", 0, 0, "--ja--", 1032, 30, "CardinalSystem::OnNormalDied";
+	monster "moc_pryd06", 0, 0, "--ja--", 1194, 20, "CardinalSystem::OnNormalDied";
+	monster "moc_pryd06", 0, 0, "--ja--", 1297, 20, "CardinalSystem::OnNormalDied";
+	end;
+	
+OnClearMonsters:	
+OnClock0000:
+	killmonsterall "moc_pryd05";
+	killmonsterall "moc_pryd06";
+	set .popAvailable, 1;
+	setd("$" + strnpcinfo(3), 0);
+	return;
+	
+OnInit:
+	set .fillPercent, 0;
+	if(getd("$" + strnpcinfo(3)) >= 1)
+	{
+		set .fillPercent, 100;
+	}
+	setarray .mapToCheck[0],5,6;
+	set .bossId, 1511;
+	set .popAvailable, 1;
+	end;
+}
+
+
+

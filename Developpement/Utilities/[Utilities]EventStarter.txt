@@ -1,0 +1,335 @@
+prt_vilg02,108,90,6	script	Event Manager::prtevtman	55,{
+	set .@npcname$, "[Event Manager]";
+
+OnDisplayMenu:	
+	//"Disguise Event",
+	//"Cubeception",
+	//"Cache Poring",
+	//"Kill the Mushroom",
+	//"The Invasor"
+	//"Event Rescapé",
+	//"Pirate Maze",
+	//"Raid Pirate";
+	//"Poring Punch"
+	//Poring Sum
+	//AlmostPoring
+	//FakePoring
+	//LoupGarou
+	//NVZ
+	//PoringRace
+	//TheInvasor
+	//ChercherPoring
+		
+	setarray .eventDescArray$[0], "That's a pretty simple event. You simply have to guess the right monster the Npc is disguised in.",
+	"Find the good monster between the 100 presents on the map. Be careful, some are trapped!",
+	"You got to find and kill first a monster spawned on a map, like a Poring or a Fabre.",
+	"A randomly chosen mushroom count are spawned on a random map. Each kill gives a reward.",
+	"Help me to cure a wounded survivor of a pirate attack. Only 3 first will get reward.",
+	"Find and kill the pirate monsters to get rewards. Be careful, the full map is in PvP mode!",
+	"Find the Pirate captain to get it's reward!",
+	"Several kind of poring are invoked, each earn a different amount of point. Get the more points add the timer end to win the event.",
+	"Those who'll find the specials porings amongst others will get the reward.",
+	"Be the first to find the wrong poring amongst other. Be careful to the names.",
+	"Be the first to find the good poring amongst other. Be careful to the names.",
+	//"L'adaptation du fameux jeu Les Loups Garous de Thiercellieux. Parviendrez-vous à les débusquer?",
+	//"Soyez le dernier survivant dans une salle remplie de Zombies.",
+	//"Pariez sur un poring, et priez pour qu'il gagne la course.",
+	//"Une vague de monstres envahi une ville au hasard. A vous de la défendre en éradiquant ces monstres!",
+	"Be the first one to find the good poring. To the weapons!!";
+	
+	mes .@npcname$;
+	mes "";
+	mes "Hello to you, " + strcharinfo(0);
+	mes "I'm the Event Manager.";
+	
+	if (getgmlevel() >= 80)
+	{
+		mes "Oh, you're a Game Master. Here, you can start manually any event.";
+		mes "Do you wanna start one?";
+		set .@menu$, "";
+		switch(select("Yes","No","Start an auto event"))
+		{
+			case 1:
+			for ( set .@j, 0; .@j<getarraysize(.eventNameArray$); set .@j, .@j+1 )
+			{
+				set .@menu$, .@menu$ + ( .@j ? ":" : "" ) + .eventNameArray$[.@j];
+			}
+			set .@choice, select(.@menu$) - 1;
+			next;
+			mes .@npcname$;
+			if (.@choice != 254)
+			{
+				mes "Perfect. Let's start the event " + .eventNameArray$[.@choice];
+				set .lastevent$, .eventArray$[.@choice];
+				doevent .eventArray$[.@choice];
+				logmes "[EventManager] Manual start by " + strcharinfo(0) + ". Event " + .eventNameArray$[.@choice] + " starting.";
+			}
+			close;
+			case 2:
+				goto OnLearnAboutEvent;
+				break;
+			case 3:
+				logmes "[EventManager] Manual start by " + strcharinfo(0) + ". Roulette start.";
+				goto StartRandomEvent;
+				close;
+		}
+	}
+	goto OnLearnAboutEvent;
+	close;
+	
+OnLearnAboutEvent:
+	set .@menu$, "";
+	mes "I can present you the existing events.";
+	for ( set .@j, 0; .@j<getarraysize(.eventNameArray$); set .@j, .@j+1 )
+	{
+    		set .@menu$, .@menu$ + ( .@j ? ":" : "" ) + .eventNameArray$[.@j];
+	}
+    	set .@choice, select(.@menu$) - 1;
+	if (.@choice != 254)
+	{
+		next;
+		mes .@npcname$;
+		mes "Here's what I know for this event.";
+		mes "~" + .eventNameArray$[.@choice] + "~:";
+		mes .eventDescArray$[.@choice];
+		next;
+		mes .@npcname$;
+		mes "Anything else?";
+		goto OnLearnAboutEvent;
+	}
+	close;
+
+
+StartRandomEvent:
+	announce "[EventManager] A random event will start soon. Let's start the Wheel!",bc_all|bc_blue;
+	set .@randevent, rand(0,getarraysize(.eventArray$) - 1);
+	while (.eventArray$[.@randevent] == .lastevent$ 
+		|| .eventArray$[.@randevent] == ""
+		|| (.eventArray$[.@randevent] == "prtinv::OnStartInvasorEvent" && .invasorActivated == 1))
+	{
+		set .@randevent, rand(0,getarraysize(.eventArray$) - 1);
+	}
+	if (.eventArray$[.@randevent] == "prtinv::OnStartInvasorEvent")
+		set .invasorActivated , 1;
+	announce "[EventManager] The wheel stops on " + .eventNameArray$[.@randevent] + "!",bc_all|bc_blue;
+	sleep 3000;
+	set .lastevent$, .eventArray$[.@randevent];
+	donpcevent .eventArray$[.@randevent];
+	end;
+
+OnClock0100:
+	if (.autoStart == 1 && .start01 == 1)
+	{
+		goto StartRandomEvent;
+	}
+	end;
+OnClock0200:
+	if (.autoStart == 1 && .start02 == 1)
+	{
+		goto StartRandomEvent;
+	}
+	end;
+OnClock0300:
+	if (.autoStart == 1 && .start03 == 1)
+	{
+		goto StartRandomEvent;
+	}
+	end;
+OnClock0400:
+	if (.autoStart == 1 && .start04 == 1)
+	{
+		goto StartRandomEvent;
+	}
+	end;
+OnClock0500:
+	if (.autoStart == 1 && .start05 == 1)
+	{
+		goto StartRandomEvent;
+	}
+	end;
+OnClock0600:
+	if (.autoStart == 1 && .start06 == 1)
+	{
+		goto StartRandomEvent;
+	}
+	end;
+OnClock0700:
+	if (.autoStart == 1 && .start07 == 1)
+	{
+		goto StartRandomEvent;
+	}
+	end;
+OnClock0800:
+	if (.autoStart == 1 && .start08 == 1)
+	{
+		goto StartRandomEvent;
+	}
+	end;
+OnClock0900:
+	if (.autoStart == 1 && .start09 == 1)
+	{
+		goto StartRandomEvent;
+	}
+	end;
+OnClock1000:
+	if (.autoStart == 1 && .start10 == 1)
+	{
+		goto StartRandomEvent;
+	}
+	end;
+OnClock1100:
+	if (.autoStart == 1 && .start11 == 1)
+	{
+		goto StartRandomEvent;
+	}
+	end;
+OnClock1200:
+	if (.autoStart == 1 && .start12 == 1)
+	{
+		goto StartRandomEvent;
+	}
+	end;
+OnClock1300:
+	if (.autoStart == 1 && .start13 == 1)
+	{
+		goto StartRandomEvent;
+	}
+	end;
+OnClock1400:
+	if (.autoStart == 1 && .start14 == 1)
+	{
+		goto StartRandomEvent;
+	}
+	end;
+OnClock1500:
+	if (.autoStart == 1 && .start15 == 1)
+	{
+		goto StartRandomEvent;
+	}
+	end;
+OnClock1600:
+	if (.autoStart == 1 && .start16 == 1)
+	{
+		goto StartRandomEvent;
+	}
+	end;
+OnClock1700:
+	if (.autoStart == 1 && .start17 == 1)
+	{
+		goto StartRandomEvent;
+	}
+	end;
+OnClock1800:
+	if (.autoStart == 1 && .start18 == 1)
+	{
+		goto StartRandomEvent;
+	}
+	end;
+OnClock1900:
+	if (.autoStart == 1 && .start19 == 1)
+	{
+		goto StartRandomEvent;
+	}
+	end;
+OnClock2000:
+	if (.autoStart == 1 && .start20 == 1)
+	{
+		goto StartRandomEvent;
+	}
+	end;
+OnClock2100:
+	if (.autoStart == 1 && .start21 == 1)
+	{
+		goto StartRandomEvent;
+	}
+	end;
+OnClock2200:
+	if (.autoStart == 1 && .start22 == 1)
+	{
+		goto StartRandomEvent;
+	}
+	end;
+OnClock2300:
+	if (.autoStart == 1 && .start23 == 1)
+	{
+		goto StartRandomEvent;
+	}
+	end;
+OnClock0000:
+	if (gettime(4) == 0)
+	{
+		set .invasorActivated, 0;
+	}
+	if (.autoStart == 1 && .start24 == 1)
+	{
+		goto StartRandomEvent;
+	}
+	end;
+
+
+OnInit:
+	set .autoStart, 1;
+	set .start01, 0;
+	set .start02, 0;
+	set .start03, 0;
+	set .start04, 0;
+	set .start05, 0;
+	set .start06, 1;
+	set .start07, 1;
+	set .start08, 1;
+	set .start09, 1;
+	set .start10, 1;
+	set .start11, 1;
+	set .start12, 1;
+	set .start13, 1;
+	set .start14, 1;
+	set .start15, 1;
+	set .start16, 1;
+	set .start17, 1;
+	set .start18, 1;
+	set .start19, 1;
+	set .start20, 1;
+	set .start21, 1;
+	set .start22, 1;
+	set .start23, 1;
+	set .start24, 0;
+	set .lastevent$, "";
+	setarray .eventArray$[0],
+		"prtdis::OnStartDisguise",
+		"prtcub::OnStartCubeception",
+		"Poringcache::OnCachePoringEventStart",
+		"prtmush::OnMushroomEventStart",
+		"prtevtres::OnSurvivorStart",
+		"prtpirmaz::OnStartPirateHunting",
+		"prtpirraid::OnStartRaidPirate",
+		"ppevent::OnStartEvent",
+		"porsum::OnStartEvent",
+		"prtalpo::OnStartAlmostPoring",
+		"evtfipo::OnStartFindPoring",
+		//"evtlg::OnStartLg",
+		//"prtnvz::OnStartNVZ",
+		//"prtporace::OnStartPoringRace",
+		//"invasor::OnStartInvasorEvent",
+		"Lancement::OnStartFindEvent";
+		
+	setarray .eventNameArray$[0],	
+		"Disguise Event",
+		"Cubeception",
+		"Cache Poring",
+		"Kill the Mushroom",
+		"Event Rescapé",
+		"Pirate Maze",
+		"Raid Pirate",
+		"Poring Puncher",
+		"Poring Summoner",
+		"Almost Poring",
+		"Fake Poring",
+		//"Loup Garou de Thiercellieux",
+		//"Novice Vs Zombies",
+		//"Poring Race",
+		//"The Invasor"
+		"Cherche le Poring";
+		bindatcmd "event",strnpcinfo(3)+"::OnDisplayMenu";
+		bindatcmd "eventauto",strnpcinfo(3)+"::StartRandomEvent";
+	end;
+}

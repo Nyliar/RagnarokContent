@@ -1,0 +1,162 @@
+// [========================================================]
+// [===========      Fury_Energy - Core          ===========]
+// [========================================================]
+// [ Version 1                                              ]
+// [========================================================]
+// [ Original script by: Alayne                             ]
+// [========================================================]
+// [ Description:                                           ]
+// [--------------------------------------------------------]
+// [                                                        ]
+// [========================================================]
+// [ Changelog: (5 last updates)                            ]
+// [--------------------------------------------------------]
+// [                                                        ]
+// [ v0: Creation                      			    ]
+// [                                                        ]
+// [========================================================]
+// [                                                        ]
+// [========================================================]
+
+-	script	Fury_Energy_Core	-1,{
+	end;
+
+OnInit:
+	setarray $fury_energy_igni_item_id[0], 21952,21953,21954,21955,21956,21957,21958,21959,21960,21961;
+	setarray $fury_energy_aqua_item_id[0], 21962,21963,21964,21965,21966,21967,21968,21969,21970,21971;
+	setarray $fury_energy_terra_item_id[0], 21972,21973,21974,21975,21976,21977,21978,21979,21980,21981;
+	setarray $fury_energy_aeri_item_id[0], 21982,21983,21984,21985,21986,21987,21988,21989,21990,21991;
+	setarray $fury_energy_flori_item_id[0], 21992,21993,21994,21995,21996,21997,21998,21999,22000,22001;
+	setarray $fury_energy_ferro_item_id[0], 21002,21003,21004,21005,21006,21007,21008,21009,21010,21011;
+	
+	setarray $fury_energy_summon_duration[0], 300,270,240,210,180,150,120,90,60,30;
+	
+	//for each kind, until 10 lvl, igni, aqua, terra...
+//Gajomart 1309, Blazer 1367, Explosion 1383, Kaho 1072, Headless Mule 2071, 
+//Banaspaty 2154, Ferus 1714, Kasa 1833, Salamander 1831, Ifrit 1832
+	setarray $id_mob_fire[0], 1309,1367,1383,1072,2071,2154,1714,1833,1831,1832;
+//Deviace 1108, Garm Baby 1515, Sedora 2204, Gazeti 1778, Aqua Elemental 2016, Elvira 2278, 
+//Coelacanth 2186, Giant Octopus 2194, Garm 1252, Bakonawa 2322
+	setarray $id_mob_water[0], 1108,1515,2204,1778,2016,2278,2186,2194,1252,2322;
+//TriJoint 1454, Megalith 1793, Garden Keeper 1932, Bungisngis 2309, Butoijo 2155,
+//Bradium Golem 2149, Kublin 1980, Duneyrr 2018, Hardrock Mammoth 1990, Scaraba Queen 2087
+	setarray $id_mob_earth[0], 1454,1793,1932,2309,2155,2149,1980,2018,1990,2087;
+//Breeze 1692, Cenere 2365, Bloody butterfly 1408, Acidus 1716, Luciola Vespa 2129,
+//Menblatt 2363, Garden Watcher 1933, Wish Maiden 1931, Lost Dragon 2131, Nydhoggur's Shadow 2022
+	setarray $id_mob_wind[0], 1692,2365,1408,1716,2129,2363,1933,1931,2131,2022;
+//Creeper 2135, Rafflesia 1790, Alnoldi 2151, Dryad 1493, Les 1881, Stone Shooter 1495,
+//Makva 1884, Ancient Tree 2019, Gopinich 1885, Kades 2255
+	setarray $id_mob_flor[0], 2135,1790,2151,1493,1881,1495,1884,2019,1885,2255;
+//Kobold 1135, Dulahan 1504, Bloody Knight 1268, Sword Guardian 1829, Abysmal Knight 1219,
+//Baroness of Retribution 1702, Daehyon 2253, Lord of Death 1373, Pyuriel 2249, Valkyrie 1765
+	setarray $id_mob_ferro[0], 1135,1504,1268,1829,1219,1702,2253,1373,2249,1765;
+
+	setarray $id_mob_percent[0], 1,4,8,16,32,48,64,87,95,100;
+
+	bindatcommand "Fury","OnFuryAsked";
+	bindatcommand "ShowFury","OnFuryShowed";
+	end;
+
+OnFuryShowed:
+	set .@fury_id, getarg(0);
+	
+	end;
+
+OnFuryAsked:
+	if (QUESTFURY == 9)
+	{
+		mes "What kind of Fury do you want to crystallise?";
+		set .@choice, select("Igni","Aqua","Terra","Aeri","Flori","Ferro") - 1;
+		mes "Choose a level to crystallise. It has to be inferior to your maximum level.";
+		set .@message$, "Which is, to know: ";
+		switch(.@choice)
+		{
+			case 1:
+				set .@message$, .@message$ + IGNIFEVRE;
+				break;
+			case 2:
+				set .@message$, .@message$ + AQUAFEVRE;
+				break;
+			case 3:
+				set .@message$, .@message$ + TERRAFEVRE;
+				break;
+			case 4:
+				set .@message$, .@message$ + AERIAFEVRE;
+				break;
+			case 5:
+				set .@message$, .@message$ + FLORIFEVRE;
+				break;
+			case 6:
+				set .@message$, .@message$ + FERROFEVRE;
+				break;
+		}
+		input .@lvl;
+		mes "How many Pearls do you wanna create?";
+		mes "0 means 'as much as possible'";
+		input .@count;
+		switch(.@choice)
+		{
+			case 1:
+				for (set .@i,0; .@i<getarraysize($fury_energy_igni_item_id); set .@i,.@i+1)
+				{
+					if (countitem($fury_energy_igni_item_id[.i]) >= .@count)
+					{
+						delitem $fury_energy_igni_item_id[.@i], .@count;
+						getitem $fury_energy_igni_item_id_out[.@i], .@count;
+					}
+				}
+				break;
+			case 2:
+				for (set .@i,0; .@i<getarraysize($fury_energy_aqua_item_id); set .@i,.@i+1)
+				{
+					if (countitem($fury_energy_aqua_item_id[.i]) >= .@count)
+					{
+						delitem $fury_energy_aqua_item_id[.@i], .@count;
+						getitem $fury_energy_aqua_item_id_out[.@i], .@count;
+					}
+				}
+				break;
+			case 3:
+				for (set .@i,0; .@i<getarraysize($fury_energy_terra_item_id); set .@i,.@i+1)
+				{
+					if (countitem($fury_energy_terra_item_id[.i]) >= .@count)
+					{
+						delitem $fury_energy_terra_item_id[.@i], .@count;
+						getitem $fury_energy_terra_item_id_out[.@i], .@count;
+					}
+				}
+				break;
+			case 4:
+				for (set .@i,0; .@i<getarraysize($fury_energy_aeri_item_id); set .@i,.@i+1)
+				{
+					if (countitem($fury_energy_aeri_item_id[.i]) >= .@count)
+					{
+						delitem $fury_energy_aeri_item_id[.@i], .@count;
+						getitem $fury_energy_aeri_item_id_out[.@i], .@count;
+					}
+				}
+				break;
+			case 5:
+				for (set .@i,0; .@i<getarraysize($fury_energy_flori_item_id); set .@i,.@i+1)
+				{
+					if (countitem($fury_energy_flori_item_id[.i]) >= .@count)
+					{
+						delitem $fury_energy_flori_item_id[.@i], .@count;
+						getitem $fury_energy_flori_item_id_out[.@i], .@count;
+					}
+				}
+				break;
+			case 6:
+				for (set .@i,0; .@i<getarraysize($fury_energy_ferro_item_id); set .@i,.@i+1)
+				{
+					if (countitem($fury_energy_ferro_item_id[.i]) >= .@count)
+					{
+						delitem $fury_energy_ferro_item_id[.@i], .@count;
+						getitem $fury_energy_ferro_item_id_out[.@i], .@count;
+					}
+				}
+				break;
+		}
+	}
+	close;
+}

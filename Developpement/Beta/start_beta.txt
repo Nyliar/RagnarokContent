@@ -1,0 +1,166 @@
+//----------------------------------------------------------------//
+//--- Main Script ------------------------------------------------//
+new_1-1,57,116,3	script	Jonny Start	50,{
+	set .@npcname$, "[Jonny Start]";
+	mes .@npcname$;
+	mes "";
+	mes "Welcome in the PYRO's World.";
+	mes "You're here to help the staff members to offer a content as clean as possible.";
+	mes "On the other hand, the rates and loots will be set to the final values, to enable logic and difficulty testing.";
+	mes "To help you doing that, I can directly up you as a Class 2, lvl 60/1.";
+	mes "It's totally free.";
+	mes "Keep in mind that all your characters will be deleted once the Testing Phase will be over.";
+	mes "Plus, you can only have one change.";
+	if (BETAJOB == 0)
+	{
+		mes "So? Interested?";
+		if (select("Yes","No") == 1)
+		{
+			next;
+			mes .@npcname$;
+			mes "Then select the desired class please.";
+			set .@job, -1;
+			switch(select("Knight","Crusader","Hunter","Bard/Dancer","Priest","Monk","Assassin","Rogue","Blacksmith","Alchemist","Wizard","Sage","Ninja","Gunslinger","Taekwon",
+			"Rune Knight R","ArchBishop R","Warlock R","Mechanic R","Ranger R","Guillotine Cross R","Royal Guard R","Sura R","Sorcerer R","Shadow Chaser R","Genetic R","Minstrel/Wanderer R"))
+			{
+				case 1:
+					set .@job, -1;
+					break;
+				case 2:
+					set .@job, 7;
+					break;
+				case 3:
+					set .@job, 14;
+					break;
+				case 4:
+					set .@job, 11;
+					break;
+				case 5:
+					if(Sex == 1)
+					{
+						set .@job, 19;
+					}
+					else
+					{
+						set .@job, 20;
+					}
+					break;
+				case 6:
+					set .@job, 8;
+					break;
+				case 7:
+					set .@job, 15;
+					break;
+				case 8:
+					set .@job, 12;
+					break;
+				case 9:
+					set .@job, 17;
+					break;
+				case 10:
+					set .@job, 10;
+					break;
+				case 11:
+					set .@job, 18;
+					break;
+				case 12:
+					set .@job, 9;
+					break;
+				case 13:
+					set .@job, 16;
+					break;
+				case 14:
+					set .@job, 25;
+					break;
+				case 15:
+					set .@job, 24;
+					break;
+				case 16:
+					set .@job, 4046;
+					break;
+				case 17:
+					set .@job, 4054;
+					break;
+				case 18:
+					set .@job, 4057;
+					break;
+				case 19:
+					set .@job, 4055;
+					break;
+				case 20:
+					set .@job, 4058;
+					break;
+				case 21:
+					set .@job, 4056;
+					break;
+				case 22:
+					set .@job, 4059;
+					break;
+				case 23:
+					set .@job, 4070;
+					break;
+				case 24:
+					set .@job, 4067;
+					break;
+				case 25:
+					set .@job, 4072;
+					break;
+				case 26:
+					set .@job, 4071;
+					break;
+				case 27:
+					if(Sex == 1)
+					{
+						set .@job, 4068;
+					}
+					else
+					{
+						set .@job, 4069;
+					}
+					break;
+			}
+			//change job
+			atcommand "@job " + .@job;
+			//update lvl
+			atcommand "@blvl 60";
+			//update skpoints
+			atcommand "@skpoint 50";
+			set Zeny, Zeny + 5000000;
+			if (.@job != -1)
+			{
+				//update skillpoint to 50 for first class raise
+				atcommand "@skpoint 50";	
+				set BETAJOB, 1;
+			}
+		}
+		else
+		{
+			next;
+			mes .@npcname$;
+			mes "Your choice.";
+			mes "Good luck then.";
+		}	
+	}
+	else
+	{
+		next;
+		mes .@npcname$;
+		mes "You already have changed your class once.";
+	}
+	next;
+	mes .@npcname$;
+	mes "Next, I can make you access to the world of Project Yggdrasil, or the world of DANMA.";
+	mes "These are two separate worlds, and there's no link between them.";
+	mes "PY is more based over a giant dungeon, while DANMA is a completely new project.";
+	mes "Read more on website before choosing, cause the choice is definitive.";
+	mes "So. PY? Or DANMA?";
+	if(select("PYRO","DANMA") == 1)
+	{
+		warp "prontera",155,182; 
+	}
+	else
+	{
+		warp "mellina",86,58;
+	}
+	close;
+}

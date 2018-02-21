@@ -1,0 +1,165 @@
+//29329 -> Trapping Thread
+//ars_dun31,138,136,5	script	Trapper::giquest23	540,{
+payon,239,51,5	script	Trapper::giquest23	540,{
+	mes "[Trapper]";
+	mes "Hey! Hello to you, my friend";
+	if (callfunc("IsPlayerOn"))
+	{
+		if (TRAPPING == 0)
+		{
+			mes "I can learn you to trap. Interested?";
+			mes "With that you'll be able to capture some rabbits, or little animals.";
+			mes "For bigger, you'll never be sure. Even with the better traps...";
+			mes "You're in? I only need a bit of thread.";
+			mes "You can have some by destroying clothes like a 'Skirt of Virgin'.";
+			set TRAPPING, 1;
+		}
+		else
+		{
+			mes "Do you got what I need?";
+			if (countitem(1049) >= 100)
+			{
+				mes "Perfect!";
+				mes "Take it, it's for you.";
+				rentitem  29329, 60;
+				logmes "[Yggdrasil Memories] " + strcharinfo(0) + " obtains a rental " + getitemname(29329) + ".";
+				delitem 7285, 1;
+				set TRAPPING, 0;
+				mes "To catch an animal, make a knot like that.";
+				mes "If it steps on it, the more it move, the more it get stucked.";
+			}
+			else
+			{
+				mes "Hum...Doesn't look like...";
+			}
+		}
+	}
+	else
+	{
+		mes "Traps are the best!";
+	}
+	close;
+}
+
+//29356 -> Centaure Domination
+//ars_fild56,115,30,5	script	Centaurus::giquest24	1061,7,7,{
+pay_fild05,86,151,5	script	Centaurus::giquest24	1061,7,7,{
+	end;
+
+OnTouch:
+	dispbottom "You're entering in the area of the centaurus.";
+	if (countitem(29408) == 1 && callfunc("IsPlayerOn"))
+	{
+		if (rand(21) >= 18)
+		{
+			dispbottom "You've caught the centaurus. Congratulations!";
+			rentitem  29356, 60;
+			logmes "[Yggdrasil Memories] " + strcharinfo(0) + " obtains a rental " + getitemname(29356) + ".";
+		}
+		else
+		{
+			dispbottom "It hits you with an arrow...";
+			percentheal -rand(10,100),-rand(10,100);
+			dispbottom "It runs away...";
+			do
+			{		
+				set .movex,rand(0,150);
+				set .movey,rand(0,150);
+				set .map$,strcharinfo(3);
+			}
+			while(!checkcell(.map$,.movex,.movey,cell_chkpass));
+			movenpc strnpcinfo(3),.movex,.movey;
+		}
+	}
+	end;
+}
+
+//29342 -> Poltergeist Pillow
+//ars_dun25,62,103,5	script	Poltergeist::giquest25	1506,2,2,{
+gl_chyard,101,134,5	script	Poltergeist::giquest25	1506,2,2,{
+	end;
+
+OnTouch:
+	if (callfunc("IsPlayerOn"))
+	{
+		dispbottom "A poltergeist was next to you";
+		if (POLTERGEIST >= .touchCount)
+		{
+			rentitem  29342, 60;
+			logmes "[Yggdrasil Memories] " + strcharinfo(0) + " obtains a rental " + getitemname(29342) + ".";
+			set POLTERGEIST, 0;
+			set .touchCount, rand(10,50);
+		}
+		else
+		{
+			dispbottom "You've seen a poltergeist...You feel really tired";
+			sc_start SC_SLEEP,600000,0,5000;
+			do
+			{		
+				set .movex,rand(0,150);
+				set .movey,rand(0,150);
+				set .map$,strcharinfo(3);
+			}
+			while(!checkcell(.map$,.movex,.movey,cell_chkpass));
+			movenpc strnpcinfo(3),.movex,.movey;
+		}	
+		set POLTERGEIST, POLTERGEIST + 1;			
+	}
+	end;
+	
+OnInit:
+	set .touchCount, rand(10,50);
+	end;
+}
+
+//29352 -> Bloody Cape
+//ars_fild10,213,177,5	script	Murderer::giquest26	735,7,7,{
+gl_prison,183,13,5	script	Murderer::giquest26	735,7,7,{
+	end;
+
+OnTouch:
+	dispbottom "You're entering the murderer area.";
+	if (callfunc("IsPlayerOn") && countitem(29407) == 1)
+	{
+		if (rand(0,10) < 1)
+		{
+			dispbottom "You've killed him with the boomerang!";
+			dispbottom "You got his bloody cape.";
+			hideonnpc strnpcinfo(3);
+			initnpctimer;
+			rentitem  29352, 60;
+			logmes "[Yggdrasil Memories] " + strcharinfo(0) + " obtains a rental " + getitemname(29352) + ".";
+		}
+		else
+		{
+			dispbottom "He runs away...";
+			do
+			{		
+				set .movex,rand(0,150);
+				set .movey,rand(0,150);
+				set .map$,strcharinfo(3);
+			}
+			while(!checkcell(.map$,.movex,.movey,cell_chkpass));
+			movenpc strnpcinfo(3),.movex,.movey;
+		}
+	}
+	else
+	{
+		dispbottom "He runs away...";
+		dispbottom "You'll probably need something to hit from afar.";
+		do
+		{		
+			set .movex,rand(0,150);
+			set .movey,rand(0,150);
+			set .map$,strcharinfo(3);
+		}
+		while(!checkcell(.map$,.movex,.movey,cell_chkpass));
+		movenpc strnpcinfo(3),.movex,.movey;
+	}
+	end;
+
+OnTimer60000:
+	hideoffnpc strnpcinfo(3);
+	stopnpctimer;
+	end;
+}

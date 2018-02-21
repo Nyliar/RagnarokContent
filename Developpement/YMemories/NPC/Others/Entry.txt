@@ -1,0 +1,115 @@
+prontera,164,172,3	script	Elena::ymentry	4_F_FAIRY1,{
+	set .@npcname$, "[Elena]";
+	mes .@npcname$;
+	mes "";
+		mes "Hello, " + strcharinfo(0);
+		mes "Welcome in Yggdrasil Memories.";
+		next;
+		mes .@npcname$;
+		mes "Do you want to listen to the rules?";
+
+		switch(select("Yes please:No thanks, no need"))
+		{
+			case 1:
+				mes "Yggdrasily Memories is a complementary system of Midgard.";
+				mes "When you enter in Y.M, you earn a Ring.";
+				mes "This ring is the key to be part of Y.M.";
+				mes "It enables you to call the Book, and collect cards.";
+				next;
+				mes .@npcname$;
+				mes "In Y.M, everything is based on cards. There's two types: the Fixed, and the Common Cards.";
+				mes "Most of them are Common Cards, but the really needed ones are the Fixed.";
+				mes "The final goal in Y.M is to complete a book with 100 Fixed cards";
+				next;
+				mes .@npcname$;
+				mes "Each card can be droped by any mob, with a corresponding looting rate, or can be obtain by using Gain on the corresponding conditions or item.";
+				mes "You can also use cards, but only one time. Once done, the card will disappear from you inventory.";
+				mes "There's no possible return once a card has been activated.";
+				next;
+				mes .@npcname$;
+				mes "Each card in Y.M got a rank and a transformation limit.";
+				mes "The rank, from de G to SSS, represents the difficulty to obtain the card.";
+				mes "The transformation limit is the maximum different peoples which can have the card in the entire world.";
+				mes "This mean that if a card is a S-5, you can have it only if less than 5 peoples already got it.";
+				mes "If 5 peoples already got it, Gain on the initial item will remain without effect, and you won't be able to get the card by looting.";
+				mes "On the other hand, you can collect the same card til 3 times, to ensure yourself an advantage.";
+				next;
+				mes .@npcname$;
+				mes "Let's talk now about the Common Cards.";
+				mes "Most of them are usable as Spells, on self or a target.";
+				mes "They're divided in three types: Atk, Def and Utililities.";
+				mes "As the name indicates it, Atk cards enable to destroy, steal or exchange cards.";
+				mes "Def ensure a protection against Atk.";
+				mes "And Utilities enable informations collection.";
+				mes "This cards can be obtained via a blister merchant, in Y.M.";
+				next;
+				mes .@npcname$;
+				mes "The last point is the most important.";
+				mes "To free a transformation slot, there's only 3 solutions:";
+				mes "Exchange a card (or more).";
+				mes "Destroy or steal the wanted card on a owner.";
+				mes "Or killing the owner.";
+				next;
+				mes .@npcname$;
+				mes "When a player dies, he automatically loots some cards, randomly choosen.";
+				mes "This can lead to a loss of 1 to 5 cards.";
+				mes "Plus, when you leave Y.M, there's a limit of " + $limit_return_day + " days to get back.";
+				mes "Going over this limit will lead to a book reset on your next connection!";
+				next;
+				mes .@npcname$;
+				mes "I think we're done now.";
+				mes "Keep in mind that the goal is to complete your Book.";
+				mes "And stay in touch with other players. Informations can be obtained this way.";
+				next;
+				mes .@npcname$;
+				goto EnterGM;
+				break;
+			case 2:
+				mes "Are you ready to enter in Y.M?";
+				goto EnterGM;
+				break;
+	}
+	close;
+
+EnterGM:
+	query_sql("SELECT `id` FROM `ym_player` WHERE `id_char`=" + getcharid(0) + "", .@id); 
+	if (getarraysize(.@id) == 0)
+	{
+		mes "To be part of Yggdrasily Memories, you'll have to pay a fee of " + $YMEntryPrice + "Zeny.";
+		mes "Are you ok with that?";
+		switch(select("Yes","No"))
+		{
+			case 1:
+				next;
+				mes .@npcname$;
+				mes "Perfect. A moment please.";
+				if (Zeny > $YMEntryPrice)
+				{
+					set Zeny, Zeny - $YMEntryPrice;
+				}
+				else
+				{
+					mes "Sorry, but you lack some money.";
+					close;
+				}
+				mes "You're now ready to enter in Y.M.";
+				mes "Here's your Ring.";
+				mes "Don't forget: you can only drop cards with the ring on, but it also mean dying will lead to a card lost.";
+				getitem $YMRingId, 1;
+				logmes "[Yggdrasil Memories] " + strcharinfo(0) + " obtains a " + getitemname($YMRingId) + ".";
+				mes "Good luck to you.";
+				break;
+			case 2:
+				mes "Then you can't be part of Yggdrasily Memories.";
+				break;
+		} 
+	}
+	else
+	{
+		next;
+		mes .@npcname$;
+		mes "Sorry but you're already a player in Y.M.";
+	}
+		
+	close;
+}

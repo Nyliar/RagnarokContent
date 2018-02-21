@@ -1,0 +1,473 @@
+que_sign01,222,44,0	script	sumentrance::lmountq6	-1,2,2,{
+	end;
+
+OnResetEntrance:
+	set .enteredOnes, 0;
+	end;
+	
+OnTouch:
+	if (.enteredOnes == 0)
+	{
+		initnpctimer;
+		set .entranceEnabled, 1;
+
+		set .attachrid, getcharid(3);
+
+		hideonnpc "Serin#serin";
+		hideoffnpc "lmountq7";
+		donpcevent "Summoner#1::OnHideoff";
+		donpcevent "Summoner#2::OnHideoff";
+		donpcevent "Summoner#3::OnHideoff";
+		donpcevent "Summoner#4::OnHideoff";
+		donpcevent "Summoner#5::OnHideoff";
+		donpcevent "Summoner#6::OnHideoff";
+
+		donpcevent "lmountq::OnStartSummoning";
+		donpcevent "Summoner#1::OnStartSummon";
+	}
+	if (.entranceEnabled == 1)
+	{
+		set .enteredOnes, .enteredOnes + 1;
+	}
+	end;
+	
+OnTimer30000:
+	//30 seconds delay
+	stopnpctimer;
+
+	attachrid(.attachrid);
+
+	set .entranceEnabled, 0;
+	
+	if (.enteredOnes >= $mountQMinimumMember)
+	{
+		//enough players to take the quest, continue
+		mapannounce $summonMap$, "[Summoner] You can hear strange voices moaning.", 0;
+		sleep 1000;
+		mapannounce $summonMap$, "[Summoner] Something...strange is happening here.", 0;	
+		sleep 1000;
+		mapannounce $summonMap$, "[Summoner] You should be careful...", 0;
+
+		donpcevent "Summoner#1::OnEnabled";
+		donpcevent "Summoner#2::OnEnabled";
+		donpcevent "Summoner#3::OnEnabled";
+		donpcevent "Summoner#4::OnEnabled";
+		donpcevent "Summoner#5::OnEnabled";
+		donpcevent "Summoner#6::OnEnabled";
+	}
+	else
+	{
+		//nothing, the quest is abandonned
+	}
+	end;
+	
+OnInit:
+	set .enteredOnes, 0;
+	set .entranceEnabled, 0;
+	end;
+}
+
+
+que_sign01,197,45,0	script	Zeil::lmountq7	457,2,2,{
+	end;
+	
+OnSummonLord:
+	set .summonStarted, 1;
+
+	mapannounce strnpcinfo(4), "[Zeil] Hu...", 0;
+	sleep 1000;
+	mapannounce strnpcinfo(4), "[Zeil] Hu...", 0;
+	sleep 1000;
+	mapannounce strnpcinfo(4), "[Zeil] Thank you...For helping me...", 0;
+	sleep 1000;
+	mapannounce strnpcinfo(4), "[Zeil] Thank you so much! We'll stay friends...Forever...No matter how long it takes...", 0;
+	sleep 1000;
+	mapannounce strnpcinfo(4), "[Zeil] Keep that...In mind...", 0;
+	sleep 5000;
+	mapannounce strnpcinfo(4), "[Zeil] Kh...Kh...Khu...", 0;
+	sleep 1000;
+	mapannounce strnpcinfo(4), "[Zeil] KHUAAAAAAAAA...", 0;
+	sleep 1000;
+	mapannounce strnpcinfo(4), "[DemonLord] Too late, Humans...", 0;
+	sleep 1000;
+	mapannounce strnpcinfo(4), "[DemonLord] You're know about to know the word despair.", 0;
+
+	hideonnpc strnpcinfo(3);
+	
+	monster "que_sign01", 197, 45, "--ja--", $finalSummonId, 1, "lmountq::OnFinalSummonKilled";
+	end;
+
+OnTouch:
+	if (.summonStarted == 0)
+	{
+		mes "He doesn't answer.";
+		mes "There's an ugly wound at the back of his head...";
+		mes "He looks more dead than alive...";
+	}
+	close;
+
+OnInit:	
+	hideonnpc strnpcinfo(3);
+	set .summonStarted, 0;
+	end;
+}
+
+que_sign01,199,49,4	script	Summoner#1	880,2,2,{
+	end;
+	
+OnTouch:
+	if (.visible == 1 && .summonStarted < 2)
+	{
+		set .summonStarted, 2;
+		mes "Who...Who are you?";
+		hideonnpc strnpcinfo(3);
+		getmapxy(.@map$, .@mapX, .@mapY, 0);
+		monster .@map$, .@mapX, .@mapY, "--ja--", .monsterId, 1, "lmountq::OnSummonerKilled";
+	}
+	close;
+
+OnStartSummon:
+	if (.summonStarted >= 0 && .summonStarted < 1)
+	{
+		set .summonStarted, 1;
+		switch(rand(0,5))
+		{
+			case 0:
+				npctalk "All praise our Lord!";	
+				break;
+			case 1:
+				npctalk "May the darkness come!";	
+				break;
+			case 2:
+				npctalk "Adventurers should die!";	
+				break;
+			case 3:
+				npctalk "Please Lord, free us from them!";	
+				break;
+			case 4:
+				npctalk "Please Lord, purify this putriscent world!";	
+				break;
+			case 5:
+				npctalk "Everything should die!";	
+				break;
+		}
+		sleep 5000;
+		donpcevent "Summoner#"+rand(2,6)+"::OnStartSummon";
+	}
+	end;
+
+OnHideoff:
+	hideoffnpc strnpcinfo(3);
+	end;
+
+OnEnabled:
+	set .visible, 1;
+	end;
+	
+OnInit:
+	set .summonStarted, 0;
+	set .monsterId, 2076;
+	hideonnpc strnpcinfo(3);
+	set .visible, 0;
+	end;
+}
+
+que_sign01,201,45,3	script	Summoner#2	494,2,2,{
+	end;
+	
+OnTouch:
+	if (.visible == 1 && .summonStarted < 2)
+	{
+		set .summonStarted, 2;
+		mes "Who...Who are you?";
+		hideonnpc strnpcinfo(3);
+		getmapxy(.@map$, .@mapX, .@mapY, 0);
+		monster .@map$, .@mapX, .@mapY, "--ja--", .monsterId, 1, "lmountq::OnSummonerKilled";
+	}
+	close;
+
+OnStartSummon:
+	if (.summonStarted >= 0 && .summonStarted < 1)
+	{
+		set .summonStarted, 1;
+		switch(rand(0,5))
+		{
+			case 0:
+				npctalk "All praise our Lord!";	
+				break;
+			case 1:
+				npctalk "May the darkness come!";	
+				break;
+			case 2:
+				npctalk "Adventurers should die!";	
+				break;
+			case 3:
+				npctalk "Please Lord, free us from them!";	
+				break;
+			case 4:
+				npctalk "Please Lord, purify this putriscent world!";	
+				break;
+			case 5:
+				npctalk "Everything should die!";	
+				break;
+		}
+		sleep 5000;
+		donpcevent "Summoner#"+rand(2,6)+"::OnStartSummon";
+	}
+	end;
+
+OnHideoff:
+	hideoffnpc strnpcinfo(3);
+	end;
+
+OnEnabled:
+	set .visible, 1;
+	end;
+	
+OnInit:
+	set .summonStarted, 0;
+	set .monsterId, 2076;
+	hideonnpc strnpcinfo(3);
+	set .visible, 0;
+	end;
+}
+
+que_sign01,199,41,1	script	Summoner#3	705,2,2,{
+	end;
+	
+OnTouch:
+	if (.visible == 1 && .summonStarted < 2)
+	{
+		set .summonStarted, 2;
+		mes "Who...Who are you?";
+		hideonnpc strnpcinfo(3);
+		getmapxy(.@map$, .@mapX, .@mapY, 0);
+		monster .@map$, .@mapX, .@mapY, "--ja--", .monsterId, 1, "lmountq::OnSummonerKilled";
+	}
+	close;
+
+OnStartSummon:
+	if (.summonStarted >= 0 && .summonStarted < 1)
+	{
+		set .summonStarted, 1;
+		switch(rand(0,5))
+		{
+			case 0:
+				npctalk "All praise our Lord!";	
+				break;
+			case 1:
+				npctalk "May the darkness come!";	
+				break;
+			case 2:
+				npctalk "Adventurers should die!";	
+				break;
+			case 3:
+				npctalk "Please Lord, free us from them!";	
+				break;
+			case 4:
+				npctalk "Please Lord, purify this putriscent world!";	
+				break;
+			case 5:
+				npctalk "Everything should die!";	
+				break;
+		}
+		sleep 5000;
+		donpcevent "Summoner#"+rand(2,6)+"::OnStartSummon";
+	}
+	end;
+
+OnHideoff:
+	hideoffnpc strnpcinfo(3);
+	end;
+
+OnEnabled:
+	set .visible, 1;
+	end;
+	
+OnInit:
+	set .summonStarted, 0;
+	set .monsterId, 2076;
+	hideonnpc strnpcinfo(3);
+	set .visible, 0;
+	end;
+}
+
+que_sign01,194,41,1	script	Summoner#4	735,2,2,{
+	end;
+	
+OnTouch:
+	if (.visible == 1 && .summonStarted < 2)
+	{
+		set .summonStarted, 2;
+		mes "Who...Who are you?";
+		hideonnpc strnpcinfo(3);
+		getmapxy(.@map$, .@mapX, .@mapY, 0);
+		monster .@map$, .@mapX, .@mapY, "--ja--", .monsterId, 1, "lmountq::OnSummonerKilled";
+	}
+	close;
+
+OnStartSummon:
+	if (.summonStarted >= 0 && .summonStarted < 1)
+	{
+		set .summonStarted, 1;
+		switch(rand(0,5))
+		{
+			case 0:
+				npctalk "All praise our Lord!";	
+				break;
+			case 1:
+				npctalk "May the darkness come!";	
+				break;
+			case 2:
+				npctalk "Adventurers should die!";	
+				break;
+			case 3:
+				npctalk "Please Lord, free us from them!";	
+				break;
+			case 4:
+				npctalk "Please Lord, purify this putriscent world!";	
+				break;
+			case 5:
+				npctalk "Everything should die!";	
+				break;
+		}
+		sleep 5000;
+		donpcevent "Summoner#"+rand(2,6)+"::OnStartSummon";
+	}
+	end;
+
+OnHideoff:
+	hideoffnpc strnpcinfo(3);
+	end;
+
+OnEnabled:
+	set .visible, 1;
+	end;
+	
+OnInit:
+	set .summonStarted, 0;
+	set .monsterId, 2076;
+	hideonnpc strnpcinfo(3);
+	set .visible, 0;
+	end;
+}
+
+que_sign01,192,45,0	script	Summoner#5	494,2,2,{
+	end;
+	
+OnTouch:
+	if (.visible == 1 && .summonStarted < 2)
+	{
+		set .summonStarted, 2;
+		mes "Who...Who are you?";
+		hideonnpc strnpcinfo(3);
+		getmapxy(.@map$, .@mapX, .@mapY, 0);
+		monster .@map$, .@mapX, .@mapY, "--ja--", .monsterId, 1, "lmountq::OnSummonerKilled";
+	}
+	close;
+
+OnStartSummon:
+	if (.summonStarted >= 0 && .summonStarted < 1)
+	{
+		set .summonStarted, 1;
+		switch(rand(0,5))
+		{
+			case 0:
+				npctalk "All praise our Lord!";	
+				break;
+			case 1:
+				npctalk "May the darkness come!";	
+				break;
+			case 2:
+				npctalk "Adventurers should die!";	
+				break;
+			case 3:
+				npctalk "Please Lord, free us from them!";	
+				break;
+			case 4:
+				npctalk "Please Lord, purify this putriscent world!";	
+				break;
+			case 5:
+				npctalk "Everything should die!";	
+				break;
+		}
+		sleep 5000;
+		donpcevent "Summoner#"+rand(2,6)+"::OnStartSummon";
+	}
+	end;
+
+OnHideoff:
+	hideoffnpc strnpcinfo(3);
+	end;
+
+OnEnabled:
+	set .visible, 1;
+	end;
+	
+OnInit:
+	set .summonStarted, 0;
+	set .monsterId, 2076;
+	hideonnpc strnpcinfo(3);
+	set .visible, 0;
+	end;
+}
+
+que_sign01,194,48,5	script	Summoner#6	806,2,2,{
+	end;
+	
+OnTouch:
+	if (.visible == 1 && .summonStarted < 2)
+	{
+		set .summonStarted, 2;
+		mes "Who...Who are you?";
+		hideonnpc strnpcinfo(3);
+		getmapxy(.@map$, .@mapX, .@mapY, 0);
+		monster .@map$, .@mapX, .@mapY, "--ja--", .monsterId, 1, "lmountq::OnSummonerKilled";
+	}
+	close;
+
+OnStartSummon:
+	if (.summonStarted >= 0 && .summonStarted < 1)
+	{
+		set .summonStarted, 1;
+		switch(rand(0,5))
+		{
+			case 0:
+				npctalk "All praise our Lord!";	
+				break;
+			case 1:
+				npctalk "May the darkness come!";	
+				break;
+			case 2:
+				npctalk "Adventurers should die!";	
+				break;
+			case 3:
+				npctalk "Please Lord, free us from them!";	
+				break;
+			case 4:
+				npctalk "Please Lord, purify this putriscent world!";	
+				break;
+			case 5:
+				npctalk "Everything should die!";	
+				break;
+		}
+		sleep 5000;
+		donpcevent "Summoner#"+rand(2,6)+"::OnStartSummon";
+	}
+	end;
+
+OnHideoff:
+	hideoffnpc strnpcinfo(3);
+	end;
+
+OnEnabled:
+	set .visible, 1;
+	end;
+	
+OnInit:
+	set .summonStarted, 0;
+	set .monsterId, 2076;
+	hideonnpc strnpcinfo(3);
+	set .visible, 0;
+	end;
+}

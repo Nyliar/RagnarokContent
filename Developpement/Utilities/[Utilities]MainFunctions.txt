@@ -1,0 +1,9 @@
+function	script	AddPoints	{
+	set .@accountID, getarg(0);
+	set .@amount, getarg(1);
+ 
+	set #CASHPOINTS, #CASHPOINTS + .@amount;
+  	message rid2name(.@accountID), "You just won " + .@amount + " Point" + (.@amount > 1 ? "s" : "") + " !";
+
+	return;
+}

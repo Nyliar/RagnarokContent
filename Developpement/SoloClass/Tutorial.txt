@@ -1,0 +1,222 @@
+prt_church,102,118,5	script	Yggdrasil::alaygg	HIDDEN_WARP_NPC,10,10,{
+	end;
+	
+OnTouch:
+	if(TUTORIAL == 0)
+	{
+		set .@npcname$, "[Yggdrasil]";
+		set .@pcname$, "[" + strcharinfo(0) + "]";
+		mes .@npcname$;
+		mes "aze dsqdfp iuty, ljktyi?";
+		next;
+		mes .@pcname$;
+		mes "....?";
+		next;
+		mes .@npcname$;
+		mes "aze dsqdfp iuty, ljktyi?";
+		set LANGUAGE, select("Do you speak english?") - 1;
+		if(LANGUAGE == 0)
+		{
+			next;
+			mes .@pcname$;
+			mes "English? Yeah, I speak english.";
+			next;
+			mes .@npcname$;
+			mes "Ah, perfect!";
+			mes "I was affraid you wouldn't be able to understand me.";
+			next;
+			mes .@pcname$;
+			mes "What was that language you talked?";
+			next;
+			mes .@npcname$;
+			mes "It was...An extremely old language.";
+			mes "But to understand what it is, you have to understand who I am.";
+			next;
+			mes .@pcname$;
+			mes "And you...are?";
+			mes "Am I really speaking out loud, alone?";
+			next;
+			mes .@npcname$;
+			mes "Oh! sorry!";
+			cutin "kardui01",2;
+			next;
+			mes .@npcname$;
+			mes "That's better, right?";
+			mes "You can see me as...A part of Yggdrasil, the Original Tree.";
+			mes "I'm here to explain where you are, and why.";
+			mes "Are you interested?";
+			if(select("Yes","No") == 1)
+			{
+				next;
+				mes .@pcname$;
+				mes "Yes, please. Explain me.";
+				next;
+				mes .@npcname$;
+				mes "Allright. As I said, I'm a born from Yggdrasil.";
+				mes "You gotta know that the Ragnarok allready occured.";
+				mes "Gods and Giants are all dead, slaughtered during this war.";
+				mes "You're here on the rests of the old world, where no rules applies anymore.";
+				mes "So here, you'll have to become stronger, just to survive.";
+				next;
+				mes .@pcname$;
+				mes "Really?";
+				next;
+				mes .@npcname$;
+				mes "Yes. There's one special thing here. Higher range fighters can choose to become a Gangsi.";
+				mes "In the ancient language, it means 'The One who Can be everything
+				mes "Your skills build will then depend on the type of weapon you'll choose to wear.";
+				mes "The skill level will depend on the weapon upgrade level.";
+				mes "Therefor, the higher the weapon level will be, the stronger the skills will be.";
+				mes "But on the other hand, the harder it'll be to get them at high level.";
+				next;
+				mes .@pcname$;
+				mes "Allright. So the better the weapon is, the stronger I'll be. Okay.";
+				next;
+				mes .@npcname$;
+				mes "Right.";
+				mes "Other thing, this world is divided in area.";
+				mes "Each area is held by a guardian, a Boss monster.";
+				mes "That's the only place where you'll find them.";
+				mes "But be careful. Anyone of them is stronger than you can imagine.";
+				mes "You won't be able to defeat one alone. Or you'll be very lucky.";
+				next;
+				mes .@npcname$;
+				mes "To find them, you'll have to first find a Blood Crystal.";
+				mes "Each area have one. Adventurers will have to fill it with their own blood.";
+				mes "By doing so, the crystal will change from blue, to red.";
+				mes "Once done, the path to the guardian will be opened.";
+				next;
+				mes .@pcname$;
+				mes "Allright. So, find the crystal, and kill the Guardian. Not to hard, then.";
+				next;
+				mes .@npcname$;
+				mes "There's a last thing you...Don't know about yet...";
+				next;
+				mes .@pcname$;
+				mes "...What is it?";
+				next;
+				mes .@npcname$;
+				mes "Here you...You're not as invicible as ever.";
+				mes "When you'll die, you'll be changed in a spirit if you're not raised in a delay of 3 minutes.";
+				mes "While a spirit, you'll have another delay to get back from death.";
+				mes "For this...You'll have to drink blood from a Crystal. Or to take your life back from...Another human being...";
+				next;
+				mes .@pcname$;
+				mes "So...Break everyone efforts, or kill somebody...Wonderfull choice.";
+				mes "But why wouldn't I simply respawn?";
+				next;
+				mes .@npcname$;
+				mes "You can't. A spirit will remain a spirit...";
+				mes "And there's more...";
+				mes "If you die, you'll lose definitely a Spirit Life. Lose 10 and...You're dead.";
+				mes "Completely...";
+				next;
+				mes .@pcname$;
+				mes "W...What? That's insane!";
+				next;
+				mes .@npcname$;
+				mes "You don't have the choice. Well in fact, you have...";
+				mes "But you allready now...So the better will probably be to...not die...";
+				next;
+				cutin "", 255;
+				mes .@pcname$;
+				mes "Hey?";
+				mes "Hey? Are you still there?";
+				mes "You must be kidding me...";
+				mes "Allright. Let's go then...";
+				set TUTORIAL, 1;
+			}
+			else
+			{
+				next;
+				mes .@npcname$;
+				mes "Allright. Good luck in your discovery then.";
+				cutin "", 255;
+				set TUTORIAL, 0;
+			}
+		}
+	}
+	close;
+}
+
+prt_church,97,89,5	script	Yggdrasil::alatuto2	HIDDEN_WARP_NPC,2,2,{
+	end;
+	
+OnTouch:
+	set .@npcname$, "[Yggdrasil]";
+	set .@pcname$, "[" + strcharinfo(0) + "]";
+	if(TUTORIAL == 1)
+	{
+		mes .@npcname$;
+		if(LANGUAGE == 0)
+		{
+			cutin "kardui01",2;
+			mes "There's still things I need to talk to you about.";
+			next;
+			mes .@pcname$;
+			mes "Hey! I thought you'd left, back then...";
+			next;
+			mes .@npcname$;
+			mes "Sorry...My energy isn't that high...";
+			mes "I won't be able to speak for a long time again...";
+			mes "So let's hurry.";
+			next;
+			mes .@pcname$;
+			mes "Right, I'm listening.";
+			next;
+			mes .@npcname$;
+			mes "After the Ragnarok, a Demon Lord took the power down here.";
+			mes "Since then, no human can live around anymore.";
+			mes "Humans have been slaughtered by monsters, who now lead the towns.";
+			mes "Moreover, the Night is now eternal.";
+			next;
+			mes .@npcname$;
+			mes "It is however still possible to bring back the Light.";
+			mes "For this, with the Shards dropped by monsters, you'll be able to produce Pearls, Night or Light ones.";
+			mes "By bringing them to the matching Angel in the last unoccupied Town, you'll be able to make the Night or the Day longer.";
+			mes "It's up to you to take it to one or the other.";
+			next;
+			mes .@npcname$;
+			mes "During the Night, fights are free, according to each one envy.";
+			mes "On top of that, the adventurers that we sent on the world will encounter mutations during these times.";
+			mes "During the days, kills on Humans will be harshly punished by Light energy.";
+			mes "Therefor, the monsters will go back to their darkness, and Humans will come back.";
+			next;
+			mes .@npcname$;
+			mes "....";
+			next;
+			mes .@pcname$;
+			mes "Hey? Are you still there?";
+			next;
+			mes .@npcname$;
+			mes "Yes sorry...I got to hurry...";
+			mes "I've allready told you about the Spirit Life and the Blood Crystals.";
+			mes "Now, you need to learn more about the Families.";
+			mes "As the Bosses disappeared, adventurers create the Families.";
+			mes "To obtain the elements which can't be looted anymore, the best producer around the realm worked really hard.";
+			mes "They've obtained new recipes, enabling those items to be crafted.";
+			next;
+			mes .@npcname$;
+			mes "There's lots of Families. You should take all infos you can in the main cities.";
+			mes "For instance, you'll find a Family specialized in Weapon Smithing.";
+			mes "Or in Armor Smithing, Potion Making, Player Supporting, Cooking and so on.";
+			mes "Some will provide you news skills, others recipes to produce rare items.";
+			next;
+			mes .@pcname$;
+			mes "That's a pretty good thing, hu?";
+			next;
+			mes .@npcname$;
+			mes "Yep, but it requires more work than simply looting.";
+			mes "Finally, and that's where it joins back the Families, the looting did change a bit too.";
+			mes "Each monster here will loot shards, crystallisation of the dark energy ruling here.";
+			mes "There's common ones, which only cost some zenies, but the rarest, used in produce, can be sold for a bunch of money.";
+			mes "Also, you'll sometimes find Crystals. But each one is self explaining.";
+			next;
+			mes .@npcname$;
+			mes "I...I can't continue...Good luck in your trip!";
+			cutin "", 255;
+			set TUTORIAL, 2;
+		}
+	}
+	close;
+}

@@ -1,0 +1,18 @@
+//Almost Poring
+mellina,120,149,4	duplicate(almopo)	Almost Poring::almopomel	909
+//Cubception
+mellina,120,154,4	duplicate(Cubeception Guard)	Garde Cubeception::guacubmel	413
+//Fake poring
+mellina,125,140,4	duplicate(prtfipo)	Fake Poring::prtfipomel	909
+//Pirate Maze
+mellina,129,140,4	duplicate(prtprimhunt)	Prime Hunter::prtprimhuntmel	106
+//Raid Pirate
+mellina,134,140,4	duplicate(prtcostguard)	Coast Guard::prtcostguardmel	413
+//Survivor
+mellina,116,144,4	duplicate(prtsurv)	Survivor::prtsurvmel	887
+//Poring Puncher
+mellina,116,144,4	duplicate(ppevent)	Poring Puncher::ppeventmel	883
+//Poring Summoner
+mellina,116,144,4	duplicate(ps)	Poring Summoner::psmel	909
+//Disguise
+mellina,116,144,4	duplicate(prtdis)	Disguise#2::prtdismel	626

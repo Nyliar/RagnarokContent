@@ -1,0 +1,97 @@
+
+{
+	Id: 35000
+	AegisName: "Fenrir_Key"
+	Name: "Fenrir Key"
+	Buy: 0
+	Weight: 10
+	BuyingStore: true
+},
+{
+	Id: 35001
+	AegisName: "Jormungand_Key"
+	Name: "Jormungand Key"
+	Buy: 0
+	Weight: 10
+	BuyingStore: true
+},
+{
+	Id: 35002
+	AegisName: "Hel_Key"
+	Name: "Hel Key"
+	Buy: 0
+	Weight: 10
+	BuyingStore: true
+},
+{
+	Id: 35003
+	AegisName: "Duneyrr_Key"
+	Name: "Duneyrr Key"
+	Buy: 0
+	Weight: 10
+	BuyingStore: true
+},
+{
+	Id: 35004
+	AegisName: "Nyddhog_Key"
+	Name: "Nyddhog Key"
+	Buy: 0
+	Weight: 10
+	BuyingStore: true
+},
+{
+	Id: 35005
+	AegisName: "Loki_Key"
+	Name: "Loki Key"
+	Buy: 0
+	Weight: 10
+	BuyingStore: true
+},
+{
+	Id: 35006
+	AegisName: "Odin_Key"
+	Name: "Odin Key"
+	Buy: 0
+	Weight: 10
+	BuyingStore: true
+},
+{
+	Id: 35007
+	AegisName: "Thor_Key"
+	Name: "Thor Key"
+	Buy: 0
+	Weight: 10
+	BuyingStore: true
+},
+{
+	Id: 35008
+	AegisName: "Freyja_Key"
+	Name: "Freyja Key"
+	Buy: 0
+	Weight: 10
+	BuyingStore: true
+},
+{
+	Id: 35009
+	AegisName: "Njord_Key"
+	Name: "Njord Key"
+	Buy: 0
+	Weight: 10
+	BuyingStore: true
+},
+{
+	Id: 35010
+	AegisName: "Tyr_Key"
+	Name: "Tyr Key"
+	Buy: 0
+	Weight: 10
+	BuyingStore: true
+},
+{
+	Id: 35011
+	AegisName: "Heimdall_Key"
+	Name: "Heimdall Key"
+	Buy: 0
+	Weight: 10
+	BuyingStore: true
+},

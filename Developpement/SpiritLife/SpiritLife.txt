@@ -1,0 +1,159 @@
+prt_church,108,127,5	script	SpiritLife	HIDDEN_WARP_NPC,{
+
+OnPCDieEvent:
+	undisguise();
+	if(SPIRIT == 0)
+	{
+		set PERMADEATH, 1;
+		set PERMACOUNT, 1;
+		set PERMAMAP$, strcharinfo(3);
+		debugmes "you died";
+		addtimer 10000, strnpcinfo(3) + "::OnCheckDeath"; 	
+	}
+	else	
+	{
+		deltimer strnpcinfo(3) + "::OnCheckDeath";
+		goto OnDiedAgain;
+	}
+	end;
+	
+OnCheckDeath:
+	if(Hp > 0)
+	{
+		if(strcharinfo(3) == PERMAMAP$)
+		{
+			//raised, clean permadeath
+			set PERMADEATH, 0;
+			set PERMACOUNT, 0;
+			set PERMAMAP$, "";
+		}
+		else if(SPIRIT == 0)
+		{
+			//raised, recall, whatsoever, so spirit change
+			goto OnSpiritCall;
+		}
+	}
+	else
+	{
+		if(PERMACOUNT >= .maxDelayLoopCount)
+		{
+			goto OnSpiritCall;
+		}
+		else
+		{
+			set PERMACOUNT, PERMACOUNT + 1;
+			addtimer 10000, strnpcinfo(3) + "::OnCheckDeath"; 			
+		}
+	}
+	end;
+	
+OnSpiritCall:
+	charcommand "#alive " + strcharinfo(0);
+	//change display
+	if(Sex == 1)
+	{
+		disguise 2142;
+	}
+	else
+	{
+		disguise 2143;
+	}
+	set SPIRITLIFE, SPIRITLIFE - 1;
+	set SPIRIT, 1;
+	//clean permadeath
+	set PERMADEATH, 0;
+	set PERMACOUNT, 0;
+	set PERMAMAP$, "";
+	end;
+
+OnDiedAgain:
+	if(SPIRITLIFE == 0)
+	{
+		goto OnPermadeathOn;
+	}
+	else
+	{
+		dispbottom "[Cardinal System] You've lost a Spirit Life. Only " + SPIRITLIFE + " remaining.";
+		undisguise();
+	}
+	end;
+
+OnWhisperGlobal:
+	set SPIRIT, 0;
+	set SPIRITLIFE, 10;
+	set PERMADEATH, 0;
+	set PERMACOUNT, 0;
+	set PERMAMAP$, "";
+	end;
+
+OnPermadeathOn:
+	setarray .@autoStorableIds[0],19507,12411,19519,19520,19581,19930,19526,19538,16683,16682,12622,6060,14545,12208,13710,7776,13534,13810,13912,13913,13914,12993,19976,19509,19514,19521,19513,19517,19954,19791,19934,19827,20315,19781,19848,19797,20161,20054,20201,12213,12911,6320,16555;
+	set .@accountId, getcharid(3);
+	set .@startValue, 0;
+	set .@maxLoopRound, 50;
+	set .@complete, 0;
+	set .@countItems, 0;
+	set .@totalSize, getarraysize(.@autoStorableIds);
+	
+	while(.@complete == 0 && .@startValue < .@totalSize)
+	{
+		for(set .@i,.@startValue; .@i<.@totalSize && .@i<.@maxLoopRound; set .@i,.@i+1)
+		{
+			if(countitem(.@autoStorableIds[.@i]) > 0)
+			{
+				set .@query$, "INSERT INTO `pd_save` (`account_id`,`item_id`,`amount`) VALUES ";
+				//auto store
+				set .@query$, .@query$ + (.@countItems == 0 ? "":",") + "(" + getcharid(3) + "," + .@autoStorableIds[.@i] + "," + countitem(.@autoStorableIds[.@i]) + ")";
+				set .@countItems, .@countItems + 1;
+				delitem .@autoStorableIds[.@i], countitem(.@autoStorableIds[.@i]);
+			}
+			if(.@i == .@totalSize)
+			{
+				set .@complete, 1;
+			}
+		}
+		set .@query$, .@query$ + ";";
+		query_sql(.@query$, .@count);
+		set .@startValue, .@startValue + .@maxLoopRound;
+	}
+	logmes "Auto stored " + .@countItems + " items for char " + strcharinfo(0) + " after he/she died.";
+	
+	callfunc "PermadeathExpell";
+	
+	end;
+	
+OnInit:
+	set .maxDelayLoopCount, 2; //delay after dying, number of 10s loop to wait before expelling dead player
+	set $maxSpiritLife, 10;
+	end;
+}
+
+function	script	PermadeathExpell	{
+	//Set specific content over 10 spirit lifes lost
+
+	set .@playerlevel, BaseLevel;
+	set .@baseLevel, 70;
+	
+	//announce strcharinfo(0) +" was killed by "+ KILLERNAME + " at level: "+.@playerlevel,bc_all,0xff0000;
+	//query_sql("UPDATE `char` SET `char_num` = 17 WHERE `char_id` = '"+ .@deadplayer +"'");
+	setarray .char_delete$[0],"char","cart_inventory","elemental","friends","guild","guild_member","homunculus","hotkey","inventory","memo","mercenary","mercenary_owner","pet","quest","sc_data","skill","skillcooldown";
+	set .@deadplayer,getcharid(0);
+	message strcharinfo(0),"Dead End";
+	atcommand "@kick "+strcharinfo(0);
+	//set .@j, getarraysize( .char_delete$ );
+	//for (.@i = 0; .@i < .@j; .@i++) {
+	//query_sql("DELETE FROM `"+ .char_delete$[.@i] +"` WHERE `char_id` = '"+ .@deadplayer +"'");
+	
+	query_sql("SELECT MAX(`char_num`) FROM `char` WHERE `account_id`=" + getcharid(3), .@max);
+	if(getarraysize(.@max) > 0)
+	{
+		set .@newRank, .@max[0];
+		if(.@newRank < 13)
+		{
+			set .@newRank, 13;
+		}
+		query_sql("UPDATE `char` SET `char_num` = " + .@newRank + " WHERE `char_id` = '"+ .@deadplayer +"'");
+	}
+	
+	end;
+}

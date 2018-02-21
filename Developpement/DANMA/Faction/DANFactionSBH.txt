@@ -1,0 +1,84 @@
+// [========================================================]
+// [=============     DANMA - Faction Support     ============]
+// [========================================================]
+// [ Version 1                                              ]
+// [========================================================]
+// [ Original script by: Alayne				    ]
+// [========================================================]
+// [ Description:                                           ]
+// [--------------------------------------------------------]
+// [                                                        ]
+// [ - The Faction Support			    	    ]
+// [========================================================]
+// [ Changelog: (5 last updates)                            ]
+// [--------------------------------------------------------]
+// [                                                        ]
+// [ v0: Creation                      			    ]
+// [                                                        ]
+// [                                                        ]
+// [========================================================]
+// [                                                        ]
+// [========================================================]
+
+mellina_in,128,168,3	script	Lucia::danfmsbh	77,{
+	set .@npcname$, "[Lucia]";
+	mes .@npcname$;
+	mes "Welcome to House of Supporters.";
+	mes "Here, all of us lives for each other.";
+	mes "We help one another and help those in need of us.";
+	mes "I'll explain everything else if you join our cause.";
+	switch(select("Supporters?","What do you do?","Can I join your House?","I'd like to give your House Reputation Points"))
+	{
+		case 1:
+			next;
+			mes .@npcname$;
+			mes "Yes, as I've said, our lives are destined for helping the others.";
+			mes "Some choose to learn how to cure, or save lives.";
+			mes "They're known as Healers.";
+			next;
+			mes .@npcname$;
+			mes "Some prefer to become stronger or give strength to others.";
+			mes "They're known as Buffers.";
+			next;
+			mes .@npcname$;
+			mes "And lastly, there are those who become a shield for those who need a wall to hide behind.";
+			mes "They're known as Supports.";
+			break;
+		case 2:
+			next;
+			mes .@npcname$;
+			mes "I myself am a Healer.";
+			mes "I think that, as long as I can save lives, what becomes of my life means very little.";
+			mes "That's what I choose to do.";
+			break;
+		case 3:
+			next;
+			callfunc("OnJoinFaction","Lucia",2);
+			next;
+			mes .@npcname$;
+			mes "Now that you're one of us, you need to know a few things.";
+			mes "There are several advantages of joining a House.";
+			mes "The first one is that each House has a special doctor. He can use his knowledge to cure what ale's people.";
+			mes "But be careful. He's a human after all, just like everyone else!";
+			mes "He can only look after so much people. He will get tired.";
+			mes "Please take care to of him. We only have one doctor.";
+			next;
+			mes .@npcname$;
+			mes "Next, we have the Bank.";
+			mes "Each house has one. They can help with loans, deposits/withdrawls, or help you set up a bank account.";
+			mes "That's some pretty useful information right here!";
+			next;
+			mes .@npcname$;
+			mes "Finally, the House Skills.";
+			mes "Each House let's you learn a set of skills specific to them!";
+			mes "You already have some, check it out!";
+			next;
+			mes .@npcname$;
+			mes "Anyway, welcome friend. Welcome to Lucia's Family.";
+			break;
+		case 4:
+			callfunc("OnGiveFactionPoints","Lucia",2);			
+			break;
+	}
+	close;
+}

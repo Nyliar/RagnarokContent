@@ -1,0 +1,467 @@
+//29299 -> Blue Planet
+//ars_fild59,34,122,5	script	Astrologist::giquest7	448,{
+comodo,175,231,5	script	Astrologist::giquest7	448,{
+	set .@npcname$, "[Astrologist";
+	mes .@npcname$;
+	mes "";
+	
+	mes "Hello to you, " + strcharinfo(0);
+	mes "I'm here to look at the stars.";
+	if (callfunc("IsPlayerOn"))
+	{
+		if (BLUEPLAN == 0)
+		{
+			mes "One of them in particular, it look like a perfect blue sphere.";
+			mes "It's really fabulous.";
+			set BLUEPLAN, 1;
+			mes "Some says it cost more that lots of 3Carat Diamonds.";
+		}
+		else if (BLUEPLAN == 1 && countitem(732) >= 100)
+		{
+			mes "So you've read between the lines hu?";
+			mes "Farewell. It's your's now.";
+			delitem 732, 100;
+			rentitem 29299, 60;
+			logmes "[Yggdrasil Memories] " + strcharinfo(0) + " obtains a rental " + getitemname(29299) + ".";
+			set BLUEPLAN, 0;
+		}
+	}
+	close;
+}
+
+//29302 -> Hela's Kris
+//ars_fild33,107,81,5	script	Assassin::giquest8	466,{
+prontera,268,362,5	script	Assassin::giquest8	466,{
+	set .@npcname$, "[Assassin]";
+
+	mes .@npcname$;
+	mes "";
+	mes "You shouldn't have see me.";
+	mes "Nobody can survive after seeing me.";
+	if (callfunc("IsPlayerOn"))
+	{
+		if (HELASKRISS == 0 &&
+			(BaseClass == Job_Thief || BaseLevel > rand(90,99)))
+		{
+			mes "Hum...You're an assassin too?";
+			mes "And stronger than me...";
+			mes "You should have tell me earlier.";
+			mes "I guess this will be usefull for you someday.";
+			rentitem 29302, 60;
+			logmes "[Yggdrasil Memories] " + strcharinfo(0) + " obtains a rental " + getitemname(29302) + ".";
+		}
+	}
+	close;
+}
+
+//29303 -> Heavy Bow
+//ars_fild26,217,197,5	script	Strong Bowman::giquest9	634,{
+payon,255,298,5	script	Strong Bowman::giquest9	634,{
+	set .@npcname$, "[Strong Bowman]";
+
+	mes .@npcname$;
+	mes "";
+
+	mes "Hello to you.";
+	mes "I'm an archer. The strongest of them all.";
+	mes "I can reach a target 100 feets away.";
+	mes "But I can also shoot several arrows at a time!";
+	if (callfunc("IsPlayerOn"))
+	{
+		if (HEAVYBOW == 0)
+		{
+			mes "You'd like to know how to do that too?";
+			mes "If you want me to learn you, you should bring me 100 Mute Arrow.";
+			mes "And a Ballista.";
+			set HEAVYBOW, 1;
+		}
+		else if (HEAVYBOW == 1 && countitem(1722) > 0 && countitem(1769) >= 100)
+		{
+			mes "Perfect.";
+			mes "Now you can understand. To shoot this far, hold your respiration and keep concentrate.";
+			mes "Then, let your instinct do what it needs.";
+			mes "You'll see.";
+			delitem 1722, 1;
+			delitem 1769, 100;
+			rentitem 29303, 60;
+			logmes "[Yggdrasil Memories] " + strcharinfo(0) + " obtains a rental " + getitemname(29303) + ".";
+			set HEAVYBOW, 0;
+		}
+	}
+	close;
+}
+
+//29305 -> Thor Hammer
+//ars_fild46,85,28,5	script	Thor::giquest10	469,{
+mjolnir_02,341,114,5	script	Thor::giquest10	469,{
+	set .@npcname$, "[Thor]";
+
+	mes .@npcname$;
+	mes "";
+	mes "Hello to you, Human.";
+	mes "I'm Thor, God of Thunder.";
+	if (callfunc("IsPlayerOn"))
+	{
+		if (HAMMERTHOR == 0)
+		{
+			mes "And I've lost my hammer, Mjolnir.";
+			mes "If you bring it back to me, I'll reward you.";
+			mes "God's words!";
+			if (select("Deal!","God's words? What's that?") == 1)
+			{
+				next;
+				mes .@npcname$;
+				mes "Great. Then, you should bring me:";
+				for (set .@i,0; .@i<getarraysize(.elemId); set .@i,.@i+1)
+				{
+					mes "	~ " + .elemCount[.@i] + " ^FF0000" + getitemname(.elemId[.@i]) + "^000000";
+				}
+				mes "I'll wait you here.";
+			}
+			else
+			{
+				mes "You shouldn't be contemptuous, mortal...";
+				percentheal -99, -99;
+				mes "Keep in mind I'm still a God!";
+			}
+			set HAMMERTHOR, 1;
+		}
+		else if (HAMMERTHOR == 1)
+		{
+			mes "Do you bring me all I need?";
+			if(select("Yes, I get everything","No, can you remember me the list?") == 1)
+			{
+				for (set .@i,0; .@i<getarraysize(.elemId); set .@i,.@i+1)
+				{
+					if (countitem(.elemId[.@i]) < .elemCount[.@i])
+					{
+						mes "You're missing some " + getitemname(.elemId[.@i]);
+						mes "Sorry, but I can't do it without all the items.";
+						close;
+					}
+				}		
+				mes "You've bring it back to me!";
+				mes "By Odin, you'll be rewarded by the true strength!";
+				for (set .@i,0; .@i<getarraysize(.elemId); set .@i,.@i+1)
+				{
+					delitem .elemId[.@i], .elemCount[.@i];
+				}
+				mes "Take this one with you. I've made a copie from the materials you've brought me!";
+				rentitem 29305, 60;
+				logmes "[Yggdrasil Memories] " + strcharinfo(0) + " obtains a rental " + getitemname(29305) + ".";
+				set HAMMERTHOR, 0;
+			}
+			else
+			{
+				mes "Sure, my friend.";
+				for (set .@i,0; .@i<getarraysize(.elemId); set .@i,.@i+1)
+				{
+					mes "	~ " + .elemCount[.@i] + " ^FF0000" + getitemname(.elemId[.@i]) + "^000000";
+				}
+			}
+		}
+	}
+	close;
+	
+OnInit:
+	setarray .elemId[0],615,996,1005,1355;
+	setarray .elemCount[0],25,50,10,1;
+}
+
+//29321 -> God Eyes
+//ars_fild28,143,225,5	script	Master Bowman::giquest11	407,{
+tur_dun01,221,208,5	script	Master Bowman::giquest11	407,{
+	set .@npcname$, "[Bernard]";
+
+	mes .@npcname$;
+	mes "";
+	mes "Hey! Hello to you, my friend!";
+	mes "Yes, yes. I know. Pretty impressive to me such a great bowman as me.";
+	mes "There's merely nothing I can't reach.";
+	mes "And thus, because I got the Divine Eye.";
+	if (readparam(bDex) >= 95 && callfunc("IsPlayerOn"))
+	{
+		mes "Unbelievable. You also have the Divine Eye?";
+		mes "You should hit an apple hundreds foots away!";
+		mes "Take that. That's a proof that we're brothers!";
+		rentitem 29321, 60;
+		logmes "[Yggdrasil Memories] " + strcharinfo(0) + " obtains a rental " + getitemname(29321) + ".";
+	}
+	close;
+}
+
+//29323 -> Aegis Shield
+//lafayette,235,298,5	script	Aegis::giquest12	492,{
+mid_camp,197,292,5	script	Aegis::giquest12	492,{
+	set .@npcname$, "[Aegis]";
+
+	mes .@npcname$;
+	mes "";
+	mes "Hello, " + strcharinfo(0) + "!";
+	mes "I'm a veteran legionnary.";
+	if (callfunc("IsPlayerOn"))
+	{
+		if (AEGMSQ == 0)
+		{
+			mes "I've fought long time for the realm. Against the Marats. The Ice Giants. Even the Canims.";
+			mes "But this, we've been able to achieve it thanks to our discipline, and our shields.";
+			mes "They was the hardest, but also the heaviest, which prevented us to move.";
+			mes "Unfortunately, mine broke some times ago.";
+			mes "Since that, I'm not a legionnary again...";
+			set AEGMSQ, 1;
+		}
+		else if (AEGMSQ == 1)
+		{
+			mes "What's that?";
+			if (countitem(2125) >= 1)
+			{
+				mes "Thanks to you my friend. Now, I can again be a fighter.";
+				mes "For the realm!";
+				rentitem 29323,60;	
+				logmes "[Yggdrasil Memories] " + strcharinfo(0) + " obtains a rental " + getitemname(29323) + ".";
+				delitem 2125, 1;
+				set AEGMSQ, 0;
+			}
+		}
+	}
+	close;
+}
+
+//29333 -> Witch Broom
+//ars_dun60,118,184,5	script	Witch::giquest13	856,{
+niflheim,199,91,5	script	Witch::giquest13	856,{
+	set .@npcname$, "[Ariol]";
+
+	mes .@npcname$;
+	mes "";
+	mes "Hin hin hin!";
+	mes "Welcome in my little shop.";
+	mes "I can create you lots of potion, filters and other spells.";
+	mes "But it's pretty expensive, I must warn you.";
+	if (callfunc("IsPlayerOn"))
+	{
+		set .@choice, select("Potion of Atk","Potion of Def","Potion of Speed","Potion of Motion","Potion of Strength","Life Pill","Mana Pill","Vision Cake","Flee Cake");
+		switch(.@choice)
+		{
+			case 1:
+				next;
+				mes .@npcname$;
+				mes "It cost 1 Million per bottle.";
+				if (select("Ok","No way!?") == 1)
+				{
+					if (Zeny >= 1000000)
+					{
+						set Zeny, Zeny - 1000000;
+						getitem 12269, 1;
+						set WITCHBROOM, WITCHBROOM + .@choice;
+						if (WITCHBROOM >= 50)
+						{
+							mes "A good customer, hu?";
+							mes "Here's for you!";
+							rentitem 29333, 60;
+							logmes "[Yggdrasil Memories] " + strcharinfo(0) + " obtains a rental " + getitemname(29333) + ".";
+							set WITCHBROOM, 0;
+						}
+					}
+				}
+				break;
+			case 2:
+				next;
+				mes .@npcname$;
+				mes "It cost 1 Million per bottle.";
+				if (select("Ok","No way!?") == 1)
+				{
+					if (Zeny >= 1000000)
+					{
+						set Zeny, Zeny - 1000000;
+						getitem 12269, 1;
+						set WITCHBROOM, WITCHBROOM + .@choice;
+						if (WITCHBROOM >= 50)
+						{
+							mes "A good customer, hu?";
+							mes "Here's for you!";
+							rentitem 29333, 60;
+							logmes "[Yggdrasil Memories] " + strcharinfo(0) + " obtains a rental " + getitemname(29333) + ".";
+							set WITCHBROOM, 0;
+						}
+					}
+				}
+				break;
+			case 5:
+				next;
+				mes .@npcname$;
+				mes "It cost 1 Million per bottle.";
+				if (select("Ok","No way!?") == 1)
+				{
+					if (Zeny >= 1000000)
+					{
+						set Zeny, Zeny - 1000000;
+						getitem 12270, 1;
+						set WITCHBROOM, WITCHBROOM + .@choice;
+						if (WITCHBROOM >= 50)
+						{
+							mes "A good customer, hu?";
+							mes "Here's for you!";
+							rentitem 29333, 60;
+							logmes "[Yggdrasil Memories] " + strcharinfo(0) + " obtains a rental " + getitemname(29333) + ".";
+							set WITCHBROOM, 0;
+						}
+					}
+				}
+				break;
+			case 3:
+				next;
+				mes .@npcname$;
+				mes "It cost 5 Million per bottle.";
+				if (select("Ok","No way!?") == 1)
+				{
+					if (Zeny >= 5000000)
+					{
+						set Zeny, Zeny - 5000000;
+						getitem 12342, 1;
+						set WITCHBROOM, WITCHBROOM + .@choice;
+						if (WITCHBROOM >= 50)
+						{
+							mes "A good customer, hu?";
+							mes "Here's for you!";
+							rentitem 29333, 60;
+							logmes "[Yggdrasil Memories] " + strcharinfo(0) + " obtains a rental " + getitemname(29333) + ".";
+							set WITCHBROOM, 0;
+						}
+					}
+				}
+				break;
+			case 4:
+				next;
+				mes .@npcname$;
+				mes "It cost 5 Million per bottle.";
+				if (select("Ok","No way!?") == 1)
+				{
+					if (Zeny >= 5000000)
+					{
+						set Zeny, Zeny - 5000000;
+						getitem 12016, 1;
+						set WITCHBROOM, WITCHBROOM + .@choice;
+						if (WITCHBROOM >= 50)
+						{
+							mes "A good customer, hu?";
+							mes "Here's for you!";
+							rentitem 29333, 60;
+							logmes "[Yggdrasil Memories] " + strcharinfo(0) + " obtains a rental " + getitemname(29333) + ".";
+							set WITCHBROOM, 0;
+						}
+					}
+				}
+				break;
+			case 6:
+				next;
+				mes .@npcname$;
+				mes "It cost 2.5 Million per pill.";
+				if (select("Ok","No way!?") == 1)
+				{
+					if (Zeny >= 2500000)
+					{
+						set Zeny, Zeny - 2500000;
+						getitem 12274, 1;
+						set WITCHBROOM, WITCHBROOM + .@choice;
+						if (WITCHBROOM >= 50)
+						{
+							mes "A good customer, hu?";
+							mes "Here's for you!";
+							rentitem 29333, 60;
+							logmes "[Yggdrasil Memories] " + strcharinfo(0) + " obtains a rental " + getitemname(29333) + ".";
+							set WITCHBROOM, 0;
+						}
+					}
+				}
+				break;
+			case 7:
+				next;
+				mes .@npcname$;
+				mes "It cost 2.5 Million per pill.";
+				if (select("Ok","No way!?") == 1)
+				{
+					if (Zeny >= 2500000)
+					{
+						set Zeny, Zeny - 2500000;
+						getitem 12275, 1;
+						set WITCHBROOM, WITCHBROOM + .@choice;
+						if (WITCHBROOM >= 50)
+						{
+							mes "A good customer, hu?";
+							mes "Here's for you!";
+							rentitem 29333, 60;
+							logmes "[Yggdrasil Memories] " + strcharinfo(0) + " obtains a rental " + getitemname(29333) + ".";
+							set WITCHBROOM, 0;
+						}
+					}
+				}
+				break;
+			case 8:
+				next;
+				mes .@npcname$;
+				mes "It cost 3 Million per piece.";
+				if (select("Ok","No way!?") == 1)
+				{
+					if (Zeny >= 3000000)
+					{
+						set Zeny, Zeny - 3000000;
+						getitem 12272, 1;
+						set WITCHBROOM, WITCHBROOM + .@choice;
+						if (WITCHBROOM >= 50)
+						{
+							mes "A good customer, hu?";
+							mes "Here's for you!";
+							rentitem 29333, 60;
+							logmes "[Yggdrasil Memories] " + strcharinfo(0) + " obtains a rental " + getitemname(29333) + ".";
+							set WITCHBROOM, 0;
+						}
+					}
+				}
+				break;
+			case 9:
+				next;
+				mes .@npcname$;
+				mes "It cost 3 Million per piece.";
+				if (select("Ok","No way!?") == 1)
+				{
+					if (Zeny >= 3000000)
+					{
+						set Zeny, Zeny - 3000000;
+						getitem 12273, 1;
+						set WITCHBROOM, WITCHBROOM + .@choice;
+						if (WITCHBROOM >= 50)
+						{
+							mes "A good customer, hu?";
+							mes "Here's for you!";
+							rentitem 29333, 60;
+							logmes "[Yggdrasil Memories] " + strcharinfo(0) + " obtains a rental " + getitemname(29333) + ".";
+							set WITCHBROOM, 0;
+						}
+					}
+				}
+				break;
+		}
+	}	
+	close;
+}
+
+//29334 -> Invisible Garment
+//ars_fild40,139,153,5	script	Invisible Man::giquest14	411,{
+nif_fild01,321,79,5	script	Invisible Man::giquest14	411,{
+	set .@npcname$, "[Bernard]";
+
+	mes .@npcname$;
+	mes "";
+
+	mes "AHA! You can't see meeee!";
+	if (INVISIBLEQ == 0 && (getskilllv(389) >= 1 || getskilllv(135) >= 1) && callfunc("IsPlayerOn"))
+	{
+		mes "Ah...You can.";
+		mes "Forget about that, ok?";
+		rentitem 29334, 60;
+		logmes "[Yggdrasil Memories] " + strcharinfo(0) + " obtains a rental " + getitemname(29334) + ".";
+		set INVISIBLEQ, 1;
+	}
+	close;
+}

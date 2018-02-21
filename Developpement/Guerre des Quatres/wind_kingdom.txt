@@ -1,0 +1,55 @@
+//===== eAthena Script =======================================
+//= War of Emperium (Al De baran)
+//===== By: ==================================================
+//= L0ne_W0lf
+//===== Current Version: =====================================
+//= 1.1
+//===== Compatible With: =====================================
+//= eAthena SVN
+//===== Description: =========================================
+//= NPCs that relate to Al De Baran Guild Castle 1
+//===== Additional Comments: =================================
+//= 1.0 First Version. No longer uses functions. [L0ne_W0lf]
+//= 1.1 Removed dialog from interior flags. [L0ne_W0lf]
+//============================================================
+
+// Guild Flag (Town)
+//============================================================
+capitale,200,165,4	script	Blasjuld#2::WindKingdom	722,{
+	end;
+
+OnRecvCastleW:
+	FlagEmblem GetCastleData("combat01",1);
+	end;
+}
+
+// Guild Flag (Inside Castle)
+//============================================================
+wind_king,93,214,2	script	Blasjuld#wk-2::WindKingdom2	722,{
+	end;
+
+OnRecvCastleW:
+	FlagEmblem GetCastleData("combat01",1);
+	end;
+}
+
+wind_king,159,123,2	duplicate(WindKingdom)	Blasjuld#wk-3	722
+wind_king,180,123,8	duplicate(WindKingdom)	Blasjuld#wk-4	722
+
+// AGIT Manager
+//============================================================
+combat01,107,79,0	duplicate(4_War_Manager)	4_War#combat01	-1
+
+// Grand Argentier
+//============================================================
+wind_king,74,195,1	duplicate(Grand Argentier)	Grand Argentier#2	963
+
+// Main du Roi
+//============================================================
+wind_king,235,179,5	duplicate(Main du Roi)	Main du Roi#2	964
+
+// General des armées
+//============================================================
+wind_king,74,233,5	duplicate(General en Chef)	General en Chef#2	966
+
+combat01,107,79,0	duplicate(4_War_Treasure)	4_War_Treasure#combat01	-1

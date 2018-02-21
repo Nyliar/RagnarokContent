@@ -1,0 +1,353 @@
+//29317 -> Imp's Wink
+//ars_fild30,52,59,5	script	Imp::giquest33	1937,10,10,{
+thor_v01,36,116,5	script	Imp::giquest33	1937,10,10,{
+	set .@rand, rand(0,10);
+	if (strcharinfo(3) == strnpcinfo(4)
+		&& .@rand == 1)
+	{
+		dispbottom "You've caught the imp. Congratulations!";
+		rentitem 29317, 60;
+		logmes "[Yggdrasil Memories] " + strcharinfo(0) + " obtains a rental " + getitemname(29317) + ".";
+	}
+	else
+	{
+		dispbottom "It runs away...";
+		do
+		{		
+			set .movex,rand(0,150);
+			set .movey,rand(0,150);
+			set .map$,strcharinfo(3);
+		}
+		while(!checkcell(.map$,.movex,.movey,cell_chkpass));
+		movenpc strnpcinfo(3),.movex,.movey;
+	}
+	end;
+
+OnTouch:
+	dispbottom "You're entering in the area of the imp.";
+	if (callfunc("IsPlayerOn") && countitem(994) > 1)
+	{
+		dispbottom "You're near! Try to catch it!";
+		if(rand(0,10) >= 5)
+		{
+			sc_start SC_STUN,30000,0;
+			dispbottom "It runs away...";
+			dispbottom "Perhaps you can use something to capture its flamed heart...";
+			do
+			{		
+				set .movex,rand(0,150);
+				set .movey,rand(0,150);
+				set .map$,strcharinfo(3);
+			}
+			while(!checkcell(.map$,.movex,.movey,cell_chkpass));
+			movenpc strnpcinfo(3),.movex,.movey;
+		}
+		delitem 994, 1;
+	}
+	else
+	{
+		dispbottom "It runs away...";
+		dispbottom "Perhaps you can use something to capture its flamed heart...";
+		do
+		{		
+			set .movex,rand(0,150);
+			set .movey,rand(0,150);
+			set .map$,strcharinfo(3);
+		}
+		while(!checkcell(.map$,.movex,.movey,cell_chkpass));
+		movenpc strnpcinfo(3),.movex,.movey;
+	}
+	end;
+}
+
+//29320 -> Dragon's Miniature
+//ars_fild49,178,111,5	script	Dragon Fighter::giquest34	796,{
+cmd_fild03,215,119,5	script	Dragon Fighter::giquest34	796,{
+	set .@npcname$, "[Dragon Fighter]";
+	mes .@npcname$;
+	mes "";
+	enablenpc "giquest34-1";
+	mes "STOP!";
+	mes "Don't come closer, " + strcharinfo(0);
+	mes "You gonna make my prey flee. And if it happens, you'll become my new one.";
+	mes "....";
+	if (callfunc("IsPlayerOn"))
+	{
+		if (DRAGONQ == 0)
+		{
+			if (rand(0,10) < 8)
+			{
+				next;
+				mes .@npcname$;
+				disablenpc "giquest34-1";
+				mes "I've missed it...";
+			}
+			else
+			{
+				disablenpc "giquest34-1";
+				mes "Aha! None can escape me.";
+				mes "That's thanks to my taming item.";
+				mes "I like to call it like that, but that's more a toy than anything else.";
+				mes "Dunno why they like it so much.";
+				mes "If only I got something better than that. Capturing dragons is greate,";
+				mes "But that won't free us from them...";
+				set DRAGONQ, 1;
+			}
+		}
+		else
+		{
+			if (countitem(1166) >= 1)
+			{
+				mes "I...I need that!";
+				mes "Give it to me, and I'll trade you this toy.";
+				mes "Dragon's love it.";
+				if (select("Ok, let's trade","No way, it's mine") == 1)
+				{
+					mes "Thanks, my friend!";
+					delitem 1166, 1;
+					rentitem 29320, 60;
+					logmes "[Yggdrasil Memories] " + strcharinfo(0) + " obtains a rental " + getitemname(29320) + ".";
+					set DRAGONQ, 0;
+				}
+				else
+				{
+					mes "...But I need this dragons slayer...";
+				}
+			}
+			disablenpc "giquest34-1";
+		}
+	}
+	close;
+}
+
+//ars_fild49,175,118,5	script	Dragon::giquest34-1	1715,{
+cmd_fild03,201,105,5	script	Dragon::giquest34-1	1715,{
+	mes "Growl!";
+	close;
+}
+
+//29340 -> Pregnancy Stone
+//invek,204,52,5	script	Crying Woman::giquest35	758,{
+in_orcs01,17,174,5	script	Crying Woman::giquest35	758,{
+	set .@npcname$, "[Ayol]";
+	mes .@npcname$;
+	mes "";
+	mes "I...I've lost my child...";
+	mes "I was pregnant for 8 months, when I've been attacked by monsters.";
+	mes "I've been able to escape but...";
+	mes "I've lost him...";
+	if (callfunc("IsPlayerOn"))
+	{
+		if (PREGNANCYQ == 0)
+		{
+			set PREGNANCYQ, 1;
+		}
+	}
+	close;
+}
+
+//invek,208,56,5	script	Conred::giquest35-1	731,{
+gef_fild03,29,57,5	script	Conred::giquest35-1	731,{
+	set .@npcname$, "[Conred]";
+	mes .@npcname$;
+	mes "";
+	mes "I'm Conred, Ayol's husband.";
+	mes "I felt terribly sorry for her, and I can't do nothing to calm her...";
+	if (callfunc("IsPlayerOn"))
+	{
+		if (PREGNANCYQ == 1)
+		{
+			next;
+			mes .@npcname$;
+			mes "I've got something to ask you.";
+			mes "Ayol lost her child when she's been attacked.";
+			mes "There's an old legend.";
+			mes "It says that a monster killing a to-be born child produce a stone when dying.";
+
+			mes "It's called a Pregnancy Stone.";
+			mes "Kill the monsters that attacked Ayol.";
+			mes "None of them should be able to do that again.";
+			set PREGNANCYQ, 2;
+		}
+	}
+	close;
+}
+	
+//29350 -> Beast Claw
+//ars_fild56,127,161,5	script	HeadHunter::giquest36	730,{
+ra_fild03,307,83,5	script	HeadHunter::giquest36	730,{
+	set .@npcname$, "[Yoruk]";
+	mes .@npcname$;
+	mes "";
+	mes "Hey, how are you " + strcharinfo(0);
+	mes "My name's Yoruk.";
+	mes "I'm known to hunt the ferocious beasts.";
+	mes "The bigger they are, the more I like it.";
+	mes "You should try one day too.";
+	if (callfunc("IsPlayerOn") && BEASTCLAW == 0) 
+	{
+		monster strnpcinfo(4),0,0,strmobinfo(1,.mobId),.mobId,1,strnpcinfo(3)+"::OnLootClaw",2,0;
+	}
+	close;
+	
+OnLootClaw:
+	set CLAWQ, CLAWQ + 1;
+	set .@npcname$, "[Yoruk]";
+	mes .@npcname$;
+	mes "Hey, you've killed my prey!";
+	if (CLAWQ >= .killCount)
+	{
+		mes "But that was a good fight.";
+		mes "I'm glad to call you brother.";
+		mes "Take that with you.";
+		rentitem 29350, 60;
+		logmes "[Yggdrasil Memories] " + strcharinfo(0) + " obtains a rental " + getitemname(29350) + ".";
+		set CLAWQ, 0;
+	}
+	close;
+	
+OnInit:
+	set .mobId, 1785;
+	set .killCount, rand(1,10);
+	end;
+}
+
+//29369 -> Golden Dust Girl
+//Hyrule,80,239,5	script	Bandit::giquest37	54,{
+aldebaran,194,65,5	script	Bandit::giquest37	54,{
+	set .@npcname$, "[Bandit]";
+	mes .@npcname$;
+	mes "";
+	mes "What are you doing here?";
+	mes "There's nothing to see here.";
+	next;
+	if (callfunc("IsPlayerOn"))
+		set BANDITQ, BANDITQ + 1;
+	warp "Hyrule",140,179;
+	close;
+}
+
+//Hyrule,100,250,5	duplicate(giquest37)	Bandit::giquest37-1	54
+//Hyrule,80,218,4	duplicate(giquest37)	Bandit::giquest37-2	55
+//Hyrule,205,22,2	duplicate(giquest37)	Bandit::giquest37-3	54
+//Hyrule,148,229,3	duplicate(giquest37)	Bandit::giquest37-4	56
+//Hyrule,60,146,6	duplicate(giquest37)	Bandit::giquest37-5	57
+
+aldebaran,143,128,5	duplicate(giquest37)	Bandit::giquest37-1	54
+aldebaran,117,100,4	duplicate(giquest37)	Bandit::giquest37-2	55
+aldebaran,67,74,2	duplicate(giquest37)	Bandit::giquest37-3	54
+aldebaran,89,226,3	duplicate(giquest37)	Bandit::giquest37-4	56
+aldebaran,98,229,6	duplicate(giquest37)	Bandit::giquest37-5	57
+
+
+//Hyrule,22,44,5	script	HeadBandit::giquest37-6	61,{
+aldeba_in,236,233,5	script	HeadBandit::giquest37-6	61,{
+	set .@npcname$, "[Bandit]";
+	mes .@npcname$;
+	mes "";
+	mes "What are you doing here?";
+	mes "There's nothing to see here.";
+	
+	if (callfunc("IsPlayerOn"))
+	{
+		set BANDITQ, BANDITQ + 5;
+		hideoffnpc "giquest37-7";
+	}
+	next;
+	//warp "Hyrule",140,179;
+	warp "aldebaran",0,0;
+	close;
+}
+
+//Hyrule,21,19,5	script	Golden Girl::giquest37-7	72,{
+aldeba_in,221,233,5	script	Golden Girl::giquest37-7	72,{
+	set .@npcname$, "[Golden Girl]";
+	mes .@npcname$;
+	mes "";
+	mes "Who are you mister?";
+	if (callfunc("IsPlayerOn"))
+	{
+		if (GOLDENQ == 0)
+		{
+			mes "Look around you! Monsters!";
+			mes "I'm so affraid!";
+			
+			for (set .@i, 0; .@i<BANDITQ; set .@i, .@i+1)
+			{
+				//monster strnpcinfo(4),0,0,strmobinfo(1,.mobId),.mobId,1,strnpcinfo(3)+"::OnMobsDead",rand(0,2),0;
+				monster "aldebaran",0,0,strmobinfo(1,.mobId),.mobId,1,strnpcinfo(3)+"::OnMobsDead",rand(0,2),0;
+			}
+			set GOLDENCOUNTQ, 0;
+			initnpctimer;
+			addtimer 300000, strnpcinfo(3)+"::OnTimeElapsed";
+			
+			hideonnpc strnpcinfo(3);
+			hideonnpc "giquest37";
+			hideonnpc "giquest37-1";
+			hideonnpc "giquest37-2";
+			hideonnpc "giquest37-3";
+			hideonnpc "giquest37-4";
+			hideonnpc "giquest37-5";
+			hideonnpc "giquest37-6";
+		}
+		else
+		{
+			mes "Thank you. The Bandits fled because of the monsters.";
+			mes "Now you've killed them, I'm free.";
+			mes "They captured me cause they thought I produced gold by skin contact.";
+			mes "That's stupid, isn't it?";
+			rentitem 29369, 60;
+			logmes "[Yggdrasil Memories] " + strcharinfo(0) + " obtains a rental " + getitemname(29369) + ".";
+			hideonnpc strnpcinfo(3);
+			set BANDITQ, 0;
+			set GOLDENQ, 0;
+		}
+	}
+	close;
+
+OnPCLoginEvent:
+	if (BANDITQ > 0)
+		set BANDITQ, 0;
+	end;
+
+OnMobsDead:
+	set GOLDENCOUNTQ, GOLDENCOUNTQ + 1;
+	if (GOLDENCOUNTQ == BANDITQ)
+	{
+		goto OnAllMonstersDead;
+	}
+	end;
+	
+OnTimeElapsed:
+	//killmonster strnpcinfo(4), strnpcinfo(3)+"::OnMobsDead";
+	killmonster "aldebaran", strnpcinfo(3)+"::OnMobsDead";
+	close;
+	
+OnTimer300000:
+	hideoffnpc "giquest37";
+	hideoffnpc "giquest37-1";
+	hideoffnpc "giquest37-2";
+	hideoffnpc "giquest37-3";
+	hideoffnpc "giquest37-4";
+	hideoffnpc "giquest37-5";
+	hideoffnpc "giquest37-6";
+	end;
+
+OnAllMonstersDead:
+	deltimer strnpcinfo(3)+"::OnTimeElapsed";
+	stopnpctimer;
+	hideoffnpc "giquest37-7";	
+	set .@npcname$, "[Golden Girl]";
+	mes .@npcname$;
+	mes "";
+	mes "Come back to me.";
+	set GOLDENQ, 1;
+	set BANDITQ, 0;
+	close;
+	
+OnInit:
+	hideonnpc strnpcinfo(3);
+	set .mobId, 1313;
+	end;
+}
+

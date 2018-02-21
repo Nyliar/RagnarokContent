@@ -1,0 +1,745 @@
+// [========================================================]
+// [============    Battle Arena - Elemental Crystal    ==========]
+// [========================================================]
+// [ Version 1                                              ]
+// [========================================================]
+// [ Original script by: Alayne				    ]
+// [========================================================]
+// [ Description:                                           ]
+// [--------------------------------------------------------]
+// [                                                        ]
+// [ - The Elemental Crystal System				    ]
+// [========================================================]
+// [ Changelog: (5 last updates)                            ]
+// [--------------------------------------------------------]
+// [                                                        ]
+// [ v0: Creation                      			    ]
+// [                                                        ]
+// [                                                        ]
+// [========================================================]
+// [                                                        ]
+// [========================================================]
+
+mapflag	pvp_n_1-1	battleground
+
+pvp_n_1-1,99,144,0	script	ElementalCrystalManager::alabaec	-1,2,2,{
+	close;
+
+OnStartEC:
+	set $elementalcrystalon, 2;
+	pvpon $elementalCrystalMap$;
+	set .earthScore, 1;
+	set .fireScore, 1;
+	set .waterScore, 1;
+	set .windScore, 1;
+	set .countTimer, 0;
+	initnpctimer;
+	goto OnPopCrystals;
+	end;
+	
+OnEcEnd:
+	pvpoff $elementalCrystalMap$;
+	set .@winningTeam, getarg(0); 
+	switch(.@winningTeam)
+	{
+		case 1:
+			announce "[Elemental War] Fire Kingdom win the Elemental War!", bc_all|bc_red;
+			
+			for(set .@i,0; .@i<getarraysize($@ecTeamFi); set .@i,.@i+1)
+			{
+				if(attachrid($@ecTeamFi[.@i]))
+				{
+					charcommand "#fakename " + strcharinfo(0);
+					bg_leave;
+					set .@cnt, CPOINTS / .rewardCnt[0];
+					if(.@cnt < .rewardMin[0])
+						set .@cnt, .rewardMin[0];
+					getitem 7773, .@cnt;
+					set Zeny, Zeny + $ECEntryPrice * ($maxECMemberCount - 1) / (getarraysize($@ECMembers));
+					set Zeny, Zeny + ECPOINTS * 10000;
+				}
+			}
+			break;
+		case 2:
+			announce "[Elemental War] Earth Kingdom win the Elemental War!", bc_all|bc_red;
+			
+			for(set .@i,0; .@i<getarraysize($@ecTeamEa); set .@i,.@i+1)
+			{
+				if(attachrid($@ecTeamEa[.@i]))
+				{
+					charcommand "#fakename " + strcharinfo(0);
+					bg_leave;
+					set .@cnt, CPOINTS / .rewardCnt[0];
+					if(.@cnt < .rewardMin[0])
+						set .@cnt, .rewardMin[0];
+					set Zeny, Zeny + $ECEntryPrice * ($maxECMemberCount - 1) / (getarraysize($@ECMembers));
+					set Zeny, Zeny + ECPOINTS * 10000;
+				}
+			}
+			break;
+		case 3:
+			announce "[Elemental War] Wind Kingdom win the Elemental War!", bc_all|bc_red;
+			
+			for(set .@i,0; .@i<getarraysize($@ecTeamWi); set .@i,.@i+1)
+			{
+				if(attachrid($@ecTeamWi[.@i]))
+				{
+					charcommand "#fakename " + strcharinfo(0);
+					bg_leave;
+					set .@cnt, CPOINTS / .rewardCnt[0];
+					if(.@cnt < .rewardMin[0])
+						set .@cnt, .rewardMin[0];
+					set Zeny, Zeny + $ECEntryPrice * ($maxECMemberCount - 1) / (getarraysize($@ECMembers));
+					set Zeny, Zeny + ECPOINTS * 10000;
+				}
+			}
+			break;
+		case 4:
+			announce "[Elemental War] Water Kingdom win the Elemental War!", bc_all|bc_red;
+			
+			for(set .@i,0; .@i<getarraysize($@ecTeamWa); set .@i,.@i+1)
+			{
+				if(attachrid($@ecTeamWa[.@i]))
+				{
+					charcommand "#fakename " + strcharinfo(0);
+					bg_leave;
+					set .@cnt, CPOINTS / .rewardCnt[0];
+					if(.@cnt < .rewardMin[0])
+						set .@cnt, .rewardMin[0];
+					set Zeny, Zeny + $ECEntryPrice * ($maxECMemberCount - 1) / (getarraysize($@ECMembers));
+					set Zeny, Zeny + ECPOINTS * 10000;
+				}
+			}
+			break;
+	}
+	
+	if(.@winningTeam != 1)
+	{
+		for(set .@i,0; .@i<getarraysize($@ecTeamFi); set .@i,.@i+1)
+		{
+			if(attachrid($@ecTeamFi[.@i]))
+			{
+				charcommand "#fakename " + strcharinfo(0);
+				bg_leave;
+				set .@cnt, CPOINTS / .rewardCnt[1];
+				if(.@cnt < .rewardMin[1])
+					set .@cnt, .rewardMin[1];
+			}
+		}
+	}
+	if(.@winningTeam != 2)
+	{
+		for(set .@i,0; .@i<getarraysize($@ecTeamEa); set .@i,.@i+1)
+		{
+			if(attachrid($@ecTeamEa[.@i]))
+			{
+				charcommand "#fakename " + strcharinfo(0);
+				bg_leave;
+				set .@cnt, CPOINTS / .rewardCnt[1];
+				if(.@cnt < .rewardMin[1])
+					set .@cnt, .rewardMin[1];
+			}
+		}
+	}
+	if(.@winningTeam != 3)
+	{
+		for(set .@i,0; .@i<getarraysize($@ecTeamWi); set .@i,.@i+1)
+		{
+			if(attachrid($@ecTeamWi[.@i]))
+			{
+				charcommand "#fakename " + strcharinfo(0);
+				bg_leave;
+				set .@cnt, CPOINTS / .rewardCnt[1];
+				if(.@cnt < .rewardMin[1])
+					set .@cnt, .rewardMin[1];
+			}
+		}
+	}
+	if(.@winningTeam != 4)
+	{
+		for(set .@i,0; .@i<getarraysize($@ecTeamWa); set .@i,.@i+1)
+		{
+			if(attachrid($@ecTeamWa[.@i]))
+			{
+				charcommand "#fakename " + strcharinfo(0);
+				bg_leave;
+				set .@cnt, CPOINTS / .rewardCnt[1];
+				if(.@cnt < .rewardMin[1])
+					set .@cnt, .rewardMin[1];
+			}
+		}
+	}
+
+	bg_destroy $@fireTeam; 
+	bg_destroy $@earthTeam; 
+	bg_destroy $@windTeam; 
+	bg_destroy $@waterTeam; 
+	set $elementalcrystalon, 0;
+	end;
+
+OnCheckVictory:
+	if(.windScore == 0 && .waterScore == 0 && .earthScore == 0)
+	{
+		callsub "OnEcEnd", 1;
+	}
+	else if(.windScore == 0 && .waterScore == 0 && .fireScore == 0)
+	{
+		callsub "OnEcEnd", 2;
+	}
+	else if(.fireScore == 0 && .waterScore == 0 && .earthScore == 0)
+	{
+		callsub "OnEcEnd", 3;
+	}
+	else if(.fireScore == 0 && .earthScore == 0 && .windScore == 0)
+	{
+		callsub "OnEcEnd", 4;
+	}
+	end;	
+
+OnTimer10000:
+	//every minute, check for members availability
+	set .countTimer, .countTimer + 1;	
+	if (.countTimer == $battleDuration)
+	{
+		goto OnEndEC;
+	}
+	end;
+
+OnPCDieEvent:
+	if (strcharinfo(3) == $elementalCrystalMap$)
+	{
+		addtimer 5000, strnpcinfo(3) + "::OnHealAfterDeath";
+
+		attachrid(killerrid);
+		if(callfunc("CheckFiPlayer") == 1)
+		{
+			set .fireScore, .fireScore + 1;
+		}
+		else if(callfunc("CheckEaPlayer") == 1)
+		{
+			set .earthScore, .earthScore + 1;
+		}
+		else if(callfunc("CheckWiPlayer") == 1)
+		{
+			set .windScore, .windScore + 1;
+		}
+		else if(callfunc("CheckWaPlayer") == 1)
+		{
+			set .waterScore, .waterScore + 1;
+		}
+		set ECPOINTS, ECPOINTS + .pointPerKill;
+		dispbottom "[Elemental Crystal] You've won " + .pointPerKill + ". Your current balance is " + ECPOINTS + ".";
+	}
+	end;
+	
+OnPopCrystals:
+	for(set .@i,0; .@i<getarraysize(.crystalIds); set .@i,.@i+1)
+	{
+		switch(.@i)
+		{
+			case 0:
+				monster $elementalCrystalMap$, $warpPoint1[0], $warpPoint1[1], "Fire Crystal", .crystalIds[.@i], 1, strnpcinfo(3) + "::OnCrystalBroke";
+				break;
+			case 1:
+				monster $elementalCrystalMap$, $warpPoint2[0], $warpPoint2[1], "Earth Crystal", .crystalIds[.@i], 1, strnpcinfo(3) + "::OnCrystalBroke";
+				break;
+			case 2:
+				monster $elementalCrystalMap$, $warpPoint3[0], $warpPoint3[1], "Wind Crystal", .crystalIds[.@i], 1, strnpcinfo(3) + "::OnCrystalBroke";
+				break;
+			case 3:
+				monster $elementalCrystalMap$, $warpPoint4[0], $warpPoint4[1], "Water Crystal", .crystalIds[.@i], 1, strnpcinfo(3) + "::OnCrystalBroke";
+				break;
+		}
+	}
+	end;
+	
+OnCrystalBroke:
+	if(killedrid == .crystalIds[0])
+	{
+		mapannounce $elementalCrystalMap$, "[Elemental War] The Fire Kingdom has been eliminated!", bc_red;
+		set .fireScore, 0;
+		for(set .@i,0; .@i<getarraysize($@ecTeamFi); set .@i,.@i+1)
+		{
+			if(attachrid($@ecTeamFi[.@i]))
+			{
+				charcommand "#fakename " + strcharinfo(0);
+				if(strcharinfo(3) == $elementalCrystalMap$)
+					warp "Save", 0, 0;
+			}
+		}
+	}
+	else if(killedrid == .crystalIds[1])
+	{
+		mapannounce $elementalCrystalMap$, "[Elemental War] The Earth Kingdom has been eliminated!", bc_red;
+		set .earthScore, 0;
+		for(set .@i,0; .@i<getarraysize($@ecTeamEa); set .@i,.@i+1)
+		{
+			if(attachrid($@ecTeamEa[.@i]))
+			{
+				charcommand "#fakename " + strcharinfo(0);
+				if(strcharinfo(3) == $elementalCrystalMap$)
+					warp "Save", 0, 0;
+			}
+		}
+	}
+	else if(killedrid == .crystalIds[2])
+	{
+		mapannounce $elementalCrystalMap$, "[Elemental War] The Wind Kingdom has been eliminated!", bc_red;
+		set .windScore, 0;
+		for(set .@i,0; .@i<getarraysize($@ecTeamWi); set .@i,.@i+1)
+		{
+			if(attachrid($@ecTeamWi[.@i]))
+			{
+				charcommand "#fakename " + strcharinfo(0);
+				if(strcharinfo(3) == $elementalCrystalMap$)
+					warp "Save", 0, 0;
+			}
+		}
+	}
+	else if(killedrid == .crystalIds[3])
+	{
+		mapannounce $elementalCrystalMap$, "[Elemental War] The Water Kingdom has been eliminated!", bc_red;
+		set .waterScore, 0;
+		for(set .@i,0; .@i<getarraysize($@ecTeamWa); set .@i,.@i+1)
+		{
+			if(attachrid($@ecTeamWa[.@i]))
+			{
+				charcommand "#fakename " + strcharinfo(0);
+				if(strcharinfo(3) == $elementalCrystalMap$)
+					warp "Save", 0, 0;
+			}
+		}
+	}
+	set ECPOINTS, ECPOINTS + .pointPerCKill;
+		dispbottom "[Elemental Crystal] You've won " + .pointPerCKill + ". Your current balance is " + ECPOINTS + ".";
+	goto OnCheckVictory;
+	end;
+	
+OnPCLoginEvent:
+	set ECPOINTS, 0;
+	end;
+	
+OnHealAfterDeath:
+	dispbottom "[Valkyrie] You received the War Goddess benediction!";
+	percentheal 100, 100;
+	if(.buffs == 1)
+	{
+		specialeffect2 EF_INCAGILITY; sc_start SC_INC_AGI,240000,10;
+		specialeffect2 EF_BLESSING; sc_start SC_BLESSING,240000,10;
+	}
+	end;
+	
+OnBoardAsked:
+	set .@caller, getcharid(3);
+	dispbottom "!!Elemental Crystal Points Board!!";
+	dispbottom "";
+	dispbottom "Fire Kingdom total Points ==> " + .fireScore;
+	for(set .@i,0; .@i<getarraysize($@ecTeamFi); set .@i,.@i+1)
+	{
+		set .@attached, attachrid($@ecTeamFi[.@i]);
+		if (.@attached == 0)
+		{
+			deletearray $@ecTeamFi[.@i], 1;			
+		}
+		else
+		{
+			set .@message$, "	~" + strcharinfo(0) + ": " + ECPOINTS;
+			if(attachrid(.@caller))
+				dispbottom .@message$;
+		}
+	}
+	
+	dispbottom "";
+	dispbottom "Water Kingdom total Points ==> " + .waterScore;
+	for(set .@i,0; .@i<getarraysize($@ecTeamWa); set .@i,.@i+1)
+	{
+		set .@attached, attachrid($@ecTeamWa[.@i]);
+		if (.@attached == 0)
+		{
+			deletearray $@ecTeamWa[.@i], 1;			
+		}
+		else
+		{
+			set .@message$, "	~" + strcharinfo(0) + ": " + ECPOINTS;
+			if(attachrid(.@caller))
+				dispbottom .@message$;
+		}
+	}
+	
+	dispbottom "";
+	dispbottom "Earth Kingdom total Points ==> " + .earthScore;
+	for(set .@i,0; .@i<getarraysize($@ecTeamEa); set .@i,.@i+1)
+	{
+		set .@attached, attachrid($@ecTeamEa[.@i]);
+		if (.@attached == 0)
+		{
+			deletearray $@ecTeamEa[.@i], 1;			
+		}
+		else
+		{
+			set .@message$, "	~" + strcharinfo(0) + ": " + ECPOINTS;
+			if(attachrid(.@caller))
+				dispbottom .@message$;
+		}
+	}
+	
+	dispbottom "";
+	dispbottom "Wind Kingdom total Points ==> " + .windScore;
+	for(set .@i,0; .@i<getarraysize($@ecTeamWi); set .@i,.@i+1)
+	{
+		set .@attached, attachrid($@ecTeamWi[.@i]);
+		if (.@attached == 0)
+		{
+			deletearray $@ecTeamWi[.@i], 1;			
+		}
+		else
+		{
+			set .@message$, "	~" + strcharinfo(0) + ": " + ECPOINTS;
+			if(attachrid(.@caller))
+				dispbottom .@message$;
+		}
+	}
+	end;
+
+OnInit:
+	set $elementalCrystalMap$, "pvp_n_1-1";
+	set $maxECMemberCount, 4;//10;
+	setarray $ECDuration[0], 5, 10, 15; //in minutes
+	set $ECEntryPrice, 0;//15000;
+	set $elementalcrystalon, 0;
+	set .pointPerKill, 10;
+	set .pointPerCKill, 50;
+	set .pointPerVictory, 100;
+	setarray .rewardCnt[0], 10, 20;
+	setarray .rewardMin[0], 5, 1;
+	setarray $@ecTeamFi[0], 0;
+	setarray $@ecTeamWa[0], 0;
+	setarray $@ecTeamEa[0], 0;
+	setarray $@ecTeamWi[0], 0;
+	setarray $warpCoordFi[0], 0, 0;
+	setarray $warpCoordEa[0], 0, 0;
+	setarray $warpCoordWi[0], 0, 0;
+	setarray $warpCoordWa[0], 0, 0;
+	setarray .crystalIds[0],1397,1396,1395,1398;
+	bindatcmd "ecboard", strnpcinfo(3) + "::OnBoardAsked";
+	set .buffs, 1;
+	end;
+}
+
+
+prontera,99,144,0	script	Elemental Crystal::alaecent	1005,{
+	set .@npcname$, "[Leag]";
+	mes .@npcname$;
+	mes "Hello to you, " + strcharinfo(0);
+	mes "I'm the Elemental Crystal Manager.";
+	mes "When you talk to me, you'll be able to setup or join an existing Elemental Crystal.";
+	next;
+	mes .@npcname$;
+	mes "Here's how a Elemental Crystal works.";
+	mes "First of all, this is a team match.";
+	mes "A general party matching will be made when all players will be registered.";
+	mes "Each team will have to defend its Kingdom, represented by a Crystal monster.";
+	mes "If a Crystal gets broken, the whole team is eliminated.";
+	mes "Last Kingdom alive will win the fight.";
+	next;
+	mes .@npcname;
+	mes "Once " + $maxECMemberCount + " will have join, the team matching will begin, and the match will start.";
+	mes "This is not really an alone fight.";
+	set .@message$, "";
+	for(set .@i,0; .@i<getarraysize($ECDuration); set .@i,.@i+1)
+	{
+		set .@message$, (.@i == 0 ? "" : (.@i == getarraysize($ECDuration) - 1 ? ", or " : ", ")) + $ECDuration[.@i];
+	}
+	mes "The global fight will last for " + .@message$ + " minutes. After that, the match will be a Draw.";
+	mes "Individual kill doesn't matter. It's the Crystal that does.";
+	mes "On the other hand, you'll get points from killing players if your team wins the fight.";
+	mes "You're not prevented from harming your teammates too.";
+	mes "You can only differenciate them from color and name, as a fakename will be applied.";
+	next;
+	mes .@npcname;
+	mes "So. Are you interested?";
+	if ($elementalcrystalon == 2)
+	{
+		goto OnEnterAgain;
+	}
+	if ($elementalcrystalon == 1)
+	{
+		if(callfunc("CheckECPlayers") == 1)
+		{
+			next;
+			mes .@npcname$;
+			mes "Be patient please. The Elemental Crystal will start soon.";
+			close;
+		}
+		
+		if (select("Join the currently running Elemental Crystal","No, thanks") == 1)
+		{
+			callsub OnJoin, 1;
+		}
+		else
+		{
+			goto OnLeave;
+		}
+	}
+	else if ($elementalcrystalon == 0)
+	{
+		if (select("Start a new Elemental Crystal","No, thanks") == 1)
+		{
+			callsub OnJoin, 0;
+		}
+		else
+		{
+			goto OnLeave;
+		}
+	}
+	else
+	{
+		next;
+		mes .@npcname$;
+		mes "Sorry, it's too late for this battle. Come back later.";
+	}
+	close;
+
+OnEnterAgain:
+	set .@found1, callfunc("CheckFiPlayer");
+	set .@found2, callfunc("CheckEaPlayer");
+	set .@found3, callfunc("CheckWiPlayer");
+	set .@found4, callfunc("CheckWaPlayer");
+	set .@found, .@found1 + .@found2 + .@found3 + .@found4;
+	if(.@found >= 1)
+	{
+		mes "Get ready, I'll send you back.";
+		if(.@found1 == 1)
+		{
+			if(.fireScore == 0)
+			{
+				mes "You're Kingdom have been eliminated.";
+				mes "You can't enter back, sorry.";
+				close;
+			}
+			warp $elementalCrystalMap$, $warpPointFi[0], $warpPointFi[1];
+		}
+		else if(.@found2 == 1)
+		{
+			if(.earthScore == 0)
+			{
+				mes "You're Kingdom have been eliminated.";
+				mes "You can't enter back, sorry.";
+				close;
+			}
+			warp $elementalCrystalMap$, $warpPointEa[0], $warpPointEa[1];
+		}
+		else if(.@found3 == 1)
+		{
+			if(.windScore == 0)
+			{
+				mes "You're Kingdom have been eliminated.";
+				mes "You can't enter back, sorry.";
+				close;
+			}
+			warp $elementalCrystalMap$, $warpPointWi[0], $warpPointWi[1];
+		}
+		else if(.@found4 == 1)
+		{
+			if(.waterScore == 0)
+			{
+				mes "You're Kingdom have been eliminated.";
+				mes "You can't enter back, sorry.";
+				close;
+			}
+			warp $elementalCrystalMap$, $warpPointWa[0], $warpPointWa[1];
+		}
+	}
+	else
+	{
+		mes "You're not part of this Elemental Crystal.";
+		mes "Wait for another to begin, please.";
+	}
+	close;
+
+OnJoin:
+	set .@mode, getarg(0);
+
+	next;
+	mes .@npcname$;
+	mes "Sure!";
+	mes "It'll cost you " + $ECEntryPrice + "z to enter.";
+	if (Zeny < $ECEntryPrice)
+	{
+		next;
+		mes .@npcname$;
+		mes "Sorry, but you lack some money...";
+		close;
+	}
+	if (select("Here you are.","I'll get back") == 1)
+	{
+		next;
+		mes .@npcname;
+		set Zeny, Zeny - $ECEntryPrice;
+		mes "Allright.";
+		if (.@mode == 0)
+		{
+			next;
+			mes .@npcname$;
+			mes "Now, choose a duration.";
+			set .@menu$, "";
+			for(set .@i,0; .@i<getarraysize($ECDuration); set .@i,.@i+1)
+			{
+				set .@menu$, .@menu$ + (.@i == 0 ? "" : ":") + $ECDuration[.@i] + " minutes";
+			} 
+			set .@duration, select(.@menu$) - 1;
+			next;
+			mes .@npcname$;
+			mes "Allright, let's go for " + $ECDuration[.@choice] + " minutes then.";
+			next;
+			mes .@npcname$;
+		}
+		next;
+		mes .@npcname;
+		mes "The team with the highest sum of points once the duration will be ellapsed will win.";
+		mes "The reward will be the total amount paid by all players, divided between the team players.";
+		mes "Also, there's an individual reward according to the number of kill a player may do.";
+		if (.@mode == 0)
+		{
+			deletearray $@ECMembers[0], getarraysize($@ECMembers);
+			deletearray $@ecTeamFi[0], getarraysize($@ecTeamFi);
+			deletearray $@ecTeamEa[0], getarraysize($@ecTeamEa);
+			deletearray $@ecTeamWi[0], getarraysize($@ecTeamWi);
+			deletearray $@ecTeamWa[0], getarraysize($@ecTeamWa);
+			
+			set $@ECMembers[0], getcharid(3);
+			
+			set $elementalcrystalon, 1;
+			set $battleDuration, $ECDuration[.@choice];
+			announce "[Elemental War] " + strcharinfo(0) + " just join the Elemental Crystal. Who will come to fight him?", bc_all|bc_yellow;
+		}
+		else
+		{
+			set $@ECMembers[getarraysize($@ECMembers)], getcharid(3);
+			if (getarraysize($@ECMembers) < $maxECMemberCount)
+			{
+				announce "[Elemental War] " + strcharinfo(0) + " just join the Elemental Crystal. Still " + ($maxECMemberCount - getarraysize($@ECMembers)) + " fighters needed to begin!", bc_all|bc_yellow;
+			}
+			else
+			{
+				//start
+				//build teams
+				set .teamCount, $maxECMemberCount / 4;
+				//warp first char
+				announce "[Elemental War] The fight begins!", bc_all|bc_yellow;
+				set .@warped, 0;	
+				set $@fireTeam, bg_create_team($elementalCrystalMap$, $warpCoordFi[0], $warpCoordFi[1]);
+				set $@earthTeam, bg_create_team($elementalCrystalMap$, $warpCoordEa[0], $warpCoordEa[1]);
+				set $@windTeam, bg_create_team($elementalCrystalMap$, $warpCoordWi[0], $warpCoordWi[1]);
+				set $@waterTeam, bg_create_team($elementalCrystalMap$, $warpCoordWa[0], $warpCoordWa[1]);
+				for(set .@i,0; .@i<getarraysize($@ECMembers); set .@i,.@i+1)
+				{
+					if (attachrid($@ECMembers[.@i]) == 1)
+					{
+						set ECPOINTS, 0;
+						getmapxy(.@map$, .@x, .@y);
+						savepoint .@map$, .@x, .@y;
+						if (getarraysize($@ecTeamFi) < .teamCount)
+						{
+							set $@ecTeamFi[getarraysize($@ecTeamFi)], $@ECMembers[.@i];
+							bg_join_team($@fireTeam);
+							//start effect and fakename
+							charcommand "#fakename " + strcharinfo(0) + " Salamander";
+							warp $elementalCrystalMap$, $warpPointFi[0], $warpPointFi[1];
+						}
+						else if (getarraysize($@ecTeamEa) < .teamCount)
+						{
+							set $@ecTeamEa[getarraysize($@ecTeamEa)], $@ECMembers[.@i];
+							bg_join_team($@earthTeam);
+							//start effect and fakename
+							charcommand "#fakename " + strcharinfo(0) + " Gnome";
+							warp $elementalCrystalMap$, $warpPointEa[0], $warpPointEa[1];
+						}
+						else if (getarraysize($@ecTeamWi) < .teamCount)
+						{
+							set $@ecTeamWi[getarraysize($@ecTeamWi)], $@ECMembers[.@i];
+							bg_join_team($@windTeam);
+							//start effect and fakename
+							charcommand "#fakename " + strcharinfo(0) + " Sylph";
+							warp $elementalCrystalMap$, $warpPointWi[0], $warpPointWi[1];
+						}
+						else
+						{
+							set $@ecTeamWa[getarraysize($@ecTeamWa)], $@ECMembers[.@i];
+							bg_join_team($@waterTeam);
+							//start effect and fakename
+							charcommand "#fakename " + strcharinfo(0) + " Undine";
+							warp $elementalCrystalMap$, $warpPointWa[0], $warpPointWa[1];
+						}
+					}
+				}
+				donpcevent "alabaec::OnStartEC";
+			}
+		}
+	}
+	else
+	{
+		goto OnLeave;
+	}
+	close;
+
+OnLeave:
+	next;
+	mes .@npcname$;
+	mes "Your choice!";
+	close;
+}
+
+function	script	CheckFiPlayer	{
+	for(set .@i,0; .@i<getarraysize($@ecTeamFi) && .@found == 0; set .@i,.@i+1)
+	{
+		if($@ecTeamFi[.@i] == getcharid(3))
+		{
+			return 1;
+		}
+	}
+	return 0;
+}
+
+function	script	CheckWaPlayer	{
+	for(set .@i,0; .@i<getarraysize($@ecTeamWa) && .@found == 0; set .@i,.@i+1)
+	{
+		if($@ecTeamWa[.@i] == getcharid(3))
+		{
+			return 1;
+		}
+	}
+	return 0;
+}
+
+function	script	CheckWiPlayer	{
+	for(set .@i,0; .@i<getarraysize($@ecTeamWi) && .@found == 0; set .@i,.@i+1)
+	{
+		if($@ecTeamWi[.@i] == getcharid(3))
+		{
+			return 1;
+		}
+	}
+	return 0;
+}
+
+function	script	CheckEaPlayer	{
+	for(set .@i,0; .@i<getarraysize($@ecTeamEa) && .@found == 0; set .@i,.@i+1)
+	{
+		if($@ecTeamEa[.@i] == getcharid(3))
+		{
+			return 1;
+		}
+	}
+	return 0;
+}
+function	script	CheckECPlayers	{
+	for(set .@i,0; .@i<getarraysize($@ECMembers) && .@found == 0; set .@i,.@i+1)
+	{
+		if($@ECMembers[.@i] == getcharid(3))
+		{
+			return 1;
+		}
+	}
+	return 0;
+}

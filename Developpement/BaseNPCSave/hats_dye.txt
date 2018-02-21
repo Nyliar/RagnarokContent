@@ -1,0 +1,140 @@
+//===== Hercules Script ======================================
+//= Colorisation de certains hats
+//= Réécriture du script offi d'Hercules
+//===== By: ==================================================
+//= Lyyn / Vali, pour Artefact-RO.fr
+//===== Current Version: =====================================
+//= 1.0
+//===== Description: =========================================
+//= Réécriture du script offi d'Hercules
+//= Permet de changer la couleur de certaines hats, coûte l'item
+//=     définit sur la variable .@dyeID
+//===== Additional Comments: =================================
+//= 1.0 : Première version fonctionnelle et testée
+//= inDev : NOPE
+//============================================================
+
+prt_in,253,168,4	script	Alora::cusalo	4_F_LGTGIRL,{	
+
+// Item à demander
+	set .@dyeID, 675;
+// Headgear Choices
+	setarray .@hgn$[1], "Mage Hat","Beanie","Drooping Cat","Deviruchi Hat","Wig","Ribbon","Magestic Goat";
+// Mage Hats - Normal, Yellow, Blue, Brown, Gray, Red
+	setarray .@hg_1[1], 5027, 5242, 5241, 5240, 5239, 5238;
+// Beanies - Normal, Pink, Blue, Brown
+	setarray .@hg_2[1], 5076, 5237, 5236, 5235;
+// Drooping Cats - Normal, Blue, Brown, Gray, Pink, Yellow
+	setarray .@hg_3[1], 5058, 5233, 5231, 5230, 5232, 5234;
+// Deviruchi Hats - Normal, Red, Gray, Brown
+	setarray .@hg_4[1], 5038, 5227, 5228, 5229;
+// Wigs - Happy, Shiny, Marvelous, Fantastic
+	setarray .@hg_5[1], 5273, 5274, 5275, 5276;
+// Ribbons - Normal, Black, Yellow, Green, Pink, Red, Orange, White
+	setarray .@hg_6[1], 2208, 5191, 5192, 5193, 5194, 5195, 5196, 5197;
+// Magestic Goats - Normal, Evolved
+	setarray .@hg_7[1], 2256, 5217;
+
+	mes "[Alora]";
+	mes "Hello, I can change your headgear's color if you bring me a ^0000FF" + getitemname(.@dyeID) + "^000000.";
+	//mes "Salut ! Je peux changer la couleur d'un de tes chapeaux si tu m'apportes un ^0000FF" + getitemname(.@dyeID) + "^000000.";
+	next;
+	mes "[Alora]";
+	mes "Do you have a headgear that you would like to dye?";
+	//mes "Possèdes-tu un chapeau que tu souhaites recoloriser ?";
+	next;
+	for(set .@i,1; .@i < getarraysize(.@hgn$); set .@i,.@i+1) {
+		if(.@i == 1)    set .@menu$, .@hgn$[.@i];
+		else            set .@menu$, .@menu$ +":"+ .@hgn$[.@i];
+	}
+	set .@menu$, .@menu$ +":Aucun";
+	set .@t, select(.@menu$);
+	if(.@t == getarraysize(.@hgn$)) {
+		mes "[Alora]";
+		mes "Have a good journey adventurer!";
+		//mes "Passe une bonne journée !";
+		mes "If you ever are curious to try a new color on your Kafra headgear or the ones you found on your adventures please come to me!";
+		//mes "N'hésite pas à revenir si tu souhaites tout de même changer la couleur d'un de tes chapeaux !";
+		close;
+	}
+	mes "[Alora]";
+	mes "Okay, what color do you want to change it to?";
+	//mes "Okay ! Quelle couleur ^FF0000souhaites-tu^000000 ?";
+	next;
+	for(set .@i,1; .@i < getarraysize(getd(".@hg_"+.@t+"")); set .@i,.@i+1) {
+		if(.@i == 1 && .@t != 5)
+			set .@menu$, "Normal";
+		else if(.@i == 1 && .@t == 5)
+			set .@menu$, getitemname(getd(".@hg_"+.@t+"["+.@i+"]"));
+		else {
+			sscanf(getitemname(getd(".@hg_"+.@t+"["+.@i+"]")),"%s "+ .@hgn$[.@t],.@colour$);
+			set .@menu$, .@menu$ +":"+ .@colour$;
+		}
+	}
+	set .@menu$, .@menu$ +":Cancel";
+	set .@c, select(.@menu$);
+	if(.@c == getarraysize(getd(".@hg_"+.@t+""))) {
+		mes "[Alora]";
+		mes "Oh, okay no problem!";
+		//mes "Oh, okay. Pas de souci  !";
+		close;
+	}
+	set .@dyHG, getd(".@hg_"+.@t+"["+.@c+"]");
+	mes "[Alora]";
+	mes "Oh I'm so excited aren't you?";
+	//mes "Oh, je suis si impatiente ! Pas toi ?";
+	mes "And just to be sure, what color is the "+ .@hgn$[.@t] +" you want me to use?";
+	//mes "Et juste pour être sûre, de quelle couleur est ^FF0000ton " + .@hgn$[.@t] + "^000000 ?";
+	next;
+	mes "[Alora]";
+	mes "Please understand that I'm going to use the ^FF00001st "+ .@hgn$[.@t] +" of that color in your inventory!^000000";
+	//mes "Surtout n'oublie pas, j'utiliserai le ^FF0000premier " + .@hgn$[.@t] + "^000000 de cette couleur dans ton inventaire !";
+	next;
+	mes "[Alora]";
+	mes "Any upgrades and cards will be dissolved by the mysterious dye, so be sure you are ok with having a ^0000FF+0 "+ getitemname(.@dyHG) +" without any cards.^000000";
+	//mes "Également, si ton chapeau a été amélioré ou des cartes insérées, elles disparaîtront. Sois donc sûr de vouloir un ^0000FF+0 " + getitemname(.@dyHG) + " sans aucune carte.^000000";
+	next;
+	mes "["+ strcharinfo(0) +"]";
+	mes "Ok, thanks for the warning, I think I'll give you my";
+	//mes "Ok, merci pour l'avertissement. Je vais vous donner mon...";
+	next;
+	set .@menu$, "Non, en fait...";
+	for(set .@i,1; .@i < getarraysize(getd(".@hg_"+.@t+"")); set .@i,.@i+1) {
+		if(.@i == 1)    set .@menu$, .@menu$ +":Normal "+ getitemname(getd(".@hg_"+.@t+"["+.@i+"]"));
+		else            set .@menu$, .@menu$ +":"+ getitemname(getd(".@hg_"+.@t+"["+.@i+"]"));
+	}
+	set .@mine, select(.@menu$) - 1;
+	if(!.@mine) {
+		mes "[Alora]";
+		mes "It's best to be very sure, have a safe journey.";
+		//mes "C'est préférable d'être vraiment sûr. Passe une bonne journée !";
+		close;
+	}
+	set .@myHG, getd(".@hg_"+.@t+"["+.@mine+"]");
+	if(.@dyHG == .@myHG) {
+		mes "[Alora]";
+		mes "Woah what happened?";
+		//mes "Hey mais, pourquoi demandes-tu exactement le même chapeau ?";
+		next;
+		
+		mes "[Alora]";
+		mes "Ce n'est pas très gentil de te moquer de moi !";
+		close;
+	}	
+	if(!countitem(.@dyeID) || !countitem(.@myHG)) {
+		mes "[Alora]";
+		mes "Oh my, you seem to be missing something.";
+		//mes "Oh, tu sembles avoir oublié un élément important...";
+		mes "Il te manque le ^FF0000" + (!countitem(.@dyeID) ? getitemname(.@dyeID) : getitemname(.@myHG)) + "^000000.";
+		close;
+	}
+	mes "[Alora]";
+	mes "Looks great doesn't it?!";
+	//mes "Ca semble bien là, n'est-ce-pas ?!";
+	mes "I hope you'll come back to dye more pretty headgears!";
+	//mes "J'espère que tu reviendras coloriser d'autres jolis chapeaux !";
+	delitem .@dyeID,1; // Dyestuff
+	delitem .@myHG,1;  // Your headgear
+	getitem .@dyHG,1;  // Dyed headgear
+	close;
+}

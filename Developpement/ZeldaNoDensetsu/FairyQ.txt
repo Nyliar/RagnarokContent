@@ -1,0 +1,355 @@
+// [========================================================]
+// [============    ZnD	- Language Stone Quest    ==========]
+// [========================================================]
+// [ Version 1                                              ]
+// [========================================================]
+// [ Original script by: Alayne				    ]
+// [========================================================]
+// [ Description:                                           ]
+// [--------------------------------------------------------]
+// [                                                        ]
+// [ - a Npc used to learn an old language to players	    ]
+// [                                                        ]
+// [========================================================]
+// [ Changelog: (5 last updates)                            ]
+// [--------------------------------------------------------]
+// [                                                        ]
+// [ v0: Creation                      			    ]
+// [                                                        ]
+// [========================================================]
+// [                                                        ]
+// [========================================================]
+
+prontera,50,49,0	script	Ancient Stone::alazndast	HIDDEN_WARP_NPC,2,2,{
+	if(ZNDLANGUAGE == 0 || countitem($zndslate) == 0)
+	{
+		set .@npcname$, "[Ancient Stone]";
+		mes .@npcname$;
+		mes "&²kji(_ç))09=^$u*£¨%µ";
+		next;
+		mes "You don't understand anything. No need to read any further.";
+	}
+	else
+	{
+		set .@npcname$, "[Sheikah Stone]";
+		mes .@npcname$;
+		mes "It's Dangerous to Go Alone.";
+		switch(rand(10))
+		{
+			case 1:
+				mes "Before going any further, you should find the right Weapon.";
+				mes "You won't be able to defeat what's coming without it.";
+				mes "Go, and find your Steel Self.";
+				set ZNDQ, 1;
+				break;
+			case 2:
+				mes "It appears the Magnet Feature can works two way.";
+				mes "If you're heavier than the target, you'll be moved to it.";
+				mes "Otherwise, it'll be moved to you.";
+				break;
+			case 3:
+				mes "Sometime, frost isn't an issue.";
+				mes "It's the way it has to be...";
+				break;
+			case 4:
+			case 5:
+			case 6:
+				mes "Boing! Boing!";
+				break;
+			case 7:
+				break;
+			case 8:
+				break;
+			case 9:
+				break;
+			case 10:
+				break;
+		}
+	}
+	close;
+	
+OnTouch:
+	dispbottom "Boing! Boing!";
+	dispbottom "It's " + gettime(GETTIME_HOUR) + ":" + gettime(GETTIME_MINUTE) + ":" + gettime(GETTIME_SECOND);
+	end;
+}
+
+prontera,50,49,0	duplicate(alazndast)	Ancient Stone::alazndast2	HIDDEN_WARP_NPC,2,2
+prontera,50,49,0	duplicate(alazndast)	Ancient Stone::alazndast3	HIDDEN_WARP_NPC,2,2
+prontera,50,49,0	duplicate(alazndast)	Ancient Stone::alazndast4	HIDDEN_WARP_NPC,2,2
+prontera,50,49,0	duplicate(alazndast)	Ancient Stone::alazndast5	HIDDEN_WARP_NPC,2,2
+prontera,50,49,0	duplicate(alazndast)	Ancient Stone::alazndast6	HIDDEN_WARP_NPC,2,2
+prontera,50,49,0	duplicate(alazndast)	Ancient Stone::alazndast7	HIDDEN_WARP_NPC,2,2
+prontera,50,49,0	duplicate(alazndast)	Ancient Stone::alazndast8	HIDDEN_WARP_NPC,2,2
+prontera,50,49,0	duplicate(alazndast)	Ancient Stone::alazndast9	HIDDEN_WARP_NPC,2,2
+prontera,50,49,0	duplicate(alazndast)	Ancient Stone::alazndast12	HIDDEN_WARP_NPC,2,2
+
+prontera,50,49,0	script	Marlon::alazndma	HIDDEN_WARP_NPC,2,2,{
+	set .@npcname$, "[Marlon]";
+	mes .@npcname$;
+	mes "Hehehe! Where do you come from?";
+	mes "You don't look like you came from here.";
+	if(select("I'm from Prontera","I woke up in a Forest, long ago")==1)
+	{
+		if(MARLONQ == 0)
+		{
+			next;
+			mes .@npcname$;
+			mes "From Prontera? The Big Town?";
+			mes "Really?";
+			if(select("Yes","No") == 1)
+			{
+				next;
+				mes .@npcname$;
+				mes "Hihihi. I hope I'll be able to go there one day.";
+				mes "But from now, my dad don't want me to.";
+			}
+			else
+			{
+				next;
+				mes .@npcname$;
+				mes "Oh...Why did you tell that then?";
+				if(select("Cause you called me 'Town Being'","I wanted to impress you") == 1)
+				{
+					next;
+					mes .@npcname$;
+					mes "Well it's just cause you looks like somebody who live in Town.";
+					mes "You're not dirty enough to live in the country.";
+					mes "And I don't speak about the Forest. It's simply impossible.";
+				}
+				else
+				{
+					next;
+					mes .@npcname$;
+					mes "Huhu. You're a charming boy, hu?";
+					set MARLONQ, 1;
+				}
+			}
+		}
+		else
+		{
+			next;
+			mes .@npcname$;
+			mes "You came back to see me again?";
+			if(select("Yes","No, not really") == 1)
+			{
+				next;
+				mes .@npcname$;
+				mes "Hehehe. You're nice. But my father wont let anything happens, you know?";
+			}
+		}
+	}
+	else
+	{
+		next;
+		mes .@npcname$;
+		mes "Huhu. What a strange being you are.";
+		mes "Wearing some shiny stuffs, and speaking about old Forest lives.";
+		mes "Can you see the Fee?";
+		if(select("Fee? of course.","Fee? What do you talk about?") == 1)
+		{
+			next;
+			mes .@npcname$;
+			mes "Really? I found one several days ago, in the Forest.";
+			mes "I wonder if she managed to escape...";
+			if(select("Escape? From what?"))
+			{
+				next;
+				mes .@npcname$;
+				mes "Well I don't really know myself...";
+				mes "But she looks like she was hurt...";
+				mes "But when I tried to approach her, she vanished...";
+				mes "Poor little Fee.";
+				set FAIRYQ, 1;
+			}
+		}
+		else
+		{
+			next;
+			mes .@npcname$;
+			mes "Yes. A Fee. You know? Little Fairy?";
+			mes "Red, Pink or Blue. With a pair of wings?";
+			mes "Like a glowing butterfly?";
+			mes "No?";
+		}
+	}
+	close;
+	
+OnTouch:	
+	if(MARLONQ == 0)
+	{
+		mes "Hey, you!";
+		mes "Town Being! Yeah, you!";
+	}
+	close;
+}
+
+prontera,50,49,0	script	Fairy::alazndf	HIDDEN_WARP_NPC,{
+	set .@npcname$, "[Mayl]";
+	mes .@npcname$;
+	mes "Hey...Listen!";
+	if(FAIRYQ == 2)
+	{
+		mes "What? Do you need more fairy powder?";
+		if(select("Yes please","No thanks") == 1)
+		{
+			next;
+			mes .@npcname$;
+			mes "If you don't have anymore, come back to me. I'll give you more.";
+			getitem $zndfairypowder, 100;
+		}
+	}
+	else
+	{
+		if(select("Who? Me?"))
+		{
+			next;
+			mes .@npcname$;
+			mes "Yes, you. Do you see someone else?";
+			mes "I need you to do something...";
+			mes "Can you help me?";
+			if(select("Yes","No") == 1)
+			{
+				next;
+				mes .@npcname$;
+				mes "Thank you.";
+				mes "Well I should probably wait before telling that but...";
+				mes "Do you ever heard about the Three Goddess story?";
+				if(select("Yes","No, never") == 1)
+				{
+					next;
+					mes .@npcname$;
+					mes "Really? Wouldn't have thought so.";
+					mes "Anyway.";
+				}
+				else
+				{
+					next;
+					mes .@npcname$;
+					mes "Long ago, Three Goddess came down to a raw, impure world.";
+					mes "The First one, Goddess of Fierce Strength, build up the Earth as we know it.";
+					mes "She created the Soil, the Montains, the Rifts, the Volcano...Anything bound to the Earth itself.";
+					next;
+					mes .@npcname$;
+					mes "The Second one, Goddess of Peace and Wisdom, brought up the Water and the life on it.";
+					mes "She created the Gods, the Dwarves, the Elves, the Ases. All those divinities your people still continue to worship.";
+					next;
+					mes .@npcname$;
+					mes "The Last one, Goddess of Courage, bring the Human to cultivate the Soil.";
+					mes "Once their job done, they left the Earth, but their powers were so huge that Demons and monsters break in.";
+					mes "Realizing that, but unable to came back from their godly world, they sent something to help the Humans.";
+				}
+				mes "I need you to find those...things the Three Goddess left down here.";
+				mes "By finding those, you'll be able to understand a lot of things.";
+				mes "And especially, you'll be able to...fix me.";
+				mes "I can hide myself here, but it won't last.";
+				mes "My power fades away since the Great Tree disappeared.";
+				mes "So please...Hurry up. They're probably hidden somewhere, in caves or things like that.";
+				next;
+				mes .@npcname$;
+				mes "I'll use a bunch of my remaining power to provide you something to help you.";
+				mes "Use this as...some kind of radar. It'll beep if something is hidden around.";
+				getitem $zndslate, 1;
+				next;
+				mes .@npcname$;
+				mes "You'll have to use this item to activate the radar."
+				mes "If you don't have anymore, come back to me. I'll give you more.";
+				getitem $zndfairypowder, 100;
+				set FAIRYQ, 2;
+			}
+			else
+			{
+				next;
+				mes .@npcname$;
+				mes "You're not the one I'm waiting for then...";
+			}
+		}
+	}
+	close;
+	
+OnPCLoadMapEvent:
+	if(FAIRYQ == 1)
+	{
+		hideoffnpc strnpcinfo(3);
+	}
+	else
+	{
+		hideonnpc strnpcinfo(3);
+	}
+	end;
+	
+OnInit:
+	hideonnpc strnpcinfo(3);
+	end;
+}
+
+prontera,50,49,0	script	Great Fairy#0::alazndgf	HIDDEN_WARP_NPC,{
+	set .@npcname$, "[Great Fairy]";
+	mes .@npcname$;
+	mes "Yo oh oh oh oh oh oh !";
+	mes "Welcome to my place, my little Human.";
+	mes "I'm sorry, but I'm not allowed to help you more than a full heal.";
+	specialeffect2 885;
+	percentheal 100, 100;
+	if(FAIRYQ == 2)
+	{
+		next;
+		mes .@npcname$;
+		mes "Hohoho!";
+		mes "I can feel you've allready met a Fairy.";
+		mes "Who was it? Tael? Navi?";
+		if(select("No, it was Mayl") == 1)
+		{
+			next;
+			mes .@npcname$;
+			mes "Oh! Mayl! How was he? Is it in good health?";
+			if(select("No, not really...") == 1)
+			{
+				next;
+				mes .@npcname$;
+				mes "Wa...Tell me everything you know, then.";
+				if(select("Tell her the whole story") == 1)
+				{
+					next;
+					mes .@npcname$;
+					mes "Hum...I see. But I'm sorry, I can't help.";
+					switch(atoi(strnpcinfo(2)))
+					{
+						case 0:
+							set .@name$, "Faror";
+							set .@dungeon$, "the Walking Turtle";
+							break;
+						case 1:
+							set .@name$, "Din";
+							set .@dungeon$, "the Fallen Saint Abbey";
+							break;
+						case 2:
+							set .@name$, "Nayru";
+							set .@dungeon$, "the Sleeping Water";
+							break;
+					}
+					mes "The Goddess " + .@name$ + " gave me a piece to protect this World long time ago.";
+					mes "But I don't have it anymore.";
+					mes "I hided it in the deepest point of a dungeon, which was then called " + .@dungeon$ + ".";
+					mes "I guess you should go there to find it back...";
+					setd("GFAIRY" + strnpcinfo(2) + "Q", 1);
+					next;
+					mes .@npcname$;
+					mes "I wish you good luck.";
+					mes "Yo oh oh oh oh oh oh!";
+				}
+			}
+		}
+	}
+	specialeffect 512;
+	hideonnpc strnpcinfo(3);
+	initnpctimer;
+	close;
+	
+OnTimer30000:
+	hideoffnpc strnpcinfo(3);	
+	end;
+}
+
+prontera,50,99,5	duplicate(alazndgf)	Great Fairy#1::alazndgf1	HIDDEN_WARP_NPC
+prontera,50,99,5	duplicate(alazndgf)	Great Fairy#2::alazndgf2	HIDDEN_WARP_NPC

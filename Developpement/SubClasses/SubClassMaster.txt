@@ -1,0 +1,592 @@
+prontera,150,150,5	World Class Chest#1917_1::alawcc	4_TREASURE,{
+	set .@npcname$, "[" + strcharinfo(0) + "]";
+	mes .@npcname$;
+	if(WCINFOS == 1)
+	{
+		mes "It's empty...";
+		close;
+	}
+	if(.rewardAvailable == 0)
+	{
+		mes "The ground shake...";
+		mes "Something's coming.";
+		set .teamId, getcharid(2);
+		goto OnPopWorldGuardian;
+	}
+	else
+	{
+		mes "There's something relying on the bottom of the Chest.";
+		explode(.@infos, strnpcinfo(2), "_");
+		getitem(atoi(.@infos[1], 1);
+		
+		set .rewardAvailable, 2;
+		set .timerCount, 0;
+		goto OnHide;
+	}
+	close;
+	
+OnHide:
+	hideonnpc strnpcinfo(3);
+	initnpctimer;
+	end;
+	
+OnUnHide:
+	hideoffnpc strnpcinfo(3);
+	end;
+
+OnTimer1000:	
+	set .timerCount, .timerCount + 10;
+	freeloop(1);
+	if(.rewardAvailable == 2)
+	{
+		if(.timerCount == .guardianAlive * 2 * 60)
+		{
+			stopnpctimer; 
+			set .rewardAvailable, 0;
+			goto OnUnHide;
+		}
+	}
+	else
+	{
+		if(.timerCount == .guardianAlive * 60)
+		{
+			stopnpctimer; 
+
+			killmonster strnpcinfo(4), strnpcinfo(3) + "::OnWorldGuardianDied";
+			killmonster strnpcinfo(4), strnpcinfo(3) + "::OnSaveDied";
+			killmonster strnpcinfo(4), strnpcinfo(3) + "::OnCloneDied";
+			killmonster strnpcinfo(4), strnpcinfo(3) + "::OnReducedBossDied";
+
+			set .wGuardianPop, 0;		
+		}
+		set .@cellRange, 25;
+		switch(.timerCount)
+		{
+			case 60:
+				//1 min
+				mapannounce strnpcinfo(4), "[ Chest Guardian ] Raise! Raise, my army!", bc_map, 0xFF0000;
+				//RATHENA
+				getunitdata(.wBossId, .@worldBossData);
+				set .@x, .@worldBossData[UMOB_X];
+				set .@y, .@worldBossData[UMOB_Y];
+				//HERCULES
+				//getmapxy(.@map$, .@x, .@y, UNITTYPE_MOB, .wBossId);
+				for(set .@i,0; .@i<getarraysize(.wbSlaveMobsId); set .@i,.@i+1)
+				{
+					for(set .@j,0; .@j<.wbSlaveMobsCount[.@i]; set .@j,.@j+1)
+					{
+						areamonster strnpcinfo(4), .@x - .@cellRange, .@y - .@cellRange, .@x + .@cellRange, .@y + .@cellRange, "Slaves", .wbSlaveMobsId[.@i], 1, strnpcinfo(3) + "::OnSaveDied";  
+					}
+				}
+				break;
+			case 120:
+				//2 min, all summon cast skills
+				mapannounce strnpcinfo(4), "[ Chest Guardian ] You are all far beyond my control!", bc_map, 0xFF0000;
+				//RATHENA
+				getunitdata(.wBossId, .@worldBossData);
+				set .@x, .@worldBossData[UMOB_X];
+				set .@y, .@worldBossData[UMOB_Y];
+				//HERCULES
+				//getmapxy(.@map$, .@x, .@y, UNITTYPE_MOB, .wBossId);
+				for(set .@i,0; .@i<getarraysize(.wbSlaveMobsId); set .@i,.@i+1)
+				{
+					areamobuseskill strnpcinfo(4), .@x, .@y, .@cellRange * 2, .wbSlaveMobsId[.@i], .wbSummonSkillId[.lastRandId], 5, 3000,1,e_gg,3;
+				}
+				break;
+			case 180:
+				//3 min, pop 15 reduced clone of the mob
+				mapannounce strnpcinfo(4), "[ Chest Guardian ] You won't go away with this, humans!", bc_map, 0xFF0000;
+				monster strnpcinfo(4),0,0,.wBossName$[.lastRandId],.wBossIds[.lastRandId],15,strnpcinfo(3) + "::OnReducedBossDied"; 
+				copyarray .@tempMobId[0], $@mobId[0], 15;
+				//RATHENA
+				getunitdata(.wBossId, .@worldBossData);
+				set .@hp, .@worldBossData[UMOB_HP];
+				//HERCULES
+				//set .@hp, getunitdata(.wBossId, UDT_HP);
+				set .@tempHp, .@hp / 15;
+				for(set .@i,0; .@i<getarraysize(.@tempMobId); set .@i,.@i+1)
+				{	
+					setunitdata .@tempMobId[.@i], UMOB_MAXHP, .@tempHp;
+					setunitdata .@tempMobId[.@i], UMOB_HP, .@tempHp;
+				}
+				break;
+			case 240:
+				//4 min, raise dead bodies
+				mapannounce strnpcinfo(4), "[ Chest Guardian ] Even the deads are on my side! You can't win!", bc_map, 0xFF0000;
+				set .@deadSplit, .deadCount / getarraysize(.deadMonstersId);
+				if(.@deadSplit <= 0)
+				{
+					set .@deadSplit, 2;
+				}
+				//RATHENA
+				getunitdata(.wBossId, .@worldBossData);
+				set .@x, .@worldBossData[UMOB_X];
+				set .@y, .@worldBossData[UMOB_Y];
+				//HERCULES
+				//getmapxy(.@map$, .@x, .@y, UNITTYPE_MOB, .wBossId);
+				for(set .@i,0; .@i<getarraysize(.deadMonstersId); set .@i,.@i+1)
+				{
+					areamonster strnpcinfo(4), .@x - .@cellRange, .@y - .@cellRange, .@x + .@cellRange, .@y + .@cellRange, "Dead Corpses", .deadMonstersId[.@i], .@deadSplit, strnpcinfo(3) + "::OnSaveDied";  
+				}
+				break;
+			case 300:
+				//5 min, pop clone of all player on map + teammates of the one opening the chest
+				mapannounce strnpcinfo(4), "[ Chest Guardian ] Fight against your own power you're so proud of, shall you?!", bc_map, 0xFF0000;
+				//RATHENA
+				getunitdata(.wBossId, .@worldBossData);
+				set .@x, .@worldBossData[UMOB_X];
+				set .@y, .@worldBossData[UMOB_Y];
+				//HERCULES
+				//getmapxy(.@map$, .@x, .@y, UNITTYPE_MOB, .wBossId);
+				//
+				if(.teamId > 0)
+				{
+					getpartymember(.teamId, 2);
+					for(set .@i,0; .@i<$@partymembercount; set .@i,.@i+1)
+					{
+						if(attachrid($@partymemberaid[.@i]) == 1)
+						{
+							callsub OnPopClone;
+						}
+					}
+				}
+				for(set .@i,0; .@i<gatarraysize(.wGuardPlayId); set .@i,.@i+1)
+				{
+					if(attachrid(.wGuardPlayId[.@i]) == 1)
+					{
+						callsub OnPopClone;
+					}
+				}
+				break;
+			case 360:
+				//6 min
+				mapannounce strnpcinfo(4), "[ Chest Guardian ] Raise! Raise, my army!", bc_map, 0xFF0000;
+				//RATHENA
+				getunitdata(.wBossId, .@worldBossData);
+				set .@x, .@worldBossData[UMOB_X];
+				set .@y, .@worldBossData[UMOB_Y];
+				//HERCULES
+				//getmapxy(.@map$, .@x, .@y, UNITTYPE_MOB, .wBossId);
+				for(set .@i,0; .@i<getarraysize(.wbSlaveMobsId); set .@i,.@i+1)
+				{
+					for(set .@j,0; .@j<.wbSlaveMobsCount[.@i]; set .@j,.@j+1)
+					{
+						areamonster strnpcinfo(4), .@x - .@cellRange * 2, .@y - .@cellRange * 2, .@x + .@cellRange * 2, .@y + .@cellRange * 2, "Slaves", .wbSlaveMobsId[.@i], 1, strnpcinfo(3) + "::OnSaveDied";  
+					}
+				}
+				break;
+			case 420:
+				//7 min, autocast earthquake at 10% hp cost
+				mapannounce strnpcinfo(4), "[ Chest Guardian ] STOP BOTHERING ME, HUMANS!", bc_map, 0xFF0000;
+				//RATHENA
+				getunitdata(.wBossId, .@worldBossData);
+				set .@hp, .@worldBossData[UMOB_HP];
+				set .@mhp, .@worldBossData[UMOB_MAXHP];
+				set .@x, .@worldBossData[UMOB_X];
+				set .@y, .@worldBossData[UMOB_Y];
+				//HERCULES
+				//set .@hp, getunitdata(.wBossId, UDT_HP);
+				//getmapxy(.@map$, .@x, .@y, UNITTYPE_MOB, .wBossId);
+				if(.@worldBossData[UMOB_HP] > 10 * .@mhp / 100)
+				{
+					setunitdata .wBossId, UMOB_HP, .@hp - 10 * .@mhp / 100;
+					set .@id, .wbSlaveMobsId[rand(getarraysize(.wbSlaveMobsId) - 1)];
+					areamobuseskill strnpcinfo(4), .@x, .@y, .@cellRange * 2, .@id, 653, 3, 3000, 1, e_gg, 3;
+				}
+				else
+				{
+					//only Chest Guardian pop, but stronger
+					areamobuseskill strnpcinfo(4), .@x, .@y, .@cellRange * 2, .wBossIds[$lastPopIdRank], 653, 10, 3000, 1, e_gg, 3;
+				}
+				break;
+			case 480:
+				//8 min, wide bleeding
+				mapannounce strnpcinfo(4), "[ Chest Guardian ] You don't even deserve me to fight you!", bc_map, 0xFF0000;
+				areamobuseskill strnpcinfo(4), .@x, .@y, 50, .wBossIds[$lastPopIdRank], 665, 5, 3000, 1, e_gg, 3;
+				break;
+			case 540:
+				//9 min, random kill over fighters
+				mapannounce strnpcinfo(4), "[ Chest Guardian ] Feel my rage! Limitless is my power!!", bc_map, 0xFF0000;
+				//action according to guardian type
+				set .@killCount, rand(10);
+				set .@killed, 0;
+				if(.teamId > 0)
+				{
+					getpartymember(.teamId, 2);
+					for(set .@i,0; .@i<$@partymembercount && .@killed < .@killCount; set .@i,.@i+1)
+					{
+						if(attachrid($@partymemberaid[.@i]) == 1 && strcharinfo(3) == $lastPopMap$)
+						{
+							charcommand "#nuke " + strcharinfo(0) + " " + strcharinfo(0);
+						}
+					}
+				}
+				for(set .@i,0; .@i<gatarraysize(.wGuardPlayId) && .@killed < .@killCount; set .@i,.@i+1)
+				{
+					if(attachrid(.wGuardPlayId[.@i]) == 1 && strcharinfo(3) == $lastPopMap$)
+					{
+						charcommand "#nuke " + strcharinfo(0) + " " + strcharinfo(0);
+					}
+				}
+				break;
+			case 600:
+				//10 min, raise life according to alive clones
+				mapannounce strnpcinfo(4), "[ Chest Guardian ] I'll feast from your bones!!", bc_map, 0xFF0000;
+				set .@mobCount, mobcount(strnpcinfo(4), strnpcinfo(3) + "::OnReducedBossDied");
+				killmonster strnpcinfo(4), strnpcinfo(3) + "::OnReducedBossDied";
+				//RATHENA
+				getunitdata(.wBossId, .@worldBossData);
+				set .@hp, .@worldBossData[UMOB_HP];
+				set .@mhp, .@worldBossData[UMOB_MAXHP];
+				if( .@hp + .@mobCount * 50000 > .@mhp )
+					setunitdata .wBossId, UMOB_HP, .@mhp;
+				else
+					setunitdata .wBossId, UMOB_HP, .@hp + .@mobCount * 50000;
+				//HERCULES
+				//set .@hp, getunitdata(.wBossId, UDT_HP);
+				//setunitdata .wBossId, UDT_HP, .@hp + .@mobCount * 50000;
+				break;
+			case 660:
+				//11 min, slave skill area
+				mapannounce strnpcinfo(4), "[ Chest Guardian ] Life and death are nothing to me!", bc_map, 0xFF0000;
+				//RATHENA
+				getunitdata(.wBossId, .@worldBossData);
+				set .@x, .@worldBossData[UMOB_X];
+				set .@y, .@worldBossData[UMOB_Y];
+				//HERCULES
+				//getmapxy(.@map$, .@x, .@y, UNITTYPE_MOB, .wBossId);
+				for(set .@i,0; .@i<getarraysize(.wbSlaveMobsId); set .@i,.@i+1)
+				{
+					//BASILICA 362 (5) OR EVILLAND 670 (1)
+					if(rand(1) == 0)
+					{
+						areamobuseskill strnpcinfo(4), .@x, .@y, .@cellRange * 2, .wbSlaveMobsId[.@i], 362, 5, 3000,1,e_gg,3;
+					}
+					else
+					{
+						areamobuseskill strnpcinfo(4), .@x, .@y, .@cellRange * 2, .wbSlaveMobsId[.@i], 670, 1, 3000,1,e_gg,3;
+					}
+				}
+				break;
+		}
+	}
+	setnpctimer 0;
+	freeloop(0);
+	end;
+	
+OnPCLoadMapEvent:
+	if(.wGuardianPop == 0)
+	{
+		set .wGuardPlayId[getarraysize(.wGuardPlayId) - 1], getcharid(3);
+	}
+	else
+	{
+		goto OnPopClone;
+	}
+	end;
+	
+OnPCDieEvent:
+	addtimer 10000, strnpcinfo(3) + "::OnPopClone";
+	set .deadCount, .deadCount + 1;
+	end;
+
+OnPopClone:
+	if(Hp > 0)
+	{
+		set .@cellRange, 25;
+		//RATHENA
+		getunitdata(.wBossId, .@worldBossData);
+		set .@x, .@worldBossData[UMOB_X];
+		set .@y, .@worldBossData[UMOB_Y];
+		//HERCULES
+		//getmapxy(.@map$, .@x, .@y, UNITTYPE_MOB, .wBossId);
+		clone strnpcinfo(4), rand(.@x - .@cellRange, .@x + .@cellRange), rand(.@y - .@cellRange, .@y + .@cellRange), strnpcinfo(3) + "::OnCloneDied", getcharid(0);
+	}
+	end;
+	
+OnSaveDied:
+OnCloneDied:
+OnReducedBossDied:
+	//nothing, used to clean
+	end;
+	
+OnWorldGuardianDied:
+	stopnpctimer;
+
+	killmonster strnpcinfo(4), strnpcinfo(3) + "::OnWorldGuardianDied";
+	killmonster strnpcinfo(4), strnpcinfo(3) + "::OnSaveDied";
+	killmonster strnpcinfo(4), strnpcinfo(3) + "::OnCloneDied";
+	killmonster strnpcinfo(4), strnpcinfo(3) + "::OnReducedBossDied";
+	
+	set .rewardAvailable, 1;
+	set .wGuardianPop, 0;
+	goto OnUnHide;
+	end;	
+	
+OnPopWorldGuardian:
+	//RATHENA
+	getmapxy(.@map$, .@x, .@y, UNITTYPE_NPC);
+	explode(.@infos, strnpcinfo(2), "_");
+	monster .@map$, .@x, .@y, "--Chest Guardian--", atoi(.@infos[0]), 1,strnpcinfo(3) + "::OnWorldGuardianDied",2; 
+	set .wGuardianId, $@mobId[0];
+	getunitdata(.wGuardianId, .@wGuardianData);
+	set .@wGuardianHp, .@wGuardianData[UMOB_MAXHP] * 2;
+	while(.@wGuardianHp < 10000000)
+	{
+		set .@wGuardianHp, .@wGuardianHp * 2;
+	}
+	setunitdata .wGuardianId, UMOB_MAXHP, .@wGuardianHp;
+	//HERCULES
+	//set .wGuardianId, monster(.@map$, .@x, .@y, "--Chest Guardian--", atoi(.@infos[0]), 1,strnpcinfo(3) + "::OnWorldGuardianDied",2); 
+	//set .@wGuardianHp, getunitdata(.wGuardianId, UDT_MAXHP);
+	//while(.@wGuardianHp < 10000000)
+	//{
+	//	set .@wGuardianHp, .@wGuardianHp * 2;
+	//}
+	//setunitdata(.wGuardianId, UDT_MAXHP, .@wGuardianHp);
+
+	set .deadCount, 0;
+	set .wGuardianPop, 1;
+	
+	set .timerCount, 0;
+	
+	goto OnHide;
+	end;
+	
+OnInit:
+	set .rewardCount, -1;
+	set .timerCount, 0;
+	set .rewardAvailable, 0;
+	set .teamId, 0;
+	set .debug, 1;
+	set .guardianAlive, 15; //in minutes. Will be double for chest unhiding after opening
+	setarray .wbSlaveMobsId[0], 1098, 2023, 2365, 2019, 2472;
+	setarray .wbSlaveMobsCount[0], 25, 15, 10, 15, 5;
+	setarray .deadMonstersId[0], 1865, 2603, 1870, 2473, 2474, 2283;
+	//Storm Gust, Meteor Storm, Lord of Vermillion, Bowling Bash, Kyrie Eleison
+	setarray .wbSummonSkillId[0],
+		89, 83, 85, 62, 73;
+	end;
+}
+
+prontera,150,150,5	duplicate(alawcc)	World Class Chest#1917_1::alawcc1	4_TREASURE,{
+prontera,150,150,5	duplicate(alawcc)	World Class Chest#1917_1::alawcc2	4_TREASURE,{
+prontera,150,150,5	duplicate(alawcc)	World Class Chest#1917_1::alawcc3	4_TREASURE,{
+prontera,150,150,5	duplicate(alawcc)	World Class Chest#1917_1::alawcc4	4_TREASURE,{
+
+prontera,144,198,4	script	World Class Master::alawcm	4_M_CATMAN2,{
+	mes "[World Class Master]";
+	mes .@npcname$;
+	if(WCINFOS == 2)
+	{
+		mes "What can I do for you?";
+		switch(select("Can you identify my item?","Can you increase my item's power?","Nothing, why?"))
+		{
+			case 1:
+				next;
+				mes .@npcname$;
+				mes "Sure. Wait a bit.";
+				if(countitem(.unidentifiedId) > 0)
+				{
+					next;
+					mes .@npcname$;					
+					mes "That's a pretty rare you got there.";
+					mes "You have to know what identifying one isn't as easy as other items.";
+					mes "I only have " + .identifySuccessRate + "% chance to succeed.";
+					mes "If I fail, there's " + .breakRate + "% chance that it'll break the item.";
+					mes "Are you sure you want to do this?";
+					if(select("Yes","No") == 1)
+					{
+						next;
+						mes .@npcname$;		
+						mes "Let's do this, then.";
+						specialeffect 512;
+						if(rand(100) < .identifySuccessRate)
+						{
+							next;
+							mes .@npcname$;
+							mes "Hehehe! I was successfull, as expected of me.";
+							mes "Here's for you.";
+							deleteitem .unidentifiedId, 1;
+							getitem .identifiedIds[rand(0, getarraysize(.identifiedIds) - 1)], 1;
+						}
+						else
+						{
+							next;
+							mes .@npcname$;
+							mes "...Sorry, really...";
+							if(rand(100) <= .breakRate)
+							{
+								deleteitem .unidentifiedId, 1;
+								mes "It broke...";
+							}
+							else
+							{
+								mes "I failed...";
+								mes "But the item's safe.";
+							}
+						}
+					}
+				}
+				break;
+			case 2:
+				next;
+				mes .@npcname$;
+				mes "You want me to improve your stuff?";
+				mes "Well that's possible, but that's not free.";
+				mes "To improve your stuff, you need to improve your control over it.";
+				mes "By using it, simple as that.";
+				mes "Right, let's see what we can do.";
+				set .@menu$, "";
+				for(set .@i,0; .@i<getarraysize(.identifiedIds); set .@i,.@i+1)
+				{
+					set .@menu$, .@menu$ + (.@i == 0 ? "" : ":") + getitemname(.identifiedIds[.@i]);
+				}
+				set .@choice, select(.@menu$) - 1;
+				next;
+				mes .@npcname$;
+				mes "Okay, so your " + .identifiedIds[.@choice] + ", hu?";
+				if(countitem(.identifiedIds[.@choice]) <= 0)
+				{
+					mes "But you don't have this item...";
+					mes "I need at least one to work on...";
+					mes "You're bound to it, I need it.";
+					close;
+				}
+				if(getd("WCITEMCNT" + .@choice) >= getd("WCITEMNEED" + .@choice))
+				{
+					if(getd("WCITEMLVL" + .@choice) == 5)
+					{
+						mes "You're allready at the highest point.";
+						mes "You can't get more control than that.";
+						close;
+					}
+					mes "Allright. Apparently you're ready.";
+					mes "Wait a bit.";
+					progressbar 0xFF0000, 5000;
+					specialeffect 512;
+					next;
+					mes .@npcname$;
+					mes "Allright. You're now ready.";
+					mes "Go on, give it a try, you'll see.";
+					setd("WCITEMLVL" + .@choice, getd("WCITEMLVL" + .@choice) + 1);
+					setd("WCITEMNEED" + .@choice, getd("WCITEM" + .@choice) * 100);
+					setd("WCITEMCNT" + .@choice, 0);
+				}
+				else
+				{
+					mes "No, you're not ready for this.";
+					mes "You'll have to train more.";
+				}
+				break;
+			case 3:
+				next;
+				mes .@npcname$;
+				mes "Why am I wasting my time with you, then?";
+				break;
+		}
+	}
+	else if(WCINFOS == 1)
+	{
+		mes "Ha, you're finally here.";
+		mes "I've been waiting for a long time before you came back, you know?";
+		mes "I don't have time to lose, so let's start immediately.";
+		mes "World Class Items are some piece of stuff that are really, really rare.";
+		mes "There's only " + getarraysize(.identifiedIds) + " different types existing.";
+		mes "Each one is kept hidden somewhere, in the deepest points of this world.";
+		mes "Or in the highest. Or the toughest. Not easy to access ones, anyway.";
+		next;
+		mes .@npcname$;
+		mes "Why are they called World Class, you may ask.";
+		mes "Well that's cause their rarity isn't their only...strength.";
+		mes "They were all crafter by really ancient people.";
+		mes "An ancient knowledge, lost in time. Perhaps made by the dwarves, no one really know.";
+		next;
+		mes .@npcname$;
+		mes "The fact is that each one allows you to use some new powers.";
+		mes "Some will bring you some skills you shouldn't be able to use.";
+		mes "Others, the ability to control monsters.";
+		mes "All of them are rare enough to cause a country to collapse while fighting for its power.";
+		set WCINFOS, 2;
+	}
+	else
+	{
+		mes "Who are you? Why are you talking to me?";
+		mes "I'm not anybody else! I am THE world class item most knowing people in the world.";
+		mes "None of them, around us, knows as much as me about those items.";
+		mes "I can tell you some about them if you want.";
+		mes "But not right now. I'm a bit busy. Come back in a moment.";
+		addtimer 180000, strnpcinfo(3) + "::OnInfoAvailable";
+	}
+	close;
+	
+OnPopWorldSkill:
+	set .@found, 0;
+	if(.@atcmd_numparameters > 0)
+	{
+		set $worldSkillLvl, atoi(.@atcmd_parameters$[0]);
+	}
+	for(set .@i,0; .@i<getarraysize(.identifiedIds) && .@found == 0; set .@i,.@i+1)
+	{
+		if(getequipid(EQI_ACC_L) == .identifiedIds[.@i])
+		{
+			set .@found, 1;
+			switch(.@i)
+			{
+				case 0:
+					callfunc "SC_AntiPriest";
+					break;
+				case 1:
+					callfunc "SC_DeadController";
+					break;
+				case 2:
+					callfunc "SC_DeathBringer";
+					break;
+				case 3:
+					callfunc "SC_LifeLord";
+					break;
+				case 4:
+					callfunc "SC_IllusionMaster";
+					break;
+				case 5:
+					callfunc "SC_NatureTamer";
+					break;
+				case 6:
+					callfunc "SC_MonsterHunter";
+					break;
+				case 7:
+					callfunc "SC_FoodThinker";
+					break;
+				case 8:
+					callfunc "SC_SpellMaster";
+					break;
+			}
+		}
+	}
+	end;
+	
+OnInvokDied:
+	//nothing, used to clean
+	end;
+	
+OnResetNature:
+	unitskilluse getcharid(3), 244, 1;
+	killmonster strcharinfo(3), strnpcinfo(3) + "::OnInvokDied";
+	end;
+	
+OnEnableSkillAgain:
+	set WCSkillUsed, 0;
+	end;
+	
+OnInfoAvailable:
+	set WCINFOS, 1;
+	end;
+	
+OnInit:
+	set .unidentifiedId, 512;
+	setarray .identifiedIds[0], 513, 514, 515;
+	set .identifySuccessRate, 10;
+	set .breakRate, 25;
+	bindatcmd "worldskill", strnpcinfo(3) + "::OnPopWorldSkill";
+	end;
+}

@@ -1,0 +1,278 @@
+//Alf Brumeux Master
+ars_fild21,259,226,5	script	Ancient Mist Alfe::ame	1708,{
+
+	set .@npcname$, "[Ancient Mist Alfe]";
+	if(degoe == 1)goto OtherQuest_Started;
+	if(legoe == 1)goto OtherQuest_Started;
+	if(hagoe == 1)goto OtherQuest_Started;
+	if(mwgoe == 1)goto OtherQuest_Started;
+	if(oagoe == 1)goto OAGo_Etheria;
+	if(dsgoe == 1)goto OtherQuest_Started;
+	if(deqstart == 1)goto OtherQuest_Started;
+	if(leqstart == 1)goto OtherQuest_Started;
+	if(haqstart == 1)goto OtherQuest_Started;
+	if(mwqstart == 1)goto OtherQuest_Started;
+	if(oaqstart >= 1)goto OAQuest_Started;
+	if(dsqstart == 1)goto OtherQuest_Started;
+	if(deqdone == 1)goto OtherQuest_Done;
+	if(leqdone == 1)goto OtherQuest_Done;
+	if(haqdone == 1)goto OtherQuest_Done;
+	if(mwqdone == 1)goto OtherQuest_Done;
+	if(oaqdone == 1)goto OAQuest_Done;
+	if(dsqdone == 1)goto OtherQuest_Done;
+	if(BaseLevel < 50 || JobLevel < 50) goto L_LowLevel;
+      
+	mes .@npcname$;
+	mes "Hello to you, traveler. I'm a Mist Alfe.";
+	mes "We live in the deppest points of Helheim, among the deads.";
+	next;
+	menu "Can you tell me more?.",OAInfo,"I'd like to become one of yours!",-,"That's doesn't really matter to me.",OANo;
+
+	mes .@npcname$;
+	mes "To become a Mist Alfe, you'll have to show me you owe that.";
+	next;
+	mes .@npcname$;
+	mes "Mist Alfes have learnt some special capacities while living with the deads. If you become one of us, you'll learn them too.";
+	next;
+	mes .@npcname$;
+	mes "But for that, I need you to bring me proof of your merit.";
+	next;
+	mes .@npcname$;
+	mes "There's a realm somewhere, near Helheim.";
+	next;
+	mes .@npcname$;
+	mes "You'll find there a man. He'll tell you a bit more about us.";
+	next;
+	mes .@npcname$;
+	mes "Once you'll know more, you'll be able to start your quest to the Mist.";
+	set oaqstart,1;
+	close;
+
+OAQuest_Started:
+	mes .@npcname$;
+	mes "So. What did you learnt?";
+	next;
+	menu "I'd like to abandon",L_sure,"I've got all I need!",OAQuest_AlmostDone,"I working on it.",OANo;
+
+	L_sure:
+		mes .@npcname$;
+		mes "Humpf? Are you sure?";
+		next;
+		menu "No...No I want to continue.",L_conti,"I...I'm sure!",L_quit;
+
+		L_conti:
+			mes .@npcname$;
+			mes "Good. You should not let go. A Mist Alfe wouldn't.";
+			close;
+
+		L_quit:
+			mes .@npcname$;
+			mes "Allright. You'll be able to start again.";
+			mes "But don't talk about us. To no one.";
+			set oaqstart,0;
+			set oaqdone,0;
+			set oagoe,0;
+			close;
+
+		L_LowLevel:
+			mes .@npcname$;
+			mes "I'm the Ancient Mist Alfe. You can't become one of us.";
+			mes "For that, you'll need a higher level. In both base and job, you're required to be lvl 50.";
+			next;
+			mes .@npcname$;
+			mes "Do you wish to learn more?";
+			next;
+			menu "Yes please.",OAInfo,"No thanks!",Quit;
+
+//Alfe Brumeux Info
+		
+	OAInfo:
+		mes .@npcname$;
+		mes "Us, Mist Alfes, are the inhabitant of Abyss. We're not reknown for our strength, or our magic,";
+		mes "but for hability to survive.";
+		next;
+		mes .@npcname$;
+		mes "We don't need to make high damage. We just need to survive, no matter what.";
+		next;
+		mes .@npcname$;
+		mes "Therefor, we've developped some capacities to help us in this...purpose.";
+		close;
+
+//Dialogues
+
+		OANo:
+		mes .@npcname$;
+		mes "Allright, as you wish.";
+		close;
+
+		OAQuest_Done:
+			mes .@npcname$;
+			mes "Hello to you, Mist Alfe.";
+			close;
+
+		OAQuest_AlmostDone:
+			if(countitem(7001)<100 || countitem(924)<100 || countitem(7154)<50) goto OAQuest_NotEnuf;
+			mes .@npcname$;
+			mes "I can feel that you've finally completed this quest.";
+			next;
+			mes .@npcname$;
+			mes "You're now ready to become one of us.";
+			mes "Go find the Etherian Angel. She'll guide you in this ultimate ordeal.";
+			mes "Once you'll be one of us, seek Larham. He'll teach you more about the Mist Orbs.";
+			delitem 7001, 100;
+			delitem 924, 100;
+			delitem 7154, 50;
+			set oagoe,1;
+			close;
+		
+		OAGo_Etheria:
+			mes .@npcname$;
+			mes "Go find the Etherian Angel. She'll guide you in this ultimate ordeal.";
+			close;
+
+		OtherQuest_Done:
+			mes .@npcname$;
+			mes "Leave this place. You now belong to another race.";
+			close;
+
+		OtherQuest_Started:
+			mes .@npcname$;
+			mes "Leave this place. You've started to work for another race. Cancel it, and come back to me, if you change your mind.";
+			close;
+
+		OAQuest_NotEnuf:
+			mes .@npcname$;
+			mes "Sorry but you lack some items. Here's what I need:";
+			next;
+			mes .@npcname$;
+			mes "- ^5555FF100 Smoke Powder^000000.";
+			mes "- ^5555FF100 Powder of Butterfly^000000.";
+			mes "- ^5555FF50 Poisonous Powder^000000.";
+			close;
+
+	Quit:
+		mes "That's your choice.";
+		close;
+
+}
+
+niflheim,32,143,5	script	Mist Alfe::ma	1768,{
+	set .@npcname$, "[Elnoir]";
+
+	mes .@npcname$;
+	mes "...";
+	if (oaqstart == 1)
+	{
+		mes "So you've decided to become one of us.";
+		mes "Do you really now what you've chosen?";
+		mes "We don't live in sun. In light. In heat.";
+		mes "Our usual life is guided by fear, and death.";
+		mes "Are you ready for that? Then you can enter in the Mist Path.";
+		next;
+		mes .@npcname$;
+		mes "The Alfes must learn to rely on everyone, and everybody.";
+		mes "The Mist world is cold, and dangerous.";
+		mes "Without help, you may not be able to do anything.";
+		mes "Prove me you deserve to join us. Then, go see the Ancient.";
+		mes "- ^5555FF100 Smoke Powder^000000.";
+		mes "- ^5555FF100 Powder of Butterfly^000000.";
+		mes "- ^5555FF50 Poisonous Powder^000000.";
+		next;
+		mes .@npcname$;	
+			//add skill SL_KAIZEL lvl 1
+		mes "If you succeed, you'll learnt the Survival.";
+		mes "You won't be killed without escaping death at least once.";
+		mes "But it won't always be enough. Kekekeke!";
+		mes "On top of that, you'll also be able to learn to use the Mist Orbs.";
+		mes "They'll learnt you how to command the Death.";
+		set oaqstart, 2;
+	}
+	close;
+}
+
+nif_fild01,121,169,5	script	Larham::mal	1418,{
+	set .@npcname$, "[Larham]";
+
+	mes .@npcname$;
+	mes "...";
+	if (oaqdone > 0 && oaqdone <= 1 || oaqstart == 1)
+	{
+		mes "You're not ready. Leave!";
+	}
+	else if (oaqdone == 3)
+	{
+		mes "Finally, someone of my race. I lived alone for so long...";
+		mes "The light around here burnt my eyes. So I live here, hidden in the Church shadows.";
+		mes "Midgard isn't made for us.";
+		next;
+		mes .@npcname$;
+		mes "But you're not here for that, isn't it?";
+		mes "You're here for the Mist Orbs.";
+		mes "Each ones can be used separately, one at a time.";
+		mes "You can only find them in Helheim.";
+		next;
+		mes "The first one, the 'Slowing Wave',";
+			//March of Abyss, 677
+		mes "enables to start a slowing spell from Death itself.";
+		mes "The second one, the 'Mist Caller',";
+			//PF_FOGWALL, 404
+		mes "enables you to disappear in fog.";
+		mes "And the last one, the rarest, the 'Raising Orb',";
+			//summon undeads
+		mes "enables you to wake up some Deads to help you in fights.";
+		mes "But to invok them, you'll have to pay a bit of your own life.";
+		next;
+		mes "These are the Mist Orbs. Only our race can use them. We're a kind of...Necromancer I guess.";
+	}
+	else
+		mes "I don't speak to other races.";
+	close;	
+}
+
+function	script	OnNecromancerSummon	{
+	switch(rand(0,3)) { 
+		//5 Orc Skeleton, 3 Archer Skeleton
+		case 1: 
+			percentheal -20,-20;
+			specialeffect2 752;
+			summon "--ja--",1076;
+			summon "--ja--",1076;
+			summon "--ja--",1076;
+			summon "--ja--",1076;
+			summon "--ja--",1076;
+
+			summon "--ja--",1420;
+			summon "--ja--",1420;
+			summon "--ja--",1420;
+
+			break; 
+		//Skeleton general
+		case 2: 
+			percentheal -40,-40;
+			specialeffect2 752;
+			summon "--ja--",1290; 
+			break; 
+		//3 Depraved Orc Spirit
+		case 3: 
+			percentheal -75,-75;
+			specialeffect2 450;
+			summon "--ja--",1983; 
+			summon "--ja--",1983;
+			summon "--ja--",1983;
+			break; 
+		//2 Necro
+		case 4: 
+			percentheal -50,-99;
+			specialeffect2 938;
+			summon "--ja--",1870; 
+			summon "--ja--",1870; 
+			break; 
+		//Eint Croth
+		case 5: 
+			percentheal -90,-90;
+			specialeffect2 674;
+			summon "--ja--",1957; 
+			break; 
+	}
+}
+

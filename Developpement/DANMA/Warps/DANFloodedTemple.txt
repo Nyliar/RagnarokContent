@@ -1,0 +1,19 @@
+danma_24,168,173,0	warp	dun24-maintown	2,2,mellina,85,138
+
+danma_24,352,342,0	warp	dun24-25	5,2,danma_25,253,252
+danma_24,39,41,0	warp	dun24-25-2	5,2,danma_25,41,37
+
+danma_25,118,170,0	warp	dun25-26	5,2,danma_26,236,204
+danma_25,253,258,0	warp	dun25-24	2,2,danma_24,352,337
+danma_25,41,32,0	warp	dun25-24-2	2,2,danma_24,39,46
+
+danma_26,236,198,0	warp	dun26-25	5,3,danma_25,118,165
+danma_26,339,331,0	warp	dun26-27	2,2,danma_27,32,63
+
+danma_27,264,245,0	warp	dun27-28	1,2,danma_28,26,27
+danma_27,29,63,0	warp	dun27-26	2,2,danma_26,339,328
+
+danma_28,26,24,0	warp	dun28-27	2,2,danma_27,261,245
+danma_28,130,234,0	warp	dun27-28	1,2,danma_29,141,187
+
+danma_29,142,190,0	warp	dun28-27	2,2,danma_28,129,232

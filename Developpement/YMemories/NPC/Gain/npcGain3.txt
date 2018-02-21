@@ -1,0 +1,132 @@
+//29300 ==> Black And White Temple
+prontera,140,181,0	script	Scientist::gigain14	HIDDEN_WARP_NPC,{
+	end;
+
+OnInit:
+	defpattern 1,"Gain","OnGainAsked";
+	activatepset 1;
+	end;
+
+OnGainAsked:
+	if (countitem($portalCrystalId) >= 30)
+	{
+		rentitem 29300, 300;
+		delitem $portalCrystalId, 30;
+		logmes "[Yggdrasil Memories] " + strcharinfo(0) + " obtains a " + getitemname(29300);
+	}
+	end;
+}
+
+//29293 ==> Champion Arena
+prontera,271,78,3	script	Weapon Master::gigain15	HIDDEN_WARP_NPC,{
+	end;
+
+OnInit:
+	defpattern 1,"Gain","OnGainAsked";
+	activatepset 1;
+	end;
+
+OnGainAsked:
+	if (CHAMPIONARENA == 1)
+	{
+		rentitem 29293, 300;
+		set CHAMPIONARENA, 0;
+		logmes "[Yggdrasil Memories] " + strcharinfo(0) + " obtains a " + getitemname(29293);
+	}
+	end;
+}
+
+//29297 ==> Endless Cellar
+e_tower,81,105,0	script	Cellar Protection Stone::gigain16	HIDDEN_WARP_NPC,{
+	end;
+
+OnInit:
+	defpattern 1,"Gain","OnGainAsked";
+	activatepset 1;
+	end;
+
+OnGainAsked:
+	if (ENDLESSC == 1)
+	{
+		rentitem 29297, 300;
+		set ENDLESSC, 0;
+		logmes "[Yggdrasil Memories] " + strcharinfo(0) + " obtains a " + getitemname(29297);
+	}
+	end;
+}
+
+//29296 ==> Endless Tower
+e_tower,81,105,0	script	Tower Protection Stone::gigain17	HIDDEN_WARP_NPC,{
+	end;
+
+OnInit:
+	defpattern 1,"Gain","OnGainAsked";
+	activatepset 1;
+	end;
+
+OnGainAsked:
+	if (ENDLESST == 1)
+	{
+		rentitem 29296, 300;
+		set ENDLESST, 0;
+		logmes "[Yggdrasil Memories] " + strcharinfo(0) + " obtains a " + getitemname(29296);
+	}
+	end;
+}
+
+//29295 ==> Lonely Mountain
+prontera,271,74,4	script	Lonely Mountain Guardian::gigain18	HIDDEN_WARP_NPC,{
+	end;
+
+OnInit:
+	defpattern 1,"Gain","OnGainAsked";
+	activatepset 1;
+	end;
+
+OnGainAsked:
+	if (LONELY == 1)
+	{
+		rentitem 29295, 300;
+		set LONELY, 0;
+		logmes "[Yggdrasil Memories] " + strcharinfo(0) + " obtains a " + getitemname(29295);
+	}
+	end;
+}
+
+//29298 ==> Valhalla Garden
+prontera,271,70,5	script	Garden Watcher::gigain19	HIDDEN_WARP_NPC,{
+	end;
+
+OnInit:
+	defpattern 1,"Gain","OnGainAsked";
+	activatepset 1;
+	end;
+
+OnGainAsked:
+	if (VALHALLA == 1)
+	{
+		rentitem 29298, 300;
+		set VALHALLA, 0;
+		logmes "[Yggdrasil Memories] " + strcharinfo(0) + " obtains a " + getitemname(29298);
+	}
+	end;
+}
+
+//29294 ==> Astral Temple
+prontera,271,66,1	script	Temple Guardian::gigain20	HIDDEN_WARP_NPC,{
+	end;
+
+OnInit:
+	defpattern 1,"Gain","OnGainAsked";
+	activatepset 1;
+	end;
+
+OnGainAsked:
+	if (ASTRAL == 1)
+	{
+		rentitem 29294, 300;
+		set ASTRAL, 0;
+		logmes "[Yggdrasil Memories] " + strcharinfo(0) + " obtains a " + getitemname(29294);
+	}
+	end;
+}

@@ -1,0 +1,972 @@
+function	script	YM_Analysis	{
+	if (callfunc("IsPlayerOn") || callfunc("IsPlayerOnTown"))
+	{
+		cutin "GI_AnalysisCard", 4;
+		dispbottom "[Book] Please insert the seeked card name...";
+		input .@itemName$;
+
+		specialeffect2 58;
+		charcommand "#me " + strcharinfo(0) + " Analysis activated! " + .@itemName$;
+
+		set .@query$, "SELECT `id_card` FROM `ym_cards` WHERE `name_item`='" + .@itemName$ + "'";
+		query_sql(.@query$, .@idCards);
+		if (getarraysize(.@idCards) > 0)
+		{		
+			switch(.@idCards[0])
+			{
+				case 29292:
+					set .@message$, "A rare card given as a reward of the Seed Savior. SS-3";
+					break;
+				case 29293:
+					set .@message$, "A rare card given as a reward to those who finished the Champions Arena. SS-6";
+					break;
+				case 29294:
+					set .@message$, "A rare card given as a reward to those who finished the Celestial Temple. SS-9";
+					break;
+				case 29295:
+					set .@message$, "A rare card given as a reward to those who finished the Lonely Mountain. SS-8";
+					break;
+				case 29296:
+					set .@message$, "A rare card given as a reward to those who finished the Endless Tower. SS-12";
+					break;
+				case 29297:
+					set .@message$, "A rare card given as a reward to those who finished the Endless Cellar. SS-11";
+					break;
+				case 29298:
+					set .@message$, "A rare card given as a reward to those who finished the Valhalla Garden. SS-2";
+					break;
+				case 29299:
+					set .@message$, "A very rare jewel. It look like a little blue planet. SS-5";
+					break;
+				case 29300:
+					set .@message$, "A rare card given as a reward to those who show they mastered Project Yggdrasil. SS-4";
+					break;
+				case 29301:
+					set .@message$, "A rare card given as a reward to those who played with death. SS-7";
+					break;
+				case 29302:
+					set .@message$, "A cursed knife. Any person hurt by this is sure to die soon. SS-7";
+					break;
+				case 29303:
+					set .@message$, "A really heavy bow. You can merely shot spears with it! SS-5";
+					break;
+				case 29304:
+					set .@message$, "A little demon who's flying near those who gonna die. SS-3";
+					break;
+				case 29305:
+					set .@message$, "Thor Hammer. It always return to its owner. SS-6";
+					break;
+				case 29306:
+					set .@message$, "A rare weapon. Always heavy, but powerful. S-7";
+					break;
+				case 29307:
+					set .@message$, "A rare item which can stock electricity to free it later. S-6";
+					break;
+				case 29308:
+					set .@message$, "A special orb which contains the Winter Essence. S-5";
+					break;
+				case 29309:
+					set .@message$, "A magic sword that can contains several elemental attack. S-8";
+					break;
+				case 29310:
+					set .@message$, "A reward for those who find the 'First Enigma'. S-12";
+					break;
+				case 29311:
+					set .@message$, "A reward for those who reach the final step of 'An Adventurer's Life'. S-25";
+					break;
+				case 29312:
+					set .@message$, "A strange stone, shining like hell's fire. S-13";
+					break;
+				case 29313:
+					set .@message$, "An accessory which reward the Ase Tree seeker. S-10";
+					break;
+				case 29314:
+					set .@message$, "A strange scale, which will guide the lost in darkness. S-13";
+					break;
+				case 29315:
+					set .@message$, "A strange djinn, which will reward you if you're enough insistant. S-10";
+					break;
+				case 29316:
+					set .@message$, "An angel kiss. It can cure anything, except death. S-7";
+					break;
+				case 29317:
+					set .@message$, "A funny imp, which can charm anyone in a second. S-16";
+					break;
+				case 29318:
+					set .@message$, "A myth becoming true. That's a true siren. S-4";
+					break;
+				case 29319:
+					set .@message$, "A strange ticket, granting access to Swap. S-7";
+					break;
+				case 29320:
+					set .@message$, "A strange item. Dragons seems liking it as a toy. S-3";
+					break;
+				case 29321:
+					set .@message$, "An item which highly improve vision. S-10";
+					break;
+				case 29322:
+					set .@message$, "A very powerful defensive spell, which protect from anything. S-10";
+					break;
+				case 29323:
+					set .@message$, "A shield, known to be the hardest of them all. S-7";
+					break;
+				case 29324:
+					set .@message$, "A knuckle which property can change. S-16";
+					break;
+				case 29325:
+					set .@message$, "A special ring, bringing back dead to life. S-13";
+					break;
+				case 29326:
+					set .@message$, "A shield which make you lose sp instead of hp. S-10";
+					break;
+				case 29327:
+					set .@message$, "A shield which return damage. S-15";
+					break;
+				case 29328:
+					set .@message$, "A never missing target boomerang. S-4";
+					break;
+				case 29329:
+					set .@message$, "A special thread used for trapping. Thin, but really hard to break. S-17";
+					break;
+				case 29330:
+					set .@message$, "A card to reward Mimir's killers. S-6";
+					break;
+				case 29331:
+					set .@message$, "A strange ball. There's only 7 in world. S-7";
+					break;
+				case 29332:
+					set .@message$, "A card rewarding those who helped Fehu. A-10";
+					break;
+				case 29333:
+					set .@message$, "A broom belonging to a witch. You'll feel extremely light! A-18";
+					break;
+				case 29334:
+					set .@message$, "A garment which can made you invisible. A-15";
+					break;
+				case 29335:
+					set .@message$, "A reward for those who find an Ase Fruit. A-22";
+					break;
+				case 29336:
+					set .@message$, "A mark for your fishing hability. A-14";
+					break;
+				case 29337:
+					set .@message$, "A mark for your mining hability. A-11";
+					break;
+				case 29338:
+					set .@message$, "A really rare bug, which appears only to the strongest. A-42";	
+					break;
+				case 29339:
+					set .@message$, "A proof that you've leaved the Labyrinth. A-15";
+					break;
+				case 29340:
+					set .@message$, "A strange stone who bring fecondity. A-34";
+					break;
+				case 29341:
+					set .@message$, "An ancient ring, enabling people to understand fairies. A-50";
+					break;
+				case 29342:
+					set .@message$, "A strange pillow, which sometimes start to float in the air. A-12";
+					break;
+				case 29343:
+					set .@message$, "The only item which can bring back from death. A-6";
+					break;
+				case 29344:
+					set .@message$, "A reward for those who avoid MvP. A-3";
+					break;
+				case 29345:
+					set .@message$, "An incredibly solid barrier. A-20";
+					break;
+				case 29346:
+					set .@message$, "A sword of light. It can cut anything. A-10";
+					break;
+				case 29347:
+					set .@message$, "A scythe bring by all Reaper. It contains any disease in world. A-5";
+					break;
+				case 29348:
+					set .@message$, "A scroll to write powerfull spells. A-12";
+					break;
+				case 29349:
+					set .@message$, "A brush to write on scrolls. A-12";
+					break;
+				case 29350:
+					set .@message$, "Hope you'll never see the beast who lost this claw. A-24";
+					break;
+				case 29351:
+					set .@message$, "A strange stair, which seems never ending. A-13";
+					break;
+				case 29352:
+					set .@message$, "A bloody cape, probably worned by a murderer. A-25";
+					break;
+				case 29353:
+					set .@message$, "A reward for lady fae savior. A-34";
+					break;
+				case 29354:
+					set .@message$, "A reward for jormungand killers. A-42";
+					break;
+				case 29355:
+					set .@message$, "An unbreakable barrier, in which you'll be sticked. A-4";
+					break;
+				case 29356:
+					set .@message$, "A strange arbalest which changes foes to friend. A-17";
+					break;
+				case 29357:
+					set .@message$, "A card with a dice. It has 8 heart face, and 1 skull. B-75";
+					break;
+				case 29358:
+					set .@message$, "A card to steal another one. B-30";
+					break;
+				case 29359:
+					set .@message$, "A card for those who find an Ase map. B-45";
+					break;
+				case 29360:
+					set .@message$, "A card for the sex undecided. B-68";
+					break;
+				case 29361:
+					set .@message$, "A strange basket. Whatever you do, you can't clean it. B-54";
+					break;
+				case 29362:
+					set .@message$, "A parrot candy. B-30";
+					break;
+				case 29363:
+					set .@message$, "A rare item which can heal you entirely. B-25";
+					break;
+				case 29364:
+					set .@message$, "A paladin's necklace. It prevent counterfeit. B-24";
+					break;
+				case 29365:
+					set .@message$, "Destroy a A+ card on the target. B-25";
+					break;
+				case 29366:
+					set .@message$, "Steal the seeked card to the target. B-30";
+					break;
+				case 29367:
+					set .@message$, "A card for the really lucky. B-13";
+					break;
+				case 29368:
+					set .@message$, "A girl who slept since 200 years. B-16";
+					break;
+				case 29369:
+					set .@message$, "A strange girl, producing gold when bathing. B-17";
+					break;
+				case 29370:
+					set .@message$, "Back to save point. B-30";
+					break;
+				case 29371:
+					set .@message$, "Steal a card to each target in the area of effect. B-25";
+					break;
+				case 29372:
+					set .@message$, "Destroy randomly a card. B-15";
+					break;
+				case 29373:
+					set .@message$, "A little ghost is drawn on this one. C-50";
+					break;
+				case 29374:
+					set .@message$, "A strange little violet boy is drawn on this one. C-50";
+					break;
+				case 29375:
+					set .@message$, "A little angel is drawn on this one. C-50";
+					break;
+				case 29376:
+					set .@message$, "A little black demon is drawn on this one. C-50";
+					break;
+				case 29377:
+					set .@message$, "A bloody knight is drawn on this one. C-50";
+					break;
+				case 29378:
+					set .@message$, "A howling kobold is drawn on this one. C-50";
+					break;
+				case 29379:
+					set .@message$, "A crowned goblin is drawn on this one. C-50";
+					break;
+				case 29380:
+					set .@message$, "An eagle with a lion head is drawn on this one. C-50";
+					break;
+				case 29381:
+					set .@message$, "Swap a card for another owned B-. C-20";
+					break;
+				case 29382:
+					set .@message$, "Transform a B+ from the target to D-. C-40";
+					break;
+				case 29383:
+					set .@message$, "A big pink ball is drawn on this one. D-60";
+					break;
+				case 29384:
+					set .@message$, "A big green insect is drawn on this one D-60";
+					break;
+				case 29385:
+					set .@message$, "A little blue furry monster is drawn on this one. D-60";
+					break;
+				case 29386:
+					set .@message$, "A strange fly is drawn on this one. D-60";
+					break;
+				case 29387:
+					set .@message$, "An enormous toad is drawn on this one. D-60";
+					break;
+				case 29388:
+					set .@message$, "A blue wolf is drawn on this one. D-60";
+					break;
+				case 29389:
+					set .@message$, "Enable to see cards of a target. D-70";
+					break;
+			}
+		}
+		dispbottom .@message$;
+	}
+	else
+	{
+		dispbottom "[Book] You can't used spell out of the System.";
+	}
+	cutin "", 255;
+	close;
+}
+
+function	script	YM_List	{
+	if (callfunc("IsPlayerOn") || callfunc("IsPlayerOnTown"))
+	{
+		cutin "GI_ListCard", 4;
+		dispbottom "[Book] Please insert the seeked card name...";
+		input .@itemName$;
+		set .@query$, "SELECT `actual_count` FROM `ym_cards` WHERE `name_item`='" + .@itemName$ + "'";
+
+		query_sql(.@query$, .@count);
+		if (getarraysize(.@count) >= 1)
+		{
+			set .@totalCount, .@count[0];
+			dispbottom "[Book] " + .@totalCount + " people(s) own the card " + .@cardName$ + "";
+		}
+		else
+		{
+			dispbottom "[Book] Nobody own this card.";
+		}
+	}
+	else
+	{
+			dispbottom "[Book] You can't used spell out of the System.";
+	}
+	cutin "", 255;
+	close;
+}
+
+function	script	YM_Guidepost	{
+	if (callfunc("IsPlayerOn") || callfunc("IsPlayerOnTown"))
+	{
+		cutin "GI_GuidepostCard", 4;
+		dispbottom "[Book] Please insert the seeked card name...";
+		input .@itemName$;
+
+		set .@query$, "SELECT `id_card` FROM `ym_cards` WHERE `name_item`='" + .@itemName$ + "'";
+		query_sql(.@query$, .@idCards);
+		if (getarraysize(.@idCards) > 0)
+		{		
+			switch(.@idCards[0])
+			{
+				case 29292:
+					set .@message$, "Can be obtained by by fulfilling the quest 'Elemental Furor'";
+					break;
+				case 29293:
+					set .@message$, "Can be obtained by completing the instance 'Champions' Arena'";
+					break;
+				case 29294:
+					set .@message$, "Can be obtained by completing the instance 'Astral Temple'";
+					break;
+				case 29295:
+					set .@message$, "Can be obtained by freeing the 'Lonely Mountain'.";
+					break;
+				case 29296:
+					set .@message$, "Can be obtained by reaching the end of Endless Cellar";
+					break;
+				case 29297:
+					set .@message$, "Can be obtained by reaching the end of Endless Tower";
+					break;
+				case 29298:
+					set .@message$, "Can be obtained by freeing the 'Valhalla Garden'";
+					break;
+				case 29299:
+					set .@message$, "Can be obtained in the Stars Heart";
+					break;
+				case 29300:
+					set .@message$, "Can be obtained by owning some rare crystal near the 'Scientist'";
+					break;
+				case 29301:
+					set .@message$, "Can be obtained by being part of the Roulette game";
+					break;
+				case 29302:
+					set .@message$, "Can be obtained by fulfilling the 'Assassin's Quest'";
+					break;
+				case 29303:
+					set .@message$, "Can be obtained by fulfilling the quest 'Archer Master'";
+					break;
+				case 29304:
+					set .@message$, "Can be obtained by talking with the Death Demon";
+					break;
+				case 29305:
+					set .@message$, "Can be obtained by helping the god of thunder, Thor";
+					break;
+				case 29306:
+					set .@message$, "Can be obtained by fulfilling the quest of the 'Adventurer'";
+					break;
+				case 29307:
+					set .@message$, "Can be obtained by fulfilling the quest of the 'Electric Man'";
+					break;
+				case 29308:
+					set .@message$, "Can be obtained by freeing the 'Winter Orb'";
+					break;
+				case 29309:
+					set .@message$, "Can be obtained by fulfilling the quest of the 'Saint Fighter'";
+					break;
+				case 29310:
+					set .@message$, "Can be obtained by fulfilling the quest 'Enigma'";
+					break;
+				case 29311:
+					set .@message$, "Can be obtained by fulfilling the quest 'An Adventurer Life'";
+					break;
+				case 29312:
+					set .@message$, "Can be obtained by fulfilling the quest 'Cursed Villagers'";
+					break;
+				case 29313:
+					set .@message$, "Can be obtained by giving water to the 'Great Tree'";
+					break;
+				case 29314:
+					set .@message$, "Can be obtained by fulfilling the quest 'Golden Monster'.";
+					break;
+				case 29315:
+					set .@message$, "Can be obtained by fulfilling the quest 'A Strange Djinn'.";
+					break;
+				case 29316:
+					set .@message$, "Can be obtained by opening a blister.";
+					break;
+				case 29317:
+					set .@message$, "Can be obtained by capturing an Imp.";
+					break;
+				case 29318:
+					set .@message$, "Can be obtained by fulfilling the quest 'The siren's kiss'.";
+					break;
+				case 29319:
+					set .@message$, "Can be obtained by opening a blister.";
+					break;
+				case 29320:
+					set .@message$, "Can be obtained by fulfilling the quest 'Dragons Hunt'.";
+					break;
+				case 29321:
+					set .@message$, "Can be obtained by fulfilling the quest 'Divine Eye'.";
+					break;
+				case 29322:
+					set .@message$, "Can be obtained by opening a blister.";
+					break;
+				case 29323:
+					set .@message$, "Can be obtained by fulfilling the quest 'Aegis Shield'.";
+					break;
+				case 29324:
+					set .@message$, "Can be obtained by fulfilling the quest 'Elemental Fighter'.";
+					break;
+				case 29325:
+					set .@message$, "Can be obtained by dying.";
+					break;
+				case 29326:
+					set .@message$, "Can be obtained by fulfilling the quest 'Allmighty Shielder'";
+					break;
+				case 29327:
+					set .@message$, "Can be obtained by fulfilling the quest 'Allmighty Shielder'";
+					break;
+				case 29328:
+					set .@message$, "Can be obtained by fulfilling the quest 'Missing Boomerang'";
+					break;
+				case 29329:
+					set .@message$, "Can be obtained by fulfilling the quest 'Give me a Thread'";
+					break;
+				case 29330:
+					set .@message$, "Can be obtained by killing Mimir";
+					break;
+				case 29331:
+					set .@message$, "Can be obtained by fulfilling the quest 'Yggdrasil Crystal'";
+					break;
+				case 29332:
+					set .@message$, "Can be obtained by fulfilling the quest 'Rune Crafter'";
+					break;
+				case 29333:
+					set .@message$, "Can be obtained by buying in the Witch Shop";
+					break;
+				case 29334:
+					set .@message$, "Can be obtained by finding the Invisible Man";
+					break;
+				case 29335:
+					set .@message$, "Can be obtained by finding an Ase Fruit";
+					break;
+				case 29336:
+					set .@message$, "Can be obtained by fishing";
+					break;
+				case 29337:
+					set .@message$, "Can be obtained by mining";
+					break;
+				case 29338:
+					set .@message$, "Can be obtained by being near the Giant Tree";
+					break;
+				case 29339:
+					set .@message$, "Can be obtained by fulfilling the quest 'Find Me'";
+					break;
+				case 29340:
+					set .@message$, "Can be obtained in fulfilling the quest 'Crying Mother'";
+					break;
+				case 29341:
+					set .@message$, "Can be obtained by fulfilling the quest 'Understandable'";
+					break;
+				case 29342:
+					set .@message$, "Can be obtained by hunting a Poltergeist";
+					break;
+				case 29343:
+					set .@message$, "Can be obtained in a blister";
+					break;
+				case 29344:
+					set .@message$, "Can be obtained by going through Boss Nest";
+					break;
+				case 29345:
+					set .@message$, "Can be obtained by fulfilling the quest 'Be a Paladin'";
+					break;
+				case 29346:
+					set .@message$, "Can be obtained from the Saint Knight";
+					break;
+				case 29347:
+					set .@message$, "Can be obtained from a Grim Reaper";
+					break;
+				case 29348:
+					set .@message$, "Can be obtained by helping the Spellcaster";
+					break;
+				case 29349:
+					set .@message$, "Can be obtained by helping the Spellcaster";
+					break;
+				case 29350:
+					set .@message$, "Can be obtained from the quest 'Big Hunt'";
+					break;
+				case 29351:
+					set .@message$, "Can be obtained by climbing the 'Infinite Stairs'";
+					break;
+				case 29352:
+					set .@message$, "Can be obtained by hunting the 'Bloody Murderer'";
+					break;
+				case 29353:
+					set .@message$, "Can be obtained by helping Lady Fae";
+					break;
+				case 29354:
+					set .@message$, "Can be obtained by killing Jormungand";
+					break;
+				case 29355:
+					set .@message$, "Can be obtained in a blister";
+					break;
+				case 29356:
+					set .@message$, "Can be obtained by dominating the Centaurus";
+					break;
+				case 29357:
+					set .@message$, "Can be obtained in a blister";
+					break;
+				case 29358:
+					set .@message$, "Can be obtained in a blister";
+					break;
+				case 29359:
+					set .@message$, "Can be obtained by finding an Ase Tree";
+					break;
+				case 29360:
+					set .@message$, "Can be obtained by switching sex";
+					break;
+				case 29361:
+					set .@message$, "Can be obtained by finding the 'Wisdom Source'";
+					break;
+				case 29362:
+					set .@message$, "Can be obtained by feeding a Pirate Parrot";
+					break;
+				case 29363:
+					set .@message$, "Can be obtained in a blister";
+					break;
+				case 29364:
+					set .@message$, "Can be obtained by helping the Paladin";
+					break;
+				case 29365:
+					set .@message$, "Can be obtained in a blister";
+					break;
+				case 29366:
+					set .@message$, "Can be obtained in a blister";
+					break;
+				case 29367:
+					set .@message$, "Can be obtained by 'Pulling the Trigger'";
+					break;
+				case 29368:
+					set .@message$, "Can be obtained by awaking the 'Sleeping Girl'";
+					break;
+				case 29369:
+					set .@message$, "Can be obtained by freeing the 'Golden Girl'";
+					break;
+				case 29370:
+					set .@message$, "Can be obtained in a blister";
+					break;
+				case 29371:
+					set .@message$, "Can be obtained in a blister";
+					break;
+				case 28372:
+					set .@message$, "Can be obtained in a blister";
+					break;
+				case 29373:
+					set .@message$, "Can be obtained in a blister";
+					break;
+				case 29374:	
+					set .@message$, "Can be obtained in a blister";
+					break;
+				case 29375:
+					set .@message$,"Can be obtained in a blister";
+					break;
+				case 29376:
+					set .@message$, "Can be obtained in a blister";
+					break;
+				case 29477:
+					set .@message$, "Can be obtained in a blister";
+					break;
+				case 29378:
+					set .@message$, "Can be obtained in a blister";
+					break;
+				case 29379:
+					set .@message$, "Can be obtained in a blister";
+					break;
+				case 29380:
+					set .@message$,"Can be obtained in a blister";
+					break;
+				case 29381:
+					set .@message$, "Can be obtained in a blister";
+					break;
+				case 29382:
+					set .@message$, "Can be obtained in a blister";
+					break;
+				case 29383:
+					set .@message$, "Can be obtained in a blister";
+					break;
+				case 29384:
+					set .@message$, "Can be obtained by hunting a Mastering";
+					break;
+				case 29385:
+					set .@message$, "Can be obtained by hunting a Vocal";
+					break;
+				case 29386:
+					set .@message$, "Can be obtained by hunting an Eclipse";
+					break;
+				case 29387:
+					set .@message$, "Can be obtained by hunting a Dragon Fly";
+					break;
+				case 29388:
+					set .@message$, "Can be obtained by hunting a Toad";
+					break;
+				case 29389:
+					set .@message$, "Can be obtained by hunting a Vagabond Wolf";
+					break;
+			}
+			dispbottom .@message$;
+		}
+	}
+	else
+	{
+		dispbottom "[Book] You can't used spell out of the System.";
+	}
+	cutin "", 255;
+	close;
+}
+
+function	script	YM_Sightvision	{
+	if (callfunc("IsPlayerOn") || callfunc("IsPlayerOnTown"))
+	{
+		cutin "GI_SightvisionCard", 4;
+		//attach script to target
+		dispbottom "[Book] Please insert the targeted player...";
+		input .@playerName$;
+
+		specialeffect2 58;
+		charcommand "#me " + strcharinfo(0) + " Sightvision activated! " + .@playerName$;
+
+		set .@userId, getcharid(3);
+		
+		set .@returnid, callfunc("AttachToPlayer", .@playerName$, 1);
+		if (.@returnid != -1)
+		{
+			set .@query$, "SELECT `visible` FROM `ym_player` WHERE `id_char`=" + getcharid(0);
+			query_sql(.@query$, .@visible);
+			set .@targetId, getcharid(0);
+			set .@success, 1;
+			if (.@visible[0] == 0)
+			{
+				dispbottom "[Book] Your Black Curtain has counter a Sightvision card.";
+				set .@success, 0;
+				query_sql("UPDATE `ym_player` SET `visible`=1 WHERE `id_char` =" + getcharid(0), .@count);
+			}
+
+			attachrid .@userId;
+			if (.@success == 1)
+			{
+				mes "[Book]";
+				mes "";
+				mes "Checking target's fixed slots...";
+				callfunc "OnSeeCard", .@targetId, 0, 10, 1, .@userId; 
+				next;
+				mes "[Book]";
+				mes "";
+				mes "Checking target's common slots...";
+				callfunc "OnSeeCard", .@targetId, 0, 10, 0, .@userId; 
+			}
+			else
+			{
+				dispbottom "[Book] Spell countered by Black Curtain";
+			}
+		}
+	}
+	else
+	{
+		dispbottom "[Book] You can't used spell out of the System.";
+	}
+	cutin "", 255;
+	close;
+}
+
+function	script	YM_Steal	{
+	if (callfunc("IsPlayerOn") || callfunc("IsPlayerOnTown"))
+	{
+		cutin "GI_StealCard", 4;
+		//attach script to target
+		dispbottom "[Book] Please insert the targeted player...";
+		input .@playerName$;
+
+		specialeffect2 58;
+		charcommand "#me " + strcharinfo(0) + " Steal activated! " + .@playerName$;
+
+		set .@userId, getcharid(3);
+		
+		set .@returnid, callfunc("AttachToPlayer", .@playerName$, 1);
+		if (.@returnid != -1)
+		{
+			set .@query$, "SELECT `visible` FROM `ym_player` WHERE `id_char`=" + getcharid(0);
+			query_sql(.@query$, .@visible);
+			set .@targetId, getcharid(0);
+			set .@success, 1;
+			if (.@visible[0] == 0)
+			{
+				specialeffect2 58;
+				dispbottom "[Book] Your Black Curtain has counter a Steal card.";
+				set .@success, 0;
+				query_sql("UPDATE `ym_player` SET `visible`=1 WHERE `id_char` =" + getcharid(0), .@count);
+			}
+
+			attachrid .@userId;
+			if (.@success == 1)
+			{
+				mes "[Book]";
+				mes "";
+				mes "Checking target's common slots...";
+				callfunc "OnSeeCard", .@targetId, 0, 10, 0, .@userId; 
+			}
+			else
+			{
+				dispbottom "[Book] Spell countered by Black Curtain";
+			}
+		}
+	}
+	else
+	{
+		dispbottom "[Book] You can't used spell out of the System.";
+	}
+	cutin "", 255;
+	close;
+}
+
+function	script	YM_Fluoroscopy	{
+	if (callfunc("IsPlayerOn") || callfunc("IsPlayerOnTown"))
+	{
+		cutin "GI_FluoroscopyCard", 4;
+		//attach script to target
+		dispbottom "[Book] Please insert the targeted player...";
+		input .@playerName$;
+
+		specialeffect2 58;
+		charcommand "#me " + strcharinfo(0) + " Fluoroscopy activated! " + .@playerName$;
+
+		set .@userId, getcharid(3);
+		
+		set .@returnid, callfunc("AttachToPlayer", .@playerName$, 1);
+		if (.@returnid != -1)
+		{
+			set .@query$, "SELECT `visible` FROM `ym_player` WHERE `id_char`=" + getcharid(0);
+			query_sql(.@query$, .@visible);
+			set .@targetId, getcharid(0);
+			set .@success, 1;
+			if (.@visible[0] == 0)
+			{
+				specialeffect2 963; 
+				dispbottom "[Book] Your Black Curtain has counter a Fluoroscopy card.";
+				set .@success, 0;
+				query_sql("UPDATE `ym_player` SET `visible`=1 WHERE `id_char` =" + getcharid(0), .@count);
+			}
+
+			attachrid .@userId;
+			if (.@success == 1)
+			{
+				cutin "GI_CardSuccess", 4;
+				mes "[Book]";
+				specialeffect2 56; 
+				mes "Checking target's fixed slots...";
+				callfunc "OnSeeCard", .@targetId, 0, 10, 1, .@userId; 
+			}
+			else
+			{
+				cutin "GI_FluoroscopyCardFail", 4;
+				specialeffect2 55; 
+				dispbottom "[Book] Spell countered by Black Curtain";
+			}
+		}
+		else
+		{
+			specialeffect2 54;
+			dispbottom "[Book] Spell cancelled.";	
+		}
+	}
+	else
+	{
+		dispbottom "[Book] You can't used spell out of the System.";
+	}
+	cutin "", 255;
+	close;
+}
+
+function	script	YM_Trace	{
+	if (callfunc("IsPlayerOn") || callfunc("IsPlayerOnTown"))
+	{
+		cutin "GI_TraceCard", 4;
+		//check defense on
+		set .@userAccountId, getcharid(3);
+		set .@userId, getcharid(0);
+
+		//attach script to target
+		dispbottom "[Book] *Please insert the targeted player...*";
+		input .@playerName$;
+
+		specialeffect2 58;
+		charcommand "#me " + strcharinfo(0) + "Trace activated! " + .@playerName$;
+
+		set .@returnid, callfunc("AttachToPlayer", .@playerName$, 1);
+
+		set .@success, 0;
+		if (.@returnid != -1)
+		{
+			set .@query$, "SELECT `visible` FROM `ym_player` WHERE `id_char`=" + getcharid(0);
+			query_sql(.@query$, .@visible);
+			set .@success, 1;
+			if (.@visible[0] == 0)
+			{
+				specialeffect2 963;
+				dispbottom "[Book] *Your Black Curtain has counter a Trace card.*";
+				set .@success, 0;
+				query_sql("UPDATE `ym_player` SET `visible`=1 WHERE `id_char` =" + getcharid(0), .@count);
+			}
+			else
+			{
+				getmapxy(.@map$, .@mapx, .@mapy, 0);
+			}
+			attachrid .@userAccountId;
+			if (.@success)
+			{
+				cutin "GI_CardSuccess", 4;
+				specialeffect2 56; 
+				dispbottom "[Book] Player '" + .@targetName$ + "' location: " + .@map$ + " (" + .@mapx + "," + .@mapy + ")";
+			}
+			else
+			{
+				cutin "GI_TraceCardFail", 4;
+				specialeffect2 55; 
+				dispbottom "[Book] Your spell has been countered.";
+			}
+		}
+		else
+		{
+			specialeffect2 54; 
+			dispbottom "[Book] Spell cancelled.";
+		}
+	}
+	else
+	{
+		dispbottom "[Book] You can't used spell out of the System.";
+	}
+	cutin "", 255;
+	close;
+}
+
+function	script	YM_Penetrate	{
+	if (callfunc("IsPlayerOn") || callfunc("IsPlayerOnTown"))
+	{
+		cutin "GI_PenetrateCard", 4;
+		//check defense on
+		set .@userAccountId, getcharid(3);
+		set .@userId, getcharid(0);
+		set .@userMap$, strcharinfo(3);
+		//attach script to target
+		dispbottom "[Book] *Please insert the targeted player...*";
+		input .@playerName$;
+
+		specialeffect2 58;
+		charcommand "#me " + strcharinfo(0) + "Penetrate activated! " + .@playerName$;
+
+		set .@returnid, callfunc("AttachToPlayer", .@playerName$, 1);
+		if (.@returnid != -1)
+		{
+			set .@targetId, getcharid(0);
+			set .@near, callfunc ("CheckTargetable", .@userMap$, -1, -1, -1);
+			if (.@near == 1)
+			{
+				set .@query$, "SELECT `visible` FROM `ym_player` WHERE `id_char`=" + getcharid(0);
+				query_sql(.@query$, .@visible);
+				set .@success, 1;
+				if (.@visible[0] == 0)
+				{
+					dispbottom "[Book] *Your Black Curtain has counter a Penetrate card.*";
+					set .@success, 0;
+					query_sql("UPDATE `ym_player` SET `visible`=1 WHERE `id_char` =" + getcharid(0), .@count);
+				}
+				else
+				{
+					getmapxy(.@map$, .@mapx, .@mapy, 0);
+				}
+				attachrid .@userAccountId;
+				if (.@success)
+				{
+					cutin "GI_CardSuccess", 4;
+					specialeffect2 56; 
+					//get transformed cards
+					query_sql("SELECT `id`, `idOriginal`, `position` FROM `ym_book` WHERE `clone`=1", .@id, .@originalId, .@position);
+					if (getarraysize(.@id) > 0)
+					{
+						for (set .@i,0; .@i<getarraysize(.@id); set .@i,.@i+1)
+						{
+							query_sql("UPDATE `ym_book` SET `id_card`=" + .@originalId + ", `clone`=0, `idOriginal`=-1  WHERE `id`=" + .@id[.@i], .@count);
+						}
+						callfunc "OnCheckCardPosition", .@targetId;
+					}
+					dispbottom "[Book] Your Penetrate has been applied on target.";
+				}
+				else
+				{
+					cutin "GI_PenetrateCardFail", 4;
+					specialeffect2 55; 
+					dispbottom "[Book] Your spell has been countered.";
+				} 
+			}
+			else
+		 	{
+				cutin "GI_PenetrateCardFail", 4;
+				specialeffect2 55; 
+				attachrid(.@userAccountId);
+				dispbottom "[Book] You can't target someone who's not on the same map.";
+			}
+		}
+		else
+		{
+			specialeffect2 54; 
+			dispbottom "[Book] Spell cancelled.";
+		}
+	}
+	else
+	{
+		dispbottom "[Book] You can't used spell out of the System.";
+	}
+	cutin "", 255;
+	close;
+}

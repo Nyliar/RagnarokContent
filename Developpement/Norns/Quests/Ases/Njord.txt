@@ -1,0 +1,210 @@
+// [========================================================]
+// [===========  	 Main Line - Skadi	============]
+// [========================================================]
+// [ Version 1                                              ]
+// [========================================================]
+// [ Original script by: Alayne				    ]
+// [========================================================]
+// [ Description:                                           ]
+// [--------------------------------------------------------]
+// [                                                        ]
+// [ - Rune Midgard main story quest line    	   	    ]
+// [  This file contains explanation and base npcs 	    ]
+// [                                                        ]
+// [========================================================]
+// [ Changelog: (5 last updates)                            ]
+// [--------------------------------------------------------]
+// [                                                        ]
+// [ v0: Creation                      			    ]
+// [                                                        ]
+// [========================================================]
+// [                                                        ]
+// [========================================================]
+
+cmd_fild01,97,225,4	script	Skadi::Ase_2_1_1	4_SERVICE_30_F_01,{ //10146
+	set .@npcname$, "[Skadi]";
+	set .@pcname$, "[" + strcharinfo(0) + "]";
+	
+	mes .@npcname$;
+	//cutin Skadi
+	mes "Who are you, mortal?";
+	mes "I'm Skadi, Goddess of Winter and Frost.";
+	mes "I'm here to fight against Hrym. Those filthy Giants decided they should rule over the Frost.";
+	mes "I'm here to show them they're wrong.";
+	query_sql("SELECT `sealId`,`generalState` FROM `verdandi_quests` WHERE `id`='2_1'", .@sealItem, .@generalState);
+	if(SkadiQ == 0)
+	{
+		if(countitem(.@sealItem[0]) > 0 && .@generalState[0] == 2)
+		{
+			switch(rand(0,10))
+			{
+				case 0:
+				case 1:
+				case 2:
+					//nothing, stop talking from this point
+					break;
+				case 3:
+					next;
+					mes .@npcname$;
+					mes "You look a bit strange...Are you hidding something from me?";
+					break;
+				case 4:
+					next;
+					mes .@npcname$;
+					mes "When somebody tells you his name, it's polite to tell him yours, isn't it?";
+					break;
+				case 5:
+					next;
+					mes .@npcname$;
+					mes "...Are you sure I've never seen you before?";
+					break;
+				case 6:
+					next;
+					mes .@npcname$;
+					mes "There's a strange smell over you...What is it?";
+					break;
+				case 7:
+					next;
+					mes .@npcname$;
+					mes "There's a strange aura issuing from you...What is it?";
+					break;
+				case 8:
+					next;
+					mes .@npcname$;
+					mes "Go away. I'm a bit busy now.";
+					break;
+				case 9:
+					next;
+					mes .@npcname$;
+					mes "That's kinda strange you've been able to see me...Who are you?";
+					break;
+				case 10:
+					next;
+					cutin "", 255;
+					mes .@pcname$;
+					mes "What do you think about the War?";
+					next;
+					//cutin Hugin
+					mes .@npcname$;
+					mes "The Ragnarok? I don't really care.";
+					mes "As long as I can kill Hrym and his filthy giants!";
+					next;
+					cutin "", 255;
+					mes .@pcname$;
+					mes "Thanks...You remove my last hesitations.";
+					delitem .@sealItem[0], 1;
+					goto OnSealActivated;
+					break;
+			}
+		}
+	}
+	else
+	{
+		next;
+		mes .@npcname$;
+		mes "You can't fight against the frost...I'll kill you even before you'll be able to understand it!";
+		getmapxy(.@map$, .@x, .@y, UNITTYPE_NPC);
+		set .SkadiPoped, 1;
+		hideonnpc strnpcinfo(3);
+		monster .@map$, .@x, .@y, "Skadi", x, 1, strnpcinfo(3) + "::OnSkadiDied";
+	}
+	close;
+	
+OnSealActivated:
+	set .@skuldName$, "[Skuld]";
+	next;
+	cutin "shaloshi01",2;
+	mes .@skuldName$;
+	mes "" + strcharinfo(0) + ", I've found he's weakness.";
+	mes "To seal him, you'll have to find an answer to his question...Simple as that, hu?!";
+	mes "Once done, come back to Verdandi. She'll be able to Seal him completely.";
+	next;
+	cutin "", 255;
+	mes "[" + strcharinfo(0) + "]";
+	mes "I'm on it.";
+	set SkadiQ, 1;
+	close;
+	
+OnSkadiDied:
+	set .@npcname$, "[Skadi]";
+	next;
+	mes .@npcname$;
+	mes "You...You defeated me...";
+	next;
+	//condition fullfilled
+	set .@skuname$, "[Skuld]";
+	cutin "shaloshi01",2;
+	mes .@skuname$;
+	mes "I got him! I found his Future Thread. Take it to Verdandi now!";
+	getitem $SkadiSealItemId, 1;
+	next;
+	mes "[" + strcharinfo(0) + "]";
+	mes "On my way!";
+	close;
+	
+OnSealTarget:
+	specialeffect 910; //inspiration
+	hideonnpc strnpcinfo(3);
+	hideonnpc "Ase_2_1_2";
+	hideonnpc "Ase_2_1_3";
+	hideonnpc "Ase_2_1_4";
+	query_sql("UPDATE `verdandi_quests` SET `generalState`=3 WHERE `id`='2_1'", .@count);
+	announce " [Verdandi] The Ase Skadi has been Sealed successfully thanks to " + strcharinfo(0) + " and his team.",bc_all,"0x00FF99";
+	getpartymember getcharid(2),2;
+	for( set .@pt, 0; .@pt < $@partymembercount; set .@pt, .@pt+1 ){
+		if( attachrid( $@partymemberaid[.@pt] ) ){
+			callfunc("AddPoints", getcharid(3), $sealingPointAmount);
+			logmes "" + strcharinfo(0) + " obtains " + ($sealingPointAmount) + " points from sealing Skadi.";
+		}
+	}
+	close;	
+	
+OnActivateTarget:
+	set .@activatedRank, rand(1,4);
+	cutin "shaloshi01",2;
+	set .@skuldName$, "[Skuld]";	
+	explode(.@id$, strnpcinfo(3), "_");
+	set .@realid$, .@id$[1] + "_"  + .@id$[2];
+	set .@npcname$, .@id$[0] + "_"  + .@realid$ + "_" + .@activatedRank;
+	hideoffnpc .@npcname$;
+	mes .@skuldName$;
+	mes "" + strcharinfo(0) + ", I've found him.";
+	mes "He's on Comodo Field 0" + .@activatedRank + ".";
+	next;
+	cutin "", 255;
+	mes "[" + strcharinfo(0) + "]";
+	mes "I'll get him.";
+	set .@query$, "UPDATE `verdandi_quests` SET `ActivatedNpc`=" + .@activatedRank + " WHERE `id`='" + .@realid$ + "'";
+	query_sql(.@query$, .@count);
+	close;
+
+OnTimer10000:
+	if(.SkadiPoped == 0)
+	{
+		if (strnpcinfo(3) == "Ase_2_1_1")
+		{
+			query_sql("SELECT `ActivatedNpc`,`generalState` FROM `verdandi_quests` WHERE `id`='2_1'", .@npc$, .@generalState);
+			if(.@npc$[0] != "0" && .@npc$[0] != "" && .@generalState[0] == 2)
+			{
+				hideoffnpc "Ase_2_1_" + .@npc$[0];
+			}
+		}
+	}
+	
+	unitwarp strnpcinfo(3), strnpcinfo(4), rand(150), rand(150);
+	unitskilluseid strnpcinfo(3), MG_STORMGUST, 10; //21
+	setnpctimer 0;
+	end;
+	
+OnInit:
+	hideonnpc strnpcinfo(3);
+	initnpctimer;
+	setarray .influencedMaps$[0], "cmd_fild01", "cmd_fild02", "cmd_fild03", "cmd_fild04", "cmd_fild05", "cmd_fild06", "cmd_fild07", "cmd_fild08", "cmd_fild09";
+	set $SkadiSealItemId, 27004;
+	set .SkadiPoped, 0;
+	end;
+}
+
+cmd_fild02,369,364,4	duplicate(Ase_2_1_1)	Skadi::Ase_2_1_2	4_SERVICE_30_F_01
+cmd_fild03,269,240,4	duplicate(Ase_2_1_1)	Skadi::Ase_2_1_3	4_SERVICE_30_F_01
+cmd_fild04,276,148,4	duplicate(Ase_2_1_1)	Skadi::Ase_2_1_4	4_SERVICE_30_F_01

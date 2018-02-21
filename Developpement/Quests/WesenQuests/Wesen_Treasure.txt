@@ -1,0 +1,58 @@
+//thier_in,212,88,6	script	Wesen Treasure::thierwestre	1324,{
+thier_in,212,88,6	script	Wesen Treasure::thierwestre	1324,{
+	set .@npcname$, "[Wesen Treasure]";
+
+	if (.debug)
+		set WESENREWARDQ, 4;
+	
+	mes .@npcname$;
+	mes "This is Wesen Treasure.";
+	mes "You can access to it only by ascomplishing council missions.";
+	if (WESENQ > 5)
+	{
+		next;
+		mes .@npcname$;
+		mes "Actually, you've got " + WESENREWARDQ + " points.";
+		mes "Here's what the Treasure contains: ^FF3333" + .coinCount + " " + getitemname(.coinId) + "^000000";
+		next;
+		mes .@npcname$;
+		mes "Each coin will cost you " + .pointPerCoin + " points.";
+		mes "How many do you wanna take?";
+		input .@take;
+		if (.@take <= .coinCount)
+		{
+			if ((.@take * .pointPerCoin) <= WESENREWARDQ)
+			{
+				set .coinCount, .coinCount - .@take;
+				getitem .coinId, .@take;
+				set WESENREWARDQ, WESENREWARDQ - (.@take * .pointPerCoin);
+			}
+			else
+			{
+				next;
+				mes .@npcname$;
+				mes "You don't have enough points.";
+			}
+		}
+		else
+		{
+			next;
+			mes .@npcname$;
+			mes "You can't take that much coins.";
+		}
+	}
+	close;
+
+OnUpdateCoinCount:
+	set .coinCount, .coinCount + 1;
+	end;
+
+OnInit:
+	set .coinId, 675;
+	set .debug, 0;
+	set .coinCount, 0;
+	if (.debug)
+		set .coinCount, 10;
+	set .pointPerCoin, 3;
+	end;
+}

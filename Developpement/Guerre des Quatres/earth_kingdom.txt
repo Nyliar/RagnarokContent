@@ -1,0 +1,50 @@
+//===== Pierre Script ========================================
+//= Guerre des Quatres, Royaume de la Terre
+//===== By: ==================================================
+//= Eirel
+//===== Current Version: =====================================
+//= 1.1
+//===== Description: =========================================
+//= NPCs that relate to Earth Kingdom
+//============================================================
+
+// Guild Flag (Town)
+//============================================================
+capitale,243,165,4	script	Skälva#combat02::EarthKingdom	722,{
+	end;
+
+OnRecvCastleE:
+	FlagEmblem GetCastleData("combat02",1);
+	end;
+}
+
+// Guild Flag (Inside Castle)
+//============================================================
+earth_king,192,94,8	script	Skälva#combat02::EarthKingdom2	722,{
+	end;
+
+OnRecvCastleE:
+	FlagEmblem GetCastleData("combat02",1);
+	end;
+}
+
+earth_king,192,105,8	duplicate(EarthKingdom)	Skälva#2	722
+earth_king,156,214,2	duplicate(EarthKingdom)	Skälva#3	722
+
+// AGIT Manager
+//============================================================
+combat02,108,117,0	duplicate(4_War_Manager)	4_War#combat02	-1
+
+// Grand Argentier
+//============================================================
+earth_king,156,239,3	duplicate(Grand Argentier)	Grand Argentier#combat02	898
+
+// Main du Roi
+//============================================================
+earth_king,158,242,1	duplicate(Main du Roi)	Main du Roi#combat02	987
+
+// General des armées
+//============================================================
+earth_king,153,242,5	duplicate(General en Chef)	General en Chef#combat02	902
+
+combat02,108,117,0	duplicate(4_War_Treasure)	4_War_Treasure#combat02	-1

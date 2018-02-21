@@ -1,0 +1,38 @@
+CREATE TABLE `verdandi_quests` 
+(
+    id VARCHAR(5) PRIMARY KEY NOT NULL,
+	description VARCHAR(50),
+    item1Id INT,
+    item1IdCount INT,
+    item1IdCurrent INT,
+    item2Id INT,
+    item2IdCount INT,
+    item2IdCurrent INT,
+    item3Id INT,
+    item3IdCount INT,
+    item3IdCurrent INT,
+    item4Id INT,
+    item4IdCount INT,
+    item4IdCurrent INT,
+    item5Id INT,
+    item5IdCount INT,
+    item5IdCurrent INT,
+    generalState TINYINT,
+    killCount INT,
+    killNeeded INT,
+    sealId INT
+)
+
+INSERT INTO `verdandi_quests` VALUES ("1_1", "Heimdall", 7115, 350, 0, 949, 620, 0, 7063, 100, 0, null, null, null, null, null, null, 0, 0, 100, 27001);
+INSERT INTO `verdandi_quests` VALUES ("1_2", "Tyr", 1306, 30, 0, 931, 210, 0, 12343, 50, 0, null, null, null, null, null, null, 0, 0, 400, 27005);
+INSERT INTO `verdandi_quests` VALUES ("1_3", "Njord", 944, 270, 0, 7120, 210, 0, 6020, 80, 0, null, null, null, null, null, null, 0, 0, 200, 27005);
+INSERT INTO `verdandi_quests` VALUES ("1_4", "Freyja", 929, 420, 0, 953, 250, 0, 994, 80, 0, 2746, 50, 0, null, null, null, 0, 0, 650, 27005);
+INSERT INTO `verdandi_quests` VALUES ("1_5", "Thor", 12032, 270, 0, 12121, 60, 0, 12028, 80, 0, 1820, 50, 0, 7162, 650, 0, 0, 0, 1200, 27005);
+INSERT INTO `verdandi_quests` VALUES ("1_6", "Odin", 2614, 730, 0, 7337, 50, 0, 2783, 25, 0, 7510, 120, 0, 1040, 860, 0, 0, 0, 2500, 27005);
+
+INSERT INTO `verdandi_quests` VALUES ("2_1", "Duneyrr", 7106, 430, 0, 7265, 390, 0, 6020, 150, 0, null, null, null, null, null, null, 0, 0, 100, 27007);
+INSERT INTO `verdandi_quests` VALUES ("2_2", "Hel", 2252, 25, 0, 637, 10, 0, 1061, 850, 0, 1973, 10, 0, null, null, null, 0, 0, 200, 27011);
+INSERT INTO `verdandi_quests` VALUES ("2_3", "Fafnir", 969, 120, 0, 730, 210, 0, 731, 80, 0, 732, 50, 0, null, null, null, 0, 0, 300, 27005);
+INSERT INTO `verdandi_quests` VALUES ("2_4", "Jormungandr", 926, 270, 0, 936, 210, 0, 954, 240, 0, 963, 310, 0, null, null, null, 0, 0, 400, 27005);
+INSERT INTO `verdandi_quests` VALUES ("2_5", "Fenrir", 6252, 340, 0, 920, 210, 0, 1063, 80, 0, 6020, 350, 0, null, null, null, 0, 0, 650, 27005);
+INSERT INTO `verdandi_quests` VALUES ("2_6", "Loki", 7521, 1250, 0, 994, 210, 0, 716, 80, 0, 7096, 250, 0, 7097, 380, 0, 0, 0, 1200, 27005);

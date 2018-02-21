@@ -1,0 +1,231 @@
+//Muspel Slayer Master
+ars_fild56,23,16,3	script	Flame King Sturt::fks	1832,{
+
+	set .@npcname$, "[Sturt]";
+	if(degoe == 1)goto OtherQuest_Started;
+	if(legoe == 1)goto OtherQuest_Started;
+	if(hagoe == 1)goto OtherQuest_Started;
+	if(mwgoe == 1)goto OtherQuest_Started;
+	if(oagoe == 1)goto OtherQuest_Started;
+	if(dsgoe == 1)goto DSGo_Etheria;
+	if(deqstart == 1)goto OtherQuest_Started;
+	if(leqstart == 1)goto OtherQuest_Started;
+	if(haqstart == 1)goto OtherQuest_Started;
+	if(mwqstart == 1)goto OtherQuest_Started;
+	if(oaqstart == 1)goto OtherQuest_Started;
+	if(dsqstart >= 1)goto DSQuest_Started;
+	if(deqdone == 1)goto OtherQuest_Done;
+	if(leqdone == 1)goto OtherQuest_Done;
+	if(haqdone == 1)goto OtherQuest_Done;
+	if(mwqdone == 1)goto OtherQuest_Done;
+	if(oaqdone == 1)goto OtherQuest_Done;
+	if(dsqdone == 1)goto DSQuest_Done;
+	if(BaseLevel < 50 || JobLevel < 50) goto L_LowLevel;
+      
+	mes .@npcname$;
+	mes "I am Sturt. King of all the Flame Giants.";
+	mes "We, living in an endlessly burning realm, called Muspelheim, are fearless fighters.";
+	next;
+	menu "Can you tell me more?.",DSInfo,"I'd like to become one of yours!",-,"I don't care.",DSNo;
+
+	mes .@npcname$;
+	mes "To become a Muspelheimer, you'll have to prove you deserve it.";
+	next;
+	mes .@npcname$;
+	mes "Just as the Lava, nothing can stop us. We make metal and flesh melt as we touch it.";
+	next;
+	mes .@npcname$;
+	mes "But to learn that, you'll have to prove me you deserve it.";
+	next;
+	mes .@npcname$;
+	mes "There is a burning realm, somewhere in midgard. In its heart, there is a Muspelheimer.";
+	next;
+	mes .@npcname$;
+	mes "Find him, and he'll tell you more about us.";
+	next;
+	mes .@npcname$;
+	mes "Once this done, you'll be able to enter on the Burnt Path.";
+	set dsqstart,1;
+	close;
+
+DSQuest_Started:
+	mes .@npcname$;
+	mes "So. What did you learnt?";
+	next;
+	menu "I'd like to abandon",L_sure,"I've got all I need!",DSQuest_AlmostDone,"I'm working on it.",DSNo;
+
+	L_sure:
+		mes .@npcname$;
+		mes "Muspelheimer don't retreat. Their ennemies does!";
+		next;
+		menu "No...No I want to continue.",L_conti,"I...I'm sure!",L_quit;
+
+		L_conti:
+			mes .@npcname$;
+			mes "Then leave, you drip!";
+			close;
+		L_quit:
+			mes .@npcname$;
+			mes "Allright. You'll be able to start again.";
+			mes "But don't talk about us. To no one.";
+			set dsqstart,0;
+			set dsqdone,0;
+			set dsgoe,0;
+			close;
+
+		L_LowLevel:
+			mes .@npcname$;
+			mes "I'm Sturt, Flame Giant King. You can't become one of us.";
+			mes "For that, you'll need a higher level. In both base and job, you're required to be lvl 50.";
+			next;
+			mes .@npcname$;
+			mes "Do you wish to learn more?";
+			next;
+			menu "Yes please.",DSInfo,"No thanks!",Quit;
+
+
+//DS Information
+		
+		DSInfo:
+		mes .@npcname$;
+		mes "Flame Giants live in Muspelheim, a Burning Realm, just before Helheim.";
+		next;
+		mes .@npcname$;
+		mes "We've earnt there a wrath nature, devouring.";
+		next;
+		mes .@npcname$;
+		mes "We've learnt to control this burning, inside. It's called the Burnt.";
+		next;
+		mes .@npcname$;
+		mes "The main power it got is to devour our ennemies weapon.";
+		next;
+		mes .@npcname$;
+		mes "There's more, but you'll learn that later.";
+		close;
+
+//Dialogues
+
+		DSNo:
+		mes .@npcname$;
+		mes "Allright, as you wish.";
+		close;
+
+		DSQuest_Done:
+			mes .@npcname$;
+			mes "Welcome, Muspelheimer. May the Burnt devour your ennemies.";
+			close;
+
+		DSQuest_AlmostDone:
+			if(countitem(994)<75 || countitem(2683)<5 || countitem(7099)<100) goto DSQuest_NotEnuf;
+			mes .@npcname$;
+			mes "I can feel that you've finally completed this quest.";
+			next;
+			mes .@npcname$;
+			mes "You're now ready to become one of us.";
+			mes "Go find the Etherian Angel. She'll guide you in this ultimate ordeal.";
+			mes "Once you'll be one of us, seek Yarmon. He'll teach you more about the Flame Orbs.";
+			set dsgoe,1;
+			delitem 994, 75;
+			delitem 2683, 5;
+			delitem 7099, 100;
+			close;
+		
+		DSGo_Etheria:
+			mes .@npcname$;
+			mes "Go find the Etherian Angel. She'll guide you in this ultimate ordeal.";
+			close;
+
+		OtherQuest_Done:
+			mes .@npcname$;
+			mes "Leave this place. You now belong to another race.";
+			close;
+
+		OtherQuest_Started:
+			mes .@npcname$;
+			mes "Leave this place. You've started to work for another race. Cancel it, and come back to me, if you change your mind.";
+			close;
+
+		DSQuest_NotEnuf:
+			mes .@npcname$;
+			mes "Sorry but you lack some items. Here's what I need:";
+			next;
+			mes .@npcname$;
+			mes "- ^5555FF75 Flame Heart^000000.";
+			mes "- ^5555FF5 Ring of Fire^000000.";
+			mes "- ^5555FF100 Burning Heart^000000.";
+			close;
+
+	Quit:
+		mes "That's your choice.";
+		close;
+}
+
+
+ars_dun71,110,62,5	script	Muspelheimer Grenih::mg 	2249,{
+	set .@npcname$, "[Grenih]";
+
+	mes .@npcname$;
+	mes "...";
+	if (dsqstart == 1)
+	{
+		mes "So you've decided to become one of us.";
+		mes "Do you really now what you've chosen?";
+		mes "The Burnt is a dangerous power. An endless wrath, which can control you.";
+		mes "You're ready for that? Then embrace the Burnt Path.";
+		next;
+		mes .@npcname$;
+		mes "Muspelheimer only rely on their own strength.";
+		mes "We're not some grass eaters.";
+		mes "Prove me your merit. Take this back to Sturt, the Flame King.";
+		mes "- ^5555FF75 Flame Heart^000000.";
+		mes "- ^5555FF5 Ring of Fire^000000.";
+		mes "- ^5555FF100 Burning Heart^000000.";
+		next;
+		mes .@npcname$;	
+		mes "If you succeed, you'll be able to learn the Burnt.";
+		mes "Once known, you'll be able to produce extreme heat, weakening the ennemies weapons, making them easily breakable.";
+		mes "But it won't be enough alone. So take care!";
+		mes "On top of that, you'll learn how to use the Burning Orbs.";
+		mes "They'll let you use another power from the Burnt Path.";
+		set dsqstart, 2;
+	}
+	close;
+}
+
+ars_fild24,242,210,5	script	Muspelheimer Davron::md	1115,{
+	set .@npcname$, "[Davron]";
+
+	mes .@npcname$;
+	mes "...";
+	if (dsqdone > 0 && dsqdone <= 1 || dsqstart == 1)
+	{
+		mes "You're not ready. Leave!";
+	}
+	else if (dsqdone == 3)
+	{
+		mes "A feel a great Burnt out of you.";
+		mes "You aura glow like our burning lands heat.";
+		next;
+		mes .@npcname$;
+		mes "But you're not here for that, isn't it?";
+		mes "You're here for the Burning Orbs.";
+		mes "Each ones can be used separately, one at a time.";
+		mes "You can only find them in Muspelheim.";
+		next;
+		mes "The first one, the 'Heat Wave',";
+			//NPC_HALLUCINATION, 207 (lvl 1)
+		mes "makes one of your ennemies feel a powerfull hallucination.";
+		mes "The second one, the 'Melting Machine',";
+			//NPC_FIREBREATH, 654 (lvl 3)
+		mes "contains a breath of an old Flame Giant, and allows you to use it.";
+		mes "Finally, the rarest one, the 'Magma Armor',";
+			//MH_GRANITIC_ARMOR, 8040 (lvl 1)
+		mes "covers your body with some solidified magma.";
+		next;
+		mes "These are the Burning Orbs. Only our race can use them. We're a kind of...Necromancer I guess.";
+	}
+	else
+		mes "I don't speak to other races.";
+	close;	
+}
+

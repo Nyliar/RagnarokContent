@@ -1,0 +1,20 @@
+Heimdall => Speak to the Spirit of Day and Night to change the map's weather. 
+	During Spring, fight 
+	During Summer
+	During Autumn
+	During Winter
+Tyr =>
+Njord => Ice bloc on the map. One contain the winning interruptor, others will increase the number of wave of point two.
+	Speak to them to melt. 
+	When the interruptor is poped, wave mode start. As much wave as the number of incorrect melt.
+	Use Tyr item to check if the bloc should be melt
+Freyja => Move npc over blowing statues from point a to point b. 
+	Avoid burning statues, or the ordeal is a failure (3 options. Move it, place you before it (damaging) or use Njord item)
+	You can change your place for one of the creature. 3 max over 5, rand lose over 1-3.
+	Burning the creature pops monsters
+Thor => Cross the area within the delay and avoid electric traps, to activate a button. Use Freyja item (attraction) to
+	move a bloc on the interruptor and make it easier to win. Error will electrocute you and pop monster
+Odin => Redo the runes by activating crystals. Validate your entry to the energy provider.
+	One error pop monsters, which can loot items needed for the energy pro (otherwise, can be obtained on Thor instance)
+	Then fight against Mugin, Muning, Greki, Freki and Valkyrie.
+	Finally, fight again Odin's puppet

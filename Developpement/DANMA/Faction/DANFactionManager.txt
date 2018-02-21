@@ -1,0 +1,534 @@
+// [========================================================]
+// [=============     DANMA - Faction      ============]
+// [========================================================]
+// [ Version 1                                              ]
+// [========================================================]
+// [ Original script by: Alayne				    ]
+// [========================================================]
+// [ Description:                                           ]
+// [--------------------------------------------------------]
+// [                                                        ]
+// [ - The Faction manager			    	    ]
+// [========================================================]
+// [ Changelog: (5 last updates)                            ]
+// [--------------------------------------------------------]
+// [                                                        ]
+// [ v0: Creation                      			    ]
+// [                                                        ]
+// [                                                        ]
+// [========================================================]
+// [                                                        ]
+// [========================================================]
+
+prontera,99,144,0	script	Faction Manager::danfm	-1,2,2,{
+	end;
+	
+OnPCLoginEvent:
+	//refresh points if days or year has changed
+	if (FACTIONPOINTS < 2 && (lastyearrefresh <= gettime(7) || gettime(8) > lastdayrefresh))
+	{
+		set FACTIONPOINTS, 2;
+		set lastdayrefresh, gettime(8);
+		set lastyearrefresh, gettime(7);
+	}
+	end;
+
+OnWhisperGlobal:
+	set DANFACTIONID, 3;
+	set DANFACTIONTYPE, 2;
+	end;
+
+OnPCStatCalcEvent:
+	switch(DANFACTIONID)
+	{
+		case 1:
+			if (DANFACTIONTYPE == 1)
+			{
+				copyarray .@skillIds[0], $faction1_1SkillsIds[0], getarraysize($faction1_1SkillsIds);
+				copyarray .@skillLvl[0], $faction1_1SkillsLvl[0], getarraysize($faction1_1SkillsLvl);
+			}
+			else
+			{
+				copyarray .@skillIds[0], $faction1_2SkillsIds[0], getarraysize($faction1_2SkillsIds);
+				copyarray .@skillLvl[0], $faction1_2SkillsLvl[0], getarraysize($faction1_2SkillsLvl);
+			}
+			break;
+		case 2:
+			if (DANFACTIONTYPE == 1)
+			{
+				copyarray .@skillIds[0], $faction2_1SkillsIds[0], getarraysize($faction2_1SkillsIds);
+				copyarray .@skillLvl[0], $faction2_1SkillsLvl[0], getarraysize($faction2_1SkillsLvl);
+			}
+			if (DANFACTIONTYPE == 2)
+			{
+				copyarray .@skillIds[0], $faction2_2SkillsIds[0], getarraysize($faction2_2SkillsIds);
+				copyarray .@skillLvl[0], $faction2_2SkillsLvl[0], getarraysize($faction2_2SkillsLvl);
+			}
+			if (DANFACTIONTYPE == 3)
+			{
+				copyarray .@skillIds[0], $faction2_3SkillsIds[0], getarraysize($faction2_3SkillsIds);
+				copyarray .@skillLvl[0], $faction2_3SkillsLvl[0], getarraysize($faction2_3SkillsLvl);
+			}
+			break;
+		case 3:
+			copyarray .@skillIds[0], $faction3SkillsIds[0], getarraysize($faction3SkillsIds);
+			copyarray .@skillLvl[0], $faction3SkillsLvl[0], getarraysize($faction3SkillsLvl);
+			break;
+	}
+	for(set .@i,0; .@i < getarraysize(.@skillIds); set .@i,.@i+1)
+	{
+		skill .@skillIds[.@i], .@skillLvl[.@i];
+	}
+	end;
+
+OnInit:
+	//skills id per faction. 
+	//1: BS
+	//Smith Dagger - (custom Dagger will be added)
+	//Smith Sword - (custom Sword will be added)
+	//Smith Two Handed Sword - (custom Two-Handed Sword will be added)
+	//Smith Axe - (custom Axe will be added)
+	//Smith Mace - (custom Mace will be added)
+	//Smith Knuckles - (custom Knuckle will be added)
+	//Smith Spear - (custom Spear will be added)
+	//Repair Weapon
+	//Enlarge Weight Limit
+	//Push Cart
+	//Cart Boost
+	//Vending
+	setarray $faction1_1SkillsNames$[0], "Smith Dagger", "Smith Sword", "Smith Two-Handed Sword", "Smith Axe", "Smith Mace", "Smith Knucles", "Smith Spears",
+	"Repair Weapon", "Enlarge Weight Limit", "Push Cart", "Cart Boost", "Vending";
+	setarray $faction1_1SkillsIds[0], 98, 99, 100, 101, 102, 103, 104, 108, 36, 39, 387, 41;
+	setarray $faction1_1SkillsLvl[0], 3, 3, 3, 3, 3, 3, 3, 1, 10, 10, 1, 10;
+	
+	//2: WS
+	//Smith Dagger - (custom Dagger will be added)
+	//Smith Sword - (custom Sword will be added)
+	//Weaponry Research
+	//Weapon Refine
+	//Repair Weapon
+	//Enlarge Weight Limit
+	//Push Cart
+	//Cart Boost
+	//Vending
+	setarray $faction1_2SkillsNames$[0], "Smith Dagger", "Smith Sword", "Weaponry Research", "Weapon Refine", "Repair Weapon",
+	"Enlarge Weight Limit", "Push Cart", "Cart Boost", "Vending";
+	setarray $faction1_2SkillsIds[0], 98, 99, 107, 477, 108, 36, 39, 387, 41;
+	setarray $faction1_2SkillsLvl[0], 3, 3, 10, 10, 1, 10, 10, 1, 10;
+	
+	//3:Healer
+	//Heal
+	//Cure
+	//Resurrection
+	//Redemptio
+	//Sanctuary
+	//Recovery
+	setarray $faction2_1SkillsNames$[0], "Heal", "Cure", "Resurrection", "Redemptio", "Sanctuary", "Recovery";
+	setarray $faction2_1SkillsIds[0], 28, 35, 54, 1014, 70, 72;
+	setarray $faction2_1SkillsLvl[0], 10, 1, 4, 1, 10, 1;
+	
+	//4: Support
+	//Demonbane
+	//Beastbane
+	//Divine Protection
+	//Redemptio
+	//Safety Wall
+	//Kyrie Eleison
+	//Basilica
+	//Sacrifice
+	//Gospel
+	//Faith
+	//Devotion
+	//Reflect Shield
+	setarray $faction2_2SkillsNames$[0], "Demonbane", "Beastbane", "Divine Protection", "Redemptio", "Safety Wall", "Kyrie Eleison",
+	"Basilica", "Sacrifice", "Gospel", "Faith", "Devotion", "Reflect Shield";
+	setarray $faction2_2SkillsIds[0], 23, 126, 22, 1014, 12, 73, 362, 368, 369, 248, 255, 252;
+	setarray $faction2_2SkillsLvl[0], 10, 10, 10, 1, 10, 10, 5, 5, 10, 10, 5, 10;
+	
+	//5: Buffer
+	//Assumptio
+	//Impositio Manus
+	//Suffragium
+	//Slow Poison
+	//Ruwach
+	//Pneuma
+	//Angelus
+	//Blessing
+	//Increase Agility
+	setarray $faction2_3SkillsNames$[0], "Assumptio", "Imposito Manus", "Suffragium", "Slow Poison", "Ruwach", "Pneuma", "Angelus",
+	"Blessing", "Increase Agility";
+	setarray $faction2_3SkillsIds[0], 391, 66, 67, 71, 24, 25, 33, 34, 29;
+	setarray $faction2_3SkillsLvl[0], 5, 5, 3, 4, 1, 1, 10, 10, 10;
+	
+	//6: Potion Master
+	//Learning Potion
+	//Pharmacy - (custom potions will be added)
+	//Demonstration
+	//Acid Terror
+	//Potion Pitcher
+	//Chemical Protection Weapon/Shield/Armor/Helm
+	//Enlarge Weight Limit
+	//Push Cart
+	//Cart Boost
+	//Vending
+	setarray $faction3SkillsNames$[0], "Learning Potion", "Pharmacy", "Demonstration", "Acid Terror", "Potion Pitcher",
+	"Chemical Protection Weapon", "Chemical Protection Shield", "Chemical Protection Armor", "Chemical Protection Helm",
+	"Enlarge Weight Limit", "Push Cart", "Cart Boost", "Vending";
+	setarray $faction3SkillsIds[0], 227, 228, 229, 230, 231, 234, 235, 236, 237, 36, 39, 387, 41;
+	setarray $faction3SkillsLvl[0], 10, 10, 5, 5, 5, 5, 5, 5, 5, 10, 10, 1, 10;
+	
+	setarray $factionReputationPoints[0], 0, 0, 0;
+	setarray $factionLvlRequired[0], 10, 9;
+	
+	set $discountAmount, 10;
+	set $mostFamousFactionId, -1;
+	set .party_level_range,10;
+	set $mostFamousFactionId, -1;
+	set .startDay, -1;
+	set $updateSkillItemId, 1012;
+	set $updateSkillGetItemBack, 0;
+	end;
+	
+OnClock0000:
+	//first, look if a week hasn't passed since last buff start
+	if (.startDay == gettime(4) && $mostFamousFactionId != -1)
+	{
+		//if so, reset the id to prevent buffs to apply for more than a week
+		set $mostFamousFactionId, -1;
+	}
+	else
+	{
+		//otherwise, if that's the first day of the month
+		if (gettime(5) == 1)
+		{
+			//save day of the week to stop buff a week later
+			set .startDay, gettime(4);
+			//find best faction
+			set .@highestScore, $factionReputationPoints[0];
+			set .@bestFactionId, 0;
+			for(set .@i, 1; .@i<getarraysize($factionReputationPoints); set .@i,.@i+1)
+			{
+				if ($factionReputationPoints[.@i] > .@highestScore)
+				{
+					set .@highestScore, $factionReputationPoints[.@i];
+					set .@bestFactionId, .@i;
+				}
+			}
+			
+			//best faction has been found
+			//save faction id for exp bonus
+			//only if faction really have points
+			if ($factionReputationPoints[.@bestFactionId] > 0)
+			{
+				set $mostFamousFactionId, .@bestFactionId;
+				//reset count
+				set $factionReputationPoints[.@bestFactionId], 0;
+			}
+
+			//reset quota
+			set .@query$, "SELECT `id` FROM `dan_economy` WHERE `id`=1";
+			query_sql(.@query$, .@count);
+			if (getarraysize(.@count) == 1)
+			{
+				set .@query$, "UPDATE `dan_economy` set `bwsCurrentQuota`=0,`sbhCurrentQuota`=0,`pmCurrentQuota`=0  WHERE `id`=1";
+				logmes "The reset on quota have been applied.";
+				query_sql(.@query$, .@count);
+			}
+		}
+	}
+	end;
+}
+
+function	script	OnGiveFactionPoints	{
+	next;
+	set .@npcname$, "[" + getarg(0) + "]";
+	mes .@npcname$;
+	
+	if (DANFACTIONID != getarg(1))
+	{
+		mes "So you'd like to give our House Reputation Points?";
+		mes "That's very nice of you!";
+		mes "How many points are you giving us?";
+		set .@choice, select("1 point","2 points") + 1;
+
+		next;
+		set .@npcname$, "[" + getarg(0) + "]";
+		mes "Thanks!";
+		//reduce player points
+		set FACTIONPOINTS, FACTIONSPOINT - .@choice;
+		//increase faction point
+		set $factionReputationPoints[getarg(1)], $factionReputationPoints[getarg(1)] + .@choice;
+		
+		mes "We give our blessings to you.";
+		mes "You also have a discount of " + (.@choice * $discountAmount) + "% in all shops.";
+		set discountAmount, (.@choice * $discountAmount);
+	}
+	else
+	{
+		next;
+		set .@npcname$, "[" + getarg(0) + "]";
+		mes "Sorry, my friend, but you can't give points to your own Family.";
+		mes "Go see another Faction.";
+	}
+	close;
+}
+
+function	script	OnCheckFactionQuota	{
+	set .@query$, "SELECT `" + getarg(0) + "`,`" + getarg(1) + "` FROM `dan_economy` WHERE `id`=1";
+	query_sql(.@query$, .@quota, .@currentQuota);
+
+	if (.@quota <= .@currentQuota)
+	{
+		//quota is reached
+		return 1;
+	}
+	return 0;
+}
+
+function	script	OnUpdateFactionQuota	{
+	set .@query$, "SELECT `" + getarg(0) + "` FROM `dan_economy` WHERE `id`=1";
+	query_sql(.@query$, .@quota);
+	set .@query$, "UPDATE `dan_economy` SET `" + getarg(0) + "`=" + (.@quota[0] + getarg(1)) + " WHERE `id`=1";
+	query_sql(.@query$, .@quota);
+	return;
+}
+	
+function	script	OnUpgradeSkill	{
+	switch(DANFACTIONID)
+	{
+		case 1:
+			set .@npcname$, "[Ghrenald]";	
+			if (DANFACTIONTYPE == 1)
+			{
+				copyarray .@skillIds[0], $faction1_1SkillsIds[0], getarraysize($faction1_1SkillsIds);
+				copyarray .@skillLvl[0], $faction1_1SkillsLvl[0], getarraysize($faction1_1SkillsLvl);
+				copyarray .@skillNames$[0], $faction1_1SkillsNames$[0], getarraysize($faction1_1SkillsNames$);
+			}
+			else
+			{
+				copyarray .@skillIds[0], $faction1_2SkillsIds[0], getarraysize($faction1_2SkillsIds);
+				copyarray .@skillLvl[0], $faction1_2SkillsLvl[0], getarraysize($faction1_2SkillsLvl);
+				copyarray .@skillNames$[0], $faction1_2SkillsNames$[0], getarraysize($faction1_2SkillsNames$);
+			}
+			break;
+		case 2:
+			set .@npcname$, "[Lucia]";	
+			switch(DANFACTIONTYPE)
+			{
+				case 1:
+					copyarray .@skillIds[0], $faction2_1SkillsIds[0], getarraysize($faction2_1SkillsIds);
+					copyarray .@skillLvl[0], $faction2_1SkillsLvl[0], getarraysize($faction2_1SkillsLvl);
+					copyarray .@skillNames$[0], $faction2_1SkillsNames$[0], getarraysize($faction2_1SkillsNames$);
+					break;
+				case 2:
+					copyarray .@skillIds[0], $faction2_2SkillsIds[0], getarraysize($faction2_2SkillsIds);
+					copyarray .@skillLvl[0], $faction2_2SkillsLvl[0], getarraysize($faction2_2SkillsLvl);
+					copyarray .@skillNames$[0], $faction2_2SkillsNames$[0], getarraysize($faction2_2SkillsNames$);
+					break;
+				case 3:
+					copyarray .@skillIds[0], $faction2_3SkillsIds[0], getarraysize($faction2_3SkillsIds);
+					copyarray .@skillLvl[0], $faction2_3SkillsLvl[0], getarraysize($faction2_3SkillsLvl);
+					copyarray .@skillNames$[0], $faction2_3SkillsNames$[0], getarraysize($faction2_3SkillsNames$);
+					break;
+			}
+			break;
+		case 3:
+			set .@npcname$, "[Piccard]";
+			copyarray .@skillIds[0], $faction3SkillsIds[0], getarraysize($faction3SkillsIds);
+			copyarray .@skillLvl[0], $faction3SkillsLvl[0], getarraysize($faction3SkillsLvl);
+			copyarray .@skillNames$[0], $faction3SkillsNames$[0], getarraysize($faction3SkillsNames$);
+			break;
+	}
+	
+	for ( set .@j, 0; .@j<getarraysize(.@skillNames$); set .@j, .@j+1 )
+	{
+    	set .@menu$, .@menu$ + ( .@j ? ":" : "" ) + .@skillNames$[.@j];
+	}
+	
+	mes .@npcname$;
+	mes "So you want to upgrade one of your faction skills?";
+	mes "Tell me which one?";
+
+    	// On récupère le choix de l'utilisateur
+    	set .@choice, select(.@menu$);
+	
+	//check skill actual level
+	set .@initialLvl, getskilllv(.@skillIds[.@choice]);
+	if (.@initialLvl == .@skillLvl[.@choice])
+	{
+		next;
+		mes .@npcname$;
+		mes "Sorry, but this skill is already at max level.";
+		if ($updateSkillGetItemBack == 1)
+		{
+			getitem $updateSkillItemId, 1;
+		}
+		close;
+	}
+	mes "Alright, so we're gonna upgrade the " + .@skillNames$[.@choice] + " skill by one, okay?";
+	if (select("Yes","No") == 1)
+	{
+		addtoskill .@skillIds[.@choice], .@initialLvl + 1, 2; 
+		next;
+		mes .@npcname$;
+		mes "Here you are.";
+		mes "Come back again soon.";
+	}
+	else
+	{
+		next;
+		mes .@npcname$;
+		mes "That's fine. We all have our reasons.";
+	}
+	if ($updateSkillGetItemBack == 1)
+	{
+		getitem $updateSkillItemId, 1;
+	}
+	close;
+}
+
+function	script	OnJoinFaction	{
+	set .@npcname$, "[" + getarg(0) + "]";
+	mes .@npcname$;
+	
+	if (BaseLevel < 10 || getskilllv(1) < 9)
+	{
+		mes "Sorry but you can't join our faction right now.";
+		mes "You need to know the basics before I can accept you.";
+		close;
+	}	
+	else if (DANFACTIONID > 0)
+	{
+		mes "Sorry but you're already a member of another House.";
+		mes "You can't join another Faction after once you've joined one already.";
+		close;
+	}
+	mes "So you're want to join us, huh?";
+	mes "I'm pretty happy you chose our family!";
+	mes "We welcome you with open arms!";
+	mes "But, keep in mind once you join a House you may not change your mind and join another Faction.";
+	mes "Are you absolutely sure you want to join our Faction?";
+	if (select("Yes","No") == 1)
+	{
+		next;
+		mes .@npcname$;
+		mes "Perfect!";
+		jobchange 4230;
+		
+		next;
+		mes .@npcname$;
+		mes "Now, we'll teach you our House skills!";
+		mes "Those skills are unique to our Faction. Only our members can use them.";
+		mes "There's other things to keep in mind, but I'd explain those later.";
+		switch(getarg(1))
+		{
+			case 1:
+				next;
+				mes .@npcname$;
+				mes "Alright! Now that you're one of us, you need to choose your main occupation.";
+				mes "There's two types of Artisans. The Blacksmith, who roughly create weapons.";
+				mes "And the Whitesmith, who are able to reinforce existing weapons.";
+				mes "Both are able to use carts to sell their products anywhere.";
+				next;
+				mes .@npcname$;
+				mes "So, what's will you choose to be?";
+				if (select("Blacksmith","Whitesmith") == 1)
+				{
+					set DANFACTIONTYPE, 1;
+				}
+				else
+				{
+					set DANFACTIONTYPE, 2;
+				}
+
+				set .@query$, "SELECT `bwsCount`, `bwsBaseQuota` FROM `dan_economy` WHERE `id`=1";
+				query_sql(.@query$, .@count, .@quota);
+
+				set .@newCount, .@count + 1;
+				set .@query$, "UPDATE `dan_economy` set `bwsCount`=" + .@newCount;
+					
+				if (.@newCount % $factionCountNeeded == 0)
+				{
+					//update quota
+					set .@newQuota, .@quota * $quotaUp / 100 + .@quota;
+					set .@query$, .@query$ + ", `bwsBaseQuota`=" + .@newQuota;
+				}
+					
+				set .@query$, .@query$ + " WHERE `id`=1";
+				query_sql(.@query$, .@count);
+				break;
+			case 2:
+				next;
+				mes .@npcname$;
+				mes "Alright. Now that you're one of us, you need to choose your main occupation.";
+				mes "There's three kinds of Supporters. The Healer, who is able to cure and take care of the wounded.";
+				mes "The Support, who is able to become the shield of those who are vulnerable.";
+				mes "And finally, The Buffer, who is able to transfer their spirit energy to help people become strong.";
+				next;
+				mes .@npcname$;
+				mes "So what will you choose?";
+				switch(select("Healer","Support","Buffer"))
+				{
+					case 1:
+						set DANFACTIONTYPE, 1;
+						break;
+					case 2:
+						set DANFACTIONTYPE, 2;
+						break;
+					case 3:
+						set DANFACTIONTYPE, 3;
+						break;
+				}
+				
+				set .@query$, "SELECT `sbhCount`, `sbhBaseQuota` FROM `dan_economy` WHERE `id`=1";
+				query_sql(.@query$, .@count, .@quota);
+				if (getarraysize(.@count) == 1)
+				{
+					set .@newCount, .@count[0] + 1;
+					set .@query$, "UPDATE `dan_economy` set `sbhCount`=" + .@newCount;
+					
+					if (.@newCount % $factionCountNeeded == 0)
+					{
+						//update quota
+						set .@newQuota, .@quota[0] * $quotaUp / 100 + .@quota[0];
+						set .@query$, .@query$ + ", `sbhBaseQuota`=" + .@newQuota;
+					}
+					
+					set .@query$, .@query$ + " WHERE `id`=1";
+					query_sql(.@query$, .@count);
+				}
+				break;
+			case 3:
+				set .@query$, "SELECT `pmCount`, `pmBaseQuota` FROM `dan_economy` WHERE `id`=1";
+				query_sql(.@query$, .@count, .@quota);
+				if (getarraysize(.@count) == 1)
+				{
+					set .@newCount, .@count[0] + 1;
+					set .@query$, "UPDATE `dan_economy` set `pmCount`=" + .@newCount;
+					
+					if (.@newCount % $factionCountNeeded == 0)
+					{
+						//update quota
+						set .@newQuota, .@quota[0] * $quotaUp / 100 + .@quota[0];
+						set .@query$, .@query$ + ", `pmBaseQuota`=" + .@newQuota;
+					}
+					
+					set .@query$, .@query$ + " WHERE `id`=1";
+					query_sql(.@query$, .@count);
+				}
+				break;
+		}
+		next;
+		mes .@npcname$;
+		mes "Perfect. You're now ready.";
+		mes "Welcome to our great Family.";
+		set DANFACTIONID, getarg(1);
+	}
+	else
+	{
+		next;
+		mes .@npcname$;
+		mes "Think wisely then.";
+	}
+	return;
+}

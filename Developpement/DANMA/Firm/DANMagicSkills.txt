@@ -1,0 +1,121 @@
+// [========================================================]
+// [============   DANMA - Magic Skills Shops    ===========]
+// [========================================================]
+// [ Version 1                                              ]
+// [========================================================]
+// [ Original script by: Alayne				    ]
+// [========================================================]
+// [ Description:                                           ]
+// [--------------------------------------------------------]
+// [                                                        ]
+// [ - The Magic skills Shops			    	    ]
+// [========================================================]
+// [ Changelog: (5 last updates)                            ]
+// [--------------------------------------------------------]
+// [                                                        ]
+// [ v0: Creation                      			    ]
+// [                                                        ]
+// [                                                        ]
+// [========================================================]
+// [                                                        ]
+// [========================================================]
+
+-	shop	MagicItemShopZeny	HIDDEN_WARP_NPC,29506:1000000,29507:1000000,29508:1000000,29509:1000000,29510:1000000,29511:1000000,29512:1000000,29513:1000000,29514:1000000,29515:1000000,29516:1000000,29517:1000000,29518:1000000,29519:1000000,29520:1000000,29521:1000000,29522:1000000,29523:1000000,29524:1000000,29525:1000000,29526:1000000,29527:1000000,29528:1000000,29529:1000000,29530:1000000;
+
+//Made by Lunar
+//Version 1.6 - by Lunar
+//version 1.6.1 - by Rikimaru
+//Fixed some errors,which were shown in the map Server - by Rikimaru
+//6.1.09
+
+-	shop	quest_shop_magic	HIDDEN_WARP_NPC,501:50
+mellina,139,56, 3	script	Shard Warlock::danmss	4_F_JPNMU,{
+	set @i,0;
+	mes "[Shard Warlock]";
+	mes "Come come! I have some very nice items to share with you!";
+	mes "I sell grimoires that'll teach you some nice magic!";
+	mes "I'll trade you some for Shards or Zeny!";
+	mes "What do ya say?";
+	if (select("Zeny","Shards")==1)
+	{
+		callshop "MagicItemShopZeny", 0;
+	}
+	else
+	{
+		callshop "quest_shop_magic",1;
+		npcshopattach "quest_shop_magic";
+	}
+	end;
+
+OnBuyItem:
+	if(.BuildQuest) {
+		for(set .e,0; !compare(getarg(.e+1)+"", "Zeny"); set .e,.e+2) {}
+		npcshopadditem "quest_shop_magic",getarg(.e+2),getarg(.e)*compare(getarg(.e+1)+"","SZeny");
+		setarray .Shop[.i],getarg(.e+2);
+		set .i,.i+1;
+		goto Quest_Setup;
+	}
+	if(.Shop[@i]!=@bought_nameid) for(set @i,1; 1; set @i,@i+1) if(.Shop[@i]==@bought_nameid) { set .i,@i; callsub Quest_Setup; }
+	for(set @i,1; !@e; set @i,@i+1) if(.Shop[@i]==@bought_nameid) { set @e,1; set .i,@i; callsub Quest_Setup; }
+	mes "[Shard Warlock]";
+	mes "I require the following:";
+	for(set @i,0; !compare(getarg(@i+1)+"","Zeny"); set @i,@i+2) mes "^FF0000" + ((countitem(getarg(@i))>=getarg(@i+1))? "^00FF00":"") + "" + getarg(@i+1) + " " + getitemname(getarg(@i)) + " [" + countitem(getarg(@i)) + "/" + getarg(@i+1) + "]";
+	if(getarg(@i)) mes "^FF0000" + ((Zeny>=getarg(@i))? "^00FF00":"") + "" + getarg(@i) + " Zeny";
+	mes "^000000In exchange, I will give you:^0000FF";
+	for(set @i,@i+2; getarg(@i+1,0); set @i,@i+2) mes getarg(@i+1) + " " + getitemname(getarg(@i));
+	switch(select("Exchange:No thanks")) {
+		case 1:
+			for(set @i,0; !compare(getarg(@i+1)+"","Zeny"); set @i,@i+2) if(countitem(getarg(@i)) < getarg(@i+1)) {
+				next;
+				mes "You have " + countitem(getarg(@i)) + " " + getitemname(getarg(@i)) + ", while I require " + getarg(@i+1) + ".";
+				mes "Please obtain ^FF0000" + (getarg(@i+1)-countitem(getarg(@i))) + " more " + getitemname(getarg(@i)) + "^000000.";
+				close;
+			}
+			if(Zeny < getarg(@i)) {
+				next;
+				mes "You do not have enough Zeny.";
+				mes "You need ^FF0000" + (getarg(@i)-Zeny) + " more Zeny^000000.";
+				close;
+			}
+			for(set @i,0; !compare(getarg(@i+1)+"","Zeny"); set @i,@i+2) delitem getarg(@i),getarg(@i+1);
+			set Zeny,Zeny-getarg(@i);
+			for(set @i,@i+2; getarg(@i+1,0); set @i,@i+2) getitem getarg(@i),getarg(@i+1);
+			if (compare(getarg(@i,0)+"","announce")) announce strcharinfo(0) + " has just obtained " + getitemname(@bought_nameid) + "!",bc_all;
+			close;
+		case 2:
+			close;
+	}
+OnInit:
+	npcshopitem "quest_shop_magic",0,0;
+	set .BuildQuest,1;
+	set .i,1;
+Quest_Setup:
+	switch(.i) {
+		default: set .BuildQuest,0; set .e,0; set .i,0; end;
+		case 1: callsub OnBuyItem,29504,200,1000,"Zeny",29506,1,"";
+		case 2: callsub OnBuyItem,29504,200,1000,"Zeny",29507,1,"";
+		case 3: callsub OnBuyItem,29504,200,1000,"Zeny",29508,1,"";
+		case 4: callsub OnBuyItem,29504,200,1000,"Zeny",29509,1,"";
+		case 5: callsub OnBuyItem,29504,200,1000,"Zeny",29510,1,"";
+		case 6: callsub OnBuyItem,29504,200,1000,"Zeny",29511,1,"";
+		case 7: callsub OnBuyItem,29504,200,1000,"Zeny",29512,1,"";
+		case 8: callsub OnBuyItem,29504,200,1000,"Zeny",29513,1,"";
+		case 9: callsub OnBuyItem,29504,200,1000,"Zeny",29514,1,"";
+		case 10: callsub OnBuyItem,29504,200,1000,"Zeny",29515,1,"";
+		case 11: callsub OnBuyItem,29504,200,1000,"Zeny",29516,1,"";
+		case 12: callsub OnBuyItem,29504,200,1000,"Zeny",29517,1,"";
+		case 13: callsub OnBuyItem,29504,200,1000,"Zeny",29518,1,"";
+		case 14: callsub OnBuyItem,29504,200,1000,"Zeny",29519,1,"";
+		case 15: callsub OnBuyItem,29504,200,1000,"Zeny",29520,1,"";
+		case 16: callsub OnBuyItem,29504,200,1000,"Zeny",29521,1,"";
+		case 17: callsub OnBuyItem,29504,200,1000,"Zeny",29522,1,"";
+		case 18: callsub OnBuyItem,29504,200,1000,"Zeny",29523,1,"";
+		case 19: callsub OnBuyItem,29504,200,1000,"Zeny",29524,1,"";
+		case 20: callsub OnBuyItem,29504,200,1000,"Zeny",29525,1,"";
+		case 21: callsub OnBuyItem,29504,200,1000,"Zeny",29526,1,"";
+		case 22: callsub OnBuyItem,29504,200,1000,"Zeny",29527,1,"";
+		case 23: callsub OnBuyItem,29504,200,1000,"Zeny",29528,1,"";
+		case 24: callsub OnBuyItem,29504,200,1000,"Zeny",29529,1,"";
+		case 25: callsub OnBuyItem,29504,200,1000,"Zeny",29530,1,"";
+			}
+}

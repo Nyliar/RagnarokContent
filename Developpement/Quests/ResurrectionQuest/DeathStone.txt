@@ -1,0 +1,333 @@
+//===== eAthena Script ======================================= 
+//= Death Stone and resurrection quest
+//===== By: ================================================== 
+//= Alayne
+//===== Current Version: ===================================== 
+//= 1.0
+//===== Compatible With: ===================================== 
+//============================================================ 
+
+prontera,184,168,4	script	Wandering Fighter::alrqwf	4_M_CRU,2,2,{ 
+	set .@npcname$, "[Wandering Fighter]";
+	set .@pcname$, "[" + strcharinfo(0) + "]";
+	mes .@npcname$;
+	mes "Haaa....";
+	mes "I was married once. But she...She died a few times ago.";
+	mes "She fight for a long time, but felt against multiples ennemies.";
+	mes "...I would pay anything to get her back...";
+	next;
+	mes .@pcname$;
+	mes "I'm sorry. I know this feeling.";
+	mes "I've lost a bunch of friends too.";
+	if(countitem($startItem) >= 5 && GOLDENAPPLEQ == 0)
+	{
+		next;
+		mes .@npcname$;
+		mes "You know, there's a rumor that starts to spread a while ago.";
+		mes "A ghost may be bound to this stone.";
+		mes "If you pay him what he's waiting, he'll be able to raise somebody from the dead, as long as his/her name is engraved in the stone.";
+		next;
+		mes .@pcname$;
+		mes "Really?";
+		next;
+		mes .@npcname$;
+		mes "I've been looking for something he may like for a pretty long time now.";
+		mes "But the only thing I've been able to find is that he likes...Apples.";
+		mes "A ghost who like apples...What a joke.";
+		mes "This must be a dead end...";
+		next;
+		mes .@pcname$;
+		mes "Apples hu?";
+		mes "I may investigate a bit more about that...";
+		next;
+		mes .@npcname$;
+		mes "Well...Good luck to you then.";
+		mes "Doesn't bother yourself looking other Porings and other monsters.";
+		mes "I've already done everything I could.";
+		mes "I was about to go search on Poring Heaven. There was supposed to hide something there.";
+		mes "But...I'm a bit desesperated...";
+		set GOLDENAPPLEQ, 1;
+		close;
+	}
+	close;
+	
+OnTouch:
+	if(countitem($startItem) >= 5)
+	{
+		npctalk "Haaa....";
+	}
+	close;
+}
+
+prontera,182,170,7	script	Death Stone::alrqds	MOB_TOMB,{ 
+	set .@npcname$, "[Dead Fighters]";
+	mes .@npcname$;
+	mes "May they Rest In Peace. Everyone shall praise there sacrifice.";
+	mes " ";
+	set .@query$, "SELECT `name`, `base_level` FROM `char` WHERE `char_num` = 17";
+	query_sql(.@query$, .@name$, .@level);
+	if(countitem($startItem) >= rand(1,15) * 10) //activation condition random
+	{
+		enablenpc "alrqs";
+		close;
+	}
+	goto OnDisplayNext5Dead;
+	
+OnDisplayNext5Dead:	
+	set .@startValue, DEATHPAGE * 5;
+	set .@count, 0;
+	for(set .@i,.@startValue; .@i<getarraysize(.@name$) && .@count < 5; set .@i,.@i+1)
+	{
+		mes "	" + .@name$[.@i] + ", died on level " + .@level[.@i];
+		set .@count, .@count + 1;
+	}
+	if(.@startValue + .@count >= getarraysize(.@name$))
+	{
+		set DEATHPAGE, 0;
+		close;
+	}
+	next;
+	mes .@npcname$;
+	mes "Do you want to continue to read their names?";
+	if(select("Yes","No") == 1)
+	{
+		set DEATHPAGE, DEATHPAGE + 1;
+		next;
+		mes .@npcname$;
+		goto OnDisplayNext5Dead;
+	}
+	//reset for next read
+	set DEATHPAGE, 0;
+	close;
+
+OnInit:
+	set $resurrectionItem, 7793;
+	set $startItem, 512;
+	end;
+}
+//cmd_fild07,134,142,4
+prontera,182,168,4	script	Shinigami::alrqs	4_M_DEATH2,2,2,{ 
+	set .@npcname$, "[Shinigami]";
+	set .@pcname$, "[" + strcharinfo(0) + "]";
+	mes .@npcname$;
+	initnpctimer;
+	if(GOLDENAPPLEQ == 1)
+	{
+		mes "I can smell it...";
+		mes "You got it, don't you?";
+		mes "I can smell the smelly smell of Apples.";
+		next;
+		mes .@pcname$;
+		mes "I got some, yes.";
+		mes "Do you want it?";
+		next;
+		mes .@npcname$;
+		mes "Don't think I'm some kind of pet.";
+		mes "I'm a powerful Death God.";
+		mes "Keeping the Soul for Hel before sending them to Helheim.";
+		mes "Want me to take your's too?";
+		next;
+		mes .@pcname$;
+		mes "Well...Guess I'll have to keep these apples then.";
+		mes "What a shame...They'll rot...";
+		next;
+		mes .@npcname$;
+		mes "You...You wont dare!";
+		mes "Allright, allright. Stay calm.";
+		mes "Give them to me, okay?";
+		if(select("Yes","No") == 1)
+		{
+			next;
+			mes .@pcname$;
+			mes "Sure. So that's true. Gods love apples...";
+			delitem $startItem, countitem($startItem);
+			next;
+			mes .@npcname$;
+			mes "Not all of them. Just me.";
+			mes "I'll eat it entirely. Skin, juice, even the seeds.";
+			mes "I like Apples, more than anything.";
+			next;
+			mes .@pcname$;
+			mes "Then I guess I can buy you a soul for some apples, right?";
+			next;
+			mes .@npcname$;
+			mes "No. That's not that simple.";
+			mes "There's a way thought.";
+			mes "Did you ever heard of " + getitemname($resurrectionItem) + "?";
+			mes "They're lost powerfull items, which can be used to call back a soul from my stomach.";
+			next;
+			mes .@pcname$;
+			mes "You...Your stomach?";
+			next;
+			mes .@npcname$;
+			mes "Well yes...How do you think I can handle hundreds of souls at once?";
+			mes "That's why I should eat these items to let a soul escape.";
+			next;
+			mes .@pcname$;
+			mes "And...Where can I find them?";
+			next;
+			mes .@npcname$;
+			mes "You canno't 'find' them.";
+			mes "Idlunn is the keeper of these things.";
+			mes "She won't let them escape this easily.";
+			mes "Find a way to convince her, and she'll may give one to you.";
+		}
+		else
+		{
+			next;
+			mes .@pcname$;
+			mes "Nah...I'll prefer to keep them for me.";
+		}
+	}
+	else if (GOLDENAPPLEQ >= 2)
+	{
+		if(countitem($resurrectionItem) > 0)
+		{
+			mes "He he he...You got one?";
+			next;
+			mes .@npcname$;
+			mes "Allright...Let's do it this way, then.";
+			delitem $resurrectionItem, 1;
+			mes "Here's you reward, for this gift.";
+			//Death Demon
+			getitem 29418, 1;
+			//enable in case of definitive death feature
+			//mes "Choose the Soul you wanna save.";
+			//callsub OnDisplayNext5Dead, 0;
+		}
+		else
+		{
+			mes "You don't have anything for me, he?";
+			mes "Well...I lied a bit to you.";
+			mes "That's not the only way.";
+			mes "Do you know what can also bring a soul back?";
+			mes "A golden bridge.";
+			callfunc "OnParsePrice","If you can bring me ",.price;
+			mes "Then the Soul will be able to get out.";
+			if(select("Here's your money","No way...Too expensive") == 1)
+			{
+				next;
+				mes .@pcname$;
+				mes "Here you are. That's way more easier.";
+				if(Zeny >= .price)
+				{
+					next;
+					mes .@npcname$;
+					mes "Allright...Let's do it this way, then.";
+					set Zeny, Zeny - .price;
+					mes "Choose the Soul you wanna save.";
+					callsub OnDisplayNext5Dead, 1;
+				}
+				else
+				{
+					next;
+					mes .@npcname$;
+					mes "You should at least bring those money, aren't you?";
+				}
+			}
+			else
+			{
+				next;
+				mes .@pcname$;
+				mes "Sorry I can't...I'll get back.";
+			}
+		}
+	}
+	else
+	{
+		mes "Give it to me!";
+		delitem $startItem, countitem($startItem);
+	}
+	disablenpc strnpcinfo(3);
+	close;
+	
+OnTimer60000:
+	disablenpc strnpcinfo(3);
+	end;
+	
+OnDisplayNext5Dead:	
+	set .@menu$, "";
+	set .@priceType, getarg(0);
+	set .@query$, "SELECT `name`, `account_id`, `char_id` FROM `char` WHERE `char_num` = 17";
+	query_sql(.@query$, .@name$, .@accId, .@charId);
+	for(set .@i,.@startValue; .@i<getarraysize(.@name$); set .@i,.@i+1)
+	{
+		set .@menu$, .@menu$ + (.@i==0 ? "" : ":") + .@name$[.@i];
+	}
+	set .@choice, select(.@menu$) - 1;
+	switch(.@choice)
+	{
+		case 254:
+			//leave
+			break;
+		default:
+			//raise
+			next;
+			mes .@npcname$;
+			mes "So you want to save " + .@name$[.@choice] + "?";
+			if(select("Yes","No") == 1)
+			{
+				next;
+				mes .@npcname$;
+				mes "Perfect. Wait a second then.";
+				set .@query$, "SELECT `char_num` FROM `char` WHERE `account_id`=" + .@accId[.@choice] + " AND `char_num`<9 ORDER BY `char_num` ASC";
+				query_sql(.@query$, .@maxSlot);
+				if(getarraysize(.@maxSlot) == 0)
+				{
+					set .@newSlot, .@maxSlot + 1;
+				}
+				else
+				{
+					set .@continueSearch, 1;
+					for(set .@i,0; .@i<getarraysize(.@maxSlot) && .@continueSearch == 1; set .@i,.@i+1)
+					{
+						if(.@maxSlot[.@i] != .@newSlot && .@maxSlot[.@i] >= .@newSlot + 1)
+						{
+							//slot is not the actual value, and next one is higher than current + 1. Means there's a gap to use
+							set .@continueSearch, 0;
+						}
+						else
+						{
+							set .@newSlot, .@newSlot + 1;
+						}
+					}
+				}
+				if(.@newSlot >= 9)
+				{
+					next;
+					mes .@npcname$;
+					mes "Sorry but I can't raise him.";
+					mes "There's no more space on Midgard for him.";
+					if(.@priceType == 1)
+					{
+						set Zeny, Zeny + .price;
+					}
+					else
+					{
+						getitem $resurrectionItem, 1;
+					}
+					disablenpc strnpcinfo(3);
+					close;
+				}
+				set .@query$, "UPDATE `char_reg_num_db` set `value`=0 WHERE `char_id`='" + .@charId[.@choice] + "' AND `key`='CHECKDEATH'"; 
+				query_sql(.@query$, .@count);
+				set .@query$, "UPDATE `char` set `char_num`=" + .@newSlot + " WHERE `name`='" + .@name$[.@choice] + "'"; 
+				query_sql(.@query$, .@count);
+				specialeffect 372; //death
+				next;
+				mes .@npcname$;
+				mes "Here you are. His soul has been released.";
+				mes "Now, leave me alone.";
+				//Death Demon
+				getitem 29418, 1;
+			}
+			break;
+	}
+	disablenpc strnpcinfo(3);
+	close;
+	
+OnInit:
+	disablenpc strnpcinfo(3);
+	set .price, 15000000;
+	end;
+}

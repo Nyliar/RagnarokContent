@@ -1,0 +1,281 @@
+-	script	Tribut	-1,{
+	end;
+	
+OnInit:
+	set .tribut, 10000;
+	set .max, 8;
+
+	// On définit les maps que la guild possède
+	setarray .@fire_kingdom$[0]
+		,"fire_king"
+		,"thor_camp"
+		, "thor_v01"
+		, "thor_v03"
+		, "mag_dun01"
+		, "mag_dun02"
+		, "tur_dun06"
+		, "rachel"
+	;
+	
+	setarray .@ice_kingdom$[0]
+		,"ice_kingdom"
+		,"manuk"
+		,"man_fild02"
+		, "dicastes01"
+		, "dicastes02"
+		, "dic_fild01"
+		, "ice_dun03"
+		, "ice_dun04"
+	;
+	
+	setarray .@wind_kingdom$[0]
+ 		,"wind_king"
+		,"spl_fild02"
+		, "spl_fild03"
+		, "2@nyd"
+		, "nyd_dun01"
+		, "yuno"
+		, "odin_tem03"
+		, "odin_tem02"
+	;
+	
+	setarray .@earth_kingdom$[0]
+		,"earth_king"
+		,"morocc"
+		, "einbech"
+		, "einbroch"
+		, "veins"
+		, "ve_fild02"
+		, "ve_fild03"
+		, "ve_fild04"
+	;
+
+	setarray .@map_list$[0]
+		,"ice_kingdom"
+		,"manuk"
+		,"man_fild02"
+		, "dicastes01"
+		, "dicastes02"
+		, "dic_fild01"
+		, "ice_dun03"
+		, "ice_dun04"
+		,"fire_king"
+		,"thor_camp"
+		, "thor_v01"
+		, "thor_v03"
+		, "mag_dun01"
+		, "mag_dun02"
+		, "tur_dun06"
+		, "rachel"
+		,"earth_king"
+		,"morocc"
+		, "einbech"
+		, "einbroch"
+		, "veins"
+		, "ve_fild02"
+		, "ve_fild03"
+		, "ve_fild04"
+ 		,"wind_king"
+		,"spl_fild02"
+		, "spl_fild03"
+		, "2@nyd"
+		, "nyd_dun01"
+		, "yuno"
+		, "odin_tem03"
+		, "odin_tem02"
+	;
+
+	// On construit une string à partir de la liste pour faire un "quick search"
+	// On active la mapflag loadevent sur ces maps.
+	for ( set .@i,0 ; .@i<getarraysize(.@map_list$); set .@i, .@i+1 ) {
+		set .GUILD_RESERVEDMAP$, .GUILD_RESERVEDMAP$ + .@map_list$[.@i] + "|";
+		setmapflag .@map_list$[.@i], mf_loadevent;
+	}
+
+	if ((GetCastleData "fire_combat",2) > .max)
+	{
+		set .@red, getarraysize(.@fire_kingdom$);
+	}
+	else
+		set .@red, (GetCastleData "fire_combat",2);
+
+	for ( set .@i,0; .@i<.@red; set .@i, .@i+1 ) {
+		set .FIRE_RESERVEDMAP$, .FIRE_RESERVEDMAP$ + .@fire_kingdom$[.@i] + "|";
+	}
+
+	if ((GetCastleData "ice_combat",2) > .max)
+	{
+		set .@red, getarraysize(.@ice_kingdom$);
+	}
+	else
+		set .@red, (GetCastleData "ice_combat",2);
+
+	for ( set .@i,0; .@i<.@red; set .@i, .@i+1 ) {
+		set .ICE_RESERVEDMAP$, .ICE_RESERVEDMAP$ + .@ice_kingdom$[.@i] + "|";
+	}
+
+	if ((GetCastleData "combat01",2) > .max)
+	{
+		set .@red, getarraysize(.@wind_kingdom$);
+	}
+	else
+		set .@red, (GetCastleData "combat01",2);
+
+	for ( set .@i,0; .@i<.@red; set .@i, .@i+1 ) {
+		set .WIND_RESERVEDMAP$, .WIND_RESERVEDMAP$ + .@wind_kingdom$[.@i] + "|";
+	}
+
+	if ((GetCastleData "combat02",2) > .max)
+	{
+		set .@red, getarraysize(.@earth_kingdom$);
+	}
+	else
+		set .@red, (GetCastleData "combat02",2);
+
+	for ( set .@i,0; .@i<.@red; set .@i, .@i+1 ) {
+		set .EARTH_RESERVEDMAP$, .EARTH_RESERVEDMAP$ + .@earth_kingdom$[.@i] + "|";
+	}
+	set .GUILD_RESERVEDMAP$, "|" + .GUILD_RESERVEDMAP$;
+	
+	set .FIRE_RESERVEDMAP$, "|" + .FIRE_RESERVEDMAP$;
+	set .ICE_RESERVEDMAP$, "|" + .ICE_RESERVEDMAP$;
+	set .WIND_RESERVEDMAP$, "|" + .WIND_RESERVEDMAP$;
+	set .EARTH_RESERVEDMAP$, "|" + .EARTH_RESERVEDMAP$;
+	end;
+
+OnPCLoadMapEvent:
+	// Quick Search
+	if ( compare( .GUILD_RESERVEDMAP$, "|" + strcharinfo(3) + "|" ) ) 
+	{
+		if ( compare( .ICE_RESERVEDMAP$, "|" + strcharinfo(3) + "|" )
+		{
+			if ( ($_ICE_GUILD_WINNER && (getcharid(2) != $_ICE_GUILD_WINNER)) ) 
+			{
+				set @royaume$, "Gelé";
+				callfunc "mes_tribut",@royaume$,ICE_CHEST,@tribut;
+			}
+		}
+		if ( compare( .FIRE_RESERVEDMAP$, "|" + strcharinfo(3) + "|" )
+		{
+			if ( ($_FIRE_GUILD_WINNER && (getcharid(2) != $_FIRE_GUILD_WINNER)) ) 
+			{
+				set @royaume$, "Brûlant";
+				callfunc "mes_tribut",@royaume$,FIRE_CHEST,@tribut;
+			}
+		}
+		if ( compare( .WIND_RESERVEDMAP$, "|" + strcharinfo(3) + "|" )
+		{
+			if ( ($_WIND_GUILD_WINNER && (getcharid(2) != $_WIND_GUILD_WINNER)) ) 
+			{
+				set @royaume$, "Soufflant";
+				callfunc "mes_tribut",@royaume$,WIND_CHEST,@tribut;
+			}
+		}
+		if ( compare( .EARTH_RESERVEDMAP$, "|" + strcharinfo(3) + "|" )
+		{
+			if ( ($_EARTH_GUILD_WINNER && (getcharid(2) != $_EARTH_GUILD_WINNER)) ) 
+			{
+				set @royaume$, "Dévorant";
+				callfunc "mes_tribut",@royaume$,EARTH_CHEST,@tribut;
+			}
+		}
+	}
+
+OnChestKilled:
+	if ( compare( .EARTH_RESERVEDMAP$, "|" + strcharinfo(3) + "|" )
+	{
+		if (getcharinfo(2) == GetCastleData("combat02", 1))
+		{
+			mes "Bravo. N'oubliez pas qu'il y a deux coffres dispersés.";
+			close;
+		}
+		else
+		{
+			mes "Il ne faut jamais toucher à ce qui n'est pas à soi!";
+			warp "black",0,0;
+			//atcommand "!jail " + strcharinfo(0) + " 15";
+			end;
+		}
+	}
+	else if ( compare( .WIND_RESERVEDMAP$, "|" + strcharinfo(3) + "|" )
+	{
+		if (getcharinfo(2) == GetCastleData("combat01", 1))
+		{
+			mes "Bravo. N'oubliez pas qu'il y a deux coffres dispersés.";
+			close;
+		}
+		else
+		{
+			mes "Il ne faut jamais toucher à ce qui n'est pas à soi!";
+			//atcommand "!jail " + strcharinfo(0) + " 15";
+			warp "black",0,0;
+			end;
+		}
+	}
+	else if ( compare( .FIRE_RESERVEDMAP$, "|" + strcharinfo(3) + "|" )
+	{
+		if (getcharinfo(2) == GetCastleData("fire_combat", 1))
+		{
+			mes "Bravo. N'oubliez pas qu'il y a deux coffres dispersés.";
+			close;
+		}
+		else
+		{
+			mes "Il ne faut jamais toucher à ce qui n'est pas à soi!";
+			//atcommand "!jail " + strcharinfo(0) + " 15";
+			warp "black",0,0;
+			end;
+		}
+	}
+	else if ( compare( .ICE_RESERVEDMAP$, "|" + strcharinfo(3) + "|" )
+	{
+		if (getcharinfo(2) == GetCastleData("ice_combat", 1))
+		{
+			mes "Bravo. N'oubliez pas qu'il y a deux coffres dispersés.";
+			close;
+		}
+		else
+		{
+			mes "Il ne faut jamais toucher à ce qui n'est pas à soi!";
+			//atcommand "!jail " + strcharinfo(0) + " 15";
+			warp "black",0,0;
+			end;
+		}
+	}
+	end;
+}
+
+function	script	mes_tribut	{
+	// Si une guild a gagné la mini-woe et que cette guild est différente de celle du personnage
+			mes "Attention, vous entrez sur une map appartenant au Royaume" + getarg(0);
+			mes "Vous devez payer un droit de passage pour accéder à ce terrain";
+			mes "Souhaitez-vous vous acquitter de ce Tribut?";
+			switch (prompt("J'ai besoin d'accéder à la map:Non tant pis, j'irais voir ailleurs"))
+			{
+				case 1:
+					mes "Parfait. Je vais donc vous prélever le Tribut";
+					if (Zeny < getarg(2))
+					{
+						mes "Désolé, mais vous n'avez pas ce qu'il faut.";
+						mes "Le Tribut s'élève à "+ getarg(2) + "Zeny.";
+						mes "Je vais vous renvoyer vers la capitale";
+						warp "capitale", 200, 188;
+						end;
+					}
+					else
+					{
+						set Zeny, Zeny - @tribut;
+						set getarg(1), getarg(1)+getarg(2);
+						mes "Merci à toi.";
+						end;
+					}
+					
+				case 2:
+					mes "Très bien. Je vais donc te renvoyer vers la capitale.";
+					warp "capitale", 200, 188;
+					end;
+				case 255:
+					warp "capitale", 200, 188;
+					end;
+			}
+}

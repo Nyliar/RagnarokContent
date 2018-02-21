@@ -1,0 +1,696 @@
+//Hyrule,152,213,5	script	Booker::ymbooman	4_M_DEWMAN,{
+prontera,140,169,5	script	Booker::ymbooman	4_M_DEWMAN,{
+	set .@npcname$, "[Booker]";
+	mes .@npcname$;
+	mes "";
+	mes "Hello to you. I'm Booker.";
+	mes "I'm the only one around here which can save or extract your cards from Yggdrasil Memories into your own Book.";
+	mes "I know it's a bit blocking, but you don't have the choice.";
+	next;
+	mes .@npcname$;
+	mes "To insert a card in your book, wear your Ring and say '@insert', and then the name of the card.";
+	mes "To retrieve one, same thing, but say '@retrieve' instead.";
+	next;
+	mes .@npcname$;
+	mes "To transform a card to an item, say '@transform', and then the name of the card.";
+	mes "Finally, to move a card from your free slots to your fixed, or on the other way, say '@transfer'. You'll then be guided.";
+	next;
+	mes .@npcname$;
+	query_sql("SELECT `id_card` FROM `ym_book` WHERE `id_char`=" + getcharid(0), .@idCard);
+	if (getarraysize(.@idCard) == 98)
+	{
+		if (QUIZSUCCESS == 0)
+		{
+			//last step
+			mes "Oh...You've completed all the collection.";
+			mes "That's really...Impressive...";
+			mes "I didn't thought someone would ever succeed...";
+			mes "Well, let's go for the last step then...";
+			next;
+			mes .@npcname$;
+			//questionnary?
+			mes "You'll have to answer to each of this question, without making errors.";
+			mes "A percentage will be allowed, but you'll have a delay to answer. Any answer over this delay will make you fail.";
+			mes "If you fail, you'll loose " + .quizLoss + " cards.";
+			mes "If you succeed, you can get an item. Completely, and without restrictions.";
+			mes "Are you ready?";
+			if (select("Yes","No"))
+			{
+				mes "To answer, simply input the correct answer id.";
+				set .@failCount, 0;
+				for (set .@i,0; .@i<getarraysize(.quizSentences$); set .@i,.@i+1)
+				{
+					next;
+					mes .@npcname$;
+					set .delayOver, 0;
+					mes .quizSentences$[.@i];
+					mes "";
+					mes "1 - " + .quizAnswer1$[.@i];
+					mes "2 - " + .quizAnswer2$[.@i];
+					mes "3 - " + .quizAnswer3$[.@i];
+					mes "4 - " + .quizAnswer4$[.@i];
+					set .@ticks, gettimetick(0);
+					input .@answer$;
+					if (.@answer$ != .quizAnswer[.@i] || gettimetick(0) - .@ticks > .delayAnswer)
+					{
+						set .@failCount, .@failCount + 1;
+					}
+					mes "Next question...";
+				}
+				set .@success, getarraysize(.quizSentences$) - .@failCount;
+				set QUIZSUCCESS, (.@success * 100 / getarraysize(.quizSentences$));
+			}
+			else
+			{
+				mes "Let's see your results...";
+				mes "You have a percent of " + QUIZSUCCESS + "% right answers.";
+				if (QUIZSUCCESS >= .minPercentSucceed)
+				{
+					//get reward
+					next;
+					mes .@npcname$;
+					mes "Congratulations. Looks like you've really completed your book.";
+					mes "You're officially a winner.";
+					set .@startId, 29390;
+					set .@endId, 29423;
+					setarray .@idItems[0], 0;
+					set .@countItem, 0;
+					for(set .@i,.@startId; .@i<.@endId; set .@i,.@i+1)
+					{
+						set .@menu$,.@menu$+getitemname(.@i)+":";
+						set .@idItems[.@countItem], .@i;
+						set .@countItem, .@countItem + 1;
+					}
+					mes "Choose three items. You can bring them out of there.";
+					for(set .@i, 0; .@i<3; set .@i,.@i+1)
+					{
+						next;
+						mes .@npcname$;
+						set .@choice, select(.@menu$) - 1;
+						mes "Here's your item.";
+						next;
+						mes .@npcname$;
+						getitem .@idItems[.@choice], 1;
+					}
+					next;
+					mes .@npcname$;
+					mes "Thank you for playing Yggdrasil Memories.";
+					mes "I'm gonna retrieve your ring now.";
+					delitem 29424, 1;
+					callfunc ("OnClearBook", getcharid(0));
+				}
+				else
+				{
+					mes "That's not enought...";
+					mes "I don't know how you got your cards, but you should do it correctly.";
+					//delete random cards
+					set .@randDelete, rand(0,10);
+					for(set .@i,0; .@i<.@randDelete; set .@i,.@i+1)
+					{
+						callfunc "OnDeleteCard", getcharid(0), 0, 10, rand(0,1), -1, 0, rand(0,1);
+					}
+				}
+			}
+		}
+		else
+		{
+			mes "Come back later then.";
+		}
+	}
+	else
+	{
+		mes "See you soon.";
+		mes "And good luck.";
+	}
+	close;
+
+OnInit:
+	activatepset 1;
+	bindatcmd "insert",strnpcinfo(3)+"::OnInsertAsked";
+	bindatcmd "retrieve",strnpcinfo(3)+"::OnRetrieveAsked";
+	bindatcmd "transform",strnpcinfo(3)+"::OnTransformAsked";
+	bindatcmd "book",strnpcinfo(3)+"::OnBookAsked";
+	bindatcmd "transfer",strnpcinfo(3)+"::OnTransferAsked";
+	bindatcmd "gain",strnpcinfo(3)+"::OnGainAsked";
+	setarray .quizSentences$[0],"What is the effect of Angel Breath",
+	"How do you get Shining Alexandrite?",
+	"How can you see a target's free slots?",
+	"How can you counter an attack upon free slots?",
+	"How can you prevent an information retrieve on fixed slots?",
+	"Where do you get a Gladiate",
+	"How do you obtain a Witch Broom",
+	"Who gaves you the Ancient Wise King Ring?",
+	"On which world can you find the Elemental Fighter?",
+	"How do you get the White Horn King?", // 10
+	"What's skill is launched by Saint Wall?",
+	"How can you obtain a 777 more easily?",
+	"Who's Lady Fae?",
+	"How can you obtain Vorpalin Weapon?",
+	"How can you obtain Epic Adventurer?",
+	"Where can you find a Swap Ticket?",
+	"What's the effect of Corruption?",
+	"From what are you protected with a Blackout Curtain?",
+	"What's the purpose of Guidepost?",
+	"What's the purpose of Drift?", //20
+	"Where can you find a Guided Boomerang?",
+	"How do you obtain Dead Ring?",
+	"Who's Mimir?",
+	"How many Yggdrasil Crystal is there?",
+	"Where can you find the Winter Orb?";
+	
+	setarray .quizAnswer1$[0],"Call an angel to cure a target",
+	"Randomly, by killing monsters.",
+	"With Corruption",
+	"With Saint Wall, Holy Barrier or Castle Gate",
+	"With Fluoroscopy",
+	"From the Saint Fighter",
+	"By buying potions to the Witch",
+	"Tavi",
+	"Niflheim",
+	"By talking to the Axeman",
+	"Basilic",
+	"With a Lucky Dice",
+	"Who knows?",
+	"By luck or trade",
+	"By using Gain on you",
+	"In a blister",
+	"Change a card from A to D rank",
+	"Any attack",
+	"Give infos on target free slots",
+	"Teleport to a random place",
+	"In Jotunheim",
+	"By killing skeletons",
+	"A mud monster",
+	"3",
+	"In jotunheim";
+	
+	setarray .quizAnswer2$[0],"Call a raging angel to bring target down",
+	"By helping the sicks villagers",
+	"With Penetrate",
+	"With Saint Wall, Solidity or Castle Gate",
+	"With Penetrate",
+	"From the Elemental Fighter"
+	"By buying cakes to the Witch",
+	"The Villager Son",
+	"Midgard",
+	"By hitting the Huge Tree",
+	"Cast-Off Cicada",
+	"Each try make it easier",
+	"Part of a song",
+	"By stealing it",
+	"By using Gain on Lady Fae",
+	"By killing Lady Fae"
+	"Change a fixed card from B+ to D- rank",
+	"Fluoroscopy",
+	"Give infos on target fixed slots"
+	"Teleport to a chosen place",
+	"In midgard"
+	"By killing players",
+	"The guardian of wisdom source",
+	"4",
+	"In midgard";
+	
+	setarray .quizAnswer3$[0],"Call an angel to get a random item",
+	"By using 777 on a money machine",
+	"With Blackout Curtain",
+	"With Saint Wall, Penetrate or Castle Gate",
+	"With Blackout Curtain",
+	"From a Blister"
+	"By buying pills to the Witch",
+	"The Axeman",
+	"Jotunheim",
+	"By spilling water on the Huge Tree",
+	"Safety Wall",
+	"By hitting the machine",
+	"A ghost",
+	"By completing Mysterio Quest",
+	"By using Gain on the Veteran",
+	"By using Gain on the Huge Tree"
+	"Change a common card from B+ to D- rank",
+	"Penetrate"
+	"Give infos on seeked card's location"
+	"Teleport target to a random place",
+	"In the grass"
+	"By killing undead",
+	"An invocation",
+	"2",
+	"In Helheim";
+	
+	setarray .quizAnswer4$[0],"Call a demon to fight against ange type monster",
+	"In a blister",
+	"With Sightvision",
+	"With Saint Wall, Holy Barrier or Paladin Necklace",
+	"With Shot",
+	"With Collision"
+	"By buying enough goods to the Witch",
+	"Galus",
+	"Vanaheim",
+	"No Idea",
+	"Energy Coat",
+	"With a blister",
+	"The chief of all Faes",
+	"By completing Veteran Quest",
+	"By using Gain on a Vorpalin Weapon"
+	"Change a card from B+ to D- rank",
+	"Any information spell"
+	"Give infos on target card's condition of obtention"
+	"Teleport target to a chosen place",
+	"In a tree"
+	"By being killed",
+	"The guardian of Yggdrasil",
+	"7",
+	"In midgard";
+	
+	setarray .quizAnswer$[0],"1","2","4","2","3","1","4","1","4","2","3","1","2","4","3","1","4","4","4","2","3","4","2","4","1";
+	set .delayAnswer, 10000;
+	set .minPercentSucceed, 90;
+	end;	
+
+OnGainAsked:
+	//retrieve card from item
+	if (callfunc("IsPlayerOn") || callfunc("IsPlayerOnTown"))
+	{
+		dispbottom "[Book] Please insert the card name...";
+		input .@itemName$;
+		set .@query$, "SELECT `id_item`, `id_card` FROM `ym_cards` WHERE `name_item`='" + .@itemName$ + "'";
+		debugmes "query:" + .@query$;
+		query_sql(.@query$, .@idItem, .@idCard);
+		if (getarraysize(.@idCard[0]) > 0 && countitem(.@idItem[0]) > 0)
+		{
+			delitem .@idItem[0], 1;
+			rentitem .@idCard[0], 300;
+			logmes "[Yggdrasil Memories] " + strcharinfo(0) + " obtains a rental " + getitemname(.@IdCard[0]) + ".";
+			dispbottom "[Book] Object successfully transformed.";
+		}
+	}
+	else
+	{
+			dispbottom "[Book] You can't used commands out of the System.";
+	}
+	end;
+	
+OnTransformAsked:
+	//retrieve item from card
+	if (callfunc("IsPlayerOn") || callfunc("IsPlayerOnTown"))
+	{
+		dispbottom "[Book] Please insert the card name...";
+		input .@itemName$;
+		query_sql("SELECT `id_item`, `id_card` FROM `ym_card` WHERE `name_item`='" + .@itemName$ = "'", .@idItem, .@idCard);
+		if (getarraysize(.@idItem) > 0 && countitem(.@idCard[0]) > 0)
+		{
+			delitem .@idCard[0], 1;
+			rentitem .@idItem[0], 300;
+			logmes "[Yggdrasil Memories] " + strcharinfo(0) + " obtains a rental " + getitemname(.@idItem[0]) + ".";
+			dispbottom "[Book] Object successfully transformed.";
+		}
+	}
+	else
+	{
+			dispbottom "[Book] You can't used commands out of the System.";
+	}
+	end;
+
+OnTransferAsked:
+	//transfer from free to fixed, or fixed to free
+	if (callfunc("IsPlayerOn") || callfunc("IsPlayerOnTown"))
+	{
+		dispbottom "[Book] Please insert the card name...";
+		input .@itemName$;
+		dispbottom "[Book] Please insert the start position: 1 for fixed slots, 0 for free...";
+		input .@position;
+		if (.@position != 0 && .@position != 1)
+		{
+			dispbottom "[Book] Error. Transfer unavailable.";
+			end;
+		}
+		if (.@position == 0)
+		{
+			set .@destination, 1;
+			set .@position$, "Common slots";
+			set .@destination$, "Fixed slots";
+		}
+		else if (.@position == 1)
+		{
+			set .@destination, 0;
+			set .@destination$, "Common slots";
+			set .@position$, "Fixed slots";
+		}
+		
+		query_sql("SELECT `id_card` FROM `ym_cards` WHERE `name_item`='" + .@itemName$ + "'", .@idCards);
+		
+		if (getarraysize(.@idCards) > 0)
+		{		
+			dispbottom "[Book] Moving " + .@itemName$ + " from " + .@position$ + " to " + .@destination$ + ".";
+			set .@query$, "SELECT `id` FROM `ym_book` WHERE `id_char`=" + getcharid(0) + " AND `id_card`=" + .@idCards[0] + " AND `position`=" + .@position;
+			query_sql(.@query$, .@id);
+			if (getarraysize(.@id) != 0)
+			{
+				set .@query$, "UPDATE `ym_book` SET `position`=" + .@destination + " WHERE `id_char`=" + getcharid(0) + " AND `id`=" + .@id[0];
+				query_sql(.@query$, .@count);
+				dispbottom "[Book] Card successfully moved.";
+			}
+			else
+			{
+				dispbottom "[Book] You don't own this card.";
+			}
+		}
+		else
+		{
+			dispbottom "[Book] Card unfound.";
+		}
+	}
+	else
+	{
+		dispbottom "[Book] You can't used spell out of the System.";
+	}
+	end;
+	
+OnBookAsked:
+	if (callfunc("IsPlayerOn") || callfunc("IsPlayerOnTown"))
+	{
+		cutin "GI_Book",2;
+		mes "[Book]";
+		mes "Welcome on Book.";
+		query_sql("SELECT `id_char` FROM `ym_player` WHERE `id_char`=" + getcharid(0) + "", .@id); 
+		if (getarraysize(.@id) != 0)
+		{
+			if(.@atcmd_numparameters == 0 || (.@atcmd_parameters$[0] == "Compulse" || .@atcmd_parameters$[0] == "compulse"))
+			{	
+				goto OnCompulseMode;
+			}
+			else if(.@atcmd_numparameters >= 1 && .@atcmd_parameters$[0] == "Insert" || .@atcmd_parameters$[0] == "insert")
+			{
+				next;				
+				mes "[Book]";
+				mes "Insertion mode on.";
+				if(.@atcmd_numparameters >= 2 && .@atcmd_parameters$[1] == "Free" || .@atcmd_parameters$[1] == "free")
+				{
+					mes "Inserting on free slots.";
+					set INSERTPOS, 0;
+				}
+				else
+				{
+					mes "Inserting on fixed slots.";
+					set INSERTPOS, 1;
+				}
+				mes "Please, use items to insert them in book.";
+				mes "Return then to compulse mode to ensure you'll be able to use card spells.";
+				set INSERTMODE, 1;
+			}
+			else if(.@atcmd_numparameters >= 1 && .@atcmd_parameters$[0] == "Retrieve" || .@atcmd_parameters$[0] == "retrieve")
+			{
+				next;				
+				mes "[Book]";
+				mes "Retrieve mode on.";
+				if(.@atcmd_numparameters >= 2 && .@atcmd_parameters$[1] == "Free" || .@atcmd_parameters$[1] == "free")
+				{
+					mes "Retrieving cards from free slots.";
+					callsub OnRetrieveCard, 0;
+				}
+				else
+				{
+					mes "Retrieving cards from fixed slots.";
+					callsub OnRetrieveCard, 1;
+				}
+			}	
+		}
+		else
+		{
+			mes "You're not registered as a player.";
+		}
+	}
+	else
+	{
+			dispbottom "[Book] You can't used commands out of the System.";
+	}
+	cutin "", 255;
+	close;
+	
+OnCompulseMode:
+	set INSERTMODE, 0;
+	set INSERTPOS, -1;
+	next;				
+	mes "[Book]";
+	mes "Please choose an option:";		
+	set .@position, select("See the Free Slots","See the Fixed Slots") - 1;
+	set .@query$, "SELECT `id_card`, `name_item`, `max_count` FROM `ym_cards` ";
+	if (.@position == 1)
+	{
+		set .@query$, .@query$ + "WHERE `fixed` = 1";
+	}
+	query_sql(.@query$, .@idCards, .@name$, .@maxCount);
+	//compute id in string to used it in join function
+	for(set .@i,0; .@i<getarraysize(.@idCards); set .@i,.@i+1)
+	{
+		if (.@idArrayInString$ == "")
+		{
+			set .@idArrayInString$, .@idArrayInString$ + .@idCards[.@i];
+		}
+		else
+		{
+			set .@idArrayInString$, .@idArrayInString$ + "," + .@idCards[.@i];
+		}
+	}
+	
+	set .@query$, "SELECT DISTINCT `id_card` FROM `ym_book` WHERE `id_char` = " + getcharid(0) + " AND `position` = " + .@position + " AND `id_card` IN (" + .@idArrayInString$ + ")";
+	query_sql(.@query$, .@idOwnedCards);
+	set .@idArrayInString$, "";
+	for(set .@i,0; .@i<getarraysize(.@idOwnedCards); set .@i,.@i+1)
+	{
+		if (.@idArrayInString$ == "")
+		{
+			set .@idArrayInString$, .@idArrayInString$ + .@idOwnedCards[.@i];
+		}
+		else
+		{
+			set .@idArrayInString$, .@idArrayInString$ + "," + .@idOwnedCards[.@i];
+		}
+	}
+			
+	set .@cardPerPage, 9;
+	set .@currentCard, 0;
+	next;
+	mes "[Book]";
+	if (.@position == 0)
+	{
+		cutin "GI_BookFreeSlots",2;
+		//display free slots
+		for (set .@i, 0; .@i<getarraysize(.@idCards); set .@i,.@i+1)
+		{
+			set .@compare, compare(.@idArrayInString$, ""+.@idCards[.@i]);
+			if (.@compare != 0)
+			{
+				query_sql("SELECT COUNT(*) FROM `ym_book` WHERE `id_char`=" + getcharid(0) + " AND `id_card`=" + .@idCards[.@i], .@count);
+				set .@countOwned[getarraysize(.@countOwned)], .@count[0];
+				set .@nameOwned$[getarraysize(.@nameOwned$)], .@name$[.@i];						
+			}
+		}
+		
+		set .@sum, 0;
+		for (set .@i,0; .@i<getarraysize(.@countOwned); set .@i,.@i+1)
+		{
+			set .@sum, .@sum + .@countOwned[.@i];
+		}				
+	
+		dispbottom "Common Slots: " + .@sum + "/45";
+		for (set .@i, 0; .@i<getarraysize(.@nameOwned$); set .@i,.@i+1)
+		{
+			mes " ~ " + .@countOwned[.@i] + " " + .@nameOwned$[.@i] + "";
+			
+			set .@currentCard, .@currentCard + 1;
+			if (.@currentCard > .@cardPerPage)
+			{
+				next;
+				mes "[Book]";
+				set .@currentCard, 0;
+			}
+		}
+	}
+	else
+	{
+		dispbottom "Fixed Slots: " + getarraysize(.@idOwnedCards) + "/99";
+		//display fixed slots
+		callsub OnDisplayPage, 0, 0, 1, .@idCards, .@name$, .@idArrayInString$;
+	}
+	close;
+	
+OnDisplayPage:
+	set .@pageIndex, getarg(0);
+	set .@startIndex, getarg(1);
+	set .@maxToDisplay, getarg(2);
+	copyarray .@idCards[0], getarg(3), getarraysize(getarg(3));
+	copyarray .@name$[0], getarg(4), getarraysize(getarg(4));
+	set .@idArrayInString$, getarg(5);
+	//set .@basePageName$, "GI_BookPage" + .@pageIndex + "_";
+	for (set .@i,0; .@i<.@maxToDisplay; set .@i,.@i+1)
+	{
+		set .@index, .@startIndex + .@i;
+		if(.@index >= 99)
+		{
+			close;
+		}
+		set .@compare, compare(.@idArrayInString$, ""+.@idCards[.@index]);
+		if (.@compare == 0)
+		{
+			mes "^FF0000 " + (.@index + 1) + " ~ " + .@name$[.@index] + "^000000";
+		}
+		else
+		{
+			mes "^00FF00 " + (.@index + 1) + " ~ " + .@name$[.@index] + "^000000";
+		}
+		set .@basePageName$, .@basePageName$ + .@compare;
+	}
+	if(select("Go to next page") == 1)
+	{
+		next;
+		set .@startIndex, .@startIndex + .@maxToDisplay;
+		//other page than first one have 9 slots
+		set .@maxToDisplay, 9;
+		callsub OnDisplayPage, .@pageIndex + 1, .@startIndex, .@maxToDisplay, .@idCards, .@name$, .@idArrayInString$;
+	}
+	cutin "", 255;
+	close;	
+	
+OnInsertAsked:
+	//if the ring is on
+	if (callfunc("IsPlayerOn") || callfunc("IsPlayerOnTown"))
+	{
+		dispbottom "[Book] Please insert the card name...";
+		input .@itemName$;
+		dispbottom "[Book] Please choose the position: 1 for fixed slots, 0 for free...";
+		input .@position;
+		if (.@position != 0 && .@position != 1)
+		{
+			dispbottom "[Book] Error. Insertion unavailable.";
+			end;
+		}
+		callfunc "OnCheckInsert", .@itemName$, .@position;
+	}
+	else
+	{
+		dispbottom "[Book] You can't used commands out of the System.";
+	}
+	end;
+
+OnRetrieveAsked:
+	//if the ring is on
+	if (callfunc("IsPlayerOn") || callfunc("IsPlayerOnTown"))
+	{
+		next;
+		mes "[Book]";
+		mes "Please select a position: 1 for fixed slots, 0 for free...";
+		input .@position;
+		callsub OnRetrieveCard, .@position;
+	}
+	else
+	{
+		dispbottom "[Book] You can't used commands out of the System.";
+	}
+	close;
+	
+OnRetrieveCard:	
+	set .@position, getarg(0);
+	query_sql("SELECT `id_card` FROM `ym_book` WHERE `id_char`=" + getcharid(0) + " AND `position`=" + .@position + "", .@idCards);
+	set .@idCount, getarraysize(.@idCards);
+	if (.@idCount > 0)
+	{			
+		set .@query$, "SELECT `id_card` FROM `ym_cards` WHERE `id_card` IN (";
+		for (set .@i,0; .@i<.@idCount; set .@i, .@i+1)
+		{
+			if (.@i == 0)
+				set .@query$, .@query$ + .@idCards[.@i];
+			else
+				set .@query$, .@query$ + "," + .@idCards[.@i];				
+		}
+		set .@query$, .@query$ + ")";
+		query_sql(.@query$, .@foundIdCards);
+		
+		// For each found card, add it to custom cash shop
+		//cost must be 0 to prevent players for paying for items they already earn
+		tradertype(NST_CASH);
+		npcshopdelitem "Book_shop", 512;
+		if (getarraysize(.@foundIdCards) > 0)
+		{
+			npcshopadditem "Book_shop", .@foundIdCards, 0;
+		}
+		callshop "Book_shop",1;
+		npcshopattach "Book_shop";
+	}	
+	return;
+	
+OnBuyItem:
+	//an item has been taken from cash shop, remove it from database
+	// One or more corresponding cards have been found
+	//delete corresponding card
+	for(set .@i, 0; .@i<getarraysize(@bought_nameid); set .@i,.@i+1)
+	{
+		rentitem @bought_nameid[.@i], 300;
+		callfunc "OnDeleteCard",getcharid(0),-1,-1,-1,@bought_nameid[.@i],0,.@position;
+	}
+	end;
+}
+
+-	cashshop	Book_shop	FAKE_NPC,512:50;
+
+function	script	OnInsertAskedFromCard	{
+	//if the ring is on
+	if (callfunc("IsPlayerOn") || callfunc("IsPlayerOnTown"))
+	{
+		set .@itemName$, getarg(0);
+		set .@position, getarg(1);
+		
+		callfunc "OnCheckInsert", .@itemName$, .@position;
+	}
+	else
+	{
+		dispbottom "[Book] You can't used commands out of the System.";
+	}
+	end;
+}
+
+function	script	OnCheckInsert	{
+	set .@itemName$, getarg(0);
+	set .@position, getarg(1);
+
+	set .@query$, "SELECT `id_card`,`actual_count`,`max_count`,`fixed` FROM `ym_cards` WHERE `name_item`='" + .@itemName$ + "'";
+	query_sql(.@query$, .@idCards, .@actualCount, .@maxCount, .@fixed);
+	if (getarraysize(.@idCards) > 0 && countitem(.@idCards[0]) > 0)
+	{
+		if (.@actualCount[0] == .@maxCount[0])
+		{
+				dispbottom "[Book] This card has already reached her max transformation count.";
+				end;
+		}
+		if (.@position == 0)
+		{
+			query_sql("SELECT `id_card` FROM `ym_book` WHERE `id_char`=" + getcharid(0) + " AND `position`=0",.@idcard);
+			if (getarraysize(.@idcard) >= $ymCommonSlotCount)
+			{
+				dispbottom "[Book] Your common slots are all occupied.";
+				end;
+			}
+			set .@query$, "SELECT `id_card` FROM `ym_book` WHERE `id_char`=" + getcharid(0) + " AND `id_card`=" + .@idCards[0] + "";
+			query_sql(.@query$,.@idcardOwned);
+			if (getarraysize(.@idcardOwned) >= $ymMaxCardTypePerUser)
+			{
+				dispbottom "[Book] You can't have a card more than " + $ymMaxCardTypePerUser + " times.";
+				end;
+			}
+		}
+		if (.@position == 1 && .@fixed[0] == 0)
+		{
+			dispbottom "Common cards can't be inserted in fixed slots. Changing position to common.";
+			set .@position, 1;
+		}
+		set res, callfunc("OnInsertCard",.@actualCount[0],.@idCards[0],getcharid(0),.@position,0,-1);
+		if (res == 1)
+		{
+			delitem .@idCards[0],1;
+		}
+	}
+	else
+	{
+		dispbottom "[Book] You don't have this card.";
+	}
+	end;	
+}

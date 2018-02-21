@@ -1,0 +1,176 @@
+glastheim,54,82,7	script	Sleipnir::alamemas0	702,{
+	set .@npcname$, "[Sleipnir]";
+	set .@pcname$, "[" + strcharinfo(0) + "]";
+	mes .@npcname$;
+	mes "Who are you?";
+	next;
+	mes .@pcname$;
+	mes "No, you, who are you?";
+	next;
+	mes .@npcname$;
+	mes "And where are we???";
+	mes "I'm...Sleipnir.";
+	mes "Yeap, that's my name.";
+	mes "I was Odin's horse.";
+	mes "I was changed by Odin to a human form so I can take part of the incoming war.";
+	mes "I fight alongside with the Ase, the Vanes and the Eihenjar.";
+	next;
+	mes .@npcname$;
+	mes "But then...I...I can't remember...";
+	mes "The only thing I can remember is those words...They turn, again and again, in my head...";
+	mes "The Father Mount.";
+	if(countitem($memoryId[0]) >= 1)
+	{
+		next;
+		mes .@pcname$;
+		mes "Do you remember this?";
+		next;
+		mes .@npcname$;
+		mes "No. What is....";
+		mes "GRAAAAAAAAAAAAAAAAAAAAAA";
+		mes "My head!";
+		mes "Take that away!";
+		next;
+		mes .@pcname$;
+		mes "Sorry, I didn't thought it will...";
+		next;
+		mes .@npcname$;
+		mes "Well you were wrong!";
+		mes "Leave!";
+	}
+	else
+	{
+		next;
+		mes .@pcname$;
+		mes "Looks like all of you have memories loss.";
+		mes "You shouldn't try to think of it to hard.";
+		mes "It'll come back later...";
+	}
+	close;
+	
+OnUnhide:
+	hideoffnpc strnpcinfo(3);
+	end;
+	
+OnInit:
+	hideonnpc strnpcinfo(3);
+	close;
+}
+
+glastheim,54,82,7	script	Sleipnir::alamemas1	702,{
+	set .@npcname$, "[Sleipnir]";
+	set .@pcname$, "[" + strcharinfo(0) + "]";
+	mes .@npcname$;
+	mes "Who are you?";
+	next;
+	mes .@pcname$;
+	mes "No, you, who are you?";
+	next;
+	mes .@npcname$;
+	mes "And where are we???";
+	mes "I'm...Sleipnir.";
+	mes "Yeap, that's my name.";
+	mes "I was Odin's horse.";
+	mes "I was changed by Odin to a human form so I can take part of the incoming war.";
+	mes "I fight alongside with the Ase, the Vanes and the Eihenjar.";
+	next;
+	mes .@npcname$;
+	mes "But then...I...I can't remember...";
+	mes "The only thing I can remember is those words...They turn, again and again, in my head...";
+	mes "The Father's Mount.";
+	if(countitem($memoryId[1]) >= 1)
+	{
+		next;
+		mes .@pcname$;
+		mes "Do you remember this?";
+		next;
+		mes .@npcname$;
+		mes "No. What is....";
+		mes "GRAAAAAAAAAAAAAAAAAAAAAA";
+		mes "My head!";
+		mes "Take that away!";
+		next;
+		mes .@pcname$;
+		mes "Sorry, I didn't thought it will...";
+		next;
+		mes .@npcname$;
+		mes "Well you were wrong!";
+		mes "Leave!";
+	}
+	else
+	{
+		next;
+		mes .@pcname$;
+		mes "Looks like all of you have memories loss.";
+		mes "You shouldn't try to think of it to hard.";
+		mes "It'll come back later...";
+	}
+	close;
+	
+OnUnhide:
+	hideoffnpc strnpcinfo(3);
+	end;
+	
+OnInit:
+	hideonnpc strnpcinfo(3);
+	close;
+}
+
+glastheim,54,82,7	script	Sleipnir::alamemas2	702,{
+	set .@npcname$, "[Sleipnir]";
+	set .@pcname$, "[" + strcharinfo(0) + "]";
+	mes .@npcname$;
+	mes "Who are you?";
+	next;
+	mes .@pcname$;
+	mes "No, you, who are you?";
+	next;
+	mes .@npcname$;
+	mes "And where are we???";
+	mes "I'm...Sleipnir.";
+	mes "Yeap, that's my name.";
+	mes "I was Odin's horse.";
+	mes "I was changed by Odin to a human form so I can take part of the incoming war.";
+	mes "I fight alongside with the Ase, the Vanes and the Eihenjar.";
+	next;
+	mes .@npcname$;
+	mes "But then...I...I can't remember...";
+	mes "The only thing I can remember is those words...They turn, again and again, in my head...";
+	mes "The Father's Mount.";
+	if(countitem($memoryId[2]) >= 1)
+	{
+		next;
+		mes .@pcname$;
+		mes "Do you remember this?";
+		next;
+		mes .@npcname$;
+		mes "No. What is....";
+		mes "GRAAAAAAAAAAAAAAAAAAAAAA";
+		mes "My head!";
+		mes "Take that away!";
+		next;
+		mes .@pcname$;
+		mes "Sorry, I didn't thought it will...";
+		next;
+		mes .@npcname$;
+		mes "Well you were wrong!";
+		mes "Leave!";
+	}
+	else
+	{
+		next;
+		mes .@pcname$;
+		mes "Looks like all of you have memories loss.";
+		mes "You shouldn't try to think of it to hard.";
+		mes "It'll come back later...";
+	}
+	close;
+	
+OnUnhide:
+	hideoffnpc strnpcinfo(3);
+	end;
+	
+OnInit:
+	hideonnpc strnpcinfo(3);
+	close;
+}

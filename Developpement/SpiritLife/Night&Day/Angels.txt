@@ -1,0 +1,154 @@
+prt_church,108,127,5	script	White Angel::alawhan	4_F_VALKYRIE,{
+	set .@npcname$, "[White Angel]";
+	mes .@npcname$;
+	if(LANGUAGE == 0)
+	{
+		mes "I am the Day Angel.";
+		mes "By talking to me, you can reduce the Night duration.";
+		mes "While the Day is up, Humans will be able to get back to their old life.";
+		mes "On top of that, the murder is forbidden, as I'll cruelly avenge anybody who got killed.";
+		next;
+		mes .@npcname$;
+		mes "What can I do for you?";
+		if(select("Create a Pearl","Give you a Pearl") == 1)
+		{
+			next;
+			mes .@npcname$;
+			mes "So you want to create a Pearl.";
+			mes "For that, I'll need Shards.";
+			set .@menu$, "";
+			for(set .@i,0;.@i<getarraysize($shardIds); set .@i,.@i+1)
+			{
+				mes (.@i == 0? "" : "Or ") + $shardForPearls[.@i] + " " + getitemname($shardIds[.@i]);
+				set .@menu$, .@menu$ + (.@i == 0? "" : ":") + getitemname($shardIds[.@i]);
+			}
+			next;
+			mes .@npcname$;
+			mes "Which one are you interested in?";
+			set .@choice, select(.@menu$) - 1;
+			if(.@choice != 254)
+			{
+				if(countitem($shardIds[.@choice]) >= $shardForPearls[.@choice])
+				{
+					delitem $shardIds[.@choice], $shardForPearls[.@choice];
+					getitem $pearlIds[0], 1;
+				}
+				else
+				{
+					next;
+					mes .@npcname$;
+					mes "You don't have enough Shards.";
+				}
+			}
+		}
+		else
+		{
+			next;
+			mes .@npcname$;
+			mes "So you want to increase the Day duration?";
+			mes "Perfect. How many Pearl do you want to give me?";
+			input .@choice;
+			if(countitem($pearlIds[0]) >= .@choice)
+			{
+				next;
+				mes .@npcname$;
+				mes "Perfect. I'll increase the Day right now.";
+				delitem $pearlIds[0], .@choice;
+				if($dayduration < 24)
+				{
+					set $dayduration, $dayduration + 1;
+					specialeffect 221;
+				}
+			}
+			else
+			{
+				next;
+				mes .@npcname$;
+				mes "You don't have enough Pearls.";
+			}
+		}
+	}
+	close;
+	
+OnInit:
+	set .debug, 1;
+	end;
+}
+
+prt_church,91,127,5	script	Black Angel::alablan	4_F_VALKYRIE2,{
+	set .@npcname$, "[Black Angel]";
+	mes .@npcname$;
+	if(LANGUAGE == 0)
+	{
+		mes "I am the Night Angel.";
+		mes "By talking to me, you can increase the Night duration.";
+		mes "While the Night is up, no rules may apply to prevent Humans bestiality.";
+		mes "On top of that, some mutations may be observed.";
+		next;
+		mes .@npcname$;
+		mes "What can I do for you?";
+		if(select("Create a Pearl","Give you a Pearl") == 1)
+		{
+			next;
+			mes .@npcname$;
+			mes "So you want to create a Pearl.";
+			mes "For that, I'll need Shards.";
+			set .@menu$, "";
+			for(set .@i,0;.@i<getarraysize($shardIds); set .@i,.@i+1)
+			{
+				mes (.@i == 0? "" : "Or ") + $shardForPearls[.@i] + " " + getitemname($shardIds[.@i]);
+				set .@menu$, .@menu$ + (.@i == 0? "" : ":") + getitemname($shardIds[.@i]);
+			}
+			next;
+			mes .@npcname$;
+			mes "Which one are you interested in?";
+			set .@choice, select(.@menu$) - 1;
+			if(.@choice != 254)
+			{
+				if(countitem($shardIds[.@choice]) >= $shardForPearls[.@choice])
+				{
+					delitem $shardIds[.@choice], $shardForPearls[.@choice];
+					getitem $pearlIds[1], 1;
+				}
+				else
+				{
+					next;
+					mes .@npcname$;
+					mes "You don't have enough Shards.";
+				}
+			}
+		}
+		else
+		{
+			next;
+			mes .@npcname$;
+			mes "So you want to increase the Night duration?";
+			mes "Perfect. How many Pearl do you want to give me?";
+			input .@choice;
+			if(countitem($pearlIds[1]) >= .@choice)
+			{
+				next;
+				mes .@npcname$;
+				mes "Perfect. I'll increase the Night right now.";
+				delitem $pearlIds[1], .@choice;
+				if($dayduration > 0)
+				{
+					set $dayduration, $dayduration - 1;
+					specialeffect 812;
+				}
+			}
+			else
+			{
+				next;
+				mes .@npcname$;
+				mes "You don't have enough Pearls.";
+			}
+		}
+	}
+	close;
+	
+OnInit:
+	set .debug, 1;
+	end;
+}
+

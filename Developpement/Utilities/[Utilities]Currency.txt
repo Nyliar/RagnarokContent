@@ -1,0 +1,41 @@
+-	script	Currency System::cursys	-1,{
+	
+	OnManageCurrency:
+		.@npc$ = strnpcinfo(1);
+		
+		mes "[^FF0000 "+.@npc$+" ^000000]";
+		mes "You actually earn:";
+		mes "^0000FF"+#CASHPOINTS+" Currency Points^000000.";
+		mes " ", "Would you like to convert them?";
+				next;
+				mes "[^FF0000 "+.@npc$+" ^000000]";
+				mes "The exchange rate is ^666666100 Currency Point^000000 for 0000FF1 Silver Coin^000000.";
+				mes " ";
+				mes "WOuld you like to continue?";
+				if (select("No:Yes") == 1) { close; }
+				if (#CASHPOINTS < 100) {
+					dispbottom "[ "+.@npc$+" ] : You don't have enough Currency Point.";
+					close;
+				}
+				
+				.@total = #CASHPOINTS / 100;
+				.@point = .@total * 100;
+				
+				next;
+				mes "[^FF0000 "+.@npc$+" ^000000]";
+				mes "you're about to obtain ^0000FF"+.@total+" Silver Coins^000000 for 666666"+.@point+" Currency Point^000000.";
+				mes " ", "Confirm?";
+				if (select("No:Yes") == 1) { close; }
+				dispbottom "[ "+.@npc$+" ] : "+.@point+" Currency Point has been traded.";
+				#CASHPOINTS -= .@point;
+				getitem .Currency_ID, .@total;
+				logmes "[CurrencyManager] Le joueur " + strcharinfo(0) + "transforme " + .@point + " points en " + .@total + " " + getitemname(.Currency_ID) + ".";
+				close;
+	
+	OnInit:
+		bindatcmd "currency",strnpcinfo(3)+"::OnManageCurrency";
+		setarray .MOB_EXEMPT[0],1419,1608,1558,1084,1085,1079,1080,1750,1078,1878,1083,1082,1081,1097;
+		set $activeEnvironmentPoints, 0;
+		.Currency_ID = 675;
+	end;
+}

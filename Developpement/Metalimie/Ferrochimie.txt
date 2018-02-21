@@ -1,0 +1,237 @@
+//
+// [========================================================]
+// [===========       Metalimie - Ferrochimie    ===========]
+// [========================================================]
+// [ Version 1                                              ]
+// [========================================================]
+// [ Original script by: Alayne                             ]
+// [========================================================]
+// [ Description:                                           ]
+// [--------------------------------------------------------]
+// [                                                        ]
+// [ - Ferrochimie functions			           ]
+// [ - Enable to store or use a Ferrochimie bonus           ]
+// [========================================================]
+// [ Changelog: (5 last updates)                            ]
+// [--------------------------------------------------------]
+// [                                                        ]
+// [ v0: Creation                      			    ]
+// [                                                        ]
+// [========================================================]
+// [                                                        ]
+// [========================================================]
+
+prontera,97,190,6	script	Ferrochemist::prtfebl	810,{
+
+	//Gold Ring,Silver Ring,Steel,Iron,Oridecon,Elunium,Bradium,Carnium,Ring of Water,Fire,Wind,Earth
+	setarray .@FeroMetalId[0],2610,2611,999,998,984,985,6224,6223,2682,2683,2684,2685;
+	setarray .@FeroMetalCount[0],2,5,10,10,5,5,2,2,1,1,1,1;
+	setarray .@FeroMetalName$[0],"Gold","Silver","Steel","Iron","Oridecon","Elunium","Bradium","Carnium","Watery","Firy","Windy","Earthy";
+	//Golden Anvil, Blacksmith Hammer
+	setarray .@FerrochimieItems[0],988,1005;
+
+	set .@npcname$, "[Alro]";
+	mes .@npcname$;
+
+	if (METALIMIE == 1)
+	{
+		mes "Good day, hu?";
+		mes "My name's " + .@npcname$;
+		mes "I'm quite a good Blacksmith, as far as I know.";
+		mes "But I'm a bit...Specialized.";
+	}
+	if (METALIMIE == 5)
+	{
+		mes "Right now, I'm sorry, but I can't do anything more for you.";
+		mes "Yeah, I'm the one you're looking for.";
+		mes "But I can't create stuffs for ya at this moment.";
+		mes "First of all, you're not yet a Ferrochemist.";
+		mes "You'll have to know a Fall.";
+		mes "To know that, you have to go back where everything started.";
+		mes "The man you'll find here will help to Fall.";
+		set METALIMIE, 6;
+	}
+	if (FERROCHIMIE == 1)
+	{
+		mes "Ho! So you've become a Ferrochemist!";
+		mes "Nice to count you on my future customers!";
+		mes "At work, then.";
+		mes "Here's what I can do for you.";
+		mes "I can create Ferrochemist equipement pieces.";
+		mes "By using them, you'll be able to stocke or use stats supplies.";
+		mes "But you know how it works, he?";
+		mes "Let's see what I can do for you!";
+		next;
+		mes .@npcname$;
+		set .@foundOne, 0;
+		for(set .@i,0; .@i<getarraysize(.@FeroMetalId); set .@i,.@i+1)
+		{
+			if (countitem(.@FeroMetalId[.@i]) >= .@FeroMetalCount[.@i])
+			{
+				set .@menu$, .@menu$ + ( .@i ? ":" : "" ) + .@FeroMetalName[.@i]; 
+				set .@possessedItemsRank[getarraysize(.@possessedItemsRank)],.@i;
+				if (.@foundOne == 0)
+					set .@foundOne, 1;
+			}
+		}
+		if (.@foundOne == 1)
+		{
+			mes "Here's the Metals I can work with:";
+			set .@choice, select(.@menu)-1;
+			if (.@choice != 254)
+			{
+				mes "Let's go for the metal " + .@FeroMetalName[.@possessedItemsRank[.@choice]] + "!";
+				next;
+				mes .@npcname$;
+				mes "Which piece of stuff do you want?";
+				switch(select("A Ring","A Necklace","A Bracelet","Gaiter","Spaulders","Earrings"))
+				{
+					case 1:
+						set .@itemId, 21800 + .@possessedItemsRank[.@choice]*7;
+						break;
+					case 2:
+						set .@itemId, 21801 + .@possessedItemsRank[.@choice]*7;
+						break;
+					case 3:
+						set .@itemId, 21802 + .@possessedItemsRank[.@choice]*7;
+						break;
+					case 4:
+						set .@itemId, 21803 + .@possessedItemsRank[.@choice]*7;
+						break;
+					case 5:
+						set .@itemId, 21804 + .@possessedItemsRank[.@choice]*7;
+						break;
+					case 6:
+						set .@itemId, 21805 + .@possessedItemsRank[.@choice]*7;
+						break;
+				}
+				mes "Ok!";
+				mes "I'll also need a Blacksmith Hammer and a Golden Anvil.";
+				if (countitem(988) > 0 && countitem(1055) > 0)
+				{
+					delitem .@FeroMetalId[.@possessedItemsRank[.@choice]], .@FeroMetalCount[.@possessedItemsRank[.@choice]];
+					delitem 988, 1;
+					delitem 1055, 1;
+					getitem .@itemId, 1;
+				}
+			}
+		}
+		else
+		{
+			mes "Sorry, but you don't have what I need to work.";
+			mes "Here's what I need:";
+			for(set .@i,0; .@i<getarraysize(.@FeroMetalId); set .@i,.@i+1)
+			{
+				mes "Either " + .@FeroMetalCount[.@i] + " " + getitemname(.@FeroMetalId[.@i]);
+			}
+			mes "I'll also need a Blacksmith Hammer and a Golden Anvil.";
+			mes "Come back with one of these, ok?";
+		}
+	}
+	close;
+}
+
+
+function	script	OnUnEquipFerroItem	{
+	//stop use mode
+	set .@actualTicks, gettimetick(0);
+	//retrieve activation tick
+	set .@savedTickes, getd("FERROCHIMIE_"+.@itemLocation);
+	//calculate bonus time
+	set .@elapsedTick, .@actualTicks - .@savedTicks;
+	//update bonus duration
+	set .@BonusTime, getd("FERROCHIMIETICKS_"+getarg(0)) - .@elapsedTick;
+
+	//remaining time
+	if (.@BonusTime > 0)
+	{
+		setd("FERROCHIMIETICKS_"+getarg(0),.@BonusTime);
+		dispbottom "The Ferrochemistry bonus stocked in item " + getitemname(getarg(1)) + " partially used.";
+	}
+	//all bonus time used
+	else
+	{
+		setd("FERROCHIMIETICKS_"+getarg(0),0);
+		dispbottom "The Ferrochemistry bonus stocked in item " + getitemname(getarg(1)) + " completely used.";
+	}
+	
+	mes "Do you wish to stock in item?";
+	switch(select("Yes","No"))
+	{
+		case 1:
+			callfunc "stockFerroStats", getarg(0), getarg(1);
+			break;
+		case 2:
+			break;
+	}
+	close;
+}
+
+function	script	OnEquipFerroItem	{	
+	//check if the current item was storing
+	if (getd("FERROCHIMIESTOCK_"+getarg(0)) == 1)
+	{
+		//if so, stop the process
+		set .@actualTicks, gettimetick(0);
+		//retrieve activation tick
+		set .@savedTickes, getd("FERROCHIMIE_"+.@itemLocation);
+		//calculate bonus time
+		set .@elapsedTick, .@actualTicks - .@savedTicks;
+
+		setd("FERROCHIMIETICKS_"+getarg(0),getd("FERROCHIMIETICKS_"+getarg(0)) + .@elapsedTick);
+		dispbottom "Ferrochemistry bonus stocked in item " + getitemname(getarg(1)) + ".";
+	}
+	
+	close;
+}
+
+function	script	stockFerroStats	{
+	if (getd("FORCEDUNEQUIPPED_" + getarg(0)) == 0)
+	{
+		set .@itemLocation, getarg(0);
+		set .@actualTicks, gettimetick(0);
+		setd("FERROCHIMIE_"+.@itemLocation,.@actualTicks);
+		dispbottom "Ferrochemistry bonus storing for item " + getitemname(getarg(1));
+		setd("FERROCHIMIESTOCK_"+getarg(0),1);
+	}
+	end;
+}
+
+function	script	useFerroStats	{
+	set .@itemLocation, getarg(0);
+	//retrieve activation tick limit
+	set .@savedTickes, getd("FERROCHIMIETICKS_"+.@itemLocation);
+
+	dispbottom "Ferrochemistry bonus in use for item " + getitemname(getarg(1));
+
+	setd("FERROCHIMIE_"+.@itemLocation,.@actualTicks);
+
+	//sleep for bonus period
+	set .@sleepPeriod, .@savedTickes/10000;
+	sleep .@sleepPeriod;
+	if (getarg(0) == 7 || getarg(0) == 8)
+	{
+		if (getequipid(7) == getarg(1))
+		{
+			//update infos and unequipped empty item
+			setd("FORCEDUNEQUIPPED" + getarg(0), 1);
+			unequip getarg(0);
+		}
+		else if (getequipid(8) == getarg(1))
+		{
+			//update infos and unequipped empty item
+			setd("FORCEDUNEQUIPPED" + getarg(0), 1);
+			unequip getarg(0);
+		}
+	}
+	else
+	{
+		if (getequipid(getarg(0)) == getarg(1))
+		{
+			//update infos and unequipped empty item
+			setd("FORCEDUNEQUIPPED" + getarg(0), 1);
+			unequip getarg(0);
+		}
+	}
+	end;
+}

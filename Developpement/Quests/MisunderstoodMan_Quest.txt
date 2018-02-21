@@ -1,0 +1,542 @@
+// [========================================================]
+// [=============    	Quest - Valentine   	============]
+// [========================================================]
+// [ Version 1                                              ]
+// [========================================================]
+// [ Original script by: Alayne				    ]
+// [========================================================]
+// [ Description:                                           ]
+// [--------------------------------------------------------]
+// [                                                        ]
+// [ - A quest for Valentine day	 		    ]
+// [========================================================]
+// [ Changelog: (5 last updates)                            ]
+// [--------------------------------------------------------]
+// [                                                        ]
+// [ v0: Creation                      			    ]
+// [                                                        ]
+// [========================================================]
+// [                                                        ]
+// [========================================================]
+
+prt_fild01,151,29,4	script	Misunderstood Man::alvalmm	4_M_GRANDMONK,{
+	set .@npcname$, "[Garcia]";
+	set .@playerName$, "[" + strcharinfo(0) + "]";
+	if (SOPHIA_Q == 3)
+	{
+		mes .@playerName$;
+		mes "Garcia! I need your help!";
+		next;
+		mes .@npcname$;
+		mes "Calm down, young one. What is it you need?";
+		next;
+		mes .@playerName$;
+		mes "Sophia told me Dark Lord has been lurking around her and asked me to bring you these.";
+		set .@ok, 1;
+		for(set .@i,0; .@i<getarraysize($requirementFixIdSop); set .@i,.@i+1)
+		{
+			if(countitem($requirementFixIdSop[.@i]) < $requirementFixCountSop[.@i])
+			{
+				set .@ok, 0;
+			}
+		}
+		next;
+		mes .@npcname$;
+		if (.@ok == 0)
+		{
+			mes "I...I can't help Sophia if you don't bring me the items I need...";
+			mes "Bring me back thoses items!";
+			for(set .@i,0; .@i<getarraysize($requirementFixIdSop); set .@i,.@i+1)
+			{
+				mes "	~ " + $requirementFixCountSop[.@i] + " " + getitemname($requirementFixIdSop[.@i]);
+			}
+			close;
+		}
+		mes "Sophia... I see. So she decided to fight. Thank you for helping her, please come back to me after an hour or so. I need to make this item.";
+		next;
+		for(set .@i,0; .@i<getarraysize($requirementFixIdSop); set .@i,.@i+1)
+		{
+			delitem $requirementFixIdSop[.@i], $requirementFixCountSop[.@i];
+		}
+		mes .@playerName$;
+		mes "Okay, please hurry! This is the Dark Lord we are dealing with.";
+		next;
+		mes "Come back after 1 hour";
+		set soptimer, gettimetick(2) + 3600;
+		set SOPHIA_Q, 4;
+	}
+	else if (SOPHIA_Q == 4)
+	{
+		mes .@npcname$;
+		if (gettimetick(2) < soptimer)
+		{
+			mes "Worrying will not hasten one's work, dear.";
+			close;
+		}
+		mes "Here you go. Go with haste!";
+		getitem 18001, 1;
+		set SOPHIA_Q, 5;
+		hideonnpc "alvallg";
+		hideoffnpc "alvalso";
+	}
+	else if (SOPHIA_Q == 7)
+	{
+		mes .@npcname$;
+		mes "...You are in need of my assistance...";
+		next;
+		mes .@playerName$;
+		mes "No assistance needed, Garcia. I just came here beca--";
+		next;
+		mes .@npcname$;
+		mes "Hush, young one. I know you need assistance with your grief. (Garcia stood closer)";
+		mes "Sophia is a special girl, the Dark Lord chose her as a pathway to enter Midgard.";
+		mes "He made Sophia like she is, to feel the hate from everyone, to make her despise this world and bring Dark Lord here.";
+		mes "Even though Sophia was an outcast to everyone, she did not break and remained in control, and never lost her love for this world.";
+		mes "She is a hero for you and I.";
+		next;
+		mes .@playerName$;
+		mes "(You couldn't help but shed a tear, but not from sadness)";
+		next;
+		mes .@npcname$;
+		mes "Dear, give me the bead. I will keep her safe of evil.";
+		delitem 18002,1;
+		next;
+		mes .@npcname$;
+		mes "Here you go, Sophia came to me before she faced Dark Lord. She wanted me to give you this.";
+		set SOPHIA_Q, 8;
+	}
+	else if (KJELLE_Q == 3)
+	{
+		mes .@playerName$;
+		mes "Hi, sir... (oh, he's huge)";
+		next;
+		mes .@npcname$;
+		//emote ...
+		mes "*Gives you a sharp look*";
+		next;
+		mes .@playerName$;
+		mes "Oh, I, umm.. (Valkyries, please save my soul!)";
+		next;
+		mes .@npcname$;
+		mes "No need to be frightened, young one. You are in need of something I have?";
+		next;
+		mes .@playerName$;
+		mes "(Ooh, he isn't scary at all) Hello, sir. Umm, I heard you are looking for students to study under your arts?";
+		next;
+		mes .@playerName$;
+		mes "*Garcia made a quick analysis*";
+		mes "Under my arts, or not. If one is willing to improve, I will accept them as a student. Tell the child to meet with me in Mount Mjollnir. You may go, too, if you will.";
+		next;
+		mes .@playerName$;
+		mes "I will certainly. Thank you, sir.";
+		set KJELLE_Q, 4;
+	}
+	else if (KJELLE_Q >= 4)
+	{
+		mes .@npcname$;
+		mes "He he, orcs. *snort*";
+	}
+	else if (GARCIA_Q == 0)
+	{
+		set .@npcname$, "[Huge Man]";
+		mes .@npcname$;
+		mes "...Are you not frightened of me?";
+		next;
+		mes .@playerName$;
+		mes "What? Why, of course not. Why would I be?";
+		next;
+		mes .@npcname$;
+		mes "Because I am... towering, and with an intimidating look. You are not frightened?";
+		if(select("You're not scary at all.","...Now that you mentioned it.") == 1)
+		{
+			next;
+			mes .@playerName$;
+			mes "Oh, man. You are not even scarier than any Bigfoot.";
+			next;
+			mes .@npcname$;
+			mes "Bigfoot? Those bears are plump and docile. How are they scary? You lack proper judgement, my boy.";
+		}
+		else
+		{
+			next;
+			mes .@playerName$;
+			mes "You do look a bit scary. But I don't think you're dangerous.";
+			next;
+			mes .@npcname$;
+			mes "You please me, lad. What is your name? I am Garcia, a monk in pursue of wisdom.";
+			next;
+			mes .@playerName$;
+			mes "I am " + strcharinfo(0) + ", a seasoned adventurer~";
+			next;
+			mes .@npcname$;
+			mes "Adventurer, you say? I am assured you take things with you as a token of remembrance. Might you show me one?";
+			next;
+			mes "Show him a Chivalry Emblem";
+			set GARCIA_Q, 1;
+		}
+	}
+	else if (GARCIA_Q == 1)
+	{
+		if (countitem(1004) == 1)
+		{
+			mes .@playerName$;
+			mes "Here it is, Garcia. I got this from...";
+			next;
+			mes .@npcname$;
+			mes "Ágyeli se aftí ti yi.  Phérte tous ouranoús... Oh, you're back.";
+			next;
+			mes .@playerName$;
+			mes "...Am I interrupting something? I got the item. (You showed him the item)";
+			next;
+			mes .@npcname$;
+			mes "A... Chivalry Emblem. From the Shadows of Terror... If I may, can I ask you a favor?";
+			next;
+			mes .@playerName$;
+			mes "Umm... sure. What is it?";
+			next;
+			mes .@npcname$;
+			mes "This is a holy bead. It is tainted for absorbing a tenuous form of Dark Lord. Will you help me seal it and not put Sophia's sacrifice in vain?";
+			goto OnFirstDialog;
+		}
+		else
+		{
+			mes .@npcname$;
+			mes "(You sneak behind Garcia and hear him) Ah... They will grow, too, one day, and pursue their own paths. Thank you, Sophia, for giving them the chance.";
+			next;
+			mes .@npcname$;
+			mes "You shouldn't be sneaking behind him. Bring Garcia a rare item as a proof of a seasoned adventurer.";
+		}
+	}
+	else if (GARCIA_Q == -1)
+	{
+		mes .@npcname$;
+		mes "" + strcharinfo(0) + ", please, this is for you, too.";
+		goto OnFirstDialog;
+	}
+	else if (GARCIA_Q == 2)
+	{
+		set .@ok, 1;
+		for(set .@i,0; .@i<getarraysize($requirementFixIdGa); set .@i,.@i+1)
+		{
+			if(countitem($requirementFixIdGa[.@i]) < $requirementFixCountGa[.@i])
+			{
+				set .@ok, 0;
+			}
+		}
+		if (.@ok == 1)
+		{
+			mes .@playerName$;
+			mes "Garcia, I got the items you need. What now?";
+			for(set .@i,0; .@i<getarraysize($requirementFixIdGa); set .@i,.@i+1)
+			{
+				delitem $requirementFixIdGa[.@i], $requirementFixCountGa[.@i];
+			}
+			next;
+			mes .@npcname$;
+			mes "Good, lad. Now, draw a devil's trap in the ground using the dye. Quickly!";
+			//aura?
+			next;
+			mes .@playerName$;
+			mes "(You draw the trap in the ground and hear Garcia's chants keep getting louder) It's done, Garcia! Do your stuff!";
+			next;
+			mes .@npcname$;
+			mes "Give me the Flame Heart! (You tossed the Flame Heart to Garcia).";
+			next;
+			mes .@npcname$;
+			mes "Me ta ierá phlóyes.  Sas sphrayída.  Me tin iskhirí voúlisi tou sindetikoú ilikoú kai ti sphrayída.  Boríte kaloúntai sphrayízontai!";
+			next;
+			//meteor assault effect
+			mes .@npcname$;
+			mes "We did it, lad. Thank you for the service. I must rest now as I have exhausted my spirit.";
+			next;
+			mes "Come back after 12 hours";
+			set GARCIA_Q, 3;
+			set garciatimer, gettimetick(2) + 43200;
+		}
+		else
+		{
+			mes .@npcname$;
+			mes "Phos apó tin kardiá.  Apodinamósi to skotádi.";
+			next;
+			mes "You still need to bring him a Flame Heart, and 5 Black Dyestuff";
+			close;
+		}
+	}
+	else if (GARCIA_Q == 3)
+	{
+		if(gettimetick(2) < garciatimer)
+		{
+			mes .@npcname$;
+			mes "*Grunt* He he.";
+		}
+		else
+		{
+			mes .@npcname$;
+			mes "Good day, " + strcharinfo(0) + ". Have you had a good rest?";
+			next;
+			mes .@playerName$;
+			mes "Yes, I had. How are you doing?";
+			next;
+			mes .@npcname$;
+			mes "I am feeling greater than ever! My student finally have been able to attain one of her ambitions. It's heartbreaking I wasn't there when it unfolded. Her name is Kjelle.";
+			next;
+			mes .@playerName$;
+			mes "I see... that's good to hear.";
+			next;
+			mes .@npcname$;
+			mes "Since my students begun to pursue their own paths, I can now leave. I got a request from a Cavalier. We are to accompany him in eradicating forces in a location. Rendez-vous in the Borders of Yuno and Aldebaran.";
+			next;
+			mes "Go to the North field of Aldebaran";
+			set GARCIA_Q, 4;
+			hideoffnpc "alvalar3";
+			hideonnpc strnpcinfo(3);
+		}
+	}
+	else
+	{
+		mes .@npcname$;
+		mes "Grumpf! He he";
+	}
+	close;
+	
+OnFirstDialog:
+	switch(select("Yes","No","Who is 'Sophia'?"))
+	{
+		case 1:
+			next;
+			mes .@playerName$;
+			mes "The Dark Lord!? I do not believe you! Roan pretty sure killed him with his shield!";
+			next;
+			mes .@npcname$;
+			mes "Please, " + strcharinfo(0) + ". This is for you, too.";
+			set GARCIA_Q, -1;
+			break;
+		case 2:
+			next;
+			mes .@playerName$;
+			mes "Okay, big guy. It is always nice to help. What do you need me to do?";
+			next;
+			mes .@npcname$;
+			mes "Thank you for your kind heart. I need you to gather me these things. I would do it personally but I need to chant incantations to hold it off. The items are:";
+			for(set .@i,0; .@i<getarraysize($requirementFixIdGa); set .@i,.@i+1)
+			{
+				mes "	~ " + $requirementFixCountGa[.@i] + " " + getitemname($requirementFixIdGa[.@i]);
+			}
+			set GARCIA_Q, 2;
+			break;
+		case 3:
+			next;
+			mes .@playerName$;
+			mes "Who is Sophia?";
+			next;
+			mes .@npcname$;
+			mes "Sophia was my friend who was cursed by the Dark Lord and use her as a gateway to bring havoc to this world. But Sophia chose to battle the Dark Lord and chose to give her life and cut the gateway.";
+			set GARCIA_Q, -1;
+			break;			
+	}
+	close;
+	
+OnInit:
+	setarray $requirementFixIdGa[0],994,983;
+	setarray $requirementFixCountGa[0],1,5;	
+	end;
+}
+
+yuno_fild01,194,175,4	script	The Legendary Garcia::alvalmm2	4_M_GRANDMONK,{
+	set .@npcname$, "[Garcia]";
+	set .@playerName$, "[" + strcharinfo(0) + "]";
+	if (GARCIA_Q == 4)
+	{
+		mes .@npcname$;
+		mes "There you are, " + strcharinfo(0) + "! This (good looking) Knight here, is sir Ares. He will brief us with the skirmish at hand.";
+	}
+	else if (GARCIA_Q == 6)
+	{
+		mes .@npcname$;
+		mes "(What an adorable young man) You did it, lad. You have driven them away.";
+		next;
+		mes .@playerName$;
+		mes "I did? How did you know it was me?";
+		next;
+		mes "[Ares]";
+		mes "A skeleton managed to caught our attention and was shouting your description while skipping away from here.";
+		next;
+		mes .@playerName$;
+		mes "It's not like you guys didn't do a thing at all. Garcia had the idea to talk things out. Ares was obedient to comply. Everyone had a part in it.";
+		next;
+		mes "[Ares]";
+		mes "Very well. I should return to my post and report. Catch you later!";
+		hideonnpc "alvalar3";
+		set GARCIA_Q, 7;
+	}
+	else if (GARCIA_Q == 7)
+	{
+		mes .@npcname$;
+		mes "Hey, lad. Now that is over, I can't express my gratitude enough. Even for a short while, you have been a company to a lone stranger. I could not help you much with your adventures, though.";
+		next;
+		mes .@playerName$;
+		mes "Thank you for the kind words, Garcia. I would love to help someone like you.";
+		next;
+		mes .@npcname$;
+		mes "So I got this for you, I picked it up while we were looking for the skeleton. Another token of remembrance, I suppose.  I am going back to Ares and help around for a while. Good luck with your adventures!";
+		getitem 18546, 1;
+		hideonnpc strnpcinfo(3);
+		hideonnpc "alvalar3";
+		hideoffnpc "alvalmm";
+		set GARCIA_Q, 8;
+		rentitem 29322, 60;
+	}
+	else
+	{
+		mes .@npcname$;
+		mes "Sorry I'm a bit busy.";
+	}
+	close;
+	
+OnInit:
+	hideonnpc strnpcinfo(3);
+	end;
+}
+
+yuno_fild01,190,176,4	script	Ares::alvalar3	4_M_KY_KNT,{
+	set .@npcname$, "[Ares]";
+	set .@playerName$, "[" + strcharinfo(0) + "]";
+	if (GARCIA_Q == 4)
+	{
+		mes .@npcname$;
+		mes "Okay, guys. Our mission is to eradicate the sudden appearance of monsters that do not live in this area. Do not hesitate to kill every one of them!";
+		next;
+		mes "[Garcia]";
+		mes "Killing is one way to eradicate them. But have you tried resorting to speech?";
+		next;
+		mes .@npcname$;
+		mes "These monsters have been causing trouble to everyone. There is no need for talks.";
+		next;
+		mes "[Garcia]";
+		mes "There is nothing impossible to Garcia, lad.";
+		next;
+		mes .@npcname$;
+		mes "Garcia...? From the stories? The legendary monk who-";
+		next;
+		mes "[Garcia]";
+		mes "They exaggerate the stories, lad. I am not a monk of legend. I simply do what I can. Now, to look for that monster you're talking about.";
+		next;
+		mes .@playerName$;
+		mes "It seems that we'll need to look for a monster who would like to talk things out. We have to look for it, we will spread and search to cover more ground.";
+		next;
+		mes "[garcia]";
+		mes "Right, you are. Let's go.";
+		hideonnpc strnpcinfo(3);
+		hideonnpc "alvalmm2";
+		hideoffnpc "alvalps";
+		getmapxy(.@map$,.@mapX,.@mapY,0);
+		monster .@map$,0,0,"Playful Skeleton",1076,15,strnpcinfo(3)+"::OnMonsterKilled"; //event is used to kill those monsters only
+		set GARCIA_Q, 5;
+	}
+	close;
+	
+OnInit:
+	hideonnpc strnpcinfo(3);
+	end;
+}
+
+yuno_fild01,310,335,4	script	Playful Skeleton::alvalps	SKELETON,{
+	set .@npcname$, "[Skippy]";
+	set .@playerName$, "[" + strcharinfo(0) + "]";
+	if (GARCIA_Q == 5)
+	{
+		mes .@npcname$;
+		mes "Hello hooman would you like to play with us";
+		if(select("Yes","No") == 1)
+		{
+			next;
+			mes .@playerName$;
+			mes "I would love to, but not here.";
+			next;
+			mes .@npcname$;
+			mes "You do oh but why not here";
+			next;
+			mes .@playerName$;
+			mes "Because there's a mean guy looking for you and he says he is going to hurt you really bad!";
+			next;
+			mes .@npcname$;
+			mes "But hooman always do that it is a good thing we are undead";
+			next;
+			mes .@playerName$;
+			mes "That makes a lot of sense, but you should really go...";
+			next;
+			mes .@npcname$;
+			mes "I know you hoomans you always hurt us non-aggressive monsters for selfish reasons I have a request before we will leave you in peace gather me";
+			for(set .@i,0; .@i<getarraysize($requirementFixIdSk); set .@i,.@i+1)
+			{
+				mes "	~ " + $requirementFixCountSk[.@i] + " " + getitemname($requirementFixIdSk[.@i]);
+			}
+			next;
+			mes .@playerName$;
+			mes "What for? If I may ask.";
+			next;
+			mes .@npcname$;
+			mes "You hoomans and your curious mind just go get them for me all those should be found in this map chop chop";
+			set GARCIA_Q, 6;
+		}
+		else
+		{
+			next;
+			mes .@playerName$;
+			mes "Play with you?! Monsters? Don't be ridiculous!";
+			next;
+			mes .@npcname$;
+			mes "Okay hooman";
+		}
+	}
+	else if (GARCIA_Q == 6)
+	{
+		set .@ok, 1;
+		for(set .@i,0; .@i<getarraysize($requirementFixIdSk); set .@i,.@i+1)
+		{
+			if(countitem($requirementFixIdSk[.@i]) < $requirementFixCountSk[.@i])
+			{
+				set .@ok, 0;
+			}
+		}
+		if (.@ok == 1)
+		{
+			mes .@playerName$;
+			mes "Here are the items you asked for. Now tell me, what are you gonna use them for?";
+			for(set .@i,0; .@i<getarraysize($requirementFixIdSk); set .@i,.@i+1)
+			{
+				delitem $requirementFixIdSk[.@i], $requirementFixCountSk[.@i];
+			}
+			next;
+			mes .@npcname$;
+			mes "No reason at all I just want to test if you are going to run away from my request like the others do";
+			next;
+			mes .@playerName$;
+			mes "Okay... You really have to leave this place before you get hurt.";
+			next;
+			mes .@npcname$;
+			mes "Okay okay we will go bye bye hooman";
+			set GARCIA_Q, 7;
+			killmonster strnpcinfo(4), "alvalar3::OnMonsterKilled";
+			hideonnpc strnpcinfo(3);
+			hideoffnpc "alvalmm2";
+			hideoffnpc "alvalar3";
+		}
+		else
+		{
+			mes .@npcname$;
+			mes "Hooman I do not want to fight you because I do not have the guts and not all of us are bad to the bones";
+			for(set .@i,0; .@i<getarraysize($requirementFixIdSk); set .@i,.@i+1)
+			{
+				mes "	~ " + $requirementFixCountSk[.@i] + " " + getitemname($requirementFixIdSk[.@i]);
+			}
+		}
+	}
+	close;
+	
+OnInit:
+	hideonnpc strnpcinfo(3);
+	setarray $requirementFixIdSk[0],512,905,910,510,1057,7101;
+	setarray $requirementFixCountSk[0],20,20,20,3,50,1;	
+	end;
+}

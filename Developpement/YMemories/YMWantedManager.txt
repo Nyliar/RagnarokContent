@@ -1,0 +1,106 @@
+// [========================================================]
+// [===========   Yggdrasily Memories - Wanted   ===========]
+// [========================================================]
+// [ Version 2                                              ]
+// [========================================================]
+// [ Original script by: Nyliar                             ]
+// [========================================================]
+// [ Description:                                           ]
+// [--------------------------------------------------------]
+// [                                                        ]
+// [ - Yggdrasily Memories of pk / kpk system 				]
+// [                                                        ]
+// [========================================================]
+// [ Changelog: (5 last updates)                            ]
+// [--------------------------------------------------------]
+// [                                                        ]
+// [ v0: Creation                      			    		]
+// [                                                        ]
+// [========================================================]
+// [                                                        ]
+// [========================================================]
+
+-	script	YMWanted::ymwantedsys	-1,{
+	end;
+	
+OnAddInitialMap:
+OnClock0000:
+	//reinitialize possible array
+	copyarray $possibleYmWanted$[0], $ymMapList$[0], getarraysize($ymMapList$);
+	//clear mapflags
+	for(set .@i,0; .@i<getarraysize($ymWantedMap$); set .@i,.@i+1)
+	{
+		removemapflag $ymWantedMap$, mf_pvp;
+	}
+	deletearray $ymWantedMap$[0], getarraysize($ymWantedMap$);
+
+	//check killcount
+	if (.minWantedKillCount > $wantedKillCount)
+	{
+		//if the min count hasn't been done, and if it's possible to add more maps, add more
+		if (.startWantedMapCount < .maxWantedKillCount)
+		{
+			set .startWantedMapCount, .startWantedMapCount + 1;
+		}
+	}
+	else
+	{
+		if (.startWantedMapCount < .minWantedMapCount)
+		{
+			set .startWantedMapCount, .startWantedMapCount - 1;	
+		}
+	}
+
+	//get new values
+	for (set .@i,0; .@i<.startWantedMapCount; set .@i,.@i+1)
+	{
+		callsub OnAddMap;
+	}
+
+	for(set .@i,0; .@i<getarraysize($ymWantedMap$); set .@i,.@i+1)
+	{
+		if (.debug == 1)
+		{
+			announce "Adding pvp to map " + $ymWantedMap$[.@i], bc_all;
+		}
+		setmapflag $ymWantedMap$[.@i], mf_pvp;
+	}
+	end;
+	
+OnAddMap:
+	set .@rand, rand(0,getarraysize($possibleYmWanted$)-1);
+	set .@lookedMap$, $possibleYmWanted$[.@rand];
+	
+	set .@out, 0;
+	
+	for(set .@j,0; .@j<getarraysize(.excludedMap$) && .@out == 0; set .@j,.@j+1)
+	{	
+		if (.excludedMap$[.@j] == .@lookedMap$)
+		{
+			set .@out, 1;
+		}
+	}
+	
+	if (.@out)
+	{
+		callsub OnAddMap;
+	}
+	else
+	{
+		set $ymWantedMap$[getarraysize($ymWantedMap$)], .@lookedMap$;
+		deletearray $possibleYmWanted$[.@rand], 1;
+	}
+	return;
+
+OnInit:
+	copyarray $possibleYmWanted$[0], $ymMapList$[0], getarraysize($ymMapList$);
+	set .startWantedMapCount, 5;
+	setarray .excludedMap$[0],"ars_fild21", "ars_fild48", "br_lb", "ygg_village";
+	set .minWantedKillCount, 10;
+	set .minWantedMapCount, 5;
+	set .maxWantedMapCount, getarraysize($possibleYmWanted$) - getarraysize(.excludedMap$);
+	set .debug, 0;
+	goto OnAddInitialMap;
+	end;
+	
+}

@@ -1,0 +1,351 @@
+function	script	SC_AntiPriest	{
+	if(WCSkillUsed == 0)
+	{
+		if($worldSkillLvl > getd("WCITEMLVL0"))
+		{
+			$worldSkillLvl = getd("WCITEMLVL0");
+		}
+		unitskilluseid getcharid(3), 3029, $worldSkillLvl;
+		set WCITEMCNT0, WCITEMCNT0 + 1;
+		set WCSkillUsed, 1;
+		addtimer 60000 * WCITEMLVL0, "alawcm::OnEnableSkillAgain";
+	}
+	else
+	{
+		dispbottom "[ World Class ] You're not ready to use a World Class skill again.";
+	}
+	end;
+}
+
+function	script	SC_DeadController	{
+	if(WCSkillUsed == 0)
+	{
+		if($worldSkillLvl > getd("WCITEMLVL1"))
+		{
+			$worldSkillLvl = getd("WCITEMLVL1");
+		}
+		switch($worldSkillLvl)
+		{
+			case 1:
+				summon "--ja--",1562,300000;
+				summon "--ja--",1562,300000;
+				summon "--ja--",1562,300000;
+				break;
+			case 2:
+				summon "--ja--",1016,300000;
+				summon "--ja--",1016,300000;
+				summon "--ja--",1028,270000;
+				summon "--ja--",1028,270000;
+				break;
+			case 3:
+				summon "--ja--",1291,270000;
+				summon "--ja--",2649,210000;
+				summon "--ja--",1028,210000;
+				summon "--ja--",1028,210000;
+				break;
+			case 4:
+				summon "--ja--",1958,300000;
+				summon "--ja--",1959,210000;
+				summon "--ja--",1960,180000;
+				summon "--ja--",1291,180000;
+				break;
+			case 5:
+				summon "--ja--",1958,300000;
+				summon "--ja--",1959,210000;
+				summon "--ja--",1960,180000;
+				summon "--ja--",1961,180000;
+				summon "--ja--",1291,120000;
+				summon "--ja--",1957,60000;
+				break;
+		}
+		set WCITEMCNT1, WCITEMCNT1 + 1;
+		set WCSkillUsed, 1;
+		addtimer 60000 * WCITEMLVL1, "alawcm::OnEnableSkillAgain";
+	}
+	else
+	{
+		dispbottom "[ World Class ] You're not ready to use a World Class skill again.";
+	}
+	end;
+}
+
+function	script	SC_DeathBringer	{
+	if(WCSkillUsed == 0)
+	{
+		if($worldSkillLvl > getd("WCITEMLVL2"))
+		{
+			$worldSkillLvl = getd("WCITEMLVL2");
+		}
+		switch($worldSkillLvl)
+		{
+			case 1:
+				unitskilluseid 339, 1;
+				break;
+			case 2:
+				unitskilluseid 339, 1;
+				unitskilluseid 679, 5;
+				break;
+			case 3:
+				unitskilluseid 679, 10;
+				break;
+			case 4:
+				unitskilluseid 658, 3;
+				unitskilluseid 670, 5;
+				break;
+			case 5:
+				unitskilluseid 680, 10;
+				break;
+		}
+		set WCITEMCNT2, WCITEMCNT2 + 1;
+		set WCSkillUsed, 1;
+		addtimer 60000 * WCITEMLVL2, "alawcm::OnEnableSkillAgain";
+	}
+	else
+	{
+		dispbottom "[ World Class ] You're not ready to use a World Class skill again.";
+	}
+	end;
+}
+
+function	script	SC_LifeLord	{
+	if(WCSkillUsed == 0)
+	{
+		if($worldSkillLvl > getd("WCITEMLVL3"))
+		{
+			$worldSkillLvl = getd("WCITEMLVL3");
+		}
+		switch($worldSkillLvl)
+		{
+			case 1:
+				recovery 1, getcharid(0), 2;
+				break;
+			case 2:
+				recovery 1, getcharid(2), 2;
+				break;
+			case 3:
+				recovery 3, strcharinfo(4), 2;
+				break;
+			case 4:
+				recovery 3, strcharinfo(4), 4;
+				break;
+			case 5:
+				recovery 3, strcharinfo(4), 1;
+				break;
+		}
+		set WCITEMCNT3, WCITEMCNT3 + 1;
+		set WCSkillUsed, 1;
+		addtimer 60000 * WCITEMLVL3, "alawcm::OnEnableSkillAgain";
+	}
+	else
+	{
+		dispbottom "[ World Class ] You're not ready to use a World Class skill again.";
+	}
+	end;
+}
+
+function	script	SC_IllusionMaster	{
+	if(WCSkillUsed == 0)
+	{
+		if($worldSkillLvl > getd("WCITEMLVL4"))
+		{
+			$worldSkillLvl = getd("WCITEMLVL4");
+		}
+		switch($worldSkillLvl)
+		{
+			case 1:
+				unitskilluseid getcharid(3), 2492, 1;
+				break;
+			case 2:
+				charcommand "#clone " + strcharinfo(0);
+				charcommand "#clone " + strcharinfo(0);
+				break;
+			case 3:
+				charcommand "#slaveclone  " + strcharinfo(0);
+				break;
+			case 4:
+				charcommand "#clone " + strcharinfo(0);
+				charcommand "#slaveclone  " + strcharinfo(0);
+				break;
+			case 5:
+				unitskilluseid getcharid(3), 5003, 5;
+				charcommand "#slaveclone  " + strcharinfo(0);
+				charcommand "#slaveclone  " + strcharinfo(0);
+				break;
+		}
+		set WCITEMCNT4, WCITEMCNT4 + 1;
+		set WCSkillUsed, 1;
+		addtimer 60000 * WCITEMLVL4, "alawcm::OnEnableSkillAgain";
+	}
+	else
+	{
+		dispbottom "[ World Class ] You're not ready to use a World Class skill again.";
+	}
+	end;
+}
+
+function	script	SC_NatureTamer	{
+	if(WCSkillUsed == 0)
+	{
+		if($worldSkillLvl > getd("WCITEMLVL5"))
+		{
+			$worldSkillLvl = getd("WCITEMLVL5");
+		}
+		switch($worldSkillLvl)
+		{
+			case 1:
+				getmapxy(.@map$, .@x, .@y, UNITTYPE_PC);
+				areamonster .@map$, .@x - 5, .@y - 5, .@x + 5, .@y + 5, "--ja--", rand(1078,1083), 10, "alawcm::OnInvokDied";
+				break;
+			case 2:
+				charcommand "#makehomun " + strcharinfo(0) + " " + rand(5);
+				break;
+			case 3:
+				unitskilluseid 2483, 5;
+				break;
+			case 4:
+				unitskilluseid 5036, 3;
+				break;
+			case 5:
+				unitskilluseid 5028, 5;
+				break;
+		}
+		addtimer 180000, "alawcm::OnResetNature"; 
+		set WCITEMCNT5, WCITEMCNT5 + 1;
+		set WCSkillUsed, 1;
+		addtimer 60000 * WCITEMLVL5, "alawcm::OnEnableSkillAgain";
+	}
+	else
+	{
+		dispbottom "[ World Class ] You're not ready to use a World Class skill again.";
+	}
+	end;
+}
+
+function	script	SC_MonsterHunter	{
+	if(WCSkillUsed == 0)
+	{
+		if($worldSkillLvl > getd("WCITEMLVL6"))
+		{
+			$worldSkillLvl = getd("WCITEMLVL6");
+		}
+		switch($worldSkillLvl)
+		{
+			case 1:
+				//earth
+				summon "--ja--",2045,600000;  
+				summon "--ja--",2045,600000;  
+				break;
+			case 2:
+				//aqua element
+				summon "--ja--",2016,500000;
+				summon "--ja--",2020,500000;
+				summon "--ja--",2021,500000;
+				break;
+			case 3:
+				//wind
+				summon "--ja--",1263,400000;
+				summon "--ja--",1263,400000;
+				summon "--ja--",1263,400000;
+				summon "--ja--",1263,400000;
+				break;
+			case 4:
+				//fire
+				summon "--ja--",1833,300000;
+				summon "--ja--",1834,300000;
+				break;
+			case 5:
+				//mvp
+				summon "--ja--",1039,100000;
+				break;
+		}
+		set WCITEMCNT6, WCITEMCNT6 + 1;
+		set WCSkillUsed, 1;
+		addtimer 60000 * WCITEMLVL6, "alawcm::OnEnableSkillAgain";
+	}
+	else
+	{
+		dispbottom "[ World Class ] You're not ready to use a World Class skill again.";
+	}
+	end;
+}
+
+function	script	SC_FoodThinker	{
+	if(WCSkillUsed == 0)
+	{
+		if($worldSkillLvl > getd("WCITEMLVL7"))
+		{
+			$worldSkillLvl = getd("WCITEMLVL7");
+		}
+		switch($worldSkillLvl)
+		{
+			case 1:
+				consumeitem 685;
+				consumeitem 662;
+				break;
+			case 2:
+				consumeitem 12245;
+				consumeitem 11551;
+				break;
+			case 3:
+				consumeitem 607;
+				consumeitem 11551;
+				consumeitem 11552;
+				consumeitem 11553;
+				consumeitem 11554;
+				break;
+			case 4:
+				consumeitem 607;
+				consumeitem 12298;
+				consumeitem 12299;
+				consumeitem 12319;
+				break;
+			case 5:
+				consumeitem 12226;
+				break;
+		}
+		set WCITEMCNT7, WCITEMCNT7 + 1;
+		set WCSkillUsed, 1;
+		addtimer 60000 * WCITEMLVL7, "alawcm::OnEnableSkillAgain";
+	}
+	else
+	{
+		dispbottom "[ World Class ] You're not ready to use a World Class skill again.";
+	}
+	end;
+}
+
+function	script	SC_SpellMaster	{
+	if(WCSkillUsed == 0)
+	{
+		if($worldSkillLvl > getd("WCITEMLVL8"))
+		{
+			$worldSkillLvl = getd("WCITEMLVL8");
+		}
+		switch($worldSkillLvl)
+		{
+			case 1:
+				itemskill 694, 1;
+				break;
+			case 2:
+				itemskill 662, 5;
+				break;
+			case 3:
+				itemskill 662, 7;
+				break;
+			case 4:
+				itemskill 680, 8;
+				break;
+			case 5:
+				itemskill 653, 10;
+				break;
+		}
+		set WCITEMCNT8, WCITEMCNT8 + 1;
+		set WCSkillUsed, 1;
+		addtimer 60000 * WCITEMLVL8, "alawcm::OnEnableSkillAgain";
+	}
+	else
+	{
+		dispbottom "[ World Class ] You're not ready to use a World Class skill again.";
+	}
+	end;
+}

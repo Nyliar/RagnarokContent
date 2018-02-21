@@ -1,0 +1,27 @@
+/////////////////////////////////////////////
+//NPC Créé par Lyyn - lyyn@bewoopi.com
+//Pour Tradition Online
+//////--------------------------------------
+//Date de création :
+// 24 juillet 2009
+//////--------------------------------------
+//Description du script :
+//Healer original avec système de fatigue.
+//////--------------------------------------
+//Suivi des modifications :
+//-------------------------
+//06-07-2014	:	Suppression des prompt + remaniement du code
+//24-07-2009	:	Création du NPC
+////////////////////////////////////////////
+
+//factions doctor
+mellina_in,247,21,5	script	Doctor#1::danfbwsd	121,{
+	callfunc "F_menuheal",29;
+
+	OnInit:
+		callfunc "F_recup",29;
+		end;
+}
+
+mellina_in,63,67,5	duplicate(danfbwsd)	Doctor#2::danfsbhd	121
+mellina_in,120,165,5	duplicate(danfbwsd)	Doctor#3::danfpmd	121

@@ -1,0 +1,1156 @@
+// [========================================================]
+// [=============	 Main Line - TimeFountain      ============]
+// [========================================================]
+// [ Version 1                                              ]
+// [========================================================]
+// [ Original script by: Alayne				    ]
+// [========================================================]
+// [ Description:                                           ]
+// [--------------------------------------------------------]
+// [                                                        ]
+// [ - Rune Midgard main story quest line    	   	    ]
+// [  This file contains the entrance to the Time Fountain 	    ]
+// [                                                        ]
+// [========================================================]
+// [ Changelog: (5 last updates)                            ]
+// [--------------------------------------------------------]
+// [                                                        ]
+// [ v0: Creation                      			    ]
+// [                                                        ]
+// [========================================================]
+// [                                                        ]
+// [========================================================]
+
+prontera,165,188,4	script	Norns Ghost::alnogh	4_F_NYDHOG,{
+	set .@npcname$, "[ Norns Ghost ]";
+	mes .@npcname$;
+	mes "Looks like you've succeeded in the sealing process.";
+	mes "Now, nobody will ever block us again. We're able to rule this world!";
+	mes "And even you won't be able to. You're belonging to us. Those Ases and Giants, even the allmighty ones, belong to us.";
+	mes "You have no way to avoid this!";
+	next;
+	mes .@npcname$;
+	mes "But if ever you're willing to try, we won't be selfish.";
+	mes "We'd like to prove you that it isn't worth trying.";
+	mes "Come, come to our place.";
+	mes "The Time Fountain will be the last place you'll see.";
+	next;
+	mes .@npcname$;
+	mes "Well, if you can find it at least...";
+	mes "Time Fountain isn't really hidden, nor visible.";
+	mes "Logic is unfair, but reallistic.";
+	mes "Dumbs peoples aren't welcome to our Kingdom.";
+	close;
+	
+OnCheckAseGiants:
+	stopnpctimer;
+	query_sql("SELECT `id` FROM `verdandi_quests` WHERE `generalState`!=3", .@id);
+	if(getarraysize(.@id) == 0)
+	{
+		hideoffnpc strnpcinfo(3);
+		disablenpc "almqlve";
+		disablenpc "almqlur";
+		disablenpc "almqlsk";
+		
+		enablenpc "almqtfm";
+		enablenpc "almqkh0";
+		enablenpc "almqkh1";
+		enablenpc "almqkh2";
+		enablenpc "almqkh3";
+		enablenpc "almqkh4";
+		enablenpc "almqkh5";
+		enablenpc "almqkh6";
+		enablenpc "almqkh7";
+		enablenpc "almqkh8";
+		enablenpc "almqkh9";
+		enablenpc "almqkh10";
+		enablenpc "almqkh11";
+	}	
+	else
+	{
+		initnpctimer;
+	}
+	end;
+	
+OnTimer60000:
+	//each minutes, check if this npc should be shown
+	goto OnCheckAseGiants;
+	end;
+	
+OnInit:
+	set $tfKeyId, 7026;
+	hideonnpc strnpcinfo(3);
+	goto OnCheckAseGiants;
+	end;
+}
+
+c_tower4,165,188,4	script	Time Fountain::almqtfm	HIDDEN_WARP_NPC,{
+function summon_normal;
+function summon_guardian;
+function summon_asesgiants;
+	end;
+	
+OnPCLoadMapEvent:
+	if(mobcount(strnpcinfo(4), strnpcinfo(3) + ::"OnTimeHolderDied) == 1)
+	{
+		//clock tower manager
+		summon_normal( strnpcinfo(4), strnpcinfo(3) + "::OnSupportDied", 0 );	
+	}
+	else
+	{
+		goto OnChangeHour;	
+	}
+	end;
+	
+OnCheckTimeFountainRaid:
+	set .@totalCountUser, 0;
+	for(set .@i,0; .@i<getarraysize($tFountainMap$); set .@i,.@i+1)
+	{
+		set .@totalCountUser, .@totalCountUser + getmapusers($tFountainMap$[.@i]);
+	}
+	return .@totalCountUser == 0;
+	
+OnChangeHour:
+	set .lastHour, .lastHour + 1;
+	if(.lastHour > 11)
+	{
+		set .lastHour, 0;
+	}
+	enablenpc "almqkh" + .lastHour;
+	end;
+	
+OnTHolderPoped:
+	initnpctimer;
+	announce "[ Norns Ghost ] Looks like somebody pierced the Clock Tower secret...But you're not yet inside the Fountain!", bc_all, 0xFF0000;
+	end;
+	
+OnTimer10000:
+	set .announceOn, 1;
+	set .countRound, .countRound + 1;
+	//every 10s, check if there's still some Manager alive
+	if(mobcount(strnpcinfo(4), strnpcinfo(3) + "::OnTimeHolderDied") == 0 && .countRound > 0)
+	{			
+		set .entranceCount, .entranceCount + 1;
+		if(.entranceCount >= .entranceDelay * 60000)
+		{
+			setnpcdisplay strnpcinfo(3), HIDDEN_WARP_NPC;
+			stopnpctimer;
+			set .entranceCount, -1;
+		}
+	}
+	else
+	{
+		if(.countRound >= .minuteDelay * 60000)
+		{
+			stopnpctimer;
+			killmonster strnpcinfo(3) + "::OnSupportDied";
+			killmonster strnpcinfo(3) + "::OnTimeHolderDied";
+			announce "[ Norns Ghost ] See? You're not yet ready to encounter us!", bc_all, 0xFF0000;
+		}
+		if(mobcount(strnpcinfo(4), strnpcinfo(3) + ::"OnSupportDied) >= 1)
+		{
+			unitskilluseid $tHolderId,"NPC_INVINCIBLE",1;
+		}
+		else
+		{
+			unitskilluseid $tHolderId,"NPC_INVINCIBLE",0;
+		}
+	}
+	
+	if(.raidCount != -1)
+	{
+		set .raidCount, .raidCount + 1;
+		if(.raidCount >= .raidDelay * 60000)
+		{
+			stopnpctimer;
+			announce "[ Norns Ghost ] You can't defeat us! Leave this place, now!", bc_all, 0xFF0000;
+			for(set .@i,0; .@i<getarraysize($tFountainMap$); set .@i,.@i+1)
+			{
+				killmonsterall $tFountainMap$[.@i];
+				mapwarp $tFountainMap$[.@i], "prontera", 0, 0;
+			}
+			disablenpc "tfwarp#0";
+			disablenpc "altfve";
+			disablenpc "altfsk";
+			disablenpc "altfur";
+		}
+	}
+	if(.reviveCount != -1)
+	{
+		set .reviveCount, .reviveCount + 1;
+		if(.reviveDelay >= .reviveDelay * 60000)
+		{
+			summon_guardian( .lastMapPoped$, strnpcinfo(3) );
+		}
+	}
+	setnpctimer 0;
+	end;
+	
+OnSupportDied:
+	//used to check if holder should be damageable
+	end;
+	
+OnTimeHolderDied:
+	setnpcdisplay strnpcinfo(3), 3074;
+	set .entranceCount, 0;
+	killmonster strnpcinfo(3) + "::OnSupportDied";
+	
+	set $raid_tf_level, 0;
+	
+	if(.announceOn == 1)
+	{
+		if(callsub(OnCheckTimeFountainRaid))
+		{
+			enablenpc "tfwarp#0";
+			enablenpc "tfwarp#1";
+			enablenpc "altfv";
+			enablenpc "altfve";
+			enablenpc "altfsk";
+			enablenpc "altfur";
+			
+			disablenpc "tfwarp#1";
+			disablenpc "tfwarp#2";
+			disablenpc "tfwarp#3";
+			disablenpc "tfwarp#4";
+			disablenpc "tfwarp#5";
+			disablenpc "tfwarp#6";
+			
+			setarray .availableAsesGiants[0],2942,3628,3273;
+			setarray .typeAsesGiants[0],0,0,0,0,0,0,1,1,1,1,1,1;
+		}
+		announce "[ Norns Ghost ] " + strcharinfo(0) + " opened the entrance to the Time Fountain.", bc_all, 0xFF0000;
+		set .announceOn, 0;
+	}
+	end;
+	
+
+function	summon_normal	{
+	set .@map$, getarg(0);
+	set .@npcname$, getarg(1);
+	set .@increaseFloor, getarg(2);
+	
+	if(.@increaseFloor == 1)
+	{
+		$raid_tf_level++;
+	}
+	
+	setarray .@coordinate[0], 216, 255, 216, 215;
+	
+	switch( $raid_tf_level ){
+		case 1:
+			//Holder protector
+			setarray .@monster,1270;
+			setarray .@amount,getmapusers(strnpcinfo(4));
+			setarray .@label$,"OnSupportDied";
+			break;
+		case 2:
+			//Past monsters
+			setarray .@monster,1270,1270,1270;
+			for(set .@i,0; .@i<getarraysize($tfPlayerIn); set .@i,.@i+1)
+			{
+				if(attachrid($tfPlayerIn[.@i]))
+				{
+					for(set .@j,0; .@j<$tfPlayerDeathCount[.@i]; set .@j,.@j+1)
+						clone .@map$,150,150,strcharinfo(3) + "::OnNormalDied",$tfPlayerIn[.@];
+				}
+			}
+			break;
+		case 3:
+			//Future monsters
+			setarray .@monster,1270,1270,1270;
+			break;
+		case 5:
+			switch(rand(0,3))
+			{
+				case 0:
+					//
+					break;
+				case 1:
+					break;
+				case 2:
+					break;
+				case 3:
+					break;
+			}
+			break;
+		case 6:
+			//system message
+			setarray .@monster,1270;
+			setarray .@amount,getmapusers(.@map$);
+			setarray .@label$,"OnChestBroke";
+			break;
+	}
+	set .@monster_size, getarraysize( .@monster );
+	for( set .@i, 0; .@i < .@monster_size; set .@i,.@i+1 ){
+		set .@target_amount, ( .@amount[.@i] );
+		set .@size, 0;
+		if(getarraysize(.@label$) == 0)
+		{
+			set .@clabel$, .@npcname$ + "::OnNormalDied";
+		}
+		else
+		{
+			set .@clabel$, .@npcname$ + "::" + .@label$[.@i];
+		}	
+		if(getarraysize(.@coordX) > 0)
+		{
+			set .@coordinate[0], .@coordX[.@i * 2];
+			set .@coordinate[1], .@coordY[.@i * 2];
+			set .@coordinate[2], .@coordX[.@i * 2 + 1];
+			set .@coordinate[3], .@coordY[.@i * 2 + 1];
+		}
+		if($raid_tf_level != 3)
+		{
+			areamonster .@map$,.@coordinate[0],.@coordinate[1],.@coordinate[2],.@coordinate[3],"--ja--",.@monster[.@i],.@target_amount,.@clabel$,.@size;
+		}
+		else
+		{
+			for(set .@j,0; .@j<.@target_amount; set .@j,.@j+1)
+			{
+				set .systemIds[.@j], areamonster(.@map$,.@coordinate[0],.@coordinate[1],.@coordinate[2],.@coordinate[3],"--ja--",.@monster[.@i],1,.@clabel$,.@size);
+				debugmes "arraysize: " + getarraysize(.systemIds);
+			}
+		}
+	}
+	set .lastMapPoped$, .@map$;
+	return;
+}
+
+
+function	summon_asesgiants	{
+	set .@map$, getarg(0);
+	set .@npcname$, getarg(1);
+	set .@increaseFloor, getarg(2);
+	
+	setarray .@coordinate[0], 216, 255, 216, 215;
+	set .@summon, rand(0,getarraysize(.availableAsesGiants) - 1);
+	set .popType, .typeAsesGiants[.@summon];
+	
+	switch( .@summon ){
+		case 0:
+			//Fenrir
+			setarray .@monster,.availableAsesGiants[.@summon];
+			break;
+		case 1:
+			//Hel
+			setarray .@monster,.availableAsesGiants[.@summon];
+			break;
+		case 2:
+			//Jormungand
+			setarray .@monster,.availableAsesGiants[.@summon];
+			break;
+		case 3:
+			//Fafnir
+			setarray .@monster,.availableAsesGiants[.@summon];
+			break;
+		case 4:	
+			//Staggs
+			setarray .@monster,.availableAsesGiants[.@summon];
+			break;
+		case 5:	
+			//Loki
+			setarray .@monster,.availableAsesGiants[.@summon];
+			break;
+		case 6:	
+			//Heimdall
+			setarray .@monster,.availableAsesGiants[.@summon];
+			break;
+		case 7:	
+			//Tyr
+			setarray .@monster,.availableAsesGiants[.@summon];
+			break;
+		case 8:	
+			//Njord
+			setarray .@monster,.availableAsesGiants[.@summon];
+			break;
+		case 9:	
+			//Freyja
+			setarray .@monster,.availableAsesGiants[.@summon];
+			break;
+		case 10:	
+			//Thor
+			setarray .@monster,.availableAsesGiants[.@summon];
+			break;
+		case 11:	
+			//Odin
+			setarray .@monster,.availableAsesGiants[.@summon];
+			break;
+	}
+	set .@monster_size, getarraysize( .@monster );
+	for( set .@i, 0; .@i < .@monster_size; set .@i,.@i+1 ){
+		set .@target_amount, ( .@amount[.@i] );
+		set .@clabel$, .@npcname$ + "::OnAseGiantDied";
+		areamonster .@map$,.@coordinate[0],.@coordinate[1],.@coordinate[2],.@coordinate[3],"--ja--",.@monster[.@i],.@target_amount,.@clabel$;
+	}
+	set .lastMapPoped$, .@map$;
+	return;
+}
+
+function	summon_guardian	{
+	set .@map$, getarg(0);
+	set .@npcname$, getarg(1);
+	
+	setarray .@coordinate,216,225,216,225;
+			
+	deletearray .bossIds[0], getarraysize(.bossIds);		
+	switch( $raid_tf_level ){
+		case 1:
+			//Time Holder
+			setarray .@monster,3074;
+			setarray .@label$,"OnTimeHolderDied";
+			setarray .@coordinate,216,225,216,225;
+			break;
+		case 2:
+			//Reduced Skuld
+			setarray .@monster,3074;
+			setarray .@coordinate,216,225,216,225;
+			setarray .@mob$, "Skuld";
+			break;
+		case 3:
+			//Reduced Urd
+			setarray .@monster,3074;
+			setarray .@coordinate,216,225,216,225;
+			setarray .@mob$, "Urd";
+			break;
+		case 4:
+			//Reduced Verdandi
+			setarray .@monster,3074;
+			setarray .@coordinate,216,225,216,225;
+			setarray .@mob$, "Verdandi";
+			break;
+		case 5:
+			if(.popRank == -1)
+			{
+				//Verdandi, Skuld and Urd, real ones
+				copyarray .@monster[0], .nornsIds[0], getarraysize(.nornsIds);
+				setarray .@coordX,216,225,216,225,216,225;
+				setarray .@coordY,216,225,216,225,216,225;
+				setarray .@mob$, "Verdandi","Skuld","Urd";
+			}
+			else
+			{
+				set .@monster[0], .nornsIds[.popRank];
+				switch(.popRank)
+				{
+					case 0:
+						setarray .@coordX,216,225;
+						setarray .@coordY,216,225;
+						setarray .@mob$, "Verdandi";
+						end;
+					case 1:
+						setarray .@coordX,216,225;
+						setarray .@coordY,216,225;
+						setarray .@mob$, "Skuld";
+						end;
+					case 2:
+						setarray .@coordX,216,225;
+						setarray .@coordY,216,225;
+						setarray .@mob$, "Urd";
+						end;
+				}			
+			}
+			break;
+		default: 
+			mapannounce .@map$,"[ Last Room ] : Cleared!! Congratulation!!",bc_map,0x00FF99;
+			return;
+	}
+	set .@monster_size, getarraysize( .@monster );
+	for( set .@i, 0; .@i < .@monster_size; set .@i,.@i+1 ){
+		if(getarraysize(.@label$) == 0)
+		{
+			set .@clabel$, .@npcname$ + "::OnGuardianDied";
+		}
+		else
+		{
+			set .@clabel$, .@npcname$ + "::" + .@label$[.@i];
+		}	
+		set .@mobName$, "--ja--";
+		if(getarraysize(.@mob$) == 0)
+		{
+			set .@mobName$, .@mob$[.@i];
+		}
+		if(getarraysize(.@coordX) > 0)
+		{
+			set .@coordinate[0], .@coordX[.@i * 2];
+			set .@coordinate[1], .@coordY[.@i * 2];
+			set .@coordinate[2], .@coordX[.@i * 2 + 1];
+			set .@coordinate[3], .@coordY[.@i * 2 + 1];
+		}
+	
+		set .@target_amount, 1;
+		set .@size, 0;
+		areamonster(.@map$,.@coordinate[0],.@coordinate[1],.@coordinate[2],.@coordinate[3],.@mobName$,.@monster[.@i],.@target_amount,.@clabel$,.@size);
+		copyarray .bossIds[getarraysize(.bossIds)], $@mobId[0], .@monster_size;
+	}
+	set .lastMapPoped$, .@map$;
+	return;
+}
+
+OnAseGiantDied:
+	set .@map$, .lastMapPoped$;
+	set .@npc_name$, strnpcinfo(3);
+	
+	set .@mob_dead_num, mobcount(.@map$,.@npc_name$+"::OnAseGiantDied" );
+	if( .@mob_dead_num == 0 ){		
+		if(getarraysize(.availableAsesGiants) > 0)
+		{
+			summon_asesgiants( .@map$, .@npc_name$ );	
+			goto OnBlockCharAccordingToSpawn;
+		}
+		else
+		{
+			mapannounce .lastMapPoped$, "[Skuld] It was apparently true. You're strong enough to beat them all!", bc_map, 0xFF0000;
+			sleep2 500;
+			mapannounce .lastMapPoped$, "[Skuld] Go in the next map. You earn the right too!", bc_map, 0xFF0000;
+			sleep2 500;
+			enablenpc "tfwarp#2";
+		}
+	}
+	end;
+
+OnNormalDied:
+	set .@map$, .lastMapPoped$;
+	set .@npc_name$, strnpcinfo(3);
+	
+	set .@mob_dead_num, mobcount(.@map$,.@npc_name$+"::OnNormalDied" );
+	if( .@mob_dead_num == 0 ){		
+		if($raid_tf_level == 2)
+		{
+			set .@boss_dead_num, mobcount(.@map$,.@npc_name$+"::OnGuardianDied" );
+			if(.@boss_dead_num == 1)
+			{
+				mapannounce .lastMapPoped$, "[Skuld] I control the Past! As long as I'm here, you won't defeat those monsters!", bc_map, 0xFF0000;
+				sleep2 500;
+				summon_normal( .@map$, .@npc_name$, 0 );				
+			}
+			else
+			{
+				mapannounce .lastMapPoped$, "[Skuld] Right...I'll enter in the dance then!", bc_map, 0xFF0000;
+				sleep2 500;
+				summon_normal( .@map$, .@npc_name$, 0 );
+				summon_guardian( .@map$, .@npc_name$ );
+			}
+		}
+	}
+	end;
+	
+OnGuardianDied:
+	set .@map$, .lastMapPoped$;
+	set .@npc_name$, strnpcinfo(3);
+	
+	set .@mob_dead_num, mobcount(.@map$,.@npc_name$+"::OnGuardianDied" );
+	
+	if( !.@mob_dead_num )
+	{
+		if ($raid_tf_level == 2)
+		{	
+			killmonsterall .lastMapPoped$, "All";
+			mapannounce $tFountainMap$[0], "[Skuld] Humpf...I'll let you win this time. We'll encounter later on!", bc_map, 0xFF0000;
+			sleep2 500;	
+			enablenpc "tfwarp#3";
+			goto OnSecondFloorOn;
+		}
+		else if ($raid_tf_level == 3)
+		{	
+			killmonsterall .lastMapPoped$;
+			mapannounce $tFountainMap$[0], "[Urd] Hehehehe! I thought you'd be able to pass through this too!", bc_map, 0xFF0000;
+			sleep2 500;	
+			mapannounce $tFountainMap$[0], "[Urd] I'll wait for you in the real Time Fountain!", bc_map, 0xFF0000;
+			sleep2 500;	
+			enablenpc "tfwarp#4";
+			goto OnThirdFloorOn;
+		}
+		else if ($raid_tf_level == 4)
+		{	
+			killmonsterall .lastMapPoped$;
+			enablenpc "altfve2";
+			enablenpc "altfsk2";
+			enablenpc "altfur2";
+		}
+		else if ($raid_tf_level == $max_tf_level)
+		{
+			if(killedrid == .nornsIds[0])
+			{
+				//verdandi
+				if(callsub(OnCheckAliveNorns) == 1)
+				{
+					mapannounce $tFountainMap$[0], "[Verdandi] You won't go away...With that!", bc_map, 0xFF0000;
+					sleep2 500;	
+					mapannounce $tFountainMap$[0], "[Verdandi] Sis...Sisters...Help me!", bc_map, 0xFF0000;
+					sleep2 500;
+					set .reviveCount, 0;
+				}
+				else
+				{
+					goto OnVictory;
+				}
+			}
+			else if(killedrid == .nornsIds[1])
+			{
+				//Skuld
+				if(callsub(OnCheckAliveNorns) == 1)
+				{
+					mapannounce $tFountainMap$[0], "[Skuld] You won't go away...With that!", bc_map, 0xFF0000;
+					sleep2 500;	
+					mapannounce $tFountainMap$[0], "[Skuld] Sis...Sisters...Help me!", bc_map, 0xFF0000;
+					sleep2 500;
+					set .reviveCount, 0;
+				}
+				else
+				{
+					goto OnVictory;					
+				}
+			}
+			else if(killedrid == .nornsIds[2])
+			{
+				//Urd
+				if(callsub(OnCheckAliveNorns) == 1)
+				{
+					mapannounce $tFountainMap$[0], "[Urd] You won't go away...With that!", bc_map, 0xFF0000;
+					sleep2 500;	
+					mapannounce $tFountainMap$[0], "[Urd] Sis...Sisters...Help me!", bc_map, 0xFF0000;
+					sleep2 500;
+					set .reviveCount, 0;
+				}
+				else
+				{
+					goto OnVictory;				
+				}
+			}
+			//start revive delay
+			set .reviveDelay, 0;
+		}
+	}
+	end;	
+	
+OnChestBroke:
+	//specific reward content, not looted by mobs
+	end;
+	
+OnCheckAliveNorns:
+	set .@revive, getarg(1);
+	set .@atLeastOneAlive, 0;
+	for(set .@i,0; .@i<getarraysize(.bossIds); set .@i,.@i+1)
+	{
+		if(getmapxy(.@map$, .@x, .@y, UNITTYPE_MOB, .bossIds[.@i]) == 0)
+		{
+			set .@atLeastOneAlive, 1;
+		}
+		else
+		{
+			if(.@revive)
+			{
+				set .popRank, .@i;
+				summon_guardian( .lastMapPoped$, strnpcinfo(3) );
+			}
+		}
+	}
+	return .@atLeastOneAlive;
+	
+OnVictory:
+	set .reviveCount, -1;
+	mapannounce .lastMapPoped$, "[Verdandi] This...This can't be...", bc_map, 0xFF0000;
+	sleep2 500;
+	mapannounce .lastMapPoped$, "[Skuld] Si...Sisters...It's all black around me...", bc_map, 0xFF0000;
+	sleep2 500;
+	mapannounce .lastMapPoped$, "[Urd] Where are you? You can't leave me alone! You can't!", bc_map, 0xFF0000;
+	sleep2 500;
+	mapannounce .lastMapPoped$, "[Verdandi] Don't be affraid, Sisters...", bc_map, 0xFF0000;
+	sleep2 500;
+	mapannounce .lastMapPoped$, "[Verdandi] It just mean...That our endless pain...Will finally end...", bc_map, 0xFF0000;
+	sleep2 500;
+	mapannounce .lastMapPoped$, "[Skuld] But...I don't want to...I want to live again...", bc_map, 0xFF0000;
+	sleep2 500;
+	mapannounce .lastMapPoped$, "[Urd] I won't...Stand being alone...Please...Help me!", bc_map, 0xFF0000;
+	sleep2 500;
+	mapannounce .lastMapPoped$, "[Verdandi] I'm sorry...May you...Forgive me...For my...Folishness...", bc_map, 0xFF0000;
+	sleep2 500;
+	
+	//pop rewards	
+	summon_normal ( .lastMapPoped$, strnpcinfo(3), 1 );
+	
+	sleep2 5000;
+	mapwarp .lastMapPoped$, "prontera", 0, 0;
+	end;
+	
+OnPCDieEvent:
+	if(strcharinfo(3) == .lastMapPoped$)
+	{
+		if(killedrid == .verImmPlayId)
+		{
+			//disable invicibility
+			unitemote(.bossIds[0], e_gasp);
+			unitskilluseid .bossIds[0],"NPC_INVINCIBLE",0;
+			sleep2 5000;
+			goto OnChangeImmortalitySource;
+		}
+		else
+		{
+			
+		}
+	}
+	end;
+	
+OnChangeImmortalitySource:
+	set .@rand, rand(0,getarraysize($tfPlayerIn) - 1);
+	if(attachrid($tfPlayerIn[.@rand] == 0 || strcharinfo(3) != .lastMapPoped$)
+	{
+		deletearray $tfPlayerIn[.@rand], 1;
+		if(getarraysize($tfPlayerIn) > 0)
+		{
+			goto OnChangeImmortalitySource;
+		}
+		else
+		{
+			stopnpctimer;
+			announce "[ Norns Ghost ] You can't defeat us!!", bc_all, 0xFF0000;
+			for(set .@i,0; .@i<getarraysize($tFountainMap$); set .@i,.@i+1)
+			{
+				killmonsterall $tFountainMap$[.@i];
+				disablenpc "tfwarp#0";
+			}
+		}
+	}
+	else
+	{
+		set .verImmPlayId, getcharid(3);
+		unitemote(.bossId, e_heh);
+		unitskilluseid .bossId,"NPC_INVINCIBLE",1;
+	}
+	end;
+	
+OnZeroFloorOn:
+	//Pop global manager
+	summon_guardian( strnpcinfo(4), strnpcinfo(3) );
+	//protection all over the map
+	summon_normal( strnpcinfo(4), strnpcinfo(3), 1 );
+	donpcevent "almqtfm::OnTHolderPoped";	
+	end;
+	
+OnInitialFloorOn:
+	//before starting Norns fight, fight against all gods and giants
+	mapannounce $tFountainMap$[0], "[Skuld] First of all, you'll have to prove you've earned your victory over each foes.", bc_map, 0xFF0000;
+	sleep2 500;
+	mapannounce $tFountainMap$[0], "[Urd] It won't be easy, be careful. You're old foes will all get up at once.", bc_map, 0xFF0000;
+	sleep2 500;
+	mapannounce $tFountainMap$[0], "[Verdandi] On top of that, we'll add some little improvement to them. They're belonging to us now, after all.", bc_map, 0xFF0000;
+	sleep2 500;
+	summon_asesgiants( "1@tf", strnpcinfo(3) );
+	
+	goto OnBlockCharAccordingToSpawn;
+	end;
+	
+OnFirstFloorOn:
+	mapannounce $tFountainMap$[0], "[Skuld] Welcome to my place. You're here in the Past Fountain.", bc_map, 0xFF0000;
+	sleep2 500;
+	mapannounce $tFountainMap$[0], "[Skuld] Here, you have nothing left but you're really old memories.", bc_map, 0xFF0000;
+	sleep2 500;
+	mapannounce $tFountainMap$[0], "[Skuld] Don't hope to pass through this place all alone!", bc_map, 0xFF0000;
+	sleep2 500;
+	summon_normal( "1@tf", strnpcinfo(3), 1 );
+	end;
+	
+OnSecondFloorOn:
+	mapannounce $tFountainMap$[0], "[Urd] You've defeated Skuld, hu? I expected you to do so.", bc_map, 0xFF0000;
+	sleep2 500;
+	mapannounce $tFountainMap$[0], "[Urd] After all, you've succeeded in defeating my riddle and the Holder.", bc_map, 0xFF0000;
+	sleep2 500;
+	mapannounce $tFountainMap$[0], "[Urd] It won't be as easy here, thought!", bc_map, 0xFF0000;
+	sleep2 500;
+	summon_normal( "2@tf", strnpcinfo(3), 1 );
+	summon_guardian( "2@tf", strnpcinfo(3) );
+	end;
+	
+OnThirdFloorOn:
+	mapannounce $tFountainMap$[0], "[Verdandi] Urd and Verdandi...They've let you pass?", bc_map, 0xFF0000;
+	sleep2 500;
+	mapannounce $tFountainMap$[0], "[Verdandi] I guess I missed my education over those two..;", bc_map, 0xFF0000;
+	sleep2 500;
+	mapannounce $tFountainMap$[0], "[Verdandi] You'll encounter your fate here!", bc_map, 0xFF0000;
+	sleep2 500;
+	mapannounce $tFountainMap$[0], "[Verdandi] As long as you're here, I cannot lose!!", bc_map, 0xFF0000;
+	sleep2 500;
+	summon_guardian( "3@tf", strnpcinfo(3) );
+	goto OnChangeImmortalitySource;
+	end;
+	
+OnLastFloorOn:
+	set .popRank, -1;
+	set $raid_tf_level, $raid_tf_level + 1;
+	summon_guardian( "4@tf", strnpcinfo(3) );
+	end;
+	
+OnBlockCharAccordingToSpawn:
+	set .@ok, 0;
+	for(set .@i,0; .@i<getarraysize($tfPlayerIn) && .@ok == 0; set .@i,.@i+1)
+	{
+		if(attachrid($tfPlayerIn[.@i]) && strcharinfo(3) == .lastMapPoped$)
+		{
+			if($tfPlayerChoice[.@i] == .popType)
+			{
+				pcblockmove getcharid(0), 1;
+				dispbottom "[ Volva ] Your choice has been made. You're now unable to help your friends for this fight.";
+			}
+			else
+			{
+				pcblockmove getcharid(0), 0;
+			}
+		}
+	}	
+	return -1;
+	
+OnUpdatePlayerChoice:
+	set .@npcname$, "[Volva]";
+	
+	set .@choice, select("Ases","Giants");
+	next;
+	mes .@npcname$;
+	mes "Kekeke. I understand.";
+	emotion e_gg;
+	mes "I wish you good luck in the place. Even though I know it'll end.";
+	set .@ok, 0;
+	for(set .@i,0; .@i<getarraysize($tfPlayerIn) && .@ok == 0; set .@i,.@i+1)
+	{
+		if($tfPlayerIn[.@i] == getcharid(3))
+		{
+			set $tfPlayerChoice[.@i], .@choice;
+			set .@ok, 1;
+		}
+	}
+	close;
+	
+OnAddPlayer:
+	set .@ok, 0;
+	for(set .@i,0; .@i<getarraysize($tfPlayerIn) && .@ok == 0; set .@i,.@i+1)
+	{
+		if($tfPlayerIn[.@i] == getcharid(3))
+		{
+			set .@ok, 1;
+		}
+	}
+	if(.@ok == 0)
+	{
+		set $tfPlayerIn[getarraysize($tfPlayerIn)], getcharid(3);
+		set $tfPlayerChoice[getarraysize($tfPlayerIn)], 0;		
+		set $tfPlayerDeathCount[getarraysize($tfPlayerIn)], 0;
+	}
+	end;
+	
+OnPlayerUpdateDeath:
+	set .@ok, 0;
+	for(set .@i,0; .@i<getarraysize($tfPlayerIn) && .@ok == 0; set .@i,.@i+1)
+	{
+		if($tfPlayerIn[.@i] == getcharid(3))
+		{
+			set $tfPlayerDeathCount[.@i], $tfPlayerDeathCount[.@i] + 1;
+			set .@ok, 1;
+		}
+	}
+	end;
+
+OnInit:
+	set .minuteDelay, 15; //minutes delay to kill the time holder and open the access to Time Fountain
+	set .entranceDelay, 15; //minutes delay to enter the Time Fountain
+	set .raidDelay, 180; //minutes delay before raid is considered lost
+	set .entranceCount, -1;
+	set .lastHour, 0;
+	set .announceOn, 1;
+	setarray $tFountainMap$[0],"1@tf";
+	set .max_tf_level, 5;
+	set .reviveDelay, 5; //minutes delay to kill other norns or dead one will revive
+	setarray .nornsIds[0], 3074, 3074, 3074; //verdandi, skuld, urd
+	end;
+}
+
+c_tower4,165,188,4	script	Key Hole#00::almqkh0	HIDDEN_WARP_NPC,{
+	mes "[Key Hole]";
+	mes "There's a tiny hole in this wall.";
+	if(countitem($tfKeyId) > 0)
+	{
+		mes "Would you like to insert a key in it?";
+		if(select("Yes","No") == 1)
+		{
+			delitem $tfKeyId, 1;
+			setd("tFountainHour" + strnpcinfo(2), 1);
+			donpcevent "almqtfm::OnChangeHour";
+			
+			set .@ready, 1;
+			for(set .@i,0; .@i<11 && .@ready == 1; set .@i,.@i+1)
+			{
+				if(getd("tFountainHour" + .@i) == 0)
+				{
+					set .@ready, 0;
+				}
+			}
+			
+			if(.@ready == 1)
+			{
+				donpcevent "almqtfm::OnZeroFloorOn";
+			}
+			
+			disablenpc strnpcinfo(3);
+		}
+	}
+	end;
+	
+OnInit:
+	disablenpc strnpcinfo(3);
+	end;
+}
+
+c_tower4,165,188,4	duplicate(almqkh0)	Key Hole#01::almqkh1	HIDDEN_WARP_NPC
+c_tower4,165,188,4	duplicate(almqkh0)	Key Hole#02::almqkh2	HIDDEN_WARP_NPC
+c_tower4,165,188,4	duplicate(almqkh0)	Key Hole#03::almqkh3	HIDDEN_WARP_NPC
+c_tower4,165,188,4	duplicate(almqkh0)	Key Hole#04::almqkh4	HIDDEN_WARP_NPC
+c_tower4,165,188,4	duplicate(almqkh0)	Key Hole#05::almqkh5	HIDDEN_WARP_NPC
+c_tower4,165,188,4	duplicate(almqkh0)	Key Hole#06::almqkh6	HIDDEN_WARP_NPC
+c_tower4,165,188,4	duplicate(almqkh0)	Key Hole#07::almqkh7	HIDDEN_WARP_NPC
+c_tower4,165,188,4	duplicate(almqkh0)	Key Hole#08::almqkh8	HIDDEN_WARP_NPC
+c_tower4,165,188,4	duplicate(almqkh0)	Key Hole#09::almqkh9	HIDDEN_WARP_NPC
+c_tower4,165,188,4	duplicate(almqkh0)	Key Hole#10::almqkh10	HIDDEN_WARP_NPC
+c_tower4,165,188,4	duplicate(almqkh0)	Key Hole#11::almqkh11	HIDDEN_WARP_NPC
+
+
+1@tf,165,188,4	script	Volva::altfv	HIDDEN_WARP_NPC,2,2,{
+	set .@npcname$, "[Volva]";
+	mes .@npcname$;
+	mes "Hihihi welcome in the Time Fountain.";
+	mes "Do you know who I am?";
+	if(select("Yes, you're the Volva","No, who are you?") == 1)
+	{
+		next;
+		mes .@npcname$;
+		mes "Yes, the Volva. It'll make things easier.";
+		goto OnVolvaChoice;
+	}
+	else
+	{
+		next;
+		mes .@npcname$;
+		mes "I'm the Volva. I'm the Watcher, the Witch. I'm the one who read in past, present and future.";
+		mes "I was there before the Norns. I was there before the Gods.";
+		mes "And I'll still be there after they'll be long gone.";
+		goto OnVolvaChoice;
+	}
+	close;
+	
+OnVolvaChoice:
+	set .@npcname$, "[Volva]";
+	mes "I've seen in your past. I followed your step for a long time now.";
+	mes "I know you've encountered the Giants and the Gods. I know you've fight them, defeated them or their ordeals.";
+	mes "I've seen your opinion entering into balance.";
+	next;
+	mes .@npcname$;
+	mes "I've seen you doubt.";
+	mes "You've discovered that the Giants weren't just monsters. That they were trapped, tricked and mistreated.";
+	mes "You've discovered also that Ases weren't as 'pure' as they said. Some was fighters, some were to proud, to stubborn.";
+	mes "You've understood that there's good and bad in both side.";
+	mes "And now, you're in front of a choice.";
+	next;
+	mes .@npcname$;
+	mes "The Time Fountain was once my place. The Norns, readers as me, use it now as their own palace.";
+	mes "But I still have some decision power here. I'm the Volva.";
+	mes "For now, you'll only have to make one choice. Probably the more important you'll ever make.";
+	mes "So choose. Ases, or Giants?";
+	
+	donpcevent "almqtfm::OnUpdatePlayerChoice";
+	close;
+	
+OnTouch:
+	donpcevent "almqtfm::OnAddPlayer";
+	end;	
+}
+
+1@tf,165,188,4	script	Verdandi::altfve	4_F_NYDHOG,2,2,{
+	end;
+		
+OnTouch:
+	if(.talking == 0)
+	{
+		set .talking, 1;
+		donpcevent "altfsk::OnDialog1";
+	}
+	end;
+	
+OnDialog3:
+	cutin "ep14_nyd01",2;
+	mapannounce strnpcinfo(4), "[Verdandi] Sisters, this is not the place for this. Humans, you're here in the Time Fountain.", bc_map, 0x0000FF;
+	npctalk "Sisters, this is not the place for this. Humans, you're here in the Time Fountain.";
+	sleep2 500;
+	mapannounce strnpcinfo(4), "[Verdandi] Here, you'll encounter a lot of things you wouldn't have even thought of.", bc_map, 0x0000FF;
+	npctalk "Here, you'll encounter a lot of things you wouldn't have even thought of.";
+	sleep2 500;
+	mapannounce strnpcinfo(4), "[Verdandi] Even if you're strong, it won't necessarily be enough here. But you'll probably understand that, sooner or later.", bc_map, 0x0000FF;
+	npctalk "Even if you're strong, it won't necessarily be enough here. But you'll probably understand that, sooner or later.";
+	sleep2 500;	
+	donpcevent "altfur::OnDialog4";
+	
+OnInit:
+	set .talking, 0;
+	disablenpc strnpcinfo(3);
+	end;
+}
+
+1@tf,165,188,4	script	Skuld::altfsk	4_F_SHALOSH,{
+	end;	
+	
+OnDialog1:
+	cutin "shaloshi01",2;
+	mapannounce strnpcinfo(4), "[Skuld] Welcome on our Time Kingdom, Humans.", bc_map, 0xFF0000;
+	npctalk "Welcome on our Time Kingdom, Humans.";
+	sleep2 500;
+	donpcevent "altfur::OnDialog2";
+	end;
+	
+OnDialog5:
+	cutin "shaloshi01",2;
+	mapannounce strnpcinfo(4), "[Skuld] And in the end, we'll crush you.", bc_map, 0xFF0000;
+	npctalk "And in the end, we'll crush you.";
+	sleep2 500;
+	cutin "", 255;
+	
+	disablenpc "altfur";
+	disablenpc "altfve";
+	disablenpc strnpcinfo(3);
+	
+	//unlock first trial
+	donpcevent "almqtfm::OnInitialFloorOn";
+	end;
+	
+OnInit:
+	disablenpc strnpcinfo(3);
+	end;
+}
+
+1@tf,165,188,4	script	Urd::altfur	4_F_PINKWOMAN,{
+	end;	
+	
+OnDialog2:
+	cutin "bu_maggi1",2;
+	mapannounce strnpcinfo(4), "[Urd] I don't really believed you'd be able to come this far.", bc_map, 0x00FF00;
+	npctalk "I don't really believed you'd be able to come this far.";
+	sleep2 500;
+	donpcevent "altfve::OnDialog3";
+	end;
+	
+OnDialog4:
+	cutin "bu_maggi1",2;
+	mapannounce strnpcinfo(4), "[Urd] I'll wait for you to come further!", bc_map, 0x00FF00;	
+	npctalk "I'll wait for you to come further!";
+	sleep2 500;
+	donpcevent "altfsk::OnDialog5";
+	end;
+	
+OnInit:
+	disablenpc strnpcinfo(3);
+	end;
+}
+
+
+1@tf,165,188,4	script	Verdandi::altfve2	4_F_NYDHOG,2,2,{
+	end;
+		
+OnTouch:
+	if(.talking == 0)
+	{
+		set .talking, 1;
+		cutin "ep14_nyd01",2;
+		mapannounce strnpcinfo(4), "[Verdandi] Unbelievable...You shouldn't be able to defeat us!", bc_map, 0x0000FF;
+		npctalk "Unbelievable...You shouldn't be able to defeat us!";
+		sleep2 500;
+		
+		donpcevent "altfsk2::OnDialog2_1";
+	}
+	end;
+	
+OnDialog2_3:
+	cutin "ep14_nyd01",2;
+	mapannounce strnpcinfo(4), "[Verdandi] Enough, Urd. This isn't a game!", bc_map, 0xFF0000;
+	npctalk " Enough, Urd. This isn't a game!";
+	sleep2 500;
+	mapannounce strnpcinfo(4), "[Verdandi] Those Humans are a threat for our new world!", bc_map, 0xFF0000;
+	npctalk " Those Humans are a threat for our new world!";
+	sleep2 500;
+	mapannounce strnpcinfo(4), "[Verdandi] We can't let them threats us to bring a new Ragnarok!", bc_map, 0xFF0000;
+	npctalk "We can't let them threats us to bring a new Ragnarok!";
+	sleep2 500;
+	
+	donpcevent "altfur2::OnDialog2_4";
+	end;
+	
+OnDialog2_3:
+	cutin "ep14_nyd01",2;
+	mapannounce strnpcinfo(4), "[Verdandi] Well, let's focus again.", bc_map, 0xFF0000;
+	npctalk " Well, let's focus again.";
+	sleep2 500;
+	mapannounce strnpcinfo(4), "[Verdandi] Humans, you'll gain the right to encounter us in the Fountain!", bc_map, 0xFF0000;
+	npctalk " Humans, you'll gain the right to encounter us in the Fountain!";
+	sleep2 500;
+	mapannounce strnpcinfo(4), "[Verdandi] You'll get lost in its arabescs. The Time is under our rule!", bc_map, 0xFF0000;
+	npctalk "You'll get lost in its arabescs. The Time is under our rule!";
+	sleep2 500;
+	
+	enablenpc "tfwarp#5";
+	enablenpc "tfwarp#6";
+	enablenpc "tfwarp#7";
+	donpcevent "almqtfm::OnLastFloorOn";
+	end;
+	
+OnInit:
+	set .talking, 0;
+	disablenpc strnpcinfo(3);
+	end;
+}
+
+1@tf,165,188,4	script	Skuld::altfsk2	4_F_SHALOSH,{
+	end;	
+	
+OnDialog2_1:
+	cutin "shaloshi01",2;
+	mapannounce strnpcinfo(4), "[Skuld] Well it wasn't our true forms, that's true. But that's still impressive.", bc_map, 0xFF0000;
+	npctalk "Well it wasn't our true forms, that's true. But that's still impressive.";
+	sleep2 500;
+	donpcevent "altfur2::OnDialog2_2";
+	end;
+	
+OnInit:
+	disablenpc strnpcinfo(3);
+	end;
+}
+
+1@tf,165,188,4	script	Urd::altfur2	4_F_PINKWOMAN,{
+	end;	
+	
+OnDialog2_2:
+	cutin "bu_maggi1",2;
+	mapannounce strnpcinfo(4), "[Urd] I told you those Humans will be fun to fight with.", bc_map, 0x00FF00;
+	npctalk "I told you those Humans will be fun to fight with.";
+	sleep2 500;
+	mapannounce strnpcinfo(4), "[Urd] After all, they defeated our little pets.", bc_map, 0x00FF00;
+	npctalk "After all, they defeated our little pets.";
+	sleep2 500;
+	donpcevent "altfve2::OnDialog2_3";
+	end;
+	
+OnDialog2_4:
+	cutin "bu_maggi1",2;
+	mapannounce strnpcinfo(4), "[Urd] I...Sorry, Verdandi.", bc_map, 0x00FF00;
+	npctalk " I...Sorry, Verdandi.";
+	sleep2 500;
+	donpcevent "altfve2::OnDialog2_5";
+	end;
+	
+OnInit:
+	disablenpc strnpcinfo(3);
+	end;
+}
+
+c_tower4,142,41	warp	tfwarp#0	2,2,1@tf,139,49
+1@tf,142,41	warp	tfwarp#1	2,2,1@tf,139,49
+1@tf,142,41	warp	tfwarp#1_1	2,2,1@tf,139,49
+1@tf,142,41	warp	tfwarp#2	2,2,2@tf,139,49
+2@tf,142,41	warp	tfwarp#3	2,2,3@tf,139,49
+3@tf,142,41	warp	tfwarp#4	2,2,4@tf,139,49
+3@tf,142,41	warp	tfwarp#5	2,2,4@tf,139,49
+3@tf,142,41	warp	tfwarp#6	2,2,4@tf,139,49
+3@tf,142,41	warp	tfwarp#7	2,2,4@tf,139,49

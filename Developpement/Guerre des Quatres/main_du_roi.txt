@@ -1,0 +1,242 @@
+-	script	Main du Roi::Main du Roi	-1,{
+	
+set .@npc$, "[^FF0000la Main du Roi^000000]";
+
+set @GID,getcharid(2);
+
+switch( atoi(strnpcinfo(2)) ) {
+	case 0:
+		set @guildid, GetCastleData("ice_combat", 1);
+		set .@combat$, "ice_combat";
+		setarray .coord[0], 71,91;
+      		break;
+	case 1:
+		set @guildid, GetCastleData("fire_combat", 1);
+		set .@combat$, "fire_combat";
+		setarray .coord[0], 114,75;
+    	   break;
+	case 2:
+		set @guildid, GetCastleData("combat01", 1);
+		set .@combat$, "combat01";
+		setarray .coord[0], 114,68;
+       	break;
+	case 3:
+		set @guildid, GetCastleData("combat02", 1);
+		set .@combat$, "combat02";
+		setarray .coord[0], 97,94;
+       	break;
+}
+
+if (@GID == @guildid)
+{
+	if(strcharinfo(0)==getguildmaster(@GID)) goto L_GuildMaster;
+	else goto L_GuildMember;
+}
+else
+{
+	mes .@npc$; 
+	mes "Soyez le bienvenu, voyageur.";
+	close;
+}
+
+L_GuildMaster:
+	mes .@npc$; 
+	mes "Soyez le bienvenu, votre Majesté.";
+	mes "En tant que Main du Roi, je me dois de vous guider, vous conseiller.";
+	mes "Je peux donc vous aider à comprendre ce que gérer un Royaume signifie.";
+	mes "Que puis-je faire pour vous?";
+	next;
+	switch(select("J'aimerais en savoir plus sur la Guerre des Quatres:Qu'est ce que le Tribut?:Quels territoires possédons-nous?:Quelles sont les récompenses?:Le Déclenchement Choisi? Quoi c'est?:Les Lymbes?Ca va être encore long?:Une instance? Tu m'intéresses:Je voudrais aller dans la zone de combat:Rien, je passais dans le coin."))
+	{
+		case 1:
+			mes .@npc$; 
+			mes "Il existe sur ce continent un total de cinq Royaumes.";
+			mes "Vous vous trouvez actuellement au coeur de l'un d'eux,";
+			mes "dans l'une des Quatres Cités.";
+			mes "Ces Cités se font une guerre sans merci depuis des centaines et des centaines d'années.";
+			mes "Les Rois se sont succédés sur les Trônes de manière effrenée.";
+			mes "Une légende dit que les Trônes du Souffle, Incendiaire, Givrant et Tremblant";
+			mes "ne supporte que rarement longtemps la même personne.";
+			next;
+			mes "Depuis quelques années, la cinquième cité, Bastania, dirigée par de sages conseillers,";
+			mes "a demandé aux Quatres Royaumes d'arrêter les Guerres et de limiter les pertes.";
+			mes "Ainsi est née la Guerre des Quatres. Plus qu'une guerre,";
+			mes "il s'agit de bataille ponctuelle, se déroulant aléatoirement dans un Royaume.";
+			mes "Ces batailles ont lieu deux fois par jour, et les Rois se succèdent.";
+			close;
+		case 2:
+			mes "Afin de continuer à lever des contingents,";
+			mes "les Rois ont levé ce qu'ils appellent un Tribut.";
+			mes "Cette dîme est prélevé automatiquement quand quelqu'un souhaite";
+			mes "entrer sur les territoires d'un des Royaumes.";
+			mes "Pour y accéder, aucune autre solution que de payer.";
+			mes "Le Roi peut alors relever le Tribut en parlant au Grand Argentier.";
+			mes "Bien sûr, même si le royaume change de main, tant pis pour l'ancien Roi.";
+			mes "Le Tribut n'a pour maître que le Roi actuel.";
+			close;
+		case 3:
+			mes "Les Territoires dépendent du Royaume, ";
+			mes "Ainsi que du temps passé à défendre ce dernier.";
+			mes "Vous posséder par exemple 2 Territoires la première fois";
+			mes "que vous remportez un territoire, et cela augmente de 1";
+			mes "par Bataille automatique.";
+			next;
+			mes "Voici la liste des Territoires rattachés aux Royaumes au plus";
+			mes "haut niveau de défense:";
+			mes "Royaume de Glace: Royaume de Glace, Manuk, Manuk Field 2, El Dicastes, El Dicastes Field 02, Ice Donjon 3 et 4.";
+			mes "Royaume du Feu: Royaume du Feu, Thor Camp, Thor Donjon 1 et 3, Magma Donjon 1 et 2, Turtle Donjon 4, Rachel.";
+			mes "Royaume de la Terre: Royaume de la Terre, Morocc, Einbech, Einbroch, Veins, Veins Field 2 3 et 4.";
+			mes "Royaume du Vent: Royaume du Vent, Splendied Field 2 et 3, Nydhogur Donjon, Yuno, Odin Temple 2 et 3.";
+			close;
+		case 4:
+			mes "Chaque Royaume qui subit la Guerre des Royaumes reçoit en fin de combat";	
+			mes "deux coffres. Ces coffres apparaissent dans la zone de combat du Royaume.";
+			mes "Par la suite, deux coffres supplémentaires apparaissent de manière aléatoire";
+			mes "sur les territoires annexés au Royaume.";
+			mes "Le Roi, par avidité, peut aussi remettre en jeu son Royaume contre deux coffres supplémentaires.";
+			mes "C'est ce qu'on appelle le Déclenchement Choisi.";
+			close;
+		case 5:
+			mes "Le Déclenchement Choisi ne peut être lancé que par sa Majesté.";
+			mes "Pour se faire, il doit parler au General en Chef.";
+			mes "Le Roi doit alors se mettre en avant et prouver sa valeur.";
+			mes "Il reçoit automatiquement une couronne du Royaume, qui lui offre protection et force.";
+			mes "Il devient dès lors la cible de tout les attaquant. Si l'un d'eux parvient à le tuer,";
+			mes "le Roi perds son trône, et son tueur devient la nouveau Roi (enfin le chef de sa guilde).";
+			next;
+			mes "Pour le Roi déchu, honte et c'est tout. Pour le nouveau Roi, un Royaume entier.";
+			mes "Si le Roi est vainqueur, il gagne la récompense supplémentaire de deux coffres.";
+			mes "Néanmoins, les Dieux veillent. Une Règle de Réussite a été écrite.";
+			mes "Seul un nombre d'ennemi supérieur aux alliés, ainsi qu'un nombre minimal de mort";
+			mes "donnera la victoire en cas de survie du Roi.";
+			mes "Tout comme les Batailles, ces Déclenchements sont possible deux fois par jour PAR ROYAUME.";
+			close;
+		case 6:
+			mes "Je vous ai parlé des apparitions de coffres aléatoires.";
+			mes "Ainsi, chaque homme et femme de Midgard peut obtenir ce coffre.";
+			mes "Néanmoins, il n'est pas si simple de prendre ce qui ne nous appartient pas.";
+			mes "En cas de vol, les Dieux punissent le voleur en l'envoyant dans les Lymbes.";
+			mes "Il s'agit d'un endroit affreux, où la mort entraîne irrémédiablement une perte";
+			mes "d'équipement et d'un niveau.";
+			mes "Seuls les membres de la guilde du Roi peuvent prendre les coffres libérés sans risque.";
+			mes "La Sentence des Dieux est invariable, et cruelle.";
+			close;
+		case 7:
+			mes "Il paraîtrait que chaque Royaume héberge en son sein un Pilier.";
+			mes "Ce serait une personne dont le Noyau tire sa force. C'est une histoire triste.";
+			mes "Ces Piliers sont enfermés depuis des années et pour toujours.";
+			mes "Ils connaissent tout les secrets du Royaume, pour l'avoir vu batir.";
+			mes "Ils pourraient de plus mener le Roi et son équipe vers un territoire caché,";
+			mes "sur lequel ils pourraient trouver des trésors.";
+			mes "Néanmoins, je ne l'ai jamais vu...";
+			close;
+		case 8:
+			mes "Très bien.";
+			mes "A votre service, " + (Sex?"ser":"lady");
+			warp .@combat$, .coord[0], .coord[1];
+			close;
+		case 9: 
+			mes "Très bien.";
+			mes "A votre service, " + (Sex?"ser":"lady");
+			close;
+	}	
+
+L_GuildMember:
+	mes .@npc$; 
+	mes "Soyez le bienvenu.";
+	mes "En tant que Main du Roi, je me dois de guider le Roi, de le conseiller.";
+	mes "Que puis-je faire pour vous?";
+	next;
+	switch(select("J'aimerais en savoir plus sur la Guerre des Quatres:Qu'est ce que le Tribut?:Quels territoires possédons-nous?:Quelles sont les récompenses?:Le Déclenchement Choisi? Quoi c'est?:Les Lymbes?Ca va être encore long?:Une instance? Tu m'intéresses:Je voudrais aller dans la zone de combat:Rien, je passais dans le coin."))
+	{
+		case 1:
+			mes .@npc$; 
+			mes "Il existe sur ce continent un total de cinq Royaumes.";
+			mes "Vous vous trouvez actuellement au coeur de l'un d'eux,";
+			mes "dans l'une des Quatres Cités.";
+			mes "Ces Cités se font une guerre sans merci depuis des centaines et des centaines d'années.";
+			mes "Les Rois se sont succédés sur les Trônes de manière effrenée.";
+			mes "Une légende dit que les Trônes du Souffle, Incendiaire, Givrant et Tremblant";
+			mes "ne supporte que rarement longtemps la même personne.";
+			next;
+			mes "Depuis quelques années, la cinquième cité, Bastania, dirigée par de sages conseillers,";
+			mes "a demandé aux Quatres Royaumes d'arrêter les Guerres et de limiter les pertes.";
+			mes "Ainsi est née la Guerre des Quatres. Plus qu'une guerre,";
+			mes "il s'agit de bataille ponctuelle, se déroulant aléatoirement dans un Royaume.";
+			mes "Ces batailles ont lieu deux fois par jour, et les Rois se succèdent.";
+			close;
+		case 2:
+			mes "Afin de continuer à lever des contingents,";
+			mes "les Rois ont levé ce qu'ils appellent un Tribut.";
+			mes "Cette dîme est prélevé automatiquement quand quelqu'un souhaite";
+			mes "entrer sur les territoires d'un des Royaumes.";
+			mes "Pour y accéder, aucune autre solution que de payer.";
+			mes "Le Roi peut alors relever le Tribut en parlant au Grand Argentier.";
+			mes "Bien sûr, même si le royaume change de main, tant pis pour l'ancien Roi.";
+			mes "Le Tribut n'a pour maître que le Roi actuel.";
+			close;
+		case 3:
+			mes "Les Territoires dépendent du Royaume, ";
+			mes "Ainsi que du temps passé à défendre ce dernier.";
+			mes "Vous posséder par exemple 2 Territoires la première fois";
+			mes "que vous remportez un territoire, et cela augmente de 1";
+			mes "par Bataille automatique.";
+			next;
+			mes "Voici la liste des Territoires rattachés aux Royaumes au plus";
+			mes "haut niveau de défense:";
+			mes "Royaume de Glace: Royaume de Glace, Manuk, Manuk Field 2, El Dicastes, El Dicastes Field 02, Ice Donjon 3 et 4.";
+			mes "Royaume du Feu: Royaume du Feu, Thor Camp, Thor Donjon 1 et 3, Magma Donjon 1 et 2, Turtle Donjon 4, Rachel.";
+			mes "Royaume de la Terre: Royaume de la Terre, Morocc, Einbech, Einbroch, Veins, Veins Field 2 3 et 4.";
+			mes "Royaume du Vent: Royaume du Vent, Splendied Field 2 et 3, Nydhogur Donjon, Yuno, Odin Temple 2 et 3.";
+			close;
+		case 4:
+			mes "Chaque Royaume qui subit la Guerre des Royaumes reçoit en fin de combat";	
+			mes "deux coffres. Ces coffres apparaissent dans la zone de combat du Royaume.";
+			mes "Par la suite, deux coffres supplémentaires apparaissent de manière aléatoire";
+			mes "sur les territoires annexés au Royaume.";
+			mes "Le Roi, par avidité, peut aussi remettre en jeu son Royaume contre deux coffres supplémentaires.";
+			mes "C'est ce qu'on appelle le Déclenchement Choisi.";
+			close;
+		case 5:
+			mes "Le Déclenchement Choisi ne peut être lancé que par sa Majesté.";
+			mes "Pour se faire, il doit parler au General en Chef.";
+			mes "Le Roi doit alors se mettre en avant et prouver sa valeur.";
+			mes "Il reçoit automatiquement une couronne du Royaume, qui lui offre protection et force.";
+			mes "Il devient dès lors la cible de tout les attaquant. Si l'un d'eux parvient à le tuer,";
+			mes "le Roi perds son trône, et son tueur devient la nouveau Roi (enfin le chef de sa guilde).";
+			mes "Pour le Roi déchu, honte et c'est tout. Pour le nouveau Roi, un Royaume entier.";
+			mes "Si le Roi est vainqueur, il gagne la récompense supplémentaire de deux coffres.";
+			mes "Néanmoins, les Dieux veillent. Une Règle de Réussite a été écrite.";
+			mes "Seul un nombre d'ennemi supérieur aux alliés, ainsi qu'un nombre minimal de mort";
+			mes "donnera la victoire en cas de survie du Roi";
+			close;
+		case 6:
+			mes "Je vous ai parlé des apparitions de coffres aléatoires.";
+			mes "Ainsi, chaque homme et femme de Midgard peut obtenir ce coffre.";
+			mes "Néanmoins, il n'est pas si simple de prendre ce qui ne nous appartient pas.";
+			mes "En cas de vol, les Dieux punissent le voleur en l'envoyant dans les Lymbes.";
+			mes "Il s'agit d'un endroit affreux, où la mort entraîne irrémédiablement une perte";
+			mes "d'équipement et d'un niveau.";
+			mes "Seuls les membres de la guilde du Roi peuvent prendre les coffres libérés sans risque.";
+			mes "La Sentence des Dieux est invariable, et cruelle.";
+			close;
+		case 7:
+			mes "Il paraîtrait que chaque Royaume héberge en son sein un Pilier.";
+			mes "Ce serait une personne dont le Noyau tire sa force. C'est une histoire triste.";
+			mes "Ces Piliers sont enfermés depuis des années et pour toujours.";
+			mes "Ils connaissent tout les secrets du Royaume, pour l'avoir vu batir.";
+			mes "Ils pourraient de plus mener le Roi et son équipe vers un territoire caché,";
+			mes "sur lequel ils pourraient trouver des trésors.";
+			mes "Néanmoins, je ne l'ai jamais vu...";
+			close;
+		case 8:
+			mes "Très bien.";
+			mes "A votre service, " + (Sex?"ser":"lady");
+			warp .@combat$, .coord[0], .coord[1];
+			close;
+		case 9: 
+			mes "Très bien.";
+			mes "A votre service, " + (Sex?"ser":"lady");
+			close;
+	}	
+}

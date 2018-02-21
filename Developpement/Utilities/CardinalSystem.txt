@@ -1,0 +1,100 @@
+prt_church,108,127,5	script	CardinalSystem	HIDDEN_WARP_NPC,{
+	end;
+	
+OnWhisperGlobal:	
+OnClock0005:
+	for(set .@i,0; .@i<50; set .@i,.@i+1)
+	{
+		doevent "alabc" + .@i + "::OnClearGauge";
+		doevent "alabc" + .@i + "::OnPopMonsters";
+	}
+	end;
+	
+OnPCKillEvent:
+	attachrid(killedrid);
+	if(Zeny > .zenyStole)
+	{
+		set .@zenyStole, .zenyStole;
+		set Zeny, Zeny - .zenyStole;
+	}
+	else if (Zeny > 0)
+	{
+		set .@zenyStole, Zeny;
+		set Zeny, 0;
+	}
+	attachrid(killerrid);
+	set Zeny, Zeny + .@zenyStole;
+	dispbottom "[Cardinal] You stole some zenies on your victim corpse.";
+	end;
+	
+OnNPCKillEvent:
+	set .@loot, rand(0,10000);
+	set .@looted, 0;
+	for(set .@i,getarraysize($shardIds) - 1; .@i>=0 && .@looted == 0; set .@i,.@i-1)
+	{
+		if(.@loot <= $shardPercent[.@i])
+		{
+			if(.@i == getarraysize($shardIds))
+			{
+				query_sql("SELECT COUNT(`id`) FROM `storage` WHERE id=" + $shardIds[getarraysize($shardIds) - 1], .@count);
+				query_sql("SELECT COUNT(`id`) FROM `inventory` WHERE id=" + $shardIds[getarraysize($shardIds) - 1], .@count2);
+				query_sql("SELECT COUNT(`id`) FROM `cart_inventory` WHERE id=" + $shardIds[getarraysize($shardIds) - 1], .@count3);
+				query_sql("SELECT COUNT(`id`) FROM `guild_storage` WHERE id=" + $shardIds[getarraysize($shardIds) - 1], .@count4);
+				set .@count, .@count + .@count2 + .@count3 + .@count4;
+				if(.@count < 200)
+				{
+					//max 200 exemplary at one time
+					getitem $shardIds[.@i], 1;
+					set .@looted, 1;					
+					announce "[Cardinal System] " + strcharinfo(0) + " just got a World Rare Class Shard. Congratulations", bc_all;
+				}
+			}
+			else
+			{
+				getitem $shardIds[.@i], 1;
+				set .@looted, 1;
+			}
+		}
+	}
+	end;
+	
+OnNormalDied:
+	//nothing, used only for checking
+	end;
+
+OnGuardianDied:
+	if(.debug == 1)
+	{
+		debugmes "Guardian died!";
+	}
+	end;	
+	
+OnAtcommand:
+	if(countitem($shardIds[0]) > 0 && isequipped($radarId) != 0)
+	{
+		delitem $shardIds[0], 1;
+		donpcevent "::OnRadarActivated";
+	}
+	end;
+	
+OnInit:
+	setarray $shardIds[0], 29455, 29456, 29457, 512;
+	setarray $shardForLottery[0], 100, 10, 1;
+	setarray $shardPercent[0], 10000, 1000, 10, 1;
+	setarray $shardForPearls[0], 1000, 100, 10;
+	setarray $pearlIds[0], 29458, 29459;
+	set $radarId, 512;
+	set .zenyStole, 25000;
+	set .debug, 1;
+	set $repopHourCount, 3;
+	
+	set $portalCrystalId, 29501;
+	set $returnCrystalId, 29502;
+
+	set $crystalFirstId, 29500;
+	set $crystalLastId, 29504;
+	set $crystalPercent, 4;
+	
+	bindatcmd("scanradar", strnpcinfo(3)+"::OnAtcommand");
+	end;
+}

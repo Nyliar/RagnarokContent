@@ -1,0 +1,112 @@
+//capitale,263,208,4	script	Skill Disciple::capskidis	579,{
+green,19,17,4	script	Skill Disciple::prtskidis	579,{
+	set .@npcname$, "[Skill Disciple]";
+	set .@price, 10000;
+
+	mes .@npcname$;
+	if (LANGUAGE_WOLVALD == 1)
+	{
+		mes "Bonjour à toi, " + strcharinfo(0);
+		mes "Je suis le disciple du Skill Master de Bastania.";
+		mes "Tu sais, ce monsieur bizarre qui parle de perle, d'essence et de skill en permanence.";
+		if (MULTI_CLASS_COUNT >= 0)
+		{
+			mes "Mon maître m'a appris à révéler les skills cachés dans une personne.";
+			mes "Il m'a aussi appris à les faire oublier. On ne change pas de classe, mais on peut réapprendre les skills qu'on veut.";
+			mes "C'est un reset quoi...";
+			mes "Ca t'intéresse? Ca coute " + .@price + "Zenys";
+			if (select("Oui","Non") == 1)
+			{
+				if (Zeny >= .@price)
+				{
+					set Zeny, Zeny - .@price;
+					mes "Je m'occupe de toi tout de suite.";
+					mes "Alaka....Hop!";
+					mes "Par contre, tu dois IMPERATIVEMENT te déconnecter et reconnecter.";
+					set RESETEVENT, 1;
+				}
+				else
+					mes "Tu n'as pas assez, désolé.";
+			}
+		}
+		else
+		{
+			mes "Tu ne vois pas de qui je parle?";
+			mes "Je ne peux rien pour toi pour l'instant alors...";
+		}
+	}
+	else if (LANGUAGE_WOLVALD == 2)
+	{
+		mes "Hello to you, " + strcharinfo(0);
+		mes "I'm the Bastania Skill Master's disciple.";
+		mes "You know, that strange man who always talk about pearls, essence or skills.";
+		if (MULTI_CLASS_COUNT >= 0)
+		{
+			mes "My master teach me to reveal the hidden skills in a person.";
+			mes "He also teach me how to make people forget them.";
+			mes "It's a partial skill reset...";
+			mes "Interested? It costs " + .@price + "Zenys";
+			if (select("Yes","No") == 1)
+			{
+				if (Zeny >= .@price)
+				{
+					set Zeny, Zeny - .@price;
+					mes "Then here we go.";
+					mes "Alaka....Hop!";
+					mes "But you absolutely have to unconnect and reconnect yourself.";
+					set RESETEVENT, 1;
+				}
+				else
+					mes "You don't have enought Zeny, sorry.";
+			}
+
+		}
+		else
+		{
+			mes "You don't know who he is?";
+			mes "Then I can do nothing for you now...";
+		}
+	}
+	close;
+
+OnPCLogoutEvent:
+	if (RESETEVENT == 1)
+	{
+		goto OnResetSkills;
+	}
+	end;
+
+OnResetSkills:
+	set .@idChar, getcharid(0);
+	for(set .@i,1; .@i<=MULTI_SKILL_COUNT; set .@i, .@i+1)
+	{
+		set .@countPoint, getd("MULTI_SKILL_LEARN_"+.@i) + getd("MULTI_SKILL_LEARN_USED_"+.@i);
+
+		explode(.@skillArray$,getd("MULTI_SKILL_"+.@i+"$"),"#");
+		for (set .@j,0; .@j<getarraysize(.@skillArray$); set .@j,.@j+2)
+		{
+			dispbottom "delete skill " + .@skillArray$[.@j];
+			query_sql("DELETE FROM `skill` WHERE `char_id`=" + .@idChar + " AND `id`=" + .@skillArray$[.@j]);			
+		}
+	}
+
+	setd("MULTI_SKILL_1$", ""); 
+
+	setd("MULTI_SKILL_LEARN_1", .@countPoint);
+	setd("MULTI_SKILL_LEARN_USED_1", 0);
+
+	set RESETEVENT, 0;
+	end;
+
+OnAffectSkill:
+	for(set .@i,1; .@i<=MULTI_SKILL_COUNT; set .@i,.@i+1)
+	{
+		//dispbottom "" + .@i + ":" + getd("MULTI_SKILL_"+.@i+"$");
+		explode(.@skillArray$,getd("MULTI_SKILL_"+.@i+"$"),"#");
+		for (set .@j,0; .@j<getarraysize(.@skillArray$); set .@j,.@j+2)
+		{
+			skill atoi(.@skillArray$[.@j]),atoi(.@skillArray$[.@j+1]),0;
+		}
+	}
+	close;
+}

@@ -1,0 +1,50 @@
+yggdrasil01,125,125,5	script	BloodCrystal#1::alabc41	HIDDEN_WARP_NPC,{
+	end;
+
+OnClearGauge:
+	//setnpcdisplay strnpcinfo(3), OBJ_A2;
+	set .fillPercent, 0;
+	set .fillItemCount, 0;
+	end;
+	
+OnPopMonsters:
+	callsub OnClearMonsters;
+//== yggdrasil01 - Hvergelmir's Fountain (Trunk of Yggdrasil) =
+	monster "yggdrasil01",234,256,"--ja--",1079,5,"CardinalSystem::OnNormalDied";
+	monster "yggdrasil01",273,234,"--ja--",1083,1,"CardinalSystem::OnNormalDied";
+	monster "yggdrasil01",143,257,"--ja--",1083,5,"CardinalSystem::OnNormalDied";
+	monster "yggdrasil01",98,238,"--ja--",1081,5,"CardinalSystem::OnNormalDied";
+	monster "yggdrasil01",98,238,"--ja--",1082,5,"CardinalSystem::OnNormalDied";
+	monster "yggdrasil01",47,207,"--ja--",1079,5,"CardinalSystem::OnNormalDied";
+	monster "yggdrasil01",61,258,"--ja--",1083,1,"CardinalSystem::OnNormalDied";
+	monster "yggdrasil01",132,199,"--ja--",1079,5,"CardinalSystem::OnNormalDied";
+	monster "yggdrasil01",209,218,"--ja--",1083,1,"CardinalSystem::OnNormalDied";
+	monster "yggdrasil01",192,186,"--ja--",1083,1,"CardinalSystem::OnNormalDied";
+	monster "yggdrasil01",169,176,"--ja--",1083,1,"CardinalSystem::OnNormalDied";
+	monster "yggdrasil01",169,176,"--ja--",1080,1,"CardinalSystem::OnNormalDied";
+	monster "yggdrasil01",94,111,"--ja--",1083,1,"CardinalSystem::OnNormalDied";
+	monster "yggdrasil01",51,118,"--ja--",1083,1,"CardinalSystem::OnNormalDied";
+	monster "yggdrasil01",133,54,"--ja--",1083,1,"CardinalSystem::OnNormalDied";
+	monster "yggdrasil01",257,63,"--ja--",1083,3,"CardinalSystem::OnNormalDied";
+	monster "yggdrasil01",0,0,"--ja--",1083,10,"CardinalSystem::OnNormalDied";
+	monster "yggdrasil01",0,0,"--ja--",1080,25,"CardinalSystem::OnNormalDied";
+	monster "yggdrasil01",0,0,"--ja--",1078,15,"CardinalSystem::OnNormalDied";
+	end;
+	
+OnClearMonsters:	
+OnClock0000:
+	killmonsterall "yggdrasil01";
+	set .popAvailable, 1;
+	setd("$" + strnpcinfo(3), 0);
+	return;
+	
+OnInit:
+	set .fillPercent, 0;
+	if(getd("$" + strnpcinfo(3)) >= 1)
+	{
+		set .fillPercent, 100;
+	}
+	set .popAvailable, 1;
+	end;
+}
+

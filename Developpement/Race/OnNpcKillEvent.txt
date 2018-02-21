@@ -1,0 +1,128 @@
+//dah
+prontera,50,50,0	script	NpcKillEvent	-1,{
+	end;
+	
+OnNPCKillEvent:
+	setarray .@helMaps$[0],	"ars_fild48", //hel
+	"ars_fild21",
+	"Biarmaland",
+	"ars_fild10",
+	"br_lb";
+	setarray .@jotMaps$[0],	"ars_fild07",
+	"ars_fild08",
+	"ars_fild51",
+	"ars_fild55",
+	"ars_fild16",
+	"ars_fild20",
+	"ars_fild52",
+	"ars_dun08";
+	setarray .@musMaps$[0],	"ars_fild56", //Muspel
+	"ars_fild23",
+	"ars_fild57",
+	"ars_fild32",
+	"ars_fild31",
+	"ars_dun71",
+	"ars_fild30",
+	"ars_fild24";
+	setarray .@schwaMaps$[0], "ars_fild37", //schwar
+	"ars_fild35",
+	"ars_fild39",
+	"ars_fild40",
+	"ars_dun20",
+	"ars_fild38";
+	setarray .@alfMaps$[0],	"ars_fild27", //Ljos
+	"ars_fild04",
+	"ars_dun64",
+	"ars_fild25",
+	"ars_fild26",
+	"ars_fild28",
+	"ars_dun31";
+	setarray .@vanMaps$[0],	"ars_fild13", //vana
+	"ars_fild11",
+	"ars_fild36",
+	"ars_fild45",
+	"ars_fild33",
+	"ars_fild36",
+	"ars_fild49";
+	setarray .@orbIds[0],29559,29560,29561,29562,29563,29564,29565,29566,29567,29568,29569,29570,29571,29572,29573,29574,29575,29576;
+	setarray .@orbIdsPercent[0],5,2,1;
+	set .@found, 0;
+	for(set .@i,0; .@i<getarraysize(.@helMaps$) && .@found == 0; set .@i,.@i+1)
+	{
+		if (strcharinfo(3) == .@helMaps$[.@i])
+		{
+			set .@found, 1;
+			set .@race_map, 1;
+		}
+	}
+	if (.@found == 0)
+	{	
+		for(set .@i,0; .@i<getarraysize(.@jotMaps$) && .@found == 0; set .@i,.@i+1)
+		{
+			if (strcharinfo(3) == .@jotMaps$[.@i])
+			{
+				set .@found, 1;
+				set .@race_map, 4;
+			}
+		}
+	}
+	if (.@found == 0)
+	{	
+		for(set .@i,0; .@i<getarraysize(.@musMaps$) && .@found == 0; set .@i,.@i+1)
+		{
+			if (strcharinfo(3) == .@musMaps$[.@i])
+			{
+				set .@found, 1;
+				set .@race_map, 5;
+			}
+		}
+	}
+	if (.@found == 0)
+	{	
+		for(set .@i,0; .@i<getarraysize(.@schwaMaps$) && .@found == 0; set .@i,.@i+1)
+		{
+			if (strcharinfo(3) == .@schwaMaps$[.@i])
+			{
+				set .@found, 1;
+				set .@race_map, 3;
+			}
+		}
+	}
+	if (.@found == 0)
+	{	
+		for(set .@i,0; .@i<getarraysize(.@alfMaps$) && .@found == 0; set .@i,.@i+1)
+		{
+			if (strcharinfo(3) == .@alfMaps$[.@i])
+			{
+				set .@found, 1;
+				set .@race_map, 2;
+			}
+		}
+	}
+	if (.@found == 0)
+	{	
+		for(set .@i,0; .@i<getarraysize(.@vanMaps$) && .@found == 0; set .@i,.@i+1)
+		{
+			if (strcharinfo(3) == .@vanMaps$[.@i])
+			{
+				set .@found, 1;
+				set .@race_map, 6;
+			}
+		}
+	}
+	
+	if (.@found == 1)
+	{
+		set .@lootRate, rand(0,1000);
+		
+		for(set .@j,0; .@j<getarraysize(.@orbIdsPercent); set .@j,.@j+1)
+		{
+			if (.@lootRate <= .@orbIdsPercent[.@j] && .@race_map == RACE_SYS)
+			{
+				//get item
+				getitem .@orbIds[getarraysize(.@ordIdsPercent) * (RACE_SYS - 1) + .@j], 1;
+			}
+		}
+	}
+	end;
+}

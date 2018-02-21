@@ -1,0 +1,60 @@
+orcsdun02,68,142,5	script	BloodCrystal#4::alabc6	HIDDEN_WARP_NPC,{
+	end;
+
+OnTimer360000:
+	stopnpctimer;
+	set .loopCount, .loopCount + 1;
+	if(.loopCount >= $repopHourCount)
+	{
+		goto OnClearGauge;
+	}
+	initnpctimer;
+	end;
+
+OnClearGauge:
+	//setnpcdisplay strnpcinfo(3), OBJ_A2;
+	set .fillPercent, 0;
+	set .fillItemCount, 0;
+	end;
+	
+OnPopMonsters:
+	callsub OnClearMonsters;
+//== F1 =============================
+	monster "orcsdun01", 0, 0, "--ja--", 1153, 80, "CardinalSystem::OnNormalDied";
+	monster "orcsdun01", 0, 0, "--ja--", 1005, 15, "CardinalSystem::OnNormalDied";
+	monster "orcsdun01", 0, 0, "--ja--", 1042, 10, "CardinalSystem::OnNormalDied";
+	monster "orcsdun01", 0, 0, "--ja--", 1152, 10, "CardinalSystem::OnNormalDied";
+	monster "orcsdun01", 0, 0, "--ja--", 1111, 5, "CardinalSystem::OnNormalDied";
+	monster "orcsdun01", 0, 0, "--ja--", 1084, 10, "CardinalSystem::OnNormalDied";
+	monster "orcsdun01", 0, 0, "--ja--", 1082, 5, "CardinalSystem::OnNormalDied";
+	
+//== F2 =============================
+	monster "orcsdun02", 0, 0, "--ja--", 1152, 50, "CardinalSystem::OnNormalDied";
+	monster "orcsdun02", 0, 0, "--ja--", 1177, 50, "CardinalSystem::OnNormalDied";
+	monster "orcsdun02", 0, 0, "--ja--", 1111, 20, "CardinalSystem::OnNormalDied";
+	monster "orcsdun02", 0, 0, "--ja--", 1042, 20, "CardinalSystem::OnNormalDied";
+	monster "orcsdun02", 0, 0, "--ja--", 1189, 5, "CardinalSystem::OnNormalDied";
+	monster "orcsdun02", 0, 0, "--ja--", 1084, 5, "CardinalSystem::OnNormalDied";
+	monster "orcsdun02", 0, 0, "--ja--", 1082, 5, "CardinalSystem::OnNormalDied";
+	monster "orcsdun02", 0, 0, "--ja--", 1083, 5, "CardinalSystem::OnNormalDied";
+	end;
+	
+OnClearMonsters:	
+OnClock0000:
+	killmonsterall "orcsdun01";
+	killmonsterall "orcsdun02";
+	set .popAvailable, 1;
+	setd("$" + strnpcinfo(3), 0);
+	return;
+	
+OnInit:
+	set .fillPercent, 0;
+	if(getd("$" + strnpcinfo(3)) >= 1)
+	{
+		set .fillPercent, 100;
+	}
+	setarray .mapToCheck[0],1,2;
+	set .popAvailable, 1;
+	end;
+}
+

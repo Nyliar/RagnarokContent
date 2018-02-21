@@ -1,0 +1,338 @@
+lhz_dun03,139,253,5	script	BloodCrystal#1::alabc37	OBJ_A2,{
+	set .@npcname$, "[Blood Crystal]";
+	mes .@npcname$;
+	mes "Current fill level: " + .fillPercent + "%"; 
+	mes "Would do you want to do?";
+	switch(select("Fill the Crystal","Retrieve a Spirit Life","Nothing"))
+	{
+		case 1:
+			next;
+			mes .@npcname$;
+			mes "You're about to fill Life in Blood Crystal.";
+			mes "How many Shards do you wish to give to the Crystal?";
+			mes "'0' means 'as much as possible'.";
+			input .@shardCount;
+			if(.@shardCount == 0)
+			{
+				set .@shardCount, countitem($shardIds[0]);
+			}
+			if(.@shardCount > countitem($shardIds[0]))
+			{
+				next;
+				mes .@npcname$;
+				mes "You don't have those items.";
+				close;
+			}
+			if(.popAvailable != 1)
+			{
+				next;
+				mes .@npcname$;
+				mes "The Guardian has allready been killed. Wait for " + $repopHourCount + " hours to summon it again.";
+				close;
+			}
+			delitem $shardIds[0], .@shardCount;
+			set .@fillRequired, 1000 + atoi(strnpcinfo(2)) * 50;
+			set .fillItemCount, .fillItemCount + .@shardCount;
+			set .fillPercent,  .fillItemCount * 100 / .@fillRequired;
+			if(.fillPercent >= 100)
+			{
+				set .fillPercent, 100;
+				next;
+				mes .@npcname$;
+				mes "The Crystal has been filled.";
+				for(set .@i,.mapToCheck[0]; .@i<.mapToCheck[1]; set .@i,.@i+1)
+				{
+					set .@mobCount, .@mobCount + mobcount("lhz_dun0" + .@i, "CardinalSystem::OnNormalDied");
+				}
+				if(.@mobCount == 0)
+				{
+					set .@percentHeal, 0 - atoi(strnpcinfo(2));
+					percentheal .@percentHeal, .@percentHeal;
+					set .popAvailable, 0;	
+					setnpcdisplay strnpcinfo(3), OBJ_B2, 1;
+					//special effect
+					specialeffect 862;
+					//summon boss
+					monster "lhz_dun02", 0, 0, "--ja--", 1658, 1, "CardinalSystem::OnGuardianDied";
+          set .@id, rand(1646,1651);
+					monster strnpcinfo(4), 0, 0, "--ja--", .@id, 1, "CardinalSystem::OnGuardianDied";
+          set .@id, rand(1640,1645);
+					monster strnpcinfo(4), 0, 0, "--ja--", .@id, 1, "CardinalSystem::OnGuardianDied";
+					initnpctimer;
+					set .loopCount, 0;
+				}
+				else
+				{
+					mes "The Guardian will appears after total dungeon cleaning.";
+				}
+				setd("$" + strnpcinfo(3), 1);
+			}
+			else
+			{
+				next;
+				mes .@npcname$;
+				mes "The Crystal has been filled up to " + .fillPercent + "%";
+			}
+			break;
+		case 2:
+			next;
+			mes .@npcname$;
+			if(SPIRITLIFE == $maxSpiritLife)
+			{
+				mes "You can't get more than " + $maxSpiritLife + " Spirit Lifes.";
+				close;
+			}
+			if(SPIRIT == 0)
+			{
+				mes "You can't retrieve a Spirit Life while you're not in Spirit mode.";
+				close;
+			}
+			if(.fillPercent > $minFillPercentToRetrieveLife)
+			{
+				set .fillPercent, 0;
+				set SPIRITLIFE, SPIRITLIFE + 1;
+				set SPIRIT, 0;
+				specialeffect2 372;
+				undisguise();
+				mes "The Crystal has been emptied. You've raised from the dead.";
+			}
+			else
+			{
+				mes "The Crystal isn't filled enough to allow Spirit Life retrieve.";
+			}
+			break;
+		case 3:
+			next;
+			mes .@npcname$;
+			mes "Action cancelled.";
+			break;
+	}
+	close;
+
+OnTimer360000:
+	stopnpctimer;
+	set .loopCount, .loopCount + 1;
+	if(.loopCount >= $repopHourCount)
+	{
+		goto OnClearGauge;
+	}
+	initnpctimer;
+	end;
+
+OnClearGauge:
+	setnpcdisplay strnpcinfo(3), OBJ_A2;
+	set .fillPercent, 0;
+	set .fillItemCount, 0;
+	end;
+	
+OnPopMonsters:
+	callsub OnClearMonsters;
+//== lhz_dun01 - Bio-life Labs 1F ==========================
+	monster "lhz_dun01",0,0,"--ja--",1613,50,"CardinalSystem::OnNormalDied";
+	monster "lhz_dun01",0,0,"--ja--",1627,70,"CardinalSystem::OnNormalDied";
+	monster "lhz_dun01",0,0,"--ja--",1682,100,"CardinalSystem::OnNormalDied";
+	monster "lhz_dun01",0,0,"--ja--",1652,1,"CardinalSystem::OnNormalDied";
+	monster "lhz_dun01",0,0,"--ja--",1653,1,"CardinalSystem::OnNormalDied";
+	monster "lhz_dun01",0,0,"--ja--",1654,1,"CardinalSystem::OnNormalDied";
+	monster "lhz_dun01",0,0,"--ja--",1655,1,"CardinalSystem::OnNormalDied";
+	monster "lhz_dun01",0,0,"--ja--",1656,1,"CardinalSystem::OnNormalDied";
+	monster "lhz_dun01",0,0,"--ja--",1657,1,"CardinalSystem::OnNormalDied";
+	monster "lhz_dun01",150,50,"--ja--",1652,1,"CardinalSystem::OnNormalDied";
+	monster "lhz_dun01",150,50,"--ja--",1653,1,"CardinalSystem::OnNormalDied";
+	monster "lhz_dun01",150,50,"--ja--",1654,1,"CardinalSystem::OnNormalDied";
+	monster "lhz_dun01",150,50,"--ja--",1655,5,"CardinalSystem::OnNormalDied";
+	monster "lhz_dun01",150,50,"--ja--",1656,5,"CardinalSystem::OnNormalDied";
+	monster "lhz_dun01",150,50,"--ja--",1657,5,"CardinalSystem::OnNormalDied";
+	monster "lhz_dun01",250,150,"--ja--",1652,4,"CardinalSystem::OnNormalDied";
+	monster "lhz_dun01",250,150,"--ja--",1653,4,"CardinalSystem::OnNormalDied";
+	monster "lhz_dun01",250,150,"--ja--",1654,4,"CardinalSystem::OnNormalDied";
+	monster "lhz_dun01",250,150,"--ja--",1655,2,"CardinalSystem::OnNormalDied";
+	monster "lhz_dun01",250,150,"--ja--",1656,2,"CardinalSystem::OnNormalDied";
+	monster "lhz_dun01",250,150,"--ja--",1657,2,"CardinalSystem::OnNormalDied";
+	monster "lhz_dun01",50,150,"--ja--",1652,1,"CardinalSystem::OnNormalDied";
+	monster "lhz_dun01",50,150,"--ja--",1653,4,"CardinalSystem::OnNormalDied";
+	monster "lhz_dun01",50,150,"--ja--",1654,1,"CardinalSystem::OnNormalDied";
+	monster "lhz_dun01",50,150,"--ja--",1655,4,"CardinalSystem::OnNormalDied";
+	monster "lhz_dun01",50,150,"--ja--",1656,4,"CardinalSystem::OnNormalDied";
+	monster "lhz_dun01",50,150,"--ja--",1657,2,"CardinalSystem::OnNormalDied";
+	monster "lhz_dun01",192,61,"--ja--",1652,1,"CardinalSystem::OnNormalDied";
+	monster "lhz_dun01",192,61,"--ja--",1653,1,"CardinalSystem::OnNormalDied";
+	monster "lhz_dun01",192,61,"--ja--",1654,1,"CardinalSystem::OnNormalDied";
+	monster "lhz_dun01",192,61,"--ja--",1655,1,"CardinalSystem::OnNormalDied";
+	monster "lhz_dun01",192,61,"--ja--",1656,1,"CardinalSystem::OnNormalDied";
+	monster "lhz_dun01",192,61,"--ja--",1657,1,"CardinalSystem::OnNormalDied";
+	monster "lhz_dun01",0,0,"--ja--",1681,1,"CardinalSystem::OnNormalDied";
+
+//== lhz_dun02 - Bio-life Labs 2F ==========================
+	monster "lhz_dun02",0,0,"--ja--",1652,26,"CardinalSystem::OnNormalDied";
+	monster "lhz_dun02",0,0,"--ja--",1653,26,"CardinalSystem::OnNormalDied";
+	monster "lhz_dun02",0,0,"--ja--",1654,26,"CardinalSystem::OnNormalDied";
+	monster "lhz_dun02",0,0,"--ja--",1655,26,"CardinalSystem::OnNormalDied";
+	monster "lhz_dun02",0,0,"--ja--",1656,26,"CardinalSystem::OnNormalDied";
+	monster "lhz_dun02",0,0,"--ja--",1657,26,"CardinalSystem::OnNormalDied";
+	monster "lhz_dun02",150,150,"--ja--",1652,4,"CardinalSystem::OnNormalDied";
+	monster "lhz_dun02",150,150,"--ja--",1653,4,"CardinalSystem::OnNormalDied";
+	monster "lhz_dun02",150,150,"--ja--",1654,4,"CardinalSystem::OnNormalDied";
+	monster "lhz_dun02",150,150,"--ja--",1655,4,"CardinalSystem::OnNormalDied";
+	monster "lhz_dun02",150,150,"--ja--",1656,4,"CardinalSystem::OnNormalDied";
+	monster "lhz_dun02",150,150,"--ja--",1657,4,"CardinalSystem::OnNormalDied";
+	monster "lhz_dun02",150,150,"--ja--",1652,10,"CardinalSystem::OnNormalDied";
+	monster "lhz_dun02",150,150,"--ja--",1653,10,"CardinalSystem::OnNormalDied";
+	monster "lhz_dun02",150,150,"--ja--",1654,10,"CardinalSystem::OnNormalDied";
+	monster "lhz_dun02",150,150,"--ja--",1655,10,"CardinalSystem::OnNormalDied";
+	monster "lhz_dun02",150,150,"--ja--",1656,10,"CardinalSystem::OnNormalDied";
+	monster "lhz_dun02",150,150,"--ja--",1657,10,"CardinalSystem::OnNormalDied";
+	monster "lhz_dun02",0,0,"--ja--",1652,10,"CardinalSystem::OnNormalDied";
+	monster "lhz_dun02",0,0,"--ja--",1653,10,"CardinalSystem::OnNormalDied";
+	monster "lhz_dun02",0,0,"--ja--",1654,10,"CardinalSystem::OnNormalDied";
+	monster "lhz_dun02",0,0,"--ja--",1655,10,"CardinalSystem::OnNormalDied";
+	monster "lhz_dun02",0,0,"--ja--",1656,10,"CardinalSystem::OnNormalDied";
+	monster "lhz_dun02",0,0,"--ja--",1657,10,"CardinalSystem::OnNormalDied";
+	monster "lhz_dun02",0,0,"--ja--",1682,20,"CardinalSystem::OnNormalDied";
+	monster "lhz_dun02",0,0,"--ja--",1635,1,"CardinalSystem::OnNormalDied";
+	monster "lhz_dun02",0,0,"--ja--",1681,10,"CardinalSystem::OnNormalDied";
+
+//== lhz_dun03 - Bio-life Labs 3F ==========================
+	monster "lhz_dun03",140,235,"--ja--",1634,4,"CardinalSystem::OnNormalDied";
+	monster "lhz_dun03",140,235,"--ja--",1635,4,"CardinalSystem::OnNormalDied";
+	monster "lhz_dun03",140,235,"--ja--",1636,4,"CardinalSystem::OnNormalDied";
+	monster "lhz_dun03",140,235,"--ja--",1637,4,"CardinalSystem::OnNormalDied";
+	monster "lhz_dun03",140,235,"--ja--",1638,4,"CardinalSystem::OnNormalDied";
+	monster "lhz_dun03",140,235,"--ja--",1639,4,"CardinalSystem::OnNormalDied";
+
+	monster "lhz_dun03",40,214,"--ja--",1634,1,"CardinalSystem::OnNormalDied";
+	monster "lhz_dun03",40,214,"--ja--",1635,1,"CardinalSystem::OnNormalDied";
+	monster "lhz_dun03",40,214,"--ja--",1636,1,"CardinalSystem::OnNormalDied";
+	monster "lhz_dun03",40,214,"--ja--",1637,1,"CardinalSystem::OnNormalDied";
+	monster "lhz_dun03",40,214,"--ja--",1638,1,"CardinalSystem::OnNormalDied";
+	monster "lhz_dun03",40,214,"--ja--",1639,1,"CardinalSystem::OnNormalDied";
+
+	monster "lhz_dun03",240,213,"--ja--",1634,1,"CardinalSystem::OnNormalDied";
+	monster "lhz_dun03",240,213,"--ja--",1635,1,"CardinalSystem::OnNormalDied";
+	monster "lhz_dun03",240,213,"--ja--",1636,1,"CardinalSystem::OnNormalDied";
+	monster "lhz_dun03",240,213,"--ja--",1637,1,"CardinalSystem::OnNormalDied";
+	monster "lhz_dun03",240,213,"--ja--",1638,1,"CardinalSystem::OnNormalDied";
+	monster "lhz_dun03",240,213,"--ja--",1639,1,"CardinalSystem::OnNormalDied";
+
+	monster "lhz_dun03",140,65,"--ja--",1634,7,"CardinalSystem::OnNormalDied";
+	monster "lhz_dun03",140,65,"--ja--",1635,7,"CardinalSystem::OnNormalDied";
+	monster "lhz_dun03",140,65,"--ja--",1636,7,"CardinalSystem::OnNormalDied";
+	monster "lhz_dun03",140,65,"--ja--",1637,7,"CardinalSystem::OnNormalDied";
+	monster "lhz_dun03",140,65,"--ja--",1638,7,"CardinalSystem::OnNormalDied";
+	monster "lhz_dun03",140,65,"--ja--",1639,7,"CardinalSystem::OnNormalDied";
+
+	monster "lhz_dun03",140,31,"--ja--",1634,1,"CardinalSystem::OnNormalDied";
+	monster "lhz_dun03",140,31,"--ja--",1635,1,"CardinalSystem::OnNormalDied";
+	monster "lhz_dun03",140,31,"--ja--",1636,1,"CardinalSystem::OnNormalDied";
+	monster "lhz_dun03",140,31,"--ja--",1637,1,"CardinalSystem::OnNormalDied";
+	monster "lhz_dun03",140,31,"--ja--",1638,1,"CardinalSystem::OnNormalDied";
+	monster "lhz_dun03",140,31,"--ja--",1639,1,"CardinalSystem::OnNormalDied";
+
+	monster "lhz_dun03",40,66,"--ja--",1634,1,"CardinalSystem::OnNormalDied";
+	monster "lhz_dun03",40,66,"--ja--",1635,1,"CardinalSystem::OnNormalDied";
+	monster "lhz_dun03",40,66,"--ja--",1636,1,"CardinalSystem::OnNormalDied";
+	monster "lhz_dun03",40,66,"--ja--",1637,1,"CardinalSystem::OnNormalDied";
+	monster "lhz_dun03",40,66,"--ja--",1638,1,"CardinalSystem::OnNormalDied";
+	monster "lhz_dun03",40,66,"--ja--",1639,1,"CardinalSystem::OnNormalDied";
+
+	monster "lhz_dun03",240,66,"--ja--",1634,1,"CardinalSystem::OnNormalDied";
+	monster "lhz_dun03",240,66,"--ja--",1635,1,"CardinalSystem::OnNormalDied";
+	monster "lhz_dun03",240,66,"--ja--",1636,1,"CardinalSystem::OnNormalDied";
+	monster "lhz_dun03",240,66,"--ja--",1637,1,"CardinalSystem::OnNormalDied";
+	monster "lhz_dun03",240,66,"--ja--",1638,1,"CardinalSystem::OnNormalDied";
+	monster "lhz_dun03",240,66,"--ja--",1639,1,"CardinalSystem::OnNormalDied";
+
+	monster "lhz_dun03",54,131,"--ja--",1634,5,"CardinalSystem::OnNormalDied";
+	monster "lhz_dun03",54,131,"--ja--",1635,5,"CardinalSystem::OnNormalDied";
+	monster "lhz_dun03",54,131,"--ja--",1636,5,"CardinalSystem::OnNormalDied";
+	monster "lhz_dun03",54,131,"--ja--",1637,5,"CardinalSystem::OnNormalDied";
+	monster "lhz_dun03",54,131,"--ja--",1638,5,"CardinalSystem::OnNormalDied";
+	monster "lhz_dun03",54,131,"--ja--",1639,5,"CardinalSystem::OnNormalDied";
+
+	monster "lhz_dun03",228,137,"--ja--",1634,5,"CardinalSystem::OnNormalDied";
+	monster "lhz_dun03",228,137,"--ja--",1635,5,"CardinalSystem::OnNormalDied";
+	monster "lhz_dun03",228,137,"--ja--",1636,5,"CardinalSystem::OnNormalDied";
+	monster "lhz_dun03",228,137,"--ja--",1637,5,"CardinalSystem::OnNormalDied";
+	monster "lhz_dun03",228,137,"--ja--",1638,5,"CardinalSystem::OnNormalDied";
+	monster "lhz_dun03",228,137,"--ja--",1639,5,"CardinalSystem::OnNormalDied";
+
+	monster "lhz_dun03",138,138,"--ja--",1634,3,"CardinalSystem::OnNormalDied";
+	monster "lhz_dun03",138,138,"--ja--",1635,3,"CardinalSystem::OnNormalDied";
+	monster "lhz_dun03",138,138,"--ja--",1636,3,"CardinalSystem::OnNormalDied";
+	monster "lhz_dun03",138,138,"--ja--",1637,3,"CardinalSystem::OnNormalDied";
+	monster "lhz_dun03",138,138,"--ja--",1638,4,"CardinalSystem::OnNormalDied";
+	monster "lhz_dun03",138,138,"--ja--",1639,4,"CardinalSystem::OnNormalDied";
+
+	monster "lhz_dun03",140,192,"--ja--",1634,7,"CardinalSystem::OnNormalDied";
+	monster "lhz_dun03",140,192,"--ja--",1635,7,"CardinalSystem::OnNormalDied";
+	monster "lhz_dun03",140,192,"--ja--",1636,7,"CardinalSystem::OnNormalDied";
+	monster "lhz_dun03",140,192,"--ja--",1637,7,"CardinalSystem::OnNormalDied";
+	monster "lhz_dun03",140,192,"--ja--",1638,7,"CardinalSystem::OnNormalDied";
+	monster "lhz_dun03",140,192,"--ja--",1639,7,"CardinalSystem::OnNormalDied";
+
+	monster "lhz_dun03",89,164,"--ja--",1639,1,"CardinalSystem::OnNormalDied";
+	monster "lhz_dun03",89,164,"--ja--",1638,3,"CardinalSystem::OnNormalDied";
+	monster "lhz_dun03",107,167,"--ja--",1639,1,"CardinalSystem::OnNormalDied";
+	monster "lhz_dun03",107,167,"--ja--",1638,3,"CardinalSystem::OnNormalDied";
+	monster "lhz_dun03",171,167,"--ja--",1639,1,"CardinalSystem::OnNormalDied";
+	monster "lhz_dun03",171,167,"--ja--",1638,3,"CardinalSystem::OnNormalDied";
+	monster "lhz_dun03",189,164,"--ja--",1639,1,"CardinalSystem::OnNormalDied";
+	monster "lhz_dun03",189,164,"--ja--",1638,3,"CardinalSystem::OnNormalDied";
+	monster "lhz_dun03",89,113,"--ja--",1639,1,"CardinalSystem::OnNormalDied";
+	monster "lhz_dun03",89,113,"--ja--",1638,3,"CardinalSystem::OnNormalDied";
+	monster "lhz_dun03",107,109,"--ja--",1639,1,"CardinalSystem::OnNormalDied";
+	monster "lhz_dun03",107,109,"--ja--",1638,3,"CardinalSystem::OnNormalDied";
+	monster "lhz_dun03",171,109,"--ja--",1639,1,"CardinalSystem::OnNormalDied";
+	monster "lhz_dun03",171,109,"--ja--",1638,3,"CardinalSystem::OnNormalDied";
+	monster "lhz_dun03",189,113,"--ja--",1639,1,"CardinalSystem::OnNormalDied";
+	monster "lhz_dun03",189,113,"--ja--",1638,3,"CardinalSystem::OnNormalDied";
+
+	monster "lhz_dun03",96,164,"--ja--",1634,2,"CardinalSystem::OnNormalDied";
+	monster "lhz_dun03",96,164,"--ja--",1635,2,"CardinalSystem::OnNormalDied";
+	monster "lhz_dun03",96,164,"--ja--",1637,2,"CardinalSystem::OnNormalDied";
+	monster "lhz_dun03",96,164,"--ja--",1638,5,"CardinalSystem::OnNormalDied";
+	monster "lhz_dun03",96,164,"--ja--",1639,3,"CardinalSystem::OnNormalDied";
+	monster "lhz_dun03",180,164,"--ja--",1634,2,"CardinalSystem::OnNormalDied";
+	monster "lhz_dun03",180,164,"--ja--",1636,2,"CardinalSystem::OnNormalDied";
+	monster "lhz_dun03",180,164,"--ja--",1637,2,"CardinalSystem::OnNormalDied";
+	monster "lhz_dun03",180,164,"--ja--",1638,5,"CardinalSystem::OnNormalDied";
+	monster "lhz_dun03",180,164,"--ja--",1639,3,"CardinalSystem::OnNormalDied";
+	monster "lhz_dun03",98,113,"--ja--",1634,2,"CardinalSystem::OnNormalDied";
+	monster "lhz_dun03",98,113,"--ja--",1635,2,"CardinalSystem::OnNormalDied";
+	monster "lhz_dun03",98,113,"--ja--",1636,2,"CardinalSystem::OnNormalDied";
+	monster "lhz_dun03",98,113,"--ja--",1638,5,"CardinalSystem::OnNormalDied";
+	monster "lhz_dun03",98,113,"--ja--",1639,3,"CardinalSystem::OnNormalDied";
+	monster "lhz_dun03",180,113,"--ja--",1635,2,"CardinalSystem::OnNormalDied";
+	monster "lhz_dun03",180,113,"--ja--",1636,2,"CardinalSystem::OnNormalDied";
+	monster "lhz_dun03",180,113,"--ja--",1637,2,"CardinalSystem::OnNormalDied";
+	monster "lhz_dun03",180,113,"--ja--",1638,5,"CardinalSystem::OnNormalDied";
+	monster "lhz_dun03",180,113,"--ja--",1639,3,"CardinalSystem::OnNormalDied";
+
+	monster "lhz_dun03",114,138,"--ja--",1640,1,"CardinalSystem::OnNormalDied";
+	monster "lhz_dun03",163,138,"--ja--",1642,1,"CardinalSystem::OnNormalDied";
+	monster "lhz_dun03",139,158,"--ja--",1641,1,"CardinalSystem::OnNormalDied";
+	monster "lhz_dun03",139,117,"--ja--",1644,1,"CardinalSystem::OnNormalDied";
+	monster "lhz_dun03",138,138,"--ja--",1643,1,"CardinalSystem::OnNormalDied";
+	monster "lhz_dun03",138,138,"--ja--",1645,1,"CardinalSystem::OnNormalDied";
+	end;
+	
+OnClearMonsters:	
+OnClock0000:
+	killmonsterall "lhz_dun01";
+	killmonsterall "lhz_dun02";
+	killmonsterall "lhz_dun03";
+	set .popAvailable, 1;
+	setd("$" + strnpcinfo(3), 0);
+	return;
+	
+OnInit:
+	set .fillPercent, 0;
+	if(getd("$" + strnpcinfo(3)) >= 1)
+	{
+		set .fillPercent, 100;
+	}
+	setarray .mapToCheck[0],1,3;
+	set .popAvailable, 1;
+	end;
+}
+

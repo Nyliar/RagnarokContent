@@ -1,0 +1,322 @@
+//===== rAthena Script ======================================= 
+//= @changegm
+//===== By: ================================================== 
+//= Hiero
+//===== Current Version: ===================================== 
+//= 1.0
+//===== Compatible With: =====================================
+//= eAthena SVN
+//= rAthena SVN
+//===== Description: ========================================= 
+//= @changegm sécurisé
+//===== Additional Comments: ================================= 
+//= 1.0 Première version du script. [Hiero]
+//============================================================ 
+
+prontera,145,171,3	script	Cydh#01::changegm	86,{
+
+set @npcName$, "[Cydh]";
+set .@gid, getcharid(2);
+
+	function woeChecking;
+	function isEmpty;
+	function reqGuildStorage;
+	function setPassword;
+	function newPassword;
+	function definePassword;
+	function changePassword;
+	function callStorage;
+
+	if (strcharinfo(0) == getguildmaster(.@gid))
+	{
+		mes @npcName$; mes "Hello, leader of the guild ^FF0000" + getguildname(.@gid) + "^000000. What can I do for you?"; next;
+	
+		switch(select("Use the guild storage","Guild storage password","Change leader","Don't do anything"))
+		{
+		case 1:
+			if (isEmpty(.@gid))
+			{
+				definePassword(.@gid);
+			}
+			else
+			{
+				reqGuildStorage(.@gid);
+			}
+			break;
+			
+		case 2:
+			if (isEmpty(.@gid))
+			{
+				definePassword(.@gid);
+			}
+			else
+			{
+				changePassword(.@gid);
+			}
+			break;
+			
+		case 3:
+			woeChecking();
+			getguildmember .@gid;
+			
+			// génération du menu dynamique
+			for (set .@i, 0; .@i < $@guildmembercount; set .@i, .@i + 1)
+			{
+				if ($@guildmembername$[.@i] != strcharinfo(0))
+				{
+					set .@bind$, .@bind$  + ":"  + $@guildmembername$[.@i];
+				}
+			}
+
+			do
+			{
+				mes @npcName$; mes "Choose in your guild members."; next;
+				
+				// affiche le menu dynamique
+				set .@select, select(.@bind$) - 1;
+				
+				mes @npcName$; mes "Do you really want ^FF0000" + $@guildmembername$[.@select] + "^000000 to become the new leader ?"; next;
+				
+				switch(select("Yes","No","Cancel"))
+				{
+				case 1:
+					woeChecking(); // éviter le cheat (rester sur l'option oui)
+					
+					set .@state, guildchangegm(.@gid, $@guildmembername$[.@select]);
+					
+					if (.@state)
+					{
+						logmes "[ChangeGM] " + $@guildmembername$[.@select] + " est le nouveau leader de la guilde " + getguildname(.@GID) + " (GID : " + .@gid + ")";
+						mes @npcName$; mes "^FF0000" + $@guildmembername$[.@select] + "^000000 is the new leader. Good luck.";
+						close;
+					}
+					else
+					{
+						logmes "[ChangeGM] Changement vers " + $@guildmembername$[.@select] + " de la guilde " + getguildname(.@GID) + " impossible ! (GID : " + .@gid + ")";
+						mes @npcName$; mes "Unable to give the lead to ^FF0000" + $@guildmembername$[.@select] + "^000000. Please confirm conditions before trying again.";
+						close;
+					}
+				case 2:
+					continue;	
+				case 3:
+					mes @npcName$; mes "Come back if you need me.";
+					close;
+				}
+			}
+			while (1);
+			break;	
+		case 4:
+			mes @npcName$; mes "Come back if you need me.";
+			close;
+		}
+	}
+	else if (.@gid)
+	{
+		mes @npcName$; mes "Hello, member of the guild ^FF0000" + getguildname(.@gid) + "^000000. What can I do for you ?"; next;
+		
+		switch(select("Use the guild storage","Nothing"))
+		{
+		case 1:
+			if (isEmpty(.@gid))
+			{
+				mes @npcName$; mes "Your guild leader must configure a password to allow guild storage use. Please contact him first.";
+				close;
+			}
+			else
+			{
+				reqGuildStorage(.@gid);
+			}
+		case 2:
+			mes @npcName$; mes "Come back if you need me.";
+			close;
+		}
+	}
+	else
+	{
+		mes @npcName$; mes "Hello, you're not registered to an existing guild."; next;
+		mes @npcName$; mes "I can do nothing for you.";
+		close;
+	}
+	
+	function woeChecking
+	{
+		if (agitcheck() || agitcheck2())
+		{
+			mes @npcName$; mes "I'm sorry but you can't change leader while WoE is active.";
+			close;
+		}
+	}
+	
+	function isEmpty
+	{
+		set .@table$, "gstorage";
+		set .@gid, getarg(0);
+		
+		set .@result, query_sql("SELECT id FROM " + .@table$ + " WHERE guild_id = " + .@gid + "", .@id);
+	
+		return (.@result == 0) ? 1 : 0;
+	}
+	
+	function reqGuildStorage
+	{
+		mes @npcName$; mes "Please enter the guild password.";
+		input .@pass$;
+		
+		if (callStorage(getarg(0), .@pass$))
+		{
+			close2;
+			guildopenstorage();
+			end;
+		}
+		else
+		{
+			next;
+			mes @npcName$; mes "Password incorrect. Please be careful.";
+			close;
+		}
+	}
+	
+	function definePassword
+	{
+		do
+		{
+			mes @npcName$; mes "Please define the wished password."; next;
+			mes "It must be 4 to 16 characters long."; next;
+
+			do
+			{
+				input .@pass$;
+			}
+			while (getstrlen(.@pass$) < 4 || getstrlen(.@pass$) > 16);
+			
+			mes @npcName$; mes "Do you really wish to define the password as ^FF0000" + .@pass$ + "^000000 ?"; next;
+			
+			switch(select("Yes","No","Cancel"))
+			{
+			case 1:
+				logmes "[ChangeGM] Mot de passe changé : " + .@pass$;
+				setPassword(getarg(0), .@pass$);
+				mes @npcName$; mes "You're password is ^FF0000" + .@pass$ + "^000000. Note it somewhere, and give it to members only.";
+				close;
+				
+			case 2:
+				continue;
+				
+			case 3:
+				mes @npcName$; mes "Come back if you need me.";
+				close;
+			}
+		}
+		while (1);
+	}
+	
+	function changePassword
+	{
+		set .@try, 0;
+		
+		do
+		{
+			mes @npcName$; mes "Please enter the current password."; next;
+			input .@pass$;
+			
+			if (callStorage(getarg(0), .@pass$))
+			{
+				mes @npcName$; mes "Please enter the new password.";
+				mes "It must 4 to 16 characters long."; next;
+				
+				do
+				{
+					input .@new$;
+				}
+				while (getstrlen(.@new$) < 4 || getstrlen(.@new$) > 16);
+				
+				if (.@new$ != .@pass$)
+				{
+					mes @npcName$; mes "Do you really wish to define the password as ^FF0000" + .@pass$ + "^000000 ?"; next;
+			
+					switch(select("Yes","No","Cancel"))
+					{
+					case 1:
+						logmes "[ChangeGM] Mot de passe changé : " + .@pass$;
+						newPassword(getarg(0), .@pass$, .@new$);
+						mes @npcName$; mes "You're password is ^FF0000" + .@pass$ + "^000000. Note it somewhere, and give it to members only.";
+						close;
+						
+					case 2:
+						continue;
+						
+					case 3:
+				mes @npcName$; mes "Come back if you need me.";
+						close;
+					}
+				}
+				else
+				{
+					mes @npcName$; mes "You can't use last password. Please come back later.";
+					close;
+				}
+			}
+			else
+			{
+				mes @npcName$; mes "Wrong password. Please be careful.";
+				close;
+			}
+		}
+		while (1);
+	}
+	
+	function setPassword
+	{
+		set .@table$, "gstorage";
+		set .@gid, getarg(0);
+		set .@pass$, getarg(1);
+		
+		query_sql("SELECT COUNT(*) FROM " + .@table$ + " WHERE `guild_id` = " + .@gid + " AND `pass` = '" + escape_sql(.@pass$) + "'", .@count);
+			
+		if (.@count)
+		{
+			query_sql("UPDATE " + .@table$ + " SET `pass` = '" + escape_sql(.@pass$) + "', `change` = NOW() WHERE `guild_id` = " + .@gid);
+		}
+		else
+		{
+			query_sql("INSERT INTO " + .@table$ + " VALUES (0, " + .@gid + ", '" + escape_sql(.@pass$) + "', NOW())");
+		}
+	}
+	
+	function newPassword
+	{
+		set .@table$, "gstorage";
+		set .@gid, getarg(0);
+		set .@pass$, getarg(1);
+		set .@new$, getarg(2);
+		
+		query_sql("SELECT COUNT(*) FROM " + .@table$ + " WHERE `guild_id` = " + .@gid + " AND `pass` = '" + escape_sql(.@pass$) + "'", .@count);
+			
+		if (.@count)
+		{
+			query_sql("UPDATE " + .@table$ + " SET `pass` = '" + escape_sql(.@new$) + "', `change` = NOW() WHERE `guild_id` = " + .@gid);
+		}
+		else
+		{
+			query_sql("INSERT INTO " + .@table$ + " VALUES (0, " + .@gid + ", '" + escape_sql(.@new$) + "', NOW())");
+		}
+	}
+	
+	function callStorage
+	{
+		set .@table$, "gstorage";
+		set .@gid, getarg(0);
+		set .@pass$, getarg(1);
+		
+		query_sql("SELECT COUNT(*) FROM " + .@table$ + " WHERE `guild_id` = " + .@gid + " AND `pass` = '" + escape_sql(.@pass$) + "'", .@count);
+		
+		return .@count;
+	}
+}
+
+aldebaran,132,120,6	duplicate(changegm)	Cydh#ald	86
+rachel,128,145,4	duplicate(changegm)	Cydh#rachel	86
+hugel,106,152,4	duplicate(changegm)	Cydh#hugel	86
+izlude,133,120,4	duplicate(changegm)	Cydh#izlude	86
+louyang,204,104,5	duplicate(changegm)	Cydh#louyang	86
+alberta,33,244,3	duplicate(changegm)	Cydh#alberta	86

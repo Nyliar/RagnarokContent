@@ -1,0 +1,73 @@
+// [========================================================]
+// [=============     DANMA - Restaurant      ============]
+// [========================================================]
+// [ Version 1                                              ]
+// [========================================================]
+// [ Original script by: Alayne				    ]
+// [========================================================]
+// [ Description:                                           ]
+// [--------------------------------------------------------]
+// [                                                        ]
+// [ - The DANMA Restaurant script		    	    ]
+// [                                                        ]
+// [========================================================]
+// [ Changelog: (5 last updates)                            ]
+// [--------------------------------------------------------]
+// [                                                        ]
+// [ v0: Creation                      			    ]
+// [                                                        ]
+// [                                                        ]
+// [========================================================]
+// [                                                        ]
+// [========================================================]
+
+prontera,99,144,0	script	Restaurant Chief#Alamo::danrc	HIDDEN_WARP_NPC,{
+	set .@npcname$, "[Chief " + strnpcinfo(2) + "]";
+	
+	mes .@npcname$;
+	mes "Welcome to the " + strnpcinfo(2) + "'s Restaurant, my friend.";
+	mes "You're in the best restaurant of this town.";
+	mes "Here, you'll be able to eat really good food and replenish your tired body!";
+	mes "I'm happy you decided to come in here!";
+	goto OnDisplayMenu;
+	end;
+	
+OnDisplayMenu:
+	next;
+	mes .@npcname$;
+	mes "So, what would you like to eat?";
+	for (set .@i,0; .@i<getarraysize(.@dishesList); set .@i, .@i+1)
+	{
+		set .@menu$, .@menu$ + ( .@i ? ":" : "" ) + .@dishesList$[.@i] + " - "; 
+	}
+	set .@choice, select(.@menu$) - 1;
+	next;
+	mes .@npcname$;
+	mes "Alright, so you'd like an order of " + .@dishesList$[.@choice] + "?";
+	mes "That'll come up to " + .@dishesPrice[.@choice] + ", is that fine?";
+	if (select("Yes","No") == 1)
+	{
+		if (Zeny >= .@dishesPrice[.@choice])
+		{
+			set Zeny, Zeny - .@dishesPrice[.@choice];
+			//apply bonus
+		}
+		else
+		{
+			mes "I'm sorry... You don't seem to have enough money for that.";
+		}
+	}
+	else
+	{
+		mes "Alright! Coming right up!";
+		goto OnDisplayMenu;
+	}
+	close;
+	
+OnInit:
+	setarray .@dishesList[0], 0;
+	setarray .@dishesDesc$[0], 0;
+	setarray .@dishesBonus$[0], 0;
+	setarray .@dishesPrice[0], 0;
+	end;
+}

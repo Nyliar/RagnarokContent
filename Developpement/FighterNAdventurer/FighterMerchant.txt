@@ -1,0 +1,154 @@
+-	shop	FighterShop	-1,501:50;
+
+prontera,208,97,1	script	Fighter Merchant::alafime	859,2,2,{
+	set .@npcname$, "[Yuldr]";
+	
+OnDialogStart:	
+	mes .@npcname$;
+	if (LIFEPATH == 1)
+	{
+		mes "Hey! I bet your here to use your Fighter Points, aren't you?";
+		mes "Perfect! Let's see what we can do for you.";
+		set @shopMode, select("Weapon","Armor","Shield","Garment","Footgear","Accessory","Hat","Card");
+		callshop "FighterShop",1;
+		npcshopattach "FighterShop";
+	}
+	else
+	{
+		mes "Hey sorry...";
+		mes "My stuff are all for the Fighters.";
+		mes "Not for people like you...";
+		mes "Go see others merchants, okay?";
+	}
+	close;
+	
+OnBuyItem:
+	if(.BuildQuest) {
+		for(set .e,0; !compare(getarg(.e+1)+"", "Points"); set .e,.e+2) {}
+		npcshopadditem "FighterShop",getarg(.e+2),getarg(.e)*compare(getarg(.e+1)+"","SZeny");
+		setarray .Shop[.i],getarg(.e+2);
+		set .i,.i+1;
+		goto Quest_Setup;
+	}
+	if(.Shop[@i]!=@bought_nameid) for(set @i,1; 1; set @i,@i+1) if(.Shop[@i]==@bought_nameid) { set .i,@i; callsub Quest_Setup; }	
+	for(set @i,1; !@e; set @i,@i+1) if(.Shop[@i]==@bought_nameid) { set @e,1; set .i,@i; callsub Quest_Setup; }
+	mes "[Fighter]";
+	mes "I require the following:";
+	for(set @i,0; !compare(getarg(@i+1)+"","Points"); set @i,@i+2) mes "^FF0000" + ((countitem(getarg(@i))>=getarg(@i+1))? "^00FF00":"") + "" + getarg(@i+1) + " " + getitemname(getarg(@i)) + " [" + countitem(getarg(@i)) + "/" + getarg(@i+1) + "]";
+	if(getarg(@i)) mes "^FF0000" + ((#FIGHTERPOINTS>=getarg(@i))? "^00FF00":"") + "" + getarg(@i) + " Points";
+	mes "^000000In exchange, I will give you:^0000FF";
+	for(set @i,@i+2; getarg(@i+1,0); set @i,@i+2) mes getarg(@i+1) + " " + getitemname(getarg(@i));
+	switch(select("Exchange:No thanks")) {
+		case 1:
+			for(set @i,0; !compare(getarg(@i+1)+"","Points"); set @i,@i+2) if(countitem(getarg(@i)) < getarg(@i+1)) {
+				next;
+				mes "You have " + countitem(getarg(@i)) + " " + getitemname(getarg(@i)) + ", while I require " + getarg(@i+1) + ".";
+				mes "Please obtain ^FF0000" + (getarg(@i+1)-countitem(getarg(@i))) + " more " + getitemname(getarg(@i)) + "^000000.";
+				close;
+			}
+			if(Zeny < getarg(@i)) {
+				next;
+				mes "You do not have enough Points.";
+				mes "You need ^FF0000" + (getarg(@i)-#FIGHTERPOINTS) + " more Points^000000.";
+				close;
+			}
+			for(set @i,0; !compare(getarg(@i+1)+"","Points"); set @i,@i+2) delitem getarg(@i),getarg(@i+1);
+			set #FIGHTERPOINTS,#FIGHTERPOINTS-getarg(@i);
+			for(set @i,@i+2; getarg(@i+1,0); set @i,@i+2) getitem getarg(@i),getarg(@i+1);
+			close;
+		case 2:
+			close;
+	}
+	
+OnInit:
+	npcshopitem "FighterShop",0,0;
+	set .BuildQuest,1;
+Quest_Setup:
+	switch(@shopMode)
+	{
+		case 1:
+			//weapon
+			for(set .@i,0; .@i<.weaponShop; set .@i,.@i+1)
+			{
+				callsub OnBuyItem,.weaponShopPrice[.@i],"Points",.weaponShop[.@i],1,"";				
+			}
+			end;
+		case 2:
+			//armor
+			for(set .@i,0; .@i<.armorShop; set .@i,.@i+1)
+			{
+				callsub OnBuyItem,.armorShopPrice[.@i],"Points",.armorShop[.@i],1,"";				
+			}
+			end;
+		case 3:
+			//shield
+			for(set .@i,0; .@i<.shieldShop; set .@i,.@i+1)
+			{
+				callsub OnBuyItem,.shieldShopPrice[.@i],"Points",.shieldShop[.@i],1,"";				
+			}
+			end;
+		case 4:
+			//garment
+			for(set .@i,0; .@i<.garmentShop; set .@i,.@i+1)
+			{
+				callsub OnBuyItem,.garmentShopPrice[.@i],"Points",.garmentShop[.@i],1,"";				
+			}
+			end;
+		case 5:
+			//footgear
+			for(set .@i,0; .@i<.footgearShop; set .@i,.@i+1)
+			{
+				callsub OnBuyItem,.footgearShopPrice[.@i],"Points",.footgearShop[.@i],1,"";				
+			}
+			end;
+		case 6:
+			//accessories
+			for(set .@i,0; .@i<.accessoriesShop; set .@i,.@i+1)
+			{
+				callsub OnBuyItem,.accessoriesShopPrice[.@i],"Points",.accessoriesShop[.@i],1,"";				
+			}
+			end;
+		case 7:
+			//hat
+			for(set .@i,0; .@i<.hatShop; set .@i,.@i+1)
+			{
+				callsub OnBuyItem,.hatShopPrice[.@i],"Points",.hatShop[.@i],1,"";				
+			}
+			end;
+		case 8:
+			//cards
+			for(set .@i,0; .@i<.cardsShop; set .@i,.@i+1)
+			{
+				callsub OnBuyItem,.cardsShopPrice[.@i],"Points",.cardsShop[.@i],1,"";				
+			}
+			end;
+	}
+	end;
+	
+OnTouch:
+	if (LIFEPATH == 1)
+	{
+		npctalk "Hey! You! Come see all the stuff I got for you!";
+	}
+	end;
+	
+OnInit:
+	setarray .weaponShop[0],0;
+	setarray .armorShop[0],0;
+	setarray .shieldShop[0],0;
+	setarray .garmentShop[0],0;
+	setarray .footgearShop[0],0;
+	setarray .accessoriesShop[0],0;
+	setarray .hatShop[0],0;
+	setarray .cardsShop[0],0;
+	
+	setarray .weaponShopPrice[0],0;
+	setarray .armorShopPrice[0],0;
+	setarray .shieldShopPrice[0],0;
+	setarray .garmentShopPrice[0],0;
+	setarray .footgearShopPrice[0],0;
+	setarray .accessoriesShopPrice[0],0;
+	setarray .hatShopPrice[0],0;
+	setarray .cardsShopPrice[0],0;
+	end;
+}

@@ -1,0 +1,690 @@
+//===== Hercules Script =======================================
+//= Location de DB Room
+//===== Par : =================================================
+//= Lyyn
+//===== Version du Script : =================================== 
+//= inDev
+//===== Compatible Avec : =====================================
+//= Hercules (ex.: .@i++;)
+//===== Changelog : ===========================================
+//= inDev (17/08/2014)
+//=		- Création du NPC de base
+//===== Commentaires ==========================================
+//=
+//= Nécessite des maps dupliquées, comment faire ça simplement ?
+//=
+//= 	/!\ Demande modif client + serv + recompilation du mapcache
+//=
+//=		////// CLIENT //////
+//=
+//= 1) Ouvrir artefact.grf/data/resnametable.txt (notepad++)
+//=
+//= 2) Dupliquer les données d'une map de cette façon :
+//=
+//= 	guild_room.gnd#quiz_01.gnd#
+//= 	guild_room.gat#quiz_01.gat#
+//= 	guild_room.rsw#quiz_01.rsw#
+//= 	???????\map\guild_room.bmp#???????\map\quiz_01.bmp#
+//=
+//=		guild_room est la map dupliquée
+//=
+//= 3) Donner une BGM à la map en ouvrant artefact.grf/data/mp3nametable.txt (notepad++ toujours)
+//=
+//= 4) Donner un nom à la map en ouvrant artefact.grf/data/mapnametable.txt (notepad++ encore)
+//=
+//= 6) Dupliquer le fichier des effets d'une map. Exemple avec la map paramk :
+//=	
+//=		data.grf/data/luafiles514/lua files/effecttool/paramk.lub
+//=
+//=		--> Renommer le fichier par le nom de la map dupliquée
+//=		--> Copier le code décompilé (GRF Editor) et remplacer le nom paramk par le nom de la map dupliquée
+//=		--> Placer ce nouveau fichier dans artefact.grf en respectant l'hiérarchie des dossiers
+//=		/!\ Pas besoin de recompiler le fichier, mais bien retirer les pseudo-commentaires de GRF Editor
+//=			Le double slash (//) n'est pas reconnu comme commentaire en LUA.
+//=
+//= 5) Mettre à jour artefact.grf + faire le patch
+//=
+//=     ////// SERVEUR //////
+//=
+//=	1) Ajouter les maps dans conf/maps.conf et db/maps-index.txt
+//
+//= 2) Reconstruire le mapcache
+//============================================================
+
+prt_vilg02,131,108,3	script	Aleos::dbroom	899,{
+	
+	function close3;	// Je pique le nom de ta fonction Hiero <3.
+						// -	Si getarg(0) --> pas de close (i.e.: case 255 prompt)
+	function byebye;	// Dire au revoir
+	function warpdb;	// Téléportation vers une map
+	
+	
+	cutin .cutin$, 2;
+	mes .npc$;
+	mes "Hello to you, young adventurer.";
+	mes "What can I do for you ?";
+	next;
+	
+	switch(
+		prompt(
+			"Rent a DB room",
+			"Join a DB room",
+			"Learn more",
+			((getgmlevel() >= .gmlvl) ? "^FF0000(GM) " + ((.gmroom) ? "Désa" : "A") + "ctiver le warp event^000000": "")
+		)
+	)
+	{
+		case 1:
+			// Louer une salle
+			mes .npc$;
+			mes "Which one ?";
+			next;
+			switch(
+				prompt(
+					"Room " + .nom$[0] + ((.pwd$[0]) ? " ^919191(Rented)^000000" : ""),
+					"Room " + .nom$[1] + ((.pwd$[1]) ? " ^919191(Rented)^000000" : ""),
+					"Room " + .nom$[2] + ((.pwd$[2]) ? " ^919191(Rented)^000000" : ""),
+					"Room " + .nom$[3] + ((.pwd$[3]) ? " ^919191(Rented)^000000" : ""),
+					"Aucune"
+				)
+			)
+			{
+				case 1:
+				case 2:
+				case 3:
+				case 4:
+					// @menu = Choix sélectionné
+					.@m = @menu-1;
+					mes .npc$;
+					
+					// Vérifications
+					
+					if(.@m > getarraysize(.pwd$) && .pwd$[.@m] != "") {
+						mes "Sorry, this room is already rented...";
+						close3();
+					}
+					if(Zeny < .prix) {
+						mes "You don't seems having enough zeny. You miss ^FF0000" + (.prix - Zeny) + "^000000z.";
+						close3();
+					}
+					if(.nbIt && countitem(.item) < .nbIt) {
+						mes "You seems to miss some ^FF0000" + getitemname(.item) + "^000000. You're lacking " + (.nbIt - countitem(.item)) + ".";
+						close3();
+					}
+					
+					// Location effective
+					mes "Are you sure you wanna rent the room " + .nom$[.@m] + " ?";
+					next;
+					switch(select("Yes:No")) {
+						case 1:
+							// OK. On demande le pass.
+							mes .npc$;
+							mes "Ok. Give me a password, for your friends to enter.";
+							
+							do {
+								next;
+								input .@pass$;
+								
+								mes .npc$;
+								mes "The password is :\n^FF0000"+.@pass$+"^000000.\n\nRight ?";
+								next;
+								
+								switch(prompt("Yes:No")) {
+									case 1:
+										next;
+										break;
+									case 2:
+										.@pass$ = "";
+										mes .npc$;
+										mes "Please enter another password...";
+										break;
+									case 255:
+										close3(1);
+								}
+							} while(.@pass$ == "");
+						
+							// Revérification des items et zeny avant location
+							if(Zeny < .prix || .nbIt && countitem(.item) < .nbIt) {
+								// Tricherie ! Mêmes sanctions que pour le reset
+								logmes "[DBRoom Tricherie] " + strcharinfo(0) + " a essayé de tricher.";
+								atcommand "@jailfor 48h " + strcharinfo(0);
+								atcommand "@request [NPC Reset] " + strcharinfo(0) + " vient d'être sanctionné pour tricherie au NPC DB Room.";
+								end;
+							}
+							
+							// On retire les sous/items + on valide la location
+							Zeny -= .prix;
+							delitem .item, .nbIt;
+							
+							.pwd$[.@m]		= .@pass$;					// Pass de la room = pass choisi
+							.master[.@m]	= getcharid(0);				// Maître de la room = CID du perso
+							.tick[.@m]		= gettimetick(2) + .delay;	// Expiration dans maintenant + .delay (en secondes le tout)
+							
+							mes .npc$;
+							mes "The room is now rented for a duration of ^FF0000" + .delay / 60 + "^000000 minutes.";
+							mes "Room owner : ^919191" + strcharinfo(0) + "^000000";
+							mes "Password : ^919191" + .pwd$[.@m];
+							next;
+							
+							mes .npc$;
+							mes "Thanks for using our service. Do you wanna be warped?";
+							switch(prompt("Yes:No")) {
+								next;
+								case 1:
+									warpdb(.@m);
+									break;
+								case 2:
+									byebye();
+									break;
+								case 255:
+									close3(1);
+							}
+							break;
+
+						case 2:
+							byebye();
+
+						case 255:
+							close3(1);
+					}
+					break;
+				case 5:
+					byebye();
+				case 255:
+					close3(1);
+			}
+			break;
+
+		case 2:
+			// Rejoindre une room
+			if(!getarraysize(.pwd$) && !.gmroom) {
+				mes .npc$;
+				mes "No room is currently rented.";
+				close3();
+			}
+			mes .npc$;
+			mes "Which room do you wanna join?";
+			next;
+			switch(
+				prompt(
+					((.gmroom)  ? "^FF0000Room " + .gmname$ + "^000000" : ""),
+					((.pwd$[0]) ? "Room " + .nom$[0] : ""),
+					((.pwd$[1]) ? "Room " + .nom$[1] : ""),
+					((.pwd$[2]) ? "Room " + .nom$[2] : ""),
+					((.pwd$[3]) ? "Room " + .nom$[3] : ""),
+					"Aucune"
+				)
+			)
+			{
+				case 1:
+					// Warp event
+					warpdb(0, 1);
+					break;
+				case 2:
+				case 3:
+				case 4:
+				case 5:
+					// @menu = choix du menu
+					.@m = @menu-2;	// -2 car on commence à 2 (gmmap = 1) et la liste des maps commence à 0.
+					
+					// Les GM et maîtres de room entrent sans le pass.
+					if(getgmlevel() >= .gmlvl || getcharid(0) == .master[.@m]) {
+						warpdb(.@m);
+					}
+					
+					// Les autres doivent connaître le mot de passe
+					mes .npc$;
+					mes "Please enter the password :";
+					next;
+					input .@temp$;
+					
+					if(.@m > getarraysize(.pwd$) && .@temp$ != .pwd$[.@m]) {
+						mes .npc$;
+						mes "That's not the one I'm expecting...";
+						close3();
+					}
+					
+					// Recheck au cas où la salle aurait expiré
+					if(.@m > getarraysize(.pwd$) && .pwd$[.@m] == "") {
+						mes .npc$;
+						mes "Oh...The renting duration just expired... I can't warp you, sorry.";
+						close3();
+					}
+					
+					// Tout est ok, on tp !
+					warpdb(.@m);
+					break;
+				case 6:
+					byebye();
+				case 255:
+					close3(1);
+			}
+			break;
+
+		case 3:
+			// En savoir plus
+			mes .npc$;
+			//mes "^FF0000NO_MSG^000000";
+			mes "I'm offering a renting service for rooms where you can invoke monsters using \"^FF0000Dead Branch^000000\".";
+			next;
+			
+			mes .npc$;
+			mes "There's a total of 4 rooms, each one with it's own athmosphere. The price, thought, is the same: ^FF0000" + .prix + "^000000z.";
+			next;
+			
+			mes .npc$;
+			mes "The reservation enable you to use the room for a fixed time of " + (.delay / 60) + " minutes.";
+			next;
+			
+			mes .npc$;
+			mes "Keep in mind that a special room can sometimes be opened for special event by the GM.";
+			close3();
+		
+		case 4:
+			// Désactiver / Activer le warp event
+			mes .npc$;
+			mes "Do you really want to " + ((.gmroom) ? "deactivate" : "activate") + " the DB room " + .gmname$ + " ?";
+			next;
+			switch(prompt("Yes:No")) {
+				case 1:
+					if(.gmroom) .gmroom = 0;
+					else .gmroom = 1;
+					
+					mes .npc$;
+					mes "The DB Room " + .gmname$ + " has successfully been " + ((.gmroom) ? "activated." : "deactivated.");
+					close3();
+				case 2:
+					byebye();
+				case 255:
+					close3(1);
+			}
+
+		case 255:
+			// Cancel pressed
+			close3(1);
+	}
+	
+	function close3 {
+		// Fermer une boîte de dialogue en virant le cutin
+		if(!getarg(0, 0)) close2;
+		cutin "", 255;
+		end;
+	}
+	
+	function byebye {
+		mes .npc$;
+		mes "Ok, see you soon !";
+		close3();
+	}
+	
+	function warpdb {
+		// TP de façon random sur la map choisie.
+		//		getarg(0) = id de la map
+		//		getarg(1) = Si True, warp event gm
+		.@id = getarg(0);
+		.@gm = getarg(1, 0);
+		//npctalk .@id + " - " + .@gm;
+		.@r = getarraysize(getd(.@gm ? ".gmmapx" : ".map" + .@id + "x"));
+		//.@name$ = getd((getarg(1) ? ".map" + .@id + "x" : ".gmmapx"));
+		//.@r = getarraysize(.@name$);
+		.@r = rand(.@r);
+		
+		if(!.@gm) warp(.map$[.@id], getd(".map" + .@id + "x[" + .@r + "]") , getd(".map" + .@id + "y[" + .@r + "]"));
+		else warp(.gmmap$, getd(".gmmapx[" + .@r + "]") , getd(".gmmapy[" + .@r + "]"));
+
+		end;
+	}
+	
+	OnInit:
+		// Config
+		.npc$				= "[Aleos]";
+		.cutin$				= "sc_vicente01";
+		.gmlvl				= 80;		// Niveau minimum pour entrer dans les rooms sans pass
+		.gmroom				= 0;
+		.gmname$			= "Event";
+		.gmmap$				= "dbroomgm";
+		setarray .gmmapx,	94, 94, 105;
+		setarray .gmmapy,	19, 181, 100;
+		
+		.prix				= 100000;	// Prix pour la location d'une salle
+		.item				= 675;		// Item à utiliser pour louer une salle
+		.nbIt				= 0;		// Nombre d'exemplaires requis de cet item (0 = désactivé)
+		.delay				= 1800;		// temps en secondes de location (default : 30 minutes -> 1800 secondes)
+		
+		setarray .pwd$,		"", "", "", "";									// MDP des rooms
+		setarray .nom$,		"Rurale", "Aquatique", "Paisible", "Classique";	// Nom thématique des rooms
+		setarray .master,	0, 0, 0, 0;										// CID des maîtres de room
+		setarray .tick,		0, 0, 0, 0;										// Timestamp d'expiration de location
+		setarray .map$,		"dbroom00", "dbroom01", "dbroom02", "dbroom03";	// Nom des maps des rooms
+		
+		// Coordonnées de spawn pour chaque map
+		setarray .map0x,	85, 49, 18, 50;
+		setarray .map0y,	55, 22, 57, 83;
+		setarray .map1x,	80, 52, 88, 115;
+		setarray .map1y,	56, 103, 117, 86;
+		setarray .map2x,	100, 83, 104, 127;
+		setarray .map2y,	68, 97, 136, 83;
+		setarray .map3x,	90, 50, 8, 49;
+		setarray .map3y,	50, 90, 49, 8;
+		end;
+	
+	// CHECK DEGUEULASSE POUR EVITER UNE BOUCLE EN FREELOOP.
+	OnMinute00:
+	OnMinute01:
+	OnMinute02:
+	OnMinute03:
+	OnMinute04:
+	OnMinute05:
+	OnMinute06:
+	OnMinute07:
+	OnMinute08:
+	OnMinute09:
+	OnMinute10:
+	OnMinute11:
+	OnMinute12:
+	OnMinute13:
+	OnMinute14:
+	OnMinute15:
+	OnMinute16:
+	OnMinute17:
+	OnMinute18:
+	OnMinute19:
+	OnMinute20:
+	OnMinute21:
+	OnMinute22:
+	OnMinute23:
+	OnMinute24:
+	OnMinute25:
+	OnMinute26:
+	OnMinute27:
+	OnMinute28:
+	OnMinute29:
+	OnMinute30:
+	OnMinute31:
+	OnMinute32:
+	OnMinute33:
+	OnMinute34:
+	OnMinute35:
+	OnMinute36:
+	OnMinute37:
+	OnMinute38:
+	OnMinute39:
+	OnMinute40:
+	OnMinute41:
+	OnMinute42:
+	OnMinute43:
+	OnMinute44:
+	OnMinute45:
+	OnMinute46:
+	OnMinute47:
+	OnMinute48:
+	OnMinute49:
+	OnMinute50:
+	OnMinute51:
+	OnMinute52:
+	OnMinute53:
+	OnMinute54:
+	OnMinute55:
+	OnMinute56:
+	OnMinute57:
+	OnMinute58:
+	OnMinute59:
+		// Check des réservations --> On libère les salles qui ont expiré
+		for(.@i = 0; .@i < getarraysize(.map$); .@i++) {
+			if(gettimetick(2) >= .tick[.@i]) {
+				// Salle expirée. On kick EVERYONE BOUM.
+				if(getmapusers(.map$[.@i])) {
+					donpcevent "Manager#" + .@i + "::OnAnnonceExpiration";
+					mapwarp .map$[.@i], "prt_vilg02", 100, 85;
+				}
+				// Et on tue les monstres qu'il reste, au cas où y'en aurait.
+				killmonsterall .map$[.@i];
+			}
+			else {
+				.@tl = .tick[.@i] - gettimetick(2);
+				
+				// Il reste 15 minutes de location
+				if(.@tl >= 840 && .@tl <= 900) {
+					donpcevent "Manager#" + .@i + "::OnAnnonce15Min";
+				}
+				
+				// Il reste 5 minutes de location
+				if(.@tl >= 240 && .@tl <= 300) {
+					donpcevent "Manager#" + .@i + "::OnAnnonce5Min";
+				}
+			}
+			sleep 100;	// Petit sleep entre chaque fetch
+		}
+		end;
+}
+
+// NPC de la room EVENT
+dbroomgm,85,15,3	script	Manager#gm	415,{
+	
+	mes .npc$;
+	mes "Hello " + strcharinfo(0) + ". Do you wanna go back ?";
+	next;
+	
+	if(select("Yes:No") == 1) {
+		mes .npc$;
+		mes "Perfect, see you soon then !";
+		close2;
+		warp "prt_vilg02", 100, 85;
+		end;
+	}
+	else {
+		mes .npc$;
+		mes "Sure...";
+		close;
+	}
+	
+	OnInit:
+		.npc$ = "[Manager]";
+		end;
+}
+
+// NPCs dans les rooms louées
+
+dbroom00,48,47,3	script	Manager#0	415,{
+		
+	//if(getgmlevel() >= .gmlvl) {
+	//	mes "strnpcinfo(2) : " + strnpcinfo(2);
+	//	mes "strtol : " + strtol(strnpcinfo(2), 10);
+	//	mes "getvarnpc : " + getvariableofnpc(.pwd$[strtol(strnpcinfo(2), 10)], "dbroom");
+	//	if(getvariableofnpc(.pwd$[strtol(strnpcinfo(2), 10)], "dbroom") == "") {
+	//		mes "^FF0000PAS DE PASS.^000000";
+	//	}
+	//	else {
+	//		mes "^008000PASS OK.^000000";
+	//	}
+	//	next;
+	//}
+	//else {
+		if(getvariableofnpc(.tick[strtol(strnpcinfo(2), 10)], "dbroom") < gettimetick(2)) {
+			message strcharinfo(0), "Cette salle n'est pas en cours de location, vous avez été éjecté.";
+			warp "SavePoint", 0, 0;
+			end;
+		}
+	//}
+	
+	mes .npc$;
+	mes "Hello, young " + ((Sex) ? "man" : "lady") + ". What can I do for you ?";
+	mes "\n";
+	if(((getvariableofnpc(.tick[strtol(strnpcinfo(2), 10)], "dbroom") - gettimetick(2)) / 60) > 1) mes "The rent expire in ^FF0000" + ((getvariableofnpc(.tick[strtol(strnpcinfo(2), 10)], "dbroom") - gettimetick(2)) / 60) + "^000000 minutes.";
+	else mes "The location will expire in less than 2 minutes.";
+	mes "\n";
+	if(getcharid(0) == getvariableofnpc(.master[strtol(strnpcinfo(2), 10)], "dbroom") || getgmlevel() >= .gmlvl) mes "The current password is ^FF0000" + getvariableofnpc(.pwd$[strtol(strnpcinfo(2), 10)], "dbroom") + "^000000.";
+	
+	next;
+	
+	switch(
+		select(
+			((getcharid(0) == getvariableofnpc(.master[strtol(strnpcinfo(2), 10)], "dbroom") || getgmlevel() >= .gmlvl) ? "Change password" : ""),
+			"Open storage ^919191(" + .storage + "z)^000000",
+			"Go back to main town",
+			"Goodbye"
+		)
+	)
+	{
+		case 1:
+			// Change MDP
+			if(getcharid(0) == getvariableofnpc(.master[strtol(strnpcinfo(2), 10)], "dbroom") || getgmlevel() >= .gmlvl){
+				mes .npc$;
+				mes "Please, enter the new password...";
+				
+				do {
+					next;
+					input .@pass$;
+					
+					mes .npc$;
+					mes "The new password is :\n^FF0000" + .@pass$ + "^000000.\n\nRight ?";
+					next;
+					
+					switch(select("Yes:No")) {
+						case 1:
+							next;
+							break;
+						case 2:
+							.@pass$ = "";
+							mes .npc$;
+							mes "Please enter a new password...";
+					}
+				} while(.@pass$ == "");
+				
+				set getvariableofnpc(.pwd$[strtol(strnpcinfo(2), 10)], "dbroom"), .@pass$;
+				
+				mes .npc$;
+				mes "The new password (^FF0000" + getvariableofnpc(.pwd$[strtol(strnpcinfo(2), 10)], "dbroom") + "^000000) has been saved.";
+				close;
+			}
+			else {
+				logmes "[DB Room Bug] (" + strnpcinfo(0) + ") --> Fonction change pass catchée sans les droits ?!";
+				close;
+			}
+		case 2:
+			// Ouvrir le storage
+			mes .npc$;
+			if(Zeny < .storage) {
+				mes "You don't seems to have enough zenies.";
+				mes "";
+				mes "";
+				mes "Come back with ^FF0000" + (.storage - Zeny) + "^000000z.";
+				close;
+			}
+			mes "Do you really wanna open it ? It'll cost you ^FF0000" + .storage + "^000000z.";
+			next;
+			if(select("Yes:No") == 1) {
+				close2;
+				Zeny -= .storage;
+				openstorage;
+				end;
+			}
+			else {
+				mes .npc$;
+				mes "Sure...Goodbye !";
+				close;
+			}
+		case 3:
+			// Warp cap
+			mes .npc$;
+			mes "Sure, I'll teleport you right now !";
+			close2;
+			warp "prt_vilg02", 100, 85;
+			end;
+		case 4:
+			// Annuler
+			mes .npc$;
+			mes "Goodbye !";
+			close;
+	}
+	close;
+	
+	
+	// Settings
+	OnInit:
+		.npc$		= "[Manager]";
+		.gmlvl		= getvariableofnpc(.gmlvl, "dbroom");
+		.storage	= 5000;							// Coût en zeny pour l'ouverture du storage
+		end;
+	
+	OnAnnonce15Min:
+		mapannounce getvariableofnpc(.map$[strtol(strnpcinfo(2), 10)], "dbroom"), "Warning! The reservation will expire in 15 minutes.", bc_map, 0x00FFFF;
+		end;
+	
+	OnAnnonce5Min:
+		mapannounce getvariableofnpc(.map$[strtol(strnpcinfo(2), 10)], "dbroom"), "Warning! The reservation will expire in 5 minutes.", bc_map, 0x00FFFF;
+		end;
+	
+	OnAnnonceExpiration:
+		mapannounce getvariableofnpc(.map$[strtol(strnpcinfo(2), 10)], "dbroom"), "The reservation expires. See you soon !", bc_map, 0x00FFFF;
+		killmonsterall getvariableofnpc(.map$[strtol(strnpcinfo(2), 10)], "dbroom");
+		cleanmap getvariableofnpc(.map$[strtol(strnpcinfo(2), 10)], "dbroom");
+		set getvariableofnpc(.pwd$[strtol(strnpcinfo(2), 10)], "dbroom"), "";
+		end;
+}
+
+//==========================================================================================================
+//=										!!! ALL THE CLONES !!!
+//==========================================================================================================
+dbroomgm,84,180,5	duplicate(Manager#gm)	Manager#gm2	415
+
+dbroom01,87,52,3	duplicate(Manager#0)	Manager#1	415
+dbroom02,109,136,3	duplicate(Manager#0)	Manager#2	415
+dbroom03,66,61,3	duplicate(Manager#0)	Manager#3	415
+
+
+//==========================================================================================================
+//=										!!! ALL THE MAPFLAGS !!!
+//==========================================================================================================
+
+// DB Room Rurale
+dbroom00	mapflag	loadevent
+dbroom00	mapflag	allowks
+dbroom00	mapflag	noexppenalty
+dbroom00	mapflag	nozenypenalty	// On en perd pas de base mais autant être prévoyant.
+dbroom00	mapflag	noreturn
+dbroom00	mapflag	nomemo
+dbroom00	mapflag	novending
+dbroom00	mapflag	nocashshop
+dbroom00	mapflag	noteleport
+
+dbroom01	mapflag	loadevent
+dbroom01	mapflag	allowks
+dbroom01	mapflag	noexppenalty
+dbroom01	mapflag	nozenypenalty	
+dbroom01	mapflag	noreturn
+dbroom01	mapflag	nomemo
+dbroom01	mapflag	novending
+dbroom01	mapflag	nocashshop
+dbroom01	mapflag	noteleport
+
+dbroom02	mapflag	loadevent
+dbroom02	mapflag	allowks
+dbroom02	mapflag	noexppenalty
+dbroom02	mapflag	nozenypenalty	
+dbroom02	mapflag	noreturn
+dbroom02	mapflag	nomemo
+dbroom02	mapflag	novending
+dbroom02	mapflag	nocashshop
+dbroom02	mapflag	noteleport
+
+dbroom03	mapflag	loadevent
+dbroom03	mapflag	allowks
+dbroom03	mapflag	noexppenalty
+dbroom03	mapflag	nozenypenalty	
+dbroom03	mapflag	noreturn
+dbroom03	mapflag	nomemo
+dbroom03	mapflag	novending
+dbroom03	mapflag	nocashshop
+dbroom03	mapflag	noteleport
+
+dbroomgm	mapflag	allowks
+dbroomgm	mapflag	noexppenalty
+dbroomgm	mapflag	nozenypenalty	
+dbroomgm	mapflag	noreturn
+dbroomgm	mapflag	nomemo
+dbroomgm	mapflag	novending
+dbroomgm	mapflag	nocashshop
+dbroomgm	mapflag	noteleport
+dbroomgm	mapflag	nomobloot
+dbroomgm	mapflag	nomvploot

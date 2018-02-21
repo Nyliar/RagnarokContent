@@ -1,0 +1,89 @@
+// [========================================================]
+// [================     DANMA - Warper      ===============]
+// [========================================================]
+// [ Version 1                                              ]
+// [========================================================]
+// [ Original script by: Alayne				    ]
+// [========================================================]
+// [ Description:                                           ]
+// [--------------------------------------------------------]
+// [                                                        ]
+// [ - The DANMA warping script		              	    ]
+// [                                                        ]
+// [========================================================]
+// [ Changelog: (5 last updates)                            ]
+// [--------------------------------------------------------]
+// [                                                        ]
+// [ v0: Creation                      			    ]
+// [                                                        ]
+// [                                                        ]
+// [========================================================]
+// [                                                        ]
+// [========================================================]
+
+
+mellina,74,143,3	script	Warper::danwarmel	4_M_HUGRANFA,{
+	set .@npcname$, "[Danwar]";
+	mes .@npcname$;
+	mes "";
+	mes "Hello, " + strcharinfo(0);
+	mes "I can warp to previously visited floors in the dungeon.";
+	mes "Where should I warp you?";
+
+	set .@menu$, "";
+	set .@query$, "SELECT `_map` FROM `warper_visited` WHERE `_id`=" + getcharid(0);
+	query_sql(.@query$, .@map$);
+	setarray .@danMap$[0], "";
+	set .@countMap, 0;
+	for(set .@i,0; .@i<getarraysize(.@map$); set .@i,.@i+1)
+	{
+		for(set .@j,0; .@j<getarraysize($DANlevelMap$); set .@j,.@j+1)
+		{
+			if (.@map$[.@i] == $DANlevelMap$[.@j])
+			{
+				set .@danMap$[.@countMap], .@map$[.@i];
+				set .@countMap, .@countMap + 1;
+				set .@menu$,.@menu$+$DANlevelMapName$[.@j]+":";
+			}
+		}
+	}
+
+	set .@choice,select(.@menu$) - 1;
+	if (.@choice != 254)
+	{
+		for(set .@i,0; .@i<getarraysize($DANlevelMap$); set .@i,.@i+1)
+		{
+			if ($DANlevelMap$[.@i] == .@danMap$[.@choice])
+			{
+				next;
+				mes .@npcname$;
+				if (.warpPrice == 1)
+				{
+					mes "To be warped to " + $DANlevelMapName$[.@i] + ", you'll need " + (.@i + 1) + " " + getitemname(.mapcostid) + ". Would you like to warp there?";
+					if (select("Yes","No") == 1)
+					{
+						if (countitem(.mapcostid) >= (.@i + 1))
+						{
+							delitem .mapcostid, (.@i + 1);
+							warp $DANlevelMap$[.@i],$DANlevelMapX[.@i],$DANlevelMapY[.@i];
+						}
+						else
+						{
+							mes "Sorry, but you seem lack some items...";
+						}
+					}
+				}
+				else
+				{
+					warp $DANlevelMap$[.@i],$DANlevelMapX[.@i],$DANlevelMapY[.@i];
+				}
+			}
+		}
+	}
+	close;	
+
+OnInit:
+	set .warpPrice, 1;
+	setarray .mapcostid,29503;
+	end;
+}

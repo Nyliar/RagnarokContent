@@ -1,0 +1,127 @@
+//===== Hercules Script =======================================
+//= WoE Betting NPC
+//===== By: ==================================================
+//= Alayne
+//===== Current Version: =====================================
+//= 1.0
+//===== Compatible With: ===================================== 
+//= Hercules
+//===== Description: =========================================
+//= 
+//= Npc where guilds owning a castle selected for woe can 
+//= place a Bet.
+//= 
+//============================================================
+
+prontera,166,180,2	script	WoE Bookmaker::alwobet	934,{
+	set .@npcname$, "[WoE Bookmaker]";
+	mes .@npcname$;
+	mes "";
+	mes "Welcome to the WoE Bookmaker! This is where you can set up a bet for the currently running WoE.";
+	switch(select("How does it works?","Place a bet","Claim a bet result"))
+	{
+		case 1:
+			next;
+			mes .@npcname$;
+			mes "That's pretty easy, actually.";
+			mes "When a Guild own a Castle during the War of Emperium, it may comes here to place a Bet.";
+			mes "When a Bet is placed, an announce will warn other fighters that an additional reward have been placed.";
+			mes "At the end of the WoE, this reward will come back to somebody.";
+			mes "If the Castle is still earned by the same Guild, it'll get its money back, and double it.";
+			mes "If it's another guild, the bet amount will go to this Guild.";
+			mes "Of course, a minimum of fight must be encountered.";
+			mes "If there's not " + .killsRequired + " deaths, I'll keep the Bet for me!";
+			break;
+		case 2:
+			next;
+			mes .@npcname$;
+			mes "Oh oh! You want to place a bet?";
+			if(getcharid(2) == 0)
+			{
+				next;
+				mes .@npcname$;
+				mes "Meh...I don't have time for that, kiddo. Get back when you'll have a Guild.";
+				close;
+			}
+			if(agitcheck() == 1 || agitcheck2() == 1)
+			{
+				next;
+				mes .@npcname$;
+				mes "Meh...I can only accept a bet during WoE time. Sorry, kiddo.";
+				close;
+			}
+			set .@foundCastle, 0;
+			for(set .@i,0; .@i<getarraysize(.castleName$) && .@foundCastle == 0; set .@i,.@i+1)
+			{
+				if(getcastledata(.castleName$[.@i], 1)  == getcharid(2))
+				{
+					set .@foundCastle, .@i;
+				}
+			}
+			if(.@foundCastle == 0)
+			{
+				next;
+				mes .@npcname$;
+				mes "Meh...I can only accept a bet from a Guild which own a Castle. Sorry, kiddo.";
+				close;
+			}
+			set .@continue, 0;
+			do{
+				next;
+				mes .@npcname$;
+				mes "Allright, what's your bet amount?";
+				input .@bet_value;
+				if (Zeny < .@bet_value)
+				{
+					next;
+					mes .@npcname$;
+					mes "Sorry, but you don't have that much money...";
+					mes "Stop making me losing my time...";
+					close;
+				}
+				else
+				{
+					next;
+					mes .@npcname$;
+					if (.@bet_value < .minimumBet || .@bet_value > .maximumBet)
+					{
+						mes "Please choose a bet in the given range.";
+					}
+					else
+					{
+						mes "Perfect.";
+						set .@continue, 1;
+					}
+				}
+			}while(.@continue == 0);
+			set Zeny, Zeny - .@bet_value;
+			announce "[WoE Bookmaker] The Guild " + getguildname(getcharid(2)) + " just bet that nobody will be able to throw them away.", bc_all;
+			announce "[WoE Bookmaker] " + .@bet_value + " will come to anybody able to prove them they're wrong!", bc_all;
+			
+			set $betterArray[getarraysize($betterArray)],getcharid(2);
+			set $betterCastleArray$[getarraysize($betterArray)],.castleName$[.@foundCastle];
+			set $betterAmtArray[getarraysize($betterAmtArray)],.@bet_value;
+			set $betterClaimed[getarraysize($betterArray)],0;
+			break;
+		case 3:
+			
+			break;
+	}
+	close;
+	
+OnAgitStart:
+OnAgit2Start:
+	deletearray $betterArray[0],getarraysize($betterArray);
+	deletearray $betterAmtArray[0],getarraysize($betterAmtArray);
+	end;
+	
+OnInit:
+	set .minimumBet, 50000;
+	set .maximumBet, 10000000;
+	set .killsRequired, 10;
+	setarray .castleName$[0],"aldeg_cas01","aldeg_cas02","aldeg_cas03","aldeg_cas04","aldeg_cas05",
+	"gefg_cas01","gefg_cas02","gefg_cas03","gefg_cas04","gefg_cas05",
+	"payg_cas01","payg_cas02","payg_cas03","payg_cas04","payg_cas05",
+	"prtg_cas01","prtg_cas02","prtg_cas03","prtg_cas04","prtg_cas05";
+	end;
+}

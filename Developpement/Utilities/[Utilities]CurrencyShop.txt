@@ -1,0 +1,91 @@
+
+prt_in,135,34,2	script	Currency Shop	729,{
+	mes "[^66CC66 Currency Shop ^000000]";
+	mes "Whats up?!";
+	mes "You can use your Silver Coin here, in my shop.";
+	mes " ";
+	mes "What do you want?";
+	switch(select("Headgears:Miscellaneous")) {
+		case 1:
+			openshop("Hat_1");
+			close;
+		case 2:
+			openshop("Misc_1");
+	}
+	
+	end;
+OnInit:
+	waitingroom "Currency Shops!",0;
+	set .currencyId, 675;
+end;
+}
+
+
+-	trader	Misc_1	-1,{
+	OnInit:
+	tradertype(NST_CUSTOM);
+	sellitem 5148,10;
+	sellitem 5149,10;
+	sellitem 5530,15;
+	sellitem 5006,15;
+	sellitem 5206,20;
+	sellitem 5554,25;
+	sellitem 5555,25;
+	sellitem 5665,25;
+	sellitem 5132,25;
+	sellitem 5153,30;
+	sellitem 5536,30;
+	sellitem 5503,30;
+	sellitem 5568,35;
+	sellitem 5505,35;
+	sellitem 5535,40;
+	sellitem 5287,40;
+	sellitem 5133,50;
+	
+	set .currencyId, 675;
+	end;	
+OnCountFunds:
+	setcurrency(.currencyId);
+	end;
+OnPayFunds:
+	if( countitem(.currencyId) < @price )
+		end;
+	delitem .currencyId, @price;
+	logmes "[CurrencyShop] Le joueur " + strcharinfo(0) + " achete un objet pour " + @price + " " + getitemname(.currencyId) + ".";
+	purchaseok();
+}
+
+-	trader	Hat_1	-1,{
+	OnInit:
+	tradertype(NST_CUSTOM);
+	sellitem 5148,10;
+	sellitem 5149,10;
+	sellitem 5530,15;
+	sellitem 5006,15;
+	sellitem 5206,20;
+	sellitem 5554,25;
+	sellitem 5555,25;
+	sellitem 5665,25;
+	sellitem 5132,25;
+	sellitem 5153,30;
+	sellitem 5536,30;
+	sellitem 5503,30;
+	sellitem 5568,35;
+	sellitem 5505,35;
+	sellitem 5535,40;
+	sellitem 5287,40;
+	sellitem 5133,50;
+	
+	set .currencyId, 675;
+	end;	
+OnCountFunds:
+	setcurrency(.currencyId);
+	end;
+OnPayFunds:
+	if( countitem(.currencyId) < @price )
+		end;
+	delitem .currencyId, @price;
+	logmes "[CurrencyShop] Le joueur " + strcharinfo(0) + " achete un objet pour " + @price + " " + getitemname(.currencyId) + ".";
+	purchaseok();
+}
+

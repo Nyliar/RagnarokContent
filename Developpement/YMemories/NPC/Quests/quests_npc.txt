@@ -1,0 +1,548 @@
+//29307 -> Charging Bobine
+//ars_fild33,124,131,5	script	Electric Man::giquest1	821,{
+juperos_01,119,112,5	script	Electric Man::giquest1	821,{
+	set .@npcname$, "[Electric Man]";
+
+	setarray .@skills$[0], "Lightning Bolt", "Thunder Storm", "Jupitel Thunder", "Lord of Vermillion", "Chain Lightning", "Ride in Lightning";
+	setarray .@skillid$[0], "MG_LIGHTNINGBOLT", "MG_THUNDERSTORM", "WZ_JUPITEL", "WZ_VERMILION", "WL_CHAINLIGHTNING", "SR_RIDEINLIGHTNING";
+	setarray .@skillcount[0], 1,2,5,10,25,15; 
+
+	mes .@npcname$;
+	mes "";
+	mes "...";
+	if (CHARGINGBOBINE == 0 && startedquest == 0)
+	{
+		mes "Be careful " + strcharinfo(0) + ".";
+		mes "There's a lot of static electricity around here.";
+		mes "Or maybe it was 'not enough'?";
+		mes "I can't...Can't remember...";
+		mes "*A lightning strike behind him*";
+		set CHARGINGBOBINE, 1;
+		set skillFinalCount, rand(1,100);
+		set startedquest,1;
+	}
+	else if (CHARGINGBOBINE == 1)
+	{
+		mes "*Another lightning strike*";
+		mes "Please choose one of the following skills:";
+		for (set .@i,0; .@i<getarraysize(.@skills$); set .@i,.@i+1)
+		{
+			set .@menu$, .@menu$ + ( .@i ? ":" : "" ) + .@skills$[.@i];
+		}	
+		set .@choice, prompt(.@menu$) - 1;
+
+		if (.@choice != 254)
+		{
+			switch(.@choice)
+			{
+				case 0:
+					specialeffect2 29;
+					break;
+				case 1:
+					specialeffect2 30;
+					break;
+				case 2:
+					specialeffect2 94;
+					break;
+				case 3:
+					specialeffect2 90;
+					break;
+				case 4:
+					specialeffect2 734;
+					break;
+				case 5:
+					specialeffect2 622;
+					break;
+			}
+
+			set countFinal, countFinal + .@skillcount[.@choice];
+			if (countFinal < skillFinalCount)
+			{
+				set .@rand, rand(0,10);
+				set .@min, rand(0,3);
+				if (.@rand <= .@min)
+				{
+					npcskill .@skillid$[.@choice + 1],countFinal,99,99;
+				}
+				else
+				{
+					set .@hp, rand(-100,-5);
+					set .@sp, rand(-100,-5);
+					percentheal .@hp, .@sp;
+				}
+				mes "" + countFinal + "/" + skillFinalCount;
+			}
+			else
+			{
+				set CHARGINGBOBINE, 2;
+			}
+		}
+		else
+		{
+			mes "Quest unactivated.";	
+		}
+	}
+	else if (CHARGINGBOBINE == 2)
+	{
+		mes "Congratulations!";
+		mes "You can now use gain to obtain the card.";
+		mes "Be careful, this right will disappear in 30s.";
+		defpattern 1,"Gain","OnGainAsked";
+		activatepset 1;
+		addtimer 30000, strnpcinfo(3)+"::OnGainUnactivated";
+	}
+	else
+	{
+		mes "*He doesn't talk anymore*";
+		set CHARGINGBOBINE, 0;
+		set startedquest, 0;
+		set countFinal, 0;
+	}
+	close;
+
+OnGainAsked:
+	callsub OnGainUnactivated;
+	if (callfunc("IsPlayerOn"))
+	{
+		rentitem 29307,60;
+		logmes "[Yggdrasil Memories] " + strcharinfo(0) + " obtains a rental " + getitemname(29307) + ".";
+	}
+	set CHARGINGBOBINE, 0;
+	deactivatepset 1;
+	end;
+
+OnGainUnactivated:
+	set CHARGINGBOBINE, 0;
+	set .startedquest, 0;
+	set countFinal, 0;
+	return;
+}
+
+//29308 -> Winter Orb
+//ars_fild16,122,95,5	script	Winter orb::giquest2	925,{
+dic_fild01,241,80,5	script	Winter orb::giquest2	925,{
+	set .@npcname$, "[Winter Orb]";
+	set .skillLvl, 50;
+	
+	mes .@npcname$;
+
+	if (WINTERORB == 0 && .startedquest == 0)
+	{
+		mes "To fulfill this quest, you'll simply have to...";
+		mes "survive.";
+		set WINTERORB,1;
+		set .startedquest, 1;
+		set .@lvl, rand(1,10);
+		npcskill "WZ_STORMGUST",.skillLvl,.@lvl * 5,.@lvl * 10;
+	
+		addtimer 8000, strnpcinfo(3)+"::OnSGCast";
+		addtimer 60000, strnpcinfo(3)+"::On1min";
+	}
+	else if (WINTERORB == 1 && .startedquest == 2)
+	{
+		mes "Congratulations!";
+		mes "You can now use 'Gain'.";
+		mes "Be careful, this right will disappears in 30s.";
+		defpattern 1,"Gain","OnGainAsked";
+		activatepset 1;
+		addtimer 30000, strnpcinfo(3)+"::OnGainUnactivated";
+	}
+	else
+	{
+		mes "He's frozen...";
+		addtimer 30000, strnpcinfo(3)+"::OnUnfroze";
+	}
+	close;
+
+OnUnfroze:
+	set WINTERORB, 0;
+	set .startedquest,0;
+	end;
+
+OnGainAsked:
+	callsub OnGainUnactivated;
+	if (callfunc("IsPlayerOn"))
+	{
+		rentitem 29308,60;
+		logmes "[Yggdrasil Memories] " + strcharinfo(0) + " obtains a rental " + getitemname(29308) + ".";
+	}
+	deactivatepset 1;
+	end;
+
+OnGainUnactivated:
+	deactivatepset 1;
+	set WINTERORB, 0;
+	set .startedquest,0;
+	return;
+
+OnSGCast:	
+	//reduce each SG lvl by one from 50 to 25
+	set .skillLvl, .skillLvl - 1;
+	if (.skillLvl < 25)
+		set .skillLvl, 25;
+
+	set .@lvl, rand(1,10);
+	npcskill "WZ_STORMGUST",.skillLvl,.@lvl * 5,.@lvl * 10;
+	
+	if (WINTERORB == 1 && .startedquest == 1)
+	{
+		addtimer 8000, strnpcinfo(3)+"::OnSGCast";
+	}
+	end;
+
+On1min:
+	if (WINTERORB == 1)
+	{
+		dispbottom "Talk to me again, survivor.";
+		set .startedquest, 2;
+	}
+	end;
+
+OnPCDieEvent:
+	if (strcharinfo(3) == strnpcinfo(4))
+	{
+		set WINTERORB, 0;
+		set .startedquest, 0;
+	}
+	end;
+}
+
+//29346 -> Gladiate
+//29309 -> Saint Sword
+//invek,186,113,5	script	Saint Fighter::giquest3	419,{
+job_monk,133,272,5	script	Saint Fighter::giquest3	419,{
+	set .@npcname$, "[Saint Fighter]";
+	
+	mes .@npcname$;
+	mes "";
+
+	if (SAINTSWORD == 0 && callfunc("IsPlayerOn"))
+	{
+		mes "Hello to you, adventurer.";
+		mes "What's your name?";
+		input .@name$;
+		if (.@name$ == strcharinfo(0))
+		{
+			mes "" + .@name$ + ", hu?";
+			mes "I'm the Saint Fighter.";
+			mes "The highest fighter, known by gods themselves.";
+			mes "They gave me this title.";
+			next;
+			mes .@npcname$;
+			mes "I'm earning a very rare sword.";
+			mes "It can change for each of the 6 basic properties.";
+			mes "Pretty useful.";
+			mes "Wan't one too?";
+			switch(select("Yeah!","No thanks"))
+			{
+				case 1:
+					mes "Then I'm gonna need a scroll from each kind.";
+					mes "And a very special sword, which doesn't have any form.";
+					mes "Then, it would be able to change form.";
+					mes "I'll wait here.";
+					set SAINTSWORD, 1;
+					break;
+				case 2:
+					mes "You're not ready then.";
+					mes "Come back later.";
+					break;
+			} 
+		}
+		else
+		{
+			mes "Hum...Looks like you're not ready for that.";
+		}
+	}
+	else if (countitem(29393) >= 1 && SAINTSWORD == 1 && callfunc("IsPlayerOn"))
+	{
+		mes "Hum. You've understand there's still something more?";
+		mes "Did you ever heard about Gladiate, the Light Sword?";
+		mes "It's a saint sword, blocked in the 7th form."; 
+		mes "I can have you one, in exchange of a saint sword.";
+		if(select("Ok","No way, I'm keeping it") == 1)
+		{
+			delitem 29393, 1;
+			rentitem 29346, 60;
+			logmes "[Yggdrasil Memories] " + strcharinfo(0) + " obtains a rental " + getitemname(29346) + ".";
+			set SAINTSWORD, 0;
+			mes "Here's for your.";
+		}
+		else
+		{
+			mes "That's your choice.";
+		}
+	}
+	else if (callfunc("IsPlayerOn"))
+	{
+		mes "So? Do you got it all?";
+		next;
+		mes .@npcname$;
+		if (countitem(12114) >= 1 && countitem(12115) >= 1 && countitem(12116) >= 1 && countitem(12117) >= 1 
+		&& countitem(1141) >= 1)
+		{
+			mes "Looks like you're ready.";
+			mes "Here's for you.";
+			delitem 12114, 1;
+			delitem 12115, 1;
+			delitem 12116, 1;
+			delitem 12117, 1;
+			delitem 1141, 1;
+			
+			rentitem 29309, 60;
+			logmes "[Yggdrasil Memories] " + strcharinfo(0) + " obtains a rental " + getitemname(29309) + ".";
+		}
+		else
+		{
+			mes "You lack some items...";
+			mes "Then I'm gonna need a scroll from each kind.";
+			mes "And a very special sword, which doesn't have any form.";
+		}
+		next;
+		mes .@npcname$;
+		mes "Keep in mind that this sword is special.";
+		mes "You can change it only in some conditions.";
+		mes "But you'll understand by yourself.";
+	}
+	else
+	{
+		mes "I like to fight, til death take me!";
+	}
+	close;
+}
+
+//29312 -> Shining Alexandrite
+//ars_fild04,98,339,5	script	Villager Son::giquest4_1	585,{
+ra_fild03,285,332,5	script	Villager Son::giquest4_1	585,{
+	set .@npcname$, "[Villager's Son]";
+	
+	mes .@npcname$;
+	mes "";
+	mes "Keurf keurf keurf!";
+	mes "*Hey! He's spiting blood!*";
+
+	close;
+}
+
+//ars_fild04,81,353,6	script	Villager Wife::giquest4_2	583,{
+ra_fild03,264,343,6	script	Villager Wife::giquest4_2	583,{
+	set .@npcname$, "[Villager's Wife]";
+	
+	mes .@npcname$;
+	mes "";
+	mes "Keurf keurf keurf!";
+	
+	close;
+}
+
+//ars_fild04,88,347,4	script	Villager Father::giquest4_3	582,{
+ra_fild03,271,341,4	script	Villager Father::giquest4_3	582,{
+	set .@npcname$, "[Villager's Father]";
+	
+	mes .@npcname$;
+	mes "";
+		mes "Keurf keurf keurf!";
+		mes "*Hey! He's spiting blood!*";
+		mes "We've been cursed years ago...";
+		mes "Since then, all of family has always been ill.";
+	close;
+}
+
+//ars_fild04,92,339,3	script	Villager::giquest4_0	581,{
+ra_fild03,277,334,3	script	Villager::giquest4_0	581,{
+	set .@npcname$, "[Villager]";
+	
+	mes .@npcname$;
+	mes "";
+	if (callfunc("IsPlayerOn"))
+	{
+		if (SHININGALEX == 0)
+		{
+			mes "Keuf! Keurf";
+			mes "*Looks like he's ill.*";
+			next;
+			mes "[" + strcharinfo(0) + "]";
+			mes "Everybody here look ill.";
+			next;
+			mes .@npcname$;
+			mes "Please help us...My son...He...He's very sick!";
+			mes "He gonna die!";
+			next;
+			switch(select("Let him die then...","What can I do?"))
+			{
+				case 1:
+					mes "...Leave. Let us die, you heartless.";
+					break;
+				case 2:
+					mes "Thanks a lot!";
+					mes "There's a treatment for him, but it's really expensive.";
+					mes "It costs...1.000.000 Zenys...";
+					next;
+					switch(select("But...That's all I have","...Okay, let's go."))
+					{
+						case 1:
+							mes "...I understand...Sorry for bothering you.";
+							break;
+						case 2:
+							mes "Thanks...Thanks a lot!";
+							if (Zeny >= 1000000)
+							{
+								set Zeny, Zeny - 1000000;
+								mes "Here son. Take that.";
+								mes "He's fully healed. Thank you so much!!";
+								set SHININGALEX, 1;
+							}
+							break;
+					}
+					break;
+			}
+			close;
+		}
+		else if (SHININGALEX == 1)
+		{
+			mes "You came back.";
+			mes "What can I do for you?";
+			next;
+			mes .@npcname$;
+			mes "What? You wan't us to believe in you?";
+			mes "You've saved my son's life. Of course, we're believing in you!";
+			if (callfunc ("CheckCardOn", "Paladin Necklace") == 1)
+			{
+				next;
+				mes .@npcname$;
+				mes "*Your Paladin's Necklace start shining.*";
+				specialeffect2 84;
+				next;
+				mes .@npcname$;
+				mes "We...We're save? The curse disappears. I can feel it!";
+				mes "That's...Fabulous!";
+				next;
+				mes .@npcname$;
+				mes "Thanks! Thank you so much!";
+				mes "Take that. That's our highest treasure.";
+				rentitem 29312, 60;
+				logmes "[Yggdrasil Memories] " + strcharinfo(0) + " obtains a rental " + getitemname(293012) + ".";
+				set SHININGALEX, 0;
+			}
+			else
+			{
+				next;
+				mes .@npcname$;
+				mes "Sorry, but...Nothing happens.";
+			}
+		}
+	}
+	else
+	{	
+		mes "Sorry...I feel so bad...";
+	}
+	close;
+}
+
+//29338 -> White Horn King
+//29313 -> Tree of Plenty
+//ars_fild13,77,207,5	script	Axeman::giquest5	813,{
+umbala,83,246,5	script	Axeman::giquest5	813,{
+	set .@npcname$, "[Axeman]";
+	mes .@npcname$;
+	mes "";
+	
+	mes "This tree next to me is the oldest around here.";
+	mes "Some bugs only live up there, in the branches.";
+	if (TREEOFPLEN == 0 && callfunc("IsPlayerOn"))
+	{
+		next;
+		mes .@npcname$;
+		mes "I heard he reached its size because of its roots.";
+		mes "They're known to reach the Source.";
+		mes "But I've never been able to find it...";
+		set TREEOFPLEN, 1;
+	}
+	else if (TREEOFPLEN == 1 && countitem(523) >= 50 && callfunc("IsPlayerOn"))
+	{
+		next;
+		mes .@npcname$;
+		mes "....Where...Where do you find it?";
+		mes "That's the Source's Water!";
+		mes "You should spill it on the tree...";
+		set TREEOFPLEN, 2;
+	}
+	else if (callfunc("IsPlayerOn"))
+	{
+		next;
+		mes .@npcname$;
+		mes "You should try to hit it.";
+		mes "The strongest are able to shake it.";
+		set TREEOFPLEN, 0;
+	}	
+	close;
+}
+
+//ars_fild13,86,203,5	script	Huge Tree::giquest6	836,{
+umbala,76,253,5	script	Huge Tree::giquest6	836,{
+	mes "That's a gigantic tree.";
+	if (TREEOFPLEN == 2 && countitem(523) >= 50 && callfunc("IsPlayerOn"))
+	{
+		mes "You're spilling the water on the tree.";
+		delitem 523, 1;
+		mes "It began to shine.";
+		specialeffect2 710;
+		next;
+		if (rand(0,50) < 2)
+		{
+			mes "*You can know use 'Gain'*";
+			set TREEOFPLEN, 3;
+			defpattern 1,"Gain","OnGainAsked";
+			activatepset 1;
+			initnpctimer;
+			close;
+		}
+	}
+	if (callfunc("IsPlayerOn"))
+	{
+		next;
+		mes "Do you wanna hit the tree?";
+		switch(select("Yes","No"))
+		{
+			case 1:
+				if (BaseLevel >= 80 && readparam(bStr) >= 90)
+				{
+					specialeffect2 804;
+					mes "A giant bug falls on you!";
+					getmapxy(.@map$,.@x,.@y,0);
+					monster .@map$,.@x,.@y,"Horn King",1147,1,"giquest6::OnWhiteHornKilled";
+				}
+				else
+				{
+					specialeffect2 804;
+					mes "Nothing happens.";
+				}
+				break;
+			case 2:
+				mes "You're leaving the place.";
+				break;
+		}
+	}
+	close;
+	
+OnWhiteHornKilled:
+	if (callfunc("IsPlayerOn"))
+	{
+		rentitem 29338,60;
+		logmes "[Yggdrasil Memories] " + strcharinfo(0) + " obtains a rental " + getitemname(29338) + ".";
+	}
+	end;
+
+OnGainAsked:
+	if (TREEOFPLEN == 3 && callfunc("IsPlayerOn"))
+	{
+		rentitem 29313, 60;
+		set TREEOFPLEN, 0;
+		logmes "[Yggdrasil Memories] " + strcharinfo(0) + " obtains a rental " + getitemname(29313) + ".";
+	}
+	end;
+
+OnTimer30000:
+	set TREEOFPLEN, 0;	
+	deactivatepset 1;
+	end;
+}

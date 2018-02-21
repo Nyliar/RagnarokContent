@@ -1,0 +1,118 @@
+//===== Hercules Script ======================================= 
+//= @changegm
+//===== By: ================================================== 
+//= Hiero
+//= Lyyn
+//===== Current Version: ===================================== 
+//= 1.0
+//===== Compatible With: =====================================
+//= eAthena
+//= rAthena
+//= Hercules
+//===== Description: ========================================= 
+//= Tuer tous les MVP à chaque reboot/reloadscript
+//===== Additional Comments: ================================= 
+//= battle/monster.conf -> dynamic_mob: no
+//= 1.0 Première version du script.
+//============================================================ 
+
+-	script	::killmvp	-1,{
+OnInit:
+	set .@debug, 0; // affiche les map activées sur le mapserver 
+	sleep 1000;
+
+	setarray .@mapList$[0],	
+		//====================================================================================================
+		// One Map Multi MVP
+		//====================================================================================================
+		"lhz_dun03",	// 1645		B_KATRINN			(High Wizard Katrinn / High Wizard Kathryne)
+						// 1646		B_SEYREN			(Lord Knight Seyren)
+						// 1647		B_EREMES			(Assassin Cross Eremes)
+						// 1648		B_HARWORD			(Whitesmith Harword / Whitesmith Howard)
+						// 1649		B_MAGALETA			(High Priest Magaleta / High Priest Margaretha)
+						// 1650		B_SHECIL			(Sniper Shecil / Sniper Cecil)
+
+		//====================================================================================================
+		// One Map One MVP (hors instances)
+		//====================================================================================================
+		"moc_pryd06",	// 1511		AMON_RA				(Amon Ra)
+		"lou_dun03",	// 1630		BACSOJIN_			(Bacsojin / White Lady)
+		"prt_maze03",	// 1399		BAPHOMET			(Baphomet)
+		"abyss_03",		// 1719		DETALE				(Detale / Detardeurus)
+		"gef_dun01",	// 1389		DRACULA				(Dracula)
+		"treasure02",	// 1112		DRAKE				(Drake)
+		"gon_dun03",	// 1418		DARK_SNAKE_LORD		(Evil Snake Lord)
+		"abbey02",		// 1871		FALLINGBISHOP		(Fallen Bishop / Fallen Bishop Hibram)
+		"xmas_fild01",	// 1252		GARM				(Garm / Hatii)
+		"ra_san05",		// 1768		GLOOMUNDERNIGHT		(Gloom Under Night)
+		"prt_sewb04",	// 1086		GOLDEN_BUG			(Golden Thief Bug)
+		"mosk_dun03",	// 1885		GOPINICH			(Gopinich)
+		"thor_v03",		// 1832		IFRIT				(Ifrit)
+		"ama_dun03",	// 1492		INCANTATION_SAMURAI	(Incantation Samurai / Samurai Specter)
+		"kh_dun02",		// 1734		KIEL_				(Kiel D-01)
+		"xmas_dun02",	// 1251		KNIGHT_OF_WINDSTORM	(Knight of Windstorm / Stormy Knight)
+		"ayo_dun02",	// 1688		LADY_TANEE			(Lady Tanee)
+		"niflheim",		// 1373		LORD_OF_DEATH		(Lord of Death / Lord of the Dead)
+		"mjolnir_04",	// 1059		MISTRESS			(Mistress)
+		"pay_dun04",	// 1150		MOONLIGHT			(Moonlight Flower)
+		"gef_fild10",	// 1190		ORC_LORD			(Orc Lord)
+		"moc_pryd04",	// 1038		OSIRIS				(Osiris)
+		"in_sphinx5",	// 1157		PHARAOH				(Pharaoh)
+		"moc_fild17",	// 1159		PHREEONI			(Phreeoni)
+		"moc_fild15",	// 1159		PHREEONI			(Phreeoni)	(new position, désactivé sur Artefact)
+		"ein_dun02",	// 1623		RSX_0806			(RSX 0806 / RSX-0806)
+		"beach_dun",	// 1583		TAO_GUNKA			(Tao Gunka)
+		"thana_boss",	// 1708		THANATOS			(Thanatos / Memory of Thanatos)
+		"tur_dun04",	// 1312		TURTLE_GENERAL		(Turtle General)
+		"odin_tem03",	// 1751		RANDGRIS			(Valkyrie Randgris)
+		"jupe_core",	// 1685		APOCALIPS_H			(Vesper)
+		"moc_fild22",	// 1917		MOROCC_				(Wounded Morroc)
+		"lhz_dun02",	// 1658		B_YGNIZEM			(Ygnizem / Egnigem Cenia)
+
+		//====================================================================================================
+		// Multi Map One MVP
+		//====================================================================================================
+		// 1785		ATROCE			(Atroce)
+		"gld_dun03_2",
+		"ra_fild02",
+		"ra_fild03",
+		"ra_fild04",
+		"ve_fild01",
+		"ve_fild02",
+
+		// 1272		DARK_LORD		(Dark Lord)
+		"gld_dun04",
+		"gld_dun04_2",
+		"gl_chyard",
+
+		// 1046		DOPPELGANGER	(Doppelganger)
+		"gef_dun02",
+		"gld_dun02",
+
+		// 1115		EDDGA			(Eddga)
+		"gld_dun01",
+		"gld_dun01_2",
+		"pay_fild11",
+
+		// 1147		MAYA			(Maya)
+		"anthell02",
+		"gld_dun02_2",
+		"gld_dun03",
+
+		// 1087		ORK_HERO		(Orc Hero)
+		"gef_fild02",
+		"gef_fild14";
+
+	for(set .@i, 0; .@i < getarraysize(.@mapList$); set .@i, .@i+1)
+	{
+		killmonsterall .@mapList$[.@i];
+		
+		if(.@debug)
+		{
+			debugmes .@mapList$[.@i];
+		}
+		
+		sleep 10;
+	}
+	end;
+}

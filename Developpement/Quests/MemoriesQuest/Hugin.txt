@@ -1,0 +1,308 @@
+glastheim,54,82,7	script	Hugin::alahuslq	702,{
+	set .@npcname$, "[The Crow]";
+	if(RAGNAROK_Q == 0)
+	{
+		mes .@npcname$;
+		mes "You can't stay neutral.";
+		mes "You have to choose a side.";
+		mes "Go and find Odin, the Father.";
+		close;
+	}
+	if(RAGNAROK_Q == 2)
+	{
+		set .@npcname$, "[Hugin, the Thought Crow]";
+	}
+	else
+	{
+		set .@npcname$, "[Munin, the Memory Crow]";
+	}
+	
+	if(RAGNAROKREWARDED == 0 &&
+	 ($odinPointsCount > $lokiPointsCount && RAGNAROK_Q == 1) || ($odinPointsCount < $lokiPointsCount && RAGNAROK_Q == 2) )
+	{
+		mes "Here's your reward for the last fight.";
+		//get reward
+		mes "I hope to see you again on our side on next one.";
+	}
+	
+	mes .@npcname$;
+	mes "So you finally came.";
+	mes "Hugin and Munin. We are known as the Crow of Destiny.";
+	mes "One of us lend on the craddle of each baby, in any world of Yggdrasil.";
+	mes "Therefor, we're leaving a mark over his fate.";
+	
+	if(RAGNAROK_DETAILQ == 1)
+	{
+		goto OnReadDestiny;
+	}
+	next;
+	mes .@npcname$;
+	if(RAGNAROK_Q == 1)
+	{
+		mes "When you joined the Father's side, you've accepted to help him to find his memories back.";
+		mes "For this reason, you'll have to go accross the worlds, and find some clues.";
+	}
+	else if (RAGNAROK_Q == 2)
+	{
+		mes "First of all, as you've rejected the Father's offer, you should know more about the person you've joined.";
+		mes "Loki was an Ase. But he was also borned from a Giant.";
+		mes "After killing Baldr, due to a devouring jalousy, the Ases exile him from Asgard.";
+		mes "They tied him under a snake poison droping over his face, until the end of time.";
+		next;
+		mes .@npcname$;
+		mes "But he'll get free for the Ragnarok, and will lead Giants armies against the Ases.";
+		mes "When you joined his side, you've accepted to fight for his army to rise.";
+		mes "For this reason, you'll have to go accross the worlds, and find hints for him about what happened here.";
+		mes "Cause this place is the start, and the end of all Things.";
+	}
+	if(BaseLevel < $minStartLvl)
+	{
+		next;
+		mes .@npcname$;
+		mes "But first of all, you need to learn how to survive.";
+		mes "Fight monsters, and earn some power.";
+		mes "Come back when you'll be a bit stronger.";
+		close;
+	}
+	next;
+	mes .@npcname$;
+	mes "Now you're strong enough to convince the people you'll encounter to talk to you,";
+	mes "you have to go across the world and bring your help to find the Lost Memories.";
+	goto OnReadDestiny;
+	close;
+	
+OnStartRagnarok:
+	set .currentId, getcharid(3);
+	warp .ragnarokMap$, 0, 0;
+	sleep 10000;
+	if(attachrid(.currentId))
+	{
+		if(RAGNAROK_Q == 2)
+		{
+			for(set .@i,0; .@i<.lastAseId; set .@i,.@i+1)
+			{
+				summon $summonIdsName$[.@i], $summonIds[.@i], 300000, strnpcinfo(3) + "::OnAseDied";			
+			}
+			for(set .@i,.lastAseId; .@i<getarraysize($summonIds); set .@i,.@i+1)
+			{
+				monster .ragnarokMap$, 0, 0, $summonIdsName$[.@i], $summonIds[.@i] 1, strnpcinfo(3) + "::OnGiantDied";
+			}
+		}
+		else
+		{
+			for(set .@i,.lastAseId; .@i<getarraysize($summonIds); set .@i,.@i+1)
+			{
+				summon $summonIdsName$[.@i], $summonIds[.@i], 300000, strnpcinfo(3) + "::OnGiantDied";			
+			}
+			for(set .@i,0; .@i<.lastAseId; set .@i,.@i+1)
+			{
+				monster .ragnarokMap$, 0, 0, $summonIdsName$[.@i], $summonIds[.@i] 1, strnpcinfo(3) + "::OnAseDied";
+			}			
+		}
+	}
+	end;
+	
+OnGiantDied:
+	if(mobcount(.ragnarokMap$, strnpcinfo(3) + "::OnGiantDied") == 0)
+	{
+		if(RAGNAROK_Q == 2)
+		{
+			//win
+			set .@npcname$, "[Hugin, the Thought Crow]";
+			mes .@npcname$;
+			mes "Congratulations. You've ruled over the Ragnarok.";
+			mes "Here's your reward.";
+			getitem .rewardId, .rewardCount;
+			rentitem 29297, 60;
+		}
+		else
+		{
+			//lost after player's death
+			set ALLSUMMONDIED, 1;
+		}
+	}
+	end;
+	
+OnAseDied:
+	if(mobcount(.ragnarokMap$, strnpcinfo(3) + "::OnAseDied") == 0)
+	{
+		if(RAGNAROK_Q == 2)
+		{
+			//lost after player's death
+			set ALLSUMMONDIED, 1;
+		}
+		else
+		{
+			//win
+			set .@npcname$, "[Munin, the Memory Crow]";
+			mes .@npcname$;
+			mes "Congratulations. You've ruled over the Ragnarok.";
+			mes "Here's your reward.";
+			getitem .rewardId, .rewardCount;
+			rentitem 29297, 60;
+		}
+	}
+	end;
+	
+OnPCDieEvent:
+	if(strcharinfo(4) == .ragnarokMap$ && ALLSUMMONDIED == 1)
+	{
+		set .@npcname$, "[Memory Crow]";
+		mes "Sorry...But your lost...";
+		warp "Save", 0, 0;
+		killmonsterall .ragnarokMap$;
+	}
+	end;
+	
+OnReadDestiny:
+	next;
+	mes .@npcname$;
+	mes "Do you wish me to open the Weft?";
+	if(RAGNAROK_DETAILQ == 0)
+	{
+		mes "Memories have been emprisonned under a common form, a Coin, and spread around the Yggdrasil, numerous as the Great Tree Leaves.";
+		next;
+		mes .@npcname$;
+		mes "There's a pillar with a bowl on the center of this place.";
+		mes "This is the only thing that 'survived', except for Odin and me.";
+		mes "Everything else was gone when we woke up.";
+		next;
+		mes .@npcname$;
+		mes "As a Destiny Crow, I can tell you where to go to find some memories.";
+		mes "They won't always be where I say. But those places are those where you have the biggest chance to find them.";
+		mes "There's several way to obtain those memories. The simplest is to earn points from Instances, events, or achievements.";
+		mes "You can then buy Silver Coins from the Cash Shop using these points.";
+		next;
+		mes .@npcname$;
+		mes "The second option, more retributive, will be to go accross the newly discovered worlds and fight monsters to earn them.";
+		mes "These place are known as Labyrinths. They're a place of dark magic, dangerous, where powerfull and strange monsters lives.";
+		mes "They come and go randomly, and we don't know why.";
+		next;
+		mes .@npcname$;
+		mes "Once you'll have one or more coin, you can send them in the Bowl.";
+		mes "If there's enough inside it, the Coins will melt, and a Memory will be freed.";
+		mes "But be careful. it'll takes a lot. Alone, you won't be able to free any of them.";
+		next;
+		mes .@npcname$;
+		mes "Last thing. We, the Crows, are the only one able to open a warp portal to some worlds.";
+		mes "So you'll have to come back here each time you'll like to go in some special places.";
+		mes "Keep it in mind.";
+		set RAGNAROK_DETAILQ, 1;
+		next;
+		mes .@npcname$;
+	}
+	if(select("Yes","No") == 1)
+	{
+		if(CURRENTMEMORY == getarraysize($donationCountPerMemory))
+		{
+			next;
+			mes .@npcname$;
+			mes "Hum...You've release them all, aren't you?";
+			mes "Do you wish to take the Last Step, and bring those memories back?";
+			if(select("Yes","No") == 1)
+			{
+				next;
+				mes .@npcname$;
+				mes "For that, you'll have to bring me the Memories Treasure.";
+				mes "All of them.";
+				set .@ok, 1;
+				for(set .@i,0; .@i<getarraysize($memoryId) && .@ok == 1; set .@i,.@i+1)
+				{
+					if(countitem($memoryId[.@i]) < 1)
+					{
+						set .@ok, 0;
+					}
+				}
+				if(.@ok == 1)
+				{
+					next;
+					mes .@npcname$;
+					mes "Allright, you got them all.";
+					mes "Let's do this.";
+					mes "Let's start...The Ragnarok!";
+					for(set .@i,0; .@i<getarraysize($memoryId) && .@ok == 1; set .@i,.@i+1)
+					{
+						if(countitem($memoryId[.@i]) < 1)
+						{
+							delitem $memoryId[.@i], 1;
+						}
+					}
+					goto OnStartRagnarok;
+				}
+			}
+		}
+		next;
+		mes .@npcname$;
+		mes "The Future Veil is moved aside.";
+		mes "Where do you wanna go?";
+		for(set .@i,0; .@i<getarraysize(.warpPointName$); set .@i,.@i+1)
+		{	
+			if(COINDONATIONCOUNT >= $donationCountPerMemory[CURRENTMEMORY])
+			{
+				set .@menu$,.@menu$ + (.@i == 0? "" : ":") + .warpPointName$[.@i];
+				set .@warpPointName$[getarraysize(.@warpPointName$)], .warpPointName$[.@i];
+				set .@warpPointX[getarraysize(.@warpPointX)], .warpPointX[.@i];
+				set .@warpPointY[getarraysize(.@warpPointY)], .warpPointY[.@i];
+			}
+		}
+		if(getarraysize(.@warpPointName$) == 0)
+		{
+			next;
+			mes .@npcname$;
+			mes "Sorry, there's no active Memories known at this moment...";
+			close;
+		}
+		set .@choice, select(.@menu$) - 1;
+		next;
+		mes .@npcname$;
+		mes "Get ready.";
+		mes "To find what you're looking...Leave your mark over this place.";
+		set MEMORYKILL, 0;
+		set MEMORYLASTWARP, .@choice;
+		warp .warpPointMap$[.@choice], .warpPointX[.@choice], .warpPointY[.@choice];
+	}
+	close;
+	
+OnNPCKillEvent:
+	if(strcharinfo(3) == .warpPointMap$[MEMORYLASTWARP])
+	{
+		set MEMORYKILL, MEMORYKILL + 1;
+		if(MEMORYKILL == $killNeeded[MEMORYLASTWARP])
+		{
+			//show mark
+			getmapxy(.@map$, .@x, .@y, UNITTYPE_NPC, "almemch" + MEMORYLASTWARP);
+			viewpoint(1, .@x, .@y, 1, 0xFF0000);
+		}
+	}
+	end;
+	
+OnUnlockedMemory:
+	if(RAGNAROK_Q == 2)
+	{
+		set .@npcname$, "[Hugin, the Thought Crow]";
+	}
+	else
+	{
+		set .@npcname$, "[Munin, the Memory Crow]";
+	}
+	mes .@npcname$;
+	mes "A new Memory has been unlocked somewhere. Come back to me.";
+	set CURRENTMEMORY, CURRENTMEMORY + 1;
+	end;
+	
+OnInit:
+	set .warpPointNames$[0],"Folkvang";
+	set .warpPointMaps$[0],"br_lb";
+	set .warpPointX[0],90;
+	set .warpPointY[0],47;
+	setarray $donationCountPerMemory[0], 2, 4, 6, 8, 16, 32, 64, 128, 256, 512, 1024, 2048, 4096;
+	setarray $killNeeded[0], 20, 40, 60, 80, 120, 160, 200, 245, 295, 340, 390, 450, 500;
+	set $memKeyWord$[0],"The Father Mount","The Ice Howler","The Hellish Witch","The Demonic Stagg";
+	set $memoryId[0],512,512,512,512,512,512;
+	set $summonIds[0],1002,1002,1002,1002,1002,1002;
+	set .lastAseId, 3;
+	set .ragnarokMap$, "prontera";
+	set .rewardId, 969;
+	set .rewardCount, 25;
+	end;
+}

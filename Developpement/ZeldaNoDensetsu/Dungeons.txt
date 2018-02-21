@@ -1,0 +1,303 @@
+prontera,50,49,0	script	Hidden Lever#0::alazndhl	HIDDEN_WARP_NPC,{
+	set .@atoi, atoi(strnpcinfo(2));
+	if(getd("FAIRYG" + .@atoi + "Q" == 1)
+	{
+		mes "Do you wish to pull the Lever?";
+		if(select("Yes","No") == 1)
+		{
+			set .@free, getvariableofnpc(.free, "alaznd" + strnpcinfo(2) + "d");
+			if(.@free == 1)
+			{
+				warp .mapWarp$[.@atoi], .mapCoordinates[.@atoi * 2], .mapCoordinates[.@atoi * 2 + 1];
+				donpcevent "alaznd" + strnpcinfo(2) + "d::OnStartDungeon";
+			}
+			else
+			{
+				next;
+				mes "Nothing's happening. By looking to the ground, you can see that there's allready footprints in the dust.";
+			}
+		}
+	}
+	else
+	{
+		mes "You pull the lever, but nothing happens."
+	}
+	
+	setnpcdisplay strnpcinfo(3), HIDDEN_WARP_NPC;
+	close;
+	
+OnInit:
+	setarray .mapWarp$[0], "prontera", "izlude", "geffen";
+	setarray .mapCoordinates[0], 0, 0, 0, 0, 0, 0;
+	end;
+}
+
+prontera,50,49,0	duplicate(alazndhl)	Hidden Lever#1::alazndhl1	HIDDEN_WARP_NPC	
+prontera,50,49,0	duplicate(alazndhl)	Hidden Lever#2::alazndhl2	HIDDEN_WARP_NPC	
+prontera,50,49,0	duplicate(alazndhl)	Hidden Lever#3::alazndhl3	HIDDEN_WARP_NPC	
+prontera,50,49,0	duplicate(alazndhl)	Hidden Lever#4::alazndhl4	HIDDEN_WARP_NPC	
+prontera,50,49,0	duplicate(alazndhl)	Hidden Lever#5::alazndhl5	HIDDEN_WARP_NPC	
+prontera,50,49,0	duplicate(alazndhl)	Hidden Lever#6::alazndhl6	HIDDEN_WARP_NPC	
+prontera,50,49,0	duplicate(alazndhl)	Hidden Lever#7::alazndhl7	HIDDEN_WARP_NPC	
+
+prontera,50,49,0	script	Wood Dungeon::alaznd0d	HIDDEN_WARP_NPC,2,2,{
+	end;
+	
+OnTouch:
+	if(.free == 1)
+	{
+		set .free, 0;
+		mapannounce strnpcinfo(3), "You've entered in the Foggy Woods.", bc_all, 0x00FF00;
+		sleep 1000;
+		mapannounce strnpcinfo(3), "You can feel an oppressing feeling, as if the Trees were looking after you.", bc_all, 0x00FF00;
+		sleep 1000;
+		mapannounce strnpcinfo(3), "It'll be the first and only time you'll enter this place, mortal.", bc_all, 0x00FF00;
+		sleep 1000;
+		mapannounce strnpcinfo(3), "If you have enough Courage, come. Come to me. And I'll break you.", bc_all, 0x00FF00;
+	}
+	end;
+	
+OnPCLeaveMapEvent:
+	set .free, 1;
+	end;
+	
+OnStartDungeon:
+	set .free, 0;
+	
+	end;
+	
+OnInit:
+	set .bossId, 1002;
+	set .free, 1;
+	end;
+}
+
+prontera,50,49,0	script	Fire Dungeon::alaznd1d	HIDDEN_WARP_NPC,2,2,{
+	end;
+	
+OnTouch:
+	if(.free == 1)
+	{
+		set .free, 0;
+		mapannounce strnpcinfo(3), "You've entered in the Burning Fields.", bc_all, 0x00FF00;
+		sleep 1000;
+		mapannounce strnpcinfo(3), "The Heat is awfull. If you don't hurry up, you'll be burned alive.", bc_all, 0x00FF00;
+		sleep 1000;
+		mapannounce strnpcinfo(3), "It'll be the first and only time you'll enter this place, mortal.", bc_all, 0x00FF00;
+		sleep 1000;
+		mapannounce strnpcinfo(3), "If you have enough Strength, come and fight me.", bc_all, 0x00FF00;
+	}
+	end;
+	
+OnPCLeaveMapEvent:
+	set .free, 1;
+	end;
+	
+OnStartDungeon:
+	set .free, 0;
+	end;
+	
+OnInit:
+	set .bossId, 1002;
+	set .free, 1;
+	end;
+}
+
+prontera,50,49,0	script	Water Dungeon::alaznd2d	HIDDEN_WARP_NPC,2,2,{
+	end;
+	
+OnTouch:
+	if(.free == 1)
+	{
+		set .free, 0;
+		mapannounce strnpcinfo(3), "You've entered in the Flooded Labyrinth.", bc_all, 0x00FF00;
+		sleep 1000;
+		mapannounce strnpcinfo(3), "You feel heavy, and the sounds looks like coming from the deepest water.", bc_all, 0x00FF00;
+		sleep 1000;
+		mapannounce strnpcinfo(3), "It'll be the first and only time you'll enter this place, mortal.", bc_all, 0x00FF00;
+		sleep 1000;
+		mapannounce strnpcinfo(3), "If you have enough Wisdom, you'll find your way to me.", bc_all, 0x00FF00;
+	}
+	end;
+	
+OnPCLeaveMapEvent:
+	set .free, 1;
+	end;
+	
+OnStartDungeon:
+	set .free, 0;
+	end;
+	
+OnInit:
+	set .bossId, 1002;
+	set .free, 1;
+	end;
+}
+
+
+
+
+
+
+
+prontera,50,49,0	script	Lava Dungeon::alaznd3d	HIDDEN_WARP_NPC,2,2,{
+	end;
+	
+OnTouch:
+	if(.free == 1)
+	{
+		set .free, 0;
+		mapannounce strnpcinfo(3), "You've entered in the Flooded Labyrinth.", bc_all, 0x00FF00;
+		sleep 1000;
+		mapannounce strnpcinfo(3), "You feel heavy, and the sounds looks like coming from the deepest water.", bc_all, 0x00FF00;
+		sleep 1000;
+		mapannounce strnpcinfo(3), "It'll be the first and only time you'll enter this place, mortal.", bc_all, 0x00FF00;
+		sleep 1000;
+		mapannounce strnpcinfo(3), "If you have enough Wisdom, you'll find your way to me.", bc_all, 0x00FF00;
+	}
+	end;
+	
+OnPCLeaveMapEvent:
+	set .free, 0;
+	end;
+	
+OnInit:
+	set .bossId, 1002;
+	set .free, 1;
+	end;
+}
+
+prontera,50,49,0	script	Wind Dungeon::alaznd4d	HIDDEN_WARP_NPC,2,2,{
+	end;
+	
+OnTouch:
+	if(.free == 1)
+	{
+		set .free, 0;
+		mapannounce strnpcinfo(3), "You've entered in the Flooded Labyrinth.", bc_all, 0x00FF00;
+		sleep 1000;
+		mapannounce strnpcinfo(3), "You feel heavy, and the sounds looks like coming from the deepest water.", bc_all, 0x00FF00;
+		sleep 1000;
+		mapannounce strnpcinfo(3), "It'll be the first and only time you'll enter this place, mortal.", bc_all, 0x00FF00;
+		sleep 1000;
+		mapannounce strnpcinfo(3), "If you have enough Wisdom, you'll find your way to me.", bc_all, 0x00FF00;
+	}
+	end;
+	
+OnPCLeaveMapEvent:
+	set .free, 0;
+	end;
+	
+OnInit:
+	set .bossId, 1002;
+	set .free, 1;
+	end;
+}
+
+prontera,50,49,0	script	Ice Dungeon::alaznd5d	HIDDEN_WARP_NPC,2,2,{
+	end;
+	
+OnTouch:
+	if(.free == 1)
+	{
+		set .free, 0;
+		mapannounce strnpcinfo(3), "You've entered in the Flooded Labyrinth.", bc_all, 0x00FF00;
+		sleep 1000;
+		mapannounce strnpcinfo(3), "You feel heavy, and the sounds looks like coming from the deepest water.", bc_all, 0x00FF00;
+		sleep 1000;
+		mapannounce strnpcinfo(3), "It'll be the first and only time you'll enter this place, mortal.", bc_all, 0x00FF00;
+		sleep 1000;
+		mapannounce strnpcinfo(3), "If you have enough Wisdom, you'll find your way to me.", bc_all, 0x00FF00;
+	}
+	end;
+	
+OnPCLeaveMapEvent:
+	set .free, 0;
+	end;
+	
+OnInit:
+	set .bossId, 1002;
+	set .free, 1;
+	end;
+}
+
+prontera,50,49,0	script	Darkness Dungeon::alaznd6d	HIDDEN_WARP_NPC,2,2,{
+	end;
+	
+OnTouch:
+	if(.free == 1)
+	{
+		set .free, 0;
+		mapannounce strnpcinfo(3), "You've entered in the Flooded Labyrinth.", bc_all, 0x00FF00;
+		sleep 1000;
+		mapannounce strnpcinfo(3), "You feel heavy, and the sounds looks like coming from the deepest water.", bc_all, 0x00FF00;
+		sleep 1000;
+		mapannounce strnpcinfo(3), "It'll be the first and only time you'll enter this place, mortal.", bc_all, 0x00FF00;
+		sleep 1000;
+		mapannounce strnpcinfo(3), "If you have enough Wisdom, you'll find your way to me.", bc_all, 0x00FF00;
+	}
+	end;
+	
+OnPCLeaveMapEvent:
+	set .free, 0;
+	end;
+	
+OnInit:
+	set .bossId, 1002;
+	set .free, 1;
+	end;
+}
+
+prontera,50,49,0	script	Spirit Dungeon::alaznd7d	HIDDEN_WARP_NPC,2,2,{
+	end;
+	
+OnTouch:
+	if(.free == 1)
+	{
+		set .free, 0;
+		mapannounce strnpcinfo(3), "You've entered in the Flooded Labyrinth.", bc_all, 0x00FF00;
+		sleep 1000;
+		mapannounce strnpcinfo(3), "You feel heavy, and the sounds looks like coming from the deepest water.", bc_all, 0x00FF00;
+		sleep 1000;
+		mapannounce strnpcinfo(3), "It'll be the first and only time you'll enter this place, mortal.", bc_all, 0x00FF00;
+		sleep 1000;
+		mapannounce strnpcinfo(3), "If you have enough Wisdom, you'll find your way to me.", bc_all, 0x00FF00;
+	}
+	end;
+	
+OnPCLeaveMapEvent:
+	set .free, 0;
+	end;
+	
+OnInit:
+	set .bossId, 1002;
+	set .free, 1;
+	end;
+}
+
+prontera,50,49,0	script	Light Dungeon::alaznd8d	HIDDEN_WARP_NPC,2,2,{
+	end;
+	
+OnTouch:
+	if(.free == 1)
+	{
+		set .free, 0;
+		mapannounce strnpcinfo(3), "You've entered in the Flooded Labyrinth.", bc_all, 0x00FF00;
+		sleep 1000;
+		mapannounce strnpcinfo(3), "You feel heavy, and the sounds looks like coming from the deepest water.", bc_all, 0x00FF00;
+		sleep 1000;
+		mapannounce strnpcinfo(3), "It'll be the first and only time you'll enter this place, mortal.", bc_all, 0x00FF00;
+		sleep 1000;
+		mapannounce strnpcinfo(3), "If you have enough Wisdom, you'll find your way to me.", bc_all, 0x00FF00;
+	}
+	end;
+	
+OnPCLeaveMapEvent:
+	set .free, 0;
+	end;
+	
+OnInit:
+	set .bossId, 1002;
+	set .free, 1;
+	end;
+}

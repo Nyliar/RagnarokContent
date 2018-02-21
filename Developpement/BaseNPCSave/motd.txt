@@ -1,0 +1,22 @@
+-	script	Motd	-1,{
+
+OnPCLoginEvent:
+	// FIXME - sous rAthena, les annonces se stackent si elles sont appelées l'une après l'autre
+	//announce	"Bienvenue sur Artefact !", bc_self, 0xCC9966;
+	/*announce	"Bienvenue sur Artefact !", bc_self, 0xCC9966;
+	announce	"Nous sommes le "+gettimestr("%d/%m/%Y", 21)+", il est " + gettimestr("%H:%M:%S",21) + ".", bc_yellow|bc_self;
+	announce	"-----------------------------------------------------------", bc_self, 0x000000;
+	announce	"Gamemasters statut :", bc_self, 0xFFFFFF;
+	if (isloggedin(2000001))  announce "[Administrateur] Artefact est en ligne.", bc_self, 0x00FF00;
+	if (!isloggedin(2000001)) announce "[Administrateur] Artefact est hors-ligne.", bc_self, 0xFF0000;
+	announce	"Vous pouvez taper @request pour obtenir l'aide d'un Gamemaster.", bc_self, 0xffffff;
+	announce	"-----------------------------------------------------------", bc_self, 0x000000;
+	announce	"WOE statut :",bc_self, 0xFFFFFF;
+	if (agitcheck()) announce "[War Of Emperium] La Woe est commencée.", bc_self, 0x00FF00;
+	if (!agitcheck()) announce "[War Of Emperium] La Woe n'est pas commencée.", bc_self, 0xFF0000;
+	//if (agitcheck2()) announce "La Woe 2nd édition est commencée.",bc_self,0x00FF00;
+	//if (!agitcheck2()) announce "La Woe 2nd édition n'est pas commencée.",bc_self,0xFF0000;
+	announce	"-----------------------------------------------------------", bc_self, 0x000000;
+	announce	"Il y a actuellement [" + getusers(1) + "] joueurs en ligne sur le serveur.", bc_yellow|bc_self;*/
+	end;
+}

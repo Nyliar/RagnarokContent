@@ -1,0 +1,109 @@
+revencia,290,142,5	script	Old Fae::revoldfae	439,{
+	set .@npcname$, "[Erimen]";
+	
+	mes .@npcname$;
+	mes "";
+	mes "I'm the oldest fae leavin' on Faes City.";
+	mes "I've lived long before, and will live again long after you came on this earth.";
+	mes "In other times, there was a city here, Revencia, Faes main city. At least, that's what's thinking young faes,";
+	mes "But they're wrong. Revencia was hit by Loki Wrath, and deep darkness take place here.";
+	mes "We can't leave here anymore...";
+	mes "Never try enter in.";
+	if (QUEST_SUB >= 1 && countitem(6027) >= 1 && countitem(12400) >= 1)
+	{
+		next;
+		mes "You got it! With that, I can awake my power!";
+		mes "But that's gonna be enough for only one Pearl.";
+		mes "And I also need a Sobbing Starlight.";
+		mes "They're used on Pearl creation,";
+		mes "to make them prepared to receive a class Wisdom.";
+		mes "You can get some on Duneyrr or Ancient Tree.";
+		mes "You also have to know that I can't succeed every time.";
+		mes "I've almost 33% success chance. Wanna try it?";
+		next;
+		switch(select("Let's go!","No thanks..."))
+		{
+			case 1:
+				if (countitem(12400) >= 1 && countitem(7177) >= 1)	
+				{
+					set counttrypearl, counttrypearl + 1;
+					if (counttrypearl == 5)
+					{	
+						mes "This try gonna destroy your Crystal. It's my last chance!";
+						delitem 6027, 1;
+						set counttrypearl, 0;	
+					}
+					delitem 12400,1;
+					delitem 7177,1;
+					next;
+					if (rand(0,100) < 33)
+					{
+						specialeffect 154;
+						getitem 21097, 1;
+					}
+					else
+					{
+						specialeffect 155;
+						mes "Sorry, child of my foes. I've failed.";
+						mes "Wisdom Source reject my prayers.";
+					}
+				}
+				else
+					mes "You don't have what I need.";
+				break;
+			case 2:
+				mes "Allright. Come back when you'll be brave enougth.";
+				break;
+		}
+	}
+	else if (countitem(12400) >= 1)
+	{
+		next;
+		mes "...Wha...What...?";	
+		mes "Is that...Divine source water?";
+		mes "No way! The source ran dry years ago!";
+		next;
+		mes strcharinfo(0);
+		mes "Do you that source, old fae?";
+		next;
+		mes .@npcname$;
+		mes "Long time ago, the faes were the Source's Guardians.";
+		mes "She ran dry when Loki's cursed us, and when Hel appeared.";
+		mes "Gods start thinking that we were unable to protect her.";
+		mes "But...Do you know her real power?";
+		switch(select("I think so","No...Sorry"))
+		{
+			case 1:
+				next;
+				if (MULTI_CLASS == 2)
+				{
+					mes .@npcname$;
+					mes "Hum?";
+					mes "I don't think so...";
+					mes "But you've learnt a bit.";
+					mes "Therefor, I can help you.";
+					mes "Wisdom Pearl has been lost, but I know how to create some.";
+					mes "For that, you know it, I need some Source water.";
+					mes "But not only.";
+					next;
+					mes "I can't help you while Hel is around here.";
+					mes "Her darkness power blocks my own powers.";
+					mes "Kill her, and come back to me.";
+					mes "I'll be able to create Pearls with some of her cristallized power.";
+					mes "Bring me back some Crystal of Feardom.";
+					set QUEST_SUB, 1;
+				}
+				else
+				{
+					mes "I don't think so.";
+					mes "Faes got the Judgement Eyes.";
+					mes "I can feel that you don't know a single thing.";
+				}
+				break;
+			case 2:
+				mes "I can do nothing for you then.";
+				break;
+		}
+	}
+	close;
+}

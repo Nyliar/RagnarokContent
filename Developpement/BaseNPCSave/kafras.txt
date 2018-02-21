@@ -1,0 +1,173 @@
+// Prontera village
+// ===========================================================
+// cé lil dé mariaj mdr
+jawaii,227,221,3	script	Kafra Employee::kaf_jawaii	721,{
+	cutin "kafra_07",2;
+	callfunc "F_Kafra",0,0,0,40,800;
+	if(getmapxy(@map$,@posX,@posY,0,strcharinfo(0)) != 0) {
+		savepoint "jawaii",250,128;
+	}
+	else {
+		savepoint "jawaii",@posX,@posY;
+	}
+	callfunc "F_KafEnd",0,1,"in Jawaii";
+}
+
+amatsu,204,98,3	script	Kafra Employee::kaf_amatsu0	114,{
+	cutin "kafra_04",2;
+	callfunc "F_Kafra",0,0,0,40,800;
+	if(getmapxy(@map$,@posX,@posY,0,strcharinfo(0)) != 0) {
+		savepoint "amatsu",197,93;
+	}
+	else {
+		savepoint "amatsu",@posX,@posY;
+	}
+	callfunc "F_KafEnd",0,1,"in Amatsu";
+}
+
+ayothaya,144,115,5	script	Kafra Employee::kaf_ayothaya0	114,{
+	cutin "kafra_04",2;
+	callfunc "F_Kafra",0,0,0,40,800;
+	if(getmapxy(@map$,@posX,@posY,0,strcharinfo(0)) != 0) {
+		savepoint "ayothaya",150,118;
+	}
+	else {
+		savepoint "ayothaya",@posX,@posY;
+	}
+	callfunc "F_KafEnd",0,1,"in Ayothaya";
+}
+
+xmas,152,133,3	script	Kafra Employee::kaf_lutie	114,{
+	cutin "kafra_04",2;
+	callfunc "F_Kafra",0,0,0,40,800;
+	if(getmapxy(@map$,@posX,@posY,0,strcharinfo(0)) != 0) {
+		savepoint "xmas",147,131;
+	}
+	else {
+		savepoint "xmas",@posX,@posY;
+	}
+	callfunc "F_KafEnd",0,1,"in Lutie";
+}
+
+payon,164,96,3	script	Kafra Employee::kaf_payon0	114,{
+	cutin "kafra_04",2;
+	callfunc "F_Kafra",0,0,0,40,800;
+	if(getmapxy(@map$,@posX,@posY,0,strcharinfo(0)) != 0) {
+		savepoint "payon",157,90;
+	}
+	else {
+		savepoint "payon",@posX,@posY;
+	}
+	callfunc "F_KafEnd",0,1,"in Payon";
+}
+
+hugel,91,145,5	script	Kafra Employee::kaf_hugel	114,{
+	cutin "kafra_04",2;
+	callfunc "F_Kafra",0,0,0,40,800;
+	if(getmapxy(@map$,@posX,@posY,0,strcharinfo(0)) != 0) {
+		savepoint "hugel",96,145;
+	}
+	else {
+		savepoint "hugel",@posX,@posY;
+	}
+	callfunc "F_KafEnd",0,1,"in Hugel";
+}
+
+veins,221,128,5	script	Kafra Employee::kaf_veins	114,{
+	cutin "kafra_04",2;
+	callfunc "F_Kafra",0,0,0,40,800;
+	if(getmapxy(@map$,@posX,@posY,0,strcharinfo(0)) != 0) {
+		savepoint "veins",215,128;
+	}
+	else {
+		savepoint "veins",@posX,@posY;
+	}
+	callfunc "F_KafEnd",0,1,"in Veins";
+}
+
+gonryun,159,122,5	script	Kafra Employee::kaf_gonryun0	116,{
+	cutin "kafra_02",2;
+	callfunc "F_Kafra",0,0,0,40,800;
+	if(getmapxy(@map$,@posX,@posY,0,strcharinfo(0)) != 0) {
+		savepoint "gonryun",160,115;
+	}
+	else {
+		savepoint "gonryun",@posX,@posY;
+	}
+	callfunc "F_KafEnd",0,1,"in Gonryun";
+}
+
+rachel,110,137,5	script	Kafra Employee::kaf_rachel	114,{
+	cutin "kafra_04",2;
+	callfunc "F_Kafra",0,0,0,40,800;
+	if(getmapxy(@map$,@posX,@posY,0,strcharinfo(0)) != 0) {
+		savepoint "rachel",119,135;
+	}
+	else {
+		savepoint "rachel",@posX,@posY;
+	}
+	callfunc "F_KafEnd",0,1,"in Rachel";
+}
+
+umbala,126,138,3	script	Kafra Employee::kaf_umbala0	721,{
+	cutin "kafra_07",2;
+	callfunc "F_Kafra",0,0,0,40,800;
+	if(getmapxy(@map$,@posX,@posY,0,strcharinfo(0)) != 0) {
+		savepoint "umbala",130,130;
+	}
+	else {
+		savepoint "umbala",@posX,@posY;
+	}
+	callfunc "F_KafEnd",0,1,"in Umbala";
+}
+
+izlude,133,116,3	script	Kafra Employee::kaf_izlude0	117,{
+	cutin "kafra_01",2;
+	callfunc "F_Kafra",0,0,0,40,800;
+	if(getmapxy(@map$,@posX,@posY,0,strcharinfo(0)) != 0) {
+		savepoint "izlude",128,111;
+	}
+	else {
+		savepoint "izlude",@posX,@posY;
+	}
+	callfunc "F_KafEnd",0,1,"in Izlude";
+}
+
+louyang,219,108,3	script	Kafra Employee::kaf_louyang0	112,{
+	cutin "kafra_06",2;
+	callfunc "F_Kafra",0,0,0,40,800;
+	if(getmapxy(@map$,@posX,@posY,0,strcharinfo(0)) != 0) {
+		savepoint "louyang",217,103;
+	}
+	else {
+		savepoint "louyang",@posX,@posY;
+	}
+	callfunc "F_KafEnd",0,1,"in Louyang";
+}
+
+morocc,156,97,5	script	Kafra Employee::kaf_morocc0	117,{
+	cutin "kafra_01",2;
+	callfunc "F_Kafra",0,0,0,40,800;
+	if(getmapxy(@map$,@posX,@posY,0,strcharinfo(0)) != 0) {
+		savepoint "morocc",158,92;
+	}
+	else {
+		savepoint "morocc",@posX,@posY;
+	}
+	callfunc "F_KafEnd",0,1,"in Morocc";
+}
+
+// [Lyyn] Kafra à la fontaine
+prontera,159,190,3	script	Kafra Employee::kaf_prontera_fontaine	112,{
+	cutin "kafra_06",2;
+	callfunc "F_KafSet";	// Générer les warp points selon la ville
+	callfunc "F_Kafra",0,0,0,40,800;	// 2 derniers args = prix ouverture storage + prix location pushcart
+	if(getmapxy(@map$,@posX,@posY,0,strcharinfo(0)) != 0) {
+		savepoint "prontera",99,84;
+	}
+	else {
+		savepoint "prontera",@posX,@posY;
+	}
+	callfunc "F_KafEnd",0,1,"in the city of Prontera";
+}
+

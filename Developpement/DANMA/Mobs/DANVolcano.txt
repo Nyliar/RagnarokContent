@@ -1,0 +1,20 @@
+//First stage
+danma_19,0,0,0,0	monster	Elder Willow	1033,35,0,0,1
+danma_19,0,0,0,0	monster	Explosion	1383,25,0,0,1
+danma_19,0,0,0,0	monster	Jack	1130,15,0,0,1
+danma_19,0,0,0,0	monster	Kaho	1072,25,0,0,1
+
+danma_20,0,0,0,0	monster	Grizzly	1381,35,0,0,1
+danma_20,0,0,0,0	monster	Lava Golem	1366,25,0,0,1
+danma_20,0,0,0,0	monster	Marduck	1140,15,0,0,1
+
+danma_21,0,0,0,0	monster	Blazer	1367,15,0,0,1
+danma_21,0,0,0,0	monster	Heater	1318,25,0,0,1
+danma_21,0,0,0,0	monster	Mutant Dragonoid	1262,10,0,0,1
+danma_21,0,0,0,0	monster	Chimera	1283,5,0,0,1
+
+danma_22,0,0,0,0	monster	Ferus	1714,15,0,0,1
+danma_22,0,0,0,0	monster	Headless Mule	2071,25,0,0,1
+danma_22,0,0,0,0	monster	Majoruros	1310,30,0,0,1
+
+danma_23,0,0,0,0	boss_monster	Detardeurus	1719,1,7200000,3600000,0

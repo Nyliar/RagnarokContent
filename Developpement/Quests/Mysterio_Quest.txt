@@ -1,0 +1,205 @@
+//mysterio
+mysterio,54,82,7	script	Archeologist#arch2::alajormys	4_F_GON,{
+	set .@npcname$, "^0000FF[Archeologist]^000000";
+	mes .@npcname$;
+	mes "";
+	
+	if (#quetemysterio == 1)
+	{
+		mes "Hun!";
+		mes "So you're also a Prima? Welcome on Mysterio.";
+		mes "I'm the only other person in world which raise over the Prima.";
+		mes "I was sent here to break the Mysterio's secret.";
+		mes "And I found it!";
+		next;
+		mes "The problem is that secret is to huge for anybody else.";
+		mes "If you wanna found it, you'll have to search.";
+		mes "I'll give you 5 minutes. This delay done, I'll considered you're too weak.";
+		mes "And then...You'll have to fight for your life.";
+		addtimer 300000, strnpcinfo(3)+"::OnTimeElapse";
+		set #quetemysterio, 2;
+		set #correct, 0;
+	}
+	else if (#quetemysterio == 4)
+	{
+		mes "Looks like you passed the first step.";
+		mes "I can now tell you where to go for next step.";
+		mes "Jormungand speak by my mouth. You'll have to find his Shadow.";
+		mes "He's right on top of the Yggdrasil.";
+		mes "If you don't understand, I can do nothing for you.";
+	}
+	else if (#quetemysterio >= 5)
+	{
+		mes "Looks like you find the Jormungand's Lair.";
+		mes "Allright. You can now enter. You're ready to fight against him.";
+		mes "Good luck.";
+		if(#quetemysterio == 5)
+		{
+			set #quetemysterio, 6;
+			next;
+			mes .@npcname$;
+			mes "What? What do you want more than that?";
+			mes "You've pierced an Ancient Secret.";
+			mes "No more than that...";
+			rentitem 29296, 60;
+		}
+		enablenpc "mysjorlair";
+	}
+	else if (#quetemysterio == 2)
+	{
+		mes "You don't even understand how it works?";
+		mes "You can't succeed then...";
+		set #lastactivate, 0;
+		set #correct, 0;
+	}
+	else if (#quetemysterio == 3)
+		set #quetemysterio, 2;
+	else
+		mes "* ~ Thinking ~ *";
+	close;
+
+OnTimeElapse:
+	if (#correct < 10)
+	{
+		dispbottom .@npcname + ": You failed...Bad luck!";
+		
+		setmapflag "mysterio", mf_noteleport;
+		setmapflag "mysterio", mf_nowarp;
+	}
+	close;
+}
+
+
+mysterio,83,86,5	script	Weird Statue#1::etrsta1	HIDDEN_NPC,{
+	if (#quetemysterio >= 1)
+	{	
+		if (#lastactivate == (atoi(strnpcinfo(2)) - 1))
+		{
+			set #correct, #correct+1;
+			set #lastactivate, atoi(strnpcinfo(2));
+		}
+		else 
+		{
+			set #correct, 0;
+			set #lastactivate, 0;
+		}	
+		
+		mes "Me: " + atoi(strnpcinfo(2));
+		mes "You: " + #correct;
+	
+		if (#correct == 10)
+		{
+			next;
+			mes "Congratulation. You've successfully fill the ordeal to access to the World Snake Lair.";
+			set #quetemysterio, 3;
+			mes "To enter in it, you'll now have to prove your valor.";
+			mes "You'll have to fight and win against the Jormungand monsters.";
+			mes "Get prepared.";
+			next;
+			
+			killmonsterall "pvp_n_1-2";
+			warp "pvp_n_1-2", 100,65;
+			setmapflag "pvp_n_1-2", mf_noteleport;
+			setmapflag "pvp_n_1-2", mf_nowarp;
+			areamonster "pvp_n_1-2",80,119,119,80,"Jormungand Henchman",1372,20,"etrsta1::OnSbireDead";
+		}
+	}
+	else
+	{
+		mes "It a rock statue.";	
+		mes "It looks weird, but you can't find anything suspicious.";
+	}
+	close;
+
+OnSbireDead:
+	set .@mob_dead_num,mobcount("pvp_n_1-2", "etrsta1::OnSbireDead");
+	if (.@mob_dead_num < 1)
+	{
+		atcommand "@cleanmap";
+		dispbottom "[Lair Guardian]: Congratulation. You can continue your accession to the Lair.";
+		dispbottom "[Lair Guardian]: You'll now have to find me.";
+
+		set #quetemysterio, 4;
+		mapwarp "pvp_n_1-2", "mysterio", 0, 0;
+	}
+	else
+	{
+		dispbottom "[Lair Guardian]: There's still " + .@mob_dead_num + "!";
+	}
+	end;
+
+}
+
+mysterio,53,85,5	script	Archeologist#arch1::mysarc	111,{
+	set .@npcname$, "[Archeologist]";
+
+	mes .@npcname$;
+	mes "Hello to you.";
+	mes "I've come here to learn about the mysterious statue you can find all around the island.";
+	mes "But I haven't find the smallest clue...";
+	mes "I supposed I'm not smart enought after all...";
+
+	if (#quetemysterio == 0)
+		set #quetemysterio, 1;
+	close;
+}
+
+mysterio,65,68,0	duplicate(etrsta1)	Weird Statue#2::etrsta2	HIDDEN_NPC
+mysterio,72,48,0	duplicate(etrsta1)	Weird Statue#3::etrsta3	HIDDEN_NPC
+mysterio,50,58,0	duplicate(etrsta1)	Weird Statue#4::etrsta4	HIDDEN_NPC
+mysterio,82,72,0	duplicate(etrsta1)	Weird Statue#5::etrsta5	HIDDEN_NPC
+mysterio,69,85,0	duplicate(etrsta1)	Weird Statue#6::etrsta6	HIDDEN_NPC
+mysterio,46,76,0	duplicate(etrsta1)	Weird Statue#7::etrsta7	HIDDEN_NPC
+mysterio,67,44,0	duplicate(etrsta1)	Weird Statue#8::etrsta8	HIDDEN_NPC
+mysterio,85,55,0	duplicate(etrsta1)	Weird Statue#9::etrsta9	HIDDEN_NPC
+mysterio,68,66,0	duplicate(etrsta1)	Weird Statue#10::etrsta10	HIDDEN_NPC
+
+//ars_fild60,24,149,5	script	Jormungand's Shadow::odj	EP14_MORS_BOSSA,{
+bif_fild01,74,32,5	script	Jormungand's Shadow::odj	EP14_MORS_BOSSA,{
+	set .@npcname$, "[Jormungand]";
+	mes "";
+	mes .@npcname$;
+	if (#quetemysterio == 4)
+	{
+		mes "...I'm Jormungand, the World Snake.";
+		mes "I'm the start and the end, surrounding the world in my ankles.";
+		mes "I can see in your heart, and read in your soul.";
+		mes "You want to know the World. I can bring you answers.";
+		mes "But more than everything, I want to kill you. From all the Wrath my Godly Father gave me.";
+		mes "If you want the truth, find me. If you wanna die, find me.";
+		mes "If you want strength, find me. If you want power, find yourself.";	
+		
+		next;
+		killmonsterall "pvp_n_1-2";
+		monster "pvp_n_1-2",100,101,"Lair Guardian",2022,1,"odj::OnOmbreDie";
+		warp "pvp_n_1-2", 100,65;
+	}
+	else
+	{
+		mes "Leave! NOW!";
+	}
+	close;
+
+OnOmbreDie:
+	mapannounce "pvp_n_1-2", "Great. You're ready for the next step. Come and find me.",0;
+	mapannounce "pvp_n_1-2", "I'll wait you.",0;
+	
+	set #quetemysterio, 5;
+	mapwarp "pvp_n_1-2", "mysterio", 0, 0;
+}
+
+mysterio,84,54,5	script	Jormungand Lair::mysjorlair	WARPNPC,2,2,{
+	end;
+
+OnTouch:
+	if (#quetemysterio == 5)
+	{
+		warp "casp_step",34,165;	
+		disablenpc "mysjorlair";
+	}
+	end;
+
+OnInit:
+	disablenpc "mysjorlair";
+	end;
+}

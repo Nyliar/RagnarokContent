@@ -1,0 +1,1164 @@
+//===== Alayne Scripts =======================================
+//= Fenrir Howl Instance
+//===== By: ================================================== 
+//= Alayne
+//===== Current Version: ===================================== 
+//= 1.0
+//===== Compatible With: ===================================== 
+//= rAthena SVN
+//= hercules SVN
+//===== Description: ========================================= 
+//
+//= An instance based over Fenrir, the Giant Wolf
+//
+//===== Todo Remaining: ======================================
+//
+//===== Additional Comments: =================================
+//
+//============================================================
+
+prontera,148,187,5	script	Fenrir Howl::alafhen	4_M_DEWZATICHIEF,{
+OnStart:
+	set .@party_id, getcharid(1);
+	set .@fh_leader, ( getcharid(0) == getpartyleader(.@party_id,2) );
+
+	set $instance_fh_id, -1;
+	
+	//RATHENA
+	set .@has_instance, $instance_fh_id == getcharid(1);
+	//HERCULES
+	//set .@has_instance, has_instance($fhMap$[0], $fh_instance);
+	
+	set .@instance_delay, ( instance_delay_fh - gettimetick(2) );
+
+	set .@npcname$, "[" + .instance_name$ + "]";
+	mes .@npcname$;
+	mes "This is the entrance of " + .instance_name$ + ".";
+	mes "The more you look at it, the more you feel disturb. Something's wrong happening in there.";
+	if( .@instance_delay > 0 )
+	{		
+		set .@hours, .@instance_delay / (60 * 60);
+		set .@remaining, .@instance_delay - .@hours * (60 * 60);
+		set .@minutes, .@remaining / (60);
+		set .@remaining, .@remaining - .@minutes * (60);
+		set .@seconds, .@remaining;
+		mes "You have to wait : ^FF0000"+ .@hours +" Hours, " + .@minutes + " Minutes and " + .@seconds + " Seconds.^000000";
+		//close;
+	}
+	if (.requiredItem != -1  && countitem(.requiredItem) < 1)
+	{
+		mes "You decide to step back.";
+		mes "At no cost you'll enter in that place without being well prepared.";
+		close;
+	}
+	switch( select( 
+		(( .@party_id && .@fh_leader && !.@has_instance )?"Create " + .instance_name$:""),
+		(( .@party_id && .@has_instance )?"Enter " + .instance_name$:""),
+		(( .@party_id && .@fh_leader && .@has_instance )?"Destroy " + .instance_name$:""),
+	"Nevermind."
+		)){
+	case 1:
+		getpartymember .@party_id,2;
+		if( .min_party_member >= 1 ){
+			set .@origin, getcharid(3);
+			set .@gettimetick, gettimetick(2);
+			for( set .@i, 0; .@i < $@partymembercount; set .@i, .@i+1 )
+				if( attachrid( $@partymemberaid[.@i] ) ){
+					set .@member_count, .@member_count + 1;
+					if( BaseLevel < .base_level[0] || BaseLevel > .base_level[1] ) set .@fail, .@fail|1;
+					if( Zeny < .instance_zeny ) set .@fail, .@fail|2;
+					if( instance_delay_fh > .@gettimetick ) set .@fail, .@fail|4;
+					if( .@fail ){
+						set .@name$, strcharinfo(0);
+						//break;
+					}
+				}
+			attachrid( .@origin );
+		}
+		//check that nobody else is inside
+		for(set .@i,1; .@i<=getarraysize($fhMap$); set .@i,.@i+1)
+		{
+			if (instance_mapname($fhMap$[.@i], $fh_instance) != "" && getmapusers(instance_mapname($fhMap$[.@i], $fh_instance)) > 0) {
+				mes "Another team is already in the " + .instance_name$ + ". I can't send you there, sorry.";
+				close;
+			}
+		}
+		//clean any previously remaining instance
+		if($fh_instance != -1)
+		{
+			instance_destroy $fh_instance;
+			set $fh_instance, -1;
+			set $instance_fh_id, -1;
+		}
+		
+		if( .@name$ != "" && .@fail ){
+			mes "^FF0000[ Failed ]^000000";
+			mes "^0055FF"+.@name$+"^000000, You cannot join right now.";
+			mes " ";
+			mes "^FF0000[ Reason: ]^000000";
+			if( .@fail & 1 ) mes "^777777You must be Level: "+.base_level[0]+" - "+.base_level[1]+"^000000";
+			if( .@fail & 2 ) mes "^777777You need "+ .instance_zeny +" Zeny^000000";
+			if( .@fail & 4 ) mes "^777777You still have cooldown.^000000";
+			//break;
+		}
+		getpartymember getcharid(1),0;
+		if (instance_check_party(.@party_id, .min_party_member, .base_level[0], .base_level[1]) == 0) {
+			mes "^0055FF[ "+.instance_name$+" ]^000000";
+			mes "Make or join a party with at least "+.min_party_member+" member and try again, with level between " +.base_level[0] + " and " + .base_level[1] + ".";
+		}
+		else{
+			//RATHENA
+			set $fh_instance, instance_create( .instance_name$ );
+			//HERCULES
+			//set $fh_instance, instance_create(.instance_name$, .@party_id, IOT_PARTY);
+			if( $fh_instance < 0 ) {
+				npctalk .instance_name$ + " reservation failed.";
+				mes "^0000FF"+ .instance_name$ +" ^000000 - Reservation Failed!";
+				close;
+			}
+			mes "^0055FF[ "+.instance_name$+" ]^000000";
+			mes "^0000FF"+.instance_name$+" ^000000 - Reserved";
+			set .@gettimetick, gettimetick(2);
+			getpartymember .@party_id,2;
+			for( set .@i, 0; .@i < $@partymembercount; set .@i, .@i+1 )
+				if( attachrid( $@partymemberaid[.@i] ) ){
+					set instance_delay_fh, ( .@gettimetick + ( .instance_delay ));
+					set Zeny, Zeny - .instance_zeny;
+					dispbottom "["+.instance_name$+"] -"+ .instance_zeny +" Zeny and Instance Cooldown Applied.";
+				}
+			attachrid( .@origin );
+			npctalk .instance_name$ + " has been generated for Party - " + getpartyname( .@party_id );
+			
+			set $instance_fh_id, getcharid(1);
+			
+			//HERCULES
+			//for( set .@i, 0; .@i < getarraysize($fhMap$); set .@i,.@i+1 )
+			//{
+			//	if( instance_attachmap( $fhMap$[.@i],$fh_instance ) == "" ){
+			//		setmapflag $fhMap$[.@i],mf_zone,"Memorial Dungeon";
+			//		npctalk .instance_name$ + " reservation failed due to map attach failure.";
+			//		mes "- ^FF0000Reservation Failed!^000000";
+			//		instance_destroy( $fh_instance );
+			//		set $fh_instance, -1;
+			//		set $instance_fh_id, -1;
+			//		close;
+			//	}
+			//}
+			//instance_set_timeout .instance_delay,300,$fh_instance;
+			//instance_init($fh_instance);
+			
+			//disable unused npcs for now
+ 		}
+	case 2:
+		if( $instance_fh_id != getcharid(1)){
+			mes .instance_name$ + " doesn't exist for Party - "+getpartyname( .@party_id );
+		}
+		else{
+			//RATHENA
+			switch(instance_enter(.instance_name$)) {
+				default:
+					mes "An unknown error has occurred.";
+					close;
+				case 2:
+					mes "The memorial dungeon " + .instance_name$ + " does not exist.";
+					mes "The party leader did not generate the dungeon yet.";
+					close;
+				case 1:
+					mes "You can enter the dungeon after making the party.";
+					close;
+				case 0:
+					mapannounce $fhMap$[0], strcharinfo(0)+" from party, " +getpartyname( .@party_id )+", lr entering the dungeon, "+.instance_name$+".",bc_map,"0x00ff99",FW_NORMAL,12;
+					end;
+			}
+			
+			//HERCULES
+			//if( has_instance( $fhMap$[0] ) == "" ){
+			//	mes "Fenrir Howl doesnt exist for Party - "+getpartyname( .@party_id );
+			//}
+			//else{
+			//	warp $fhMap$[0],131,107;
+			//	instance_announce $fh_instance, getpartyname(getcharid(1))+"  entered in the "+.instance_name$+"!",bc_map,"0x00ff99";
+			//}
+		}
+		break;
+	case 3:
+		mes .instance_name$ + " Destroyed.";
+		instance_destroy $fh_instance;
+		set $fh_instance, -1;
+		set $instance_fh_id, -1;
+		break;
+	default: 
+		break;
+}
+close;
+
+OnInit:
+	setarray .base_level[0],80,99;
+	setarray $fhMap$[0],"1@fh";
+	set .map_size, getarraysize( $fhMap$ );
+	set .min_party_member, 1;
+	set .instance_zeny, 0;
+	set .instance_delay, 7200;
+	set $fh_timer_delay, 3600; //1 hour to clean the instance
+	set .instance_name$, "Fenrir Howl";
+	set $fh_instance, -1;
+	set $instance_fh_id, -1;
+	set .requiredItem, -1; //define the required item to enter in the instance. Leave to -1 to disable
+	end;
+}
+
+
+1@fh,101,107,4	script	fenrir_howl	HIDDEN_WARP_NPC,2,2,{
+function summon_normal;
+function summon_guardian;
+end;
+
+OnInstanceInit:
+	set .@map$, strnpcinfo(4);
+	set .@npc_name$, instance_npcname( strnpcinfo(0), $fh_instance );
+	
+	set $instance_fh_level, 0;
+	set .max_fh_level, 1;
+	
+	set $FenrirId, -1;	
+	set .timerCount, 0;
+	setarray .gleipnirItemIds[0],7080,7081,7082,7083,7084,7085;
+	set .lootChance, 75; //debug 75, default 10
+	set .continueFirstFloor, 0;
+	
+	set $fhMana, 4;
+	set $fhHeal, 0;
+	
+	set .elveDead, 0;
+	set .checkFenrirLife, 0;
+	set .checkFenrirLifeCount, 0;
+	 
+	initnpctimer;
+	end;
+
+function	summon_normal	{
+	set .@map$, getarg(0);
+	set .@npcname$, getarg(1);
+	set .@increaseFloor, getarg(2);
+	
+	if(.@increaseFloor == 1)
+	{
+		$instance_fh_level++;
+	}
+	
+	setarray .@coordinate[0],110,162,156,112;
+	
+	switch( $instance_fh_level ){
+		case 1:
+			//dark elves preaching
+			setarray .@monster,3100;
+			setarray .@amount,20;
+			break;
+		case 2:
+			//Wolfs monsters			
+			setarray .@monster,1106,1092,1013;
+			setarray .@amount,20,5,60;
+			break;
+		case 3:
+			//Wolfs Leaders			
+			setarray .@monster,3092,1252,1106,1092,1013;
+			setarray .@amount,1,1,20,5,60;
+			break;
+		default:
+			mapannounce .@map$, "[ Fenrir Howl ] : All Floors has been cleared, congratulation. Champions Arena close in 30 seconds.",bc_map,"0x00FF99";
+			sleep2 15000;
+			instance_destroy $fh_instance;
+			set $fh_instance, -1;
+			set $instance_fh_id, -1;
+			return;
+	}
+	
+	set .@monster_size, getarraysize( .@monster );
+	for( set .@i, 0; .@i < .@monster_size; set .@i,.@i+1 ){
+		set .@target_amount, ( .@amount[.@i] );
+		set .@clabel$, .@npcname$ + "::OnNormalDied";
+		areamonster(.@map$,.@coordinate[0],.@coordinate[1],.@coordinate[2],.@coordinate[3],"--ja--",.@monster[.@i],.@target_amount,.@clabel$);
+	}
+	return;
+}
+
+function	summon_guardian	{
+	set .@map$, getarg(0);
+	set .@npcname$, getarg(1);
+	set .@label$, .@npcname$ + "::OnGuardianDied";
+	
+	setarray .@coordinate,135,133,135,133;
+			
+	switch( $instance_fh_level ){
+		case 1:
+			//Fenrir Human Form
+			setarray .@monster,2564;
+			break;
+		case 2:
+			//Fenrir Middle Form
+			setarray .@monster,3287;
+			setarray .@coordinates[0], .fhx, .fhy, .fhx, .fhy;
+			break;
+		case 3:
+			//Fenrir Final Form
+			setarray .@monster,2942;
+			setarray .@coordinates[0], .fhx, .fhy, .fhx, .fhy;
+			break;
+		default: 
+			mapannounce .@map$,"[ Fenrir Howl ] : Cleared!! Congratulation!!",bc_map,0x00FF99;
+			return;
+	}
+	set .@monster_size, getarraysize( .@monster );
+	for( set .@i, 0; .@i < .@monster_size; set .@i,.@i+1 ){
+		set .@target_amount, 1;
+		//RATHENA
+		areamonster(.@map$,.@coordinate[0],.@coordinate[1],.@coordinate[2],.@coordinate[3],"Fenrir",.@monster[.@i],.@target_amount,.@label$);
+		set $FenrirId, $@mobId[0];
+		//HERCULES
+		//set $FenrirId, areamonster(.@map$,.@coordinate[0],.@coordinate[1],.@coordinate[2],.@coordinate[3],"Fenrir",.@monster[.@i],.@target_amount,.@label$);
+	}
+	return;
+}
+
+OnElveDied:
+	set .@map$, instance_mapname( $fhMap$[0], $fh_instance );
+	set .@npc_name$, instance_npcname( strnpcinfo(0), $fh_instance );
+	set .elveDead, .elveDead + 1;
+	
+	if( .elveDead == 6 ){
+		sleep2 1500;
+		
+		if($instance_fh_level == 1)
+		{
+			set .continueFirstFloor, 0;
+			killmonster .@map$, .@npc_name$ + "::OnNormalDied";
+			//second floor
+			
+			instance_announce $fh_instance, " I can feel Gleipnir is failing. But it's magic is still there...", bc_map, 0xFF0000;
+			sleep2 1500;
+			instance_announce $fh_instance, " Something might have appeared on each elf spot!", bc_map, 0xFF0000;
+			sleep2 1500;
+			
+			enablenpc instance_npcname( "alafhc0", $fh_instance );
+			enablenpc instance_npcname( "alafhc1", $fh_instance );
+			enablenpc instance_npcname( "alafhc2", $fh_instance );
+			enablenpc instance_npcname( "alafhc3", $fh_instance );
+			enablenpc instance_npcname( "alafhc4", $fh_instance );
+		}
+	}
+	end;
+
+OnNormalDied:
+	set .@map$, instance_mapname( $fhMap$[0], $fh_instance );
+	set .@npc_name$, instance_npcname( strnpcinfo(0), $fh_instance );
+	set .@mob_dead_num, mobcount(.@map$,.@npc_name$+"::OnNormalDied" );
+	
+	if( .@mob_dead_num == 0 ){
+		sleep2 1500;
+		
+		if($instance_fh_level == 1)
+		{
+			if(.continueFirstFloor)
+			{
+				summon_normal( .@map$, .@npc_name$, 0 );
+			}
+		}
+		else if($instance_fh_level == 2)
+		{
+			enablenpc instance_npcname( "alalrve3", $fh_instance );
+		}
+	}
+	else if($instance_fh_level == 1)
+	{
+		if(rand(0,100) < .lootChance && getarraysize(.gleipnirItemIds) > 0)
+		{
+			set .@rand, rand(0,getarraysize(.gleipnirItemIds) - 1);
+			getitem .gleipnirItemIds[.@rand], 1;
+			deletearray .gleipnirItemIds[.@rand], 1;
+		}
+	}
+	end;
+	
+OnGuardianDied:
+	set .@map$, instance_mapname( $fhMap$[0], $fh_instance );
+	set .@npc_name$, instance_npcname( strnpcinfo(0), $fh_instance );
+	set .@mob_dead_num, mobcount(.@map$,.@npc_name$+"::OnGuardianDied" );
+	set .@party_id, getcharid(1);
+	
+	if( .@mob_dead_num == 0){
+		set .checkFenrirLife, 0;
+		
+		killmonsterall .@map$, "All";
+		
+		enablenpc instance_npcname( "alafhve2", $fh_instance );
+		enablenpc instance_npcname( "alafhur2", $fh_instance );
+		enablenpc instance_npcname( "alafhsk2", $fh_instance );			
+		
+		end;
+		
+		sleep2 15000;
+		summon_normal( .@map$,.@npc_name$ );
+	}
+	end;
+	
+OnTimer10000:
+	//each 10s, increase timer
+	set .timerCount, .timerCount + 10;
+	if(.timerCount == $fh_timer_delay)
+	{
+		instance_announce $fh_instance, "[ Fenrir Howl ] The Dimension collapse! You have to flee, right now!", bc_map, 0xFF0000;
+		sleep2 15000;
+		instance_destroy $fh_instance;
+		set $fh_instance, -1;
+		set $instance_fh_id, -1;
+		stopnpctimer;
+	}
+	if(.checkFenrirLife == 1)
+	{
+		set .checkFenrirLifeCount, .checkFenrirLifeCount + 10;
+		
+		set .@map$, instance_mapname( $fhMap$[0], $fh_instance );
+		set .@mob_dead_num2, mobcount(.@map$,.@npc_name$+"::OnNormalDied" );
+		set .@npc_name$, instance_npcname( strnpcinfo(0), $fh_instance );
+		//RATHENA
+		getunitdata($FenrirId, .@fenrirData);		
+		set .@mhp, .@fenrirData[UMOB_MAXHP];
+		set .@hp, .@fenrirData[UMOB_HP];
+		//HERCULES
+		//set .@mhp, getunitdata($FenrirId, UDT_MAXHP);
+		//set .@hp, getunitdata($FenrirId, UDT_HP);
+		
+		if(.@hp <= 70 * .@mhp / 100 && $instance_fh_level == 1)
+		{
+			//getmapxy(.@map$, .fhx, .fhy, UNITTYPE_MOB, $FenrirId);
+			
+			killmonster .@map$, .@npc_name$ + "::OnGuardianDied";
+			$instance_fh_level++;
+			instance_announce $fh_instance, "[ Fenrir ] You're strong, human. But not enougth to stop me!!", bc_map, 0xFF0000;
+			sleep2 1500;
+			summon_guardian( .@map$, .@npc_name$ );
+		}
+		else if($instance_fh_level == 2)
+		{
+			if(.@hp <= 50 * .@mhp / 100)
+			{
+				getmapxy(.@map$, .fhx, .fhy, UNITTYPE_MOB, $FenrirId);
+				
+				killmonster .@map$, .@npc_name$ + "::OnGuardianDied";
+				$instance_fh_level++;
+				instance_announce $fh_instance, "[ Fenrir ] We've enough played! You'll regret it now!", bc_map, 0xFF0000;
+				sleep2 1500;
+				summon_guardian( .@map$, .@npc_name$ );
+			}
+			else if(.@hp <= 70 * .@mhp / 100)
+			{
+				instance_announce $fh_instance, "[ Fenrir ] GRARGHHHH I told you to move!!!", bc_map, 0xFF0000;
+				if(.@mob_dead_num2 == 0)
+				{
+					summon_normal( .@map$, .@npc_name$, 0 );				
+				}
+				//RA_SENSITIVEKEEN
+				areamobuseskill(.@map$, 150, 150, 80, 1013, 2246, 10, 0, 1, e_gg, 3);
+			}
+			else if(.@hp <= 90 * .@mhp / 100 && .@mob_dead_num2 == 0)
+			{
+				instance_announce $fh_instance, "[ Fenrir ] Growl! Stop blocking me!!!", bc_map, 0xFF0000;
+				summon_normal( .@map$, .@npc_name$, 0 );				
+			}
+			set .checkFenrirLifeCount, 0;
+		}
+		else if($instance_fh_level == 3)
+		{
+			if(.@hp <= 30 * .@mhp / 100)
+			{
+				instance_announce $fh_instance, "[ Fenrir ] RAAAGRHHHH I'll kill you, believe me!!!", bc_map, 0xFF0000;
+				summon_normal( .@map$, .@npc_name$, 0 );
+			}
+			else if(.@hp <= 50 * .@mhp / 100 && .@mob_dead_num2 == 0)
+			{
+				instance_announce $fh_instance, "[ Fenrir ] AHOUUUUUU you'll regret that!!!", bc_map, 0xFF0000;
+				if(.@mob_dead_num2 == 0)
+				{
+					summon_normal( .@map$, .@npc_name$, 0 );
+				}
+				//RA_SENSITIVEKEEN
+				areamobuseskill(.@map$, 150, 150, 80, 1013, 2246, 10, 0, 1, e_gg, 3);
+				//WL_JACKFROST
+				areamobuseskill(.@map$, 150, 150, 80, 1252, 2204, 5, 0, 1, e_gg, 3);
+				//WL_CRIMSONROCK
+				areamobuseskill(.@map$, 150, 150, 80, 3092, 2211, 5, 0, 1, e_gg, 3);
+			}
+			set .checkFenrirLifeCount, 0;
+		}
+	}
+	setnpctimer 0;
+	end;
+	
+OnFirstFloorOn:
+	set .@map$, instance_mapname( $fhMap$[0], $fh_instance );
+	set .@npc_name$, instance_npcname( strnpcinfo(0), $fh_instance );
+	//pop monsters
+	set .continueFirstFloor, 1;
+	summon_normal( .@map$,.@npc_name$, 1 );
+	end;
+	
+OnSecondFloorCheck:
+	if($fhMana == 5)
+	{
+		attachrid($fhTalkingId);
+		set .@map$, instance_mapname( $fhMap$[0], $fh_instance );
+		set .@npc_name$, instance_npcname( strnpcinfo(0), $fh_instance );
+		instance_announce $fh_instance, "[Fenrir] Yes! Yes!!!! I'm free!!!", bc_map, 0xFF0000;
+		sleep2 1500;
+		instance_announce $fh_instance, "[" + strcharinfo(0) + "] Good! I'm happy for you!", bc_map, 0x00FF00;
+		sleep2 1500;
+		instance_announce $fh_instance, "[Fenrir] Now I will kill all those filthy Ases!!! I'll feast from their bones!", bc_map, 0xFF0000;
+		sleep2 1500;
+		instance_announce $fh_instance, "[" + strcharinfo(0) + "] What?! Now way! You can't do that!", bc_map, 0x00FF00;
+		sleep2 1500;
+		instance_announce $fh_instance, "[Fenrir] Oh I can, and I will! Don't stand in front of me, Humans! Or I'll kill you too!", bc_map, 0xFF0000;
+		sleep2 1500;
+		
+		set .checkFenrirLife, 1;
+		
+		disablenpc instance_npcname( "alafhhe", $fh_instance );
+		
+		summon_guardian( .@map$, .@npc_name$ );			
+	}
+	else
+	{
+		instance_announce $fh_instance, " No, it's not working...The mana inside the silk is too strong...", bc_map, 0x00FF00;
+		sleep2 1500;			
+		
+		enablenpc instance_npcname( "alafhc0", $fh_instance );
+		enablenpc instance_npcname( "alafhc1", $fh_instance );
+		enablenpc instance_npcname( "alafhc2", $fh_instance );
+		enablenpc instance_npcname( "alafhc3", $fh_instance );
+		enablenpc instance_npcname( "alafhc4", $fh_instance );
+	}
+	end;
+}
+
+1@fh,136,139,4	script	Fenrir::alafhhe	4_F_FENRIR,{
+	if(.talking == 0)
+	{
+		set $fhTalkingId, getcharid(3);
+		set .talking, 1;	
+		
+		cutin "fenrir_a", 2;
+		
+		npctalk "What do you want? You're here to laugh of me too?";
+		instance_announce $fh_instance, "[Fenrir] What do you want? You're here to laugh of me too?", bc_map, 0xFF0000;
+		sleep2 1500;
+		instance_announce $fh_instance, "[" + strcharinfo(0) + "] There's a lot of drool running from your mouth.", bc_map, 0x00FF00;
+		sleep2 1500;
+		npctalk "I've been put a sword between my teeths...To block my jaws...";
+		instance_announce $fh_instance, "[Fenrir] I've been put a sword between my teeths...To block my jaws...", bc_map, 0xFF0000;
+		sleep2 1500;
+		instance_announce $fh_instance, "[" + strcharinfo(0) + "] Who would have done that? On top of that, you're a human, a sword wouldn't fit in your mount.", bc_map, 0x00FF00;
+		sleep2 1500;
+		npctalk "That's only an appearance. My true form is stucked inside these trap. Gleipnir kept me here.";
+		instance_announce $fh_instance, "[Fenrir] That's only an appearance. My true form is stucked inside these trap. Gleipnir kept me here.", bc_map, 0xFF0000;
+		sleep2 1500;
+		instance_announce $fh_instance, "[" + strcharinfo(0) + "] How can you be trapped by a piece of silk?", bc_map, 0x00FF00;
+		sleep2 1500;
+		npctalk " Ases raised me. But when I grew up enough to eat one of them in one bite, they tried to trap me.";
+		instance_announce $fh_instance, "[Fenrir] Ases raised me. But when I grew up enough to eat one of them in one bite, they tried to trap me.", bc_map, 0xFF0000;
+		sleep2 1500;
+		npctalk "They built several chains to kept me trapped, and asked me to show my strength. I didn't have choice. It was it, or being thrown away. They were my family, after all.";
+		instance_announce $fh_instance, "[Fenrir] They built several chains to kept me trapped, and asked me to show my strength. I didn't have choice. It was it, or being thrown away. They were my family, after all.", bc_map, 0xFF0000;
+		sleep2 1500;
+		npctalk "So I played. And wins. Three time in a row, each chain being harder to break than the previous one.";
+		instance_announce $fh_instance, "[Fenrir] So I played. And wins. Three time in a row, each chain being harder to break than the previous one.", bc_map, 0xFF0000;
+		sleep2 1500;
+		npctalk "But then, they asked the dark elves to built something impossible. Gleipnir, made of items disappeared ever since. And it didn't broke, due to it's magic.";
+		instance_announce $fh_instance, "[Fenrir] But then, they asked the dark elves to built something impossible. Gleipnir, made of items disappeared ever since. And it didn't broke, due to it's magic.", bc_map, 0xFF0000;
+		sleep2 1500;
+		npctalk "Since that, I'm trapped here.";
+		instance_announce $fh_instance, "[Fenrir] Since that, I'm trapped here.", bc_map, 0xFF0000;
+		sleep2 1500;
+		instance_announce $fh_instance, "[" + strcharinfo(0) + "] That's...Incorrect...Do you want me to get you out?", bc_map, 0x00FF00;
+		sleep2 1500;
+		npctalk "You can't...It's too hard to broke...Even for me.";
+		instance_announce $fh_instance, "[Fenrir] You can't...It's too hard to broke...Even for me.", bc_map, 0xFF0000;
+		sleep2 1500;
+			
+		cutin "", 255;
+	
+		donpcevent instance_npcname( "fenrir_howl", $fh_instance ) + "::OnFirstFloorOn";
+	}
+	end;
+
+OnInstanceInit:	
+OnEnable:
+	enablenpc strnpcinfo(3);
+	set .talking, 0;
+	end;
+OnDisable:
+	disablenpc strnpcinfo(3);
+	end;
+}
+
+1@fh,199,162,5	script	Dark Elf#7080::alafhdae	2526,3,3,{
+	mes "[Dark Elf]";
+	mes "What are you doing here?";
+	next;
+	mes "[" + strcharinfo(0) + "]";
+	mes "I'm here to free Fenrir. He's been trapped for too long...";
+	next;
+	mes "[Dark Elf]";
+	mes "He's a monster! You can't let him. I won't let this happen!";
+	specialeffect 915;
+	mes "You wouldn't approach more than that!";
+	if(countitem(atoi(strnpcinfo(2))) > 0)
+	{
+		next;
+		mes "[" + strcharinfo(0) + "]";
+		mes "How, can you see that?";
+		mes "I will, believe me!";
+		specialeffect 244;
+		next;
+		mes "[Dark Elf]";
+		mes "No way!";
+		
+		delitem atoi(strnpcinfo(2)), 1;
+		disablenpc strnpcinfo(3);
+		
+		set .@map$, instance_mapname( $fhMap$[0], $fh_instance );
+		set .@clabel$, instance_npcname( "fenrir_howl", $fh_instance ) + "::OnElveDied";
+		monster(.@map$,199,162,"--ja--",2526,1,.@clabel$);
+	}
+	close;
+	
+OnTouch:
+	mes "[Dark Elf]";
+	mes "No, no. You won't pass!";
+	if(countitem(atoi(strnpcinfo(2))) > 0)
+	{
+		next;
+		mes "[" + strcharinfo(0) + "]";
+		mes "How, can you see that?";
+		mes "I will free him, believe me!";
+		specialeffect 244;
+		next;
+		mes "[Dark Elf]";
+		mes "No way!";
+		
+		delitem atoi(strnpcinfo(2)), 1;		
+		disablenpc strnpcinfo(3);
+		
+		set .@map$, instance_mapname( $fhMap$[0], $fh_instance );
+		set .@clabel$, instance_npcname( "fenrir_howl", $fh_instance ) + "::OnElveDied";
+		monster(.@map$,199,162,"--ja--",2526,1,.@clabel$);
+	}
+	else
+	{
+		sleep2 1500;
+		warp instance_mapname( $fhMap$[0], $fh_instance ), 192, 161;
+	}
+	close;
+	
+OnInstanceInit:
+	enablenpc strnpcinfo(3);
+	end;
+}
+
+1@fh,141,205,5	script	Dark Elf#7081::alafhdae2	2526,3,3,{
+	mes "[Dark Elf]";
+	mes "What are you doing here?";
+	next;
+	mes "[" + strcharinfo(0) + "]";
+	mes "I'm here to free Fenrir. He's been trapped for too long...";
+	next;
+	mes "[Dark Elf]";
+	mes "He's a monster! You can't let him. I won't let this happen!";
+	specialeffect 915;
+	mes "You wouldn't approach more than that!";
+	if(countitem(atoi(strnpcinfo(2))) > 0)
+	{
+		next;
+		mes "[" + strcharinfo(0) + "]";
+		mes "How, can you see that?";
+		mes "I will, believe me!";
+		specialeffect 244;
+		next;
+		mes "[Dark Elf]";
+		mes "No way!";
+		
+		delitem atoi(strnpcinfo(2)), 1;
+		disablenpc strnpcinfo(3);
+		
+		set .@map$, instance_mapname( $fhMap$[0], $fh_instance );
+		set .@clabel$, instance_npcname( "fenrir_howl", $fh_instance ) + "::OnElveDied";
+		monster(.@map$,141,205,"--ja--",2526,1,.@clabel$);
+	}
+	close;
+	
+OnTouch:
+	mes "[Dark Elf]";
+	mes "No, no. You won't pass!";
+	if(countitem(atoi(strnpcinfo(2))) > 0)
+	{
+		next;
+		mes "[" + strcharinfo(0) + "]";
+		mes "How, can you see that?";
+		mes "I will free him, believe me!";
+		specialeffect 244;
+		next;
+		mes "[Dark Elf]";
+		mes "No way!";	
+		
+		delitem atoi(strnpcinfo(2)), 1;
+		disablenpc strnpcinfo(3);
+		
+		set .@map$, instance_mapname( $fhMap$[0], $fh_instance );
+		set .@clabel$, instance_npcname( "fenrir_howl", $fh_instance ) + "::OnElveDied";
+		monster(.@map$,141,205,"--ja--",2526,1,.@clabel$);
+	}
+	else
+	{
+		sleep2 1500;
+		warp instance_mapname( $fhMap$[0], $fh_instance ), 141, 194;
+	}
+	close;
+	
+OnInstanceInit:
+	enablenpc strnpcinfo(3);
+	end;
+}
+
+1@fh,185,92,5	script	Dark Elf#7082::alafhdae3	2526,3,3,{
+	mes "[Dark Elf]";
+	mes "What are you doing here?";
+	next;
+	mes "[" + strcharinfo(0) + "]";
+	mes "I'm here to free Fenrir. He's been trapped for too long...";
+	next;
+	mes "[Dark Elf]";
+	mes "He's a monster! You can't let him. I won't let this happen!";
+	specialeffect 915;
+	mes "You wouldn't approach more than that!";
+	if(countitem(atoi(strnpcinfo(2))) > 0)
+	{
+		next;
+		mes "[" + strcharinfo(0) + "]";
+		mes "How, can you see that?";
+		mes "I will, believe me!";
+		specialeffect 244;
+		next;
+		mes "[Dark Elf]";
+		mes "No way!";
+		
+		delitem atoi(strnpcinfo(2)), 1;
+		disablenpc strnpcinfo(3);
+		
+		set .@map$, instance_mapname( $fhMap$[0], $fh_instance );
+		set .@clabel$, instance_npcname( "fenrir_howl", $fh_instance ) + "::OnElveDied";
+		monster(.@map$,185,92,"--ja--",2526,1,.@clabel$);
+	}
+	close;
+	
+OnTouch:
+	mes "[Dark Elf]";
+	mes "No, no. You won't pass!";
+	if(countitem(atoi(strnpcinfo(2))) > 0)
+	{
+		next;
+		mes "[" + strcharinfo(0) + "]";
+		mes "How, can you see that?";
+		mes "I will free him, believe me!";
+		specialeffect 244;
+		next;
+		mes "[Dark Elf]";
+		mes "No way!";
+		
+		delitem atoi(strnpcinfo(2)), 1;
+		disablenpc strnpcinfo(3);
+		
+		set .@map$, instance_mapname( $fhMap$[0], $fh_instance );
+		set .@clabel$, instance_npcname( "fenrir_howl", $fh_instance ) + "::OnElveDied";
+		monster(.@map$,185,92,"--ja--",2526,1,.@clabel$);
+	}
+	else
+	{
+		sleep2 1500;
+		warp instance_mapname( $fhMap$[0], $fh_instance ), 179, 98;
+	}
+	close;
+	
+OnInstanceInit:
+	enablenpc strnpcinfo(3);
+	end;
+}
+
+1@fh,95,91,5	script	Dark Elf#7083::alafhdae4	2526,3,3,{
+	mes "[Dark Elf]";
+	mes "What are you doing here?";
+	next;
+	mes "[" + strcharinfo(0) + "]";
+	mes "I'm here to free Fenrir. He's been trapped for too long...";
+	next;
+	mes "[Dark Elf]";
+	mes "He's a monster! You can't let him. I won't let this happen!";
+	specialeffect 915;
+	mes "You wouldn't approach more than that!";
+	if(countitem(atoi(strnpcinfo(2))) > 0)
+	{
+		next;
+		mes "[" + strcharinfo(0) + "]";
+		mes "How, can you see that?";
+		mes "I will, believe me!";
+		specialeffect 244;
+		next;
+		mes "[Dark Elf]";
+		mes "No way!";
+		
+		delitem atoi(strnpcinfo(2)), 1;
+		disablenpc strnpcinfo(3);
+		
+		set .@map$, instance_mapname( $fhMap$[0], $fh_instance );
+		set .@clabel$, instance_npcname( "fenrir_howl", $fh_instance ) + "::OnElveDied";
+		monster(.@map$,95,91,"--ja--",2526,1,.@clabel$);
+	}
+	close;
+	
+OnTouch:
+	mes "[Dark Elf]";
+	mes "No, no. You won't pass!";
+	if(countitem(atoi(strnpcinfo(2))) > 0)
+	{
+		next;
+		mes "[" + strcharinfo(0) + "]";
+		mes "How, can you see that?";
+		mes "I will free him, believe me!";
+		specialeffect 244;
+		next;
+		mes "[Dark Elf]";
+		mes "No way!";
+		
+		delitem atoi(strnpcinfo(2)), 1;
+		disablenpc strnpcinfo(3);
+		
+		set .@map$, instance_mapname( $fhMap$[0], $fh_instance );
+		set .@clabel$, instance_npcname( "fenrir_howl", $fh_instance ) + "::OnElveDied";
+		monster(.@map$,95,91,"--ja--",2526,1,.@clabel$);
+	}
+	else
+	{
+		sleep2 1500;
+		warp instance_mapname( $fhMap$[0], $fh_instance ), 99, 98;
+	}
+	close;
+	
+OnInstanceInit:
+	enablenpc strnpcinfo(3);
+	end;
+}
+
+1@fh,80,164,5	script	Dark Elf#7084::alafhdae5	2526,3,3,{
+	mes "[Dark Elf]";
+	mes "What are you doing here?";
+	next;
+	mes "[" + strcharinfo(0) + "]";
+	mes "I'm here to free Fenrir. He's been trapped for too long...";
+	next;
+	mes "[Dark Elf]";
+	mes "He's a monster! You can't let him. I won't let this happen!";
+	specialeffect 915;
+	mes "You wouldn't approach more than that!";
+	if(countitem(atoi(strnpcinfo(2))) > 0)
+	{
+		next;
+		mes "[" + strcharinfo(0) + "]";
+		mes "How, can you see that?";
+		mes "I will, believe me!";
+		specialeffect 244;
+		next;
+		mes "[Dark Elf]";
+		mes "No way!";
+		
+		delitem atoi(strnpcinfo(2)), 1;
+		disablenpc strnpcinfo(3);
+		
+		set .@map$, instance_mapname( $fhMap$[0], $fh_instance );
+		set .@clabel$, instance_npcname( "fenrir_howl", $fh_instance ) + "::OnElveDied";
+		monster(.@map$,76,164,"--ja--",2526,1,.@clabel$);
+	}
+	close;
+	
+OnTouch:
+	mes "[Dark Elf]";
+	mes "No, no. You won't pass!";
+	if(countitem(atoi(strnpcinfo(2))) > 0)
+	{
+		next;
+		mes "[" + strcharinfo(0) + "]";
+		mes "How, can you see that?";
+		mes "I will free him, believe me!";
+		specialeffect 244;
+		next;
+		mes "[Dark Elf]";
+		mes "No way!";
+		
+		delitem atoi(strnpcinfo(2)), 1;
+		disablenpc strnpcinfo(3);
+		
+		set .@map$, instance_mapname( $fhMap$[0], $fh_instance );
+		set .@clabel$, instance_npcname( "fenrir_howl", $fh_instance ) + "::OnElveDied";
+		monster(.@map$,76,164,"--ja--",2526,1,.@clabel$);
+	}
+	else
+	{
+		sleep2 1500;
+		warp instance_mapname( $fhMap$[0], $fh_instance ), 87, 162;
+	}
+	close;
+	
+OnInstanceInit:
+	enablenpc strnpcinfo(3);
+	end;
+}
+
+1@fh,136,132,5	script	Dark Elf#7085::alafhdae6	2526,3,3,{
+	mes "[Dark Elf]";
+	mes "What are you doing here?";
+	next;
+	mes "[" + strcharinfo(0) + "]";
+	mes "I'm here to free Fenrir. He's been trapped for too long...";
+	next;
+	mes "[Dark Elf]";
+	mes "He's a monster! You can't let him. I won't let this happen!";
+	specialeffect 915;
+	if(countitem(atoi(strnpcinfo(2))) > 0)
+	{
+		next;
+		mes "[" + strcharinfo(0) + "]";
+		mes "How, can you see that?";
+		mes "I will free him, believe me!";
+		specialeffect 244;
+		next;
+		mes "[Dark Elf]";
+		mes "No way!";
+		
+		delitem atoi(strnpcinfo(2)), 1;
+		disablenpc strnpcinfo(3);
+		
+		set .@map$, instance_mapname( $fhMap$[0], $fh_instance );
+		set .@clabel$, instance_npcname( "fenrir_howl", $fh_instance ) + "::OnElveDied";
+		monster(.@map$,136,132,"--ja--",2526,1,.@clabel$);
+	}
+	close;
+	
+OnTouch:
+	mes "[Dark Elf]";
+	mes "No, no. You won't pass!";
+	if(countitem(atoi(strnpcinfo(2))) > 0)
+	{
+		next;
+		mes "[" + strcharinfo(0) + "]";
+		mes "How, can you see that?";
+		mes "I will free him, believe me!";
+		specialeffect 244;
+		next;
+		mes "[Dark Elf]";
+		mes "No way!";
+		
+		delitem atoi(strnpcinfo(2)), 1;
+		disablenpc strnpcinfo(3);
+		
+		set .@map$, instance_mapname( $fhMap$[0], $fh_instance );
+		set .@clabel$, instance_npcname( "fenrir_howl", $fh_instance ) + "::OnElveDied";
+		monster(.@map$,136,132,"--ja--",2526,1,.@clabel$);
+	}
+	else
+	{
+		sleep2 1500;
+		warp instance_mapname( $fhMap$[0], $fh_instance ), 136, 125;
+	}	
+	close;
+	
+OnInstanceInit:
+	enablenpc strnpcinfo(3);
+	end;
+}
+
+1@fh,206,162,5	script	Crack#1::alafhc0	4_CRACK,{
+	mes "[" + strcharinfo(0) + "]";
+	mes "There's a crack on the floor...";
+	mes "What should I do...";
+	if(select("Leave a drop of blood","Inject mana inside") == 1)
+	{
+		next;
+		mes "[" + strcharinfo(0) + "]";
+		mes "I....What's happenning...By Odin's beard!";
+		percentheal -99, 0;
+		set $fhHeal, $fhHeal + 1;
+		close2;
+		donpcevent instance_npcname( "fenrir_howl", $fh_instance ) + "::OnSecondFloorCheck";
+	}
+	else
+	{
+		next;
+		mes "[" + strcharinfo(0) + "]";
+		mes "I....What's happenning...By Freyja's love!";
+		percentheal 0, -99;
+		set $fhMana, $fhMana + 1;
+		close2;
+		donpcevent instance_npcname( "fenrir_howl", $fh_instance ) + "::OnSecondFloorCheck";
+	}
+	disablenpc strnpcinfo(3);
+	end;
+	
+OnInstanceInit:
+	disablenpc strnpcinfo(3);
+	end;
+}
+
+1@fh,141,214,5	duplicate(alafhc0)	Crack#2::alafhc1	4_CRACK
+1@fh,191,86,5	duplicate(alafhc0)	Crack#3::alafhc2	4_CRACK
+1@fh,90,86,5	duplicate(alafhc0)	Crack#4::alafhc3	4_CRACK
+1@fh,68,168,5	duplicate(alafhc0)	Crack#5::alafhc4	4_CRACK
+
+1@fh,131,110,3	script	Verdandi::alafhve	4_F_NYDHOG,{
+	//cutin "ep14_nyd01",2;
+	end;
+		
+OnDialog1_3:			
+	attachrid($fhTalkingId);
+	cutin "ep14_nyd01", 2;
+	npctalk "He was trapped by the gods, by devoured Tyr's arm in his last ordeal...He's a demon!";
+	instance_announce $fh_instance, "[Verdandi] He was trapped by the gods, by devoured Tyr's arm in his last ordeal...He's a demon!", bc_map, 0x00FF00;
+	sleep2 1500;
+	
+	disablenpc strnpcinfo(3);
+	disablenpc instance_npcname( "alafhur", $fh_instance );
+	disablenpc instance_npcname( "alafhsk", $fh_instance );
+	
+	cutin "", 255;
+	end;
+	
+OnInstanceInit:
+	enablenpc strnpcinfo(3);
+	end;
+}
+
+1@fh,128,112,5	script	Urd::alafhur	4_F_PINKWOMAN,3,3,{
+	//cutin "bu_maggi1",0;
+	end;
+		
+OnTouch:	
+	if(.talking == 0)
+	{
+		set $fhTalkingId, getcharid(3);
+		set .talking, 1;	
+
+		cutin "bu_maggi1",2;
+		npctalk "This is the place where Fenrir is trapped.";
+		instance_announce $jl_instance, "[Urd] This is the place where Fenrir is trapped.", bc_map, 0x00FF00;
+		sleep2 1500;
+		npctalk "The Ases raised him since he was a little wolf, but then, he grew so much that they feared him and trapped him...";
+		instance_announce $jl_instance, "[Urd] The Ases raised him since he was a little wolf, but then, he grew so much that they feared him and trapped him...", bc_map, 0x00FF00;
+		sleep2 1500;
+		npctalk "He broke a lot of chains and ropes, but finally got trapped due to Gleipnir, the magic silk ribbon.";
+		instance_announce $jl_instance, "[Urd] He broke a lot of chains and ropes, but finally got trapped due to Gleipnir, the magic silk ribbon.", bc_map, 0x00FF00;
+		sleep2 1500;
+	
+		donpcevent instance_npcname( "alafhsk", $fh_instance ) + "::OnDialog1_2";
+	}
+	end;
+
+OnInstanceInit:
+	set .talking, 0;
+	enablenpc strnpcinfo(3);
+	end;
+}
+
+1@fh,134,112,3	script	Skuld::alafhsk	4_F_SHALOSH,{
+	//cutin "shaloshi01",2;
+	end;
+		
+OnDialog1_2:			
+	attachrid($fhTalkingId);
+	cutin "shaloshi01", 2;
+	npctalk "I don't know which should really be considered as the victim...";
+	instance_announce $fh_instance, "[Skuld] I don't know which should really be considered as the victim...", bc_map, 0x00FF00;
+	sleep2 1500;
+	
+	donpcevent instance_npcname( "alafhve", $fh_instance ) + "::OnDialog1_3";
+	end;
+	
+OnInstanceInit:
+	enablenpc strnpcinfo(3);
+	end;
+}
+
+1@fh,131,134,3	script	Verdandi::alafhve2	4_F_NYDHOG,2,2,{
+	//cutin "ep14_nyd01",2;
+	end;
+		
+OnTouch:	
+	if(.talking == 0)
+	{
+		set $fhTalkingId, getcharid(3);
+		set .talking, 1;	
+
+		cutin "ep14_nyd01",2;
+		npctalk "I don't feel you happy...";
+		instance_announce $fh_instance, "[Verdandi] I don't feel you happy...", bc_map, 0x00FF00;
+		sleep2 1500;
+	
+		donpcevent instance_npcname( "alafhur2", $fh_instance ) + "::OnDialog2_2";
+	}
+	end;
+
+OnInstanceInit:
+	set .talking, 0;
+	disablenpc strnpcinfo(3);
+	end;
+}
+
+1@fh,135,132,5	script	Urd::alafhur2	4_F_PINKWOMAN,{
+	//cutin "bu_maggi1",0;
+	end;
+		
+OnDialog2_2:			
+	attachrid($fhTalkingId);
+	cutin "bu_maggi1", 2;
+	npctalk "You shouldn't regret anything. It was a monster, like the others...";
+	instance_announce $fh_instance, "[Urd] You shouldn't regret anything. It was a monster, like the others...", bc_map, 0x00FF00;
+	sleep2 1500;
+	
+	donpcevent instance_npcname( "alafhsk2", $fh_instance ) + "::OnDialog2_3";
+	end;
+	
+OnInstanceInit:
+	disablenpc strnpcinfo(3);
+	end;
+}
+
+1@fh,140,134,3	script	Skuld::alafhsk2	4_F_SHALOSH,{
+	//cutin "shaloshi01",2;
+	end;
+		
+OnDialog2_3:			
+	attachrid($fhTalkingId);
+	cutin "shaloshi01", 2;
+	npctalk "And you don't have enough time to regret anything, do you?";
+	instance_announce $fh_instance, "[Skuld] And you don't have enough time to regret anything, do you?", bc_map, 0x00FF00;
+	sleep2 1500;
+	npctalk "I can feel it. It's approaching. We should hurry.";
+	instance_announce $fh_instance, "[Skuld] I can feel it. It's approaching. We should hurry.", bc_map, 0x00FF00;
+	
+	cutin "", 255;
+	
+	sleep2 15000;
+	instance_destroy( $fh_instance );
+	set $fh_instance, -1;
+	set $instance_fh_id, -1;
+	end;
+	
+OnInstanceInit:
+	disablenpc strnpcinfo(3);
+	end;
+}
+

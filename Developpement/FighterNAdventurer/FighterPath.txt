@@ -1,0 +1,47 @@
+prontera,208,97,1	script	FighterPathManager::alafpm	-1,{
+	
+OnPCKillEvent:	
+	if (LIFEPATH == 1)
+	{
+		for(set .@i,0; .@i<getarraysize(.woeMaps$); set .@i,.@i+1)
+		{
+			if(strnpcinfo(3) == .woeMaps$[.@i])
+			{
+				callfunc("AddPoints",getcharid(3),.woeKillPoint,1);
+			}
+		}
+		for(set .@i,0; .@i<getarraysize(.bgMaps$); set .@i,.@i+1)
+		{
+			if(strnpcinfo(3) == .bgMaps$[.@i])
+			{
+				callfunc("AddPoints",getcharid(3),.bgKillPoint,1);
+			}
+		}
+		for(set .@i,0; .@i<getarraysize(.pvpMaps$); set .@i,.@i+1)
+		{
+			if(strnpcinfo(3) == .pvpMaps$[.@i])
+			{
+				callfunc("AddPoints",getcharid(3),.pvpKillPoint,1);
+			}
+		}
+		for(set .@i,0; .@i<getarraysize(.specialMaps$); set .@i,.@i+1)
+		{
+			if(strnpcinfo(3) == .specialMaps$[.@i])
+			{
+				callfunc("AddPoints",getcharid(3),.specialKillPoint,1);
+			}
+		}
+	}
+	close;
+	
+OnInit:
+	set $pvpKillPoint, 5;
+	set $woeKillPoint, 20;
+	set $bgKillPoint, 20;
+	set $specialKillPoint, 10;
+	setarray .woeMaps$[0],"";
+	setarray .bgMaps$[0],"";
+	setarray .pvpMaps$[0],"";
+	setarray .specialMaps$[0],"";
+	end;
+}

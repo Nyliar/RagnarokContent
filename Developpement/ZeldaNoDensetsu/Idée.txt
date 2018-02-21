@@ -1,0 +1,36 @@
+Créer une backstory basé sur la Triforce
+	==> A définir
+
+Grappin sur mob 
+	==> add custom skill "grappin"
+	==> si size == , pas de mouvement. Si mob plus léger, attire le mode jusqu'au joueur. Si le mob est plus grand, le joueur se déplace
+inclure Navi, le Link's Cap et la MS
+	==> https://rathena.org/board/files/file/2442-master-sword/
+	==> https://rathena.org/board/files/file/2403-navi-guardian/
+	==> http://www.green-peach.net/index.php?a=sprite&type=hat&name=Link_Hat
+Inclure Ocarina / instruments
+	==> A obtenir auprès d'un npc princesse
+	==> Apprendre des chants via des npcs
+		==> Déplacement rapide via la chanson du vent
+		==> 
+Inclure la plume de Roc
+	==> Permet de sauter
+Inclure la cape de Roc
+	==> add custom skill "Fly" (?)
+	==> Permet de voler (speed 0 + levitation)
+Inclure un arc all player
+	==> Mini jeu
+	==> Puzzle utilisant l'arc pour avancer
+	==> arme ultra puissante, mais très lente
+Inclure l'endurance
+	==> Permet de courir
+Inclure les Potions et les fées
+	==> Permet de se soigner (HP)
+	==> permet de se soigner (MP)
+	==> Permet de restaurer son endurance
+	==> Permet un autores
+Inclure les Grandes Fées 
+	==> Donne les pouvoirs des trois Déesses
+Koroks Seed 
+	==> utiliser un skill donné pour faire apparaitre un Korok et récupérer une reward ainsi qu'un indice 
+		sur l'emplacement de la MS, de l'Instrument ou des Grandes Fées

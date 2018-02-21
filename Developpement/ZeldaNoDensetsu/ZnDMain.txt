@@ -1,0 +1,211 @@
+prontera,50,49,0	script	ZndMain::alazndm	HIDDEN_WARP_NPC,2,2,{
+	end;
+
+OnSlateActivated:
+	if(countitem($zndslate) > 0)
+	{
+		mes "[Sheikah Slate]";
+		mes "Welcome on Sheikah Slate.";
+		mes "What do you want to do?";
+		.@menu$ = "Check if there's anything hidden around here:Look for an info";
+		.@menu$ += (ZNDQ >= 2 ? ":Activate Magnet" : ":";
+		.@menu$ += (ZNDQ >= 3 ? ":Activate Time Hold" : ":";
+		.@menu$ += (ZNDQ >= 4 ? ":Activate Frost Keep" : ":";
+		.@menu$ += (ZNDQ >= 5 ? ":Activate Land Burn" : ":";
+		switch(select(.@menu$))
+		{
+			case 1:
+				next;
+				mes "[Sheikah Slate]";
+				mes "Activating the Radar function. Please wait...";
+				.@found = 0;
+				getmapxy(.@map$, .@x, .@y);
+				specialeffect 512;
+				next;
+				mes "...Scanning area...";
+				for(.@i = 0; .@i<getarraysize(.radarNpcName$) && .@found == 0; .@i++)
+				{
+					getmapxy(.@mapN$, .@mapNx, .@mapNy, UNITTYPE_NPC, .radarNpcName$[.@i]);
+					if(.@mapN$ == .@map$)
+					{
+						.@found = .@i;
+					}
+				}
+				if(.@found == 1)
+				{
+					.@found = 0;
+					specialeffect 512;
+					next;
+					mes "...Restraining Scanning area...";
+					
+					if(.@x >= .@mapNx - 50 && .@x <= .@mapNx - 50
+						&& .@y >= .@mapNy - 50 && .@y <= .@mapNy - 50)
+					{
+						specialeffect 512;
+						next;
+						mes "...Scanning closest area...";
+						if(.@x >= .@mapNx - 25 && .@x <= .@mapNx - 25
+							&& .@y >= .@mapNy - 25 && .@y <= .@mapNy - 25)
+						{
+							next;
+							mes "[Sheikah Slate]";
+							mes "Scan complete.";
+							mes "Something is hidden in a range of 25 cells around you.";	
+							next;
+							mes "[Sheikah Slate]";
+							mes "Do you wish to reveal it?";
+							if(select("Yes","No") == 1)
+							{
+								setnpcdisplay .radarNpcName$[.@found], .radarNpcDisplayId[.@found];
+							}
+						}
+						else
+						{
+							next;
+							mes "[Sheikah Slate]";
+							mes "Scan complete.";
+							mes "Something is hidden in a range of 50 cells around you.";
+						}
+					}
+					else
+					{
+						next;
+						mes "[Sheikah Slate]";
+						mes "Scan complete.";
+						mes "Something is hidden somewhere on the current area you're in.";
+					}
+				}
+				else
+				{
+					next;
+					mes "[Sheikah Slate]";
+					mes "Scan complete.";
+					mes "Nothing detected in the current area.";
+				}
+				break;
+			case 2:
+				next;
+				mes "[Sheikah Slate]";
+				mes "Choose the kind of info you want to look for:";
+				switch(select("About a Mob","About an Item","About a Class/Skill","About a map","Something else"))
+				{
+					case 1:
+						.@url$ = <INFO>http://ratemyserver.net/index.php?page=re_mob_db</INFO>;
+						break;
+					case 2:
+						.@url$ = <INFO>http://ratemyserver.net/index.php?page=re_item_db</INFO>;
+						break;
+					case 3:
+						.@url$ = <INFO>http://ratemyserver.net/index.php?page=skill_db_class</INFO>;
+						break;
+					case 4:
+						.@url$ = <INFO>http://ratemyserver.net/index.php?page=map_db</INFO>;
+						break;
+					case 5:
+						.@url$ = <INFO>http://www.google.fr</INFO>;
+						break;	
+				}
+				next;
+				mes "[Sheikah Slate]";
+				mes "<URL>Click here " + .@url$ + " to open the browser!</URL>";
+				break;
+			case 3:
+				next;
+				mes "[Sheikah Slate]";
+				mes "Magnet Feature initializing...";
+				specialeffect 512;
+				getmapxy(.@map$, .@x, .@y);
+				for(.@i = 0; .@i<getarraysize(.magnetNpcName$) && .@found == 0; .@i++)
+				{
+					getmapxy(.@mapN$, .@mapNx, .@mapNy, UNITTYPE_NPC, .magnetNpcName$[.@i]);
+					if(.@mapN$ == .@map$)
+					{
+						.@found = .@i;
+						.@type = .magnetNpcType[.@i];
+					}
+				}
+				if(.@found != 0)
+				{
+					if(.@type == 0)
+					{
+						warp .@map$, .@mapNx, .@mapNy;
+					}
+					else
+					{
+						movenpc .magnetNpcName[.@found], .@x, .@y;
+					}
+				}
+				break;
+			case 4:
+				next;
+				mes "[Sheikah Slate]";
+				mes "Time Hold Feature initializing...";
+				specialeffect 512;
+				getmapxy(.@map$, .@x, .@y);
+				for(.@i = 0; .@i<getarraysize(.timeNpcName$) && .@found == 0; .@i++)
+				{
+					getmapxy(.@mapN$, .@mapNx, .@mapNy, UNITTYPE_NPC, .timeNpcName$[.@i]);
+					if(.@mapN$ == .@map$)
+					{
+						.@found = .@i;
+					}
+				}
+				if(.@found != 0)
+				{
+					donpcevent .timeNpcName$[.@found] + "::OnTimeHold";
+				}
+				break;
+			case 5:
+				next;
+				mes "[Sheikah Slate]";
+				mes "Frost Keep Feature initializing...";
+				specialeffect 512;
+				getmapxy(.@map$, .@x, .@y);
+				for(.@i = 0; .@i<getarraysize(.frostNpcName$) && .@found == 0; .@i++)
+				{
+					getmapxy(.@mapN$, .@mapNx, .@mapNy, UNITTYPE_NPC, .frostNpcName$[.@i]);
+					if(.@mapN$ == .@map$)
+					{
+						.@found = .@i;
+					}
+				}
+				if(.@found != 0)
+				{
+					donpcevent .frostNpcName$[.@found] + "::OnFreezeStart";
+				}				
+				break;
+			case 6:
+				next;
+				mes "[Sheikah Slate]";
+				mes "Land Burn Feature initializing...";
+				specialeffect 512;
+				getmapxy(.@map$, .@x, .@y);
+				for(.@i = 0; .@i<getarraysize(.burnNpcName$) && .@found == 0; .@i++)
+				{
+					getmapxy(.@mapN$, .@mapNx, .@mapNy, UNITTYPE_NPC, .burnNpcName$[.@i]);
+					if(.@mapN$ == .@map$)
+					{
+						.@found = .@i;
+					}
+				}
+				if(.@found != 0)
+				{
+					donpcevent .burnNpcName$[.@found] + "::OnBurnLand";
+				}				
+				break;
+		}
+	}
+	close;
+	
+OnInit:
+	set $zndslate, 512;
+	set $zndfairypowder, 513;
+	setarray .radarNpcName$[0], "alazndhl";
+	setarray .radarNpcDisplayId[0], 512;
+	setarray .magnetNpcName$[0], "alazndhl";
+	setarray .magnetNpcType[0], 1; //1 for "player go to npc", 0 for "npc bring to player"
+	setarray .timeNpcName$[0], "alazndhl";
+	setarray .frostNpcName$[0], "alazndhl";
+	setarray .burnNpcName$[0], "alazndhl";
+	end;
+}

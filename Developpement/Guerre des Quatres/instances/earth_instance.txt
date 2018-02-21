@@ -1,0 +1,188 @@
+//Ice Kingdom Mini Instance
+
+//earth_king,16,14,3	script	Collapsed Man#ik	412,{
+	set .@npcname$, "[Collapsed Man]";
+	mes .@npcname$;
+	mes "Bonjour Skälvaiens!";
+	mes "Je suis un ancien habitant du Royaume Grondat.";
+	mes "J'étais là bien avant que vos petites guerres ne débutent,";
+	mes "et je serais là encore bien longtemps après qu'elles se soient terminées.";
+	next;
+	mes .@npcname$;
+	mes "Je suis à même de vous emmerner dans les Entrailles Branlantes. Cela vous intéresse-t-il?";
+	next;
+	set .@selection,select("Les Entrailles Branlantes?:Ok allons-y:Je me suis fait tuer, je peux revenir?:Euh non merci. Fait déjà assez froid ici...");
+
+	switch(.@selection) {
+	case 4:
+		mes .@npcname$;
+		mes "Très bien. Je pense aussi que tu es un Enfant de la Stabilité,";
+		mes "et par conséquent, tu n'as rien à faire en bas.";
+		next;
+		mes .@npcname$;
+		mes "Reviens le jour où le Tremblement t'envahira, et que tu l'accepteras.";
+		break;
+	case 3:
+		if (.party_id == getcharid(1))
+		{
+			mes .@npcname$;
+			mes "Très bien. Je te renvoie au début.";
+			warp "grotto_lb",200,180;
+			close;
+		}
+		else
+		{
+			mes .@npcname$;
+			mes "Impossible. Tu ne fait pas partie de ce groupe.";
+			warp "earth_king", 200, 180;
+			close;
+		}
+	case 2:
+		if (BaseLevel > 99) {
+			set .@party_id,getcharid(1);
+			getpartymember(.@party_id);
+			set .@partymembercount,$@partymembercount;
+			copyarray .@partymembername$[0],$@partymembername$[0],.@partymembercount;
+			copyarray .@partymembercid[0],$@partymembercid[0],.@partymembercount;
+			set .party_id,.@party_id;
+
+			mes .@npcname$;
+			mes "Enfants de la Stabilité,";
+			next;
+			mes .@npcname$;
+			mes "Les Entrailles Branlantes vous attendent.";
+			mes "Il y a peu de chemin à parcourir, mais des épreuves à relever.";
+			mes "Prenez garde, vous ne disposerez que d'une heure. Ensuite, vos propres entrailles collapseront.";
+			next;
+			mes .@npcname$;
+			mes "Si cela arrive, vous deviendrez une décoration de la Salle.";
+			next;
+
+
+			// 12 hour cooldown
+			set .@ins_ei_check,checkquest(60315,PLAYTIME);
+			// 2 hours play limit
+			set .@ins_ei_check2,checkquest(60316,PLAYTIME);
+
+			if (.@ins_ei_check < 2) {
+				if (.@ins_ei_check == -1) {
+					set $ins_lead, getpartyleader(.@party_id,2);
+					set @GID,getcharid(2);
+					if (($ins_lead == getcharid(0)) && (strcharinfo(0)==getguildmaster(@GID)) && (.@partymembercount > 2)) || getgmlevel() > 60) 
+					{
+						set .@instance, instance_create("Entrailles Branlantes", .@party_id);
+						if (.@instance < 0) {
+							mes .@npcname$;
+							mes "Le nom du Groupe est donc "+getpartyname(.@party_id)+".";
+							mes "Le nom du Leader est "+.@partymembername$[0]+".";
+							mes "Cependant, je peux pas vous laissez entrer. Réessayez svp.";
+						}
+						else {
+
+							if( instance_attachmap("grottor_lb", .@instance, 1) == "" )
+							{
+								instance_destroy(.@instance);
+								close;
+							}
+
+							instance_set_timeout 3600,300,.@instance;
+							instance_init(.@instance);
+							instance_attach(.@instance);
+
+							// enable first floor
+							donpcevent instance_npcname("ins_ei_1F", instance_id())+"::OnEnable";
+
+							mes .@npcname$;
+							mes "Le nom du Groupe est donc "+getpartyname(.@party_id)+".";
+							mes "Le nom du Leader est "+.@partymembername$[0]+".";
+							mes "Amusez vous, les enfants!";
+							next;
+							warpparty "grottor_lb",52,22,.@party_id;
+						}
+					}
+					else {
+						mes .@npcname$;
+						mes "Demande à ton maître de venir me parler, plutôt.";
+						next;
+						mes .@npcname$;
+						mes "Il faut que ce soit le Maître de Guilde qui lance le Voyage.";
+						next;
+						mes .@npcname$;
+						mes "Et n'oubliez pas que le groupe doit compter au minimum 2 membres!";
+					}
+				}
+				else if ((.@ins_ei_check == 0) || (.@ins_ei_check == 1)) {
+					mes .@npcname$;
+					mes "Désolé, mais vous n'êtes pas encore remis de votre dernier Voyage.";
+				}
+				else if (.@ins_i_check == 2) {
+					mes .@npcname$;
+					mes "Hum...Je pense que vous êtes prêt.";
+					next;
+					mes .@npcname$;
+					mes "Vous devriez pouvoir redescendre dans les Entrailles sans risque.";
+					next;
+					mes .@npcname$;
+					mes "Enfin, sans risque au niveau de votre santé du moins.";
+				}
+			}
+		}
+		else {
+			mes .@npcname$;
+			mes "Désolé, je ne peux pas envoyer une personne qui n'est pas prête. Revenez au niveau 99.";
+		}
+		break;
+	}
+	close2;
+	end;
+}
+
+grottor_lb,16,14,3	script	ins_ei_1F	-1,{
+	end;
+
+OnEnable:
+	initnpctimer;
+	//Kasa, Monemus, Nine Tail
+	areamonster "grottor_lb",27,72,87,56,"Monstre de Feu",1833,30,instance_npcname("ins_ei_1F", instance_id())+"::OnMyMobDead";
+	areamonster "grottor_lb",27,72,87,56,"Monstre de Feu",1674,30,instance_npcname("ins_ei_1F", instance_id())+"::OnMyMobDead";
+	areamonster "grottor_lb",27,72,87,56,"Monstre de Feu",1471,30,instance_npcname("ins_ei_1F", instance_id())+"::OnMyMobDead";
+	end;
+
+OnTimer60000:
+	attachrid($@partymembercid[rand(0,$@partymembercount)]);
+	//stone curse un joueur au hasard pour une minute
+	sc_start SC_STONE, 60000, 0;
+	initnpctimer;
+	end;
+
+OnMyMobDead:
+	set .@mob_dead_num,mobcount("grottor_lb",instance_npcname("ins_ei_1F", instance_id())+"::OnMyMobDead");
+	if (.@mob_dead_num < 1)
+	{
+		instance_announce 0, @npcname$ + "On dirait bien que vous avez libéré les Entrailles du Mal qui les rongeaient!",bc_map,"0x00ff99";
+		sleep 15000;
+		//Ifrit
+		areamonster "grottor_lb",27,72,87,56,"Monstre Brûlant",1832,1,instance_npcname("ins_ei_1F", instance_id())+"::OnMyBossDead";
+		instance_announce 0, @npcname$ + "Enfin...Presque...",bc_map,"0x00ff99";
+	}
+	end;
+
+OnMyBossDead:
+	instance_announce 0, @npcname$ + "Bien joué! Je vous remonte dans trente secondes!",bc_map,"0x00ff99";
+	areamonster "grottor_lb",27,72,87,56,"Coffre Grondant",1335,2;
+	sleep 30000;
+	warparty "earth_king",100,99;
+	end;
+}
+
+earth_king,214,194,0	script	warpInstance	45,2,2,{
+	end;
+
+OnTouch:
+	//entraine une perte de HP pendant une heure, et faiblesse face à l'élément feu
+	sc_start SC_POISON, 3600000, 0;
+	bonus bSubEle,Ele_Fire,-25;
+	bonus bAddEle,Ele_Fire,-25;
+	warp "grottor_lb",100,99;
+	end;
+}

@@ -1,0 +1,134 @@
+prontera,208,97,1	script	Odin::alapacho	859,2,2,{
+	set .@npcname$, "[Odin]";
+	
+OnDialogStart:	
+	mes .@npcname$;
+	if (PATHCHOOSE == 0)
+	{
+		mes "Welcome, child.";
+		mes "I'm Odin, Father of All Thing.";
+		mes "I'm here to help you choose the Path you're going to travel in your entire life here, in Midgard.";
+		next;
+		mes .@npcname$;
+		mes "First, you have to know there's two Paths. The Fighters, and the Adventurers.";
+		mes "If they're cohabitating on the same world, they're fondamentaly different.";
+		next;
+		mes .@npcname$;
+		mes "The Fighters dedicate their life to the Fight Thirst.";
+		mes "They fight, fight again, and will fight again, until the Ragnarok comes.";
+		mes "Therefor, they don't feel the urge to go around the world, to see its wonders.";
+		mes "They don't want to discover, to explore.";
+		mes "They want to fight, as quick as possible.";
+		next;
+		mes .@npcname$;
+		mes "All the things they doesn't want to do, Adventurers tend to do them.";
+		mes "As an Adventurer, your life will be on the road.";
+		mes "You'll go through all the lands, visit all maps, and fight too.";
+		mes "But not as a Fighter. You'll fight mostly against this rude world, against Giants, Demons and so on.";
+		next;
+		mes .@npcname$;
+		mes "You have to know some more things about the Fighters.";
+		mes "As their entire life is dedicated to fights, lots of things are forbidden to them.";
+		mes "They cannot warp. They cannot use the kafras, nor most of the commands.";
+		mes "On the other hand, some seller are here only for them.";
+		mes "They'll provide them almost anything they'll need, as long as they pay the price.";
+		mes "And these price are brought back by winning more fights.";
+		next;
+		mes .@npcname$;
+		mes "When a Fighter join Midgard, he'll earn some Fighter Points.";
+		mes "These points can be used to achieve a basic set of stuff.";
+		mes "From then, when a Fighter win a combat, they earn more points.";
+		mes "And these points can be used again to imprive the set they've choosen, by buying other piece.";
+		mes "But as the Season will end, all their stuff will be deleted. And they'll have to start all over again.";
+		mes "Remember that. On first day of all month, your stuff will be deleted, and you'll earn back the base points.";
+		mes "If you're on top of the Fighters, you'll also earn a bonus hat, to prove you were one of the strongest.";
+		next;
+		mes .@npcname$;
+		mes "So. What's your choice?";
+		mes "A life of figths, or a life or discovering?";
+		set LIFEPATH, select("Fighter","Adventurer");
+		next;
+		mes .@npcname$;
+		mes "Perfect. So you're now " + LIFEPATH == 1 ? "a Fighter!" : "an Adventurer.";
+		if (LIFEPATH == 1)
+		{
+			mes "As you've chosen this way a life, I'm gonna send you directly to the main town of this world, " + .capName$;
+			mes "You can also choose a class to use. I'll bend the time of your life to make you become one.";
+			if (.renewalClasses == 1)
+			{
+				set .@choice, select("Rune Knight","Royal Guard","Warlock","Sorcerer","Arch Bishop","Sura","Ranger","Minstrel/Wanderer","Guillotine Cross","Shadow Chaser","Mechanic","Genetic");
+				set .@newJob, .jobArray[.@choice - 1];
+				if (.@newJob == 4068 && Sex == 1)
+				{
+					set .@newJob, 4069;
+				}
+				jobchange .@newJob;
+			}
+			else
+			{
+				set .@choice, select("Lord Knight","Paladin","High Wizard","Professor","High Priest","Champion","Sniper","Clown/Gipsy","Assassin Cross","Stalker","Whitesmith","Creator");
+				set .@newJob, .jobArray[.@choice - 1];
+				if (.@newJob == 4020 && Sex == 1)
+				{
+					set .@newJob, 4021;
+				}
+				jobchange .@newJob;
+			}
+			charcommand "#blvl 99";
+			charcommand "#jlvl 70";				
+			callfunc("AddPoints", getcharid(3), 1000, 1);
+			next;
+			mes .@npcname$;
+			mes "Good luck in your life then.";
+			warp .capitale$, .capX, .capY;
+			set PATHCHOOSE, 1;
+		}
+		else
+		{
+			mes "As you've chosen this way of life, you now have the possibility to join the main town immediately, or continue your way.";
+			mes "This way is a bit longer, but you'll learn some really usefull things.";
+			mes "My opinion is that you take a bit of your time for that.";
+			next;
+			mes .@npcname$;
+			mes "What's you choice?";
+			if(select("To the main town","I'll take my time") == 1)
+			{
+				next;
+				mes .@npcname$;
+				mes "Good luck in your life then.";
+				warp .capitale$, .capX, .capY;
+			set PATHCHOOSE, 1;
+				close;
+			}
+			next;
+			mes .@npcname$;
+			mes "Good decision.";
+			mes "Go on. Discover this new life that's opened for you.";
+			mes "Good luck.";
+			set PATHCHOOSE, 1;
+		}
+	}
+	else
+	{
+		mes "How did you ended there?";
+		mes "I'll send you to the main town.";
+		warp .capitale$, .capX, .capY;
+	}
+	close;
+	
+OnTouch:
+	if(PATHCHOOSE == 0)
+	{
+		goto OnDialogStart;
+	}
+	end;
+	
+OnInit:
+	set .capName$, "Prontera";
+	setarray .jobArray[0], 4008,4015,4010,4017,4009,4016,4012,4020,4013,4018,4011,4019;
+	setarray .jobArrayRe[0], 4060,4066,4061,4074,4063,4070,4062,4068,4065,4072,4064,4078;
+	set .capitale$, "prontera";
+	set .capX, 0;
+	set .capY, 0;
+	end;
+}

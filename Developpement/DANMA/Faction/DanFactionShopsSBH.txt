@@ -1,0 +1,223 @@
+// [========================================================]
+// [=============     DANMA - Faction Shops     ============]
+// [========================================================]
+// [ Version 1                                              ]
+// [========================================================]
+// [ Original script by: Alayne				    ]
+// [========================================================]
+// [ Description:                                           ]
+// [--------------------------------------------------------]
+// [                                                        ]
+// [ - The Faction Shops			    	    ]
+// [========================================================]
+// [ Changelog: (5 last updates)                            ]
+// [--------------------------------------------------------]
+// [                                                        ]
+// [ v0: Creation                      			    ]
+// [                                                        ]
+// [                                                        ]
+// [========================================================]
+// [                                                        ]
+// [========================================================]
+
+-	shop	SBHShop	-1,501:50;
+
+mellina_in,120,153,3	script	Support::danfsbhs	76,{
+	set @i,0;
+	callshop "SBHShop",1;
+	npcshopattach "SBHShop";
+	end;
+
+OnBuyItem:
+	if(.BuildQuest) {
+		for(set .e,0; !compare(getarg(.e+1)+"", "Zeny"); set .e,.e+2) {}
+		npcshopadditem "SBHShop",getarg(.e+2),getarg(.e)*compare(getarg(.e+1)+"","SZeny");
+		setarray .Shop[.i],getarg(.e+2);
+		set .i,.i+1;
+		goto Quest_Setup;
+	}
+	if(.Shop[@i]!=@bought_nameid) for(set @i,1; 1; set @i,@i+1) if(.Shop[@i]==@bought_nameid) { set .i,@i; callsub Quest_Setup; }	
+	for(set @i,1; !@e; set @i,@i+1) if(.Shop[@i]==@bought_nameid) { set @e,1; set .i,@i; callsub Quest_Setup; }
+	mes "[Support]";
+	mes "I require the following:";
+	for(set @i,0; !compare(getarg(@i+1)+"","Zeny"); set @i,@i+2) mes "^FF0000" + ((countitem(getarg(@i))>=getarg(@i+1))? "^00FF00":"") + "" + getarg(@i+1) + " " + getitemname(getarg(@i)) + " [" + countitem(getarg(@i)) + "/" + getarg(@i+1) + "]";
+	if(getarg(@i)) mes "^FF0000" + ((Zeny>=getarg(@i))? "^00FF00":"") + "" + getarg(@i) + " Zeny";
+	mes "^000000In exchange, I will give you:^0000FF";
+	for(set @i,@i+2; getarg(@i+1,0); set @i,@i+2) mes getarg(@i+1) + " " + getitemname(getarg(@i));
+	switch(select("Exchange:No thanks")) {
+		case 1:
+			for(set @i,0; !compare(getarg(@i+1)+"","Zeny"); set @i,@i+2) if(countitem(getarg(@i)) < getarg(@i+1)) {
+				next;
+				mes "You have " + countitem(getarg(@i)) + " " + getitemname(getarg(@i)) + ", while I require " + getarg(@i+1) + ".";
+				mes "Please obtain ^FF0000" + (getarg(@i+1)-countitem(getarg(@i))) + " more " + getitemname(getarg(@i)) + "^000000.";
+				close;
+			}
+			if(Zeny < getarg(@i)) {
+				next;
+				mes "You do not have enough Zeny.";
+				mes "You need ^FF0000" + (getarg(@i)-Zeny) + " more Zeny^000000.";
+				close;
+			}
+			for(set @i,0; !compare(getarg(@i+1)+"","Zeny"); set @i,@i+2) delitem getarg(@i),getarg(@i+1);
+			set Zeny,Zeny-getarg(@i);
+			callfunc("OnUpdateFactionQuota","sbhCurrentQuota",getarg(@i));
+			for(set @i,@i+2; getarg(@i+1,0); set @i,@i+2) getitem getarg(@i),getarg(@i+1);
+			if (compare(getarg(@i,0)+"","announce")) announce strcharinfo(0) + " has just obtained " + getitemname(@bought_nameid) + "!",bc_all;
+			close;
+		case 2:
+			close;
+	}
+OnInit:
+	npcshopitem "SBHShop",0,0;
+	set .BuildQuest,1;
+	set .i,1;
+OnMinute00:
+Quest_Setup:
+	switch(.i) {
+		default: set .BuildQuest,0; set .e,0; set .i,0; end;
+		case 1: 
+			if(callfunc("OnCheckFactionQuota","sbhBaseQuota","sbhCurrentQuota") == 0)
+			{
+				//Fly Wing
+				callsub OnBuyItem,100,"Zeny",601,1,"";
+			}
+			else
+			{
+				//Lvl 5 Heal
+				callsub OnBuyItem,3500,"Zeny",12002,1,"";
+			}
+		case 2: 
+			if(callfunc("OnCheckFactionQuota","sbhBaseQuota","sbhCurrentQuota") == 0)
+			{
+				//Butterfly wing
+				callsub OnBuyItem,200,"Zeny",602,1,"";
+			}
+			else
+			{
+				//Holy Egg
+				callsub OnBuyItem,14600,"Zeny",12019,1,"";
+			}
+		case 3: 
+			if(callfunc("OnCheckFactionQuota","sbhBaseQuota","sbhCurrentQuota") == 0)
+			{
+				//anodyne
+				callsub OnBuyItem,600,"Zeny",605,1,"";
+			}
+			else
+			{
+				//Box of Resentment
+				callsub OnBuyItem,13000,"Zeny",12030,1,"";
+			}
+		case 4: 
+			if(callfunc("OnCheckFactionQuota","sbhBaseQuota","sbhCurrentQuota") == 0)
+			{
+				//Aloevera
+				callsub OnBuyItem,500,"Zeny",606,1,"";
+			}
+			else
+			{
+				//Box of Drosi
+				callsub OnBuyItem,13000,"Zeny",12031,1,"";
+			}
+		case 5: 
+			if(callfunc("OnCheckFactionQuota","sbhBaseQuota","sbhCurrentQuota") == 0)
+			{
+				//Ygg Leaf
+				callsub OnBuyItem,900,"Zeny",610,1,"";
+			}
+			else
+			{
+				//Box of Storm
+				callsub OnBuyItem,13000,"Zeny",12032,1,"";
+			}
+		case 6: 
+			if(callfunc("OnCheckFactionQuota","sbhBaseQuota","sbhCurrentQuota") == 0)
+			{
+				//Lvl 3 Heal
+				callsub OnBuyItem,2000,"Zeny",12001,1,"";
+			}
+			else
+			{
+				//Elemental Convert Fire
+				callsub OnBuyItem,6500,"Zeny",12114,1,"";
+			}
+		case 7: 
+			if(callfunc("OnCheckFactionQuota","sbhBaseQuota","sbhCurrentQuota") == 0)
+			{
+				//Chocolate Tart
+				callsub OnBuyItem,3200,"Zeny",12200,1,"";
+			}
+			else
+			{
+				//Elemental Convert Water
+				callsub OnBuyItem,6500,"Zeny",12115,1,"";
+			}
+		case 8: 
+			if(callfunc("OnCheckFactionQuota","sbhBaseQuota","sbhCurrentQuota") == 0)
+			{
+				//Acorn Jelly
+				callsub OnBuyItem,2900,"Zeny",12347,1,"";
+			}
+			else
+			{
+				//Elemental Convert Earth
+				callsub OnBuyItem,6500,"Zeny",12116,1,"";
+			}
+		case 9: 
+			if(callfunc("OnCheckFactionQuota","sbhBaseQuota","sbhCurrentQuota") == 0)
+			{
+				//Lucky Cookie
+				callsub OnBuyItem,3500,"Zeny",12706,1,"";
+			}
+			else
+			{
+				//Elemental Convert Wind
+				callsub OnBuyItem,6500,"Zeny",12117,1,"";
+			}
+		case 10: 
+			if(callfunc("OnCheckFactionQuota","sbhBaseQuota","sbhCurrentQuota") == 0)
+			{
+				//Lucky Cookie 2
+				callsub OnBuyItem,3500,"Zeny",12708,1,"";
+			}
+			else
+			{
+				//xmas Cake
+				callsub OnBuyItem,14000,"Zeny",12200,1,"";
+			}
+		case 11: 
+			if(callfunc("OnCheckFactionQuota","sbhBaseQuota","sbhCurrentQuota") == 0)
+			{
+				//Box of Gloom
+				callsub OnBuyItem,2800,"Zeny",12029,1,"";
+			}
+			else
+			{
+				//Angeling Potion
+				callsub OnBuyItem,23500,"Zeny",12350,1,"";
+			}
+		case 12: 
+			if(callfunc("OnCheckFactionQuota","sbhBaseQuota","sbhCurrentQuota") == 0)
+			{
+				//Cursed Water
+				callsub OnBuyItem,2500,"Zeny",12020,1,"";
+			}
+			else
+			{
+				//Lex 
+				callsub OnBuyItem,16000,"Zeny",14515,1,"";
+			}
+		case 13: 
+			if(callfunc("OnCheckFactionQuota","sbhBaseQuota","sbhCurrentQuota") == 0)
+			{
+				//Magni Scroll
+				callsub OnBuyItem,5500,"Zeny",14516,1,"";
+			}
+			else
+			{
+				//Mystical
+				callsub OnBuyItem,25000,"Zeny",14593,1,"";
+			}
+	}
+	return;
+}

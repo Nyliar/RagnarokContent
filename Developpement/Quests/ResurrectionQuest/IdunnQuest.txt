@@ -1,0 +1,366 @@
+//===== eAthena Script ======================================= 
+//= Resurrection Quest - Idunn
+//===== By: ================================================== 
+//= Alayne
+//===== Current Version: ===================================== 
+//= 1.0
+//===== Compatible With: ===================================== 
+//============================================================ 
+
+pay_fild04,346,336,4	script	Idunn Stone::alrqis	HIDDEN_WARP_NPC,2,2,{ 
+	set .@npcname$, "[Idunn Secret]";
+	set .@pcname$, "[" + strcharinfo(0) + "]";
+	mes .@npcname$;
+	if(IDUNNQ == 0)
+	{
+		mes "You can read some kind of runes engraved on the stone.";
+		mes "*You who wants to know the life of Gods by eating one of my Apple,";
+		mes "You may encounter the fate they're fighting for.";
+		mes "Cross this land before dying,";
+		mes "And I may recognize you're worth speaking to.*";
+		next;
+		mes .@npcname$;
+		mes "You have up to 10 minutes to find the solution of this riddle.";
+		mes "Hurry up, but not to much. You'll understand.";
+		
+		viewpoint 1,223,92,1,0xFF0000;
+		viewpoint 1,343,222,2,0xFF0000;
+		viewpoint 1,256,340,3,0xFF0000;
+		viewpoint 1,191,283,4,0xFF0000;
+		viewpoint 1,151,243,5,0xFF0000;
+		viewpoint 1,197,204,6,0xFF0000;
+		viewpoint 1,267,195,7,0xFF0000;
+		viewpoint 1,196,177,8,0xFF0000;
+		viewpoint 1,364,107,9,0xFF0000;
+		viewpoint 1,184,39,10,0xFF0000;
+		
+		enablenpc "alrqcp";
+		enablenpc "alrqcp1";
+		enablenpc "alrqcp2";
+		enablenpc "alrqcp3";
+		enablenpc "alrqcp4";
+		enablenpc "alrqcp5";
+		enablenpc "alrqcp6";
+		enablenpc "alrqcp7";
+		enablenpc "alrqcp8";
+		enablenpc "alrqcp9";
+		
+		set DELAYIDUNN, 1;
+		set IDUNNQ, 1;
+		set iduunq_0, 0;
+		set iduunq_1, 0;
+		set iduunq_2, 0;
+		set iduunq_3, 0;
+		set iduunq_4, 0;
+		set iduunq_5, 0;
+		set iduunq_6, 0;
+		set iduunq_7, 0;
+		set iduunq_8, 0;
+		set iduunq_9, 0;
+		set iduunq_10, 0;
+		addtimer 1000, strnpcinfo(3) + "::On1SecondElapsed";
+		next;
+		mes .@npcname$;
+		mes "The Stone returns to earth.";
+		specialeffect 888; //earth shaker
+		setnpcdisplay strnpcinfo(3), HIDDEN_WARP_NPC;
+		set .displayed, 0;
+	}
+	else
+	{
+		mes "You canno't read what's written over it.";
+	}
+	close;
+	
+On1SecondElapsed:
+	deltimer "alrqis::On1SecondElapsed";
+	set iduunq_0, iduunq_0 + 1;
+	set .@successCount, 0;
+	for(set .@i,0; .@i<11; set .@i,.@i+1)
+	{
+		if(getd("iduunq_" + .@i) == 1)
+		{
+			set .@successCount, .@successCount + 1;
+		}
+	}
+	if(iduunq_0 == (600 - 60 * .@successCount))
+	{
+		goto OnFinalCheck;
+	}
+	if(iduunq_0 == 60 || iduunq_0 == 120 || iduunq_0 == 180 || iduunq_0 == 240 || iduunq_0 == 300
+	|| iduunq_0 == 360 || iduunq_0 == 420 || iduunq_0 == 480 || iduunq_0 == 540)
+	{
+		//1 minute
+		set .@min, .@successCount;
+		if (.@successCount == 0)
+		{
+			set .@min, 1;
+		}
+		set .@healPerc, -10 * .@min;
+		if (.@healPerc >= 50)
+		{
+			set .@healPerc, -50;
+		}
+		dispbottom "You've left one more year of your life behind you.";
+		debugmes "Healing for " + .@healPerc;
+		percentheal .@healPerc, .@healPerc;
+	}
+	dispbottom "" + (iduunq_0 % 2 == 0 ? "Toc":"Tic");
+	addtimer 1000, strnpcinfo(3) + "::On1SecondElapsed";
+	end;
+	
+OnFinalCheck:
+	set .@successCount, 0;
+	for(set .@i,0; .@i<11; set .@i,.@i+1)
+	{
+		if(getd("iduunq_" + .@i) == 1)
+		{
+			set .@successCount, .@successCount + 1;
+		}
+	}
+	//10 minutes, time to check
+	if(Hp > MaxHp * 10 / 100)
+	{
+		//success if at least 5 points have been activated
+		if(.@successCount >= 5)
+		{
+			dispbottom "You've completed this task.";
+			dispbottom "Try to find the true Idunn now.";
+			set GOLDENAPPLEQ, 2;
+			set GOLDENAPPLEQ_COUNT, .@successCount;
+			set IDUNNQ, 0;
+		}
+	}
+	else
+	{
+		//fail
+		dispbottom "You wont be able to handle the Apples power if you can't activate at least some clones.";
+		set GOLDENAPPLEQ, 1;
+		set IDUNNQ, 0;
+		set DELAYIDUNN, 0;
+	}	
+	end;
+	
+OnNPCKillEvent:
+	getmapxy(.@map$,.@mapX,.@mapY,UNITTYPE_PC);
+	getmapxy(.@mapN$,.@mapNX,.@mapNY,UNITTYPE_NPC);
+	set .@checkX, ((.@mapX - .@mapNX) >= -5 && (.@mapX - .@mapNX) <= 5);
+	set .@checkY, ((.@mapY - .@mapNY) >= -5 && (.@mapY - .@mapNY) <= 5);
+	set .@checkMap, .@map$ == .@mapN$;
+	//debugmes "map: " + .@checkMap + ", X: " + .@checkX + ", Y: " + .@checkY;
+	//debugmes "GOLDENAPPLEQ: " + GOLDENAPPLEQ + ", IDUNNQ: " + IDUNNQ;
+	if(.@checkMap && .@checkX && .@checkY 
+		&& GOLDENAPPLEQ == 1
+		&& IDUNNQ == 0)
+	{
+		mes "Some blood drips inside the tiny hole.";
+		mes "The earth starts shaking...";
+		specialeffect 888; //earth shaker
+		set .displayed, 1;
+		setnpcdisplay strnpcinfo(3), 2_MONEMUS;
+		close;
+	}
+	end;
+	
+OnPCLoginEvent:
+	set IDUNNQ, 0;
+	end;
+	
+OnTouch:
+	if(GOLDENAPPLEQ == 1 && .displayed == 0)
+	{
+		mes "There's something strange here.";
+		mes "Looks like a tiny hole. Something really, really small may enter, but nothing else.";
+		mes "Maybe some liquid? Some blood perhaps?";
+		close;
+	}
+	end;
+	
+OnWhisperGlobal:
+	set GOLDENAPPLEQ, 2;
+	dispbottom "GOLDENAPPLE: " + GOLDENAPPLEQ;
+	dispbottom "CHECKDEATH: " + CHECKDEATH;
+	end;
+	
+OnInit:
+	set .displayed, 0;	
+	end;
+}
+
+pay_fild04,156,100,4	script	Idunn::alrqi	4_HUMAN_GERUTOO,2,2,{ 
+	set .@npcname$, "[Idunn]";
+	set .@pcname$, "[" + strcharinfo(0) + "]";
+	mes .@npcname$;
+	mes "Who are you? How did you find me?";
+
+	disablenpc "alrqcp";
+	disablenpc "alrqcp1";
+	disablenpc "alrqcp2";
+	disablenpc "alrqcp3";
+	disablenpc "alrqcp4";
+	disablenpc "alrqcp5";
+	disablenpc "alrqcp6";
+	disablenpc "alrqcp7";
+	disablenpc "alrqcp8";
+	disablenpc "alrqcp9";
+	
+	viewpoint 2,223,92,1,0xFF0000;
+	viewpoint 2,343,222,2,0xFF0000;
+	viewpoint 2,256,340,3,0xFF0000;
+	viewpoint 2,191,283,4,0xFF0000;
+	viewpoint 2,151,243,5,0xFF0000;
+	viewpoint 2,197,204,6,0xFF0000;
+	viewpoint 2,267,195,7,0xFF0000;
+	viewpoint 2,196,177,8,0xFF0000;
+	viewpoint 2,364,107,9,0xFF0000;
+	viewpoint 2,184,39,10,0xFF0000;
+	
+	deltimer "alrqis::On1SecondElapsed";
+		
+	if(GOLDENAPPLEQ == 2)
+	{
+		if(IDUNNQ == 0)
+		{
+			next;
+			mes .@pcname$;
+			mes "My name's " + strcharinfo(0) + ". I'm here to get a Golden Apple.";
+			next;
+			mes .@npcname$;
+			mes "Yes I know...Like they all did.";
+			mes "But I can't let you have one...";
+			mes "They only cause discord, fight and war.";
+			mes "They're raising envy, wrath.";
+			mes "I like to take care of them, but they're one on the higher discord maker of all times.";
+			next;
+			mes .@pcname$;
+			mes "I know. I undertand.";
+			next;
+			mes .@npcname$;
+			mes "No. Believe me, you don't.";
+			mes "Nobody can, as long as they don't see parents fighting each others.";
+			mes "As they don't see parents killing their siblings, their childrens.";
+			next;
+			mes .@pcname$;
+			mes "At least, I can understand the grief caused by losing someone you care about.";
+			mes "I've been taken someone. And I want to retrieve him.";
+			next;
+			mes .@npcname$;
+			mes "You're right. I can understand that too.";
+			mes "As I hate fights, there have been one time where I was almost inside one of them.";
+			mes "I use my tongue instead of my sword, so I can prevent it from happening.";
+			mes "If you can tell me who was involved, and where it happened, I'll you take an Apple.";
+			mes "Cause if you know that, you'll know what I've lost and how I had to handle it.";
+			set IDUNNQ, 1;
+			goto OnAskRiddle;
+		}
+		else
+		{
+			goto OnAskRiddle;
+		}
+	}
+	else
+	{
+		dispbottom "[Idunn Stone] You've talked to Idunn to early. Quest failed, please start again.";
+	}
+	close;
+	
+OnAskRiddle:
+	mes "As I hate fights, there have been one time where I was almost inside one of them.";
+	mes "I use my tongue instead of my sword, so I can prevent it from happening.";
+	mes "If you can tell me who was involved, and where it happened, I'll you take an Apple.";
+	mes "Cause if you know that, you'll know what I've lost and how I had to handle it.";
+	next;
+	mes .@npcname$;
+	mes "First of all, where did it happened?";
+	input .@where$;
+	if(.@where$ != "Aegir" && .@where$ != "aegir")
+	{
+		next;
+		mes .@npcname$;
+		mes "No. That's not the right answer.";
+		close;
+	}
+	next;
+	mes .@npcname$;
+	mes "Then, who was involved? The first one?";
+	input .@who1$;
+	if(.@who1$ != "Loki" && .@who1$ != "loki" && .@who1$ != "Bragi" && .@who1$ != "bragi")
+	{
+		next;
+		mes .@npcname$;
+		mes "No. That's not the right answer.";
+		close;
+	}
+	next;
+	mes .@npcname$;
+	mes "Then, who else was involved? The second one?";
+	input .@who2$;
+	if(.@who2$ != "Loki" && .@who2$ != "loki" && .@who2$ != "Bragi" && .@who2$ != "bragi"
+	&& .@who1$ != .@who2$)
+	{
+		next;
+		mes .@npcname$;
+		mes "No. That's not the right answer.";
+		close;
+	}
+	next;
+	mes .@npcname$;
+	mes "That's right. I was involved in a fight between Loki and Bragi, in Aegir Hall.";
+	mes "I tried to stopped them. And Loki send me back my biggest grief.";
+	mes "My lost brother.";
+	mes "That's a story I like to talk about.";
+	mes "Take this apple, and leave me alone.";
+	getitem $resurrectionItem, 1;
+	set GOLDENAPPLEQ, 3;
+	close;
+}
+
+pay_fild04,223,92,4	script	Idunn#1::alrqcp	4_HUMAN_GERUTOO,2,2,{ 
+	end;
+	
+OnTouch:
+	if(DELAYIDUNN >= 1)
+	{
+		if(mobcount(strcharinfo(3),"alrqcp::OnMobDead") > 0)
+		{
+			npctalk "There's monsters around there...I can feel them!";
+			end;
+		}
+		npctalk "Who are you?";
+		if(Hp > MaxHp * 10 / 100 && getd("iduunq_" + atoi(strnpcinfo(2))) == 0)
+		{
+			setd("iduunq_" + atoi(strnpcinfo(2)), 1);
+		}
+		if(rand(0,10) <= 5)
+		{
+			set .@mobId, 1617;
+			getmapxy(.@mapN$,.@xN,.@yN,UNITTYPE_NPC);
+			monster .@mapN$, .@xN, .@yN, "--ja--", .@mobId, 5, "alrqcp::OnMobDead";
+		}
+		doevent "alrqis::OnFinalCheck";
+		disablenpc strnpcinfo(3);
+	}
+	else
+	{
+		disablenpc strnpcinfo(3);
+	}
+	end;	
+	
+OnMobDead:
+	//nothing, used for checking
+	end;
+	
+OnInit:
+	disablenpc strnpcinfo(3);
+	end;
+}
+
+pay_fild04,343,222,4	duplicate(alrqcp)	Idunn#2::alrqcp1	4_HUMAN_GERUTOO,2,2
+pay_fild04,256,340,4	duplicate(alrqcp)	Idunn#3::alrqcp2	4_HUMAN_GERUTOO,2,2
+pay_fild04,191,283,4	duplicate(alrqcp)	Idunn#4::alrqcp3	4_HUMAN_GERUTOO,2,2
+pay_fild04,151,243,4	duplicate(alrqcp)	Idunn#5::alrqcp4	4_HUMAN_GERUTOO,2,2
+pay_fild04,197,204,4	duplicate(alrqcp)	Idunn#6::alrqcp5	4_HUMAN_GERUTOO,2,2
+pay_fild04,267,195,4	duplicate(alrqcp)	Idunn#7::alrqcp6	4_HUMAN_GERUTOO,2,2
+pay_fild04,196,177,4	duplicate(alrqcp)	Idunn#8::alrqcp7	4_HUMAN_GERUTOO,2,2
+pay_fild04,364,107,4	duplicate(alrqcp)	Idunn#9::alrqcp8	4_HUMAN_GERUTOO,2,2
+pay_fild04,184,39,4	duplicate(alrqcp)	Idunn#10::alrqcp9	4_HUMAN_GERUTOO,2,2

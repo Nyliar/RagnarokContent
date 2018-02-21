@@ -1,0 +1,53 @@
+function	script	AttachToPlayer	{
+	set .@playername$, getarg(0);
+	set .@query$, "SELECT `account_id`,`char_id` FROM `char` WHERE `name`='" + .@playername$ + "'";
+	query_sql(.@query$, .@playeraccountid, .@playercharid);
+
+	if (getarraysize(.@playeraccountid) == 0)
+	{
+		dispbottom "[Book] Player can't be targeted (offline). Disactivation.";
+		return -1;
+	}
+	query_sql("SELECT `id_char` FROM `ym_player` WHERE `id_char`=" + .@playercharid[0], .@idChar);
+	if (getarraysize(.@idChar) == 0 || .@idChar == 0)
+	{
+		dispbottom "[Book] Player out of Yggdrasil Memories can't be targeted. Disactivation.";
+		return -1;
+	}
+	if (getarg(1) == 1)
+	{
+		if (!attachrid(.@playeraccountid))
+			return -1;
+	}
+
+	return .@playeraccountid;
+}
+
+function	script	CheckTargetable	{
+	set .@map$, strcharinfo(3);
+	set .@ray, getarg(1);
+	set .@x, getarg(2);
+	set .@y, getarg(3);
+	if (.@ray == -1)
+	{
+		if (strcharinfo(3) == getarg(0))
+			set .@ok, 1;
+	}
+	else
+	{
+		getmapxy(.@map2$, .@x2, .@y2, 0);
+		if (.@map$ != .@map2$)
+		{
+			return .@ok;
+		}
+		else
+		{
+			if (.@x2 > (.@x - (.@ray / 2)) && .@x2 < (.@x + (.@ray / 2))
+				&& .@y2 > (.@y - (.@ray / 2)) && .@y2 < (.@y + (.@ray / 2)))
+			{
+				set .@ok, 1;
+			}					
+		}
+	}
+	return .@ok;
+}

@@ -1,0 +1,452 @@
+//===== Hercules Script =======================================
+//= Quest Template
+//===== Par: =================================================
+//= Hiero
+//===== Version du Script: =================================== 
+//= 1.4
+//===== Compatible Avec: =====================================
+//= Hercules
+//===== Commentaires =========================================
+// 
+
+gef_fild07,293,205,4	script	Gardien#geffild07	733,{
+	setarray .@mobs[0], 1007; // Fabre
+	setarray .@count[0], 50;
+	setarray .@rewarditem[0], 501; // Red Potion
+	setarray .@rewardicount[0], 20;
+
+	callfunc("hunting", 65000, "Fabres Hunting", 2, 10, 27, .@mobs, .@count, 800, .@rewarditem, .@rewardicount, 1);
+}
+
+in_sphinx4,14,218,4	script	Gardien#insphinx4	733,{
+	setarray .@mobs[0], 1098, 1149; // Anubis, Minorous
+	setarray .@count[0], 15, 30;
+	setarray .@rewarditem[0], 610; // Yggdrasil Leaf
+	setarray .@rewardicount[0], 4;
+
+	callfunc("hunting", 65001, "In the Pyramid", 1, 74, 89, .@mobs, .@count, 21000, .@rewarditem, .@rewardicount, 1);
+}
+
+ein_fild04,189,41,1	script	Gardien#einfild04	733,{
+	setarray .@mobs[0], 1368, 1613; // Géographer, Metaling
+	setarray .@count[0], 40, 30;
+	setarray .@rewarditem[0], 12002; // Heal lvl 5
+	setarray .@rewardicount[0], 2;
+
+	callfunc("hunting", 65002, "Weeding", 2, 48, 89, .@mobs, .@count, 7000, .@rewarditem, .@rewardicount, 1);
+}
+
+pay_arche,41,127,1	script	Gardien#payarche	733,{
+	setarray .@mobs[0], 1015, 1076, 1031; // Zombie, Skeleton, Poporing
+	setarray .@count[0], 20, 15, 10;
+	setarray .@rewarditem[0], 0;
+	setarray .@rewardicount[0], 0;
+
+	callfunc("hunting", 65003, "The undead night", 2, 24, 46, .@mobs, .@count, 2000, .@rewarditem, .@rewardicount, 1);
+}
+
+odin_tem03,237,42,6	script	Gardien#odintem03	733,{
+	setarray .@mobs[0], 1755, 1752; // Skeggiold, Skogul
+	setarray .@count[0], 3, 5;
+	setarray .@rewarditem[0], 985; // Elunium
+	setarray .@rewardicount[0], 3;
+
+	callfunc("hunting", 65004, "For Odin's glory", 1, 94, 99, .@mobs, .@count, 26000, .@rewarditem, .@rewardicount, 1);
+}
+
+prt_fild01,118,28,4	script	Gardien#profild01	733,{
+	setarray .@mobs[0], 1010, 1008; // Willow, Pupa
+	setarray .@count[0], 15, 8;
+	setarray .@rewarditem[0], 503; // Yellow Potion
+	setarray .@rewardicount[0], 5;
+
+	callfunc("hunting", 65005, "In the nature #01", 2, 8, 22, .@mobs, .@count, 400, .@rewarditem, .@rewardicount, 1);
+}
+
+gl_prison,16,74,6	script	Gardien#glprison	733,{
+	setarray .@mobs[0], 1197; // Zombie Prisoner
+	setarray .@count[0], 30;
+	setarray .@rewarditem[0], 533; // Grape Juice
+	setarray .@rewardicount[0], 10;
+
+	callfunc("hunting", 65006, "Zombies hunt", 2, 42, 72, .@mobs, .@count, 4800, .@rewarditem, .@rewardicount, 1);
+}
+
+gef_fild14,358,223,4	script	Gardien#geffild14	733,{
+	setarray .@mobs[0], 1213, 1189; // High Orc, Orc Archer
+	setarray .@count[0], 50, 25;
+	setarray .@rewarditem[0], 999; // Steel
+	setarray .@rewardicount[0], 5;
+
+	callfunc("hunting", 65007, "Orcs must die!", 2, 52, 82, .@mobs, .@count, 5200, .@rewarditem, .@rewardicount, 1);
+}
+
+lhz_fild01,204,71,6	script	Gardien#lhzfild01	733,{
+	setarray .@mobs[0], 1613; // Metaling
+	setarray .@count[0], 70;
+	setarray .@rewarditem[0], 925; // Bill of Birds
+	setarray .@rewardicount[0], 15;
+
+	callfunc("hunting", 65008, "Heavy and metal", 2, 28, 56, .@mobs, .@count, 2300, .@rewarditem, .@rewardicount, 1);
+}
+
+in_orcs01,32,166,4	script	Gardien#inorcs01	733,{
+	setarray .@mobs[0], 1153, 1152; // Orc Warrior, Orc Skeleton
+	setarray .@count[0], 80, 40;
+	setarray .@rewarditem[0], 502; // Orange Potion
+	setarray .@rewardicount[0], 20;
+
+	callfunc("hunting", 65009, "Orcs must die 2!", 2, 28, 56, .@mobs, .@count, 2200, .@rewarditem, .@rewardicount, 1);
+}
+
+ice_dun01,155,22,6	script	Gardien#icedun01	733,{
+	setarray .@mobs[0], 1776, 1780; // Siroma, Muscipular
+	setarray .@count[0], 50, 20;
+	setarray .@rewarditem[0], 504; // White Potion
+	setarray .@rewardicount[0], 15;
+
+	callfunc("hunting", 65010, "The north wind", 2, 56, 82, .@mobs, .@count, 6200, .@rewarditem, .@rewardicount, 1);
+}
+
+ra_fild05,338,281,4	script	Gardien#rafild05	733,{
+	setarray .@mobs[0], 1680; // Hill Wind
+	setarray .@count[0], 50;
+	setarray .@rewarditem[0], 505; // Blue Potion
+	setarray .@rewardicount[0], 5;
+
+	callfunc("hunting", 65011, "Above the hill", 2, 66, 82, .@mobs, .@count, 5000, .@rewarditem, .@rewardicount, 1);
+}
+
+gl_knt01,158,26,4	script	Gardien#glknt01	733,{
+	setarray .@mobs[0], 1163; // Raydric
+	setarray .@count[0], 60;
+	setarray .@rewarditem[0], 0; // Rien
+	setarray .@rewardicount[0], 0;
+
+	callfunc("hunting", 65012, "Dark Castle", 2, 64, 82, .@mobs, .@count, 8000, .@rewarditem, .@rewardicount, 1);
+}
+
+lou_fild01,220,342,6	script	Gardien#loufild01	733,{
+	setarray .@mobs[0], 1516, 1139; // Mi Gao, Mantis
+	setarray .@count[0], 40, 30;
+	setarray .@rewarditem[0], 514; // Grape
+	setarray .@rewardicount[0], 15;
+
+	callfunc("hunting", 65013, "Dune", 2, 44, 76, .@mobs, .@count, 5000, .@rewarditem, .@rewardicount, 1);
+}
+
+ein_fild06,161,174,4	script	Gardien#einfild06	733,{
+	setarray .@mobs[0], 1372; // Goat
+	setarray .@count[0], 30;
+	setarray .@rewarditem[0], 510; // Blue Herb
+	setarray .@rewardicount[0], 10;
+
+	callfunc("hunting", 65014, "Dune", 2, 64, 84, .@mobs, .@count, 7000, .@rewarditem, .@rewardicount, 1);
+}
+
+gl_sew03,176,284,4	script	Gardien#glsew03	733,{
+	setarray .@mobs[0], 1207, 1253; // String, Gargoyle
+	setarray .@count[0], 60, 30;
+	setarray .@rewarditem[0], 0; // Rien.
+	setarray .@rewardicount[0], 0;
+
+	callfunc("hunting", 65015, "Power Glove", 2, 60, 89, .@mobs, .@count, 8200, .@rewarditem, .@rewardicount, 1);
+}
+
+ayo_fild02,277,157,4	script	Gardien#ayofild02	733,{
+	setarray .@mobs[0], 1586; // Leaf Cat
+	setarray .@count[0], 40;
+	setarray .@rewarditem[0], 2501; // Hood[0]
+	setarray .@rewardicount[0], 1;
+
+	callfunc("hunting", 65016, "Billy the Cat", 2, 40, 70, .@mobs, .@count, 3200, .@rewarditem, .@rewardicount, 1);
+}
+
+ve_fild03,165,237,6	script	Gardien#vefild03	733,{
+	setarray .@mobs[0], 1833, 1837; // Kasa, Imp
+	setarray .@count[0], 30, 20;
+	setarray .@rewarditem[0], 0; // Rien.
+	setarray .@rewardicount[0], 0;
+
+	callfunc("hunting", 65017, "In volcano's heart", 1, 84, 99, .@mobs, .@count, 11000, .@rewarditem, .@rewardicount, 1);
+}
+
+ice_dun03,152,45,4	script	Gardien#icedun03	733,{
+	setarray .@mobs[0], 1777, 1775; // Ice Titan, Snowier
+	setarray .@count[0], 50, 25;
+	setarray .@rewarditem[0], 984; // Oridecon
+	setarray .@rewardicount[0], 8;
+
+	callfunc("hunting", 65018, "A bit of ice ?", 2, 84, 99, .@mobs, .@count, 9000, .@rewarditem, .@rewardicount, 1);
+}
+
+prt_fild02,309,26,4	script	Gardien#prtfild02	733,{
+	setarray .@mobs[0], 1020; // Mandragora
+	setarray .@count[0], 120;
+	setarray .@rewarditem[0], 2307; // Mantle npc
+	setarray .@rewardicount[0], 1;
+
+	callfunc("hunting", 65019, "In the nature #02", 2, 25, 56, .@mobs, .@count, 200, .@rewarditem, .@rewardicount, 1);
+}
+
+moc_fild02,81,337,4	script	Gardien#mocfild02	733,{
+	setarray .@mobs[0], 1019, 1047; // Peco Peco, Peco Peco Egg
+	setarray .@count[0], 50, 20;
+	setarray .@rewarditem[0], 2101; // Guard npc
+	setarray .@rewardicount[0], 1;
+
+	callfunc("hunting", 65020, "In the nature #03", 2, 28, 54, .@mobs, .@count, 300, .@rewarditem, .@rewardicount, 1);
+}
+
+pay_fild02,77,376,6	script	Gardien#payfild02	733,{
+	setarray .@mobs[0], 1013; // Wolf
+	setarray .@count[0], 60;
+	setarray .@rewarditem[0], 1607; // staff[2] npc
+	setarray .@rewardicount[0], 1;
+
+	callfunc("hunting", 65021, "Wolfs hunt #01", 2, 28, 54, .@mobs, .@count, 600, .@rewarditem, .@rewardicount, 1);
+}
+
+moc_fild13,295,362,4	script	Gardien#mocfild13	733,{
+	setarray .@mobs[0], 1106; // Desert Wolf
+	setarray .@count[0], 60;
+	setarray .@rewarditem[0], 1154; // Bastard Sword[2] npc
+	setarray .@rewardicount[0], 1;
+
+	callfunc("hunting", 65022, "Wolfs hunt #02", 2, 25, 54, .@mobs, .@count, 600, .@rewarditem, .@rewardicount, 1);
+}
+
+prt_fild08,175,372,4	script	Gardien#prtfild08	733,{
+	setarray .@mobs[0], 1002, 1063, 1008; // Poring, Lunatic, Pupa
+	setarray .@count[0], 20, 15, 10;
+	setarray .@rewarditem[0], 569; // Novice Potion
+	setarray .@rewardicount[0], 20;
+
+	callfunc("hunting", 65023, "To adventure !", 2, 1, 22, .@mobs, .@count, 300, .@rewarditem, .@rewardicount, 3);
+}
+
+ve_fild04,60,255,6	script	Gardien#vefild04	733,{
+	setarray .@mobs[0], 1106, 1782; // Desert Wolf, Roween
+	setarray .@count[0], 30, 20;
+	setarray .@rewarditem[0], 1011; // Emveretarcon
+	setarray .@rewardicount[0], 15;
+
+	callfunc("hunting", 65024, "Wolfs hunt #03", 2, 42, 76, .@mobs, .@count, 2600, .@rewarditem, .@rewardicount, 1);
+}
+
+pay_fild08,41,81,6	script	Gardien#payfild08	733,{
+	setarray .@mobs[0], 1010; // Willow, Spore
+	setarray .@count[0], 50;
+	setarray .@rewarditem[0], 1752; // Fire Arrow
+	setarray .@rewardicount[0], 100;
+
+	callfunc("hunting", 65025, "That's for sportives !", 2, 14, 28, .@mobs, .@count, 400, .@rewarditem, .@rewardicount, 3);
+}
+
+moc_fild11,66,153,6	script	Gardien#moc_fild11	733,{
+	setarray .@mobs[0], 1040, 1055; // Golem, Muka
+	setarray .@count[0], 50, 20;
+	setarray .@rewarditem[0], 2403; // Shoes[0] npc 
+	setarray .@rewardicount[0], 1;
+
+	callfunc("hunting", 65026, "A rolling golem never gets dusty", 2, 38, 72, .@mobs, .@count, 3400, .@rewarditem, .@rewardicount, 4);
+}
+
+lhz_dun01,142,287,6	script	Gardien#lhzdun01	733,{
+	setarray .@mobs[0], 1656, 1657, 1682; // Kavach Icarus, Laurell Weinder, Remover
+	setarray .@count[0], 20, 20, 20;
+	setarray .@rewarditem[0], 0; // Rien.
+	setarray .@rewardicount[0], 0;
+
+	callfunc("hunting", 65027, "The others", 2, 64, 89, .@mobs, .@count, 7600, .@rewarditem, .@rewardicount, 2);
+}
+
+ra_san01,136,134,6	script	Gardien#rasan01	733,{
+	setarray .@mobs[0], 1771, 1772, 1773; // Vanberk, Isilla, Hodremlin
+	setarray .@count[0], 40, 40, 20;
+	setarray .@rewarditem[0], 0; // Rien.
+	setarray .@rewardicount[0], 0;
+
+	callfunc("hunting", 65028, "The sanctuary", 1, 64, 89, .@mobs, .@count, 2600, .@rewarditem, .@rewardicount, 1);
+}
+
+/**
+ * Simple template de Hunting Quest
+ *
+ * @param {integer} getarg(0) - Quest id
+ * @param {string}  getarg(1) - Quest name
+ * @param {integer} getarg(2) - Repeat count
+ * @param {integer} getarg(3) - Lvl min
+ * @param {integer} getarg(4) - Lvl max
+ * @param {Array<integer>} getarg(5) - Mobs id
+ * @param {Array<integer>} getarg(6) - Mobs count
+ * @param {integer} getarg(7) - Bonus Zenies
+ * @param {Array<integer>} getarg(8) - Bonus items
+ * @param {Array<integer>} getarg(9) - Bonus items count
+ * @param {integer} getarg(10) - Extra bonus
+ */
+function	script	hunting	{
+
+	function exp;
+	
+	set .@id, getarg(0);
+	set .@qname$, getarg(1);
+	set .@repeat, getarg(2);
+	set .@minlvl, getarg(3);
+	set .@maxlvl, getarg(4);
+	copyarray .@mobs[0], getarg(5), getarraysize(getarg(5));
+	copyarray .@mcount[0], getarg(6), getarraysize(getarg(6));
+	set .@zeny, getarg(7);
+	copyarray .@rewarditem[0], getarg(8), getarraysize(getarg(8));
+	copyarray .@rewardicount[0], getarg(9), getarraysize(getarg(9));
+	set .@bonus, getarg(10);
+	
+	set .@qid, questprogress(.@id, HUNTING);
+	set .@rates, 3;
+	set .@xp, exp(.@mobs[0], .@mcount[0], .@bonus) * .@rates;
+	set .@getexp, exp(.@mobs[0], .@mcount[0], .@bonus);
+	set .@state, getd("quest_" + .@id);
+	
+	set @npc$, "[Gardien]";
+	set @log$, "[^606060QUEST LOG^000000]";
+	
+	if (.@state >= .@repeat)
+	{
+		mes @npc$; mes "This quest has already been done too much times.";
+		close;
+	}
+	// Quête terminée
+	if (.@qid == 2)
+	{
+		mes @npc$; mes "Thanks for your help ! People like your are getting to rare."; next;
+		
+		mes @log$; mes "Quest completed !";
+		mes .@xp + " XP Base earned !";
+		mes (.@xp/4) + " XP Job earned !";
+		
+		if (.@zeny)
+		{
+			mes .@zeny + " Zenies earned !";
+		}
+		
+		if (.@rewarditem[0])
+		{
+			for (set .@i, 0; .@i < getarraysize(.@rewarditem); set .@i, .@i + 1)
+			{
+				mes .@rewardicount[.@i] + " " + getitemname(.@rewarditem[.@i]) + " earned !";
+			}
+		}
+		
+		// 0.04% de chance d'avoir un Silver Coin
+		if (rand(10000) < 4)
+		{
+			getitem 675, 3;
+			mes "3 Silver Coin earned !";
+			logmes "[Quest] " + strcharinfo(0) + " 3 Silver Coin earned";
+		}
+		
+		set .@next, .@state + 1;
+		set getd("quest_" + .@id), .@next;
+		
+		getexp .@getexp, .@getexp/4;
+		
+		if (.@zeny)
+		{
+			set Zeny, Zeny + .@zeny;
+		}
+		
+		if (.@rewarditem[0])
+		{
+			for (set .@i, 0; .@i < getarraysize(.@rewarditem); set .@i, .@i + 1)
+			{
+				getitem .@rewarditem[.@i], .@rewardicount[.@i];
+			}
+		}
+		
+		erasequest .@id;
+		logmes "[Quest] " + strcharinfo(0) + " Quête " + .@id + " terminée (" + (.@state + 1) + "/" + .@repeat + ")";
+		close;
+	}
+	
+	if (BaseLevel < .@minlvl || BaseLevel > .@maxlvl)
+	{
+		mes @npc$; mes "Your level has to be between " +.@minlvl + " and " + .@maxlvl + " to afford this quest.";
+		close;
+	}
+	
+	else
+	{
+		if (.@qid == -1)
+		{
+			mes @npc$; mes "You! I need someone like you for a quest. You look like the one I need. I can feel it.";
+			mes "Open my register and see if you're able to do it."; next;
+			
+			mes @log$; mes "Quest level : ^606060" + .@minlvl + " to " + .@maxlvl + "^000000";
+			mes "Name : ^606060" + .@qname$ + "^000000";
+
+			for (set .@i, 0; .@i < getarraysize(.@mobs); set .@i, .@i + 1)
+			{
+				mes "Quest : ^606060Kill " + .@mcount[.@i] + " " + getmonsterinfo(.@mobs[.@i], 0) + "s^000000";
+			}
+
+			mes "Reward : ^606060" + .@xp + " XP Base^000000";
+			mes "^606060(^000000"+ callfunc("getPercent", .@xp, 1) + "^606060 of your actual level)^000000";
+			mes "Reward : ^606060" + (.@xp/4)+ " XP Job^000000";
+			
+			if (.@zeny)
+			{
+				mes "Reward : ^606060" + .@zeny + " Zenies^000000";
+			}
+			
+			if (.@rewarditem[0])
+			{
+				for (set .@i, 0; .@i < getarraysize(.@rewarditem); set .@i, .@i + 1)
+				{
+					mes "Reward : ^606060" + .@rewardicount[.@i] + " " + getitemname(.@rewarditem[.@i]) + "^000000";
+				}
+			}
+			mes "Other Reward : ^606060Silver Coin (0.04%)^000000";
+			mes "Quest done " + .@state + "/" + .@repeat + " times."; next;
+			
+			switch(select("Accept the quest","Refuse the quest"))
+			{
+			case 1:
+				set questRank, questRank + 1;
+				setquest .@id;
+				mes @log$; mes "The quest has been accepted.";
+				close;
+			case 2:
+				mes @log$; mes "The quest has been refused.";
+				close;
+			}
+		}
+		else if (.@qid == 0 || .@qid == 1)
+		{
+			mes @npc$; mes "Looks like you didn't finished the quest.";
+			mes "Do you wanna abandon?"; next;
+			
+			switch(select("No","Yes"))
+			{
+			case 1:
+				mes @npc$; mes "I rely on you, finish it !";
+				close;
+			case 2:
+				mes @npc$; mes "I'm gonna give this quest to someone else. Have a good " + (!isnight() ? "day" : "night") + ".";
+				erasequest .@id;
+				close;
+			}
+		}
+	}
+	
+	function exp
+	{
+		query_sql("SELECT `EXP` FROM `mob_db` WHERE `ID` = " + getarg(0), .@exp);
+		return (((.@exp * getarg(1))/2) * getarg(2)) + .@exp * 6;
+		//return (.@exp * getarg(1) * getarg(2)) + .@exp * 12;
+	}
+}
+
+function	script	getPercent	{
+	set .@var, 100 * getarg(0) / NextBaseExp;
+	return getarg(1) ? .@var + "%" : .@var;
+}

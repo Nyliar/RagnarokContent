@@ -1,0 +1,118 @@
+// [========================================================]
+// [============   DANMA - Ninja Skills Shops    ===========]
+// [========================================================]
+// [ Version 1                                              ]
+// [========================================================]
+// [ Original script by: Alayne				    ]
+// [========================================================]
+// [ Description:                                           ]
+// [--------------------------------------------------------]
+// [                                                        ]
+// [ - The Ninja skills Shops			    	    ]
+// [========================================================]
+// [ Changelog: (5 last updates)                            ]
+// [--------------------------------------------------------]
+// [                                                        ]
+// [ v0: Creation                      			    ]
+// [                                                        ]
+// [                                                        ]
+// [========================================================]
+// [                                                        ]
+// [========================================================]
+
+-	shop	NinjutsuItemShopZeny	HIDDEN_WARP_NPC,29531:1000000,29532:1000000,29533:1000000,29534:1000000,29535:1000000,29536:1000000,29537:1000000,29538:1000000,29539:1000000,29540:1000000,29541:1000000,29542:1000000,29543:1000000,29544:1000000,29545:1000000,29546:1000000,29547:1000000,29548:1000000,29549:1000000,29550:1000000,29551:1000000,29552:1000000,29553:1000000,29554:1000000,29555:1000000,29556:1000000,29557:1000000,29558:1000000;
+
+-	shop	quest_shop_ninja	HIDDEN_WARP_NPC,501:50
+mellina,139,74,3	script	Shards Hokage::danfnsss	4_M_JPN2,{
+	set @i,0;
+	mes "[Shard Warlock]";
+	mes "Which item do you wish to obtain?";
+	mes "First of all, choose the kind of currency you wanna use.";
+	if (select("Zeny","Shards")==1)
+	{
+		callshop "NinjutsuItemShopZeny", 0;
+	}
+	else
+	{
+		callshop "quest_shop_ninja",1;
+		npcshopattach "quest_shop_ninja";
+	}
+	end;
+
+OnBuyItem:
+	if(.BuildQuest) {
+		for(set .e,0; !compare(getarg(.e+1)+"", "Zeny"); set .e,.e+2) {}
+		npcshopadditem "quest_shop_ninja",getarg(.e+2),getarg(.e)*compare(getarg(.e+1)+"","SZeny");
+		setarray .Shop[.i],getarg(.e+2);
+		set .i,.i+1;
+		goto Quest_Setup;
+	}
+	if(.Shop[@i]!=@bought_nameid) for(set @i,1; 1; set @i,@i+1) if(.Shop[@i]==@bought_nameid) { set .i,@i; callsub Quest_Setup; }
+	for(set @i,1; !@e; set @i,@i+1) if(.Shop[@i]==@bought_nameid) { set @e,1; set .i,@i; callsub Quest_Setup; }
+	mes "[Shard Warlock]";
+	mes "I require the following:";
+	for(set @i,0; !compare(getarg(@i+1)+"","Zeny"); set @i,@i+2) mes "^FF0000" + ((countitem(getarg(@i))>=getarg(@i+1))? "^00FF00":"") + "" + getarg(@i+1) + " " + getitemname(getarg(@i)) + " [" + countitem(getarg(@i)) + "/" + getarg(@i+1) + "]";
+	if(getarg(@i)) mes "^FF0000" + ((Zeny>=getarg(@i))? "^00FF00":"") + "" + getarg(@i) + " Zeny";
+	mes "^000000In exchange, I will give you:^0000FF";
+	for(set @i,@i+2; getarg(@i+1,0); set @i,@i+2) mes getarg(@i+1) + " " + getitemname(getarg(@i));
+	switch(select("Exchange:No thanks")) {
+		case 1:
+			for(set @i,0; !compare(getarg(@i+1)+"","Zeny"); set @i,@i+2) if(countitem(getarg(@i)) < getarg(@i+1)) {
+				next;
+				mes "You have " + countitem(getarg(@i)) + " " + getitemname(getarg(@i)) + ", while I require " + getarg(@i+1) + ".";
+				mes "Please obtain ^FF0000" + (getarg(@i+1)-countitem(getarg(@i))) + " more " + getitemname(getarg(@i)) + "^000000.";
+				close;
+			}
+			if(Zeny < getarg(@i)) {
+				next;
+				mes "You do not have enough Zeny.";
+				mes "Please obtain ^FF0000" + (getarg(@i)-Zeny) + " more Zeny^000000.";
+				close;
+			}
+			for(set @i,0; !compare(getarg(@i+1)+"","Zeny"); set @i,@i+2) delitem getarg(@i),getarg(@i+1);
+			set Zeny,Zeny-getarg(@i);
+			for(set @i,@i+2; getarg(@i+1,0); set @i,@i+2) getitem getarg(@i),getarg(@i+1);
+			if (compare(getarg(@i,0)+"","announce")) announce strcharinfo(0) + " has just obtained " + getitemname(@bought_nameid) + "!",bc_all;
+			close;
+		case 2:
+			close;
+	}
+OnInit:
+	npcshopitem "quest_shop_ninja",0,0;
+	set .BuildQuest,1;
+	set .i,1;
+Quest_Setup:
+// THEESE ARE JUST A FEW EXAMPLES;WHICH I MADE,YOU HAVE TO PUT IN YOUR OWN ITEM ID'S HERE!
+	switch(.i) {
+		default: set .BuildQuest,0; set .e,0; set .i,0; end;
+		case 1: callsub OnBuyItem,29504,200,1000,"Zeny",29531,1,"";
+		case 2: callsub OnBuyItem,29504,200,1000,"Zeny",29532,1,"";
+		case 3: callsub OnBuyItem,29504,200,1000,"Zeny",29533,1,"";
+		case 4: callsub OnBuyItem,29504,200,1000,"Zeny",29534,1,"";
+		case 5: callsub OnBuyItem,29504,200,1000,"Zeny",29535,1,"";
+		case 6: callsub OnBuyItem,29504,200,1000,"Zeny",29536,1,"";
+		case 7: callsub OnBuyItem,29504,200,1000,"Zeny",29537,1,"";
+		case 8: callsub OnBuyItem,29504,200,1000,"Zeny",29538,1,"";
+		case 9: callsub OnBuyItem,29504,200,1000,"Zeny",29539,1,"";
+		case 10: callsub OnBuyItem,29504,200,1000,"Zeny",29540,1,"";
+		case 11: callsub OnBuyItem,29504,200,1000,"Zeny",29541,1,"";
+		case 12: callsub OnBuyItem,29504,200,1000,"Zeny",29542,1,"";
+		case 13: callsub OnBuyItem,29504,200,1000,"Zeny",29543,1,"";
+		case 14: callsub OnBuyItem,29504,200,1000,"Zeny",29544,1,"";
+		case 15: callsub OnBuyItem,29504,200,1000,"Zeny",29545,1,"";
+		case 16: callsub OnBuyItem,29504,200,1000,"Zeny",29546,1,"";
+		case 17: callsub OnBuyItem,29504,200,1000,"Zeny",29547,1,"";
+		case 18: callsub OnBuyItem,29504,200,1000,"Zeny",29548,1,"";
+		case 19: callsub OnBuyItem,29504,200,1000,"Zeny",29549,1,"";
+		case 20: callsub OnBuyItem,29504,200,1000,"Zeny",29550,1,"";
+		case 21: callsub OnBuyItem,29504,200,1000,"Zeny",29551,1,"";
+		case 22: callsub OnBuyItem,29504,200,1000,"Zeny",29552,1,"";
+		case 23: callsub OnBuyItem,29504,200,1000,"Zeny",29553,1,"";
+		case 24: callsub OnBuyItem,29504,200,1000,"Zeny",29554,1,"";
+		case 25: callsub OnBuyItem,29504,200,1000,"Zeny",29555,1,"";
+		case 26: callsub OnBuyItem,29504,200,1000,"Zeny",29556,1,"";
+		case 27: callsub OnBuyItem,29504,200,1000,"Zeny",29557,1,"";
+		case 28: callsub OnBuyItem,29504,200,1000,"Zeny",29558,1,"";
+			}
+}
+

@@ -1,0 +1,33 @@
+// [========================================================]
+// [=============     DANMA - Resting      ============]
+// [========================================================]
+// [ Version 1                                              ]
+// [========================================================]
+// [ Original script by: Alayne				    ]
+// [========================================================]
+// [ Description:                                           ]
+// [--------------------------------------------------------]
+// [                                                        ]
+// [ - The DANMA resting script		    	    ]
+// [ 	- Contain Inn management		    	    ]
+// [ 	- Contain Resting Zone		    	    ]
+// [ 	- Contain Faction Base		    	    ]
+// [========================================================]
+// [ Changelog: (5 last updates)                            ]
+// [--------------------------------------------------------]
+// [                                                        ]
+// [ v0: Creation                      			    ]
+// [                                                        ]
+// [                                                        ]
+// [========================================================]
+// [                                                        ]
+// [========================================================]
+
+
+//======================== Inn ====================================
+mellina_in,47,164,3	script	Inn Employee#MaryAnn	1_M_INNKEEPER,{
+
+	//display dialog, provide name of the employee, of the inn, maps coordinate to be able to save
+	callfunc "F_InnMaid","[Employee Mary Ann]","'Mellina SafeZone'!","mellina_in",70,172;
+	warp "mellina_in",70,172; end;
+}

@@ -1,0 +1,28 @@
+//First stage
+danma_32,0,0,0,0	monster	Martin	1145,35,0,0,1
+danma_32,0,0,0,0	monster	Horn	1128,25,0,0,1
+danma_32,0,0,0,0	monster	Giearth	1121,15,0,0,1
+danma_32,0,0,0,0	monster	Kukre	1070,25,0,0,1
+
+danma_33,0,0,0,0	monster	Tri Joint	1279,35,0,0,1
+danma_33,0,0,0,0	monster	Bettle King	1494,25,0,0,1
+danma_33,0,0,0,0	monster	Holden	1628,15,0,0,1
+
+danma_34,0,0,0,0	monster	Nereid	1255,15,0,0,1
+danma_34,0,0,0,0	monster	Pitman	1616,25,0,0,1
+danma_34,0,0,0,0	monster	Petite	1155,10,0,0,1
+danma_34,0,0,0,0	monster	Knocker	1838,5,0,0,1
+
+danma_35,0,0,0,0	boss_monster	Kublin	1980,1,7200000,3600000,0
+
+danma_36,0,0,0,0	monster	Jing Guai	1517,15,0,0,1
+danma_36,0,0,0,0	monster	Orc Archer	1189,25,0,0,1
+danma_36,0,0,0,0	monster	Obsidian	1615,10,0,0,1
+danma_36,0,0,0,0	monster	Driller	1380,15,0,0,1
+
+danma_37,0,0,0,0	monster	Arclouse	1194,5,0,0,1
+danma_37,0,0,0,0	monster	Sting	1207,25,0,0,1
+danma_37,0,0,0,0	monster	Catterpillar	1300,10,0,0,1
+danma_37,0,0,0,0	monster	Solider	1316,5,0,0,1
+
+danma_38,0,0,0,0	boss_monster	Turtle General	1312,1,7200000,3600000,0

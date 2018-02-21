@@ -1,0 +1,269 @@
+gl_chyard,147,149,5	script	BloodCrystal#8::alabc42	OBJ_A2,{
+	set .@npcname$, "[Blood Crystal]";
+	mes .@npcname$;
+	mes "Current fill level: " + .fillPercent + "%"; 
+	mes "Would do you want to do?";
+	switch(select("Fill the Crystal","Retrieve a Spirit Life","Nothing"))
+	{
+		case 1:
+			next;
+			mes .@npcname$;
+			mes "You're about to fill Life in Blood Crystal.";
+			mes "How many Shards do you wish to give to the Crystal?";
+			mes "'0' means 'as much as possible'.";
+			input .@shardCount;
+			if(.@shardCount == 0)
+			{
+				set .@shardCount, countitem($shardIds[0]);
+			}
+			if(.@shardCount > countitem($shardIds[0]))
+			{
+				next;
+				mes .@npcname$;
+				mes "You don't have those items.";
+				close;
+			}
+			if(.popAvailable != 1)
+			{
+				next;
+				mes .@npcname$;
+				mes "The Guardian has allready been killed. Wait for " + $repopHourCount + " hours to summon it again.";
+				close;
+			}
+			delitem $shardIds[0], .@shardCount;
+			set .@fillRequired, 1000 + atoi(strnpcinfo(2)) * 50;
+			set .fillItemCount, .fillItemCount + .@shardCount;
+			set .fillPercent,  .fillItemCount * 100 / .@fillRequired;
+			if(.fillPercent >= 100)
+			{
+				set .fillPercent, 100;
+				next;
+				mes .@npcname$;
+				mes "The Crystal has been filled.";
+				for(set .@i,0; .@i<getarraysize(.checkMap$); set .@i,.@i+1)
+				{
+					set .@mobCount, .@mobCount + mobcount(.checkMap$[.@i], "CardinalSystem::OnNormalDied");
+				}
+				if(.@mobCount == 0)
+				{
+					set .@percentHeal, 0 - atoi(strnpcinfo(2));
+					percentheal .@percentHeal, .@percentHeal;
+					set .popAvailable, 0;	
+					setnpcdisplay strnpcinfo(3), OBJ_B2, 1;
+					//special effect
+					specialeffect 862;
+					//summon boss
+					monster strnpcinfo(4), 0, 0, "--ja--", .bossId, 1, "CardinalSystem::OnGuardianDied";
+					initnpctimer;
+					set .loopCount, 0;
+				}
+				else
+				{
+					mes "The Guardian will appears after total dungeon cleaning.";
+				}
+				setd("$" + strnpcinfo(3), 1);
+			}
+			else
+			{
+				next;
+				mes .@npcname$;
+				mes "The Crystal has been filled up to " + .fillPercent + "%";
+			}
+			break;
+		case 2:
+			next;
+			mes .@npcname$;
+			if(SPIRITLIFE == $maxSpiritLife)
+			{
+				mes "You can't get more than " + $maxSpiritLife + " Spirit Lifes.";
+				close;
+			}
+			if(SPIRIT == 0)
+			{
+				mes "You can't retrieve a Spirit Life while you're not in Spirit mode.";
+				close;
+			}
+			if(.fillPercent > $minFillPercentToRetrieveLife)
+			{
+				set .fillPercent, 0;
+				set SPIRITLIFE, SPIRITLIFE + 1;
+				set SPIRIT, 0;
+				specialeffect2 372;
+				undisguise();
+				mes "The Crystal has been emptied. You've raised from the dead.";
+			}
+			else
+			{
+				mes "The Crystal isn't filled enough to allow Spirit Life retrieve.";
+			}
+			break;
+		case 3:
+			next;
+			mes .@npcname$;
+			mes "Action cancelled.";
+			break;
+	}
+	close;
+
+OnTimer360000:
+	stopnpctimer;
+	set .loopCount, .loopCount + 1;
+	if(.loopCount >= $repopHourCount)
+	{
+		goto OnClearGauge;
+	}
+	initnpctimer;
+	end;
+
+OnClearGauge:
+	setnpcdisplay strnpcinfo(3), OBJ_A2;
+	set .fillPercent, 0;
+	set .fillItemCount, 0;
+	end;
+	
+OnPopMonsters:
+	callsub OnClearMonsters;
+//== F1 =============================
+	monster "glast_01", 0, 0, "--ja--", 1253, 10, "CardinalSystem::OnNormalDied";
+	monster "glast_01", 0, 0, "--ja--", 1080, 8, "CardinalSystem::OnNormalDied";
+	monster "glast_01", 0, 0, "--ja--", 1219, 2, "CardinalSystem::OnNormalDied";
+	monster "glast_01", 0, 0, "--ja--", 1083, 1, "CardinalSystem::OnNormalDied";
+	monster "glast_01", 0, 0, "--ja--", 1080, 8, "CardinalSystem::OnNormalDied";
+	monster "glast_01", 0, 0, "--ja--", 1079, 2, "CardinalSystem::OnNormalDied";
+	
+//== F2 =============================
+	monster "gl_cas01", 0, 0, "--ja--", 1267, 50, "CardinalSystem::OnNormalDied";
+	monster "gl_cas01", 0, 0, "--ja--", 1260, 20, "CardinalSystem::OnNormalDied";
+	monster "gl_cas01", 0, 0, "--ja--", 1320, 20, "CardinalSystem::OnNormalDied";
+	monster "gl_cas01", 0, 0, "--ja--", 1195, 15, "CardinalSystem::OnNormalDied";
+	monster "gl_cas01", 0, 0, "--ja--", 1281, 10, "CardinalSystem::OnNormalDied";
+	monster "gl_cas01", 0, 0, "--ja--", 1179, 10, "CardinalSystem::OnNormalDied";
+	monster "gl_cas01", 0, 0, "--ja--", 1295, 6, "CardinalSystem::OnNormalDied";
+	monster "gl_cas01", 0, 0, "--ja--", 1275, 1, "CardinalSystem::OnNormalDied";
+	
+//== F3 =============================
+	monster "gl_cas02", 0, 0, "--ja--", 1208, 41, "CardinalSystem::OnNormalDied";
+	monster "gl_cas02", 0, 0, "--ja--", 1163, 36, "CardinalSystem::OnNormalDied";
+	monster "gl_cas02", 0, 0, "--ja--", 1195, 29, "CardinalSystem::OnNormalDied";
+	monster "gl_cas02", 0, 0, "--ja--", 1276, 20, "CardinalSystem::OnNormalDied";
+	monster "gl_cas02", 0, 0, "--ja--", 1117, 9, "CardinalSystem::OnNormalDied";
+	monster "gl_cas02", 0, 0, "--ja--", 1219, 7, "CardinalSystem::OnNormalDied";
+	monster "gl_cas02", 0, 0, "--ja--", 1132, 6, "CardinalSystem::OnNormalDied";
+	monster "gl_cas02", 0, 0, "--ja--", 1283, 3, "CardinalSystem::OnNormalDied";
+	monster "gl_cas02", 0, 0, "--ja--", 1191, 2, "CardinalSystem::OnNormalDied";
+	monster "gl_cas02", 0, 0, "--ja--", 1275, 1, "CardinalSystem::OnNormalDied";
+	monster "gl_cas02", 0, 0, "--ja--", 1185, 1, "CardinalSystem::OnNormalDied";
+	monster "gl_cas02", 0, 0, "--ja--", 1203, 1, "CardinalSystem::OnNormalDied";
+	monster "gl_cas02", 0, 0, "--ja--", 1204, 1, "CardinalSystem::OnNormalDied";
+	
+//== F4 =============================
+	monster "gl_church", 0, 0, "--ja--", 1117, 60, "CardinalSystem::OnNormalDied";
+	monster "gl_church", 0, 0, "--ja--", 1192, 55, "CardinalSystem::OnNormalDied";
+	monster "gl_church", 0, 0, "--ja--", 1191, 9, "CardinalSystem::OnNormalDied";
+	monster "gl_church", 0, 0, "--ja--", 1117, 1, "CardinalSystem::OnNormalDied";
+	monster "gl_church", 0, 0, "--ja--", 1291, 1, "CardinalSystem::OnNormalDied";
+	
+//== F5 =============================
+	monster "gl_chyard", 0, 0, "--ja--", 1198, 60, "CardinalSystem::OnNormalDied";
+	monster "gl_chyard", 0, 0, "--ja--", 1192, 35, "CardinalSystem::OnNormalDied";
+	monster "gl_chyard", 0, 0, "--ja--", 1117, 10, "CardinalSystem::OnNormalDied";
+	monster "gl_chyard", 0, 0, "--ja--", 1191, 3, "CardinalSystem::OnNormalDied";
+	monster "gl_chyard", 0, 0, "--ja--", 1035, 3, "CardinalSystem::OnNormalDied";
+	monster "gl_chyard", 0, 0, "--ja--", 1302, 1, "CardinalSystem::OnNormalDied";
+	
+//== F2 =============================
+	monster "gl_dun01", 0, 0, "--ja--", 1194, 50, "CardinalSystem::OnNormalDied";
+	monster "gl_dun01", 0, 0, "--ja--", 1207, 40, "CardinalSystem::OnNormalDied";
+	
+//== F2 =============================
+	monster "gl_dun02", 0, 0, "--ja--", 1310, 45, "CardinalSystem::OnNormalDied";
+	monster "gl_dun02", 0, 0, "--ja--", 1253, 15, "CardinalSystem::OnNormalDied";
+	
+//== F2 =============================
+	monster "gl_in01", 0, 0, "--ja--", 1143, 20, "CardinalSystem::OnNormalDied";
+	monster "gl_in01", 0, 0, "--ja--", 1281, 14, "CardinalSystem::OnNormalDied";
+	monster "gl_in01", 0, 0, "--ja--", 1260, 10, "CardinalSystem::OnNormalDied";
+	monster "gl_in01", 0, 0, "--ja--", 1195, 8, "CardinalSystem::OnNormalDied";
+	monster "gl_in01", 0, 0, "--ja--", 1208, 1, "CardinalSystem::OnNormalDied";
+	monster "gl_in01", 0, 0, "--ja--", 1275, 1, "CardinalSystem::OnNormalDied";
+	
+//== F2 =============================
+	monster "gl_knt01", 0, 0, "--ja--", 1163, 90, "CardinalSystem::OnNormalDied";
+	monster "gl_knt01", 0, 0, "--ja--", 1195, 21, "CardinalSystem::OnNormalDied";
+	monster "gl_knt01", 0, 0, "--ja--", 1276, 10, "CardinalSystem::OnNormalDied";
+	monster "gl_knt01", 0, 0, "--ja--", 1219, 10, "CardinalSystem::OnNormalDied";
+	monster "gl_knt01", 0, 0, "--ja--", 1132, 10, "CardinalSystem::OnNormalDied";
+	monster "gl_knt01", 0, 0, "--ja--", 1275, 1, "CardinalSystem::OnNormalDied";
+	monster "gl_knt01", 0, 0, "--ja--", 1186, 1, "CardinalSystem::OnNormalDied";
+	monster "gl_knt01", 0, 0, "--ja--", 1084, 12, "CardinalSystem::OnNormalDied";
+	
+//== F2 =============================
+	monster "gl_knt02", 0, 0, "--ja--", 1163, 80, "CardinalSystem::OnNormalDied";
+	monster "gl_knt02", 0, 0, "--ja--", 1132, 40, "CardinalSystem::OnNormalDied";
+	monster "gl_knt02", 0, 0, "--ja--", 1276, 30, "CardinalSystem::OnNormalDied";
+	monster "gl_knt02", 0, 0, "--ja--", 1219, 6, "CardinalSystem::OnNormalDied";
+	monster "gl_knt02", 0, 0, "--ja--", 1275, 1, "CardinalSystem::OnNormalDied";
+	monster "gl_knt02", 0, 0, "--ja--", 1203, 1, "CardinalSystem::OnNormalDied";
+	monster "gl_knt02", 0, 0, "--ja--", 1268, 1, "CardinalSystem::OnNormalDied";
+	
+//== F2 =============================
+	monster "gl_prison", 0, 0, "--ja--", 1197, 30, "CardinalSystem::OnNormalDied";
+	monster "gl_prison", 0, 0, "--ja--", 1257, 20, "CardinalSystem::OnNormalDied";
+	monster "gl_prison", 0, 0, "--ja--", 1201, 15, "CardinalSystem::OnNormalDied";
+	monster "gl_prison", 0, 0, "--ja--", 1035, 10, "CardinalSystem::OnNormalDied";
+	
+//== F2 =============================
+	monster "gl_prison1", 0, 0, "--ja--", 1257, 40, "CardinalSystem::OnNormalDied";
+	monster "gl_prison1", 0, 0, "--ja--", 1196, 30, "CardinalSystem::OnNormalDied";
+	monster "gl_prison1", 0, 0, "--ja--", 1201, 10, "CardinalSystem::OnNormalDied";
+	monster "gl_prison1", 0, 0, "--ja--", 1202, 10, "CardinalSystem::OnNormalDied";
+	monster "gl_prison1", 0, 0, "--ja--", 1035, 10, "CardinalSystem::OnNormalDied";
+	monster "gl_prison1", 0, 0, "--ja--", 1209, 5, "CardinalSystem::OnNormalDied";
+	monster "gl_prison1", 0, 0, "--ja--", 1200, 1, "CardinalSystem::OnNormalDied";
+	
+//== F2 =============================
+	monster "gl_sew01", 0, 0, "--ja--", 1179, 40, "CardinalSystem::OnNormalDied";
+	monster "gl_sew01", 0, 0, "--ja--", 1253, 30, "CardinalSystem::OnNormalDied";
+	monster "gl_sew01", 0, 0, "--ja--", 1194, 10, "CardinalSystem::OnNormalDied";
+	
+//== F2 =============================
+	monster "gl_sew02", 0, 0, "--ja--", 1253, 55, "CardinalSystem::OnNormalDied";
+	monster "gl_sew02", 0, 0, "--ja--", 1209, 15, "CardinalSystem::OnNormalDied";
+	
+//== F2 =============================
+	monster "gl_sew03", 0, 0, "--ja--", 1207, 70, "CardinalSystem::OnNormalDied";
+	monster "gl_sew03", 0, 0, "--ja--", 1253, 40, "CardinalSystem::OnNormalDied";
+	
+//== F2 =============================
+	monster "gl_sew04", 0, 0, "--ja--", 1206, 100, "CardinalSystem::OnNormalDied";
+	monster "gl_sew04", 0, 0, "--ja--", 1253, 20, "CardinalSystem::OnNormalDied";
+	monster "gl_sew04", 0, 0, "--ja--", 1111, 10, "CardinalSystem::OnNormalDied";
+	
+//== F2 =============================
+	monster "gl_step", 0, 0, "--ja--", 1263, 100, "CardinalSystem::OnNormalDied";
+	monster "gl_step", 0, 0, "--ja--", 1276, 10, "CardinalSystem::OnNormalDied";
+	monster "gl_step", 0, 0, "--ja--", 1191, 5, "CardinalSystem::OnNormalDied";
+	end;
+	
+OnClearMonsters:	
+OnClock0000:
+	for(set .@i,0; .@i<getarraysize(.checkMap$); set .@i,.@i+1)
+	{
+		killmonsterall .checkMap$[.@i];
+	}
+	set .popAvailable, 1;
+	setd("$" + strnpcinfo(3), 0);
+	return;
+	
+OnInit:
+	set .fillPercent, 0;
+	if(getd("$" + strnpcinfo(3)) >= 1)
+	{
+		set .fillPercent, 100;
+	}
+	setarray .checkMap$[0], "glast_01", "gl_cas01", "gl_cas02", "gl_church", "gl_chyard";
+	set .bossId, 1272;
+	set .popAvailable, 1;
+	end;
+}
+

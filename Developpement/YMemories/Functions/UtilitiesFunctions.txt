@@ -1,0 +1,205 @@
+function	script	YM_Leap	{
+	if (callfunc("IsPlayerOn") || callfunc("IsPlayerOnTown"))
+	{
+		set .@userId, getcharid(3);
+		//attach script to target
+		dispbottom "[Book] *Please insert the targeted player...*";
+		input .@playerName$;
+
+		cutin "GI_LeapCard", 4;
+		specialeffect2 58;
+		charcommand "#me " + strcharinfo(0) + " Leap activated! " + .@itemName$;
+		
+		set .@returnid, callfunc("AttachToPlayer", .@playerName$, 1);
+		if (.@returnid != -1)
+		{
+			dispbottom "[Book] You've been targeted by Leap card.";
+			if (callfunc("IsPlayerOn") || callfunc("IsPlayerOnTown"))
+			{
+				if (getequipid(8) == $YMRingId)
+					unequip 8;
+				else if (getequipid(7) == $YMRingId)
+					unequip 7;
+					
+				cutin "GI_CardSuccess", 4;	
+				specialeffect2 54;
+				charcommand "#tonpc " + strcharinfo(0) + " ymentry";
+			}
+			else
+			{
+				cutin "GI_LeapCardFail", 4;
+				specialeffect2 55;
+				attachrid(.@userId);
+				dispbottom "[Book] You can't target out of game players.";
+			}
+		}
+		else
+		{
+			specialeffect2 56;
+			dispbottom "[Book] Spell canceled.";
+		}
+	}
+	else
+	{
+		dispbottom "[Book] You can't used spell out of the System.";
+	}
+	cutin "", 255;
+	close;
+}
+
+function	script	YM_Recycle	{
+	if (callfunc("IsPlayerOn") || callfunc("IsPlayerOnTown"))
+	{
+		cutin "GI_RecycleCard", 4;
+		specialeffect2 58;
+		charcommand "#me " + strcharinfo(0) + " Recycle activated! ";
+
+		//retrieve potential card list
+		query_sql("SELECT `id_card` FROM `ym_cards` WHERE `rank` >= 0 AND `rank` <= 6 AND `actual_count` < `max_count`", .@idCards);
+		
+		//get one in random selected cards
+		set .@cardId, .@idCards[rand(0,getarraysize(.@idCards)-1)];
+		set .@newCount, .@actualCount[.@choiceRand] + 1;
+	
+		rentitem .@cardId, 300;
+	}
+	else
+	{
+		dispbottom "[Book] You can't used spell out of the System.";
+	}
+	cutin "", 255;
+	close;
+}
+
+function	script	YM_MagneticForce	{
+	if (callfunc("IsPlayerOn") || callfunc("IsPlayerOnTown"))
+	{
+		set .@userId, getcharid(3);
+	
+		//attach script to target
+		dispbottom "[Book] *Please insert the targeted player...*";
+		input .@playerName$;
+
+		cutin "GI_MagneticForceCard", 4;
+		specialeffect2 58;
+		charcommand "#me " + strcharinfo(0) + " Magnetic Force activated! " + .@playerName$;
+		
+		set .@returnid, callfunc("AttachToPlayer", .@playerName$, 1);
+		if (.@returnid != -1)
+		{
+			attachrid .@userId;
+			charcommand "#recall " + strcharinfo(0) + " " + .@playerName$;
+		}
+		else
+		{
+			dispbottom "[Book] Spell canceled.";
+		}
+	}
+	else
+	{
+		dispbottom "[Book] You can't used spell out of the System.";
+	}
+	cutin "", 255;
+	close;
+}
+
+function	script	YM_Accompany	{
+	if (callfunc("IsPlayerOn") || callfunc("IsPlayerOnTown"))
+	{
+		cutin "GI_AccompanyCard", 4;
+		mes "[Book]";
+		mes "Please choose your destination:";
+		set .@menu$, "";
+		for (set .@i, 0; .@i < getarraysize($ymMapNameListTown$); set .@i, .@i+1)
+		{
+			if (YGGPALIER >= $townByLandingMapLanding[.@i])
+			{
+				set .@menu$, .@menu$ + ( .@i ? ":" : "" ) + $ymMapNameListTown$[.@i];
+			}
+		}
+		set .@choice, select(.@menu$) - 1;
+		if (.@choice != 254)
+		{
+			specialeffect2 58;
+			charcommand "#me " + strcharinfo(0) + " Accompany activated! " + .@menu$[.@choice];
+			getpartymember getcharid(1),2;
+			copyarray .@accountId[0], $@partymemberaid[0], getarraysize($@partymemberaid); 
+			for(set .@i,0; .@i<getarraysize(.@accountId); set .@i,.@i + 1)
+			{
+				attachrid(.@accountId[.@i]);
+				warp $ymMapListTown$[.@choice],0,0;
+			}
+		}	
+	}
+	else
+	{
+		dispbottom "[Book] You can't used spell out of the System.";
+	}
+	cutin "", 255;
+	close;
+}
+
+function	script	YM_RiskyDice	{
+	if (callfunc("IsPlayerOn") || callfunc("IsPlayerOnTown"))
+	{
+		cutin "GI_RiskyDiceCard", 4;
+		specialeffect2 58;
+		charcommand "#me " + strcharinfo(0) + " Risky Dice activated!";
+		if (rand(0,20) >= 1)
+		{
+			percentheal -90, -90;
+			sc_start SC_POISON, 600000,0,10000;
+			sc_start SC_SILENCE, 600000,0,10000; 
+			sc_start SC_BLIND, 600000,0,10000; 
+			sc_start SC_CONFUSION, 600000,0,10000; 
+			sc_start SC_CURSE, 600000,0,10000; 
+			sc_start SC_HALLUCINATION, 600000,0,10000;
+			set GMLUCK, 0;
+		}
+		else
+		{
+			set GMLUCK, 1;
+			dispbottom "[Book] Luck bonus activated!";
+		}
+	}
+	else
+	{
+		dispbottom "[Book] You can't used spell out of the System.";
+	}
+	cutin "", 255;
+	close;
+}
+
+function	script	YM_Contact	{
+	if (callfunc("IsPlayerOn") || callfunc("IsPlayerOnTown"))
+	{
+		set .@userId, getcharid(3);
+		
+		//attach script to target
+		dispbottom "[Book] *Please insert the targeted player...*";
+		input .@playerName$;
+
+		cutin "GI_ContactCard", 4;
+		specialeffect2 58;
+		charcommand "#me " + strcharinfo(0) + " Contact activated! " + .@playerName$;
+		
+		set .@returnid, callfunc("AttachToPlayer", .@playerName$, 1);
+		if (.@returnid != -1)
+		{
+			attachrid .@userId;
+			set .@command$, "#goto " + strcharinfo(0) + " " + .@playerName$;
+			charcommand .@command$;
+		}
+		else
+		{
+			specialeffect2 56;
+			dispbottom "[Book] Spell canceled.";
+		}
+	}
+	else
+	{
+		dispbottom "[Book] You can't used spell out of the System.";
+	}
+	cutin "", 255;
+	close;
+}

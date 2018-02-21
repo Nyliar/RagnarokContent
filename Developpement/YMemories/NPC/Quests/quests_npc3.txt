@@ -1,0 +1,242 @@
+//29325 -> Dead Ring
+//Biarmaland,66,135,5	script	Dead Ring::giquest15	494,{
+nif_fild02,362,262,5	script	Dead Ring::giquest15	494,{
+	if (DEADRING >= 150 && callfunc("IsPlayerOn"))
+	{
+		mes "[Dead Ring]";
+		mes "Hum...Welcome on Dead Land...";
+		rentitem  29325, 60;
+		logmes "[Yggdrasil Memories] " + strcharinfo(0) + " obtains a rental " + getitemname(29325) + ".";
+		set DEADRING, 0;
+	}
+	else
+	{
+		mes "[Dead Ring]";
+		mes "Hum...You're not ready...";
+	}
+	close;
+}
+
+//29324 -> Elemental Knuckle
+//ars_fild11,190,146,5	script	Elemental Fighter::giquest16	483,{
+gl_church,168,98,5	script	Elemental Fighter::giquest16	483,{
+	set .@npcname$, "[Ulto]";
+	mes .@npcname$;
+	mes "";
+
+	mes "Nothing's better thant a fist duel, he?";
+	mes "If you know how to hit, you can make anything fall!";
+	if (callfunc("IsPlayerOn"))
+	{
+		if (countitem(1818) >= 1 && countitem(1819) >= 1 && countitem(1820) >= 1 && countitem(1821) >= 1)
+		{
+			next;
+			mes .@npcname$;
+			mes "Ho, you know how to hit, hu?";
+			mes "Here's for you.";
+			delitem 1818, 1;
+			delitem 1819, 1;
+			delitem 1820, 1;
+			delitem 1821, 1;
+			rentitem  29324, 60;
+			logmes "[Yggdrasil Memories] " + strcharinfo(0) + " obtains a rental " + getitemname(29324) + ".";
+			close;
+		}
+	}
+	close;
+}
+
+//29326 -> Absorption Shield
+//29327 -> Energy Shield
+//Hyrule,212,95,5	script	Great Shielder::giquest17	413,{
+gl_cas02,83,82,5	script	Great Shielder::giquest17	413,{
+	set .@npcname$, "[Amara]";
+
+	mes .@npcname$;
+	mes "";
+	mes "Welcome to you, you're next to Amara, the Great Shielder!";
+	mes "I've learn all the possibilities to fight with a shield.";
+	mes "Believe me, it was a long and hard learning.";
+	if (callfunc("IsPlayerOn"))
+	{
+		mes "What are you interested in?";
+		if(select("Getting hit and survive","Giving back the hits") == 1)
+		{
+			next;
+			mes .@npcname$;
+			mes "Nothing better than having lots of life and health for that.";
+			mes "This will enable you to endure lots of hits.";
+			mes "Your endurance will be your only limit then.";
+			if (rand(0,1) == 1)
+			{
+				percentheal -rand(0,100), -rand(0,100);
+				set SHIELDRES, SHIELDRES + 1;
+			}
+			else
+			{
+				heal -rand(500,2000), -rand(500,2000); 
+				set SHIELDRES, SHIELDRES + 1;
+			}
+			if (SHIELDRES >= 10 && MaxHp >= 10000)
+			{
+				next;
+				mes .@npcname$;
+				mes "Hum. Looks like you're enduring hu?!";
+				mes "Take that. Give it a try.";
+				rentitem  29326, 60;
+				logmes "[Yggdrasil Memories] " + strcharinfo(0) + " obtains a rental " + getitemname(29326) + ".";
+				set SHIELDRES, 0;
+			}
+		}
+		else
+		{
+			next;
+			mes .@npcname$;
+			mes "Nothing better than enduring, then breaking the defense of your foes then.";
+			mes "You can also try to avoir and hit before them.";
+			if (countitem(2122) >= 1)
+			{
+				next;
+				mes .@npcname$;
+				mes "Hum. Looks like you're well equiped.";
+				mes "But give this a try. It's even better.";
+				delitem 2122, 1;
+				rentitem  29327, 60;
+				logmes "[Yggdrasil Memories] " + strcharinfo(0) + " obtains a rental " + getitemname(29327) + ".";
+			}
+		}
+	}
+	close;
+}
+
+//29348 -> Spell Master Scroll
+//29349 -> Spell Master Pen
+//invek,46,67,5	script	Spellcaster::giquest18	55,{
+yuno_in04,35,68,5	script	Spellcaster::giquest18	55,{
+	set .@npcname$, "[Merlin]";
+
+	mes .@npcname$;
+	mes "";
+	mes "Ah...There was a time where I was a great enchanter.";
+	mes "But...Not any more...";
+	mes "That's no more my role...";
+	mes "Not without my stuff.";
+	if (callfunc("IsPlayerOn"))
+	{
+		if (SPELLMAS == 0)
+		{
+			mes "If only I still add some oil paper, some ink...";
+			mes "And a brush...";
+			set SPELLMAS, 1;
+		}
+		else if (SPELLMAS == 1)
+		{
+			if (countitem(7151) >= 100 && countitem(1024) >= 50 && countitem(6121) >=1)
+			{
+				delitem 7151, 100;
+				delitem 1024, 50;
+				delitem 6121, 1;
+			
+				mes "I can create spells again!";
+				mes "Look at that!";
+				mes "ALACAZAM!";
+				rentitem  29348, 60;
+				rentitem  29349, 60;
+				logmes "[Yggdrasil Memories] " + strcharinfo(0) + " obtains a rental " + getitemname(29349) + ".";
+				logmes "[Yggdrasil Memories] " + strcharinfo(0) + " obtains a rental " + getitemname(29348) + ".";
+				set SPELLMAS, 0;
+			}
+			else
+				mes "*whisper*";
+		}
+	}
+	close;
+}
+
+//29364 -> Paladin's Necklace
+//29345 -> Saint Wall
+//29355 -> Holy Barrier
+//heidelberg,186,63,5	script	Great Paladin::giquest19	450,{
+ra_temple,162,185,5	script	Great Paladin::giquest19	450,{
+	set .@npcname$, "[Onira]";
+
+	mes .@npcname$;
+	mes "";
+	mes "...You're a fighter?";
+	if (callfunc("IsPlayerOn"))
+	{
+		if (GMPALADIN == 0)
+		{
+			set GMPALADIN, 1;
+		}
+		else if (GMPALADIN == 31)
+		{
+			mes "Hum...Interesting. You're not giving up easily, hu?";
+			mes "You'll make a great paladin I guess.";
+			rentitem  29364, 60;
+			logmes "[Yggdrasil Memories] " + strcharinfo(0) + " obtains a rental " + getitemname(29364) + ".";
+			set GMPALADIN, 1;
+		}
+		else if (GMPALADIN == 62)
+		{
+			mes "Hum...Interesting. You're not giving up easily, hu?";
+			mes "You'll make a great paladin I guess.";
+			mes "A paladin is a rempart for his allies.";
+			mes "They're always relying on you. Always.";
+			rentitem  29345, 60;
+			logmes "[Yggdrasil Memories] " + strcharinfo(0) + " obtains a rental " + getitemname(29345) + ".";
+			set GMPALADIN, 0;
+		}
+		else if (GMPALADIN >= 1)
+		{
+			if(GMPALADIN % 5 == 0)
+			{
+				mes "Still here?";
+			}
+			else
+			{
+				mes "Hum...Look's like so...";
+			}
+			set GMPALADIN, GMPALADIN + 1;
+			if (getskilllv(22) >= 1 && countitem(29355) == 0)
+			{
+				mes "Take that. It'll help you.";
+				rentitem  29355, 60;
+				logmes "[Yggdrasil Memories] " + strcharinfo(0) + " obtains a rental " + getitemname(29355) + ".";
+			}
+		}
+	}
+	close;
+}
+
+//29318 -> Singing Siren
+//heidelberg,148,143,5	script	Obeaune::giquest21	478,2,2,{
+iz_dun02,302,370,5	script	Obeaune::giquest21	478,2,2,{
+	mes "*She doesn't speak. But you can hear a strange melody...*";
+	mes "*The only thing you understand looks like...'One Hundred and Fourteen'.*";
+	if (callfunc("IsPlayerOn"))
+	{
+		set SINGINGSIREN, 1;
+		set COUNTSIREN, 0;
+	}
+	close;
+
+OnGainAsked:
+	if (SINGINGSIREN == 2)
+	{
+		rentitem  29318,60;
+		logmes "[Yggdrasil Memories] " + strcharinfo(0) + " obtains a rental " + getitemname(29318) + ".";
+		set SINGINGSIREN, 0;
+		set COUNTSIREN, 0;
+	}
+	end;
+
+OnTouch:
+	if (SINGINGSIREN == 2 && callfunc("IsPlayerOn"))
+	{
+		defpattern 1,"Gain","OnGainAsked";
+		activatepset 1;
+		dispbottom "You can now use 'Gain'";
+	}
+	end;
+}

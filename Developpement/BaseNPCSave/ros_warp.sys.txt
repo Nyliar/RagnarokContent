@@ -1,0 +1,354 @@
+//===== eAthena Script =======================================
+//= Warpeuse villes/Dungeons pour Rose Of Sharon
+//===== Par: =================================================
+//= Hiero
+//===== Version du Script: =================================== 
+//= 1.0
+//===== Compatible Avec: =====================================
+//= eAthena txt & SQL
+//===== Commentaires =========================================
+// Une warpeuse avec simple d'édition
+
+/*prontera,152,190,5	script	Erika#01::warpra	936,{
+
+set .@npc$, "[^ff0000Warp Agent Erika^000000]";
+
+// Variables des prix
+setarray .@map_price[0], 0, 1, 2, 4, 8;
+
+set .@ticketID, 7060;
+	
+	cutin "ra_bishop",2;
+	mes .@npc$; mes "Hello, I'm Erika, the Warpra.";
+	mes "";
+	mes "I got the authorization to bring you to some cities and dungeons.";
+	next;
+		mes .@npc$; mes "You can go in cities, dungeons, or go back to your last destination."; next;
+		switch (select("Last destination" + ((#mapname$ != "") ? " ^919191("+#mapname$+")^000000" : ""), "Towns", "Dungeons", (getgmlevel() >= 10) ? "^FF0000(GM) Hidden Garden^000000" : ""))
+		{
+		case 1:
+			if (#map$ == "") 
+			{
+				next;
+				mes .@npc$; mes "I'm sorry, but I don't have a destinatin saved for "+ callfunc("F_SexMes","Miss","Mister" ) +" "+ strcharinfo(0) +".";
+				close2;
+				goto L_End;
+			}
+			else if (#map$ == "prontera") 
+			{
+				warp #map$, #coor_x, #coor_y;
+				end;
+			}
+			else if (#map$ == "prt_vilg00") 
+			{
+				warp #map$, #coor_x, #coor_y;
+				end;
+			}
+			else
+			{
+				if(countitem(.@ticketID) < #map_price) 
+				{
+					mes .@npc$; mes "You don't have what I need "+#map$+", come back with what I need please.";
+					close2;
+					goto L_End;
+				}
+				else
+				{
+					delitem .@ticketID, #map_price;
+					warp #map$, #coor_x, #coor_y;
+					end;
+				}
+			}
+		case 2:
+			mes .@npc$; mes "Please, choose a destination."; next;
+			switch(
+				select(
+					"^D20000Capitale^000000",
+					"Alberta",
+					"Aldebaran",
+					"Amatsu",
+					"Ayothaya",
+					"Comodo",
+					"Einbroch",
+					"Einbech",
+					"Geffen",
+					"Gonryun",
+					"Hugel",
+					"Izlude",
+					"Jawaii",
+					"Lighthalzen",
+					"Louyang",
+					"Lutie",
+					"Morocc",
+					"Moscovia",
+					"Payon",
+					"Prontera",
+					"Prontera village",
+					"Rachel",
+					"Umbala",
+					"Veins",
+					"Yuno"
+				)
+			)
+			{
+				// Arguments : callfunc "warp", "Map", "map", x, y, id du ticket, prix de la map en ticket;
+				case 1:  callfunc "warp", "Capitale", "prt_vilg02", 100, 85, .@ticketID, .@map_price[0];
+				case 2:  callfunc "warp", "Alberta", "alberta",	27, 236, .@ticketID, .@map_price[0];
+				case 3:  callfunc "warp", "Aldebaran", "aldebaran", 139, 117, .@ticketID, .@map_price[0];
+				case 4:  callfunc "warp", "Amatsu", "amatsu", 198, 94, .@ticketID, .@map_price[0];
+				case 5:  callfunc "warp", "Ayothaya", "ayothaya", 149, 118, .@ticketID, .@map_price[0];
+				case 6:  callfunc "warp", "Comodo", "comodo", 190, 156, .@ticketID, .@map_price[0];
+				case 7:  callfunc "warp", "Einbroch", "einbroch", 64, 200, .@ticketID, .@map_price[0];
+				case 8:  callfunc "warp", "Einbech", "einbech", 173, 129, .@ticketID, .@map_price[0];
+				case 9:  callfunc "warp", "Geffen", "geffen", 119, 66, .@ticketID, .@map_price[0];
+				case 10: callfunc "warp", "Gonryun", "gonryun", 160, 115, .@ticketID, .@map_price[0];
+				case 11: callfunc "warp", "Hugel", "hugel", 96, 145, .@ticketID, .@map_price[0];
+				case 12: callfunc "warp", "Izlude", "izlude", 128, 111, .@ticketID, .@map_price[0];
+				case 13: callfunc "warp", "Jawaii", "jawaii", 219, 215, .@ticketID, .@map_price[0];
+				case 14: callfunc "warp", "Lighthalzen", "lighthalzen", 158, 92, .@ticketID, .@map_price[0];
+				case 15: callfunc "warp", "Louyang", "louyang", 210, 108, .@ticketID, .@map_price[0];
+				case 16: callfunc "warp", "Lutie", "xmas", 148, 131, .@ticketID, .@map_price[0];
+				case 17: callfunc "warp", "Morocc", "morocc", 159, 93, .@ticketID, .@map_price[0];
+				case 18: callfunc "warp", "Moscovia", "moscovia", 221, 191	, .@ticketID, .@map_price[0];
+				case 19: callfunc "warp", "Payon", "payon", 157, 90, .@ticketID, .@map_price[0];
+				case 20: callfunc "warp", "Prontera", "prontera", 156, 181, .@ticketID, .@map_price[0];
+				case 21: callfunc "warp", "Prontera village", "prt_vilg02", 100, 85, .@ticketID, .@map_price[0];
+				case 22: callfunc "warp", "Rachel", "rachel", 120, 136, .@ticketID, .@map_price[0];
+				case 23: callfunc "warp", "Umbala", "umbala", 130, 130, .@ticketID, .@map_price[0];
+				case 24: callfunc "warp", "Veins", "veins", 216, 123, .@ticketID, .@map_price[0];
+				case 25: callfunc "warp", "Yuno", "yuno", 158, 182, .@ticketID, .@map_price[0];
+			}
+		case 3:
+			mes .@npc$; mes "Please, choose a destination."; next;
+			switch(
+				select(
+					"Abyss Lake",
+					"Amatsu Dungeon",
+					"Anthell",
+					"Ayothaya Dungeon",
+					"Biolab Laboratory",
+					"Byalan Dungeon",
+					"Coal Mine",
+					"Einbech Dungeon",
+					"Geffen Dungeon",
+					"Glast Heim",
+					"Gonryun Dungeon",
+					"Hidden Temple",
+					"Ice Dungeon",
+					"Juperos",
+					"Kiel Dungeon",
+					"Louyang Dungeon",
+					"Magma Dungeon",
+					"Moscovia Dungeon",
+					"Niflheim",
+					"Odin Temple",
+					"Orc Dungeon",
+					"Payon Dungeon",
+					"Prontera Culvert",
+					"Pyramids",
+					"Rachel Sanctuary",
+					"Sphinx",
+					"Sunken Ship",
+					"Thanatos Tower",
+					"Thor Volcano",
+					"Toy Factory",
+					"Turtle Dungeon"
+				)
+			)
+			{
+				case 1:  callfunc "warp", "Abyss Lake", "hu_fild05", 167, 299, .@ticketID, .@map_price[0];
+				case 2:  callfunc "warp", "Amatsu Dungeon", "ama_in02", 119, 181, .@ticketID, .@map_price[0];
+				case 3:  callfunc "warp", "Anthell", "moc_fild04", 203, 327, .@ticketID, .@map_price[0];
+				case 4:  callfunc "warp", "Ayothaya Dungeon", "ayo_fild01", 126, 196, .@ticketID, .@map_price[0];
+				case 5:  callfunc "warp", "Biolab Laboratory", "lhz_in01", 33, 224, .@ticketID, .@map_price[0];	// Lyyn : Attention, je check le nom de la map pour savoir si je warp dans le donjon ou pas. (Voir la fonction)
+				case 6:  callfunc "warp", "Byalan Dungeon", "izlu2dun", 106, 88, .@ticketID, .@map_price[0];
+				case 7:  callfunc "warp", "Coal Mine", "mjolnir_02", 79, 359, .@ticketID, .@map_price[0];
+				case 8:  callfunc "warp", "Einbech Dungeon", "einbech", 138, 245, .@ticketID, .@map_price[0];
+				case 9:  callfunc "warp", "Geffen Dungeon", "gef_tower", 153, 33, .@ticketID, .@map_price[0];
+				case 10: callfunc "warp", "Glast Heim", "glast_01", 199, 129, .@ticketID, .@map_price[0];
+				case 11: callfunc "warp", "Gonryun Dungeon", "gonryun", 161, 193, .@ticketID, .@map_price[0];
+				case 12: callfunc "warp", "Hidden Temple", "prt_fild01", 136, 368, .@ticketID, .@map_price[0];
+				case 13: callfunc "warp", "Ice Dungeon", "ra_fild01", 233, 324, .@ticketID, .@map_price[0];
+				case 14: callfunc "warp", "Juperos", "yuno_fild07", 218, 176, .@ticketID, .@map_price[0];
+				case 15: callfunc "warp", "Kiel Dungeon", "yuno_fild08", 74, 173, .@ticketID, .@map_price[0];
+				case 16: callfunc "warp", "Louyang Dungeon", "louyang", 47, 279, .@ticketID, .@map_price[0];
+				case 17: callfunc "warp", "Magma Dungeon", "yuno_fild03", 39, 140, .@ticketID, .@map_price[0];
+				case 18: callfunc "warp", "Moscovia Dungeon", "moscovia", 158, 71, .@ticketID, .@map_price[0];
+				case 19: callfunc "warp", "Niflheim", "niflheim", 35, 161, .@ticketID, .@map_price[0];
+				case 20: callfunc "warp", "Odin Temple", "hugel", 206, 109, .@ticketID, .@map_price[0];
+				case 21: callfunc "warp", "Orc Dungeon", "gef_fild10", 70, 332, .@ticketID, .@map_price[0];
+				case 22: callfunc "warp", "Payon Cave", "pay_arche", 43, 132, .@ticketID, .@map_price[0];
+				case 23: callfunc "warp", "Prontera Culvert", "prt_fild05", 284, 224, .@ticketID, .@map_price[0];
+				case 24: callfunc "warp", "Pyramids", "moc_ruins", 62, 162, .@ticketID, .@map_price[0];
+				case 25: callfunc "warp", "Rachel Sanctuary", "ra_temin", 28, 313, .@ticketID, .@map_price[0];
+				case 26: callfunc "warp", "Sphinx", "moc_fild19", 107, 100, .@ticketID, .@map_price[0];
+				case 27: callfunc "warp", "Sunken Ship", "alb2trea", 75, 97, .@ticketID, .@map_price[0];
+				case 28: callfunc "warp", "Thanatos Tower", "hu_fild01", 140, 157, .@ticketID, .@map_price[0];
+				case 29: callfunc "warp", "Thor Volcano", "ve_fild03", 168, 235, .@ticketID, .@map_price[0];
+				case 30: callfunc "warp", "Toy Factory", "xmas", 143, 311, .@ticketID, .@map_price[0];
+				case 31: callfunc "warp", "Turtle Dungeon", "tur_dun01", 149, 238, .@ticketID, .@map_price[0];
+			}
+		case 4:
+			if(getgmlevel() > 10) {
+				// Vaut mieux vérifier plusieurs fois
+				warp "sec_in02", 146, 162;
+				end;
+			}
+		case 255:
+			goto L_End;
+		}
+	//case 2:
+	//	mes .@npc$; mes "Revenez me voir si vous changez d'avis.";
+	//	close2;
+	//	goto L_End;
+	//}
+	
+	L_End:
+		// Virer le cutin, usage : close2; goto L_End;
+		cutin "",255;
+		end;
+		
+}
+
+function	script	warp	{
+
+set .@npc$, "[^ff0000Warp Agent Erika^000000]";
+
+	if(getarg(5) > 0) {
+		// Si le warp n'est pas gratuit :
+		//mes .@npc$; mes "Le prix d'un voyage pour "+getarg(0)+" vous coûtera ^339933"+getarg(5)+"^000000 "+getitemname(getarg(4))+", voulez-vous continuer ?"; next;
+		mes .@npc$; mes "The cost for a warp to "+getarg(0)+" is ^339933"+getarg(5)+"^000000 "+getitemname(getarg(4))+"."; next;
+	}
+	//switch (select("Oui", "Non"))
+	//{
+	//case 1:
+
+		if(countitem(getarg(4)) < getarg(5)) {
+			mes .@npc$; mes "You don't have enough tickets to go to "+getarg(0)+", come back later.";
+			close2;
+			goto L_End;
+		}
+		delitem getarg(4), getarg(5);
+		set #mapname$, getarg(0); set #map$, getarg(1); set #coor_x, getarg(2); set #coor_y, getarg(3); set #map_price, getarg(5);
+		
+		if(getarg(1) == "lhz_in01" && (MISC_QUEST&512)) {
+			// Quête de biolab finie
+			warp "lhz_dun01", 149, 285;
+			set #mapname$, "Biolab Laboratory";
+			set #map$, "lhz_dun01";
+			set #coor_x, 149;
+			set #coor_y, 285;
+			end;
+		}
+		
+		warp getarg(1), getarg(2), getarg(3);
+		close;
+
+	//case 2:
+	//	mes .@npc$; mes "Revenez me voir si vous changez d'avis.";
+	//	close2;
+	//	goto L_End;
+	//}
+	
+	L_End:
+		// Virer le cutin si y'en a un
+		cutin "",255;
+		end;
+}
+
+alberta,25,242,6	duplicate(warpra)	Erika#02	936
+aldebaran,133,116,6	duplicate(warpra)	Erika#03	936
+amatsu,193,98,6	duplicate(warpra)	Erika#04	936
+ayothaya,144,120,6	duplicate(warpra)	Erika#05	936
+comodo,185,166,4	duplicate(warpra)	Erika#06	936
+einbroch,58,207,5	duplicate(warpra)	Erika#07	936
+einbech,170,134,4	duplicate(warpra)	Erika#08	936
+geffen,116,73,4	duplicate(warpra)	Erika#09	936
+gonryun,153,114,5	duplicate(warpra)	Erika#10	936
+hugel,94,154,4	duplicate(warpra)	Erika#11	936
+izlude,121,118,4	duplicate(warpra)	Erika#12	936
+lighthalzen,169,93,3	duplicate(warpra)	Erika#13	936
+louyang,226,99,4	duplicate(warpra)	Erika#14	936
+morocc,159,97,6	duplicate(warpra)	Erika#15	936
+manuk,290,147,4	duplicate(warpra)	Erika#16	936
+payon,153,96,4	duplicate(warpra)	Erika#17	936
+umbala,134,133,4	duplicate(warpra)	Erika#18	936
+rachel,125,143,3	duplicate(warpra)	Erika#19	936
+splendide,244,210,4	duplicate(warpra)	Erika#20	936
+veins,210,120,6	duplicate(warpra)	Erika#21	936
+xmas,142,133,6	duplicate(warpra)	Erika#22	936
+yuno,153,183,4	duplicate(warpra)	Erika#23	936
+
+
+// Nouvelles maps + capitale
+prt_vilg00,99,95,4	duplicate(warpra)	Erika#24	936
+prt_vilg02,97,87,5	duplicate(warpra)	Erika#25	936
+prt_vilg01,97,87,5	duplicate(warpra)	Erika#26	936
+alb2trea,76,101,3	duplicate(warpra)	Erika#27	936		// Sunken Ship
+sec_in02,134,175,5	duplicate(warpra)	Erika#28	936		// lieu inaccessible aux joueurs (map des GM offi)
+jawaii,213,222,5	duplicate(warpra)	Erika#29	936		// Jawaii quoi...
+moscovia,221,195,5	duplicate(warpra)	Erika#30	936		// Jawaii quoi...
+
+*/
+// ============================================================================================================
+
+sec_in02,137,175,5	script	Maria::warpraDun	920,{
+	.@npc$ = "[Maria]";
+	
+	cutin "ra_fano01",2;
+	
+	mes .@npc$;
+	mes "Hello, I'm Maria, Erika's sister.";
+	mes "";
+	mes "I'm not as strong as her, but I can send you back to the Main Town.";
+	next;
+	
+	mes .@npc$;
+	mes "Do you wanna go back ?";
+	switch(select("Yes", "No")) {
+		case 1:
+			warp "Save",0,0;
+			end;
+			break;
+		case 2:
+			next;
+			
+			mes .@npc$;
+			mes "Ok, see you soon !";
+			close2;
+			cutin "", 255;
+			end;
+	}
+}
+
+ama_in02,116,185,5	duplicate(warpraDun)	Maria#01	920	// Amatsu Dungeon
+moc_fild04,207,332,3	duplicate(warpraDun)	Maria#02	920	// Anthell
+ayo_fild01,127,202,5	duplicate(warpraDun)	Maria#03	920	// Ayothaya Dungeon
+izlu2dun,110,93,3	duplicate(warpraDun)	Maria#04	920	// Byalan Dungeon
+lhz_dun01,155,287,5	duplicate(warpraDun)	Maria#05	920		// Biolab F1 (dans le bâtiment)
+//lighthalzen,304,307,5	duplicate(warpraDun)	Maria#05	920	// Biolab F2 (tuyau)
+mjolnir_02,86,358,3	duplicate(warpraDun)	Maria#06	920	// Coal Mine
+prt_fild05,280,226,5	duplicate(warpraDun)	Maria#07	920	// Culvert
+einbech,134,247,5	duplicate(warpraDun)	Maria#08	920	// Einbech Dungeon
+glast_01,193,129,5	duplicate(warpraDun)	Maria#09	920	// Glast Heim
+gonryun,166,192,2	duplicate(warpraDun)	Maria#10	920	// Gonryun Dungeon
+prt_fild01,140,367,3	duplicate(warpraDun)	Maria#11	920	// Hidden Temple
+ra_fild01,229,328,6	duplicate(warpraDun)	Maria#12	920	// Ice Dungeon
+yuno_fild07,215,178,5	duplicate(warpraDun)	Maria#13	920	// Juperos
+yuno_fild08,69,179,5	duplicate(warpraDun)	Maria#14	920	// Kiel
+yuno_fild03,41,144,3	duplicate(warpraDun)	Maria#15	920	// Magma Dungeon
+niflheim,31,162,5	duplicate(warpraDun)	Maria#16	920	// Niflheim
+hugel,204,110,5	duplicate(warpraDun)	Maria#17	920	// Hugel (Bateau pour Odin)
+gef_fild10,71,338,3	duplicate(warpraDun)	Maria#18	920	// Orc dungeon
+pay_arche,42,136,5	duplicate(warpraDun)	Maria#19	920	// Payon Cave
+moc_ruins,64,166,6	duplicate(warpraDun)	Maria#20	920	// Pyramids
+ra_temin,34,317,3	duplicate(warpraDun)	Maria#21	920	// Rachel Sanctuary
+moc_fild19,109,101,3	duplicate(warpraDun)	Maria#22	920	// Sphinx
+ve_fild03,174,237,3	duplicate(warpraDun)	Maria#23	920	// Thor Volcano
+xmas,139,311,5	duplicate(warpraDun)	Maria#24	920	// Toy Factory	
+tur_dun01,160,238,2	duplicate(warpraDun)	Maria#25	920	// Turtle dungeon
+gef_tower,157,36,3	duplicate(warpraDun)	Maria#26	920	// Geffen Tower
+louyang,52,273,3	duplicate(warpraDun)	Maria#27	920	// Louyang Dungeon
+hu_fild05,160,296,5	duplicate(warpraDun)	Maria#28	920	// Abyss Lake
+hu_fild01,146,159,3	duplicate(warpraDun)	Maria#29	920	// Thanatos Tower
+moscovia,161,69,3	duplicate(warpraDun)	Maria#30	920	// Moscovia

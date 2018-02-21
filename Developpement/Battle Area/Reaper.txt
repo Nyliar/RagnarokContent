@@ -1,0 +1,595 @@
+// [========================================================]
+// [============      Battle Arena - Reaper       ==========]
+// [========================================================]
+// [ Version 1                                              ]
+// [========================================================]
+// [ Original script by: Alayne				    ]
+// [========================================================]
+// [ Description:                                           ]
+// [--------------------------------------------------------]
+// [                                                        ]
+// [ - The Reaper System				    ]
+// [========================================================]
+// [ Changelog: (5 last updates)                            ]
+// [--------------------------------------------------------]
+// [                                                        ]
+// [ v0: Creation                      			    ]
+// [                                                        ]
+// [                                                        ]
+// [========================================================]
+// [                                                        ]
+// [========================================================]
+
+prontera,99,144,0	script	ReaperHuntManager::alabarh	-1,2,2,{
+	close;
+
+OnStartRH:
+	set $reaperhunton, 2;
+	pvpon $reaperHuntMap$;
+	callsub OnChangeReaper;
+	initnpctimer;
+	set .totalTimer, 0;
+	end;
+
+OnTimer60000:
+	//round complete
+	set .roundTimer, .roundTimer + 1;
+	set .totalTimer, .totalTimer + 1;
+	if(.totalTimer == $RHGameDuration)
+	{
+		goto OnReaperHuntExpired;
+	}
+	if(.roundTimer == $RHRoundLimit)
+	{
+		callsub OnChangeReaper;
+	}
+	end;
+
+OnChangeReaper:
+	set .roundTimer, 0;
+	if (.reaperId != -1)
+	{
+		set $canEnterRH, 0;
+		attachrid(.reaperId);
+		//clear ancient reaper
+		sc_end SC_ALL;
+		
+		//heal and apply buffs as for other players
+		percentheal 100, 100;
+		if(.buffs == 1)
+		{
+			specialeffect2 EF_INCAGILITY; sc_start SC_INC_AGI,240000,10;
+			specialeffect2 EF_BLESSING; sc_start SC_BLESSING,240000,10;
+		}
+	}
+	else
+	{
+		set $canEnterRH, 1;
+		donpcevent "alarhent::OnEntranceEnabled";
+	}
+	
+	do
+	{
+		set .@rank, rand(0,getarraysize($@RHMembers));
+		set .@ok, 0;
+		set .reaperId, $@RHMembers[.@rank];
+		if (attachrid(.reaperId) == 0 || strcharinfo(3) != $reaperHuntMap$)
+		{
+			deletearray $@RHMembers[.@rank], 1;
+			set .@ok,0;
+		}
+		else
+		{
+			bg_join_team($@reaper);
+			set .@ok, 1;
+		}
+	}
+	while(.@ok == 0);
+	
+	mapannounce $reaperHuntMap$, "[Reaper Hunt] " + strcharinfo(0) + " is the new Reaper! Be careful!", bc_red;
+
+	//apply bonus
+	switch(rand(0,6))
+	{
+		case 0:
+			//Baphomet Virus
+			disguise 1399;
+			//Increase All Stats
+			sc_start SC_INCALLSTATUS, $RHRoundLimit * 60000, 25;
+			break;
+		case 1:
+			//Atroce Virus
+			disguise 1785;
+			//Increase Atk Speed, but reduce movement
+			sc_start SC_INCASPDRATE, $RHRoundLimit * 60000, 25;
+			sc_start SC_DEC_AGI, $RHRoundLimit * 60000, 10;
+			break;
+		case 2:
+			//Beelzebub Virus
+			disguise 1874;
+			//Mirror spells
+			sc_start SC_MAGICMIRROR, $RHRoundLimit * 60000, 3;
+			break;
+		case 3:
+			//Garm Virus
+			disguise 2068;
+			//Bragi
+			sc_start SC_POEMBRAGI, $RHRoundLimit * 60000, 3;
+			break;
+		case 4:
+			//Dark Lord Virus
+			disguise 1272;
+			//Meltdown
+			sc_start SC_MELTDOWN, $RHRoundLimit * 60000, 3;
+			break;
+		case 5:
+			//Kades Virus
+			disguise 2255;
+			//Undead
+			sc_start SC_PROPERTYUNDEAD, $RHRoundLimit * 60000, 3;
+			break;
+		case 6:
+			//Ifrit Virus
+			disguise 1832;
+			//Clairvoyance
+			sc_start SC_CLAIRVOYANCE, $RHRoundLimit * 60000, 3;
+			break;
+	}
+
+	//Increase Agi
+	sc_start SC_INC_AGI,$RHRoundLimit * 60000,15;
+	//Increase Damage
+	sc_start SC_INCATKRATE, $RHRoundLimit * 60000, 350;
+	sc_start SC_INCMATKRATE, $RHRoundLimit * 60000, 350;
+	//Increase Defense
+	sc_start SC_INCDEFRATE, $RHRoundLimit * 60000, 100;
+	//Increase HP
+	sc_start SC_INCMHPRATE, $RHRoundLimit * 60000, 100;
+
+	set .killCount, 0;
+	callsub OnStartNextRound;
+	return;
+	
+OnResetTeams:
+	for(set .@i,0; .@i<getarraysize($@RHMembers); set .@i,.@i+1)
+	{
+		if (attachrid($@RHMembers[.@i]) == 0 || strcharinfo(3) != $reaperHuntMap$)
+		{
+			deletearray $@RHMembers[.@i], 1;
+		}
+		else
+		{
+			bg_leave;
+		}
+	}
+	return;
+	
+OnStartNextRound:
+	for(set .@i,0; .@i<getarraysize($@RHMembers); set .@i,.@i+1)
+	{
+		if (attachrid($@RHMembers[.@i]) == 0 || strcharinfo(3) != $reaperHuntMap$)
+		{
+			deletearray $@RHMembers[.@i], 1;
+		}
+		else
+		{
+			if(getcharid(3) != .reaperId)
+			{
+				bg_join_team($@targets);
+			}
+		}
+	}
+	
+	callsub OnChangeTarget;
+	setnpctimer 0;
+	set $canEnterRH, 0;
+	return;
+
+OnChangeTarget:
+	set .@id, .reaperId;
+	for(set .@i,0; .@i<getarraysize($@RHMembers); set .@i,.@i+1)
+	{
+		if (attachrid($@RHMembers[.@i]) == 0 || strcharinfo(3) != $reaperHuntMap$)
+		{
+			deletearray $@RHMembers[.@i], 1;
+		}
+	}
+	while(.@id == .reaperId)
+	{
+		set .@rank, rand(0,getarraysize($@RHMembers));
+		set .@id, $@RHMembers[.@rank];
+	}
+	set .targetId, .@id;
+	end;
+
+OnRoundExpired:
+	for(set .@i, 0; .@i<getarraysize($@RHMembers); set .@i,.@i+1)
+	{
+		if(attachrid($@RHMembers[.@i]) == 1)
+		{
+			if(getcharid(0) != .reaperId)
+			{
+				if (getcharid(0) == .targetId && ROUNDALIVE == 1)
+				{
+					set RHPOINTS, RHPOINTS + $RHTargetAlivePoint;
+				}
+				else if (ROUNDALIVE == 1)	
+				{
+					set RHPOINTS, RHPOINTS + $RHNonTargetAlivePoint;
+				}
+				//prepare next round
+				set ROUNDALIVE, 1;
+			}
+		}
+	}
+	goto OnChangeReaper;
+	end;
+
+OnReaperHuntExpired:
+	//stop all fights
+	pvpoff $deathMatchMap$;
+	if(attachrid(.reaperId) == 1)
+	{
+		sc_end SC_ALL;
+	}
+	//filter points
+	set .@highestRank, 0;
+	set .@highestPoints, -1;
+	for(set .@i, 1; .@i<getarraysize($@RHMembers); set .@i,.@i+1)
+	{
+		if(attachrid($@RHMembers[.@i]) == 1)
+		{
+			if (RHPOINTS > .@highestPoints)
+			{
+				set .@highestRank, .@i;
+				set .@highestPoints, RHPOINTS;
+			}
+		}		
+		else
+		{
+			deletearray $@RHMembers[.@i], 1;
+		}
+	}
+	if(attachrid($RHMember[.@highestRank]) == 1)
+	{
+		mapannounce $deathMatchMap$, "[Reaper Hunt] And the winner is..." + strcharinfo(0) + "!", bc_red;
+		set Zeny, Zeny + $RHEntryPrice * ($maxRHMemberCount - 1);
+		set RHPOINTS, RHPOINTS + .pointPerVictory;
+		set Zeny, Zeny + RHPOINTS * 10000;
+		announce "[Reaper Hunt] " + strcharinfo(0) + " just win the Reaper Hunt!", bc_all|bc_red;
+	}
+	set .reaperhunton, 0;
+	stopnpctimer;
+	sleep 10000;
+	//map warp to start npc
+	mapwarp $reaperHuntMap$, "prontera", 164, 164;
+	end;
+
+OnPCDieEvent:
+	if (strcharinfo(3) == $reaperHuntMap$)
+	{
+		addtimer 5000, strnpcinfo(3) + "::OnHealAfterDeath";
+		set .@seekId, -1;
+		if (getcharid(0) == .repearId)
+		{
+			for(set .@i, 0; .@i<getarraysize($@RHMembers); set .@i,.@i+1)
+			{
+				if(attachrid($@RHMembers[.@i]) == 1)
+				{
+					if(getcharid(0) != .reaperId)
+					{
+						set BRPOINTS, BRPOINTS + $RHReaperKillPoint;
+					}
+				}
+			}
+			goto OnChangeReaper;
+		}
+		else if (getcharid(0) == .targetId)
+		{
+			if(attachrid(.targetId))
+			{
+				set RHPOINTS,RHPOINTS + $RHTargetKillPoint;
+			}
+			set .killCount, .killCount + 1;
+			if (.killCount == getarraysize($@RHMembers) - 1)
+			{
+				goto OnChangeReaper;
+			}
+			else
+			{
+				callsub OnChangeTarget;
+			}
+		}
+		else
+		{
+			if(attachrid(.reaperId) == 1)
+			{
+				set RHPOINTS, RHPOINTS + $RHNonTargetKillPoint;
+			}
+			set .killCount, .killCount + 1;
+			if (.killCount == getarraysize($@RHMembers) - 1)
+			{
+				goto OnChangeReaper;
+			}
+		}
+	}
+	end;
+	
+OnBoardAsked:
+	if($reaperhunton == 2)
+	{
+		set .@caller, getcharid(3);
+		dispbottom "!!Reaper Hunt Points Board!!";
+		dispbottom "";
+		dispbottom "Current Reaper";
+		attachrid(.reaperId);
+		set .@message$, "	~" + strcharinfo(0) + RHPOINTS;
+		if(attachrid(.@caller))
+			dispbottom .@message$;
+			
+		dispbottom "";
+		dispbottom "Current Targets";
+		for(set .@i,0; .@i<getarraysize($@RHMembers); set .@i,.@i+1)
+		{
+			if (attachrid($@RHMembers[.@i]) == 0 || strcharinfo(3) != $reaperHuntMap$)
+			{
+				deletearray $@RHMembers[.@i], 1;
+			}
+			else
+			{
+				if(getcharid(3) != .reaperId)
+				{
+					set .@message$, "	~" + strcharinfo(0) + RHPOINTS;
+					if(attachrid(.@caller))
+						dispbottom .@message$;
+				}
+			}
+		}
+	}
+	end;
+	
+OnHealAfterDeath:
+	dispbottom "[Valkyrie] You received the War Goddess benediction!";
+	percentheal 100, 100;
+	if(.buffs == 1)
+	{
+		specialeffect2 EF_INCAGILITY; sc_start SC_INC_AGI,240000,10;
+		specialeffect2 EF_BLESSING; sc_start SC_BLESSING,240000,10;
+	}
+	end;	
+
+OnInit:
+	set $reaperHuntMap$, "pvp_n_2-2";
+	set $maxRHMemberCount, 3;
+	set $RHEntryPrice, 0;//5000;
+	set $reaperhunton, 0;
+	set .pointPerVictory, 100;
+	set $RHTargetKillPoint, 5;
+	set $RHNonTargetKillPoint, 1;
+	set $RHReaperKillPoint, 10;
+	set $RHTargetAlivePoint, 2;
+	set $RHNonTargetAlivePoint, 1;
+	setarray $RHDuration[0], 5, 10, 15;
+	set $RHRoundLimit, 3;
+	bindatcmd "rhboard", strnpcinfo(3) + "::OnBoardAsked";
+	end;
+}
+
+pvp_n_2-2	mapflag	battleground
+
+prontera,99,144,0	script	Reaper Hunt::alarhent	1005,{
+	set .@npcname$, "[Yolda]";
+	mes .@npcname$;
+	mes "Hello to you, " + strcharinfo(0);
+	mes "I'm the Reaper Hunt Manager.";
+	mes "When you talk to me, you'll be able to setup or join an existing Reaper Hunt.";
+	mes "Do you wish to learn how it works?";
+	if (select("Yes","No") == 1)
+	{
+		callsub OnLearnRules;
+	}
+	next;
+	mes .@npcname;
+	mes "So. Are you interested?";
+	if ($reaperhunton == 2)
+	{
+		goto OnEnterAgain;		
+	}
+	if ($reaperhunton == 1)
+	{
+		if(callfunc("CheckRHPlayers") == 1)
+		{
+			next;
+			mes .@npcname$;
+			mes "Be patient please. The Reaper Hunt will start soon.";
+			close;
+		}
+		
+		if (select("Join the currently running Reaper Hunt","No, thanks") == 1)
+		{
+			callsub OnJoin, 1;
+		}
+		else
+		{
+			goto OnLeave;
+		}
+	}
+	else
+	{
+		if (select("Start a new Reaper Hunt","No, thanks") == 1)
+		{
+			callsub OnJoin, 0;
+		}
+		else
+		{
+			goto OnLeave;
+		}
+	}
+	close;
+	
+OnEntranceEnabled:
+	npctalk "Next round will begin shortly. You can enter again.";
+	end;
+	
+OnEnterAgain:
+	set .@found, callfunc("CheckRHPlayers");
+	if(.@found == 1)
+	{
+		if($canEnterRH == 0)
+		{
+			mes "You have to wait for the Round to complete before entering again.";
+			close;
+		}
+		mes "Get ready, I'll send you back.";
+		warp $reaperHuntMap$, 0, 0;
+		sleep 1500;
+		if(getmapusers($reaperHuntMap$) == getarraysize($@RHMembers))
+		{
+			donpcevent "alabarh::OnStartNextRound";
+		}
+	}
+	else
+	{
+		mes "You're not part of this Battle Royal.";
+		mes "Wait for another to begin, please.";
+	}
+	close;
+
+OnLearnRules:
+	next;
+	mes .@npcname$;
+	mes "Here's how a Reaper Hunt works.";
+	mes "First of all, this is a One Versus All match.";
+	mes "A player will be designed as the Reaper, and he'll have to kill all other players.";
+	next;
+	mes .@npcname$;
+	mes "When a player will become the Reaper, he'll receive a bonus to help him killing all other players.";
+	mes "He then have a limit of " + $RHRoundLimit + " minutes max to kill his target.";
+	mes "A player will become the target, and it will change each time the current one dies.";
+	mes "For the Reaper, killing a target earns " + $RHTargetKillPoint + " points.";
+	mes "A non target earns " + $RHNonTargetKillPoint + " points.";
+	next;
+	mes .@npcname$;
+	mes "For the targets, the aim is to survive during the delay a round will last.";
+	mes "If a target survives, it'll earn " + $RHTargetAlivePoint + " points.";
+	mes "Others will earn " + $RHNonTargetAlivePoint + " points.";
+	mes "If they manage to kill the Reaper, all alive player will earn " + $RHReaperKillPoint + " points.";
+	set .@message$, "";
+	for(set .@i,0; .@i<getarraysize($RHDuration); set .@i,.@i+1)
+	{
+		set .@message$, (.@i == 0 ? "" : (.@i == getarraysize($RHDuration) - 1 ? ", or " : ", ")) + $RHDuration[.@i];
+	}
+	mes "The game will have a total duration of " + .@message$ + " minutes.";
+	next;
+	mes .@npcname$;
+	mes "Once " + $maxDMMemberCount + " will have join, the match will start.";
+	return;
+	
+OnJoin:
+	set .@mode, getarg(0);
+	next;
+	mes .@npcname$;
+	mes "Sure!";
+	mes "It'll cost you " + $RHEntryPrice + "z to enter.";
+	if (Zeny < $RHEntryPrice)
+	{
+		next;
+		mes .@npcname$;
+		mes "Sorry, but you lack some money...";
+		close;
+	}
+	if (select("Here you are.","I'll get back") == 1)
+	{
+		next;
+		mes .@npcname;
+		set Zeny, Zeny - $RHEntryPrice;
+		mes "Allright.";
+		if (.@mode == 0)
+		{
+			next;
+			mes .@npcname$;
+			mes "Now, choose a duration.";
+			set .@menu$, "";
+			for(set .@i,0; .@i<getarraysize($DMDuration); set .@i,.@i+1)
+			{
+				set .@menu$, .@menu$ + (.@i == 0 ? "" : ":") + $DMDuration[.@i] + " minutes";
+			} 
+			set .@duration, select(.@menu$) - 1;
+			next;
+			mes .@npcname$;
+			mes "Allright, let's go for " + $DMDuration[.@choice] + " minutes then.";
+			next;
+			mes .@npcname$;
+		}
+		mes "The Reaper Hunt is pretty simple.";
+		mes "Once " + $maxRHMemberCount + " will have join, all players will be sent on fighting area.";
+		mes "From this moment, the game begins.";
+		next;
+		mes .@npcname;
+		mes "The reward will be the total amount paid by all players.";
+		mes "I'll just keep a little part for me.";
+		
+		if (.@mode == 0)
+		{
+			deletearray $@RHMembers[0], getarraysize($@RHMembers);
+			
+			set $@RHMembers[0], getcharid(3);
+			set $reaperhunton, 1;
+			set $RHGameDuration, $DMDuration[.@choice];
+			announce "[Reaper Hunt] " + strcharinfo(0) + " just join the Reaper Hunt. Who will come to fight him?", bc_all|bc_red;
+		}
+		else
+		{
+			set $@RHMembers[getarraysize($@RHMembers)], getcharid(3);
+			if (getarraysize($@RHMembers) < $maxRHMemberCount)
+			{
+				announce "[Reaper Hunt] " + strcharinfo(0) + " just join the Reaper Hunt. Still " + ($maxRHMemberCount - getarraysize($@RHMembers)) + " fighters needed to begin!", bc_all|bc_red;
+			}
+			else
+			{
+				//warp first char
+				announce "[Reaper Hunt] The fight begins!", bc_all|bc_red;
+				set .@warped, 0;	
+				for(set .@i,0; .@i<getarraysize($@RHMembers) && .@warped == 0; set .@i,.@i+1)
+				{
+					if (attachrid($@RHMembers[.@i]) == 1)
+					{
+						warp $reaperHuntMap$, 0, 0;
+						donpcevent "alabarr::OnStartRH";
+						initnpctimer;
+					}
+					else
+					{
+						deletearray $@RHMembers[.@i], 1;
+					}
+				}
+			}
+		}
+	}
+	else
+	{
+		goto OnLeave;
+	}
+	close;
+
+OnTimer900000:
+	donpcevent "alabarr::OnReaperHuntExpired";
+	end;
+
+OnLeave:
+	next;
+	mes .@npcname$;
+	mes "Your choice!";
+	close;
+}
+
+function	script	CheckRHPlayers	{
+	for(set .@i,0; .@i<getarraysize($@RHMembers) && .@found == 0; set .@i,.@i+1)
+	{
+		if($@RHMembers[.@i] == getcharid(3))
+		{
+			return 1;
+		}
+	}
+	return 0;
+}

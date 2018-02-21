@@ -1,0 +1,208 @@
+ve_fild03,267,254,4	script	Pedestal::piedestal1	406,{
+	set .@npcname$, "[Pedestal]";
+	mes .@npcname$;
+
+	if (#elemental_favor_q >= 6 && #elemental_favor_q <=10)
+	{
+		mes "A strange glow comes from this stone pedestal.";
+		mes "You're searching where it comes from when an interstice opens up and reveals a trap door";
+		switch(select("Put your hand in it","Put the offering in it","Leave it as it is"))
+		{
+			case 1:
+				mes "There's nothing inside but you can feel some kind of itch at the bottom of your fingers.";
+				break;
+			case 2:
+				mes "You wish to insert an offering.";
+				switch(#elemental_favor_q)
+				{
+					case 6: 
+ 						// On créé un menu dynamique
+    						for ( set .@i, 0; .@i<getarraysize($elemental_water_item); set .@i, .@i+1 )
+						{
+        						set .@menu$, .@menu$ + ( .@i ? ":" : "" ) + getitemname($elemental_water_item[.@i]);
+						}
+						break;
+					case 7:
+    						for ( set .@i, 0; .@i<getarraysize($elemental_earth_item); set .@i, .@i+1 )
+						{
+        						set .@menu$, .@menu$ + ( .@i ? ":" : "" ) + getitemname($elemental_earth_item[.@i]);
+						}
+						break;
+					case 8:
+    						for ( set .@i, 0; .@i<getarraysize($elemental_wind_item); set .@i, .@i+1 )
+						{
+        						set .@menu$, .@menu$ + ( .@i ? ":" : "" ) + getitemname($elemental_wind_item[.@i]);
+						}
+						break;
+					case 9:
+    						for ( set .@i, 0; .@i<getarraysize($elemental_fire_item); set .@i, .@i+1 )
+						{
+        						set .@menu$, .@menu$ + ( .@i ? ":" : "" ) + getitemname($elemental_fire_item[.@i]);
+						}
+						break;
+				}
+
+				// On récupère le choix de l'utilisateur
+    				set .@choice, prompt(.@menu$) - 1;
+
+				if (.@choice != 254)
+				{
+					switch(#elemental_favor_q)
+					{
+						case 6: 	
+							if (countitem($elemental_water_item[.@choice]) >= 1)
+							{
+								delitem $elemental_water_item[.@choice], 1;
+								goto L_CALL_GUARDIAN;
+							}
+							break;
+						case 7:	
+							if (countitem($elemental_earth_item[.@choice]) >= 1)
+							{
+								delitem $elemental_earth_item[.@choice], 1;
+								goto L_CALL_GUARDIAN;
+							}
+							break;
+						case 8:	
+							if (countitem($elemental_wind_item[.@choice]) >= 1)
+							{
+								delitem $elemental_wind_item[.@choice], 1;
+								goto L_CALL_GUARDIAN;
+							}
+							break;
+						case 9:	
+							if (countitem($elemental_fire_item[.@choice]) >= 1)
+							{
+								delitem $elemental_fire_item[.@choice], 1;
+								goto L_CALL_GUARDIAN;
+							}
+							break;
+					}
+				}
+				else
+				{
+					mes "You go away without touching anything.";
+				}
+				break;
+			case 3:
+				mes "The glow fades as you move away.";
+				break;
+		}
+	}
+	else
+	{
+		mes "There's nothing interesting here.";
+	}
+	close;
+
+L_CALL_GUARDIAN:
+	mes "You put down the offering.";
+	mes "The trap door closes and the pedestal starts to shine violently.";
+	mes "Prepare to fight!";
+	hideonnpc strnpcinfo(3);
+	switch(#elemental_favor_q)
+	{
+		case 6:
+			//water: Drake, Turtle, Ktu, kraken
+			setarray .@monsterid[0],1112,1312,1779,2202;
+			break;
+		case 7:
+			//earth: Lady tanee, Evil snake, atroce, gold queen scara
+			setarray .@monsterid[0],1688,1418,1785,2165;
+			break;
+		case 8:
+			//wind: dracula, nyd, gloom, Valk
+			setarray .@monsterid[0],1389,2022,1768,1751;
+			break;
+		case 9:
+			//fire: gopinich, boitata, detale, ifrit
+			setarray .@monsterid[0],1885,2068,1719,1832;
+			break;
+	}
+	getpartymember(getcharid(1));
+	set .@countParty, $@partymembercount;
+
+	if (.@countParty == 0)
+		set .@rank, 0;
+	else if (.@countParty >= 1 && .@countParty <= 3)
+		set .@rank, 1;
+	else if (.@countParty >= 4 && .@countParty <= 6)
+		set .@rank, 2;
+	else if (.@countParty > 6)
+		set .@rank, 3;
+
+	set .@guardianid, .@monsterid[.@rank];
+	getmapxy(@mapname$,@mapx,@mapy,1,strnpcinfo(3));
+	monster @mapname$, @mapx, @mapy, "Gardien", .@guardianid, 1, strnpcinfo(3)+"::OnGuardianDead";
+	initnpctimer;
+	set #guardian_dead, 1;
+	close;
+
+OnTimer7200000:
+	//au bout de deux heures max, tuer le monstre.
+	getmapxy(@mapname$,@mapx,@mapy,1,strnpcinfo(3));
+	killmonster @mapname$, "All";
+	mapannounce @mapname$,"The guardian returned to his pedestal.",0;
+	hideoffnpc strnpcinfo(3);
+	
+OnGuardianDead:
+	getmapxy(@mapname$,@mapx,@mapy,1,strnpcinfo(3));
+	mapannounce @mapname$,"The Guardian regained his appearance. Go back to Invek.",0;
+	switch(#elemental_favor_q)
+	{
+		case 6:
+			hideoffnpc "gdw";
+			break;
+		case 7:
+			hideoffnpc "gde";
+			break;
+		case 8:
+			hideoffnpc "gdwi";
+			break;
+		case 9:
+			hideoffnpc "gdf";
+			break;
+	}
+	set #guardian_dead, 2;
+	set #info_favor, 0;
+	end;
+
+OnPCLogoutEvent:
+	getmapxy(@mapname$,@mapx,@mapy,1,strnpcinfo(3));
+	//check if the loging out char is on the same map as npc and that a has the quest on.
+	if (@mapname$ == strcharinfo(3) && #elemental_favor_q >= 6 && #elemental_favor_q <=10)
+	{
+		set #elemental_favor_q, #elemental_favor_q-1;
+		//kill all monster called by command
+		killmonster strcharinfo(3), "All";
+		mapannounce @mapname$,"The guardian returned to his pedestal.",0;
+	}
+
+OnInit: 
+	hideonnpc strnpcinfo(3);
+	end;
+}
+
+//fire
+ve_fild04,261,292,4	duplicate(piedestal1)	Pedestal::piedestal5	-1
+pay_fild11,127,219,4	duplicate(piedestal1)	Pedestal::piedestal9	-1
+
+//water
+ra_fild01,247,179,4	duplicate(piedestal1)	Pedestal::piedestal2	-1
+cmd_fild01,362,233,4	duplicate(piedestal1)	Pedestal::piedestal6	-1
+cmd_fild02,343,311,4	duplicate(piedestal1)	Pedestal::piedestal10	-1
+
+//wind
+moc_fild18,219,210,4	duplicate(piedestal1)	Pedestal::piedestal7	-1
+hu_fild04,266,193,4	duplicate(piedestal1)	Pedestal::piedestal3	-1
+bra_fild01,155,144,4	duplicate(piedestal1)	Pedestal::piedestal11	-1
+
+//earth
+mjolnir_02,198,178,4	duplicate(piedestal1)	Pedestal::piedestal4	-1
+dew_fild01,272,264,4	duplicate(piedestal1)	Pedestal::piedestal8	-1
+yuno_fild05,134,291,4	duplicate(piedestal1)	Pedestal::piedestal12	-1
+
+
+
+
+

@@ -1,0 +1,659 @@
+// [========================================================]
+// [===========      Fury_Energy - NPCs          ===========]
+// [========================================================]
+// [ Version 1                                              ]
+// [========================================================]
+// [ Original script by: Alayne                             ]
+// [========================================================]
+// [ Description:                                           ]
+// [--------------------------------------------------------]
+// [                                                        ]
+// [========================================================]
+// [ Changelog: (5 last updates)                            ]
+// [--------------------------------------------------------]
+// [                                                        ]
+// [ v0: Creation                      			    ]
+// [                                                        ]
+// [========================================================]
+// [                                                        ]
+// [========================================================]
+
+prontera,97,190,6	script	Maestro Fury::basmaefur	810,{
+	set .@npcname$, "[Killian]";
+		
+	mes .@npcname$;
+	mes "...";
+
+	if (QUESTFURY == 0)
+	{
+		mes "Welcome here, Academ.";
+		mes "You're here in the Fury Academy.";
+		mes "Us, Academs, Cursors and Maestros, learned how to use Fury.";
+		mes "Fury are basic elementary life forms";
+		mes "Some thinks they're only pure powers, without souls.";
+		mes "Others give them names, and they are generally even more powerfull.";
+		mes "But you're not at this point yet. You're just an Academ, an apprentice.";
+		mes "You first have to prove us that you're able to control some Fury.";
+		mes "The more you'll control, the more power you'll obtain. But the more the force applied on your mind will be.";
+		next;
+		mes .@npcname$;
+		mes "So. Do you wanna learn here, in the Academy?";
+		switch(select("Yes","No"))
+		{
+			case 1:
+				mes "Good. You're now an Academ.";
+				mes "Show us dignity. And now, go meet your teachers.";
+				set QUESTFURY, 1;
+				break;
+			case 2:
+				mes "Good. Weaks doesn't have to be here.";
+				break;
+		}		
+	}
+	else if (QUESTFURY == 7)
+	{
+		mes "Good. Without letting you notice them, they've established your affinity with each fury type.";
+		mes "Let's see.";
+		mes "Ignismithry: " + (IGNIFEVRE * 10) + "%";
+		mes "Aquasmithry: " + (AQUAFEVRE * 10) + "%";
+		mes "Terrasmithry: " + (TERRAFEVRE * 10) + "%";
+		mes "Aerismithry: " + (AERIFEVRE * 10) + "%";
+		mes "Florismithry: " + (FLORIFEVRE * 10) + "%";
+		mes "Ferrosmithry: " + (FERROFEVRE * 10) + "%";
+		next; 
+		mes .@npcname$;
+		mes "Each 10% allows you to control one fury.";
+		set .@maxAffinity, IGNIFEVRE;
+		set .@affinity$, "the ignismithry.";
+		if (AQUAFEVRE > .@maxAffinity)
+		{
+			set .@affinity$, "the aquasmithry.";
+			set .@maxAffinity, AQUAFEVRE;
+		}
+		if (TERRAFEVRE > .@maxAffinity)
+		{
+			set .@affinity$, "the terrasmithry.";
+			set .@maxAffinity, TERRAFEVRE ;
+		}
+		if (AERIFEVRE > .@maxAffinity)
+		{
+			set .@affinity$, "the aerismithry.";
+			set .@maxAffinity, AERIFEVRE ;
+		}
+		if (FLORIFEVRE > .@maxAffinity)
+		{
+			set .@affinity$, "the florismithry.";
+			set .@maxAffinity, FLORIFEVRE ;
+		}
+		if (FERROFEVRE > .@maxAffinity)
+		{
+			set .@affinity$, "the ferrosmithry.";
+		}
+
+		mes "But in general, you're mostly bound to " + .@affinity$;
+		mes "Hum...Interesting.";
+		mes "Now you have to earn some fury.";
+		mes "And for that, you'll have to find them, simply.";
+		mes "First, go see the Prime Duke. He'll explain you how this is done.";
+		set QUESTFURY, 8;
+	}
+	close;
+}
+
+prontera,97,190,6	script	Prime Duke::baspredu	810,{
+	set .@npcname$, "[Prime Duke]";
+		
+	mes .@npcname$;
+	mes "...";
+
+	setarray .@id_elem[0], 2683, 2682, 2685, 2684, 2612, 2633, 7930;
+
+	if (QUESTFURY == 8)
+	{
+		mes "An Academ, hu?";
+		mes "And with several affinities.";
+		mes "Good. You already know what are the fury, then.";
+		mes "I'll now teach you how to capture a fury.";
+		mes "They're not exactly small nice teddy.";
+		mes "Even if the weakest are pretty weak monsters,";
+		mes "the strongest can make a volcano growl, or a tempest raise.";
+		mes "Never underestimate them.";
+		next;
+		mes .@npcname$;
+		mes "To catch a fury, you'll need two things.";
+		mes "An element of the same type as the fury, and a catalyst for the fury's power.";
+		mes "I know, it sounds a bit...Harsh. See that as a leash.";
+		mes "A fire, wind, earth or whatever leash.";
+		mes "I'm the only one who can craft you one.";
+		mes "And for that, I'll need to thinks. An Halter Lead, and, according to the fury style:";
+		callsub "OnShowItemLead";
+		mes "Come back with these items.";
+		set QUESTFURY, 9;
+	}
+	else if (QUESTFURY == 9)
+	{
+		switch(select("See the items","Create a Leash"))
+		{
+			case 1:
+				callsub "OnShowItemLead";
+				break;
+			case 2:
+				mes "Good. Let's see that.";
+				set .@choice, select("Igni","Aqua","Terra","Aeri","Flori","Ferro") - 1;
+				if (countitem(12622) >= 1 && countitem(.@id_elem[.@choice]) >= 1)
+				{
+					mes "Allright. The Leash I'm about to craft depends on your affinity level.";
+
+					set .@rankLead, 0;
+					if (.@choice == 0)
+					{
+						set .@rankLead, rand(0,IGNIFEVRE);
+						copyarray $id_mob_fury[0],$id_mob_igni_fury[0],getarraysize($id_mob_igni_fury);
+					}
+					else if (.@choice == 1)
+					{
+						set .@rankLead, rand(0,AQUAFEVRE);
+						copyarray $id_mob_fury[0],$id_mob_aqua_fury[0],getarraysize($id_mob_aqua_fury);
+					}
+					else if (.@choice == 2)
+					{
+						set .@rankLead, rand(0,TERRAFEVRE);
+						copyarray $id_mob_fury[0],$id_mob_terra_fury[0],getarraysize($id_mob_terra_fury);
+					}
+					else if (.@choice == 3)
+					{
+						set .@rankLead, rand(0,AERIFEVRE);
+						copyarray $id_mob_fury[0],$id_mob_aeri_fury[0],getarraysize($id_mob_aeri_fury);
+					}
+					else if (.@choice == 4)
+					{
+						set .@rankLead, rand(0,FLORIFEVRE);
+						copyarray $id_mob_fury[0],$id_mob_flori_fury[0],getarraysize($id_mob_flori_fury);
+					}
+					else if (.@choice == 5)
+					{
+						set .@rankLead, rand(0,FERROFEVRE);
+						copyarray $id_mob_fury[0],$id_mob_ferro_fury[0],getarraysize($id_mob_ferro_fury);
+					}
+
+					if (.@rankLead == 0)
+					{
+						mes "You can't have a Leash...";
+						mes "You don't have luck, or your affinity is null with this kind of fury.";
+					}
+					else
+					{
+						mes "Here's for you.";
+						getitem .@id_elem_out[.@rankLead], 1;
+						delitem 12622, 1;
+						delitem .@id_elem[.@choice], 1;
+						mes "With that, you can try to catch a fury of type " + strmobinfo(1,$id_mob_fury[.@rankLead] + ".";
+						mes "It will be forever bound to you.";
+						mes "You'll then be able to use the Pearls.";
+						mes "You'll be able to get on the monsters of the same type as your fury, with a rate of '(11 - lvl_fury) * 0.5%';
+						mes "For a lvl 10 fury, you'll then have 0.5% chance. And for a level 1, 5%.";
+						mes "You'll be able to gain items only if your level is higher than the fury.";
+						mes "Once this item will be on your pocket, you'll be able to use the fury power.";
+						mes "You'll only have to eat the Pearl.";
+						mes "If you wanna show your fury, simply use 'ShowFury' command.";
+						mes "You'll only be able to show one at a time, and it'll always be the first in your inventory.";
+					}
+				}
+				break;
+		}
+	}
+	else
+	{
+		mes "Sorry, I'm a but occupied.";
+		mes "Come back later, okay?";
+	}
+	close;
+
+OnShowItemLead:
+	switch(select("Igni","Aqua","Terra","Aeri","Flori","Ferro"))
+	{
+		case 1:
+			mes "A " + getitemname(.@id_elem[0]);
+			mes "You can get one on several monsters, with different success rate.";
+			mes "To know: ";
+			for (set .@i,0; .@i<getarraysize($id_mob_fire); set .@i,.@i+1)
+			{
+				mes "" + strmobinfo(1, $id_mob_fire[.@i]) + " with a rate of " + $id_mob_percent[.@i] + "%";
+			}
+			break;
+		case 2:
+			mes "Un " + getitemname(.@id_elem[1]);
+			mes "You can get one on several monsters, with different success rate.";
+			mes "To know: ";
+			for (set .@i,0; .@i<getarraysize($id_mob_water); set .@i,.@i+1)
+			{
+				mes "" + strmobinfo(1, $id_mob_water[.@i]) + " with a rate of " + $id_mob_percent[.@i] + "%";
+			}
+			break;
+		case 3:
+			mes "Un " + getitemname(.@id_elem[2]);
+			mes "You can get one on several monsters, with different success rate.";
+			mes "To know: ";
+			for (set .@i,0; .@i<getarraysize($id_mob_earth); set .@i,.@i+1)
+			{
+				mes "" + strmobinfo(1, $id_mob_earth[.@i]) + " with a rate of " + $id_mob_percent[.@i] + "%";
+			}
+			break;
+		case 4:
+			mes "Un " + getitemname(.@id_elem[3]);
+			mes "You can get one on several monsters, with different success rate.";
+			mes "To know: ";
+			for (set .@i,0; .@i<getarraysize($id_mob_wind); set .@i,.@i+1)
+			{
+				mes "" + strmobinfo(1, $id_mob_wind[.@i]) + " with a rate of " + $id_mob_percent[.@i] + "%";
+			}
+			break;
+		case 5:
+			mes "Un " + getitemname(.@id_elem[4]);
+			mes "You can get one on several monsters, with different success rate.";
+			mes "To know: ";
+			for (set .@i,0; .@i<getarraysize($id_mob_flor); set .@i,.@i+1)
+			{
+				mes "" + strmobinfo(1, $id_mob_flor[.@i]) + " with a rate of " + $id_mob_percent[.@i] + "%";
+			}
+			break;
+		case 6:
+			mes "Un " + getitemname(.@id_elem[5]);
+			mes "You can get one on several monsters, with different success rate.";
+			mes "To know: ";
+			for (set .@i,0; .@i<getarraysize($id_mob_ferro); set .@i,.@i+1)
+			{
+				mes "" + strmobinfo(1, $id_mob_ferro[.@i]) + " with a rate of " + $id_mob_percent[.@i] + "%";
+			}
+			break;
+	}
+	return;
+}
+
+prontera,97,190,6	script	Ignismith::bastigni	810,{
+	set .@npcname$, "[Ignismith]";
+		
+	mes .@npcname$;
+	mes "...";
+
+	if (QUESTFURY == 1)
+	{
+		mes "Oh! A new Academ?";
+		mes "Welcome here.";
+		mes "You wanna learn more about the Ignismiths, he?";
+		mes "That's pretty simple. Ignismiths are the users of Attack Fury.";
+		mes "There's different kind. Let's see if you can find them.";
+		next;
+		mes .@npcname$;
+		mes "First of all, how many kind do you think there is?";
+		set IGNIFEVRE, 0;
+		input .@countFury;
+		if (.@countFury == 3)
+		{
+			set IGNIFEVRE, IGNIFEVRE + 1;
+		}
+		mes "There's three kind. Attack, Defense, and Buffs.";
+		mes "An Attack type can start a fire spell. Try to guess one kind of speel.";
+		input .@tmpIgni$;
+		if (.@tmpIgni$ == "FireBall" || .@tmpIgni$ == "Fire Ball" || .@tmpIgni$ == "Fireball" || .@tmpIgni$ == "Fire ball")
+		{
+			set IGNIFEVRE, IGNIFEVRE + 1;
+		}
+		else if (.@tmpIgni$ == "BakuenRyu" || .@tmpIgni$ == "Bakuenryu")
+		{
+			set IGNIFEVRE, IGNIFEVRE + 2;
+		}
+		if (.@tmpIgni$ == "HellFire" || .@tmpIgni$ == "Hell Fire"  || .@tmpIgni$ == "Hellfire" || .@tmpIgni$ == "Hell fire")
+		{
+			set IGNIFEVRE, IGNIFEVRE + 3;
+		}
+		mes "For instance, they can use a fire ball, invok a dragon, or call the Hell Flames other their ennemies.";
+		next;
+		mes .@npcname$;
+		mes "A Defense ignismith can use flames to protect themselves.";
+		mes "What can you think of?";
+		switch(select("A Flame Wall","A Flame Shell","A Burning Blood"))
+		{
+			case 1:
+				set IGNIFEVRE, IGNIFEVRE + 1;
+				break;
+			case 2:
+				set IGNIFEVRE, IGNIFEVRE - 1;
+				break;
+			case 3:
+				set IGNIFEVRE, IGNIFEVRE + 3;
+				break;
+		}
+		mes "The easiest way to think of it is the fire wall, or fire coat.";
+		mes "But a powerful ignismith can make is own blood boil, to increase it's own power.";
+		next;
+		mes .@npcname$;
+		mes "And finally the buff. What can you think of?";
+		switch(select("Increase fire damage","Send a malediction over foes","Limit the others resistance"))
+		{
+			case 1:
+				set IGNIFEVRE, IGNIFEVRE + 1;
+				break;
+			case 2:
+				set IGNIFEVRE, IGNIFEVRE + 3;
+				break;
+			case 3:
+				set IGNIFEVRE, IGNIFEVRE - 1;
+				break;
+		}
+		mes "Few talk about it, but the most powerful skill of ignismith is a malus. The Fire Charm.";
+		mes "This drive the target mad, and make them see things.";
+		mes "It increase their fear, and reduce their attack.";
+		if (IGNIFEVRE< 0)
+			set IGNIFEVRE, 0;
+		set QUESTFURY, QUESTFURY + 1;
+	}
+	else
+	{
+		mes "...Come back later, I'm preparing a lesson.";
+	}
+	close;
+}
+
+prontera,97,190,6	script	Aquasmith::bastaqu	810,{
+	set .@npcname$, "[Aquasmith]";
+		
+	mes .@npcname$;
+	mes "...";
+
+	if (QUESTFURY == 2)
+	{
+		mes "Oh! A new Academ?";
+		mes "Welcome here.";
+		mes "You wanna learn more about the Aquasmith, he?";
+		next;
+		mes .@npcname$;
+		set AQUAFEVRE, 0;
+		mes "Let's make it clear. What can you use the water for?";
+		switch(select("To heal","To communicate","To feel","To see","To slow","To push"))
+		{
+			case 1:
+				mes "Good. That's the simplest answer.";
+				mes "The main purpose of Aquasmith is to help others.";
+				mes "And for that, we have to understand those we wanna help."
+				mes "I was affraid you wasn't really receptive...";
+				set AQUAFEVRE, 6;
+				break;
+			case 2:
+				mes "Good one. When using a Water Fury, you can communicate.";
+				mes "You simply have to be near a water area. A lake, the sea, a rive...";
+				mes "But the main purpose of Aquasmith is to help others.";
+				mes "And for that, we have to understand those we wanna help.";
+				mes "I was affraid you wasn't really receptive...";
+				set AQUAFEVRE, 8;
+				break;
+			case 3:
+				mes "Good one. That's the completest, and purest answer.";
+				mes "The main purpose of Aquasmith is to help others.";
+				mes "And for that, we have to understand those we wanna help.";
+				mes "I was affraid you wasn't really receptive...";
+				set AQUAFEVRE, 10;
+				break;
+			case 4:
+				mes "No, sorry.";
+				mes "This is an Aerismith skill.";
+				mes "The main purpose of Aquasmith is to help others.";
+				mes "And for that, we have to understand those we wanna help.";
+				mes "I was affraid you wasn't really receptive...";
+				set AQUAFEVRE, 0;
+				break;
+			case 5:
+				mes "That's true. We can cure, heal...";
+				mes "But the main purpose of Aquasmith is to help others.";
+				mes "And for that, we have to understand those we wanna help.";
+				set AQUAFEVRE, 3;
+				break;
+			case 6:
+				mes "That a purely fighting skill.";
+				mes "Even if we can make it, that's not our main goal.";
+				mes "But the main purpose of Aquasmith is to help others.";
+				mes "And for that, we have to understand those we wanna help.";
+				mes "I was affraid you wasn't really receptive...";
+				set AQUAFEVRE, 1;
+				break;
+		}
+		set QUESTFURY, QUESTFURY + 1;
+	}
+	else
+	{
+		mes "...Come back later, I'm preparing a lesson.";
+	}
+	close;
+}
+
+prontera,97,190,6	script	Terrasmith::bastter	810,{
+	set .@npcname$, "[Terrasmith]";
+		
+	mes .@npcname$;
+	mes "...";
+
+	if (QUESTFURY == 3)
+	{
+		mes "Oh! A new Academ?";
+		mes "Welcome here.";
+		mes "You wanna learn more about the Terrasmith, he?";
+		next;
+		mes .@npcname$;
+		set TERRAFEVRE, 0;
+		mes "Let's keep it simple. How can you imagine the Earth to fight?";
+		switch(select("Increase defense","Increase strength","Slow down ennemies","Disturbing ennemies","Create defensive walls","Destroy the ennemy, make them fall"))
+		{
+			case 1:
+				mes "That's the simplest one.";
+				mes "Spread Earth all over you, make it harder, and increase your own defense.";
+				set TERRAFEVRE, 4;
+				break;
+			case 2:
+				mes "Sometimes, you just have to strike harder to destroy the strongest defense.";
+				set TERRAFEVRE, 5;
+				break;
+			case 3:
+				mes "It's a complicated use, which requires earth and water.";
+				mes "But that's possible.";
+				set TERRAFEVRE, 1;
+				break;
+			case 4:
+				mes "Good one. Gravity, shake, and hop. Defeated.";
+				set TERRAFEVRE, 3;
+				break;
+			case 5:
+				mes "That's possible. But that's not our goal.";
+				set TERRAFEVRE, 2;
+				break;
+			case 6:
+				mes "Ahahaha! You think you're in a magic world?";
+				mes "No, that's not possible sorry.";
+				set TERRAFEVRE, 0;
+				break;
+		}
+		set TERRAFEVRE, TERRAFEVRE*2;
+		set QUESTFURY, QUESTFURY + 1;
+	}
+	else
+	{
+		mes "...Come back later, I'm preparing a lesson.";
+	}
+	close;
+}
+
+prontera,97,190,6	script	Florismith::bastflo	810,{
+	set .@npcname$, "[Florismith]";
+		
+	mes .@npcname$;
+	mes "...";
+
+	if (QUESTFURY == 4)
+	{
+		mes "Oh! A new Academ?";
+		mes "Welcome here.";
+		mes "You wanna learn more about the Florismith, he?";
+		mes "That's pretty wide.";
+		next;
+		mes .@npcname$;
+		set FLORIFEVRE, 0;
+		mes "The test will be easy. 5 questions. Each one for a point.";
+		mes "Let's go.";
+		mes "When you hear Florismith, what do you think?";
+		if(select("Flowers","Trees","Nature","Animals") == 2)
+		{
+			set FLORIFEVRE, FLORIFEVRE + 1;
+		}
+		next;
+		mes .@npcname$;
+		mes "How can you use a tree?";
+		if(select("As a whipe","By strangling the foes","Make roots grow to block ennemies") == 2)
+		{
+			set FLORIFEVRE, FLORIFEVRE + 1;
+		}
+		next;
+		mes .@npcname$;
+		mes "A flower?";
+		if(select("I can't","By creating a poison","By creating a cure") == 1)
+		{
+			set FLORIFEVRE, FLORIFEVRE + 1;
+		}
+		next;
+		mes .@npcname$;
+		mes "The grass?";
+		if(select("Make it sharp","Make it grow","Make it sweep") == 3)
+		{
+			set FLORIFEVRE, FLORIFEVRE + 1;
+		}
+		next;
+		mes .@npcname$;
+		mes "Do you wanna be a Florismith?";
+		if(select("Yes","No","Why not") == 2)
+		{
+			set FLORIFEVRE, FLORIFEVRE + 1;
+		}
+		set FLORIFEVRE, FLORIFEVRE*2;
+		set QUESTFURY, QUESTFURY + 1;
+	}
+	else
+	{
+		mes "...Come back later, I'm preparing a lesson.";
+	}
+	close;
+}
+
+prontera,97,190,6	script	Aerismith::bastaer	810,{
+	set .@npcname$, "[Aerismith]";
+		
+	mes .@npcname$;
+	mes "...";
+
+	if (QUESTFURY == 5)
+	{
+		mes "Oh! A new Academ?";
+		mes "Welcome here.";
+		mes "You wanna learn more about the Aerismith, he?";
+		mes "That's simple. Aerismith are Sky Fighters.";
+		next;
+		mes .@npcname$;
+		set AERIFEVRE, 0;
+		mes "We'll keep it easy. Can you give me 5 way to use the Air to fight?";
+		setarray .@answer$[0], "Fly", "Quickness", "Disturb", "Tornado", "Lightness", "Dust", "Vision", "Movement", "Blow", "Slow";
+		setarray .@correctRank[0],1,2,3,4,6;
+		for (set .@i,0; .@i<5; set .@i, .@i+1)
+		{
+			// On créé un menu dynamique
+    			for ( set .@j, 0; .@j<getarraysize(.@answer$); set .@j, .@j+1 )
+			{
+    				set .@menu$, .@menu$ + ( .@i ? ":" : "" ) + .@answer$[.@j];
+			}
+			// On récupère le choix de l'utilisateur
+    			set .@choice, prompt(.@menu$) - 1;
+
+			if ((.@i != 4 && .@choice != 255))
+			{
+				if (.@choice == 0 || .@choice == 1 || .@choice == 3 || .@choice == 6)
+				{
+					set .@found, 0;
+					for ( set .@k, 0; .@k<getarraysize(.@usedAnswer$); set .@k, .@k+1 )
+					{
+						if (.@usedAnswer$[.@k] == .@answer$[.@choice])
+						{
+							set AERIFEVRE, AERIFEVRE - 1;
+							set .@found, 1;
+						}
+					}
+
+					if (.@found == 0)
+						set AERIFEVRE, AERIFEVRE + 1;				
+				}
+			}
+			else if (.@i == 4 && .@choice == 255)
+			{
+				set AERIFEVRE, AERIFEVRE + 1;	
+			}
+		}
+		if (AERIFEVRE < 0)
+			set AERIFEVRE, 0;
+		set AERIFEVRE, AERIFEVRE*2;
+		set QUESTFURY, QUESTFURY + 1;
+	}
+	else
+	{
+		mes "...Come back later, I'm preparing a lesson.";
+	}
+	close;
+}
+
+prontera,97,190,6	script	Ferrosmith::bastfer	810,{
+	set .@npcname$, "[Ferrosmith]";
+		
+	mes .@npcname$;
+	mes "...";
+
+	set .map$, ""; set .@x,0; set .@y,0;
+	set .@count, 0;
+	setarray .@mobId[0], 0;
+	if (QUESTFURY == 6)
+	{
+		mes "Oh! a new Academ?";
+		mes "Welcome here.";
+		mes "You wanna learn more about the Ferrosmith, hu?";
+		mes "That's pretty simple. Ferrosmith increase their fighting skill with metals.";
+		next;
+		mes .@npcname$;
+		set FERROFEVRE, 0;
+		mes "Here, no need to discuss.";
+		mes "Just fight, and show me what you are made of.";
+		warp strcharinfo(0), .map$, .@x, .@y;
+		monster .map$,0,0,"Ferrosmith Test",.@mobId[.@count],1,"bastfer::OnMobKilled";
+	}
+	else
+	{
+		mes "...Come back later, I'm preparing a lesson.";
+	}
+	close;
+
+OnPCDieEvent:
+	dispbottom "I've seen enought.";
+	dispbottom "Go back to the Maestro.";
+	killmonsterall .map$; 
+	set FERROFEVRE, FERROFEVRE * 2;
+	set QUESTFURY, QUESTFURY + 1;
+	end;
+
+OnMobKilled:
+	set FERROFEVRE, FERROFEVRE + 1;
+	set .@count, .@count + 1;
+	if (.@count < 5)
+	{
+		monster .map$,0,0,"Ferrosmith Test",.@mobId[.@count],1,"bastfer::OnMobKilled";
+	}
+	else
+	{
+		dispbottom "I've seen enought.";
+		dispbottom "Go back to the Maestro.";
+		set FERROFEVRE, FERROFEVRE * 2;
+		set QUESTFURY, QUESTFURY + 1;
+	}
+	end;
+}

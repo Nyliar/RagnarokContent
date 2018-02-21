@@ -1,0 +1,4 @@
+28,Fenrir Howl,1200,1@tnm2,131,107,1@tnm2
+29,Jormungand Lair,1200,1@nyd,248,278,1@nyd
+30,Hel Realm,1200,1@cata,142,56,1@cata,2@cata
+31,Fafnir Mountain,1200,1@fm,74,33,1@fm,2@fm,3@fm

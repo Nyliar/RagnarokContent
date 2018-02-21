@@ -1,0 +1,229 @@
+//Jötuun
+invek,236,88,3	script	Ice King Hrym::ikh	1252,{
+
+	set .@npcname$, "[Ice King Hrym]";
+	if(degoe == 1)goto OtherQuest_Started;
+	if(legoe == 1)goto OtherQuest_Started;
+	if(hagoe == 1)goto OtherQuest_Started;
+	if(mwgoe == 1)goto MWGo_Etheria;
+	if(oagoe == 1)goto OtherQuest_Started;
+	if(dsgoe == 1)goto OtherQuest_Started;
+	if(deqstart == 1)goto OtherQuest_Started;
+	if(leqstart == 1)goto OtherQuest_Started;
+	if(haqstart == 1)goto OtherQuest_Started;
+	if(mwqstart >= 1)goto MWQuest_Started;
+	if(oaqstart == 1)goto OtherQuest_Started;
+	if(dsqstart == 1)goto OtherQuest_Started;
+	if(deqdone == 1)goto OtherQuest_Done;
+	if(leqdone == 1)goto OtherQuest_Done;
+	if(haqdone == 1)goto OtherQuest_Done;
+	if(mwqdone == 1)goto MWQuest_Done;
+	if(oaqdone == 1)goto OtherQuest_Done;
+	if(dsqdone == 1)goto OtherQuest_Done;
+	if(BaseLevel < 50 || JobLevel < 50) goto L_LowLevel;
+      
+	mes .@npcname$;
+	mes "Welcome here, young man. I'm Hrym, King of all Frost Giants.";
+	mes "We are frost warriors, living in a forever frozen land.";
+	next;
+	menu "Can you tell me more?.",MWInfo,"I wanna become one of yours!",-,"i don't really care.",MWNo;
+
+	mes .@npcname$;
+	mes "To become a Jotun, you'll have to prove you deserve it.";
+	next;
+	mes .@npcname$;
+	mes "Jotun have learnt from the Frost how to be sharp and deadly. Just as a beautiful snowy land,";
+	mes "we're able to cause a slow, and painful death. You'll also be able to do that if you join us.";
+	next;
+	mes .@npcname$;
+	mes "But for that, you'll have to prove me you deserve it.";
+	next;
+	mes .@npcname$;
+	mes "There is somewhere in Midgard a frozen land. Far in the hills, you'll find a peacefull place.";
+	next;
+	mes .@npcname$;
+	mes "You'll find here a Jotun. He'll tell you more about us.";
+	next;
+	mes .@npcname$;
+	mes "Once you know more, you'll be able to learn more about the Frost.";
+	set mwqstart,1;
+	close;
+
+MWQuest_Started:
+	mes .@npcname$;
+	mes "So. What did you learnt?";
+	next;
+	menu "I'd like to abandon",L_sure,"I've got all I need!",MWQuest_AlmostDone,"Still working on it.",MWNo;
+
+	L_sure:
+		mes .@npcname$;
+		mes "Jotun don't fear the coldness of death!";
+		next;
+		menu "No...No I want to continue.",L_conti,"I...I'm sure!",L_quit;
+
+		L_conti:
+			mes .@npcname$;
+			mes "Then leave, you drip!";
+			close;
+		L_quit:
+			mes .@npcname$;
+			mes "Allright. You'll be able to start again.";
+			mes "But don't talk about us. To no one.";
+			set mwqstart,0;
+			set mwqdone,0;
+			set mwgoe,0;
+			close;
+
+		L_LowLevel:
+			mes .@npcname$;
+			mes "I'm the Ice King Hrym. You can't become one of us.";
+			mes "For that, you'll need a higher level. In both base and job, you're required to be lvl 50.";
+			next;
+			mes .@npcname$;
+			mes "Do you wish to learn more?";
+			next;
+			menu "Yes please.",MWInfo,"No thanks!",Quit;
+
+//Marine Warrior Information
+		
+	MWInfo:
+		mes .@npcname$;
+		mes "Jotuns live in Jotunheim, a frozen world, just before the Flame Hell, Muspelheim.";
+		next;
+		mes .@npcname$;
+		mes "We've earned there a cold mind, sharp and deadly. Event the Gods fear us.";
+		next;
+		mes .@npcname$;
+		mes "We've learn to manage the cold, to control it. It has several uses.";
+		next;
+		mes .@npcname$;
+		mes "The main one is a protective aura around our body. It weakens all attack against us.";
+		next;
+		mes .@npcname$;
+		mes "The second one is a slowing of vital functions of weak. Only the strongest can survive in the cold.";
+		close;
+
+//Dialogues
+
+		MWNo:
+		mes .@npcname$;
+		mes "Allright, as you wish.";
+		close;
+
+		MWQuest_Done:
+			mes .@npcname$;
+			mes "Welcome Jotun. May the Frost bind your ennemies in death.";
+			close;
+
+		MWQuest_AlmostDone:
+			if(countitem(6253)<10 || countitem(7561)<100 || countitem(6257)<50) goto MWQuest_NotEnuf;
+			mes .@npcname$;
+			mes "I can feel that you've finally completed this quest.";
+			next;
+			mes .@npcname$;
+			mes "You're now ready to become one of us.";
+			mes "Go find the Etherian Angel. She'll guide you in this ultimate ordeal.";
+			mes "Once you'll be one of us, seek Yarmon. He'll teach you more about the Frost Orbs.";
+			set mwgoe,1;
+			delitem 6253, 10;
+			delitem 7561, 100;
+			delitem 6257, 50;
+			close;
+		
+		MWGo_Etheria:
+			mes .@npcname$;
+			mes "Go find the Etherian Angel. She'll guide you in this ultimate ordeal.";
+			close;
+
+		OtherQuest_Done:
+			mes .@npcname$;
+			mes "Leave this place. You now belong to another race.";
+			close;
+
+		OtherQuest_Started:
+			mes .@npcname$;
+			mes "Leave this place. You've started to work for another race. Cancel it, and come back to me, if you change your mind.";
+			close;
+
+		MWQuest_NotEnuf:
+			mes .@npcname$;
+			mes "Sorry but you lack some items. Here's what I need:";
+			next;
+			mes .@npcname$;
+			mes "- ^5555FF10 Cold Ice^000000.";
+			mes "- ^5555FF100 Glacial Heart^000000.";
+			mes "- ^5555FF50 Ice Crystal^000000.";
+			close;
+
+	Quit:
+		mes "That's your choice.";
+		close;
+}
+
+ars_fild51,58,128,5	script	Jotun Roilak::jr	1779,{
+	set .@npcname$, "[Roilak]";
+
+	mes .@npcname$;
+	mes "...";
+	if (mwqstart == 1)
+	{
+		mes "So you've decided to become one of us.";
+		mes "Do you really now what you've chosen?";
+		mes "The Frost isn't really mercyfull. Not for your ennemies, nor for you.";
+		mes "You're ready for that? Then embrace the Frost Path.";
+		next;
+		mes .@npcname$;
+		mes "Jotuns only rely on their own strength.";
+		mes "We're not some grass eaters.";
+		mes "Prove me your merit. Take this back to Hrym, the Ice King.";
+		mes "- ^5555FF10 Cold Ice^000000.";
+		mes "- ^5555FF100 Glacial Heart^000000.";
+		mes "- ^5555FF50 Ice Crystal^000000.";
+		next;
+		mes .@npcname$;	
+		mes "If you succeed, you'll be able to learn the Frost.";
+		mes "You'll be able to reduce the damage you were supposed to endure.";
+		mes "But it won't be enough alone. So take care!";
+		mes "On top of that, you'll learn how to use the Frost Orbs.";
+		mes "They'll let you use another power from the Frost Path.";
+		set mwqstart, 2;
+	}
+	close;
+}
+
+ars_dun08,64,131,5	script	Jotuu Yarmon::jy	1251,{
+	set .@npcname$, "[Yarmon]";
+
+	mes .@npcname$;
+	mes "...";
+	if (mwqdone > 0 && mwqdone <= 1 || mwqstart == 1)
+	{
+		mes "You're not ready. Leave!";
+	}
+	else if (mwqdone == 3)
+	{
+		mes "A feel a great Forst out of you.";
+		mes "You aura glow from our frozen lands coldness.";
+		next;
+		mes .@npcname$;
+		mes "But you're not here for that, isn't it?";
+		mes "You're here for the Frost Orbs.";
+		mes "Each ones can be used separately, one at a time.";
+		mes "You can only find them in Jotunheim.";
+		next;
+		mes "The first one, the 'Heat Eater',";
+			//NJ_SUITON, 538 (lvl 5)
+		mes "make you ennemies feel a deep, incontrolable freeze, slowing them down.";
+		mes "The second one, the 'Ice Producer',";
+			//NPC_ICEBREATH, 655 (lvl 4)
+		mes "contains a breath of an old Ice Giant, and allows you to use it.";
+		mes "Finally, the rarest, the 'Life Devourer',";
+			//WL_FROSTMISTY, 2203 (lvl 3)
+		mes "blocks all life around you.";
+		next;
+		mes "These are the Frost Orbs. Only our race can use them. We're a kind of...Necromancer I guess.";
+	}
+	else
+		mes "I don't speak to other races.";
+	close;	
+}

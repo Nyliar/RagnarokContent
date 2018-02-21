@@ -1,0 +1,388 @@
+// [========================================================]
+// [===========       Metalimie - NPC Quest      ===========]
+// [========================================================]
+// [ Version 1                                              ]
+// [========================================================]
+// [ Original script by: Alayne                             ]
+// [========================================================]
+// [ Description:                                           ]
+// [--------------------------------------------------------]
+// [                                                        ]
+// [ - metalimie quest npc				           ]
+// [                                                        ]
+// [========================================================]
+// [ Changelog: (5 last updates)                            ]
+// [--------------------------------------------------------]
+// [                                                        ]
+// [ v0: Creation                      			    ]
+// [                                                        ]
+// [========================================================]
+// [                                                        ]
+// [========================================================]
+
+prontera,97,190,6	script	Allomancian::prtall	810,{
+	set .@npcname$, "[Allomancian]";
+		
+	mes .@npcname$;
+	mes "...";
+
+	mes "You don't know about Allomancie, he?";
+	
+	if (METALIMIE < 5)
+	{
+		mes "Pfff...";
+		mes "You're less utile than a bug...";
+	}
+	else
+	{
+		mes "Hum...Look like you've been initiated.";
+		mes "Allright. Allomancie is the Metalic Power which enable people to use internal metal as catalyst.";
+		mes "An Allomancian can create Allomantic Potion, based on Metal, to get an external supply of strength, hit or whatever.";
+		mes "But it's pretty difficult to create. You need to find a correct percentage of each metal in the mix.";
+		mes "Otherwise, you'll get poisonned.";
+		mes "Plus, you can't keep a potion in your stomac for long, or you'll also get poisonned.";
+		next;
+		mes .@npcname$;
+		mes "I can't teach you more about the Allomantic Potion Creation.";
+		mes "But I can tell you where you can get more informations.";
+		mes "Every Allomancian have to learn how to create potions.";
+		mes "To learn this, you'll have to find the Creation Book for Allomantic Users.";
+		mes "It's a secret book, which pages has been lost in time.";
+	}
+	if (METALIMIE == 2)
+	{
+		set METALIMIE, 3;
+	}
+
+	close;
+}
+
+prontera,97,190,6	script	Ferrochemist::prtfer	810,{
+	set .@npcname$, "[Ferrochemist]";
+		
+	mes .@npcname$;
+	mes "...";
+
+	mes "You don't know about Ferrochimie, hu?";
+	
+	if (METALIMIE < 5)
+	{
+		mes "I can't tell you more know. But come back a bit later, I'll tell you.";
+	}
+	else
+	{
+		mes "Hum...Look like you've been initiated.";
+		mes "Allright. Ferrochimie is the Metalic Power which enable people to use external metal as catalyst.";
+		mes "A Ferrochemist can used items, crafted from Metal, to get an external supply of strength, hit or whatever.";
+		mes "But to obtain a supply, they have to store it in the corresponding item, aweakening them during a period of time.";
+		mes "For example, to gain a supply on Hit, you'll have to decrease your own hit, to store it in the item.";
+		mes "When you'll want to use it, you simply have to revert the process.";
+		next;
+		mes .@npcname$;
+		mes "I can't teach you more about the Ferrochemist Items.";
+		mes "But I can tell you where you can get more informations.";
+		mes "Only a few specific Blacksmiths can forge this stuff.";
+		mes "You'll have to found one, and ask him to forge it for you.";
+		mes "They're in a secret place, which location has been lost in time.";
+	}
+	if (METALIMIE == 3)
+	{
+		set METALIMIE, 4;
+	}
+
+	close;
+}
+
+prontera,97,190,6	script	Hemallurgist::prthem	810,{
+	set .@npcname$, "[Inquisitor]";
+		
+	mes .@npcname$;
+	mes "...";
+
+	mes "You don't know about Hemallurgie, hu?";
+	
+	if (METALIMIE < 5)
+	{
+		mes "I can't tell you more know. I don't plan to. Get away, before I kill you.";
+	}
+	else
+	{
+		mes "Hum...Look like you've been initiated.";
+		mes "Allright. Hemallurgie is the Metalic Power which enable people to use other peoples metal as catalyst.";
+		mes "An Hemallurgist can used Nails, based on Metal, to extract power from victim, and use it as an external supply of strength, hit or whatever.";
+		mes "But to obtain a supply, these Nails has to be soaked into a victim's blood.";
+		mes "That's the strongest, but the hardest power to obtain.";
+		mes "For example, to gain a supply on Hit, you'll have to kill a people while wearing a certain Nail.";
+		mes "This will enable a Hit bonus, which grown with each killed.";
+		next;
+		mes .@npcname$;
+		mes "I can't teach you more about the Hemallurgie Items.";
+		mes "But I can tell you where you can get more informations.";
+		mes "Only a few specific peoples can forge this stuff.";
+		mes "You'll have to found one, and ask him to forge it for you.";
+		mes "They're in a secret place, which location has been lost in time.";
+	}
+	if (METALIMIE == 4)
+	{
+		set METALIMIE, 5;
+	}
+
+	close;
+}
+
+prontera,97,190,6	script	Fallen One::prtfalon	810,{
+	set .@npcname$, "[Fallen One]";
+	set .@price, 1000000;
+	set .@itemId, 12400;
+	mes .@npcname$;
+	mes "...";
+	if (ALLOMANCIE == 1 && ALLOMANCIE_LEVEL == 0)
+	{
+		mes "So you're ready to choose your path.";
+		mes "For each " + getitemname(.@itemId) + " you get, you'll have to sacrifice " + .@price + " Zenys.";
+		mes "This will raise your chance of success by 5%, with an initial rate of 1/2.";
+		set .@wob, countitem(.@itemId);
+		mes "You actually got " + .@wob + " " + getitemname(.@itemId) + ". Which represents " + .@wob + "% more chances.";
+		mes "There, if you pay " + .@wob * .@price + "Z.";
+		mes "Are you ready?";
+		switch(select("Yes","No"))
+		{
+			case 1:
+				if (Zeny >= .@wob * .@price)
+				{
+					set Zeny, Zeny - .@wob * .@price;
+					delitem .@itemId, .@wob;
+					set .@initialChance, 100;
+					set .@maxChance, 200;
+					set .@initialChance, .@initialChance + 5*.@wob;
+					// if rand  0,200 is higher than the initialchance, became MistBorn
+					if (rand(0,.@maxChance) > .@initialChance)
+					{
+						set ALLOMANTIC_LEVEL, 9;
+						mes "A new MistBorn raise...";
+						mes "From now, you'll have to find the Metal Proportion in order to create Potions.";
+						mes "Exchange with other MistBorn, ask to Fogger, or search for it in the main cities.";
+						mes "They are written in secret places.";
+						mes "In Thalys, Hyrule, Hrylar, Thiercellieux, Dodsfall, Dagslys, Varherre and Morkhet.";
+						mes "The last 4 are obtained by killing hidden dungeons MvPs.";
+					}
+					else
+					{
+						//become a fogger
+						set ALLOMANTIC_LEVEL, rand(1,8);
+						switch(ALLOMANTIC_LEVEL)
+						{
+							case 1:
+								mes "A Golden Eyed is born (Increase Hit).";
+								mes "The percentage of your corresponding Potion is 51%";
+								mes "Keep this in mind.";
+								break;
+							case 2:
+								mes "A Silvered Feet is born (Increase Flee).";
+								mes "The percentage of your corresponding Potion is 15%";
+								mes "Keep this in mind.";
+								break;
+							case 3:
+								mes "A Steel Body is born (Increase HP).";
+								mes "The percentage of your corresponding Potion is 23%";
+								mes "Keep this in mind.";
+								break;
+							case 4:
+								mes "An Iron Mind is born (Increase SP).";
+								mes "The percentage of your corresponding Potion is 32%";
+								mes "Keep this in mind.";
+								break;
+							case 5:
+								mes "An Oridecon Fist is born (Increase Atk).";
+								mes "The percentage of your corresponding Potion is 64%";
+								mes "Keep this in mind.";
+								break;
+							case 6:
+								mes "A Elunium Flow is born (Increase MAtk).";
+								mes "The percentage of your corresponding Potion is 46%";
+								mes "Keep this in mind.";
+								break;
+							case 7:
+								mes "A Bradium Being is born (Increase Status Resistance).";
+								mes "The percentage of your corresponding Potion is 37%";
+								mes "Keep this in mind.";
+								break;
+							case 8:
+								mes "A Carnium Body is born (Increase Def).";
+								mes "The percentage of your corresponding Potion is 73%";
+								mes "Keep this in mind.";
+								break;
+						}
+					}
+				}
+				else
+				{
+					mes "Sorry, but you miss some gold.";
+				}
+				break;
+			case 2:
+				mes "I'll wait here.";
+				break;
+		}
+	}
+	else if (METALIMIE == 6)
+	{
+		mes "You know.";
+		mes "You know almost everything about the Metalimie.";
+		mes "Everything except...The Fall.";
+		mes "Don't be affraid. There's nothing to be affraid of.";
+		mes "It's simply...Special.";
+		next;
+		mes .@npcname$;
+		mes "To know a Fall, all you have to do is drink a potion.";
+		mes "I can't guarantee a success. And if you fail...";
+		mes "You'll lose the possibility to try again during one entire day.";
+		mes "More than that, once you've Fall, there's no way back.";
+		mes "You'll definitely became what you've became.";
+		mes "You'll soon understand.";
+		next;
+		mes .@npcname$;
+		mes "Are you ready?";
+		switch(select("Yes","No"))
+		{
+			case 1:
+				mes "These potions are pretty rare, and so, pretty expensive.";
+				mes "I'm the only one to know how to create it.";
+				mes "I don't need anything from you. Create it is my role.";
+				mes "But, I need you to prove me your determination.";
+				mes "So, I need your experience. An entire level...";
+				mes "That's expensive, I know.";
+				mes "But it is how it is.";
+				mes "Do you agree to this sacrifice? There's no guarantee I remind you!";
+				switch(select("Yes","No"))
+				{
+					case 1:
+						mes "So, let's try.";
+						atcommand "@blvl " + (BaseLevel - 1);
+						set .@randSuccess, rand(0,100);
+						//15% de succès de bascule
+						if (.@randSuccess < 15)
+						{
+							set .@randChemis, rand(0,2);
+							if (.@randChemis == 0)
+							{
+								//ferrochimie
+								set FERROCHIMIE, 1;
+								mes "Congratulation! You've become a Ferrochemist!";
+								mes "You can now ask the Blacksmith to create items to you!";
+							}
+							else if(.@randChemis == 1)
+							{
+								//allomancie
+								set ALLOMANCIE, 1;
+								set ALLOMANCIE_LEVEL, 1;
+								mes "Congratulation! You've become an Allomancian!";
+								mes "You can know ask the Chemist to create Allomantic Potions for you!";
+								next;
+								mes .@npcname$;
+								mes "In fact, Allomancie is a bit special.";
+								mes "Thanks to her, you can use the internal Metals.";
+								mes "But...Everyone has a different relation with the Allomancie.";
+								mes "Some can use only one metal, and some, all of them.";
+								mes "That's one or the other. I don't choose, the Allomancie itself does.";
+								mes "But you can increase your chance by sacrificing more of you.";
+								next;
+								mes .@npcname$;
+								mes "If you became a Fogger, a one Metal Allomancian, you'll be able to use this one only.";
+								mes "Moreover, you won't be able to choose the one you get.";
+								mes "On the other hand, for every " + getitemname(.@itemId) + " that you'll sacrifice, you'll increase your chances";
+								mes "to become a MistBorn, a Complete Fogger.";
+								mes "I'll wait here for you to make your choice.";
+							}
+							else
+							{
+								//Hemallurgie
+								set HEMALLURGIE, 1;
+								mes "Congratulations! You've became an Hemallurgiste!";
+								mes "You can know ask the Inquisitor to create Hemallurgie items for you!";
+							}
+						}
+						break;
+					case 2:
+						mes "I understand. It's lot to ask.";
+						break;
+				}
+				break;
+			case 2:
+				mes "I understand.";
+				break;
+		}
+	}
+	close;	
+}
+
+thalys_o,97,190,6	script	Metal Board::thamb	810,{
+	mes "There's a simple word carved on it:";
+	mes "Gold 51%";
+	close;
+}
+
+Hyrule,97,190,6	script	Metal Board::basmb	810,{
+	mes "There's a simple word carved on it:";
+	mes "Silver 15%";
+	close;
+}
+
+invek,97,190,6	script	Metal Board::crymb	810,{
+	mes "There's a simple word carved on it:";
+	mes "Elunium 46%";
+	close;	
+}
+
+thier_vlg,97,190,6	script	Metal Board::casmb	810,{
+	mes "There's a simple word carved on it:";
+	mes "Steel 23%";
+	close;
+}
+
+ars_fild44,97,190,6	script	Metal Board::mormb	810,{
+	mes "There's a simple word carved on it:";
+	mes "Iron 32%";
+	close;
+}
+
+ars_fild04,97,190,6	script	Metal Board::halmb	810,{
+	mes "There's a simple word carved on it:";
+	mes "Oridecon 64%";
+	close;
+}
+
+ars_fild58,97,190,6	script	Metal Board::melmb	810,{
+	mes "There's a simple word carved on it:";
+	mes "Bradium 37%";
+	close;	
+}
+
+ars_fild40,97,190,6	script	Metal Board::thimb	810,{
+	mes "There's a simple word carved on it:";
+	mes "Carnium 73%";
+	close;	
+}
+
+function	script	GetRandomHiddenPercent	{
+	switch(rand(0,3))
+	{
+		case 0:
+			set .@mess$, "Ring of Water 76%";
+			break;
+		case 1:
+			set .@mess$, "Ring of Fire 78%";
+			break;
+		case 2:
+			set .@mess$, "Ring of Wind 49%";
+			break;
+		case 3:
+			set .@mess$, "Ring of Earth 91%";
+			break;
+	}
+	dispbottom .@mess$;
+	end;
+}
+
+
+

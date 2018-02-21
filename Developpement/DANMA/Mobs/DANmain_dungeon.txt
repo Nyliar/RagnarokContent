@@ -1,0 +1,73 @@
+//main_dungeon
+//First stage
+danma_01,0,0,0,0	monster	Poring	1002,35,0,0,1
+danma_01,0,0,0,0	monster	Drops	1113,25,0,0,1
+danma_01,0,0,0,0	monster	Poporing	1031,15,0,0,1
+danma_01,0,0,0,0	monster	Lunatic	1063,25,0,0,1
+
+danma_02,0,0,0,0	monster	Skeleton	1076,35,0,0,1
+danma_02,0,0,0,0	monster	Zombie	1015,25,0,0,1
+danma_02,0,0,0,0	monster	Familiar	1005,15,0,0,1
+
+danma_03,0,0,0,0	monster	Smokie	1056,15,0,0,1
+danma_03,0,0,0,0	monster	Chonchon	1011,25,0,0,1
+danma_03,0,0,0,0	monster	Skeleton Soldier	1028,20,0,0,1
+danma_03,0,0,0,0	monster	Skeleton Archer	1016,15,0,0,1
+
+danma_04,0,0,0,0	monster	Bongun	1188,15,0,0,1
+danma_04,0,0,0,0	monster	Munak	1026,25,0,0,1
+danma_04,0,0,0,0	monster	Hydra	1068,30,0,0,1
+
+danma_05,0,0,0,0	monster	Hyegun	1512,15,0,0,1
+danma_05,0,0,0,0	monster	High Orc	1213,25,0,0,1
+danma_05,0,0,0,0	monster	Orc Archer	1189,15,0,0,1
+
+danma_06,0,0,0,0	boss_monster	Maya	1147,1,7200000,3600000,0
+
+//second stage
+danma_07,0,0,0,0	monster	Green Iguana	1687,35,0,0,1
+danma_07,0,0,0,0	monster	Galapago	1391,15,0,0,1
+danma_07,0,0,0,0	monster	Driller	1380,20,0,0,1
+danma_07,0,0,0,0	monster	Roween	1782,35,0,0,1
+
+danma_08,0,0,0,0	monster	Talisman Ghost	1322,25,0,0,1
+danma_08,0,0,0,0	monster	Mineral	1614,35,0,0,1
+danma_08,0,0,0,0	monster	Bloody Butterfly	1526,45,0,0,1
+
+//danma_09,0,0,0,0	monster	Small Octopus	1512,15,0,0,1
+danma_09,0,0,0,0	monster	Siroma	1776,35,0,0,1
+danma_09,0,0,0,0	monster	Marc	1045,10,0,0,1
+
+danma_10,0,0,0,0	monster	Kapha	1406,25,0,0,1
+danma_10,0,0,0,0	monster	Alligator	1271,15,0,0,1
+danma_10,0,0,0,0	monster	Plasma	1697,5,0,0,1
+
+danma_11,0,0,0,0	monster	Freezer	1594,10,0,0,1
+danma_11,0,0,0,0	monster	Fur Seal	1533,25,0,0,1
+danma_11,0,0,0,0	monster	Sea Otter	1323,15,0,0,1
+danma_11,0,0,0,0	monster	Gazeti	1778,10,0,0,1
+
+danma_12,0,0,0,0	boss_monster	Garm	1252,1,7200000,3600000,0
+
+//third stage
+danma_13,0,0,0,0	monster	Dullahan	1504,15,0,0,1
+danma_13,0,0,0,0	monster	Zombie Master	1298,10,0,0,1
+danma_13,0,0,0,0	monster	Wicked Nymphe	1416,25,0,0,1
+
+danma_14,0,0,0,0	monster	Succubus	1370,15,0,0,1
+danma_14,0,0,0,0	monster	Evil Druid	1117,30,0,0,1
+danma_14,0,0,0,0	monster	Incubus	1374,15,0,0,1
+
+danma_15,0,0,0,0	monster	Skeleton General	1290,15,0,0,1
+danma_15,0,0,0,0	monster	Khalitzburg	1132,35,0,0,1
+
+//danma_17,0,0,0,0	monster	Manananggal	1512,15,0,0,1
+danma_16,0,0,0,0	monster	Nightmare Terror	1554,35,0,0,1
+//danma_17,0,0,0,0	monster	Nightmare Mummy	1189,15,0,0,1
+
+danma_17,0,0,0,0	monster	Raydric	1467,25,0,0,1
+danma_17,0,0,0,0	monster	Bloody Murderer	1507,10,0,0,1
+danma_17,0,0,0,0	monster	Ragged Zombie	1865,15,0,0,1
+
+danma_18,0,0,0,0	boss_monster	Dracula	1530,1,7200000,3600000,0
+

@@ -1,0 +1,401 @@
+//29328 -> Guided Boomerang
+//ars_fild04,175,158,5	script	Boomerang Thrower::giquest27	732,{
+prt_fild10,54,138,5	script	Boomerang Thrower::giquest27	732,{
+	mes "[Boomerang Thrower]";
+	mes "";
+	mes "Hello to you, " + strcharinfo(0);
+	mes "Haven't you seen a boomerang, by luck?";
+	mes "I send it away, and now...I can't find back...";
+	mes "It should be somewhere around here...";
+	if (callfunc("IsPlayerOn"))
+	{
+		set BOOMERANGQ, 1;
+	}
+	close;
+}
+
+//ars_fild04,51,332,5	script	Boomerang::giquest28	-1,1,1,{
+prt_fild10,331,260,5	script	Boomerang::giquest28	-1,1,1,{
+	end;
+
+OnTouch:
+	mes "*It looks like a boomerang...*";
+	if (BOOMERANGQ == 1 && callfunc("IsPlayerOn"))
+	{
+		rentitem  29328, 60;
+		logmes "[Yggdrasil Memories] " + strcharinfo(0) + " obtains a rental " + getitemname(29328) + ".";
+		set BOOMERANGQ, 2;
+	}
+	end;	
+}
+
+//29341 -> Ancient Wise King Ring
+//ars_fild39,23,82,5	script	Exotic Inhabitants::giquest29	784,{
+mid_camp,42,287,5	script	Exotic Inhabitants::giquest29	784,{
+	set .@npcname$, "[Tavi]";
+
+	mes .@npcname$;
+	mes "";
+	if (EXOTICQ == 0 || callfunc("IsPlayerOn") == 0)
+	{
+		mes "Kala ouak luk ni otu kaj rah?";
+		mes "*You don't understand a single word...*";
+		set EXOTICQ, 1;
+	}
+	else if (EXOTICQ < .talkCount)
+	{
+		mes "Kala ouak luk ni otu kaj rah?";
+		mes "...";
+		next;
+		mes "[" + strcharinfo(0) + "]";
+		mes "I...am..." + strcharinfo(0) + ". Do you understand?";
+		next;
+		mes .@npcname$;
+		for (set .@i, 0; .@i<rand(0,10); set .@i,.@i+1)
+		{
+			mes "...";
+		}
+		next;
+		mes .@npcname$;
+		mes "Kala ouak luk ni otu kaj rah?";
+		mes "*You don't understand a single word...*";	
+		set EXOTICQ, EXOTICQ + 1;		
+	}
+	else if (EXOTICQ == .talkCount)
+	{
+		mes "Kala ouak luk ni otu kaj rah?";
+		mes "...";
+		next;
+		mes "[" + strcharinfo(0) + "]";
+		mes "I...am..." + strcharinfo(0) + ". Do you understand?";
+		next;
+		mes .@npcname$;
+		for (set .@i, 0; .@i<rand(0,10); set .@i,.@i+1)
+		{
+			mes "...";
+		}
+		next;
+		mes .@npcname$;
+		mes "I...Tavi?";
+		if (select("Yes!","I am " + strcharinfo(0) + ".") == 1)
+		{
+			next;
+			mes .@npcname$;
+			mes "Find...";
+			for (set .@i, 0; .@i<getarraysize(.neededId); set .@i,.@i+1)
+			{
+				mes " " + .neededCount[.@i] + "^FF0000" + getitemname(.neededId[.@i]) + "^000000";
+			}
+			set EXOTICQ, 11;
+			close;
+		}
+		else
+		{
+			mes "Kala ouak luk ni otu kaj rah?";
+			mes "*You don't understand a single word...*";	
+		}
+	}
+	else if (EXOTICQ <= 11)
+	{
+		mes "...Find?";
+		for (set .@i, 0; .@i<getarraysize(.neededId); set .@i,.@i+1)
+		{
+			if (countitem(.neededId[.@i]) < .neededCount[.@i])
+			{
+				mes "Not...";
+				mes "Find...";
+				mes " " + .neededCount[.@i] + "^FF0000" + getitemname(.neededId[.@i]) + "^000000";	
+				close;
+			}
+		}
+		mes .@npcname$;
+		mes "...";
+		mes "Kala ouak luk ni otu kaj rah?";
+		next;
+		mes .@npcname$;
+		mes "*You don't understand a single word...*";	
+		for (set .@i, 0; .@i<getarraysize(.neededId); set .@i,.@i+1)
+		{
+			delitem .neededId[.@i], .neededCount[.@i];
+		}
+		next;
+		mes .@npcname$;
+		mes "*He took your items, and spit on the ring...*";
+		set EXOTICQ, 12;
+	}
+	else
+	{
+		mes "Kala ouak luk ni otu kaj rah?";
+		rentitem  29341, 60;
+		logmes "[Yggdrasil Memories] " + strcharinfo(0) + " obtains a rental " + getitemname(29341) + ".";
+		set EXOTICQ, 0;
+		mes "Thanks, friend. You'll finally be able to understand me!";
+		mes "The gold of the ring was used to bind a part of my soul in the ring.";
+		mes "And the jewels were used to enable you to translate my language with mana.";
+		mes "But...I've got nothing more to say...";
+		mes "What a shame...";
+	}
+	close;
+	
+OnInit:
+	setarray .neededId[0], 2610,719,720,721,722,723;
+	setarray .neededCount[0], 1, 1, 1, 1, 1, 1;
+	set .talkCount, rand(0,10);
+	end;
+}
+
+//29339 -> Maze Visitor
+//ars_fild58,158,183,5	script	Maze Lost::giquest30	797,2,2,{
+yuno_in05,192,197,5	script	Maze Lost::giquest30	797,2,2,{
+	set .@npcname$, "[Yorek]";
+	mes .@npcname$;
+	mes "";
+	mes "You...Find me...";
+	if (.timerStart == 0 && callfunc("IsPlayerOn"))
+	{
+		donpcevent "giquest30-1::OnTimerStart";
+		set .timerStart, 1;
+		hideonnpc strnpcinfo(3);
+	}
+	close;
+
+OnTouch:
+	if (.timerStart)
+	{
+		mes "...";
+		mes "*It's like he wasn't really here.*";
+	}
+	close;
+	
+OnTimerElapsed:
+	set .timerStart, 0;
+	hideoffnpc strnpcinfo(3);
+	end;
+}
+
+//ars_fild58,51,28,5	script	Maze Lost::giquest30-1	797,{
+yuno_in05,10,43,5	script	Maze Lost::giquest30-1	797,{
+	set .@npcname$, "[Yorek]";
+	mes .@npcname$;
+	mes "";
+	mes "You've...Find me...";
+	mes "Finally, somebody has been able to find me...";
+	mes "Thanks! Thanks a lot!";
+	hideonnpc strnpcinfo(3);
+	next;
+	mes "*He...Disappears...Simply disappears...*";
+	mes "[" + strcharinfo(0) + "]";
+	mes "What a strange dream...";
+	donpcevent "giquest30::OnTimerElapsed";
+	if (callfunc("IsPlayerOn"))
+	{
+		mes "What's that, in my pocket?";
+		rentitem  29339, 60;
+		logmes "[Yggdrasil Memories] " + strcharinfo(0) + " obtains a rental " + getitemname(29339) + ".";
+	}
+	close;
+
+OnTimerStart:
+	hideoffnpc strnpcinfo(3);
+	initnpctimer;
+	end;
+	
+OnTimer30000:
+	hideonnpc strnpcinfo(3);
+	donpcevent "giquest30::OnTimerElapsed";
+	end;
+	
+OnInit:
+	hideonnpc strnpcinfo(3);
+	end;
+}
+
+//29314 -> Golden Scale
+//ars_fild36,39,69,5	script	Golden Scale::giquest31	111,{
+ein_dun02,79,157,5	script	Golden Scale::giquest31	111,{
+	end;
+	
+OnLootGolden:
+	if (callfunc("IsPlayerOn"))
+	{
+		set .@randMin, 10;
+		if(countitem(29367) > 0)
+		{
+			set .@randMin, 10;
+		}
+		if (rand(1,100) <= rand(0,10))
+		{
+			rentitem  29314, 60;
+			logmes "[Yggdrasil Memories] " + strcharinfo(0) + " obtains a rental " + getitemname(29314) + ".";
+		}
+	}
+	initnpctimer;
+	end;
+
+OnTimer3000:
+	monster strnpcinfo(4),0,0,strmobinfo(1,.mobId),.mobId,1,strnpcinfo(3)+"::OnLootGolden",1,0;
+	stopnpctimer;
+	end;
+	
+OnInit:
+	set .mobId, 1614; //mineral
+	monster strnpcinfo(4),0,0,strmobinfo(1,.mobId),.mobId,1,strnpcinfo(3)+"::OnLootGolden",1,0;
+	end;
+}
+
+//29315 -> Fickle Genie
+//ars_fild45,158,73,5	script	Djinn::giquest32	794,{
+ra_fild02,187,244,5	script	Djinn::giquest32	794,{
+	set .@npcname$, "[Djinn]";
+	mes .@npcname$;
+	mes "";
+	mes "...";
+	mes "I'm Rendal, the Djinn.";
+	mes "For years now, I've been obliged to fulfill humans dreams.";
+	mes "From now, I'm free. I won't fulfill it again.";
+	next;
+	mes .@npcname$;
+	mes "Never again.";
+	mes "Now, I live for me.";
+	if (callfunc("IsPlayerOn"))
+	{
+		if (.willDone > WILLDONE)
+		{
+			if (DJINNQ == 0)
+			{
+				next;
+				mes .@npcname$;
+				mes "What? Your lamp has no power anymore on me.";
+				mes "But now, I have on you.";
+				mes "FILL MY DESIRE!";
+				set DJINNQ, rand(1,8);
+				switch(DJINNQ)
+				{
+					case 1:
+						mes "Bring me back 50 Piece of Cake.";
+						break;
+					case 2:
+						mes "Bring me back 40 Cheese.";
+						break;
+					case 3:
+						mes "Bring me back 30 Candies.";
+						break;
+					case 4:
+						mes "Bring me back 15 Banana.";
+						break;
+					case 5:
+						mes "Bring me back 10 Grape Juice.";
+						break;
+					case 6:
+						mes "Bring me back 60 Strawberry.";
+						break;
+					case 7:
+						mes "Bring me back 43 Grapes.";
+						break;
+					case 8:
+						mes "Bring me back 10 Cacao.";
+						break;
+				}
+			}
+			else if (DJINNQ == 1 && countitem(539) >= 50)
+			{
+				next;
+				mes .@npcname$;
+				delitem 539, 50;
+				mes "...Thanks.";
+				set WILLDONE, WILLDONE + 1;
+			}
+			else if (DJINNQ == 2 && countitem(548) >= 40)
+			{
+				next;
+				mes .@npcname$;
+				delitem 548, 40;
+				mes "...Thanks.";
+				set WILLDONE, WILLDONE + 1;
+			}
+			else if (DJINNQ == 3 && countitem(529) >= 30)
+			{
+				next;
+				mes .@npcname$;
+				delitem 529, 30;
+				mes "...Thanks.";
+				set WILLDONE, WILLDONE + 1;
+			}
+			else if (DJINNQ == 4 && countitem(513) >= 15)
+			{
+				next;
+				mes .@npcname$;
+				delitem 513, 15;
+				mes "...Thanks.";
+				set WILLDONE, WILLDONE + 1;
+			}
+			else if (DJINNQ == 5 && countitem(533) >= 10)
+			{
+				next;
+				mes .@npcname$;
+				delitem 533, 10;
+				mes "...Thanks.";
+				set WILLDONE, WILLDONE + 1;
+			}		
+			else if (DJINNQ == 6 && countitem(578) >= 60)
+			{
+				next;
+				mes .@npcname$;
+				delitem 578, 60;
+				mes "...Thanks.";
+				set WILLDONE, WILLDONE + 1;
+			}		
+			else if (DJINNQ == 7 && countitem(514) >= 43)
+			{
+				next;
+				mes .@npcname$;
+				delitem 514, 43;
+				mes "...Thanks.";
+				set WILLDONE, WILLDONE + 1;
+			}		
+			else if (DJINNQ == 8 && countitem(7182) >= 10)
+			{
+				next;
+				mes .@npcname$;
+				delitem 7182, 10;
+				mes "...Thanks.";
+				set WILLDONE, WILLDONE + 1;
+			}		
+		}
+		else
+		{
+			if (countitem(.neededId) > 0)
+			{
+				next;
+				mes .@npcname$;
+				mes "...";
+				mes "No! NOT AGAIN!";
+				mes "*You've captured the Djinn.*";
+				rentitem  29315, 60;
+				logmes "[Yggdrasil Memories] " + strcharinfo(0) + " obtains a rental " + getitemname(29315) + ".";
+				set WILLDONE, 0;
+				set DJINNQ, 0;
+				hideonnpc strnpcinfo(3);
+				initnpctimer;
+			}
+			else
+			{
+				next;
+				mes .@npcname$;
+				mes "Thanks but you still have no power.";
+				mes "No lamp will ever have power on me again.";
+			}
+		}
+	}
+	close;
+
+OnTimer300000:
+	hideoffnpc strnpcinfo(3);
+	stopnpctimer;
+	end;
+	
+OnInit:
+	set .willDone, rand(1,10);
+	set .neededId, 7327;
+	end;
+}

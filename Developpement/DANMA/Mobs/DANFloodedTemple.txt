@@ -1,0 +1,25 @@
+//First stage
+danma_24,0,0,0,0	monster	Crab	1073,35,0,0,1
+danma_24,0,0,0,0	monster	Goblin	1126,25,0,0,1
+danma_24,0,0,0,0	monster	Hydra	1068,15,0,0,1
+danma_24,0,0,0,0	monster	Kukre	1070,25,0,0,1
+
+danma_25,0,0,0,0	monster	Marin	1242,35,0,0,1
+danma_25,0,0,0,0	monster	Marina	1141,25,0,0,1
+danma_25,0,0,0,0	monster	Marse	1144,15,0,0,1
+
+danma_26,0,0,0,0	monster	Deviace	1108,15,0,0,1
+danma_26,0,0,0,0	monster	Iara	2069,25,0,0,1
+danma_26,0,0,0,0	monster	Kapha	1406,10,0,0,1
+danma_26,0,0,0,0	monster	Marc	1045,5,0,0,1
+
+danma_27,0,0,0,0	monster	Merman	1264,15,0,0,1
+danma_27,0,0,0,0	monster	Obeaune	1044,25,0,0,1
+danma_27,0,0,0,0	monster	Pyranha	2070,30,0,0,1
+
+danma_28,0,0,0,0	monster	Aqua Elemental	2016,5,0,0,1
+danma_28,0,0,0,0	monster	Ryncho	2020,25,0,0,1
+danma_28,0,0,0,0	monster	Sea Otter	1323,10,0,0,1
+danma_28,0,0,0,0	monster	Strouf	1075,5,0,0,1
+
+danma_29,0,0,0,0	boss_monster	Knight of Windstorm	1251,1,7200000,3600000,0

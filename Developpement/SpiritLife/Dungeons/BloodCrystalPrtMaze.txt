@@ -1,0 +1,218 @@
+prt_maze03,179,11,5	script	BloodCrystal#3::alabc3	OBJ_A2,{
+	set .@npcname$, "[Blood Crystal]";
+	mes .@npcname$;
+	mes "Current fill level: " + .fillPercent + "%"; 
+	mes "Would do you want to do?";
+	switch(select("Fill the Crystal","Retrieve a Spirit Life","Nothing"))
+	{
+		case 1:
+			next;
+			mes .@npcname$;
+			mes "You're about to fill Life in Blood Crystal.";
+			mes "How many Shards do you wish to give to the Crystal?";
+			mes "'0' means 'as much as possible'.";
+			input .@shardCount;
+			if(.@shardCount == 0)
+			{
+				set .@shardCount, countitem($shardIds[0]);
+			}
+			if(.@shardCount > countitem($shardIds[0]))
+			{
+				next;
+				mes .@npcname$;
+				mes "You don't have those items.";
+				close;
+			}
+			if(.popAvailable != 1)
+			{
+				next;
+				mes .@npcname$;
+				mes "The Guardian has allready been killed. Wait for " + $repopHourCount + " hours to summon it again.";
+				close;
+			}
+			delitem $shardIds[0], .@shardCount;
+			set .@fillRequired, 1000 + atoi(strnpcinfo(2)) * 50;
+			set .fillItemCount, .fillItemCount + .@shardCount;
+			set .fillPercent,  .fillItemCount * 100 / .@fillRequired;
+			if(.fillPercent >= 100)
+			{
+				set .fillPercent, 100;
+				next;
+				mes .@npcname$;
+				mes "The Crystal has been filled.";
+				for(set .@i,.mapToCheck[0]; .@i<=.mapToCheck[1]; set .@i,.@i+1)
+				{
+					set .@mobCount, .@mobCount + mobcount("prt_maze0" + .@i, "CardinalSystem::OnNormalDied");
+				}
+				if(.@mobCount == 0)
+				{
+					set .@percentHeal, 0 - atoi(strnpcinfo(2));
+					percentheal .@percentHeal, .@percentHeal;
+					set .popAvailable, 0;	
+					setnpcdisplay strnpcinfo(3), OBJ_B2, 1;
+					//special effect
+					specialeffect 862;
+					//summon boss
+					monster strnpcinfo(4), 0, 0, "--ja--", .bossId, 1, "CardinalSystem::OnGuardianDied";
+					initnpctimer;
+					set .loopCount, 0;
+				}
+				else
+				{
+					mes "The Guardian will appears after total dungeon cleaning.";
+				}
+				setd("$" + strnpcinfo(3), 1);
+			}
+			else
+			{
+				next;
+				mes .@npcname$;
+				mes "The Crystal has been filled up to " + .fillPercent + "%";
+			}
+			break;
+		case 2:
+			next;
+			mes .@npcname$;
+			if(SPIRITLIFE == $maxSpiritLife)
+			{
+				mes "You can't get more than " + $maxSpiritLife + " Spirit Lifes.";
+				close;
+			}
+			if(SPIRIT == 0)
+			{
+				mes "You can't retrieve a Spirit Life while you're not in Spirit mode.";
+				close;
+			}
+			if(.fillPercent > $minFillPercentToRetrieveLife)
+			{
+				set .fillPercent, 0;
+				set SPIRITLIFE, SPIRITLIFE + 1;
+				set SPIRIT, 0;
+				specialeffect2 372;
+				undisguise();
+				mes "The Crystal has been emptied. You've raised from the dead.";
+			}
+			else
+			{
+				mes "The Crystal isn't filled enough to allow Spirit Life retrieve.";
+			}
+			break;
+		case 3:
+			next;
+			mes .@npcname$;
+			mes "Action cancelled.";
+			break;
+	}
+	close;
+
+OnTimer360000:
+	stopnpctimer;
+	set .loopCount, .loopCount + 1;
+	if(.loopCount >= $repopHourCount)
+	{
+		goto OnClearGauge;
+	}
+	initnpctimer;
+	end;
+
+OnClearGauge:
+	setnpcdisplay strnpcinfo(3), OBJ_A2;
+	set .fillPercent, 0;
+	set .fillItemCount, 0;
+	end;
+	
+OnPopMonsters:
+	callsub OnClearMonsters;
+//== F1 =============================
+	monster "prt_maze01",179,20, "--ja--", 1002, 5, "CardinalSystem::OnNormalDied";
+	monster "prt_maze01",179,180, "--ja--", 1104, 5, "CardinalSystem::OnNormalDied";
+	monster "prt_maze01",139,140, "--ja--", 1174, 5, "CardinalSystem::OnNormalDied";
+	monster "prt_maze01",139,180, "--ja--", 1103, 5, "CardinalSystem::OnNormalDied";
+	monster "prt_maze01",99,180, "--ja--", 1114, 5, "CardinalSystem::OnNormalDied";
+	monster "prt_maze01",59,100, "--ja--", 1128, 5, "CardinalSystem::OnNormalDied";
+	monster "prt_maze01",99,100, "--ja--", 1011, 5, "CardinalSystem::OnNormalDied";
+	monster "prt_maze01",59,180, "--ja--", 1145, 5, "CardinalSystem::OnNormalDied";
+	monster "prt_maze01",19,60, "--ja--", 1013, 5, "CardinalSystem::OnNormalDied";
+	monster "prt_maze01",59,60, "--ja--", 1025, 5, "CardinalSystem::OnNormalDied";
+	monster "prt_maze01",99,60, "--ja--", 1056, 5, "CardinalSystem::OnNormalDied";
+	monster "prt_maze01",139,20, "--ja--", 1063, 5, "CardinalSystem::OnNormalDied";
+	monster "prt_maze01",99,20, "--ja--", 1007, 5, "CardinalSystem::OnNormalDied";
+	monster "prt_maze01",19,180, "--ja--", 1166, 5, "CardinalSystem::OnNormalDied";
+	monster "prt_maze01",59,20, "--ja--", 1008, 5, "CardinalSystem::OnNormalDied";
+	monster "prt_maze01",19,20, "--ja--", 1031, 5, "CardinalSystem::OnNormalDied";
+	monster "prt_maze01",179,60, "--ja--", 1052, 5, "CardinalSystem::OnNormalDied";
+	monster "prt_maze01",139,60, "--ja--", 1060, 5, "CardinalSystem::OnNormalDied";
+	monster "prt_maze01",19,140, "--ja--", 1042, 5, "CardinalSystem::OnNormalDied";
+	monster "prt_maze01",59,140, "--ja--", 1057, 4, "CardinalSystem::OnNormalDied";
+	monster "prt_maze01",19,180, "--ja--", 1166, 3, "CardinalSystem::OnNormalDied";
+	monster "prt_maze01",179,100, "--ja--", 1099, 3, "CardinalSystem::OnNormalDied";
+	monster "prt_maze01",99,140, "--ja--", 1037, 3, "CardinalSystem::OnNormalDied";
+	monster "prt_maze01",179,140, "--ja--", 1139, 3, "CardinalSystem::OnNormalDied";
+	monster "prt_maze01",19,100, "--ja--", 1035, 3, "CardinalSystem::OnNormalDied";
+	monster "prt_maze01",139,100, "--ja--", 1100, 3, "CardinalSystem::OnNormalDied";
+	monster "prt_maze01",59,140, "--ja--", 1214, 4, "CardinalSystem::OnNormalDied";
+	monster "prt_maze01",0,0, "--ja--", 1035, 1, "CardinalSystem::OnNormalDied";
+	monster "prt_maze01",99,20, "--ja--", 1018, 1, "CardinalSystem::OnNormalDied";
+	monster "prt_maze01",0,0, "--ja--", 1092, 1, "CardinalSystem::OnNormalDied";
+	monster "prt_maze01",101,138, "--ja--", 1083, 1, "CardinalSystem::OnNormalDied";
+	monster "prt_maze01",101,138, "--ja--", 1082, 1, "CardinalSystem::OnNormalDied";
+	monster "prt_maze01",99,181, "--ja--", 1082, 2, "CardinalSystem::OnNormalDied";
+	monster "prt_maze01",60,140, "--ja--", 1079, 1, "CardinalSystem::OnNormalDied";
+	monster "prt_maze01",61,101, "--ja--", 1081, 1, "CardinalSystem::OnNormalDied";
+	monster "prt_maze01",141,100, "--ja--", 1083, 1, "CardinalSystem::OnNormalDied";
+	monster "prt_maze01",141,100, "--ja--", 1079, 1, "CardinalSystem::OnNormalDied";
+	monster "prt_maze01",0,0, "--ja--", 1078, 5, "CardinalSystem::OnNormalDied";
+	monster "prt_maze01",100,100, "--ja--", 1079, 1, "CardinalSystem::OnNormalDied";
+	monster "prt_maze01",100,100, "--ja--", 1081, 1, "CardinalSystem::OnNormalDied";
+	monster "prt_maze01",176,132, "--ja--", 1084, 3, "CardinalSystem::OnNormalDied";
+	monster "prt_maze01",181,149, "--ja--", 1084, 2, "CardinalSystem::OnNormalDied";
+	monster "prt_maze01",178,60, "--ja--", 1085, 3, "CardinalSystem::OnNormalDied";
+	monster "prt_maze01",168,60, "--ja--", 1085, 2, "CardinalSystem::OnNormalDied";
+	
+//== F2 =============================
+	monster "prt_maze02", 0, 0, "--ja--", 1031,25, "CardinalSystem::OnNormalDied";
+	monster "prt_maze02", 0, 0, "--ja--", 1060,5, "CardinalSystem::OnNormalDied";
+	monster "prt_maze02", 0, 0, "--ja--", 1243,1, "CardinalSystem::OnNormalDied";
+	monster "prt_maze02", 0, 0, "--ja--", 1306,1, "CardinalSystem::OnNormalDied";
+
+//== F3 =============================
+	monster "prt_maze03", 0, 0, "--ja--", 1031, 45, "CardinalSystem::OnNormalDied";
+	monster "prt_maze03", 0, 0, "--ja--", 1035, 30, "CardinalSystem::OnNormalDied";
+	monster "prt_maze03", 0, 0, "--ja--", 1139, 30, "CardinalSystem::OnNormalDied";
+	monster "prt_maze03", 0, 0, "--ja--", 1101, 25, "CardinalSystem::OnNormalDied";
+	monster "prt_maze03", 0, 0, "--ja--", 1037, 30, "CardinalSystem::OnNormalDied";
+	monster "prt_maze03", 0, 0, "--ja--", 1215, 20, "CardinalSystem::OnNormalDied";
+	monster "prt_maze03", 0, 0, "--ja--", 1294, 1, "CardinalSystem::OnNormalDied";
+	monster "prt_maze03", 0, 0, "--ja--", 1120, 1, "CardinalSystem::OnNormalDied";
+	monster "prt_maze03", 0, 0, "--ja--", 1078, 5, "CardinalSystem::OnNormalDied";
+	monster "prt_maze03", 0, 0, "--ja--", 1093, 1, "CardinalSystem::OnNormalDied";
+	monster "prt_maze03", 0, 0, "--ja--", 1090, 1, "CardinalSystem::OnNormalDied";
+	monster "prt_maze03", 0, 0, "--ja--", 1092, 1, "CardinalSystem::OnNormalDied";
+	monster "prt_maze03", 0, 0, "--ja--", 1088, 1, "CardinalSystem::OnNormalDied";
+	monster "prt_maze03", 0, 0, "--ja--", 1083, 5, "CardinalSystem::OnNormalDied";
+	monster "prt_maze03", 0, 0, "--ja--", 1079, 5, "CardinalSystem::OnNormalDied";
+	monster "prt_maze03", 0, 0, "--ja--", 1083, 6, "CardinalSystem::OnNormalDied";
+	monster "prt_maze03", 0, 0, "--ja--", 1085, 5, "CardinalSystem::OnNormalDied";
+	end;
+	
+OnClearMonsters:	
+OnClock0000:
+	killmonsterall "prt_maze01";
+	killmonsterall "prt_maze02";
+	killmonsterall "prt_maze03";
+	set .popAvailable, 1;
+	setd("$" + strnpcinfo(3), 0);
+	return;
+	
+OnInit:
+	set .fillPercent, 0;
+	if(getd("$" + strnpcinfo(3)) >= 1)
+	{
+		set .fillPercent, 100;
+	}
+	setarray .mapToCheck[0],1,3;
+	set .bossId, 1039;
+	set .popAvailable, 1;
+	end;
+}
+

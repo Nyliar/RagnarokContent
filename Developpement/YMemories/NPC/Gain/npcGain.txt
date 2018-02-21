@@ -1,0 +1,96 @@
+//29310 -> First Enigma
+//ars_fild13,59,206,5	script	First Enigma::gigain1	HIDDEN_WARP_NPC,{
+bif_fild01,26,372,5	script	First Enigma::gigain1	HIDDEN_WARP_NPC,{
+	end;
+
+OnInit:
+	defpattern 1,"Gain","OnGainAsked";
+	activatepset 1;
+	end;
+
+OnGainAsked:
+	if (questenigma == 10)
+	{
+		rentitem 29310, 300;
+		set questenigma, 0;
+		logmes "[Yggdrasil Memories] " + strcharinfo(0) + " obtains a " + getitemname(29310);
+	}
+	end;
+}
+
+//29311 ==> Epic Adventurer
+//ars_fild20,135,151,5	script	Veteran::gigain2	HIDDEN_WARP_NPC,{
+izlude,173,78,5	script	Veteran::gigain2	HIDDEN_WARP_NPC,{
+	end;
+
+OnInit:
+	defpattern 1,"Gain","OnGainAsked";
+	activatepset 1;
+	end;
+
+OnGainAsked:
+	if (Q_NAH_COMPLETE == 2)
+	{
+		rentitem 29311, 300;
+		set Q_NAH_COMPLETE, 0;
+		logmes "[Yggdrasil Memories] " + strcharinfo(0) + " obtains a " + getitemname(29311);
+	}
+	end;
+}
+
+//29292 ==> Elemental Furor
+//dep_lb,14,82,4	script	Bloom::gigain4	HIDDEN_WARP_NPC,{
+prontera,91,350,4	script	Bloom::gigain4	HIDDEN_WARP_NPC,{
+	end;
+
+OnInit:
+	defpattern 1,"Gain","OnGainAsked";
+	activatepset 1;
+	end;
+
+OnGainAsked:
+	if (#elemental_favor_q == 11)
+	{
+		rentitem 29292, 300;
+		set #elemental_favor_q, 0;
+		logmes "[Yggdrasil Memories] " + strcharinfo(0) + " obtains a " + getitemname(29292);
+	}
+	end;
+}
+
+//29332 ==> Rune Master
+//ars_fild40,97,81,5	script	Fehu::gigain5	HIDDEN_WARP_NPC,{
+splendide,129,366,5	script	Fehu::gigain5	HIDDEN_WARP_NPC,{
+	end;
+
+OnInit:
+	defpattern 1,"Gain","OnGainAsked";
+	activatepset 1;
+	end;
+
+OnGainAsked:
+	if (questprogress(60368, HUNTING) == 2)
+	{
+		rentitem 29332, 300;
+		erasequest 60368;
+		logmes "[Yggdrasil Memories] " + strcharinfo(0) + " obtains a " + getitemname(29332);
+	}
+	end;
+}
+
+//29347 ==> Death Scythe
+//ars_fild21,246,212,6	script	Grim::gigain6	HIDDEN_WARP_NPC,{
+glast_01,118,354,6	script	Grim::gigain6	HIDDEN_WARP_NPC,{
+	defpattern 1,"Gain","OnGainAsked";
+	activatepset 1;
+	end;
+
+OnGainAsked:
+	if (REAPQ >= 2)
+	{
+		rentitem 29347, 300;
+		set REAPQ, 0;
+		logmes "[Yggdrasil Memories] " + strcharinfo(0) + " obtains a " + getitemname(29347);
+	}
+	end;
+}

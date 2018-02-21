@@ -1,0 +1,309 @@
+//invek,170,43,3	script	O'Hariam	901,{
+alb_ship,172,175,3	script	O'Hariam	901,{
+	set .@npcname$, "[O'Hariam]";
+
+					//set #elemental_favor_q, 7;
+					//set #guardian_dead, 2;
+					//set #info_favor, 1;
+
+	mes .@npcname$;
+	mes "";
+	mes "Ahoy, sailor!";
+	mes "You're in front of the great O'Hariam!";
+	mes "How's That ?! Never heard about me !?";
+	mes "I used to be a pirate! I've shook Invek's foundations!";
+	mes "I've plundered, stolen and even raped!";
+	next;
+	if (#elemental_favor_q == 0)
+	{
+		mes .@npcname$;
+		mes "";
+		mes "So... Tell me sailor... Have you ever heard about Treasure Maps?";
+		mes "Some say that they allow you to see where are hidden secret treasures of our world !";
+		mes "But beware ! By some kind of sorcery, you can only use them once.";
+		mes "As soon as you read them, they will disappear. Just like a sheet of paper thrown into the sea.";
+		mes "You better remember what they point out for sure !";
+	}
+	else
+	{
+		if (#elemental_favor_q >= 1 && #elemental_favor_q <= 5)
+		{
+			mes "*You start singing the pirate song*";
+			mes "AHHHH! AHHHHHHHHHHHHHHHHH!";
+			mes "GO AWAY! I ONLY WANT TO FORGET!";
+			mes "GO AWAY! GO AWAY I SAID!!!!!";
+		}
+		else
+		{
+			if (#elemental_favor_q == 6)
+			{
+				if (#guardian_dead == 0)
+				{
+					mes "*You start singing the pirate song*";
+					mes "AHHHH! AHHHHHHHHHHHHHHHHH!";
+					mes "GO AWAY! I ONLY WANT TO FORGET!";
+					mes "GO AWAY! GO AWAY I SAID!!!!!";
+					next;
+					mes .@npcname$;
+					mes "You ... Did you do that for me ?";
+					mes "I... I...";
+					next;
+					mes "*There seems to be a problem...*";
+					mes "I...";
+					mes "I remember.";
+					mes "I finally remember what it's like to be a proud Adventurer.";
+					mes "A Fighter, a Traveller... A PIRATE !";
+					next;
+					mes "Thank you my friend. You’ve opened my eyes once and for all, and I’m grateful to you for that.";
+					mes "The Gods mocked me. It's time for us, the Bloody Pirates to show them that we don't fear Gods.";
+					mes "When they cursed us, the Gods transformed four members of my crew into guardians protecting the entrance of their territories.";
+					mes "Throughout the world, several pedestals are awaiting for an offering.";
+					mes "This offering is the clue that you've reached one of the steps leading to the Treasure.";
+					mes "Find them. Find them all and steal their Treasure!";
+					mes "But be careful, they are well-guarded, and you only have a short amount time to free them...";
+					next;
+	
+					set .last_elemental_step, 0;			
+					callsub L_Prepare_Piedestal;
+					mes "The first pedestal is" + .map_indication$;
+
+					if (getarraysize($elemental_water_item) == 0)
+					{
+						donpcevent "mqi::InitArray";
+					}
+
+					if (getarraysize($elemental_water_item) > 1)
+					{
+						mes "To activate it, you'll have to bring and insert one of the following item inside : ";
+						for (set .@i, 0; .@i<getarraysize($elemental_water_item); set .@i, .@i+1)
+							mes "One " + getitemname($elemental_water_item[.@i]);
+					}
+					else
+						mes "To activate it, you'll have to bring and insert one: " + getitemname($elemental_water_item[0]);
+					mes "Once you are done, I beg you to free my sailor.";
+					set #guardian_dead, 0;
+					set #info_favor, 1;
+				}
+				else if (#info_favor == 1 && #guardian_dead < 2)
+				{
+					mes "I have a feeling that you don't know where to search anymore.";
+					mes "Here's what I told you.";
+					mes "The first pedestal is" + .map_indication$;
+					if (getarraysize($elemental_water_item) > 1)
+					{
+						mes "To activate it, you'll have to bring and insert one of the following item inside : ";
+						for (set .@i, 0; .@i<getarraysize($elemental_water_item); set .@i, .@i+1)
+							mes "One " + getitemname($elemental_water_item[.@i]);
+					}
+					else
+						mes "To activate it, you'll have to bring and insert one: " + getitemname($elemental_water_item[0]);
+					mes "Once you are done, I beg you to free my sailor.";
+				}
+				else
+				{
+					mes "You succeeded to free the first of the four Sailors.";
+					mes "Congratulations, but do not rest on one's laurels. You still have a long way to go.";
+					mes "We, pirates, made a habit of sorting ourselves out, by continuously putting ourselves in competition.";
+					mes "The four cursed sailmen were the strongest.";
+
+					next;
+					mes .@npcname$;
+
+					set .last_elemental_step, 0;				
+					callsub L_Prepare_Piedestal;
+					mes "The second pedestal is " + .map_indication$;
+					if (getarraysize($elemental_earth_item) > 1)
+					{
+						mes "To activate it, you'll have to bring and insert one of the following item : ";
+						for (set .@i, 0; .@i<getarraysize($elemental_earth_item); set .@i, .@i+1)
+							mes "One " + getitemname($elemental_earth_item[.@i]);
+					}
+					else
+						mes "To activate it, you'll have to bring and insert one: " + getitemname($elemental_earth_item[0]);
+					mes "Once you are done, I beg you to free my sailor.";
+					set #elemental_favor_q, 7;
+					set #guardian_dead, 0;
+					set #info_favor, 1;
+				}
+			}
+			else if (#elemental_favor_q == 7)
+			{
+				if (#info_favor == 1 && #guardian_dead < 2)
+				{
+					mes "I have a feeling that you don't know where to search anymore.";
+					mes "Here's what I told you.";
+					mes "The second pedestal is" + .map_indication$;
+					if (getarraysize($elemental_earth_item) > 1)
+					{
+						mes "To activate it, you'll have to bring and insert one of the following item : ";
+						for (set .@i, 0; .@i<getarraysize($elemental_earth_item); set .@i, .@i+1)
+							mes "One " + getitemname($elemental_earth_item[.@i]);
+					}
+					else
+						mes "To activate it, you'll have to bring and insert one: " + getitemname($elemental_earth_item[0]);
+					mes "Once you are done, I beg you to free my sailor.";
+				}
+				else if (#guardian_dead == 2)
+				{
+					mes "You succeeded to free the second of the four Sailors.";
+					mes "He was a proud pirate, he loved to stand on the deck when a fierce storm stroked!";
+					mes "He was undoubtedly the closest to the Sea, he could spot reefs from 300m afar.";
+
+					next;
+					mes .@npcname$;
+
+					set .last_elemental_step, 0;				
+					callsub L_Prepare_Piedestal;
+					mes "The third pedestal is " + .map_indication$;
+					if (getarraysize($elemental_wind_item) > 1)
+					{
+						mes "To activate it, you'll have to bring and insert one of the following item : ";
+						for (set .@i, 0; .@i<getarraysize($elemental_wind_item); set .@i, .@i+1)
+							mes "One " + getitemname($elemental_wind_item[.@i]);
+					}
+					else
+						mes "To activate it, you'll have to insert one: " + getitemname($elemental_wind_item[0]);
+					mes "Once you are done, I beg you to free my sailor.";
+					set #elemental_favor_q, 8;
+					set #guardian_dead, 0;
+					set #info_favor, 1;
+				}
+			}
+			else if (#elemental_favor_q == 8)
+			{
+				if (#info_favor == 1 && #guardian_dead < 2)
+				{
+					mes "I have a feeling that you don't know where to search anymore.";
+					mes "Here's what I told you.";
+					mes "The third pedestal is" + .map_indication$;
+					if (getarraysize($elemental_wind_item) > 1)
+					{
+						mes "To activate it, you'll have to bring and insert of the following item : ";
+						for (set .@i, 0; .@i<getarraysize($elemental_wind_item); set .@i, .@i+1)
+							mes "One " + getitemname($elemental_wind_item[.@i]);
+					}
+					else
+						mes "To activate it, you'll have to bring and insert one: " + getitemname($elemental_wind_item[0]);
+					mes "Once you are done, I beg you to free my sailor.";
+				}
+				else if (#guardian_dead == 2)
+				{
+					mes "Three Sailors have been released. There’s only one remaining.";
+					
+					next;
+					mes .@npcname$;
+
+					set .last_elemental_step, 0;				
+					callsub L_Prepare_Piedestal;
+					mes "The last pedestal is " + .map_indication$;
+					if (getarraysize($elemental_fire_item) > 1)
+					{
+						mes "To activate it, you'll have to bring and insert one of the following item : ";
+						for (set .@i, 0; .@i<getarraysize($elemental_fire_item); set .@i, .@i+1)
+							mes "One " + getitemname($elemental_fire_item[.@i]);
+					}
+					else
+						mes "To activate it, you'll have to bring and insert one: " + getitemname($elemental_fire_item[0]);
+					mes "Once you are done, I beg you to free my sailor.";
+					set #elemental_favor_q, 9;
+					set #guardian_dead, 0;
+					set #info_favor, 1;
+				}
+			}
+			else if (#elemental_favor_q == 9)
+			{
+				if (#info_favor == 1 && #guardian_dead < 2)
+				{
+					mes "I have a feeling that you don't know where to search anymore.";
+					mes "Here's what I told you.";
+					mes "The fourth pedestal is" + .map_indication$;
+					if (getarraysize($elemental_fire_item) > 1)
+					{
+						mes "To activate it, you'll have to bring and insert one of the following : ";
+						for (set .@i, 0; .@i<getarraysize($elemental_fire_item); set .@i, .@i+1)
+							mes "One " + getitemname($elemental_fire_item[.@i]);
+					}
+					else
+						mes "To activate it, you'll have to bring and insert one: " + getitemname($elemental_fire_item[0]);
+					mes "Once you are done, I beg you to free my sailor.";
+				}
+				else if (#guardian_dead == 2)
+				{
+					mes "You released my four sailors.";
+					mes "Now, you can reach the path to Yggdrasil";
+					mes "The Shoot is born from the Earth. It was given life by Water,";
+					mes "It lived breathing Air and will die by Fire.";
+					mes "These four marks will allow you to reach the Shoot.";
+					for (set .@i, 0; .@i<4; set .@i, .@i+1)
+						getitem $elemental_mark_item[.@i], 1;
+					next;
+					mes "Each of these Marks have to be used in the right order.";
+					mes "You will require three friends: the time you'll have at your disposal will be too short to cover the distance by yourself";
+					mes "Once done, the Shoot will call you... Beware of what will happen.";
+					mes "I wish you good luck !";
+					set #elemental_favor_q, 10;
+					set $favor_elem_quest, 1;
+				}
+			}
+			else if (#elemental_favor_q == 10)
+			{
+				mes "I can't help you anymore. You already have the marks but you have to find the Shoot !";
+				mes "Why not search places near the Yggdrasil as a starter?";
+				set $favor_elem_quest, 1;
+			}
+		}
+	}
+	close;
+
+L_Prepare_Piedestal:
+	//change npc display according to actual step
+	if (.last_elemental_step == 0)	
+	{
+		set .@npccount, rand(1,12);
+
+		switch(.@npccount)
+		{
+			case 1:
+				set .map_indication$, " just in front of the toughest fire dungeon.";
+				break;
+			case 2:
+				set .map_indication$, " really near a dungeon which represents the water element.";
+				break;
+			case 3:
+				set .map_indication$, " on a map where the monsters are the nearest of Wind element.";
+				break;
+			case 4:
+				set .map_indication$, " on a map where earth monster are quite numerous. There's also big flowers there.";
+				break;
+			case 5:
+				set .map_indication$, " one map north from Veins.";
+				break;
+			case 6:
+				set .map_indication$, " on a map where Alligator are quite numerous.";
+				break;
+			case 7:
+				set .map_indication$, " on a map where there's some strange flies. And scorpios.";
+				break;
+			case 8:
+				set .map_indication$, " on a map really few people know. I think there's a strange tribe there, near a big stone pyramids.";
+				break;
+			case 9:
+				set .map_indication$, " on a map where there's a smoking bear.";
+				break;
+			case 10:
+				set .map_indication$, " on a map where there are the most known water monster.";
+				break;
+			case 11:
+				set .map_indication$, " on a map bounded to Brasilis, the new city.";
+				break;
+			case 12:
+				set .map_indication$, " on a map where are walking bosquets. And a gray angel.";
+				break;
+		}
+
+		hideoffnpc "piedestal"+.@npccount;
+		setnpcdisplay "piedestal"+.@npccount, 406;
+		set .last_elemental_step, 1;
+	}
+	return;
+}

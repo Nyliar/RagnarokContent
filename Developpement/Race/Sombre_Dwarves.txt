@@ -1,0 +1,233 @@
+//Dark Elf Master
+ars_fild40,137,140,5	script	Gloomy Dwarf::gdm	1980,{
+
+	set .@npcname$, "[Gloomy Dwarf]";
+	if(degoe == 1)goto DEGo_Etheria;
+	if(legoe == 1)goto OtherQuest_Started;
+	if(hagoe == 1)goto OtherQuest_Started;
+	if(mwgoe == 1)goto OtherQuest_Started;
+	if(oagoe == 1)goto OtherQuest_Started;
+	if(dsgoe == 1)goto OtherQuest_Started;
+	if(deqstart >= 1)goto DEQuest_Started;
+	if(leqstart == 1)goto OtherQuest_Started;
+	if(haqstart == 1)goto OtherQuest_Started;
+	if(mwqstart == 1)goto OtherQuest_Started;
+	if(oaqstart == 1)goto OtherQuest_Started;
+	if(dsqstart == 1)goto OtherQuest_Started;
+	if(deqdone == 1)goto DEQuest_Done;
+	if(leqdone == 1)goto OtherQuest_Done;
+	if(haqdone == 1)goto OtherQuest_Done;
+	if(mwqdone == 1)goto OtherQuest_Done;
+	if(oaqdone == 1)goto OtherQuest_Done;
+	if(dsqdone == 1)goto OtherQuest_Done;
+	if(BaseLevel < 50 || JobLevel < 50) goto L_LowLevel;
+     
+	mes .@npcname$;
+	mes "Good day to you. I'm the Gloomy Dwarf, Master of all the Sombre Dwarves.";
+	mes "The Dwarves lives in Svartalfheim. In there, everything's dark, mineral.";
+	next;
+	menu "Can you tell me more?.",DEInfo,"I'd like to become one of yours!",-,"I'm not interested.",DENo;
+
+	mes .@npcname$;
+	mes "To become a Sombre Dwarf, you'll have to show me you deserve it.";
+	next;
+	mes .@npcname$;
+	mes "We've learnt some usefull capacity. We're able to make people forget us.";
+	mes "After all, who cares about the rocks he walk on. You'll be able of that too.";
+	next;
+	mes .@npcname$;
+	mes "But for that, I need you to bring me proof of your merit.";
+	next;
+	mes .@npcname$;
+	mes "There's a realm in Midgard, where men pierce a huge tunnel over the mountain.";
+	next;
+	mes .@npcname$;
+	mes "You'll find there a dwarf. Talk to her. She'll tell you more about us.";
+	next;
+	mes .@npcname$;
+	mes "Once you'll know more, you'll be able to start your quest to the Shadow.";
+	set deqstart,1;
+	close;
+
+DEQuest_Started:
+	mes .@npcname$;
+	mes "So. What did you learnt?";
+	next;
+	menu "I'd wish to abandon",L_sure,"I've got all I was asked!",DEQuest_AlmostDone,"I'm working on it.",DENo;
+
+	L_sure:
+		mes .@npcname$;
+		mes "Dwarves are proud. Be proud of what you've achieved!";
+		next;
+		menu "No...No I want to continue.",L_conti,"I...I'm sure!",L_quit;
+
+		L_conti:
+			mes .@npcname$;
+			mes "Perfect. Let your pride down. Step on it!";
+			close;
+		L_quit:
+			mes .@npcname$;
+			mes "Allright. You'll be able to start again.";
+			mes "But don't talk about us. To no one.";
+			set deqstart,0;
+			set deqdone,0;
+			set degoe,0;
+			close;
+
+		L_LowLevel:
+			mes .@npcname$;
+			mes "I'm the Gloomy Dwarf. You can't become one of us.";
+			mes "For that, you'll need a higher level. In both base and job, you're required to be lvl 50.";
+			next;
+			mes .@npcname$;
+			mes "Do you wish to learn more?";
+			next;
+			menu "Yes please.",DEInfo,"No thanks!",Quit;
+
+//DE Information
+		
+	DEInfo:
+		mes .@npcname$;
+		mes "The Sombre Dwarves were used to live in Alfheim, just as the Light Alfes. We've been expelled, due to an intern fight.";
+		next;
+		mes .@npcname$;
+		mes "Alfes feared us, and they send us far away from the Light, and from the blessed kingdom of Alfheim.";
+		next;
+		mes .@npcname$;
+		mes "Since then, we live under the Mountains. Their minerality, their strength, all if this is ours now.";
+		next;
+		mes .@npcname$;
+		mes "We've earned a hugest breath capacity, by living in cavern, where the air is rare, and inpure.";
+		next;
+		mes .@npcname$;
+		mes "Thanks to that, we're able to cast longer and stronger spells.";
+		mes "It's called the Breathing.";
+		close;
+
+//Dialogues
+	DENo:
+		mes .@npcname$;
+		mes "Allright, as you wish.";
+		close;
+
+		DEQuest_Done:
+			mes .@npcname$;
+			mes "Welcome to you, Sombre Dwarf. May the Breathing prove to them all we're still a proud and fierce people.";
+			close;
+
+		DEQuest_AlmostDone:
+			if(countitem(6100)<50 || countitem(6089)<10 || countitem(7511)<30) goto DEQuest_NotEnuf;
+			mes .@npcname$;
+			mes "I can feel that you've finally completed this quest.";
+			next;
+			mes .@npcname$;
+			mes "You're now ready to become one of us.";
+			mes "Go find the Etherian Angel. She'll guide you in this ultimate ordeal.";
+			mes "Once you'll be one of us, seek Larham. He'll teach you more about the Dark Orbs.";
+			set degoe,1;
+			delitem 6100, 50;
+			delitem 6089, 10;
+			delitem 7511, 30;
+			close;
+		
+		DEGo_Etheria:
+			mes .@npcname$;
+			mes "Go find the Etherian Angel. She'll guide you in this ultimate ordeal.";
+			close;
+
+		OtherQuest_Done:
+			mes .@npcname$;
+			mes "Leave this place. You now belong to another race.";
+			close;
+
+		OtherQuest_Started:
+			mes .@npcname$;
+			mes "Leave this place. You've started to work for another race. Cancel it, and come back to me, if you change your mind.";
+			close;
+
+		DEQuest_NotEnuf:
+			mes .@npcname$;
+			mes "Sorry but you lack some items. Here's what I need:";
+			next;
+			mes .@npcname$;
+			mes "- ^5555FF50 Damp Darkness^000000.";
+			mes "- ^5555FF10 Dark Pieces^000000.";
+			mes "- ^5555FF30 Rune of Darkness^000000.";
+			close;
+
+	Quit:
+		mes "That's your choice.";
+		close;
+}
+
+ars_fild37,116,145,5	script	Sombre Dwarf::sa	2165,{
+	set .@npcname$, "[Eldor]";
+
+	mes .@npcname$;
+	mes "...";
+	if (deqstart == 1)
+	{
+		mes "So you've decided to become one of us.";
+		mes "Do you really now what you've chosen?";
+		mes "The Breathing is feared by all...";
+		mes "She allows you to improve your power, while weakening the others one.";
+		mes "Are you ready for that? Then come, and become an Breather.";
+		next;
+		mes .@npcname$;
+		mes "The Dwarves are fierce and dangerous warriors.";
+		mes "But alone, you'll die.";
+		mes "Without help, you may not be able to do anything.";
+		mes "Prove me you deserve to join us. Then, go see the Gloomy.";
+		mes "- ^5555FF50 Damp Darkness^000000.";
+		mes "- ^5555FF10 Dark Pieces^000000.";
+		mes "- ^5555FF30 Rune of Darkness^000000.";
+		next;
+		mes .@npcname$;	
+		mes "If you succeed, you'll be able to learn the Breathing.";
+		mes "You'll be able to cast longer, and stronger spells, thanks to an increase of thoracic capacity.";
+		mes "Your hits may become sharper, deadlier.";
+		mes "But that won't always be enough!";
+		mes "On top of that, you'll also be able to learn how to use the Dark Orbs.";
+		mes "They'll let you use more Breather powers.";
+		set deqstart, 2;
+	}
+	close;
+}
+
+ars_fild38,64,74,5	script	Sombre Dwarf Darthio::sdd	2253,{
+	set .@npcname$, "[Darthio]";
+
+	mes .@npcname$;
+	mes "...";
+	if (deqdone > 0 && deqdone <= 1 || deqstart == 1)
+	{
+		mes "You're not ready. Leave!";
+	}
+	else if (deqdone == 3)
+	{
+		mes "I can feel in you a deep Breathing.";
+		mes "But your eyes haven't take yet the milky look of cavern blindness.";
+		next;
+		mes .@npcname$;
+		mes "But you're not here for that, isn't it?";
+		mes "You're here for the Dark Orbs.";
+		mes "Each ones can be used separately, one at a time.";
+		mes "You can only find them in Schwartzalfheim.";
+		next;
+		mes "The first one, the 'Suction Launcher',";
+			//NPC_SLOWCAST, 672 (lvl 2)
+		mes "reduce your ennemies Breathing power.";
+		mes "The second one, the 'Moving Mud',";
+			//WL_MARCHOFABYSS, 2205 (lvl 2)
+		mes "slow down your ennemies with the earth power.";
+		mes "Finally the rarest one, the 'Mineral Binder'";
+			//NPC_PETRIFYATTACK, 180 (lvl 5)
+		mes "will block one of your foes in stone coldness.";
+		next;
+		mes "Those are the three Orbs, usable by us only. We're some kind of...Stone Golems I guess";
+		set deqstart, 4;
+	}
+	else
+		mes "I don't speak to other races.";
+	close;	
+}

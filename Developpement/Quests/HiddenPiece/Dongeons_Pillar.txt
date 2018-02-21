@@ -1,0 +1,263 @@
+nyd_dun01,147,69,4	script	First Pillar::firstpillar	406,5,5,{
+	end;
+
+OnInit:
+	hideonnpc strnpcinfo(3);
+	setarray .mobIds[0],2016,2019,2020,2021,2015,2013,1995,1993,1992,2018;
+	setarray .mobIdsCount[0],0,0,0,0,0,0,0,0,0,0,0,0;
+	setarray .mobIdsMaxCount[0],15,5,15,15,15,15,15,15,15,2;
+	set .charid_stopping, -1;
+	end;
+
+OnTouch:
+	if ($nyddhog_hidden == 1 && $nyddhog_spawn_stopped == 0)
+	{
+		set $nyddhog_spawn_stopped, 1;
+		donpcevent "alahidpie::OnPillarStopped";
+		set .charid_stopping, getcharid(3);
+		announce "[Hidden Piece] First Pillar has been activated by " + strcharinfo(0), bc_all;
+		initnpctimer;
+	}
+	end;
+
+OnTimer10000:
+	if (.charid_stopping != -1)
+	{
+		attachrid(.charid_stopping);
+		if (strcharinfo(3) != strnpcinfo(4))
+		{
+			set $nyddhog_spawn_stopped, 0;
+			donpcevent "alahidpie::OnPillarUnactivated";
+			stopnpctimer;
+			announce "[Hidden Piece] First Pillar has been unactivated", bc_all;
+		}
+		setnpctimer 0;
+	}
+	end;
+
+OnNpcDisabled:
+	stopnpctimer;
+	setarray .mobIdsCount[0],0,0,0,0,0,0,0,0,0,0,0,0;
+	end;
+
+OnNpcEnabled:
+	hideoffnpc strnpcinfo(3);
+	set $nyddhog_hidden, 1;
+	set $nyddhog_spawn_stopped, 0;
+	initnpctimer;
+	end;
+
+//spawn a monster each 15s
+OnTimer15000:
+	if ($nyddhog_spawn_stopped == 0)
+	{
+		set .@map$, strnpcinfo(4);
+		set .@id, rand(0,getarraysize(.mobIds)-1);
+		set .@idMonster, .mobIds[.@id];
+		if (.mobIdsCount[.@id] < .mobIdsMaxCount[.@id])
+		{ 
+			monster .@map$,0,0,strmobinfo(1,.@idMonster),.@idMonster,1;
+			set .mobIdsCount[.@i],.mobIdsCount[.@i]+1;
+		}
+	}
+	setnpctimer 0;
+	end;
+}
+
+thor_v03,232,41,4	script	Second Pillar::secondpillar	406,5,5,{
+	end;
+
+OnInit:
+	hideonnpc strnpcinfo(3);
+	setarray .mobIds[0],1367,1211,2155,1244,1384,1310,1140,1694,2369,1831,1495,1072,1833,1135;
+	setarray .mobIdsCount[0],0,0,0,0,0,0,0,0,0,0,0,0,0,0;
+	setarray .mobIdsMaxCount[0],10,10,15,1,25,25,25,25,25,15,30,15,10,25;
+	set .charid_stopping, -1;
+	end;
+
+OnTouch:
+	if ($ifrit_hidden == 1 && $ifrit_spawn_stopped == 0)
+	{
+		set $ifrit_spawn_stopped, 1;
+		donpcevent "alahidpie::OnPillarStopped";
+		set .charid_stopping, getcharid(3);
+		initnpctimer;
+		announce "[Hidden Piece] Second Pillar has been activated by " + strcharinfo(0), bc_all;
+	}
+	end;
+
+OnTimer10000:
+	if (.charid_stopping != -1)
+	{
+		attachrid(.charid_stopping);
+		if (strcharinfo(3) != strnpcinfo(4))
+		{
+			set $ifrit_spawn_stopped, 0;
+			donpcevent "alahidpie::OnPillarUnactivated";
+			stopnpctimer;
+			announce "[Hidden Piece] Second Pillar has been unactivated", bc_all;
+		}
+		setnpctimer 0;
+	}
+	end;
+
+OnNpcDisabled:
+	stopnpctimer;
+	setarray .mobIdsCount[0],0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0;
+	end;
+
+OnNpcEnabled:
+	hideoffnpc strnpcinfo(3);
+	set $ifrit_hidden, 1;
+	set $ifrit_spawn_stopped, 0;
+	initnpctimer;
+	end;
+
+//spawn a monster each 15s
+OnTimer15000:
+	if ($ifrit_spawn_stopped == 0)
+	{
+		set .@map$, strnpcinfo(4);
+		set .@id, rand(0,getarraysize(.mobIds)-1);
+		set .@idMonster, .mobIds[.@id];
+		if (.mobIdsCount[.@id] < .mobIdsMaxCount[.@id])
+		{ 
+			monster .@map$,0,0,strmobinfo(1,.@idMonster),.@idMonster,1;
+			set .mobIdsCount[.@i],.mobIdsCount[.@i]+1;
+		}
+	}
+	setnpctimer 0;
+	end;
+}
+
+xmas_fild01,149,142,4	script	Third Pillar::thirdpillar	406,5,5,{
+	end;
+
+OnInit:
+	hideonnpc strnpcinfo(3);
+	setarray .mobIds[0],1515,1776,1775,1777,1243,1778,1242,1894;
+	setarray .mobIdsCount[0],0,0,0,0,0,0,0,0,0;
+	setarray .mobIdsMaxCount[0],10,10,10,10,30,25,15,15,1;
+	set .charid_stopping, -1;
+	end;
+
+OnTouch:
+	if ($hatii_hidden == 1 && $hatii_spawn_stopped == 0)
+	{
+		set $hatii_spawn_stopped, 1;
+		donpcevent "alahidpie::OnPillarStopped";
+		set .charid_stopping, getcharid(3);
+		initnpctimer;
+		announce "[Hidden Piece] Third Pillar has been activated by " + strcharinfo(0), bc_all;
+	}
+	end;
+
+OnTimer10000:
+	if (.charid_stopping != -1)
+	{
+		attachrid(.charid_stopping);
+		if (strcharinfo(3) != strnpcinfo(4))
+		{
+			set $hatii_spawn_stopped, 0;
+			donpcevent "alahidpie::OnPillarUnactivated";
+			stopnpctimer;
+			announce "[Hidden Piece] Third Pillar has been unactivated", bc_all;
+		}
+		setnpctimer 0;
+	}
+	end;
+
+OnNpcDisabled:
+	stopnpctimer;
+	setarray .mobIdsCount[0],0,0,0,0,0,0,0,0,0;
+	end;
+
+OnNpcEnabled:
+	hideoffnpc strnpcinfo(3);
+	set $hatii_hidden, 1;
+	set $hatii_spawn_stopped, 0;
+	initnpctimer;
+	end;
+
+//spawn a monster each 15s
+OnTimer15000:
+	if ($hatii_spawn_stopped == 0)
+	{
+		set .@map$, strnpcinfo(4);
+		set .@id, rand(0,getarraysize(.mobIds)-1);
+		set .@idMonster, .mobIds[.@id];
+		if (.mobIdsCount[.@id] < .mobIdsMaxCount[.@id])
+		{ 
+			monster .@map$,0,0,strmobinfo(1,.@idMonster),.@idMonster,1;
+			set .mobIdsCount[.@i],.mobIdsCount[.@i]+1;
+		}
+	}
+	setnpctimer 0;
+	end;
+}
+
+dic_dun02,214,37,4	script	Fourth Pillar::fourthpillar	406,5,5,{
+	end;
+
+OnInit:
+	hideonnpc strnpcinfo(3);
+	setarray .mobIds[0],2085,2378,2163,2161,2164,2162,2086,2083,2084;
+	setarray .mobIdsCount[0],0,0,0,0,0,0,0,0,0;
+	setarray .mobIdsMaxCount[0],60,150,50,15,100,25,10,1,1;
+	set .charid_stopping, -1;
+	end;
+
+OnTouch:
+	if ($scaraba_hidden == 1 && $scaraba_spawn_stopped == 0)
+	{
+		set $scaraba_spawn_stopped, 1;
+		donpcevent "alahidpie::OnPillarStopped";
+		set .charid_stopping, getcharid(3);
+		initnpctimer;
+		announce "[Hidden Piece] Fourth Pillar has been activated by " + strcharinfo(0), bc_all;
+	}
+	end;
+
+OnTimer10000:
+	if (.charid_stopping != -1)
+	{
+		attachrid(.charid_stopping);
+		if (strcharinfo(3) != strnpcinfo(4))
+		{
+			set $scaraba_spawn_stopped, 0;
+			donpcevent "alahidpie::OnPillarUnactivated";
+			stopnpctimer;
+			announce "[Hidden Piece] Fourth Pillar has been unactivated", bc_all;
+		}
+		setnpctimer 0;
+	}
+	end;
+
+OnNpcDisabled:
+	stopnpctimer;
+	setarray .mobIdsCount[0],0,0,0,0,0,0,0,0,0;
+	end;
+
+OnNpcEnabled:
+	hideoffnpc strnpcinfo(3);
+	set $scaraba_hidden, 1;
+	set $scaraba_spawn_stopped, 0;
+	initnpctimer;
+	end;
+
+//spawn a monster each 15s
+OnTimer15000:
+	if ($caspen_spawn_stopped == 0)
+	{
+		set .@map$, strnpcinfo(4);
+		set .@id, rand(0,getarraysize(.mobIds)-1);
+		set .@idMonster, .mobIds[.@id];
+		if (.mobIdsCount[.@id] < .mobIdsMaxCount[.@id])
+		{ 
+			monster .@map$,0,0,strmobinfo(1,.@idMonster),.@idMonster,1;
+			set .mobIdsCount[.@i],.mobIdsCount[.@i]+1;
+		}
+	}
+	setnpctimer 0;
+	end;
+}

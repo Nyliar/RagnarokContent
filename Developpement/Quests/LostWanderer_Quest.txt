@@ -1,0 +1,641 @@
+// [========================================================]
+// [=============    	Quest - Valentine   	============]
+// [========================================================]
+// [ Version 1                                              ]
+// [========================================================]
+// [ Original script by: Alayne				    ]
+// [========================================================]
+// [ Description:                                           ]
+// [--------------------------------------------------------]
+// [                                                        ]
+// [ - A quest for Valentine day	 		    ]
+// [========================================================]
+// [ Changelog: (5 last updates)                            ]
+// [--------------------------------------------------------]
+// [                                                        ]
+// [ v0: Creation                      			    ]
+// [                                                        ]
+// [========================================================]
+// [                                                        ]
+// [========================================================]
+		
+prontera,101,77,4	script	A Lost Wanderer::alvalnil	4_M_NINJA_RED,{
+	set .@npcname$, "[A Lost Wanderer]";
+	set .@playerName$, "[" + strcharinfo(0) + "]";
+	if (NILES_Q == 0)
+	{
+		mes .@npcname$;
+		mes "Hi there! I can see you are wearing a Chef Hat, so maybe... you can help me with something?";
+		next;
+		mes .@playerName$;
+		mes "Help you with what?";
+		next;
+		mes .@npcname$;
+		mes "You see, I am a drop out from a culinary school. Can you help me get back there?";
+		next;
+		mes .@playerName$;
+		mes "(This guy...) You sure you're not some random guy who is going to mug me after?";
+		next;
+		mes .@npcname$;
+		mes "(Do I really look like a hobo?) Why would I even do that? Master Garcia would kill me if I do that.";
+		next;
+		mes .@playerName$;
+		mes "Oh, you're one of Garcia's students? What's your name?";
+		next;
+		mes .@npcname$;
+		mes "I am Niles, nice to meet you, ma'am...?";
+		set .@npcname$, "[Niles]";
+		next;
+		mes .@playerName$;
+		mes "My name is " + strcharinfo(0);
+		next;
+		mes .@npcname$;
+		mes "Nice to meet you, Chef " + strcharinfo(0) + ". (He bows to you like a disciplined student)";
+		next;
+		mes .@playerName$;
+		mes "...riiiight.";
+		next;
+		mes .@npcname$;
+		mes "I have been working hard to get back to my school. Can you help me?";
+		if(select("Yes of course","You're a goner") == 1)
+		{
+			next;
+			mes .@playerName$;
+			mes "Sure. What kind of help do you need?";
+			next;
+			mes .@npcname$;
+			mes "I need to learn more recipes so I could get back to my school.";
+			next;
+			mes .@playerName$;
+			mes "Sounds... reasonable. When do we start?";
+			next;
+			mes .@npcname$;
+			mes "Meet me in the Prontera Castle's Kitchen. I asked the chef there to borrow his stuff and he agreed.";
+			set NILES_Q, 1;
+			hideonnpc strnpcinfo(3);
+			hideoffnpc "alvalnil2";
+		}
+		else
+		{
+			next;
+			mes .@playerName$;
+			mes "You're a goner. You can't go back in there! Muhahaha!!";
+			next;
+			mes .@npcname$;
+			mes "How evil!! (Niles threw a pie on your face and you are damaged)";
+			percentheal -33, 0;
+		}
+	}
+	else
+	{
+		mes .@npcname$;
+		mes "Ahhh....I wish I was a great cook...";
+		emotion e_sigh;
+	}
+	close;
+	
+OnInit:
+	setarray $requirementNiFixId[0],531,533,534,620;
+	setarray $requirementNiFixCount[0],6,2,4,4;	
+	setarray $requirementNi2FixId[0],518,961,966,7453;
+	setarray $requirementNi2FixCount[0],2,20,40,2;	
+	setarray $requirementNi3FixId[0],509,962,1024,7031,7194;
+	setarray $requirementNi3FixCount[0],20,60,20,2,20;	
+	setarray $requirementNi4FixId[0],507,520,1062,7006,7482;
+	setarray $requirementNi4FixCount[0],20,20,40,40,2;	
+	setarray $requirementNi5FixId[0],607,706,709,579,1023,7482,7456,7452;
+	setarray $requirementNi5FixCount[0],10,5,5,10,10,1,1,1;	
+	end;
+}
+
+
+prt_castle,49,33,4	script	A Lost Wanderer::alvalnil2	4_M_NINJA_RED,{
+	set .@npcname$, "[Niles]";
+	set .@playerName$, "[" + strcharinfo(0) + "]";
+	if(NILES_Q == 1)
+	{
+		mes .@npcname$;
+		mes "There you are! We need this ingredients now, " + strcharinfo(0) + ". Please collect them while I ready the stove. No time to talk! Go!!";
+		for(set .@i,0; .@i<getarraysize($requirementNiFixId); set .@i,.@i+1)
+		{
+			mes "	~ " + $requirementNiFixCount[.@i] + " " + getitemname($requirementNiFixId[.@i]);
+		}
+		set NILES_Q, 2;
+	}
+	else if (NILES_Q == 2)
+	{
+		set .@ok, 1;
+		for(set .@i,0; .@i<getarraysize($requirementNiFixId); set .@i,.@i+1)
+		{
+			if(countitem($requirementNiFixId[.@i]) < $requirementNiFixCount[.@i])
+			{
+				set .@ok, 0;
+			}
+		}
+		if (.@ok == 1)
+		{
+			mes .@playerName$;
+			mes "Here you go, Niles. Now, blend these juices and add a little bit of this.. and that...";
+			for(set .@i,0; .@i<getarraysize($requirementNiFixId); set .@i,.@i+1)
+			{
+				delitem $requirementNiFixId[.@i], $requirementNiFixCount[.@i];
+			}
+			next;
+			mes .@npcname$;
+			mes "Okay, umm... Here we go...";
+			next;
+			mes "*fuuuuum fuuuuuum fuuuuum*";
+			next;
+			mes "*beep*";
+			specialeffect EF_COOKING_OK;
+			getitem 12067, 1;
+			//cooking success effect
+			next;
+			mes .@npcname$;
+			mes "There we go... It's a success! Great job~";
+			next;
+			mes .@playerName$;
+			mes "Well, you did a great job, too.";
+			next;
+			mes .@npcname$;
+			mes "Okay... for the next dish, we will need:";
+			for(set .@i,0; .@i<getarraysize($requirementNi2FixId); set .@i,.@i+1)
+			{
+				mes "	~ " + $requirementNi2FixCount[.@i] + " " + getitemname($requirementNi2FixId[.@i]);
+			}
+			next;
+			mes .@npcname$;
+			mes "Hurry...";
+			set NILES_Q, 3;
+		}
+		else
+		{
+			mes .@npcname$;
+			mes "Ouch.. I think I burnt my finger!";
+			next;
+			mes "You still need to bring:";
+			for(set .@i,0; .@i<getarraysize($requirementNiFixId); set .@i,.@i+1)
+			{
+				mes "	~ " + $requirementNiFixCount[.@i] + " " + getitemname($requirementNiFixId[.@i]);
+			}
+		}
+	}
+	else if (NILES_Q == 3)
+	{
+		set .@ok, 1;
+		for(set .@i,0; .@i<getarraysize($requirementNi2FixId); set .@i,.@i+1)
+		{
+			if(countitem($requirementNi2FixId[.@i]) < $requirementNi2FixCount[.@i])
+			{
+				set .@ok, 0;
+			}
+		}
+		if (.@ok == 1)
+		{
+			for(set .@i,0; .@i<getarraysize($requirementNi2FixId); set .@i,.@i+1)
+			{
+				delitem $requirementNi2FixId[.@i], $requirementNi2FixCount[.@i];
+			}
+			mes .@npcname$;
+			mes "Oh, oh! Quick! Before the pot gets cold~";
+			next;
+			mes .@playerName$;
+			mes "No rush... Set the temperature to... and then you put the conch for the flavor... and a little bit of this... and that...";
+			next;
+			mes .@npcname$;
+			mes "Okay... A little bit of this, huh? And oh, *sniff* This sauce smells good.";
+			next;
+			mes "*bloop bloop*";
+			next;
+			mes "*sip*";
+			specialeffect EF_COOKING_OK;
+			getitem 12053, 1;
+			//cooking success effect
+			next;
+			mes .@npcname$;
+			mes "Yum! This is good! I didn't know you could use honey as a flavoring!";
+			next;
+			mes .@playerName$;
+			mes "Yep, we will resume our lessons later. I am tired from hunting";
+			next;
+			mes "Comeback after 6 hour.";
+			set nileqtimer, gettimetick(2) + 21600;
+			set NILES_Q, 4;
+		}
+		else
+		{
+			mes .@npcname$;
+			mes "Ouch.. I think I burnt my finger!";
+			next;
+			mes "You still need to bring:";
+			for(set .@i,0; .@i<getarraysize($requirementNi2FixId); set .@i,.@i+1)
+			{
+				mes "	~ " + $requirementNi2FixCount[.@i] + " " + getitemname($requirementNi2FixId[.@i]);
+			}
+		}
+	}
+	else if (NILES_Q == 4)
+	{
+		if(gettimetick(2) < nileqtimer)
+		{
+			mes .@npcname$;
+			mes "*snore* She has a... large.. *snore*";
+		}
+		else
+		{
+			mes .@npcname$;
+			mes "Welcome back, " + strcharinfo(0) + "! I am ready for a new dish~";
+			next;
+			mes .@playerName$;
+			mes "Okay, let's do this one. We will need:";
+			for(set .@i,0; .@i<getarraysize($requirementNi3FixId); set .@i,.@i+1)
+			{
+				mes "	~ " + $requirementNi3FixCount[.@i] + " " + getitemname($requirementNi3FixId[.@i]);
+			}
+			next;
+			mes .@npcname$;
+			mes "Okay, gather those materials while I prepare the kitchen~";
+			next;
+			mes .@playerName$;
+			mes "Okay. (Darn it)";
+			set NILES_Q, 5;
+		}
+	}
+	else if (NILES_Q == 5)
+	{
+		set .@ok, 1;
+		for(set .@i,0; .@i<getarraysize($requirementNi3FixId); set .@i,.@i+1)
+		{
+			if(countitem($requirementNi3FixId[.@i]) < $requirementNi3FixCount[.@i])
+			{
+				set .@ok, 0;
+			}
+		}
+		if (.@ok == 1)
+		{
+			for(set .@i,0; .@i<getarraysize($requirementNi3FixId); set .@i,.@i+1)
+			{
+				delitem $requirementNi3FixId[.@i], $requirementNi3FixCount[.@i];
+			}
+			mes .@playerName$;
+			mes "Here you go Niles.";
+			next;
+			mes .@npcname$;
+			mes "Nice! I should take the lead this time! Okay... Do we add the herbs first? ..then the grasses... What is this Old Frying Pan for?";
+			next;
+			mes .@playerName$;
+			mes "Focus on the cooking, Niles. You might burn it.";
+			next;
+			mes .@npcname$;
+			mes "Oh, oka-- Oh, dear!";
+			emotion e_wah;
+			next;
+			mes "*Karr-chunk*";
+			specialeffect EF_COOKING_FAIL;
+			getitem 12546, 1;
+			next;
+			mes .@npcname$;
+			mes "....It doesn't really look good. " + strcharinfo(0) + ", I am sorry for not listening and failing. Can we just continue cooking tomorrow?";
+			next;
+			mes "Give Niles some time to reflect, come back after 12 hours";
+			set nilesqtimer, gettimetick(2) + 43200;
+			set NILES_Q, 6;
+		}
+		else
+		{
+			mes .@npcname$;
+			mes "Ouch.. I think I burnt my finger!";
+			next;
+			mes "You still need to bring:";
+			for(set .@i,0; .@i<getarraysize($requirementNi3FixId); set .@i,.@i+1)
+			{
+				mes "	~ " + $requirementNi3FixCount[.@i] + " " + getitemname($requirementNi3FixId[.@i]);
+			}
+		}
+	}
+	else if (NILES_Q == 6)
+	{
+		if(gettimetick(2) < nilesqtimer)
+		{
+			mes .@npcname$;
+			mes "Ah, I see. So I have put this first before this... and the pan temperature should be at this...";
+		}
+		else
+		{
+			mes .@npcname$;
+			mes "I failed on that one. I am so sorry. Let's not dwell in it, please. Our next dish is.. this one. Can you collect these ingredients while I prepare the kitchen?";
+			for(set .@i,0; .@i<getarraysize($requirementNi4FixId); set .@i,.@i+1)
+			{
+				mes "	~ " + $requirementNi4FixCount[.@i] + " " + getitemname($requirementNi4FixId[.@i]);
+			}
+			set NILES_Q, 7;
+		}
+	}
+	else if (NILES_Q == 7)
+	{
+		set .@ok, 1;
+		for(set .@i,0; .@i<getarraysize($requirementNi4FixId); set .@i,.@i+1)
+		{
+			if(countitem($requirementNi4FixId[.@i]) < $requirementNi4FixCount[.@i])
+			{
+				set .@ok, 0;
+			}
+		}
+		if (.@ok == 1)
+		{
+			for(set .@i,0; .@i<getarraysize($requirementNi4FixId); set .@i,.@i+1)
+			{
+				delitem $requirementNi4FixId[.@i], $requirementNi4FixCount[.@i];
+			}
+			mes .@playerName$;
+			mes "Here you go, Niles. Let's start.";
+			next;
+			mes .@npcname$;
+			mes "Okay, so... ready the pot... Add this... then a bit of that... ang OUCH!";
+			next;
+			mes .@playerName$;
+			mes "Heh heh. I never thought you'd get hurt from getting stabbed. Anyway, let's put the pumpkins first then the herbs...";
+			next;
+			mes .@npcname$;
+			mes "...and finally, we add a little of magic.";
+			next;
+			mes "*Hsssssssssssssshh*";
+			next;
+			mes "*tak-lop*";
+			specialeffect EF_COOKING_OK;
+			getitem 12060, 1;
+			next;
+			mes .@npcname$;
+			mes "You're a great chef, " + strcharinfo(0) + ". Didn't know you can mix these ingredients and make a good dish. Thank you for everything. I think I can come back to the school now. Master will be pleased.";
+			next;
+			mes .@playerName$;
+			mes "(leaving so soon?) ...It's an honor, Niles. I am glad to see you improved. Good luck with that!";
+			next;
+			mes .@npcname$;
+			mes "I'll see you around~";
+			hideonnpc strnpcinfo(3);
+			next;
+			mes .@playerName$;
+			mes "Something doesn't seem right....";
+			next;
+			mes "Come back after 12 hours";
+			initnpctimer;
+			set NILES_Q, 8;
+		}
+		else
+		{
+			mes .@npcname$;
+			emotion e_wah;
+			mes "This onions are making me cry...";
+			next;
+			mes "You still need to bring:";
+			for(set .@i,0; .@i<getarraysize($requirementNi4FixId); set .@i,.@i+1)
+			{
+				mes "	~ " + $requirementNi4FixCount[.@i] + " " + getitemname($requirementNi4FixId[.@i]);
+			}
+		}
+	}
+	else if (NILES_Q == 8)
+	{
+		emotion e_omg;
+		mes .@npcname$;
+		mes "Hello, " + strcharinfo(0) + ". What brought you here?";
+		next;
+		mes .@playerName$;
+		mes "I was... I mean, I forgot my frying pan...";
+		next;
+		mes .@npcname$;
+		mes "Coincidence. Ha ha! Well, you see. Master said I have to prove myself in order to go back there. So I have to make a perfect dish while he is watching me cook.";
+		next;
+		mes .@playerName$;
+		mes "Hello... sir.";
+		next;
+		mes "[Master Neko]";
+		mes "Hello, " + strcharinfo(0) + ". Niles told me a great deal about you. So, you have been his mentor? Let's see what your teachings have brought Niles. On with the trial!";
+		next;
+		mes "Talk to Niles";
+		set NILES_Q, 9;
+	}
+	else if (NILES_Q == 9)
+	{
+		mes .@npcname$;
+		mes "Okay, we need to work on a great and risky dish... It's the master's favorite. I am pretty sure if we are able to make it perfect. I am pretty sure I'll get re-accepted.";
+		next;
+		mes .@playerName$;
+		mes "So.. What are we making?";
+		next;
+		mes .@npcname$;
+		mes "This. The ultimate dish.";
+		next;
+		mes .@playerName$;
+		mes "*gasp* I don't know how to make this dish!!";
+		next;
+		mes .@npcname$;
+		emotion e_omg;
+		mes "It's fine. Not everyone can make this ultimate dish... Since I watched Master Meko cook it, I have a little knowledge on how. I'll just need you to gather these ingredients for me.";
+		for(set .@i,0; .@i<getarraysize($requirementNi5FixId); set .@i,.@i+1)
+		{
+			mes "	~ " + $requirementNi5FixCount[.@i] + " " + getitemname($requirementNi5FixId[.@i]);
+		}
+		set NILES_Q, 10;
+	}
+	else if (NILES_Q == 10)
+	{
+		set .@ok, 1;
+		for(set .@i,0; .@i<getarraysize($requirementNi5FixId); set .@i,.@i+1)
+		{
+			if(countitem($requirementNi5FixId[.@i]) < $requirementNi5FixCount[.@i])
+			{
+				set .@ok, 0;
+			}
+		}
+		if (.@ok == 1)
+		{
+			for(set .@i,0; .@i<getarraysize($requirementNi5FixId); set .@i,.@i+1)
+			{
+				if ($requirementNi5FixCount[.@i] != 579)
+				{
+					delitem $requirementNi5FixId[.@i], $requirementNi5FixCount[.@i];
+				}
+			}
+			mes .@playerName$;
+			mes "There you are, " + strcharinfo(0) + ". The pot is ready. Can you take care of the fish? You have 10 pieces. You'll need to fillet the fish for the side dish. Please, work on it in front of the Master.";
+			set NILES_Q, 11;
+		}
+		else
+		{
+			mes .@npcname$;
+			emotion e_wah;
+			mes "I just have to recall how to mix the flavors...";
+			next;
+			mes "You still need to bring:";
+			for(set .@i,0; .@i<getarraysize($requirementNi5FixId); set .@i,.@i+1)
+			{
+				mes "	~ " + $requirementNi5FixCount[.@i] + " " + getitemname($requirementNi5FixId[.@i]);
+			}
+		}
+	}
+	else if (NILES_Q == 11 || (NILES_Q == 12 && countitem(544) < 1))
+	{
+		mes .@npcname$;
+		mes "Hurry, " + strcharinfo(0) + ". The pot is ready.";
+	}
+	else if (NILES_Q == 12)
+	{
+		mes .@npcname$;
+		mes "Ahha! Nice work, " + strcharinfo(0) + ". Can you put it here, please. Thank you for your help, but I have to be the one to cook. Please stand back.";
+		delitem 544, 1;
+		set NILES_Q, 13;
+		next;
+		mes "Wait for 20 minutes";
+		set nilesqtimer, gettimetick(2) + 1200;
+	}
+	else if (NILES_Q == 13)
+	{
+		if(gettimetick(2) > nilesqtimer)
+		{
+			mes .@npcname$;
+			mes "Thank you for your help, but I have to be the one to cook. Please stand back.";
+		}
+		else
+		{
+			mes .@npcname$;
+			mes "Eureka! I made it! " + strcharinfo(0) + ". I finally made it! Please take this to Master Meko~";
+			specialeffect EF_COOKING_OK;
+			getitem 12096, 1;
+			set NILES_Q, 14;
+			hideonnpc strcharinfo(3);
+			hideoffnpc "alvalnil";
+		}
+	}
+	else
+	{
+		next;
+		mes .@npcname$;
+		mes "I'm a bit busy here...";
+	}
+	close;
+	
+OnTimer720000:
+	hideoffnpc strnpcinfo(3);
+	hideoffnpc "alvalman";
+	end;
+	
+OnInit:
+	hideonnpc strnpcinfo(3);
+	end;
+}
+
+prt_castle,40,33,4	script	Master Neko::alvalman	4_CAT_CHEF,{
+	set .@npcname$, "[Master Neko]";
+	set .@playerName$, "[" + strcharinfo(0) + "]";
+	if (NILES_Q == 10)
+	{
+		set .@ok, 1;
+		for(set .@i,0; .@i<getarraysize($requirementNi5FixId); set .@i,.@i+1)
+		{
+			if(countitem($requirementNi5FixId[.@i]) < $requirementNi5FixCount[.@i])
+			{
+				set .@ok, 0;
+			}
+		}
+		if (.@ok == 1)
+		{
+			mes .@npcname$;
+			mes "Hum...Let's see that. See with Niles what you have to do.";
+		}
+		else
+		{
+			mes .@npcname$;
+			mes "So, you have been his mentor? Let's see what your teachings have brought Niles. ";
+		}
+	}
+	else if (NILES_Q == 11)
+	{
+		mes "You have to show your cooking skills in front of Master Meko to prove that you're a good mentor! Fillet the fish!";
+		mes "(You readied your fish and your knife. What will you do next?)";
+		set .@answer1, select("Remove the scales","Cut the head off","Slice the fish from tail to head");
+		next;
+		set .@answer2, select("Take the skin off","Cut the head off","Slice the fish from tail to head");
+		next;
+		set .@answer3, select("Separate the bone from the fillet","Take the skin off","Cut the head off");
+		next;
+		set .@answer4, select("Separate the bone from the fillet","Take the skin off","Cut the head off");
+		next;
+		if(.@answer1 == 1 && .@answer2 == 2 && .@answer3 == 1 && .@answer4 == 2)
+		{
+			mes .@npcname$;
+			mes "Oooh. (Yummy!) You seem to know your ways in the kitchen, " + strcharinfo(0) + ". Most impressive.";
+			getitem 544, 1;
+			set NILES_Q, 12;
+		}
+		else
+		{
+			mes .@playerName$;
+			mes "Oh, dear. This fish isn't good for filleting. Excuse me, sir. But I have to get a better fish.";
+		}
+	}
+	else if (NILES_Q == 13)
+	{
+		mes "[Master Neko]";
+		mes "Purrr.... It smells good, Niles.";
+	}
+	else if (NILES_Q == 14)
+	{
+		mes "[Master Neko]";
+		mes "Mhmmm... Smell good, guys. You seem to have performed well. The question is: Does it tastes good?";
+		if(countitem(12096) > 0)
+		{
+			delitem 12096, 1;
+			next;
+			mes .@npcname$;
+			mes "Oho! (Master Meko slowly took a bite of the fish)";
+			next;
+			mes .@npcname$;
+			mes "Oh, odin... (Master Meko Slowly tastes the sauce)";
+			next;
+			mes .@npcname$;
+			mes "*munch munch* *Burp*";
+			set NILES_Q, 15;
+		}
+		else
+		{
+			next;
+			mes .@npcname$;
+			mes "You...You eat it?";
+		}
+	}
+	else if (NILES_Q == 15)
+	{	
+		mes .@npcname$;
+		mes "This... dish. It is divine. Niles, you have perfectly cooked the dish. The fish is filleted nicely. The berry and the flower's taste blended perfectly. You truly have improved without my teachings. You have proven yourself.";
+		next;
+		mes "[Niles]";
+		mes "Really? I can't believe this! [player name], we did it! It's all thanks to you.";
+		next;
+		mes .@playerName$;
+		mes "It was all you, Niles. You did the cooking. You did a good job. I am proud of you.";
+		next;
+		mes "[Niles]";
+		mes "I can't thank you enough... Ah, I know! You can have this. ";
+		//getitem  get reward
+		//Elixir of Life
+		rentitem 29363, 60;
+		next;
+		mes "[Niles]";
+		mes "Well, since master is here. I am going back with him. I'll see you around~";
+		set NILES_Q, 16;
+		hideonnpc strnpcinfo(3);
+		hideonnpc "alvalni2";
+	}
+	else
+	{
+		mes .@npcname$;
+		mes "Miaoo?";
+	}
+	close;
+
+OnInit:
+	hideonnpc strnpcinfo(3);
+	end;
+}

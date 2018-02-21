@@ -1,0 +1,418 @@
+// [========================================================]
+// [============    Battle Arena - Clone Defense   ==========]
+// [========================================================]
+// [ Version 1                                              ]
+// [========================================================]
+// [ Original script by: Alayne				    ]
+// [========================================================]
+// [ Description:                                           ]
+// [--------------------------------------------------------]
+// [                                                        ]
+// [ - The Clone Defense System				    ]
+// [========================================================]
+// [ Changelog: (5 last updates)                            ]
+// [--------------------------------------------------------]
+// [                                                        ]
+// [ v0: Creation                      			    ]
+// [                                                        ]
+// [                                                        ]
+// [========================================================]
+// [                                                        ]
+// [========================================================]
+
+pvp_n_3-2,50,49,0	script	CloneDefenseManager::alabacd	HIDDEN_WARP_NPC,2,2,{
+	close;
+
+OnPCLoadMapEvent:
+	if (strcharinfo(3) == $cloneDefenseMap$)
+	{
+		getmapxy(.@map$, .@x, .@y, 0);
+		//magic, 3 clones
+		set .@cloneCount, 3;
+		switch(Class)
+		{
+			case 0:
+				//archer, 1 clone
+				break;
+			case 1:
+				//cac warriors, 2 clones
+				break;
+		}
+		for(set .@i,0; .@i<.@cloneCount; set .@i,.@i+1)
+		{
+			set .@id, clone(.@map$, .@x, .@y, strnpcinfo(3) + "::OnCloneDieEvent", getcharid(0), getcharid(0), 0, 1);
+			set $@cloneOwnerId[getarraysize(.cloneOwnerId)], getcharid(3);
+			set $@cloneId[getarraysize(.cloneId)], .@id;
+		}
+		
+		charcommand "#battleignore " + strcharinfo(0);
+		set CDINVINCIBLE, 1;
+		addtimer 10000, strnpcinfo(3) + "::OnInvicibilityCheck";
+	
+		//finally, check if event should start
+		if (getarraysize($@CDMembers) == $maxCDMemberCount && $clonedefenseon != 2)
+		{
+			goto StartCD;
+		}
+	}
+	end;
+	
+OnInvicibilityCheck:
+	if(strcharinfo(3) != $cloneDefenseMap$)
+	{
+		charcommand "#battleignore " + strcharinfo(0);
+	}
+	else if(CDINVINCIBLE == 1)
+	{
+		addtimer 10000, strnpcinfo(3) + "::OnInvicibilityCheck";
+	}
+	end;
+
+StartCD:
+	pvpon $cloneDefenseMap$;
+	mapannounce $cloneDefenseMap$, "[Clone Defense] The Clone Defense starts!", bc_red;
+	initnpctimer;
+	set $clonedefenseon, 2;
+	set .totalCount, 0;
+	end;
+
+OnTimer10000:
+	set .totalCount, .totalCount + 1;
+	if (.totalCount == $battleDuration)
+	{
+		callsub OnCheckVictory;
+	}
+
+	setnpctimer 0;
+	end;
+
+OnCheckVictory:
+	//every minute, check for members
+	set .@winner, -1;
+	set .@highest, 0;
+	for(set .@i,0; .@i<getarraysize($@CDMembers); set .@i,.@i+1)
+	{
+		set .@attached, attachrid($@CDMembers[.@i]);
+		if (getarraysize($@CDMembers[.@i]) == 0 || .@attached == 0)
+		{
+			deletearray $@CDMembers[.@i], 1;
+		}
+		else
+		{
+			if(CDPOINTS > .@highest)
+			{
+				set .@highest, CDPOINTS;
+				set .@winner, getcharid(3);
+			}
+		}
+	}
+
+	if(.@winner != -1)
+	{
+		attachrid(.@winner);
+		pvpoff $cloneDefenseMap$;
+		announce "[Clone Defense] " + strcharinfo(0) + " just win the Clone Defense!", bc_red|bc_all;
+		mapannounce $cloneDefenseMap$, "[Clone Defense] Congratulations, " + strcharinfo(0) + "!", bc_red;
+		mapannounce $cloneDefenseMap$, "[Clone Defense] you will now be rewarded.", bc_red;
+		
+		for(set .@i,0; .@i<getarraysize($@CDMembers); set .@i,.@i+1)
+		{
+			charcommand "#battleignore " + strcharinfo(0);
+			if(getcharid(3) != .@winner)
+			{
+				if(.@cnt < .rewardMin[2])
+					set .@cnt, .rewardMin[2];
+				getitem 7773, .@cnt;
+			}
+			else
+			{
+				set .@cnt, CPOINTS / .rewardCnt[1];
+				if(.@cnt < .rewardMin[1])
+					set .@cnt, .rewardMin[1];
+				getitem 7773, .@cnt;
+				set CDPOINTS, CDPOINTS + .pointPerVictory;
+				set Zeny, Zeny + CDPOINTS * 10000;
+				set Zeny, Zeny + $CDEntryPrice * ($maxCDMemberCount - 1);
+				//callfunc("AddPoints",getcharid(3),.pointPerVictory);
+			}
+		}
+		
+		killmonster $cloneDefenseMap$;
+		set $clonedefenseon, 0;
+	}
+	else
+	{
+		announce "[Clone Defense] ends without winner...", bc_red|bc_all;
+		set $clonedefenseon, 0;
+	}
+	killmonster
+	return;
+	
+OnBoardAsked:
+	set .@caller, getcharid(3);
+	dispbottom "!!Clone Defense Points Board!!";
+	for(set .@i,0; .@i<getarraysize($@CDMembers); set .@i,.@i+1)
+	{
+		set .@attached, attachrid($@CDMembers[.@i]);
+		if (.@attached == 0)
+		{
+			deletearray $@CDMembers[.@i], 1;
+		}
+		else
+		{
+			set .@message$, "	~" + strcharinfo(0) + ": " + CDPOINTS;
+			if(attachrid(.@caller))
+				dispbottom .@message$;
+		}
+	}
+	end;
+	
+OnPCLoginEvent:
+	set CDPOINTS, 0;
+	if(CDINVINCIBLE == 1)
+	{
+		
+	}
+	end;
+
+OnPCDieEvent:
+	if (strcharinfo(3) == $cloneDefenseMap$)
+	{
+		addtimer 5000, strnpcinfo(3) + "::OnHealAfterDeath";
+		
+		attachrid(killerrid);
+		
+		set CDPOINTS, CDPOINTS + .pointPerKill;
+		dispbottom "You've earn " + .pointPerKill + " points. Your current balance is " + CDPOINTS;
+	}
+	end;
+	
+OnCloneDieEvent:
+	if (strcharinfo(3) == $cloneDefenseMap$)
+	{		
+		set CDPOINTS, CDPOINTS + .pointPerCloneKill;
+		dispbottom "You've earn " + .pointPerCloneKill + " points. Your current balance is " + CDPOINTS;
+		set .@masterId, 0;
+		for(set .@i,0; .@i<getarraysize($@cloneId) && .@masterId == 0; set .@i,.@i+1)
+		{
+			if(killedrid == $@cloneId[.@i])
+			{
+				set .@masterId, $@cloneOwnerId[.@i];
+				deletearray $@cloneId[.@i], 1;
+				deletearray $@cloneOwnerId[.@i], 1;
+			}
+		}
+		set .@found1, 0;
+		for(set .@i,0; .@i<getarraysize($@cloneOwnerId) && .@found1 == 0; set .@i,.@i+1)
+		{
+			if($@cloneOwnerId[.@i] == .@masterId)
+			{
+				set .@found1, 1;
+			}
+		}
+		if(.@found1 == 1)
+		{
+			//stop invincibility
+			if(attachrid(.@masterId))
+			{
+				set CDINVINCIBLE, 1;
+				mapannounce $cloneDefenseMap$, "[Clone Defense] " + strcharinfo(0) + " invincibility will soon stop!", bc_red;
+			}
+		}
+	}
+	end;
+
+OnHealAfterDeath:
+	dispbottom "[Valkyrie] You received the War Goddess benediction!";
+	percentheal 100, 100;
+	if(.buffs == 1)
+	{
+		specialeffect2 EF_INCAGILITY; sc_start SC_INC_AGI,240000,10;
+		specialeffect2 EF_BLESSING; sc_start SC_BLESSING,240000,10;
+	}
+	end;
+
+OnInit:
+	set $cloneDefenseMap$, "pvp_n_3-2";
+	set $maxCDMemberCount, 10;
+	set $CDEntryPrice, 5000;
+	setarray $CDDuration[0],5,10,15; //minutes range
+	set $clonedefenseon, 0;
+	set .pointPerKill, 10;
+	set .pointPerCloneKill, 5;
+	set .pointPerVictory, 100;
+	bindatcmd "cdboard", strnpcinfo(3) + "::OnBoardAsked";
+	set .buffs, 1;
+	end;
+}
+
+prontera,119,166,4	script	Clone Defense::alacdent	4_MAN_GALTUN1,{
+	set .@npcname$, "[Roik]";
+	mes .@npcname$;
+	mes "Hello to you, " + strcharinfo(0);
+	mes "I'm the Clone Defense Manager.";
+	mes "When you talk to me, you'll be able to setup or join an existing Clone Defense.";
+	next;
+	mes .@npcname$;
+	if ($clonedefenseon == 2)
+	{
+		goto OnEnterAgain;
+	}
+	if ($clonedefenseon == 1)
+	{
+		if(callfunc("CheckCDPlayers") == 1)
+		{
+			next;
+			mes .@npcname$;
+			mes "Be patient please. The Clone Defense will start soon.";
+			close;
+		}
+		
+		mes "So. Are you interested?";
+		if (select("Join the currently running Clone Defense","No, thanks") == 1)
+		{
+			callsub OnJoin, 1;
+		}
+		else
+		{
+			goto OnLeave;
+		}
+	}
+	else if ($clonedefenseon == 0)
+	{
+		mes "So. Are you interested?";
+		if (select("Start a new Clone Defense","No, thanks") == 1)
+		{
+			callsub OnJoin, 0;
+		}
+		else
+		{
+			goto OnLeave;
+		}
+	}
+	else
+	{
+		next;
+		mes .@npcname$;
+		mes "Sorry, it's too late for this battle. Come back later.";
+	}
+	close;
+
+OnJoin:
+	set .@npcname$, "[Roik]";
+	set .@mode, getarg(0);
+	next;
+	mes .@npcname$;
+	mes "Sure!";
+	mes "It'll cost you " + $CDEntryPrice + "z to enter.";
+	if (Zeny < $CDEntryPrice)
+	{
+		next;
+		mes .@npcname$;
+		mes "Sorry, but you lack some money...";
+		close;
+	}
+	if (select("Here you are.","I'll get back") == 1)
+	{
+		next;
+		mes .@npcname$;
+		set Zeny, Zeny - $CDEntryPrice;
+		mes "Allright.";
+		mes "The Clone Defense is pretty simple.";
+		mes "When entering inside the map, you'll be furnished with 1 to 3 clones, according to your class.";
+		mes "Those clones will help you killing other players.";
+		mes "On the other hand, lose those three clones and you'll lose.";
+		mes "You'll have to enter again to obtain new clones, and earn more points.";
+		mes "Killing a clone will give you points, but killing the last clone of somebody will make him vulnerable again.";
+		mes "So, you'll earn more point by killing him than anything else.";
+		next;
+		mes .@npcname$;
+		mes "The reward will be the total amount paid by all players.";
+		mes "I'll just keep a little part for me.";
+		mes "The fight will starts when " + $maxCDMemberCount + " members will join.";
+		if (.@mode == 0)
+		{
+			next;
+			mes .@npcname$;
+			mes "Now, choose a duration.";
+			set .@message$, "It can last for ";
+			set .@menu$, "";
+			for(set .@i,0; .@i<getarraysize($CDDuration); set .@i,.@i+1)
+			{
+				set .@message$, .@message$ + (.@i == 0 ? "" : (.@i == getarraysize($CDDuration) - 1 ? ", or " : ", ")) + $CDDuration[.@i] + " minutes";
+				set .@menu$, .@menu$ + (.@i == 0 ? "" : ":") + $CDDuration[.@i] + " minutes";
+			} 
+			set .@message$, .@message$ + ".";
+			mes .@message$;
+			mes "What's your choice?";
+			set .@duration, select(.@menu$) - 1;
+			next;
+			mes .@npcname$;
+			mes "Allright, let's go for " + $CDDuration[.@choice] + " minutes then.";
+			next;
+			mes .@npcname$;
+		}
+		mes "Good luck.";
+		next;
+		getmapxy(.@map$, .@x, .@y, 0);
+		savepoint(.@map$, .@x, .@y);
+		set CDPOINTS, 0;
+		warp $cloneDefenseMap$, 0, 0;
+		if (.@mode == 0)
+		{
+			deletearray $@CDMembers[0], getarraysize($@CDMembers);
+			deletearray $@cloneOwnerId[0], getarraysize($cloneOwnerId);
+			deletearray $@cloneId[0], getarraysize($cloneId);
+			set $@CDMembers[0], getcharid(3);
+			
+			set $clonedefenseon, 1;
+			set $battleDuration, $CDDuration[.@choice];
+			announce "[Clone Defense] " + strcharinfo(0) + " just join the Clone Defense. Who will come to fight him?", bc_red|bc_all;
+		}
+		else
+		{
+			set $@CDMembers[getarraysize($@CDMembers)], getcharid(3);
+			if (getarraysize($@CDMembers) < $maxCDMemberCount)
+			{
+				announce "[Clone Defense] " + strcharinfo(0) + " just join the Clone Defense. Still " + ($maxCDMemberCount - getarraysize($@CDMembers)) + " fighters needed to begin!", bc_red|bc_all;
+			}
+		}
+	}
+	else
+	{
+		goto OnLeave;
+	}
+	close;
+
+OnEnterAgain:
+	set .@found, callfunc("CheckCDPlayers");
+	if(.@found == 1)
+	{
+		mes "Get ready, I'll send you back.";
+		warp $cloneDefenseMap$, 0, 0;
+	}
+	else
+	{
+		mes "You're not part of this Clone Defense.";
+		mes "Wait for another to begin, please.";
+	}
+	close;
+
+OnLeave:
+	set .@npcname$, "[Roik]";
+	next;
+	mes .@npcname$;
+	mes "Your choice!";
+	close;
+}
+
+function	script	CheckCDPlayers	{
+	for(set .@i,0; .@i<getarraysize($@CDMembers) && .@found == 0; set .@i,.@i+1)
+	{
+		if($@CDMembers[.@i] == getcharid(3))
+		{
+			return 1;
+		}
+	}
+	return 0;
+}

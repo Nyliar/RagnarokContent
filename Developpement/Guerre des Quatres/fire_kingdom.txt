@@ -1,0 +1,56 @@
+
+//===== eAthena Script =======================================
+//= War of Emperium (Al De baran)
+//===== By: ==================================================
+//= L0ne_W0lf
+//===== Current Version: =====================================
+//= 1.1
+//===== Compatible With: =====================================
+//= eAthena SVN
+//===== Description: =========================================
+//= NPCs that relate to Al De Baran Guild Castle 1
+//===== Additional Comments: =================================
+//= 1.0 First Version. No longer uses functions. [L0ne_W0lf]
+//= 1.1 Removed dialog from interior flags. [L0ne_W0lf]
+//============================================================
+
+// Guild Flag (Town)
+//============================================================
+capitale,238,165,4	script	Förbränd#1::FireKingdom	722,{
+	end;
+
+OnRecvCastleF:
+	FlagEmblem GetCastleData("fire_combat",1);
+	end;
+}
+
+// Guild Flag (Inside Castle)
+//============================================================
+fire_king,123,42,0	script	Förbränd#fk-2::FireKingdom2	722,{
+	end;
+
+OnRecvCastleF:
+	FlagEmblem GetCastleData("fire_combat",1);
+	end;
+}
+
+fire_king,133,52,0	duplicate(FireKingdom)	Förbränd#fk-3	722
+fire_king,114,52,0	duplicate(FireKingdom)	Förbränd#fk-4	722
+
+// AGIT Manager
+//============================================================
+fire_combat,100,106,0	duplicate(4_War_Manager)	4_War#fire_combat	-1
+
+// Grand Argentier
+//============================================================
+fire_king,100,24,3	duplicate(Grand Argentier)	Grand Argentier#1	943
+
+// Main du Roi
+//============================================================
+fire_king,123,27,3	duplicate(Main du Roi)	Main du Roi#1	945
+
+// General des armées
+//============================================================
+fire_king,146,24,3	duplicate(General en Chef)	General en Chef#1	946
+
+fire_combat,100,106,0	duplicate(4_War_Treasure)	4_War_Treasure#fire_combat	-1

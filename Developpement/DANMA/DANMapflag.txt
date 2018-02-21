@@ -1,0 +1,205 @@
+// [========================================================]
+// [=============     DANMA - mapflags      ============]
+// [========================================================]
+// [ Version 1                                              ]
+// [========================================================]
+// [ Original script by: Alayne				    ]
+// [========================================================]
+// [ Description:                                           ]
+// [--------------------------------------------------------]
+// [                                                        ]
+// [ - The DANMA Project - mapflags			    ]
+// [========================================================]
+// [ Changelog: (5 last updates)                            ]
+// [--------------------------------------------------------]
+// [                                                        ]
+// [ v0: Creation                      			    ]
+// [                                                        ]
+// [                                                        ]
+// [========================================================]
+// [                                                        ]
+// [========================================================]
+
+danma_01	mapflag	nomobloot
+danma_02	mapflag	nomobloot
+danma_03	mapflag	nomobloot
+danma_04	mapflag	nomobloot
+danma_05	mapflag	nomobloot
+danma_06	mapflag	nomobloot
+danma_07	mapflag	nomobloot
+danma_08	mapflag	nomobloot
+danma_09	mapflag	nomobloot
+danma_10	mapflag	nomobloot
+danma_11	mapflag	nomobloot
+danma_12	mapflag	nomobloot
+danma_13	mapflag	nomobloot
+danma_14	mapflag	nomobloot
+danma_15	mapflag	nomobloot
+danma_16	mapflag	nomobloot
+danma_17	mapflag	nomobloot
+danma_18	mapflag	nomobloot
+danma_19	mapflag	nomobloot
+danma_20	mapflag	nomobloot
+danma_21	mapflag	nomobloot
+danma_22	mapflag	nomobloot
+danma_23	mapflag	nomobloot
+danma_24	mapflag	nomobloot
+danma_25	mapflag	nomobloot
+danma_26	mapflag	nomobloot
+danma_27	mapflag	nomobloot
+danma_28	mapflag	nomobloot
+danma_29	mapflag	nomobloot
+danma_32	mapflag	nomobloot
+danma_33	mapflag	nomobloot
+danma_34	mapflag	nomobloot
+danma_35	mapflag	nomobloot
+danma_36	mapflag	nomobloot
+danma_37	mapflag	nomobloot
+danma_38	mapflag	nomobloot
+danma_39	mapflag	nomobloot
+danma_40	mapflag	nomobloot
+danma_41	mapflag	nomobloot
+danma_42	mapflag	nomobloot
+danma_43	mapflag	nomobloot
+danma_44	mapflag	nomobloot
+danma_45	mapflag	nomobloot
+
+danma_01	mapflag	loadevent
+danma_02	mapflag	loadevent
+danma_03	mapflag	loadevent
+danma_04	mapflag	loadevent
+danma_05	mapflag	loadevent
+danma_06	mapflag	loadevent
+danma_07	mapflag	loadevent
+danma_08	mapflag	loadevent
+danma_09	mapflag	loadevent
+danma_10	mapflag	loadevent
+danma_11	mapflag	loadevent
+danma_12	mapflag	loadevent
+danma_13	mapflag	loadevent
+danma_14	mapflag	loadevent
+danma_15	mapflag	loadevent
+danma_16	mapflag	loadevent
+danma_17	mapflag	loadevent
+danma_18	mapflag	loadevent
+danma_19	mapflag	loadevent
+danma_20	mapflag	loadevent
+danma_21	mapflag	loadevent
+danma_22	mapflag	loadevent
+danma_23	mapflag	loadevent
+danma_24	mapflag	loadevent
+danma_25	mapflag	loadevent
+danma_26	mapflag	loadevent
+danma_27	mapflag	loadevent
+danma_28	mapflag	loadevent
+danma_29	mapflag	loadevent
+danma_32	mapflag	loadevent
+danma_33	mapflag	loadevent
+danma_34	mapflag	loadevent
+danma_35	mapflag	loadevent
+danma_36	mapflag	loadevent
+danma_37	mapflag	loadevent
+danma_38	mapflag	loadevent
+danma_39	mapflag	loadevent
+danma_40	mapflag	loadevent
+danma_41	mapflag	loadevent
+danma_42	mapflag	loadevent
+danma_43	mapflag	loadevent
+danma_44	mapflag	loadevent
+danma_45	mapflag	loadevent
+
+mellina_in	mapflag	nowarp
+mellina_in	mapflag	noteleport
+mellina_in	mapflag	nowarpto
+
+danma_01	mapflag	bexp	250
+danma_01	mapflag	jexp	250
+danma_02	mapflag	bexp	250
+danma_02	mapflag	jexp	250
+danma_03	mapflag	bexp	250
+danma_03	mapflag	jexp	250
+danma_04	mapflag	bexp	250
+danma_04	mapflag	jexp	250
+danma_05	mapflag	bexp	250
+danma_05	mapflag	jexp	250
+danma_06	mapflag	bexp	250
+danma_06	mapflag	jexp	250
+danma_07	mapflag	bexp	250
+danma_07	mapflag	jexp	250
+danma_08	mapflag	bexp	250
+danma_08	mapflag	jexp	250
+danma_09	mapflag	bexp	250
+danma_09	mapflag	jexp	250
+danma_10	mapflag	bexp	250
+danma_10	mapflag	jexp	250
+danma_11	mapflag	bexp	250
+danma_11	mapflag	jexp	250
+danma_12	mapflag	bexp	250
+danma_12	mapflag	jexp	250
+danma_13	mapflag	bexp	250
+danma_13	mapflag	jexp	250
+danma_14	mapflag	bexp	250
+danma_14	mapflag	jexp	250
+danma_15	mapflag	bexp	250
+danma_15	mapflag	jexp	250
+danma_16	mapflag	bexp	250
+danma_16	mapflag	jexp	250
+danma_17	mapflag	bexp	250
+danma_17	mapflag	jexp	250
+danma_18	mapflag	bexp	250
+danma_18	mapflag	jexp	250
+
+//Volcano
+danma_19	mapflag	bexp	250
+danma_19	mapflag	jexp	250
+danma_20	mapflag	bexp	250
+danma_20	mapflag	jexp	250
+danma_21	mapflag	bexp	250
+danma_21	mapflag	jexp	250
+danma_22	mapflag	bexp	250
+danma_22	mapflag	jexp	250
+danma_23	mapflag	bexp	250
+danma_23	mapflag	jexp	250
+//Flooded Temple
+danma_24	mapflag	bexp	250
+danma_24	mapflag	jexp	250
+danma_25	mapflag	bexp	250
+danma_25	mapflag	jexp	250
+danma_26	mapflag	bexp	250
+danma_26	mapflag	jexp	250
+danma_27	mapflag	bexp	250
+danma_27	mapflag	jexp	250
+danma_28	mapflag	bexp	250
+danma_28	mapflag	jexp	250
+danma_29	mapflag	bexp	250
+danma_29	mapflag	jexp	250
+//Dwarves Mountain
+danma_32	mapflag	bexp	250
+danma_32	mapflag	jexp	250
+danma_33	mapflag	bexp	250
+danma_33	mapflag	jexp	250
+danma_34	mapflag	bexp	250
+danma_34	mapflag	jexp	250
+danma_35	mapflag	bexp	250
+danma_35	mapflag	jexp	250
+danma_36	mapflag	bexp	250
+danma_36	mapflag	jexp	250
+danma_37	mapflag	bexp	250
+danma_37	mapflag	jexp	250
+danma_38	mapflag	bexp	250
+danma_38	mapflag	jexp	250
+//Hazy Forest
+danma_39	mapflag	bexp	250
+danma_39	mapflag	jexp	250
+danma_40	mapflag	bexp	250
+danma_40	mapflag	jexp	250
+danma_41	mapflag	bexp	250
+danma_41	mapflag	jexp	250
+danma_42	mapflag	bexp	250
+danma_42	mapflag	jexp	250
+danma_43	mapflag	bexp	250
+danma_43	mapflag	jexp	250
+danma_44	mapflag	bexp	250
+danma_44	mapflag	jexp	250
+danma_45	mapflag	bexp	250
+danma_45	mapflag	jexp	250

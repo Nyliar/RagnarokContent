@@ -1,0 +1,28 @@
+//First stage
+danma_39,0,0,0,0	monster	Mandragora	1020,35,0,0,1
+danma_39,0,0,0,0	monster	Boa	1025,25,0,0,1
+danma_39,0,0,0,0	monster	Coco	1104,15,0,0,1
+danma_39,0,0,0,0	monster	Smokie	1056,25,0,0,1
+
+danma_40,0,0,0,0	monster	Wormtail	1024,35,0,0,1
+danma_40,0,0,0,0	monster	Rafflesia	1162,25,0,0,1
+danma_40,0,0,0,0	monster	Yoyo	1057,15,0,0,1
+
+danma_41,0,0,0,0	monster	Caramel	1103,15,0,0,1
+danma_41,0,0,0,0	monster	Orc Warrior	1023,25,0,0,1
+danma_41,0,0,0,0	monster	Wolf	1013,10,0,0,1
+danma_41,0,0,0,0	monster	Bigfoot	1060,5,0,0,1
+
+danma_42,0,0,0,0	boss_monster	Orc Hero	1087,1,7200000,3600000,0
+
+danma_43,0,0,0,0	monster	Les	1881,15,0,0,1
+danma_43,0,0,0,0	monster	Wootan Shooter	1498,25,0,0,1
+danma_43,0,0,0,0	monster	Dryad	1498,10,0,0,1
+danma_43,0,0,0,0	monster	Enchented Peach Tree	1410,15,0,0,1
+
+danma_44,0,0,0,0	monster	Wood Goblin	1880,5,0,0,1
+danma_44,0,0,0,0	monster	Grove	1687,25,0,0,1
+danma_44,0,0,0,0	monster Spring Rabbit	1322,10,0,0,1
+danma_44,0,0,0,0	monster	Strouf	1075,5,0,0,1
+
+danma_45,0,0,0,0	boss_monster	Orc Lord	1190,1,7200000,3600000,0

@@ -1,0 +1,186 @@
+//
+// [========================================================]
+// [===========       Metalimie - Allomancie     ===========]
+// [========================================================]
+// [ Version 1                                              ]
+// [========================================================]
+// [ Original script by: Alayne                             ]
+// [========================================================]
+// [ Description:                                           ]
+// [--------------------------------------------------------]
+// [                                                        ]
+// [ - Allomancie functions				           ]
+// [ - Enable to create Allomancie potions	           ]
+// [ - Determine wether potions are useful or poison	    ]
+// [========================================================]
+// [ Changelog: (5 last updates)                            ]
+// [--------------------------------------------------------]
+// [                                                        ]
+// [ v0: Creation                      			    ]
+// [                                                        ]
+// [========================================================]
+// [                                                        ]
+// [========================================================]
+
+prontera,97,190,6	script	Metal Chemistry::prtalal	810,{
+
+	//Gold Ring,Silver Ring,Steel,Iron,Oridecon,Elunium,Bradium,Carnium,Ring of Water,Fire,Wind,Earth
+	setarray .@AlloMetalId[0],2610,2611,999,998,984,985,6224,6223,2682,2683,2684,2685;
+	setarray .@AlloPotionId[0],21873,21874,21875,21876,21877,21878,21879,21880,21881,21882,21883,21884,21885;
+	//Potions Name
+	setarray .@AlloMetalName$[0],"Gold","Silver","Steel","Iron","Oridecon","Elunium","Bradium","Carnium","Watery","Firy","Windy","Earthy";
+	setarray .@AlloMetalPercent[0],51,15,23,32,64,46,37,73,76,78,49,91;
+	//Empty Bottle, Water of Blessing
+	setarray .@AllomanticItems[0],713,12400;
+
+	set .@npcName$, "[Metal Chemistry]";
+
+	mes .@npcName$;
+	
+	if (METALIMIE == 0)
+	{
+		mes "Hello to you, " + strcharinfo(0);
+		mes "I'm the owner of this Metal Chemistry Shop.";
+		mes "Have you ever heard about Metal Chemistry?";
+		mes "It's an ancient process, enabling people to use Metal as catalyst.";
+		mes "These metals then enable to obtain some hidden power in you.";
+		mes "But it's quite hard and dangerous...";
+		mes "If you're interested, the first step is to understand the Chemistry metals.";
+		mes "That's not something you can learn with a third person.";
+		mes "You have to understand yourself. And come back to me when you'll have the base.";
+		set METALIMIE, 1;
+	}
+	else if (METALIMIE == 1)
+	{
+		set .@allItemOwned, 1;
+		for(set .@i, 0; .@i<getarraysize(.@AlloMetalId) - 4; set .@i, .@i+1)
+		{
+			if (countitem(.@AlloMetalId[.@i]) < 1)
+			{
+				set .@allItemOwned, 0;
+			}
+		}
+		if (.@allItemOwned == 1)
+		{
+			mes "You've found the base Metals. Great.";
+			mes "There's actually 8 base Metals, and 4 Rarer.";
+			mes "But we'll come to it later.";
+			mes "All the metalic power are based on these 12 Metals.";
+			mes "There's probably more, but we don't know them.";
+			mes "Actually, the power are based on these Metals, but don't use them as they are.";
+			mes "There's three different powers. Ferrochimie, Hemallurgie and Allomancie.";
+			mes "You have to learn more about more.";
+			mes "Look for a user of each kind, and ask them to explain their power.";
+			set METALIMIE, 2;
+		}
+		else
+		{
+			mes "Sorry, but you're not ready yet. You miss some Metals.";
+		}
+	}
+
+	if (ALLOMANCIE == 1)
+	{
+		if (ALLOMANCIE_LEVEL == 9)
+		{
+			mes "Hello to you, Mistborn.";
+			mes "Which Allomantic Metal do you wish to use?";
+
+			for(set .@i, 0; .@i<getarraysize(.@AlloMetalId); set .@i, .@i+1)
+			{
+				if (countitem(.@AlloMetalId[.@i]) >= 1)
+				{
+					set .@menu$, .@menu$ + ( .@i ? ":" : "" ) + getitemname(.@AlloMetalId[.@i]); 
+					set .@possessedItemsRank[getarraysize(.@possessedItemsRank)],.@i;
+				}
+			}		
+			set .@choice, select(.@menu$) - 1;
+			if (.@choice != 254)
+			{
+				mes "Confirm the creation of a " + .@AlloMetalName$[.@possessedItemsRank[.@choice]] + " Potion?";
+				switch(select("Yes","No"))
+				{
+					case 1:
+						mes "It'll cost you a " + getitemname(.@AlloMetalId$[.@possessedItemsRank[.@choice]]) + ", an Empty Bottle and a Water of Blessing.";
+						mes "Interested?";
+						switch(select("Do it","No"))
+						{
+							case 1:
+								mes "Very well. I'll do it.";
+								mes "How many? 0 means as much as possible.";
+								input .@count;
+								if (countitem(12400)>=.@count && countitem(713)>=.@count && countitem(.@AlloMetalId$[.@possessedItemsRank[.@choice]])>=.@count)
+								{
+									delitem 12400, .@count;
+									delitem 713, .@count;
+									delitem .@AlloMetalId[.@possessedItemsRank[.@choice]], .@count;
+	
+									mes "In which proportion do we use Metal?";
+									input .@percent;
+				
+									//if percent's good, get potion. Otherwise, get poison
+									if (.@percent == .@AlloMetalPercent[.@possessedItemsRank[.@choice]])
+										getitem .@AlloPotionId[.@possessedItemsRank[.@choice]], .@count;
+									else
+										getitem .@AlloPotionId[getarraysize(.@AlloPotionId)], .@count;
+	
+									mes "Here you are!";
+								}
+								else
+									mes "You don't have what I need...";
+								break;
+							case 2:
+								mes "Allright, bye.";
+								break;
+						}
+						break;
+					case 2:
+						mes "Allright.";
+						break;
+				}
+			}	
+		}
+		else
+		{
+			mes "Hello to you, Fogger.";
+			mes "I can create you an Allomantic Potion.";
+			mes "It'll cost you one " + getitemname(.@AlloMetalId[ALLOMANTIC_LEVEL-1]) + ", an Empty Bottle and one Water of Blessing.";
+			mes "Interested?";
+			switch(select("Do it","No thanks"))
+			{
+				case 1:
+					mes "Allright, let's do it.";
+					mes "How many? 0 means as much as possible.";
+					input .@count;
+					if (countitem(12400)>=.@count && countitem(713)>=.@count && countitem(.@AlloMetalId[ALLOMANTIC_LEVEL-1])>=.@count)
+					{
+						delitem 12400, .@count;
+						delitem 713, .@count;
+						delitem .@AlloMetalId[ALLOMANTIC_LEVEL-1], .@count;
+
+						mes "In which proportion do I use the Metal?";
+						input .@percent;
+		
+						//if percent's good, get potion. Otherwise, get poison
+						if (.@percent == .@AlloMetalPercent[ALLOMANTIC_LEVEL-1])
+							getitem .@AlloPotionId[ALLOMANTIC_LEVEL-1], .@count;
+						else
+							getitem .@AlloPotionId[getarraysize(.@AlloPotionId)], .@count;
+
+						mes "Here you are!";
+					}
+					else
+						mes "You can't do that...";
+					break;
+				case 2:
+					mes "Allright, bye.";
+					break;
+			}
+		}
+	}
+	else
+	{
+		mes "You can't create Allomantic Potions without being Allomantian.";
+	}
+	close;
+}

@@ -1,0 +1,124 @@
+//===== Hercules Script ===========================================
+//= King of Emperium Hill
+//===== By: =======================================================
+//= AnnieRuru
+//===== Current Version: ==========================================
+//= 1.1
+//===== Compatible With: ==========================================
+//= hercules 2015-12-19
+//===== Description: ==============================================
+//= defends the emperium in the middle of the map until times up
+//===== Topic =====================================================
+//= http://hercules.ws/board/topic/4495-gvg-king-of-emperium-hill/
+//===== Additional Comments: ======================================
+//= Finally there is a topic for this !
+//=================================================================
+
+-	script	KoE	FAKE_NPC,{
+OnInit:
+	disablenpc "The King#KoE";
+	disablenpc "Exit#KoE";
+	bindatcmd "koe", strnpcinfo(0)+"::OnCommand", 99,100;
+	end;
+OnCommand:
+	if ( compare( .@atcmd_parameters$, "on" ) ) goto L_start;
+	else if ( compare( .@atcmd_parameters$, "off" ) ) goto L_end;
+	else {
+		dispbottom "type - '@koe on' to start the event";
+		dispbottom "type - '@koe off' to end the event";
+	}
+	end;
+L_start:
+OnClock2000: // everyday 8pm starts
+	if ( .start ) end;
+	gvgon "guild_vs1";
+	announce "The King of Emperium Hill has begun!", bc_all;
+	.start = true;
+	enablenpc "The King#KoE";
+	disablenpc "Exit#KoE";
+	$koegid = 0;
+	donpcevent "::OnRevKoE";
+	maprespawnguildid "guild_vs1", $koegid, 3;
+	killmonster "guild_vs1", "KoE::OnEmpDead";
+	monster "guild_vs1",49,49, "EMPERIUM", EMPELIUM, 1, "KoE::OnEmpDead";
+	end;
+L_end:
+OnClock2030: // everyday 8:30pm ends
+	gvgoff "guild_vs1";
+	announce "The King of Emperium Hill is over!", bc_all;
+	.start = 0;
+	enablenpc "Exit#KoE";
+	disablenpc "The King#KoE";
+	killmonster "guild_vs1", "KoE::OnEmpDead";
+//	maprespawnguildid "guild_vs1", $koegid, 2; // uncomment this line to kick non-owner off the map when event ends
+	end;
+OnEmpDead:
+	$koegid = getcharid(2);
+	announce "The current King of Emperium Hill is the ["+ strcharinfo(2) +"] guild.", bc_all;
+	donpcevent "::OnRevKoE";
+	maprespawnguildid "guild_vs1", $koegid, 2;
+	killmonster "guild_vs1", "KoE::OnEmpDead";
+	sleep 500;
+	if ( .start )
+		monster "guild_vs1",49,49, "EMPERIUM", EMPELIUM, 1, "KoE::OnEmpDead";
+	end;
+}
+
+// KoE Entrance
+prontera,150,194,5	script	The King#KoE	1_M_MERCHANT,{
+	mes "[The King]";
+	if ( !getcharid(2) ) {
+		mes "You must have a guild to participate in the ^FF0000King of Emperium Hill Tournament^000000.";
+		close;
+	}
+	mes "Hello.";
+	mes "Would you like to participate in the ^FF0000King of Emperium Hill Tournament^000000?";
+	if ( select ( "Yes", "No" ) == 2 ) close;
+	if ( !getvariableofnpc( .start, "KoE" ) ) close;
+	switch( rand(1,4) ){
+	case 1:	warp "guild_vs1", 50, 88; end;
+	case 2:	warp "guild_vs1", 88, 50; end;
+	case 3:	warp "guild_vs1", 50, 11; end;
+	case 4:	warp "guild_vs1", 11, 50; end;
+	}
+}
+
+// KoE Exit
+guild_vs1,49,56,5	script	Exit#KoE	1_M_BARD,{
+	mes "[Exit]";
+	mes "See ya.";
+	close2;
+	warp "Save",0,0;
+	if ( getcharid(2) == $koegid )
+	{
+		//getitem Poring_Coin, 1; // configure prize here
+		callfunc("AddPoints",getcharid(3),100);
+	}
+	end;
+}
+
+// Flags
+guild_vs1,49,38,4	script	King of Emperium Hill#1::koe_flag	GUILD_FLAG,{
+	if ( !$koegid ) end;
+	mes "[King of Emperium Hill]";
+	mes "The Current King of Emperium Hill is the ["+ getguildname($koegid) +"] guild.";
+	close;
+//OnInit: // Uncomment this line to make the emblem stay after @reloadscript
+OnRevKoE:
+	flagemblem $koegid;
+	end;
+}
+guild_vs1,61,49,6	duplicate(koe_flag)	King of Emperium Hill#2	GUILD_FLAG
+guild_vs1,38,49,2	duplicate(koe_flag)	King of Emperium Hill#3	GUILD_FLAG
+guild_vs1,49,61,0	duplicate(koe_flag)	King of Emperium Hill#4	GUILD_FLAG
+
+guild_vs1	mapflag	nobranch
+guild_vs1	mapflag	nomemo
+guild_vs1	mapflag	nopenalty
+guild_vs1	mapflag	noreturn
+guild_vs1	mapflag	nosave	SavePoint
+guild_vs1	mapflag	noteleport
+guild_vs1	mapflag	gvg_noparty
+guild_vs1	mapflag	nowarp
+guild_vs1	mapflag	nowarpto
+guild_vs1	mapflag	guildlock

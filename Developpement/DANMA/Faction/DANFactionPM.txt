@@ -1,0 +1,83 @@
+// [========================================================]
+// [=============     DANMA - Faction Potion Master     ============]
+// [========================================================]
+// [ Version 1                                              ]
+// [========================================================]
+// [ Original script by: Alayne				    ]
+// [========================================================]
+// [ Description:                                           ]
+// [--------------------------------------------------------]
+// [                                                        ]
+// [ - The Faction Potion Master			    	    ]
+// [========================================================]
+// [ Changelog: (5 last updates)                            ]
+// [--------------------------------------------------------]
+// [                                                        ]
+// [ v0: Creation                      			    ]
+// [                                                        ]
+// [                                                        ]
+// [========================================================]
+// [                                                        ]
+// [========================================================]
+
+mellina_in,62,57,3	script	Piccard::danfmpm	405,{
+	set .@npcname$, "[Piccard]";
+	mes .@npcname$;
+	mes "Welcome, welcome.";
+	mes "I'm a bit busy right now, but you're here in my house, the House of Piccard.";
+	mes "I'm the Potion Masters House Leader.";
+	switch(select("Potions Masters?","Piccard?","What are you doing?","Can I join your House?","I'd like to give your House Reputation Points"))
+	{
+		case 1:
+			next;
+			mes .@npcname$;
+			mes "Yes, Potions Masters.";
+			mes "Here, we learn to make several kind of mixture of potions and drugs.";
+			mes "Most of them can be used to cure, enforce, or even destroy.";
+			mes "It's a dangerous power but useful.";
+			mes "I can't count how many times things exploded on my face, hahaha!";
+			break;
+		case 2:
+			next;
+			mes .@npcname$;
+			mes "Well yes that's my name.";
+			mes "You don't choose your name you know...";
+			mes "Do you have a problem with my name?";
+			break;
+		case 3:
+			next;
+			mes .@npcname$;
+			mes "I'm trying to make ruby slippers for Cinderella.";
+			mes "Can't you see that I'm making potions, dumb-dumb?";
+			break;
+		case 4:
+			next;
+			callfunc("OnJoinFaction","Piccard",3);
+			next;
+			mes .@npcname$;
+			mes "Now that you're one of us, you need to know a few things.";
+			mes "There are several advantages of joining a House.";
+			mes "The first one is that each House has a special doctor. He can use his knowledge to cure what ale's people.";
+			mes "But be careful. He's a human after all, just like everyone else!";
+			mes "He can only look after so much people. He will get tired.";
+			mes "Please take care to of him. We only have one doctor.";
+			next;
+			mes .@npcname$;
+			mes "Next, we have the Bank.";
+			mes "Each house has one. They can help with loans, deposits/withdrawls, or help you set up a bank account.";
+			mes "That's some pretty useful information right here!";
+			next;
+			mes .@npcname$;
+			mes "Finally, the House Skills.";
+			mes "Each House let's you learn a set of skills specific to them!";
+			mes "You already have some, check it out!";
+			next;
+			mes .@npcname$;
+			mes "Anyway, welcome friend. Welcome to Piccard's Family.";
+			break;
+		case 5:
+			callfunc("OnGiveFactionPoints","Piccard",3);			
+			break;
+	}
+	close;
+}

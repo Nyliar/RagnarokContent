@@ -1,0 +1,117 @@
+// [========================================================]
+// [=============     DANMA - Economy      ============]
+// [========================================================]
+// [ Version 1                                              ]
+// [========================================================]
+// [ Original script by: Alayne				    ]
+// [========================================================]
+// [ Description:                                           ]
+// [--------------------------------------------------------]
+// [                                                        ]
+// [ - The economy system			    	    ]
+// [========================================================]
+// [ Changelog: (5 last updates)                            ]
+// [--------------------------------------------------------]
+// [                                                        ]
+// [ v0: Creation                      			    ]
+// [                                                        ]
+// [                                                        ]
+// [========================================================]
+// [                                                        ]
+// [========================================================]
+
+prontera,82,145,0	script	Economy Manager::danecman	4_M_YOUNGKNIGHT,{
+	set .@npcname$, "[Economy Manager]";
+	mes .@npcname$;
+	mes "";
+	mes "Hey there, " + strcharinfo(0);
+	mes "I'm the Economy Manager.";
+	if (getgmlevel() < 99)
+	{
+		mes "Sorry, but I can only speak to the GMs.";
+		mes "Have a good day!";
+	}
+	else
+	{
+		mes "What can I do for you?";
+		if(select("Change base quota","Change percent increase") == 1)
+		{
+			next;
+			mes .@npcname$;
+			mes "Sure. The base quota is currently at " + $baseQuota + "z.";
+			mes "Please, enter the new value.";	
+			input .@newQuota;
+			mes "The new quota will be " + .@newQuota + ", and it will reset all factions quotas. Is this okay?";
+			if (select("Yes","No")==1)
+			{
+				set .@query$, "SELECT `id`,`bwsBaseQuota`,`sbhBaseQuota`,`pmBaseQuota` FROM `dan_economy` WHERE `id`=1";
+				query_sql(.@query$, .@count, .@bws, .@sbh, .@pm);
+				if (getarraysize(.@count) == 1)
+				{
+					//new quota is "actual value - old base quota + new base quota" (don't recalculate increase)
+					set .@newBwsQuota, .@bws[0] - $baseQuota + .@newQuota;
+					set .@newSbhQuota, .@bws[0] - $baseQuota + .@newQuota;
+					set .@newPmQuota, .@bws[0] - $baseQuota + .@newQuota;
+					set .@query$, "UPDATE `dan_economy` set `bwsBaseQuota`=" + .@newBwsQuota;
+					set .@query$, .@query$ + ",`sbhBaseQuota`=" + .@newSbhQuota;
+					set .@query$, .@query$ + ",`pmBaseQuota`=" + .@newPmQuota;					
+					set .@query$, .@query$ + " WHERE `id`=1";
+					query_sql(.@query$, .@count);
+					mes "The quota has been modified.";
+				}
+				else
+				{		
+					logmes "No danma economy has been filled in database!";
+				}
+			}
+			mes "Have a good day.";
+		}
+		else
+		{
+			next;
+			mes .@npcname$;
+			mes "Sure. The current percentage increase is at " + $quotaUp+ "%.";
+			mes "Please, enter a new value.";	
+			input .@newIncrease;
+			mes "The new percentage will be " + .@newIncrease+ ". Is that okay?";
+			if (select("Yes","No")==1)
+			{
+				set $quotaUp, .@newIncrease; //in percentage
+				mes "The percentage has been modified.";
+			}
+			mes "Have a good day.";
+		}
+	}
+	close;
+
+OnInit:
+	set $baseQuota, 10000; //base zeny quota
+	set $quotaUp, 2; //in percentage
+	set $depositPercentage, 100; //define the divider for any deposit to increase the quota
+	set $factionCountNeeded, 10; //define the member count needed to gain an increase
+	set $currentBwsQuota, 0;
+	set $currentHsQuota, 0;
+	set $currentPmQuota, 0;
+
+	set .@query$, "SELECT `id` FROM `dan_economy` WHERE `id`=1";
+	query_sql(.@query$, .@id);
+	if (getarraysize(.@id) == 0)
+	{
+		set .@query$, "INSERT INTO `dan_economy` (`bwsBaseQuota`,`sbhBaseQuota`,`pmBaseQuota`,`bwsCurrentQuota`,`sbhCurrentQuota`,`pmCurrentQuota`,`bwsCount`,`sbhCount`,`pmCount`) VALUES (" + $baseQuota + "," + $baseQuota + "," + $baseQuota + ",0,0,0,0,0,0)";
+		query_sql(.@query$, .@count);
+	}
+	end;
+}
+
+function	script	OnCheckFactionQuota	{
+	set .@factionCurrentColumnName$, getarg(1);
+	set .@factionBaseColumnName$, getarg(0);
+	set .@query$, "SELECT `" + .@factionBaseColumnName$ + "`, `" + .@factionCurrentColumnName$ +"` FROM `dan_economy` WHERE `id`=1";
+	query_sql(.@query$, .@baseQ, .@currentQ);
+	if (getarraysize(.@baseQ) == 1)
+	{
+		if (.@baseQ[0] <= .@currentQ[0])
+			return 1;
+	}
+	return 0;
+}

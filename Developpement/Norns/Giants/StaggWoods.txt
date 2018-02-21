@@ -1,0 +1,763 @@
+//===== Alayne Scripts =======================================
+//= Staggs Woods Instance
+//===== By: ================================================== 
+//= Alayne
+//===== Current Version: ===================================== 
+//= 1.0
+//===== Compatible With: ===================================== 
+//= rAthena SVN
+//= hercules SVN
+//===== Description: ========================================= 
+//
+//= An instance based over the 4 staggs
+//
+//===== Todo Remaining: ======================================
+//
+//===== Additional Comments: =================================
+//
+//============================================================
+
+un_myst,163,38,5	script	Staggs Woods::alastwo	CLEAR_NPC,{
+OnStart:
+	set .@party_id, getcharid(1);
+	set .@sw_leader, ( getcharid(0) == getpartyleader(.@party_id,2) );
+
+	set $instance_sw_id, -1;
+	
+	//RATHENA
+	set .@has_instance, $instance_sw_id == getcharid(1);
+	//HERCULES
+	//set .@has_instance, has_instance(.map$[0], $sw_instance);
+	
+	set .@instance_delay, ( instance_delay_sw - gettimetick(2) );
+
+	set .@npcname$, "[" + .instance_name$ + "]";
+	mes .@npcname$;
+	mes "This is the entrance of " + .instance_name$ + ".";
+	mes "The giant woods looks pretty oppressive.";
+	if( .@instance_delay > 0 )
+	{
+		set .@hours, .@instance_delay / (60 * 60);
+		set .@remaining, .@instance_delay - .@hours * (60 * 60);
+		set .@minutes, .@remaining / (60);
+		set .@remaining, .@remaining - .@minutes * (60);
+		set .@seconds, .@remaining;
+		mes "You have to wait : ^FF0000"+ .@hours +" Hours, " + .@minutes + " Minutes and " + .@seconds + " Seconds.^000000";
+		//close;
+	}
+	if (.requiredItem != -1  && countitem(.requiredItem) < 1)
+	{
+		mes "You decide to step back.";
+		mes "At no cost you'll enter in that place without being well prepared.";
+		close;
+	}
+	switch( select( 
+		(( .@party_id && .@sw_leader && !.@has_instance )?"Create " + .instance_name$:""),
+		(( .@party_id && .@has_instance )?"Enter " + .instance_name$:""),
+		(( .@party_id && .@sw_leader && .@has_instance )?"Destroy " + .instance_name$:""),
+	"Nevermind."
+		)){
+	case 1:
+		getpartymember .@party_id,2;
+		if( .min_party_member >= 1 ){
+			set .@origin, getcharid(3);
+			set .@gettimetick, gettimetick(2);
+			for( set .@i, 0; .@i < $@partymembercount; set .@i, .@i+1 )
+				if( attachrid( $@partymemberaid[.@i] ) ){
+					set .@member_count, .@member_count + 1;
+					if( BaseLevel < .base_level[0] || BaseLevel > .base_level[1] ) set .@fail, .@fail|1;
+					if( Zeny < .instance_zeny ) set .@fail, .@fail|2;
+					if( instance_delay_sw > .@gettimetick ) set .@fail, .@fail|4;
+					if( .@fail ){
+						set .@name$, strcharinfo(0);
+						break;
+					}
+				}
+			attachrid( .@origin );
+		}
+		
+		//check that nobody else is inside
+		for(set .@i,1; .@i<=getarraysize($swMap$); set .@i,.@i+1)
+		{
+			if (getmapusers(instance_mapname($swMap$[.@i], $sw_instance)) > 0) {
+				mes "Another team is already in the " + .instance_name$ + ". I can't send you there, sorry.";
+				close;
+			}
+		}
+		
+		//clean any previously remaining instance
+		if($sw_instance != -1)
+		{
+			instance_destroy $sw_instance;
+			set $sw_instance, -1;
+			set $instance_sw_id, -1;
+		}
+		
+		if( .@name$ != "" && .@fail ){
+			mes "^FF0000[ Failed ]^000000";
+			mes "^0055FF"+.@name$+"^000000, You cannot join right now.";
+			mes " ";
+			mes "^FF0000[ Reason: ]^000000";
+			if( .@fail & 1 ) mes "^777777You must be Level: "+.base_level[0]+" - "+.base_level[1]+"^000000";
+			if( .@fail & 2 ) mes "^777777You need "+ .instance_zeny +" Zeny^000000";
+			if( .@fail & 4 ) mes "^777777You still have cooldown.^000000";
+			//break;
+		}
+		
+		getpartymember getcharid(1),0;
+		if (instance_check_party(.@party_id, .min_party_member, .base_level[0], .base_level[1]) == 0) {
+			mes "^0055FF[ "+.instance_name$+" ]^000000";
+			mes "Make or join a party with at least "+.min_party_member+" member and try again, with level between " +.base_level[0] + " and " + .base_level[1] + ".";
+		}
+		else{
+			//RATHENA
+			set $sw_instance, instance_create( .instance_name$ );
+			//HERCULES
+			//set $sw_instance, instance_create(.instance_name$, .@party_id, IOT_PARTY);
+			if( $sw_instance < 0 ) {
+				npctalk .instance_name$ + " reservation failed.";
+				mes "^0000FF"+ .instance_name$ +" ^000000 - Reservation Failed!";
+				close;
+			}
+			mes "^0055FF[ "+.instance_name$+" ]^000000";
+			mes "^0000FF"+.instance_name$+" ^000000 - Reserved";
+			set .@gettimetick, gettimetick(2);
+			getpartymember .@party_id,2;
+			for( set .@i, 0; .@i < $@partymembercount; set .@i, .@i+1 )
+				if( attachrid( $@partymemberaid[.@i] ) ){
+					set instance_delay_lastr, ( .@gettimetick + ( .instance_delay ));
+					set Zeny, Zeny - .instance_zeny;
+					dispbottom "["+.instance_name$+"] -"+ .instance_zeny +" Zeny and Instance Cooldown Applied.";
+				}
+			attachrid( .@origin );
+			npctalk .instance_name$ + " has been generated for Party - " + getpartyname( .@party_id );
+			
+			set $instance_sw_id, getcharid(1);
+			
+			//HERCULES
+			for( set .@i, 0; .@i < getarraysize($swMap$); set .@i,.@i+1 )
+			{
+				if( instance_attachmap( $swMap$[.@i],$sw_instance ) == "" ){
+					setmapflag $swMap$[.@i],mf_zone,"Memorial Dungeon";
+					npctalk .instance_name$ + " reservation failed due to map attach failure.";
+					mes "- ^FF0000Reservation Failed!^000000";
+					instance_destroy( $sw_instance );
+					set $sw_instance, -1;
+					set $instance_sw_id, -1;
+					close;
+				}
+			}
+			instance_set_timeout .instance_delay,300,$sw_instance;
+			instance_init($sw_instance);
+			
+			//disable unused npcs for now
+ 		}
+	case 2:
+		if( $instance_sw_id != getcharid(1)){
+			mes .instance_name$ + " doesn't exist for Party - "+getpartyname( .@party_id );
+		}
+		else{
+			//RATHENA
+			switch(instance_enter(.instance_name$)) {
+				default:
+					mes "An unknown error has occurred.";
+					close;
+				case 2:
+					mes "The memorial dungeon " + .instance_name$ + " does not exist.";
+					mes "The party leader did not generate the dungeon yet.";
+					close;
+				case 1:
+					mes "You can enter the dungeon after making the party.";
+					close;
+				case 0:
+					mapannounce $swMap$[0], strcharinfo(0)+" from party, " +getpartyname( .@party_id )+", lr entering the dungeon, "+.instance_name$+".",bc_map,"0x00ff99",FW_NORMAL,12;
+					end;
+			}
+			
+			//HERCULES
+			//if( has_instance( $swMap$[0] ) == "" ){
+			//	mes "Staggs Woods doesnt exist for Party - "+getpartyname( .@party_id );
+			//}
+			//else{
+			//	warp $swMap$[0],141,24;
+			//	instance_announce $sw_instance, getpartyname(getcharid(1))+"  entered in the "+.instance_name$+"!",bc_map,"0x00ff99";
+			//}
+		}
+		break;
+	case 3:
+		mes .instance_name$ + " Destroyed.";
+		instance_destroy $sw_instance;
+		set $sw_instance, -1;
+		set $instance_sw_id, -1;
+		break;
+	default: 
+		break;
+}
+close;
+
+OnInit:
+	setarray .base_level[0],130, 175;
+	setarray $swMap$[0],"1@sw";
+	set .map_size, getarraysize( $swMap$ );
+	set .min_party_member, 1;
+	set .instance_zeny, 0;
+	set .instance_delay, 7200;
+	set $sw_timer_delay, 3600; //1 hour to clean the instance
+	set .instance_name$, "Staggs Woods";
+	set $sw_instance, -1;
+	set $instance_sw_id, -1;
+	set .requiredItem, -1; //define the required item to enter in the instance. Leave to -1 to disable
+	end;
+}
+
+
+1@sw,101,107,4	script	staggs_woods	HIDDEN_WARP_NPC,2,2,{
+function summon_normal;
+function summon_guardian;
+end;
+
+OnInstanceInit:
+	set .@map$, strnpcinfo(4);
+	set .@npc_name$, instance_npcname( strnpcinfo(0), $sw_instance );
+	
+	set $instance_sw_level, 0;
+	set .max_sw_level, 5;
+		
+	set .timerCount, 0;
+	
+	set .lootChance, 75; //debug 75 normal 5
+	set $swYggLeaf, -1;
+	set $swReqLeaves, rand(0,100);
+	
+	set .continuePop, 0;
+	
+	set $DainStaggId, -1;
+	set $DuneyrStaggId, -1;
+	set $DurathrorStaggId, -1;
+	set $DvalinStaggId, -1;
+	 
+	initnpctimer;
+	end;
+
+function	summon_normal	{
+	set .@map$, getarg(0);
+	set .@npcname$, getarg(1);
+	set .@increaseFloor, getarg(2);
+	
+	setarray .@coordinate,216,225,216,225;
+	
+	if(.@increaseFloor == 1)
+	{
+		$instance_sw_level++;
+	}
+	
+	switch( $instance_sw_level ){
+		case 1:
+			//Forests Monsters
+			//area 1
+			setarray .@monster,3251,3252,3251,3252,3253;
+			setarray .@amount,20,5,20,5,1;
+			setarray .@coordinate[0], 512, 512, 512, 512;
+			
+			set .@monster_size, getarraysize( .@monster );
+			for( set .@i, 0; .@i < .@monster_size; set .@i,.@i+1 ){
+				set .@target_amount, ( .@amount[.@i] );
+				set .@clabel$, .@npcname$ + "::OnNormalDied";
+				areamonster(.@map$,.@coordinate[0],.@coordinate[1],.@coordinate[2],.@coordinate[3],"--ja--",.@monster[.@i],.@target_amount,.@clabel$);
+			}
+			
+			//area 2
+			setarray .@monster,3251,3252,3251,3252,3253;
+			setarray .@amount,20,5,20,5,1;
+			setarray .@coordinate[0], 512, 512, 512, 512;
+			
+			set .@monster_size, getarraysize( .@monster );
+			for( set .@i, 0; .@i < .@monster_size; set .@i,.@i+1 ){
+				set .@target_amount, ( .@amount[.@i] );
+				set .@clabel$, .@npcname$ + "::OnNormalDied";
+				areamonster(.@map$,.@coordinate[0],.@coordinate[1],.@coordinate[2],.@coordinate[3],"--ja--",.@monster[.@i],.@target_amount,.@clabel$);
+			}
+			
+			//area 3
+			setarray .@monster,3251,3252,3251,3252,3253;
+			setarray .@amount,20,5,20,5,1;
+			setarray .@coordinate[0], 512, 512, 512, 512;
+			
+			set .@monster_size, getarraysize( .@monster );
+			for( set .@i, 0; .@i < .@monster_size; set .@i,.@i+1 ){
+				set .@target_amount, ( .@amount[.@i] );
+				set .@clabel$, .@npcname$ + "::OnNormalDied";
+				areamonster(.@map$,.@coordinate[0],.@coordinate[1],.@coordinate[2],.@coordinate[3],"--ja--",.@monster[.@i],.@target_amount,.@clabel$);
+			}
+			
+			//area 4
+			setarray .@monster,3251,3252,3251,3252,3253;
+			setarray .@amount,20,5,20,5,1;
+			setarray .@coordinate[0], 512, 512, 512, 512;
+			
+			set .@monster_size, getarraysize( .@monster );
+			for( set .@i, 0; .@i < .@monster_size; set .@i,.@i+1 ){
+				set .@target_amount, ( .@amount[.@i] );
+				set .@clabel$, .@npcname$ + "::OnNormalDied";
+				areamonster(.@map$,.@coordinate[0],.@coordinate[1],.@coordinate[2],.@coordinate[3],"--ja--",.@monster[.@i],.@target_amount,.@clabel$);
+			}
+			break;
+		default:
+			mapannounce .@map$, "[ Staggs Woods ] : All Floors has been cleared, congratulation. Champions Arena close in 30 seconds.",bc_map,"0x00FF99";
+			sleep2 15000;
+			instance_destroy $sw_instance;
+			set $sw_instance, -1;
+			set $instance_sw_id, -1;
+			return;
+	}
+	if($instance_sw_level != 1)
+	{
+		set .@monster_size, getarraysize( .@monster );
+		for( set .@i, 0; .@i < .@monster_size; set .@i,.@i+1 ){
+			set .@target_amount, ( .@amount[.@i] );
+			set .@clabel$, .@npcname$ + "::OnNormalDied";
+			areamonster(.@map$,.@coordinate[0],.@coordinate[1],.@coordinate[2],.@coordinate[3],"--ja--",.@monster[.@i],.@target_amount,.@clabel$);
+		}
+	}
+	return;
+}
+
+function	summon_guardian	{
+	set .@map$, getarg(0);
+	set .@npcname$, getarg(1);
+	set .@label$, .@npcname$ + "::OnGuardianDied";
+	
+	setarray .@coordinate,216,225,216,225;
+			
+	switch( $instance_sw_level ){
+		case 3:
+			//Dain, Duneyrr, Dvalin and Durathror
+			setarray .@monster,3254,3254,3254,3254;
+			break;
+		default: 
+			mapannounce .@map$,"[ Staggs Woods ] : Cleared!! Congratulation!!",bc_map,0x00FF99;
+			return;
+	}
+	set .@monster_size, getarraysize( .@monster );
+	for( set .@i, 0; .@i < .@monster_size; set .@i,.@i+1 ){
+		set .@target_amount, 1;
+		areamonster(.@map$,.@coordinate[0],.@coordinate[1],.@coordinate[2],.@coordinate[3],"Hel",.@monster[.@i],.@target_amount,.@label$);
+	}
+	return;
+}
+
+OnStaggSummonDies:
+	set .@map$, strnpcinfo(4);
+	set .@npc_name$, instance_npcname( strnpcinfo(0), $sw_instance );
+	set .@mob_dead_num, mobcount(.@map$,.@npc_name$+"::OnNormalDied" );
+	if(.@mob_dead_num == 0)
+	{
+		instance_announce $sw_instance, "[ Staggs Woods ] The Attackers killed the Staggs...You've failed to protect them!", bc_map, 0xFF0000;
+		sleep2 500;
+		instance_announce $sw_instance, "[ Staggs Woods ] They'll resurrect in a while, but they'll start again to eat the leaves...", bc_map, 0xFF0000;
+		sleep2 500;		
+		enablenpc instance_npcname( "alaswda", $sw_instance );
+		enablenpc instance_npcname( "alaswdu", $sw_instance );
+		enablenpc instance_npcname( "alaswdur", $sw_instance );
+		enablenpc instance_npcname( "alaswdv", $sw_instance );
+		
+		killmonster .@map$, "All";
+		set $instance_sw_level, 1;
+		summon_normal( .@map$, .@npc_name$, 0 );
+	}
+	else
+	{
+		instance_announce $sw_instance, "[ Staggs Woods ] There's only " + .@mob_dead_num + " Staggs alive!", bc_map, 0xFF0000;
+		sleep2 500;
+	}
+	end;
+
+OnStaggDies:
+	//nothing really, used to clean and repop
+	if(.continuePop == 1)
+	{
+		if(killedrid == $DainStaggId)
+		{
+			enablenpc instance_npcname( "alaswda", $sw_instance );
+		}
+		else if(killedrid == $DuneyrStaggId)
+		{
+			enablenpc instance_npcname( "alaswdu", $sw_instance );
+		}
+		else if(killedrid == $DurathrorStaggId)
+		{
+			enablenpc instance_npcname( "alaswdur", $sw_instance );
+		}
+		else if(killedrid == $DvalinStaggId)
+		{
+			enablenpc instance_npcname( "alaswdv", $sw_instance );
+		}
+	}
+	end;
+OnNormalDied:
+	set .@map$, strnpcinfo(4);
+	set .@npc_name$, instance_npcname( strnpcinfo(0), $sw_instance );
+	set .@mob_dead_num, mobcount(.@map$,.@npc_name$+"::OnNormalDied" );
+	
+	if($instance_sw_level == 1)
+	{
+		if(rand(100) < .lootChance)
+		{
+			getitem $swYggLeaf, 1;
+		}
+	}
+	
+	if( .@mob_dead_num == 0 ){
+		detachrid;
+		sleep2 500;
+		
+		if($instance_sw_level == 1 && .continuePop == 1)
+		{
+			summon_normal( .@map$, .@npc_name$, 0 );
+		}
+		else if($instance_sw_level == 2)
+		{
+			goto OnThirdFloorOn;
+		}
+	}
+	end;
+	
+OnGuardianDied:
+	set .@map$, strnpcinfo(4);
+	set .@npc_name$, instance_npcname( strnpcinfo(0), $sw_instance );
+	set .@mob_dead_num, mobcount(.@map$,.@npc_name$+"::OnGuardianDied" );
+	set .@party_id, getcharid(1);
+	
+	if( .@mob_dead_num == 0){
+		enablenpc instance_npcname( "alaswve2", $sw_instance );
+		enablenpc instance_npcname( "alaswur2", $sw_instance );
+		enablenpc instance_npcname( "alaswsk2", $sw_instance );
+	}
+	end;
+	
+OnTimer10000:
+	//each 10s, increase timer
+	set .timerCount, .timerCount + 10;
+	if(.timerCount == $sw_timer_delay)
+	{
+		instance_announce $sw_instance, "[ Staggs Woods ] The Dimension collapse! You have to flee, right now!", bc_map, 0xFF0000;
+		sleep2 15000;
+		instance_destroy $sw_instance;
+		set $sw_instance, -1;
+		set $instance_sw_id, -1;
+		stopnpctimer;
+	}
+	setnpctimer 0;
+	end;
+	
+OnFirstFloorOn:
+	set .@map$, strnpcinfo(4);
+	set .@npc_name$, instance_npcname( strnpcinfo(0), $sw_instance );
+	//pop monsters
+	summon_normal( .@map$,.@npc_name$, 1 );
+	instance_announce $sw_instance, "[Staggs Woods] Welcome in the Forest.", bc_map, 0xFF0000;
+	sleep2 500;
+	instance_announce $sw_instance, "[Staggs Woods] You're goal is simple. You'll have to find you're way in the labyrinth the forest creates.", bc_map, 0xFF0000;	
+	sleep2 500;
+	instance_announce $sw_instance, "[Staggs Woods] Find the Four Staggs to reach the highest branches of Yggdrasil.", bc_map, 0xFF0000;	
+	end;
+	
+OnSecondFloorOn:
+	set .@map$, strnpcinfo(4);
+	set .@npc_name$, instance_npcname( strnpcinfo(0), $sw_instance );
+	killmonster .@map$, .@npc_name$ + "::OnStaggDies";
+	
+	instance_announce $sw_instance, "[Staggs Woods] You've now reach the center of the Forest.", bc_map, 0xFF0000;
+	sleep2 500;
+	instance_announce $sw_instance, "[Staggs Woods] The Staggs may be able to leave here without causing more damage, as Yggdrasil magic is stronger here than anywhere else.", bc_map, 0xFF0000;
+	sleep2 500;
+	instance_announce $sw_instance, "[Staggs Woods] But the other creatures can feel they've moved here.", bc_map, 0xFF0000;
+	sleep2 500;
+	instance_announce $sw_instance, "[Staggs Woods] You may protect them from their attackers.", bc_map, 0xFF0000;
+	sleep2 500;
+	
+	attachrid($swTalkingId);
+	summon("Dain", 1002, 0, .@npc_name$ + "::OnStaggSummonDies");
+	summon("Duneyr", 1002, 0, .@npc_name$ + "::OnStaggSummonDies");
+	summon("Durathror", 1002, 0, .@npc_name$ + "::OnStaggSummonDies");
+	summon("Dvalin", 1002, 0, .@npc_name$ + "::OnStaggSummonDies");
+
+	//pop monsters
+	summon_normal( .@map$,.@npc_name$, 1 );
+	end;
+	
+OnThirdFloorOn:
+	set .@map$, strnpcinfo(4);
+	set .@npc_name$, instance_npcname( strnpcinfo(0), $sw_instance );
+	
+	$instance_sw_level++;
+	killmonster .@map$, .@npc_name$ + ":OnStaggSummonDies";
+	
+	instance_announce $sw_instance, "[Staggs Woods] The Staggs are now settled here.", bc_map, 0xFF0000;
+	sleep2 500;
+	instance_announce $sw_instance, "[Staggs Woods] you should leave before they'll attack...", bc_map, 0xFF0000;
+	sleep2 500;
+	
+	summon_guardian( .@map$,.@npc_name$ );	
+	end;	
+}
+
+1@sw,141,34,3	script	Dain::alaswda	4_F_NYDHOG,2,2,{
+	//cutin "ep14_nyd01",2;
+	end;
+		
+OnTouch:	
+	if(countitem($swYggLeaf) < $swReqLeaves)
+	{
+		mes "[Staggs Woods]";
+		mes "The Stagg doesn't seem to see you.";
+		mes "He continues to eat the leaves, slowly, but endlessly.";
+		mes "Maybe if you have more leaves than he can reach...";
+	}
+	else
+	{
+		mes "[Staggs Woods]";
+		mes "The Stagg looks at your Yggdrasil Leaves.";
+		mes "You can probably lure it to where you want with it.";
+		
+		getmapxy(.@map$, .@x, .@y, UNITTYPE_NPC);		
+		set .@clabel$, instance_npcname( "staggs_woods", $sw_instance ) + "::OnStaggDies";
+		
+		setd("$" + strnpcinfo(1) + "staggId", monster(.@map$, .@x, .@y, strnpcinfo(1), atoi(strnpcinfo(2)), 1, .@clabel$));
+		
+		disablenpc strnpcinfo(3);
+	}
+	end;
+
+OnInstanceInit:
+	enablenpc strnpcinfo(3);
+	end;
+}
+
+1@sw,141,34,3	duplicate(alaswda)	Duneyrr::alaswdu	4_F_NYDHOG,2,2
+1@sw,141,34,3	duplicate(alaswda)	Durathror::alaswdur	4_F_NYDHOG,2,2
+1@sw,141,34,3	duplicate(alaswda)	Dvalin::alaswdv	4_F_NYDHOG,2,2
+
+
+1@sw,141,34,3	script	warp#150_150::alaswwa	WARP_NPC,2,2,{
+	//cutin "ep14_nyd01",2;
+	end;
+	
+OnTouchNPC:		
+OnTouch:	
+	explode(.@coord$, strcharinfo(2), "_");
+	warp strnpcinfo(4), atoi(.@coord$[0]), atoi(.@coord$[1]);
+	end;
+
+OnInstanceInit:
+	enablenpc strnpcinfo(3);
+	end;
+}
+
+1@sw,141,34,3	duplicate(alaswwa)	warp#150_150::alaswwa2	WARP_NPC,2,2
+1@sw,141,34,3	duplicate(alaswwa)	warp#150_150::alaswwa3	WARP_NPC,2,2
+1@sw,141,34,3	duplicate(alaswwa)	warp#150_150::alaswwa4	WARP_NPC,2,2
+1@sw,141,34,3	duplicate(alaswwa)	warp#150_150::alaswwa5	WARP_NPC,2,2
+1@sw,141,34,3	duplicate(alaswwa)	warp#150_150::alaswwa6	WARP_NPC,2,2
+1@sw,141,34,3	duplicate(alaswwa)	warp#150_150::alaswwa7	WARP_NPC,2,2
+1@sw,141,34,3	duplicate(alaswwa)	warp#150_150::alaswwa8	WARP_NPC,2,2
+1@sw,141,34,3	duplicate(alaswwa)	warp#150_150::alaswwa9	WARP_NPC,2,2
+1@sw,141,34,3	duplicate(alaswwa)	warp#150_150::alaswwa10	WARP_NPC,2,2
+
+
+1@sw,141,34,3	script	Maze Center::alaswmc	CLEAR_NPC,2,2,{
+	//cutin "ep14_nyd01",2;
+	end;
+	
+OnTouchNPC:		
+	set .@continue, 1;
+	getmapxy(.@map$, .@nx, .@ny, UNITTYPE_NPC);
+	getmapxy(.@map$, .@x, .@y, UNITTYPE_MOB, $DainStaggId);
+	set .@xOk, (.@x >= .@nx - $rangeLimit && .@x <= .@nx + $rangeLimit);
+	set .@yOk, (.@y >= .@ny - $rangeLimit && .@y <= .@ny + $rangeLimit);
+	if(.@xOk == 1 || .@yOk == 1)
+	{
+		getmapxy(.@map$, .@x, .@y, UNITTYPE_MOB, $DvalinStaggId);
+		set .@xOk, (.@x >= .@nx - $rangeLimit && .@x <= .@nx + $rangeLimit);
+		set .@yOk, (.@y >= .@ny - $rangeLimit && .@y <= .@ny + $rangeLimit);
+		if(.@xOk == 1 || .@yOk == 1)
+		{
+			getmapxy(.@map$, .@x, .@y, UNITTYPE_MOB, $DuneyrrStaggId);
+			set .@xOk, (.@x >= .@nx - $rangeLimit && .@x <= .@nx + $rangeLimit);
+			set .@yOk, (.@y >= .@ny - $rangeLimit && .@y <= .@ny + $rangeLimit);
+			if(.@xOk == 1 || .@yOk == 1)
+			{
+				getmapxy(.@map$, .@x, .@y, UNITTYPE_MOB, $DurathrorStaggId);
+				set .@xOk, (.@x >= .@nx - $rangeLimit && .@x <= .@nx + $rangeLimit);
+				set .@yOk, (.@y >= .@ny - $rangeLimit && .@y <= .@ny + $rangeLimit);
+				if(.@xOk == 1 || .@yOk == 1)
+				{
+					set .continuePop, 0;
+					//all staggs are in the expected place, enter final phase
+					donpcevent instance_npcname( "staggs_woods", $sw_instance ) + "::OnSecondFloorOn";
+				}
+			}
+		}
+	}
+	end;
+
+OnInstanceInit:
+	enablenpc strnpcinfo(3);
+	end;
+}
+
+1@sw,141,34,3	script	Verdandi::alaswve	4_F_NYDHOG,2,2,{
+	//cutin "ep14_nyd01",2;
+	end;
+		
+OnTouch:	
+	if(.talking == 0)
+	{
+		set $swTalkingId, getcharid(3);
+		set .talking, 1;	
+
+		cutin "ep14_nyd01",2;
+		npctalk "This is where the Staggs live...";
+		instance_announce $jl_instance, "[Verdandi] This is where the Staggs live...", bc_map, 0x00FF00;
+		sleep2 500;
+		npctalk "Do you know the creatures living in Yggdrasil?";
+		instance_announce $jl_instance, "[Verdandi] Do you know the creatures living in Yggdrasil?", bc_map, 0x00FF00;
+		sleep2 500;
+	
+		donpcevent instance_npcname( "alaswsk", $sw_instance ) + "::OnDialog1_2";
+	}
+	end;
+	
+OnDialog1_4:
+	cutin "ep14_nyd01",2;
+	npctalk "Finally, there is the four Staggs...";
+	instance_announce $jl_instance, "[Verdandi] Finally, there is the four Staggs...", bc_map, 0x00FF00;
+	sleep2 500;
+	npctalk "They lives in the higher branches, and live by eating the leaves.";
+	instance_announce $jl_instance, "[Verdandi] They lives in the higher branches, and live by eating the leaves.", bc_map, 0x00FF00;
+	sleep2 500;
+	npctalk "Now you're here because of them. They've eaten so much of those leaves that Yggdrasil is now aweaken. We must react.";
+	instance_announce $jl_instance, "[Verdandi] Now you're here because of them. They've eaten so much of those leaves that Yggdrasil is now aweaken. We must react..", bc_map, 0x00FF00;
+	sleep2 500;
+	
+	disablenpc strnpcinfo(3);
+	disablenpc instance_npcname( "alaswur", $sw_instance );
+	disablenpc instance_npcname( "alaswsk", $sw_instance );
+	
+	donpcevent instance_npcname( "staggs_woods" , $sw_instance ) + "::OnFirstFloorOn";
+	end;
+
+OnInstanceInit:
+	set .talking, 0;
+	enablenpc strnpcinfo(3);
+	end;
+}
+
+1@sw,139,32,5	script	Urd::alaswur	4_F_PINKWOMAN,{
+	//cutin "bu_maggi1",0;
+	end;
+		
+OnDialog1_3:			
+	attachrid($swTalkingId);
+	cutin "bu_maggi1", 2;
+	npctalk "Then there was Nydhogg and Ratatosk. The Dragon and the Squirel.";
+	instance_announce $sw_instance, "[Urd]  Then there was Nydhogg and Ratatosk. The Dragon and the Squirel.", bc_map, 0x00FF00;
+	sleep2 500;
+	
+	donpcevent instance_npcname( "alaswve", $sw_instance ) + "::OnDialog1_4";
+	end;	
+	
+OnInstanceInit:
+	enablenpc strnpcinfo(3);
+	end;
+}
+
+1@sw,139,32,5	script	Skuld::alaswsk	4_F_SHALOSH,{
+	//cutin "shaloshi01",2;
+	end;
+		
+OnDialog1_2:			
+	attachrid($swTalkingId);
+	cutin "shaloshi01", 2;
+	npctalk "Lots of creatures lived in the branches of Yggdrasil.";
+	instance_announce $sw_instance, "[Skuld] Lots of creatures lived in the branches of Yggdrasil.", bc_map, 0x00FF00;
+	sleep2 500;
+	npctalk "Jormungand, the Snake, lived in the ocean. He's moving and his moves creates waves, that surrounds everything.";
+	instance_announce $sw_instance, "[Skuld] Jormungand, the Snake, lived in the ocean. He's moving and his moves creates waves, that surrounds everything.", bc_map, 0x00FF00;
+	sleep2 500;
+	
+	donpcevent instance_npcname( "alaswur", $sw_instance ) + "::OnDialog1_3";
+	end;
+	
+OnInstanceInit:
+	enablenpc strnpcinfo(3);
+	end;
+}
+
+1@sw,141,34,3	script	Verdandi::alaswve2	4_F_NYDHOG,2,2,{
+	//cutin "ep14_nyd01",2;
+	end;
+		
+OnTouch:	
+	if(.talking == 0)
+	{
+		set $swTalkingId, getcharid(3);
+		set .talking, 1;	
+
+		cutin "ep14_nyd01",2;
+		npctalk "The Staggs looks way more happier and calmer here.";
+		instance_announce $sw_instance, "[Verdandi] The Staggs looks way more happier and calmer here.", bc_map, 0x00FF00;
+		sleep2 500;
+	
+		donpcevent instance_npcname( "alaswur2", $sw_instance ) + "::OnDialog2_2";
+	}
+	end;
+
+OnInstanceInit:
+	set .talking, 0;
+	disablenpc strnpcinfo(3);
+	end;
+}
+
+1@sw,139,32,5	script	Urd::alaswur2	4_F_PINKWOMAN,{
+	//cutin "bu_maggi1",0;
+	end;
+		
+OnDialog2_2:			
+	attachrid($swTalkingId);
+	cutin "bu_maggi1", 2;
+	npctalk "They'll contiue to eat here, without killing Yggdrasil slowly.";
+	instance_announce $sw_instance, "[Urd] They'll contiue to eat here, without killing Yggdrasil slowly.", bc_map, 0x00FF00;
+	sleep2 500;
+	
+	donpcevent instance_npcname( "alaswsk2", $sw_instance ) + "::OnDialog2_3";
+	end;
+	
+OnInstanceInit:
+	disablenpc strnpcinfo(3);
+	end;
+}
+
+1@sw,139,32,5	script	Skuld::alaswsk2	4_F_SHALOSH,{
+	//cutin "shaloshi01",2;
+	end;
+		
+OnDialog2_3:			
+	attachrid($swTalkingId);
+	cutin "shaloshi01", 2;
+	npctalk "Good work. The Giants and Ases are cpatured little by little. Soon, we'll be ready.";
+	instance_announce $sw_instance, "[Skuld] Good work. The Giants and Ases are cpatured little by little. Soon, we'll be ready.", bc_map, 0x00FF00;
+	sleep2 500;
+	npctalk "You should be prepared for the next one you'll encounter.";
+	instance_announce $sw_instance, "[Skuld] You should be prepared for the next one you'll encounter.", bc_map, 0x00FF00;
+	sleep2 15000;
+	instance_destroy( $sw_instance );
+	set $sw_instance, -1;
+	set $instance_sw_id, -1;
+	end;
+	
+OnInstanceInit:
+	disablenpc strnpcinfo(3);
+	end;
+}
+

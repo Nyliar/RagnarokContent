@@ -1,0 +1,110 @@
+//29344 ==> MvP Sweeper
+prontera,271,62,5	script	Nest Guardian::gigain3	HIDDEN_WARP_NPC,{
+	end;
+
+OnInit:
+	defpattern 1,"Gain","OnGainAsked";
+	activatepset 1;
+	end;
+
+OnGainAsked:
+	if (BOSSNEST == 1)
+	{ 
+		rentitem 29344, 300;
+		set BOSSNEST, 0;
+		logmes "[Yggdrasil Memories] " + strcharinfo(0) + " obtains a " + getitemname(29344);
+	}
+	end;
+}
+
+//29359 ==> Ase Fruit Seeker
+izlude,176,218,5	script	Ase Fruit Seeker::gigain7	HIDDEN_WARP_NPC,{
+	end;
+
+OnInit:
+	defpattern 1,"Gain","OnGainAsked";
+	activatepset 1;
+	end;
+
+OnGainAsked:
+	if (COUNTASETREE >= 1)
+	{
+		rentitem 29359, 300;
+		set COUNTASETREE, 0;
+		logmes "[Yggdrasil Memories] " + strcharinfo(0) + " obtains a " + getitemname(29359);
+	}
+	end;
+}
+
+//29360 ==> Sex Undecided
+prontera,182,214,6	script	Almost Surgeon::gigain8	HIDDEN_WARP_NPC,{
+	end;
+
+OnInit:
+	defpattern 1,"Gain","OnGainAsked";
+	activatepset 1;
+	end;
+
+OnGainAsked:
+	if (CHANGEDSEX >= 2)
+	{
+		rentitem 29360, 300;
+		set CHANGEDSEX, 0;
+		logmes "[Yggdrasil Memories] " + strcharinfo(0) + " obtains a " + getitemname(29360);
+	}
+	end;
+}
+
+//29301 ==> Entertainer
+cmd_in02,182,126,6	script	Entertainer::gigain9	HIDDEN_WARP_NPC,{
+	end;
+
+OnInit:
+	defpattern 1,"Gain","OnGainAsked";
+	activatepset 1;
+	end;
+
+OnGainAsked:
+	rentitem 29301, 300;
+	logmes "[Yggdrasil Memories] " + strcharinfo(0) + " obtains a " + getitemname(29301);
+	end;
+}
+
+//29361 ==> Pitcher of Eternal Water
+//crash_in,68,33,5	script	Wisdom Source::gigain12	HIDDEN_WARP_NPC,2,2,{
+//	end;
+//	
+//OnInit:
+//	defpattern 1,"Gain","OnGainAsked";
+//	activatepset 1;
+//	end;
+//
+//OnGainAsked:
+//	if (CRASHQ >= 4)
+//	{
+//		rentitem 29361, 300;
+//		set CRASHQ, 0;
+//		logmes "[Yggdrasil Memories] " + strcharinfo(0) + " obtains a " + getitemname(29361);
+//	}
+//	end;
+//
+//}
+
+//29362 ==> Parrot Candy
+prontera,145,210,3	script	Ohariam::gigain13	HIDDEN_WARP_NPC,2,2,{
+	end;
+	
+OnInit:
+	defpattern 1,"Gain","OnGainAsked";
+	activatepset 1;
+	end;
+
+OnGainAsked:
+	if (#info_favor >= 1)
+	{
+		rentitem 29362, 300;
+		set #info_favor, 0;
+		logmes "[Yggdrasil Memories] " + strcharinfo(0) + " obtains a " + getitemname(29362);
+	}
+	end;
+}

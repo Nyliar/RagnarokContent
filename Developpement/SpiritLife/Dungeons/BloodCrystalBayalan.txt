@@ -1,0 +1,135 @@
+iz_dun04,129,233,5	script	BloodCrystal#1::alabc36	HIDDEN_WARP_NPC,{
+	end;
+
+OnTimer360000:
+	stopnpctimer;
+	set .loopCount, .loopCount + 1;
+	if(.loopCount >= $repopHourCount)
+	{
+		goto OnClearGauge;
+	}
+	initnpctimer;
+	end;
+
+OnClearGauge:
+	//setnpcdisplay strnpcinfo(3), OBJ_A2;
+	set .fillPercent, 0;
+	set .fillItemCount, 0;
+	end;
+	
+OnPopMonsters:
+	callsub OnClearMonsters;
+//== iz_dun00 - Undersea Tunnel F1 =========================
+	monster "iz_dun00",0,0,"--ja--",1161,65,"CardinalSystem::OnNormalDied";
+	monster "iz_dun00",0,0,"--ja--",1141,45,"CardinalSystem::OnNormalDied";
+	monster "iz_dun00",0,0,"--ja--",1070,15,"CardinalSystem::OnNormalDied";
+	monster "iz_dun00",0,0,"--ja--",1068,15,"CardinalSystem::OnNormalDied";
+	monster "iz_dun00",0,0,"--ja--",1066,15,"CardinalSystem::OnNormalDied";
+	monster "iz_dun00",0,0,"--ja--",1084,5,"CardinalSystem::OnNormalDied";
+
+//== iz_dun01 - Undersea Tunnel F2 =========================
+	monster "iz_dun01",0,0,"--ja--",1161,10,"CardinalSystem::OnNormalDied";
+	monster "iz_dun01",0,0,"--ja--",1141,15,"CardinalSystem::OnNormalDied";
+	monster "iz_dun01",0,0,"--ja--",1070,50,"CardinalSystem::OnNormalDied";
+	monster "iz_dun01",0,0,"--ja--",1068,30,"CardinalSystem::OnNormalDied";
+	monster "iz_dun01",0,0,"--ja--",1066,60,"CardinalSystem::OnNormalDied";
+	monster "iz_dun01",0,0,"--ja--",1067,15,"CardinalSystem::OnNormalDied";
+	monster "iz_dun01",0,0,"--ja--",1084,10,"CardinalSystem::OnNormalDied";
+
+//== iz_dun02 - Undersea Tunnel F3 =========================
+	monster "iz_dun02",0,0,"--ja--",1068,40,"CardinalSystem::OnNormalDied";
+	monster "iz_dun02",0,0,"--ja--",1067,60,"CardinalSystem::OnNormalDied";
+	monster "iz_dun02",0,0,"--ja--",1144,40,"CardinalSystem::OnNormalDied";
+	monster "iz_dun02",0,0,"--ja--",1044,40,"CardinalSystem::OnNormalDied";
+	monster "iz_dun02",0,0,"--ja--",1264,1,"CardinalSystem::OnNormalDied";
+	monster "iz_dun02",0,0,"--ja--",1084,15,"CardinalSystem::OnNormalDied";
+
+//== iz_dun03 - Undersea Tunnel F4 =========================
+	monster "iz_dun03",0,0,"--ja--",1068,10,"CardinalSystem::OnNormalDied";
+	monster "iz_dun03",0,0,"--ja--",1158,45,"CardinalSystem::OnNormalDied";
+	monster "iz_dun03",0,0,"--ja--",1142,20,"CardinalSystem::OnNormalDied";
+	monster "iz_dun03",0,0,"--ja--",1069,40,"CardinalSystem::OnNormalDied";
+	monster "iz_dun03",0,0,"--ja--",1045,40,"CardinalSystem::OnNormalDied";
+	monster "iz_dun03",203,59,"--ja--",1068,1,"CardinalSystem::OnNormalDied";
+	monster "iz_dun03",203,56,"--ja--",1068,1,"CardinalSystem::OnNormalDied";
+	monster "iz_dun03",203,53,"--ja--",1068,1,"CardinalSystem::OnNormalDied";
+	monster "iz_dun03",203,50,"--ja--",1068,1,"CardinalSystem::OnNormalDied";
+	monster "iz_dun03",203,47,"--ja--",1068,1,"CardinalSystem::OnNormalDied";
+	monster "iz_dun03",204,60,"--ja--",1068,1,"CardinalSystem::OnNormalDied";
+	monster "iz_dun03",204,57,"--ja--",1068,1,"CardinalSystem::OnNormalDied";
+	monster "iz_dun03",204,54,"--ja--",1068,1,"CardinalSystem::OnNormalDied";
+	monster "iz_dun03",204,51,"--ja--",1068,1,"CardinalSystem::OnNormalDied";
+	monster "iz_dun03",204,48,"--ja--",1068,1,"CardinalSystem::OnNormalDied";
+	monster "iz_dun03",191,144,"--ja--",1068,1,"CardinalSystem::OnNormalDied";
+	monster "iz_dun03",194,144,"--ja--",1068,1,"CardinalSystem::OnNormalDied";
+	monster "iz_dun03",197,144,"--ja--",1068,1,"CardinalSystem::OnNormalDied";
+	monster "iz_dun03",200,144,"--ja--",1068,1,"CardinalSystem::OnNormalDied";
+	monster "iz_dun03",203,144,"--ja--",1068,1,"CardinalSystem::OnNormalDied";
+	monster "iz_dun03",206,144,"--ja--",1068,1,"CardinalSystem::OnNormalDied";
+	monster "iz_dun03",209,144,"--ja--",1068,1,"CardinalSystem::OnNormalDied";
+	monster "iz_dun03",212,144,"--ja--",1068,1,"CardinalSystem::OnNormalDied";
+	monster "iz_dun03",193,143,"--ja--",1068,1,"CardinalSystem::OnNormalDied";
+	monster "iz_dun03",196,143,"--ja--",1068,1,"CardinalSystem::OnNormalDied";
+	monster "iz_dun03",199,143,"--ja--",1068,1,"CardinalSystem::OnNormalDied";
+	monster "iz_dun03",202,143,"--ja--",1068,1,"CardinalSystem::OnNormalDied";
+	monster "iz_dun03",205,143,"--ja--",1068,1,"CardinalSystem::OnNormalDied";
+	monster "iz_dun03",208,143,"--ja--",1068,1,"CardinalSystem::OnNormalDied";
+	monster "iz_dun03",211,143,"--ja--",1068,1,"CardinalSystem::OnNormalDied";
+	monster "iz_dun03",176,260,"--ja--",1068,1,"CardinalSystem::OnNormalDied";
+	monster "iz_dun03",180,251,"--ja--",1068,1,"CardinalSystem::OnNormalDied";
+	monster "iz_dun03",178,253,"--ja--",1068,1,"CardinalSystem::OnNormalDied";
+	monster "iz_dun03",108,249,"--ja--",1068,1,"CardinalSystem::OnNormalDied";
+	monster "iz_dun03",80,163,"--ja--",1068,1,"CardinalSystem::OnNormalDied";
+	monster "iz_dun03",0,0,"--ja--",1264,3,"CardinalSystem::OnNormalDied";
+
+//== iz_dun04 - Undersea Tunnel F5 =========================
+	monster "iz_dun04",0,0,"--ja--",1142,10,"CardinalSystem::OnNormalDied";
+	monster "iz_dun04",0,0,"--ja--",1069,10,"CardinalSystem::OnNormalDied";
+	monster "iz_dun04",0,0,"--ja--",1264,40,"CardinalSystem::OnNormalDied";
+	monster "iz_dun04",0,0,"--ja--",1065,50,"CardinalSystem::OnNormalDied";
+	monster "iz_dun04",58,135,"--ja--",1068,1,"CardinalSystem::OnNormalDied";
+	monster "iz_dun04",61,135,"--ja--",1068,1,"CardinalSystem::OnNormalDied";
+	monster "iz_dun04",42,129,"--ja--",1068,1,"CardinalSystem::OnNormalDied";
+	monster "iz_dun04",42,116,"--ja--",1068,1,"CardinalSystem::OnNormalDied";
+	monster "iz_dun04",38,129,"--ja--",1068,1,"CardinalSystem::OnNormalDied";
+	monster "iz_dun04",33,129,"--ja--",1068,1,"CardinalSystem::OnNormalDied";
+	monster "iz_dun04",38,115,"--ja--",1068,1,"CardinalSystem::OnNormalDied";
+	monster "iz_dun04",33,115,"--ja--",1068,1,"CardinalSystem::OnNormalDied";
+	monster "iz_dun04",79,246,"--ja--",1068,1,"CardinalSystem::OnNormalDied";
+	monster "iz_dun04",80,246,"--ja--",1068,1,"CardinalSystem::OnNormalDied";
+	monster "iz_dun04",79,234,"--ja--",1068,1,"CardinalSystem::OnNormalDied";
+	monster "iz_dun04",80,233,"--ja--",1068,1,"CardinalSystem::OnNormalDied";
+	monster "iz_dun04",111,41,"--ja--",1068,1,"CardinalSystem::OnNormalDied";
+	monster "iz_dun04",111,38,"--ja--",1068,1,"CardinalSystem::OnNormalDied";
+	monster "iz_dun04",111,35,"--ja--",1068,1,"CardinalSystem::OnNormalDied";
+	monster "iz_dun04",69,243,"--ja--",1068,1,"CardinalSystem::OnNormalDied";
+	monster "iz_dun04",124,23,"--ja--",1068,1,"CardinalSystem::OnNormalDied";
+	monster "iz_dun04",134,23,"--ja--",1068,1,"CardinalSystem::OnNormalDied";
+	monster "iz_dun04",0,0,"--ja--",1108,3,"CardinalSystem::OnNormalDied";
+	monster "iz_dun04",103,231,"--ja--",1264,3,"CardinalSystem::OnNormalDied";
+	monster "iz_dun04",160,231,"--ja--",1264,3,"CardinalSystem::OnNormalDied";
+	monster "iz_dun04",95,147,"--ja--",1264,3,"CardinalSystem::OnNormalDied";
+	monster "iz_dun04",130,216,"--ja--",1264,3,"CardinalSystem::OnNormalDied";
+	end;
+	
+OnClearMonsters:	
+OnClock0000:
+	killmonsterall "iz_dun00";
+	killmonsterall "iz_dun01";
+	killmonsterall "iz_dun02";
+	killmonsterall "iz_dun03";
+	killmonsterall "iz_dun04";
+	set .popAvailable, 1;
+	setd("$" + strnpcinfo(3), 0);
+	return;
+	
+OnInit:
+	set .fillPercent, 0;
+	if(getd("$" + strnpcinfo(3)) >= 1)
+	{
+		set .fillPercent, 100;
+	}
+	setarray .mapToCheck[0],0,4;
+	set .popAvailable, 1;
+}
+

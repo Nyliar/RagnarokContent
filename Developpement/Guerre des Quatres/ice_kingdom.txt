@@ -1,0 +1,56 @@
+//===== eAthena Script =======================================
+//= War of Emperium (Al De baran)
+//===== By: ==================================================
+//= L0ne_W0lf
+//===== Current Version: =====================================
+//= 1.1
+//===== Compatible With: =====================================
+//= eAthena SVN
+//===== Description: =========================================
+//= NPCs that relate to Al De Baran Guild Castle 1
+//===== Additional Comments: =================================
+//= 1.0 First Version. No longer uses functions. [L0ne_W0lf]
+//= 1.1 Removed dialog from interior flags. [L0ne_W0lf]
+//============================================================
+
+// Guild Flag (Town)
+//============================================================
+capitale,205,165,4	script	Iskall#0::IceKingdom	722,{
+	end;
+
+OnRecvCastleI:
+	FlagEmblem GetCastleData("ice_combat",1);
+	end;
+}
+
+// Guild Flag (Inside Castle)
+//============================================================
+ice_kingdom,164,127,2	script	Iskall#ik-2::IceKingdom2	722,{
+	end;
+
+OnRecvCastleI:
+	FlagEmblem GetCastleData("ice_combat",1);
+	end;
+}
+
+ice_kingdom,151,126,2	duplicate(IceKingdom)	Iskall#ik-3	722
+ice_kingdom,150,163,2	duplicate(IceKingdom)	Iskall#ik-4	722
+ice_kingdom,165,163,2	duplicate(IceKingdom)	Iskall#ik-5	722
+
+// AGIT Manager
+//============================================================
+ice_combat,71,85,0	duplicate(4_War_Manager)	4_War#ice_combat	-1
+
+// Grand Argentier
+//============================================================
+ice_kingdom,131,143,3	duplicate(Grand Argentier)	Grand Argentier#0	989
+
+// Main du Roi
+//============================================================
+ice_kingdom,123,85,3	duplicate(Main du Roi)	Main du Roi#0	987
+
+// General des armées
+//============================================================
+ice_kingdom,226,43,3	duplicate(General en Chef)	General en Chef#0	983
+
+ice_combat,71,85,0	duplicate(4_War_Treasure)	4_War_Treasure#ice_combat	-1

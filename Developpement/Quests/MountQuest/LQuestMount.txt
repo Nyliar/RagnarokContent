@@ -1,0 +1,449 @@
+// [========================================================]
+// [=============   Legendary Quest - Mount	    ============]
+// [========================================================]
+// [ Version 1                                              ]
+// [========================================================]
+// [ Original script by: Alayne				    			]
+// [========================================================]
+// [ Description:                                           ]
+// [--------------------------------------------------------]
+// [                                                        ]
+// [ - A legendary quest to obtain Halter Lead				]
+// [========================================================]
+// [ Changelog: (5 last updates)                            ]
+// [--------------------------------------------------------]
+// [                                                        ]
+// [ v0: Creation                      			    		]
+// [                                                        ]
+// [                                                        ]
+// [========================================================]
+// [                                                        ]
+// [========================================================]
+
+//ars_fild07,167,41,0	script	main::lmountq	-1,{
+veins,192,70,0	script	main::lmountq	-1,{
+	end;
+
+OnSummonerKilled:
+	//warp players in several room
+	set .summonerKilled, .summonerKilled + 1;
+	if (.summonerKilled == 6)
+	{
+		mapannounce $summonMap$, "[Summoner] You couldn't defeat the Lord Sbire like that.",0;
+		mapannounce $summonMap$, "[Summoner] None of you have the power to defeat us!",0;
+		mapannounce $summonMap$, "[Summoner] You'll see our powers!",0;	
+		goto OnSummonStarted;
+	}
+	end;
+	
+OnSummonKilled0:
+	//start delayed timer
+	set .firstSummonKilled, 1;
+	mapannounce .summonIndividualMap$, "[Summoner] " + strcharinfo(0) + " has killed his summon.", 0;
+	
+	if (.startedDelay == 0)
+	{
+		initnpctimer;
+		set .startedDelay, 1;
+		set .attachrid, getcharid(3);
+	}
+	end;
+
+OnSummonKilled1:
+	//start delayed timer
+	set .secondSummonKilled, 1;
+	mapannounce .summonIndividualMap$, "[Summoner] " + strcharinfo(0) + " has killed his summon.", 0;
+	
+	if (.startedDelay == 0)
+	{
+		initnpctimer;
+		set .startedDelay, 1;
+		set .attachrid, getcharid(3);
+	}
+	end;
+
+OnSummonKilled2:
+	//start delayed timer
+	set .thirdSummonKilled, 1;
+	mapannounce .summonIndividualMap$, "[Summoner] " + strcharinfo(0) + " has killed his summon.", 0;
+	
+	if (.startedDelay == 0)
+	{
+		initnpctimer;
+		set .startedDelay, 1;
+		set .attachrid, getcharid(3);
+	}
+	end;
+
+OnSummonKilled3:
+	//start delayed timer
+	set .fourthSummonKilled, 1;
+	mapannounce .summonIndividualMap$, "[Summoner] " + strcharinfo(0) + " has killed his summon.", 0;
+	
+	if (.startedDelay == 0)
+	{
+		initnpctimer;
+		set .startedDelay, 1;
+		set .attachrid, getcharid(3);
+	}
+	end;
+	
+OnTimer15000:
+	attachrid(.attachrid);
+	if (.finalStep == 0)
+	{
+		if ((.summonCount > 3 && .firstSummonKilled == 1 && .secondSummonKilled && .thirdSummonKilled && .fourthSummonKilled == 1)
+			|| (.summonCount > 2 && .firstSummonKilled == 1 && .secondSummonKilled && .thirdSummonKilled == 1)
+			|| (.summonCount > 1 && .firstSummonKilled == 1 && .secondSummonKilled == 1)
+			|| (.summonCount > 0 && .firstSummonKilled == 1))
+		{
+			//success
+			
+			for (.@i = 0; .@i < .register_num && .@i < .summonCount; ++.@i) {
+				attachrid(.partymembercid[.@i]);
+				warp "que_sign01",197,45;
+			}
+			
+			stopnpctimer;
+			
+			goto OnSummonFinal;
+		}
+		else
+		{
+			//go back to pop monster	
+			for (.@i = 0; .@i < .register_num && .@i < .summonCount; ++.@i) {
+				monster .summonIndividualMap$[.@i], .summonIndividualMapX[.@i], .summonIndividualMapY[.@i], "--ja--", .summonIndividualMapId[.@i], 1, "lmountq::OnSummonKilled" + .@i;
+			}
+			
+			stopnpctimer;
+			set .startedDelay, 0;
+			
+			set .firstSummonKilled, 0;
+			set .secondSummonKilled, 0;
+			set .thirdSummonKilled, 0;
+			set .fourthSummonKilled, 0;
+		}
+	}
+	end;
+	
+OnSummonStarted:
+	getpartymember getcharid(1), 2;
+	set .register_num, $@partymembercount;
+	copyarray .partymembercid[0], $@partymembercid[0], getarraysize($@partymembercid);
+	for (.@i = 0; .@i < .register_num && .@i < .summonCount; ++.@i) {
+		attachrid(.partymembercid[.@i]);
+		warp .summonIndividualMap$,.summonIndividualMapX[.@i], .summonIndividualMapY[.@i];
+		monster .summonIndividualMap$, .summonIndividualMapX[.@i], .summonIndividualMapY[.@i], "--ja--", .summonIndividualMapId, 1, "lmountq::OnSummonKilled" + .@i;
+	}
+	
+	set .startedDelay, 0;	
+	end;
+	
+OnSummonFinal:
+	donpcevent "lmountq7::OnSummonLord";
+	end;
+	
+OnFinalSummonKilled:
+	sleep 1000;
+	mapannounce $summonMap$, "[DemonLord] Un...Unbeliveable...", 0;
+	sleep 1000;
+	mapannounce $summonMap$, "[DemonLord] You couldn't defeat me...None of you have this...power...", 0;
+	sleep 1000;
+	mapannounce $summonMap$, "[DemonLord] That's gonna be your last...Fight together!", 0;
+	
+	mapwarp $summonMap$,.fightRoom$,.fightRoomX,.fightRoomY,0;
+	
+	sleep 5000;
+	mapannounce .fightRoom$, "[DemonLord] I'll free any of you which will kill one of his friends!", 0;
+	sleep 1000;
+	mapannounce .fightRoom$, "[DemonLord] Others will stay here forever!", 0;	
+	set .finalStep, 1;
+
+	hideoffnpc "Serin#serin";
+	hideonnpc "lmountq7";
+	hideonnpc "Summoner#1";
+	hideonnpc "Summoner#2";
+	hideonnpc "Summoner#3";
+	hideonnpc "Summoner#4";
+	hideonnpc "Summoner#5";
+	hideonnpc "Summoner#6";
+
+	initnpctimer;
+	end;
+
+OnTimer600000:
+	stopnpctimer;
+	//victory, reward the remaining
+	mapannounce .fightRoom$, "[Zeil] You've understand my words!", 0;
+	sleep 1000;
+	mapannounce .fightRoom$, "[Zeil] Nothing should be stronger than friendship!", 0;	
+	sleep 1000;
+	mapannounce .fightRoom$, "[Zeil] That's what help us to go through the ordeal!", 0;
+	sleep 1000;
+	mapannounce .fightRoom$, "[Zeil] Here's your reward, for the killed and the non fighting!", 0;
+	
+	set .@success, attachrid(.attachrid);
+
+	getpartymember getcharid(1), 2;
+	set .register_num, $@partymembercount;
+	copyarray .partymembercid[0], $@partymembercid[0], getarraysize($@partymembercid);
+
+	for (.@i = 0; .@i < .register_num; ++.@i) {
+		if (strcharinfo(3) == .fightRoom$)
+		{
+			getitem .rewardId, 1;
+			//angel breath GI card
+			rentitem 29316, 60;
+			set LMOUNTQ, 2;
+		}
+	}
+	end;
+	
+OnStartSummoning:
+	set .summonerKilled, 0;
+	end;
+	
+OnNPCKillEvent:
+	//LQuest Mount
+	if (strcharinfo(3) == $summonMap$)
+	{
+		//lost, warp the killer to his save point
+		charcommand "#load " + strcharinfo(0);
+	}	
+	end;
+	
+OnInit:
+	set $disguiseMountQId, 7207;
+	set $summonMap$, "que_sign01";
+	set $summonMapX, 223;
+	set $summonMapY, 45;
+	set $mountQMinimumMember, 1;
+	set .summonerKilled, 0;
+	
+	setarray .summonIndividualMap$,"pvp_n_1-4";
+	setarray .summonIndividualMapX[0],56,144,144,56;
+	setarray .summonIndividualMapY[0],165,165,78,78;
+	setarray .summonIndividualMapId, 2076;
+	set .startedDelay, 0;
+	set .firstSummonKilled, 0;
+	set .secondSummonKilled, 0;
+	set .thirdSummonKilled, 0;
+	set .fourthSummonKilled, 0;
+	
+	set .fightRoom$, "pvp_n_1-4";
+	set .fightRoomX, 100;
+	set .fightRoomY, 116;
+	
+	set $finalSummonId, 2255;
+	set .finalStep, 0;
+	set .rewardId, 12622;
+
+	setmapflag .summonIndividualMap$, 1;
+	setmapflag $summonMap$, 1;
+
+	set .summonCount, 1;
+
+	end;
+}
+
+//ars_fild33,49,133,0	script	Zeil::lmountq0	456,{
+veins,192,70,0	script	Zeil::lmountq0	456,{
+	set .@npcname$, "[Zeil]";
+	mes .@npcname$;
+	mes "";
+	mes "...";
+	mes "I don't have time to waste.";
+	mes "Why won't go make somebody else lose their?";
+	//can't access unless you've already start the legendary quest base
+	if (LQUEST == 5)
+	{
+		next;
+		mes .@npcname$;
+		mes "Hu?";
+		mes "Seriously?";
+		mes "You're wandering around here to find what this world has to offer?";
+		mes "You're a good joker, do you know that?";
+		next;
+		mes .@npcname$;
+		mes "Look around you, child.";
+		mes "Everybody around here work hard.";
+		mes "We have to, to supply you and your kind with consumable.";
+		mes "We feed you. Create clothes for you. Even cure you.";
+		mes "And in exchange of that, you're protecting us.";
+		mes "That's what I call an equivalent trade.";
+		mes "We're kind of symbiots.";
+		next;
+		mes .@npcname$;
+		mes "We're not friend.";
+		mes "We're not family.";
+		mes "We simply interract.";
+		mes "We're helping each other to live the life they've chosen.";
+		next;
+		mes .@npcname$;
+		mes "I hope it will continue this way.";
+		set .beforeTakenDay, gettime(3);
+		set takenPeople, 1;
+		set LMOUNTQ, 1;
+	}
+	close;
+	
+OnEnableNpc:
+	hideoffnpc strnpcinfo(3);
+	set $zeildisappeared, 0;
+	set .beforeTakenDay, -1;
+	end;
+	
+OnClock0000:
+	if (gettime(3) == .beforeTakenDay + 1)
+	{
+		hideonnpc strnpcinfo(3);
+		set $zeildisappeared, 1;
+	}
+	close;
+	
+OnInit:
+	set .beforeTakenDay, -1;
+	set $zeildisappeared, 0;
+	end;
+}
+
+//ars_fild33,42,120,4	script	Eilg::lmountq1	958,{
+veins,190,64,4	script	Eilg::lmountq1	958,{
+	set .@npcname$, "[Eilg]";
+	mes .@npcname$;
+	mes "";
+	if (takenPeople == 0)
+	{
+		mes "I'm Zeil's wife.";
+		mes "He's not a bad man. He's simply a bit rude, you know.";
+		mes "But I bet he believe in every word he told you.";
+	}
+	else if (takenPeople == 1)
+	{
+		mes "Zeil?";
+		mes "ZEIL!";
+		mes "ZEILLLLL!";
+		next;
+		mes .@npcname$;
+		mes "Zeil disappeared...";
+		mes "Please...Please help me.";
+		mes "That's not in his habbits.";
+		mes "He wouldn't let us here, without letting us know where he'd go.";
+		mes "He's a brave man, and a good father...";
+		mes "Please...Please find him!";
+		set takenPeople, 2;
+		set clue1Found, 0;
+		set clue2Found, 0;
+		set clue3Found, 0;
+		//viewpoint 1,168,97,1,0xFF0000;
+		//viewpoint 1,189,53,2,0xFF0000;
+		//viewpoint 1,27,81,3,0xFF0000;
+		viewpoint 1,113,69,1,0xFF0000;
+		viewpoint 1,330,126,2,0xFF0000;
+		viewpoint 1,118,326,3,0xFF0000;
+	}
+	else if (takenPeople == 5)
+	{
+		mes "Please...Help me...";
+		mes "I'm sure is in great danger...";
+		mes "Al...e... Where can that be?";
+	}
+	else
+	{
+		mes "Please...Help me...";
+	}
+	close;
+}
+
+//ars_fild33,168,97,0	script	Clue::lmountq2	-1,2,2,{
+veins,113,69,0	script	Clue::lmountq2	-1,2,2,{
+	end;
+
+OnTouch:
+	if (takenPeople >= 2 && takenPeople < 5 && clue1Found == 0)
+	{
+		mes "[Clue]";
+		mes "You've found a strange piece of paper.";
+		mes "Something's written on it:";
+		mes "The room is ready. We're about to fulfill what we've worked so hard on.";
+		mes "Let's join on A...";
+		set takenPeople, takenPeople + 1;
+		set clue1Found, 1;
+	}
+	close;
+}
+
+//ars_fild33,189,53,0	script	Clue::lmountq3	-1,2,2,{
+veins,118,326,0	script	Clue::lmountq3	-1,2,2,{
+	end;
+
+OnTouch:
+	if (takenPeople >= 2 && takenPeople < 5 && clue2Found == 0)
+	{
+		mes "[Clue]";
+		mes "You've found a strange piece of paper.";
+		mes "Something's written on it:";
+		mes "We've prepared everything. Day after day, week after week.";
+		mes "The Leader will soon raise.";
+		mes "Let's join on Al...";
+		set takenPeople, takenPeople + 1;
+		set clue2Found, 1;
+	}
+	close;
+}
+
+//ars_fild33,27,81,0	script	Clue::lmountq4	-1,2,2,{
+veins,330,126,0	script	Clue::lmountq4	-1,2,2,{
+	end;
+
+OnTouch:
+	if (takenPeople >= 2 && takenPeople < 5 && clue3Found == 0)
+	{
+		mes "[Clue]";
+		mes "You've found a strange piece of paper.";
+		mes "Something's written on it:";
+		mes "Our last need, a victim, have been provided.";
+		mes "We'll soon be ready.";
+		mes "Let's join on Al...e...";
+		set takenPeople, takenPeople + 1;
+		set clue3Found, 1;
+	}
+	close;
+}
+
+aldeba_in,239,246,0	script	Guard::lmountq5	107,{
+	set .@npcname$, "[Riolt]";
+	mes .@npcname$;
+	mes "";
+	mes "Sorry, bu you have nothing to do around here.";
+	if (takenPeople == 5)
+	{
+		if (getmapusers($summonMap$) != 0)
+		{
+			next;
+			mes .@npcname$;
+			mes "*You're hearing the guard whispering*";
+			mes "Does he think I'm stupid?";
+			mes "They've already started...";
+			close;
+		}
+		if (countitem($disguiseMountQId) >= 1)
+		{
+			next;
+			mes .@npcname$;
+			mes "Sorry! I didn't recognize you at first.";
+			mes "You can enter.";
+
+			warp $summonMap$, $summonMapX, $summonMapY;
+		}
+		else
+		{
+			next;
+			mes .@npcname$;
+			mes "*You're hearing the guard whispering*";
+			mes "Does he really think I can't recognize one of those I can allow to enter.";
+			mes "They all have this a cape...";
+		}
+	}
+	close;
+}

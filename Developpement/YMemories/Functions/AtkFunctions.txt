@@ -1,0 +1,638 @@
+function	script	YM_Shot	{
+	if (callfunc("IsPlayerOn") || callfunc("IsPlayerOnTown"))
+	{
+		specialeffect2 58; //cast holy
+		//check defense on
+		set .@userAccountId, getcharid(3);
+		set .@userId, getcharid(0);
+		set .@userMap$, strcharinfo(3);
+
+		//attach script to target
+		dispbottom "[Book] *Please insert the targeted player...*";
+		input .@playerName$;
+		set .@returnid, callfunc("AttachToPlayer", .@playerName$, 1);
+		if (.@returnid != -1)
+		{
+			cutin "GI_ShotCard", 4;
+			charcommand "#me Shot activated! " + .@playerName$;
+			set .@targetId, getcharid(0);
+			set .@near, callfunc ("CheckTargetable", .@userMap$, -1, -1, -1);
+			if (.@near == 1)
+			{
+				set .@success, 1;
+				query_sql("SELECT `safe_count`, `protected`, `reflect` FROM `ym_player` WHERE `id_char`=" + getcharid(0), .@safe, .@protected, .@reflect);
+				if (getarraysize(.@safe) >= 1 && .@safe[0] >= 1)
+				{
+					set .@success, 0;
+					query_sql("UPDATE `ym_player` SET `safe_count`=" + (.@safe[0] - 1) + " WHERE `id_char`=" + getcharid(0), .@count);
+					dispbottom "[Book] Attack blocked! Safe count reduced.";
+					specialeffect2 248; // resistant soul
+					attachrid .@userAccountId;
+					dispbottom "Your attack has been countered. Target is in safe mode.";	
+				}
+				else if (getarraysize(.@protected) >= 1 && .@protected[0] == 1)
+				{
+					set .@success, 0;
+					query_sql("UPDATE `ym_player` SET `protected`=0 WHERE `id_char`=" + getcharid(0), .@count);	
+					dispbottom "[Book] Attack blocked!";
+					specialeffect2 222; //Defender
+					attachrid .@userAccountId;
+					dispbottom "Your attack has been countered. Target is in protected mode.";
+				}
+				else if (getarraysize(.@reflect) >= 1 && .@reflect[0] == 1)
+				{
+					query_sql("UPDATE `ym_player` SET `reflect`=0 WHERE `id_char`=" + getcharid(0), .@count);
+					set .@targetId, .@userId;
+					set .@userId, .@targetId;
+					specialeffect2 244; //Magic rod
+					dispbottom "[Book] Attack reflected!";
+					attachrid .@userAccountId;
+					specialeffect2 234; //Spell breaker
+					dispbottom "[Book] Your attack has been reflected.";
+				}
+				else
+				{
+					cutin "GI_ShotCard", 4;
+					specialeffect2 32;
+					cutin "", 255;
+				}
+
+				attachrid(.@userAccountId);
+				if (.@success == 1)
+				{
+					cutin "GI_CardSuccess", 4;
+					callfunc "OnDeleteCard", .@targetId, 0, 10, 1, -1, 0, 1;
+					specialeffect2 56; //green Cast
+					dispbottom "[Book] Card successfully destroyed.";
+				}
+				else
+				{	
+					cutin "GI_ShotCardFail", 4;
+					specialeffect2 55; //red cast
+				}
+			}
+			else
+		 	{
+				attachrid(.@userAccountId);
+				dispbottom "[Book] You can't target someone who's not on the same map.";
+			}
+		}
+		else
+		{
+			specialeffect2 54; //blue aura
+			dispbottom "[Book] Spell cancelled.";
+		}
+	}
+	else
+	{
+			dispbottom "[Book] You can't used spell out of the System.";
+	}
+	cutin "", 255;
+	close;
+}
+
+function	script	YM_StoneThrow	{
+	if (callfunc("IsPlayerOn") || callfunc("IsPlayerOnTown"))
+	{
+		specialeffect2 58; //Yellow cast
+		//check defense on
+		set .@userAccountId, getcharid(3);
+		set .@userId, getcharid(0);
+		set .@userMap$, strcharinfo(3);
+
+		//attach script to target
+		dispbottom "[Book] *Please insert the targeted player...*";
+		input .@playerName$;
+		set .@returnid, callfunc("AttachToPlayer", .@playerName$, 1);
+		if (.@returnid != -1)
+		{
+			cutin "GI_StoneThrowCard", 4;
+			charcommand "#me StoneThrow activated! " + .@playerName$;
+			set .@targetId, getcharid(0);
+
+			set .@near, callfunc ("CheckTargetable", .@userMap$, -1, -1, -1);
+			if (.@near == 1)
+			{
+				set .@success, 1;
+				query_sql("SELECT `safe_count`, `protected`, `reflect` FROM `ym_player` WHERE `id_char`=" + getcharid(0), .@safe, .@protected, .@reflect);
+				if (getarraysize(.@safe) >= 1 && .@safe[0] >= 1)
+				{
+					set .@success, 0;
+					query_sql("UPDATE `ym_player` SET `safe_count`=" + (.@safe[0] - 1) + " WHERE `id_char`=" + getcharid(0), .@count);
+					dispbottom "[Book] Attack blocked! Safe count reduced.";
+					specialeffect2 248; // resistant soul
+					attachrid .@userAccountId;
+					dispbottom "Your attack has been countered. Target is in safe mode.";	
+				}
+				else if (getarraysize(.@protected) >= 1 && .@protected[0] == 1)
+				{
+					set .@success, 0;
+					query_sql("UPDATE `ym_player` SET `protected`=0 WHERE `id_char`=" + getcharid(0), .@count);	
+					specialeffect2 222; //Defender
+					attachrid .@userAccountId;
+					dispbottom "Your attack has been countered. Target is in protected mode.";
+				}
+				else if (getarraysize(.@reflect) >= 1 && .@reflect[0] == 1)
+				{
+					query_sql("UPDATE `ym_player` SET `reflect`=0 WHERE `id_char`=" + getcharid(0), .@count);
+					set .@targetId, .@userId;
+					set .@userId, .@targetId;
+					specialeffect2 244; //Magic rod
+					dispbottom "[Book] Attack reflected!";
+					attachrid .@userAccountId;
+					specialeffect2 234; //Spell breaker
+					dispbottom "[Book] Your attack has been reflected.";
+				}
+				else
+				{
+					cutin "GI_StoneThrowCard", 4;
+					specialeffect2 32;
+					cutin "", 255;
+				}
+				
+				attachrid(.@userAccountId);
+				if (.@success == 1)
+				{
+					cutin "GI_CardSuccess", 4;
+					callfunc "OnDeleteCard", .@targetId, 0, 10, -1, -1, 0, 0;
+					specialeffect2 56; //green cast
+					dispbottom "[Book] Card successfully destroyed.";
+				}
+				else
+				{
+					cutin "GI_StoneThrowCardFail", 4;
+					specialeffect2 55; //red cast
+				}
+			}
+			else
+		 	{
+				attachrid(.@userAccountId);
+				dispbottom "[Book] You can't target someone who's not on the same map.";
+			}
+		}
+		else
+		{
+			specialeffect2 54; //blue cast
+			dispbottom "[Book] Spell cancelled.";
+		}
+	}
+	else
+	{
+			dispbottom "[Book] You can't used spell out of the System.";
+	}
+	cutin "", 255;
+	close;
+}
+
+function	script	YM_Compromise	{
+	if (callfunc("IsPlayerOn") || callfunc("IsPlayerOnTown"))
+	{
+		specialeffect2 58;
+		//check defense on
+		set .@userAccountId, getcharid(3);
+		set .@userId, getcharid(0);
+		set .@userMap$, strcharinfo(3);
+		
+		//attach script to target
+		dispbottom "[Book] *Please insert the targeted player...*";
+		input .@playerName$;
+		
+		set .@returnid, callfunc("AttachToPlayer", .@playerName$, 1);
+		if (.@returnid != -1)
+		{
+			cutin "GI_CompromiseCard", 4;
+			charcommand "#me Compromise activated! " + .@playerName$;
+			set .@targetId, getcharid(0);
+			set .@near, callfunc ("CheckTargetable", .@userMap$, -1, -1, -1);
+			if (.@near == 1)
+			{
+				set .@success, 1;
+				query_sql("SELECT `safe_count`, `protected`, `reflect` FROM `ym_player` WHERE `id_char`=" + getcharid(0), .@safe, .@protected, .@reflect);
+				if (getarraysize(.@safe) == 1 && .@safe[0] >= 1)
+				{
+					set .@success, 0;
+					query_sql("UPDATE `ym_player` SET `safe_count`=" + (.@safe[0] - 1) + " WHERE `id_char`=" + getcharid(0), .@count);
+					dispbottom "[Book] Attack countered. Safe count reduced.";
+					specialeffect2 248; // resistant soul
+					attachrid .@userAccountId;
+					dispbottom "[Book] Your Compromise has been countered. Target is in safe mode.";	
+				}
+				else if (getarraysize(.@protected) == 1 && .@protected[0] == 1)
+				{
+					set .@success, 0;
+					query_sql("UPDATE `ym_player` SET `protected` = `0` WHERE `id_char` = " + getcharid(0), .@count);	
+					dispbottom "[Book] Attack countered. Protection cancelled.";
+					specialeffect2 222; //Defender
+					attachrid .@userAccountId;
+					dispbottom "[Book] Your Compromise has been countered. Target is in protected mode.";	
+				}
+				else if (getarraysize(.@reflect) == 1 && .@reflect[0] == 1)
+				{
+					query_sql("UPDATE `ym_player` SET `reflect` = `0` WHERE `id_char` = " + getcharid(0), .@count);
+					set .@targetId, .@userId;
+					set .@userId, .@targetId;
+					specialeffect2 244; //Magic rod
+					dispbottom "[Book] Attack reflected. Protection cancelled.";
+					attachrid .@userAccountId;
+					specialeffect2 234; //Spell breaker
+					dispbottom "[Book] Your Compromise has been countered. Target is in reflect mode.";	
+				}
+				else
+				{
+					cutin "GI_CompromiseCard", 4;
+					specialeffect2 32;
+					cutin "", 255;
+				}
+				
+				if (.@success == 1)
+				{					
+					query_sql("SELECT `id_card` FROM `ym_book` WHERE `id_char`=" + .@targetId + "", .@idCards);
+					if (getarraysize(.@idCards) > 0)
+					{
+						set .@cardId, .@idCards[rand(0, getarraysize(.@idCards) - 1)];
+						//remove card from owned db
+						set .@query$, "DELETE FROM `ym_book` WHERE `id_card`=" + .@cardId + " AND `id_char`=" + .@targetId + "";
+						query_sql(.@query$, .@count);	
+						//retrieve choosen card in global list
+						query_sql("SELECT `id_card`, `rank`, `actual_count` FROM `ym_cards` WHERE `id_card`=" + .@cardId + "", .@idCard, .@rank, .@choosenActualCount);
+						set .@newActualCount, (.@choosenActualCount[0] - 1);
+						if (.@newActualCount < 0)
+							set .@newActualCount, 0;
+						if (getarraysize(.@idCard) == 1)
+						{
+							cutin "GI_CardSuccess", 4;
+							//update actual count
+							query_sql("UPDATE `ym_cards` SET `actual_count`=" + .@newActualCount + " WHERE `id_card` = " + .@idCard[0], .@count);
+							dispbottom "[Book] Card successfully destroyed.";
+							//get random loot
+							//retrieve cards which rank is equal to delete one minus 3
+							set .@query$, "SELECT `id_card` FROM `ym_cards` WHERE `rank` = " + (.@rank[0] - 3) + "";
+							query_sql(.@query$, .@idCards);
+							//get one in random selected cards
+							set .@choiceRand, rand(0,getarraysize(.@idCards)-1);
+							set .@cardId, .@idCards[.@choiceRand];
+							//get item
+							callfunc("AttachToPlayer", .@playerName$, 1);
+							rentitem .@cardId, 300;
+							specialeffect2 56; //green cast
+						}
+					}
+				}
+				else
+				{
+					cutin "GI_CompromiseCardFail", 4;
+					specialeffect2 55; //red aura
+				}
+			}
+			else
+		 	{
+				attachrid(.@userAccountId);
+				dispbottom "[Book] You can't target someone who's not on the same map.";
+			}
+		}
+		else
+		{
+			specialeffect2 54; //blue aura
+			dispbottom "[Book] Spell cancelled.";
+		}
+	}
+	else
+	{
+		dispbottom "[Book] You can't used spell out of the System.";
+	}
+	cutin "", 255;
+	close;
+}
+
+function	script	YM_Levy	{
+	if (callfunc("IsPlayerOn") || callfunc("IsPlayerOnTown"))
+	{
+		specialeffect2 58;
+		query_sql("SELECT `account_id` FROM `char` WHERE `name` != '" + strcharinfo(0) + "' AND `last_map` = '" + strcharinfo(3) + "'", .@playersaccountid);
+		set .@userAccountId, getcharid(3);
+		set .@userId, getcharid(0);
+		getmapxy(.@userMap$,.@x,.@y,0);
+		for (set .@i,0; .@i<getarraysize(.@playersaccountid); set .@i,.@i+1)
+		{
+			cutin "GI_LevyCard", 4;
+			charcommand "#me Levy activated!";
+			//check defense on
+			set .@returnid, attachrid(.@playersaccountid[.@i]);
+			if (.@returnid != -1)
+			{
+				set .@targetId, getcharid(0);
+				set .@near, callfunc ("CheckTargetable", .@userMap$, 20, .@x, .@y);
+				if (.@near == 1)
+				{
+					set .@success, 1;
+					set .@targetName$, strcharinfo(0);
+					query_sql("SELECT `safe_count`, `protected`, `reflect` FROM `ym_player` WHERE `id_char`=" + getcharid(0), .@safe, .@protected, .@reflect);
+					if (getarraysize(.@safe) == 1 && .@safe[0] >= 1)
+					{
+						set .@success, 0;
+						query_sql("UPDATE `ym_player` SET `safe_count`=" + (.@safe[0] - 1) + " WHERE `id_char` = " + getcharid(0), .@count);	
+						specialeffect2 248; // resistant soul
+						attachrid .@userAccountId;
+						dispbottom "Your Levy on target " + .@targetName$ + " has been countered. Target is in safe mode.";
+						close;
+					}
+					else if (getarraysize(.@protected) == 1 && .@protected[0] == 1)
+					{
+						set .@success, 0;
+						query_sql("UPDATE `ym_player` SET `protected`=0 WHERE `id_char`=" + getcharid(0), .@count);	
+						specialeffect2 222; //Defender
+						attachrid .@userAccountId;
+						dispbottom "Your Levy on target " + .@targetName$ + " has been countered. Target is in protected mode.";
+						close;
+					}
+					else if (getarraysize(.@reflect) == 1 && .@reflect[0] == 1)
+					{
+						query_sql("UPDATE `ym_player` SET `reflect`=0 WHERE `id_char`=" + getcharid(0), .@count);
+						set .@targetId, .@userId;
+						set .@userId, .@targetId;
+						specialeffect2 244; //Magic rod
+						dispbottom "[Book] Attack reflected. Protection cancelled.";
+						attachrid .@userAccountId;
+						specialeffect2 234; //Spell breaker
+						set .@targetName$, strcharinfo(0);
+						dispbottom "[Book] Your Levy on target " + .@targetName$ + " has been countered. Target is in reflect mode.";	
+					}
+					
+					if (.@success == 1)
+					{
+						//swap cards
+						query_sql("SELECT `id_card` FROM `ym_book` WHERE `id_char`=" + .@targetId + "", .@idCards);
+						if (getarraysize(.@idCards) > 0)
+						{
+							set .@cardId, .@idCards[rand(0, getarraysize(.@idCards) - 1)];
+							//remove card from owned db
+							set .@query$, "DELETE FROM `ym_book` WHERE `id_card`=" + .@cardId + " AND `id_char`=" + .@targetId + "";
+							query_sql(.@query$, .@count);	
+							//retrieve choosen card in global list
+							query_sql("SELECT `id_card`, `actual_count` FROM `ym_cards` WHERE `id_card`=" + .@cardId + "", .@idCard, .@choosenActualCount);
+							set .@newActualCount, (.@choosenActualCount[0] - 1);
+							if (.@newActualCount < 0)
+								set .@newActualCount, 0;
+							if (getarraysize(.@idCard) == 1)
+							{
+								cutin "GI_CardSuccess", 4;
+								//update actual count
+								query_sql("UPDATE `ym_cards` SET `actual_count`=" + .@newActualCount + " WHERE `id_card` = " + .@idCard[0], .@count);
+								//get item
+								rentitem .@idCard[0], 300;
+								specialeffect2 56; //green aura
+								dispbottom "[Book] Card successfully stolen to " + .@targetName$ + ".";
+							}
+						}
+					}	
+					else
+					{
+						cutin "GI_LevyCardFail", 4;
+						specialeffect2 55; //red aura
+					}			
+				}
+			}
+			else
+			{
+				specialeffect2 54; //blue aura
+				dispbottom "[Book] Attack cancelled.";
+			}
+		}
+	}
+	else
+	{
+			dispbottom "[Book] You can't used spell out of the System.";
+	}
+	cutin "", 255;
+	close;
+}
+
+function	script	YM_PickPocket	{
+	if (callfunc("IsPlayerOn") || callfunc("IsPlayerOnTown"))
+	{
+		specialeffect2 58;
+		//check defense on
+		set .@userAccountId, getcharid(3);
+		set .@userId, getcharid(0);
+		set .@userMap$, strcharinfo(3);
+
+		//attach script to target
+		dispbottom "[Book] *Please insert the targeted player...*";
+		input .@playerName$;
+		
+		set .@returnid, callfunc("AttachToPlayer", .@playerName$, 1);
+		if (.@returnid != -1)
+		{
+			cutin "GI_PickpocketCard", 4;
+			charcommand "#me PickPocket activated! " + .@playerName$;
+			set .@targetId, getcharid(0);
+			set .@near, callfunc ("CheckTargetable", .@userMap$, -1, -1, -1);
+			if (.@near == 1)
+			{
+				set .@success, 1;
+				query_sql("SELECT `safe_count`, `protected`, `reflect` FROM `ym_player` WHERE `id_char`=" + getcharid(0), .@protected, .@reflect);
+				if (getarraysize(.@safe) == 1 && .@safe[0] >= 1)
+				{
+					set .@success, 0;
+					query_sql("UPDATE `ym_player` SET `safe_count`=" + (.@safe[0] - 1) + " WHERE `id_char` = " + getcharid(0), .@count);	
+					specialeffect2 248; // resistant soul
+					attachrid .@userAccountId;
+					dispbottom "Your Thief has been countered. Target is in safe mode.";
+					close;
+				}
+				else if (getarraysize(.@protected) == 1 && .@protected[0] == 1)
+				{
+					set .@success, 0;
+					query_sql("UPDATE `ym_player` SET `protected`=0 WHERE `id_char`=" + getcharid(0), .@count);
+					specialeffect2 222; //Defender	
+					attachrid .@userAccountId;
+					dispbottom "Your Thief has been countered. Target is in protected mode.";
+					close;
+				}
+				else if (getarraysize(.@reflect) == 1 && .@reflect[0] == 1)
+				{
+					query_sql("UPDATE `ym_player` SET `reflect`=0 WHERE `id_char`=" + getcharid(0), .@count);
+					set .@targetId, .@userId;
+					set .@userId, .@targetId;
+					specialeffect2 244; //Magic rod
+					dispbottom "[Book] Attack reflected. Protection cancelled.";
+					attachrid .@userAccountId;
+					specialeffect2 234; //Spell breaker
+					dispbottom "[Book] Your Thief has been countered. Target is in reflect mode.";	
+				}
+				
+				query_sql("SELECT `id_card` FROM `ym_cards`", .@idCards);
+				set .@idArrayInString$, "";
+			
+				//compute id in string to used it in join function
+				for(set .@i,0; .@i<getarraysize(.@idCards); set .@i,.@i+1)
+				{
+					if (.@idArrayInString$ == "")
+					{
+						set .@idArrayInString$, .@idArrayInString$ + .@idCards[.@i];
+					}
+					else
+					{
+						set .@idArrayInString$, .@idArrayInString$ + "," + .@idCards[.@i];
+					}
+				}
+			
+				set .@query$, "SELECT `id_card` FROM `ym_book` WHERE `id_char`=" + .@targetId + " AND `position`=0 AND `id_card` IN (" + .@idArrayInString$ + ")";
+				query_sql(.@query$, .@idOwnedCards);
+				if (getarraysize(.@idOwnedCards) > 0)
+				{
+					if (.@success == 1)
+					{
+						cutin "GI_CardSuccess", 4;
+						set .@cardId, .@idOwnedCards[rand(0,getarraysize(.@idOwnedCards))];
+						//swap cards
+						callfunc "OnDeleteCard", .@targetId, -1, -1, 1, .@cardId, 0, 0;
+						rentitem .@cardId, 300;
+						specialeffect2 56; //green aura
+					}
+					else
+					{
+						cutin "GI_PickpocketCardFail", 4;
+						specialeffect2 55; //red aura
+					}
+				}
+				else
+				{
+					cutin "GI_PickpocketCardFail", 4;
+					specialeffect2 55; //red aura
+					dispbottom "[Book] Target doesn't have a matching card.";
+				}
+			}
+			else
+			{
+				dispbottom "[Book] You can't target somebody who's not on the same map.";
+			}
+		}
+		else
+		{
+			specialeffect2 54; //blue aura
+			dispbottom "[Book] Spell cancelled.";
+		}
+	}
+	else
+	{
+			dispbottom "[Book] You can't used spell out of the System.";
+	}
+	cutin "", 255;
+	close;
+}
+
+function	script	YM_Thief	{
+	if (callfunc("IsPlayerOn") || callfunc("IsPlayerOnTown"))
+	{
+		specialeffect2 58;
+		//check defense on
+		set .@userAccountId, getcharid(3);
+		set .@userId, getcharid(0);
+		set .@userMap$, strcharinfo(3);
+
+		//attach script to target
+		dispbottom "[Book] *Please insert the targeted player...*";
+		input .@playerName$;
+		
+		set .@returnid, callfunc("AttachToPlayer", .@playerName$, 1);
+		if (.@returnid != -1)
+		{
+			cutin "GI_ThiefCard", 4;
+			charcommand "#me Thief activated! " + .@playerName$;
+			set .@targetId, getcharid(0);
+			set .@near, callfunc ("CheckTargetable", .@userMap$, -1, -1, -1);
+			if (.@near == 1)
+			{
+				set .@success, 1;
+				query_sql("SELECT `safe_count`, `protected`, `reflect` FROM `ym_player` WHERE `id_char`=" + getcharid(0), .@protected, .@reflect);
+				if (getarraysize(.@safe) == 1 && .@safe[0] >= 1)
+				{
+					set .@success, 0;
+					query_sql("UPDATE `ym_player` SET `safe_count`=" + (.@safe[0] - 1) + " WHERE `id_char` = " + getcharid(0), .@count);	
+					specialeffect2 248; // resistant soul
+					attachrid .@userAccountId;
+					dispbottom "Your Thief has been countered. Target is in safe mode.";
+					close;
+				}
+				else if (getarraysize(.@protected) == 1 && .@protected[0] == 1)
+				{
+					set .@success, 0;
+					query_sql("UPDATE `ym_player` SET `protected`=0 WHERE `id_char`=" + getcharid(0), .@count);	
+					specialeffect2 222; //Defender
+					attachrid .@userAccountId;
+					dispbottom "Your Thief has been countered. Target is in protected mode.";
+					close;
+				}
+				else if (getarraysize(.@reflect) == 1 && .@reflect[0] == 1)
+				{
+					query_sql("UPDATE `ym_player` SET `reflect`=0 WHERE `id_char`=" + getcharid(0), .@count);
+					set .@targetId, .@userId;
+					set .@userId, .@targetId;
+					specialeffect2 244; //Magic rod
+					dispbottom "[Book] Attack reflected. Protection cancelled.";
+					attachrid .@userAccountId;
+					specialeffect2 234; //Spell breaker
+					dispbottom "[Book] Your Thief has been countered. Target is in reflect mode.";	
+				}
+				
+				query_sql("SELECT `id_card` FROM `ym_cards` WHERE `fixed`=1", .@idCards);
+				set .@idArrayInString$, "";
+			
+				//compute id in string to used it in join function
+				for(set .@i,0; .@i<getarraysize(.@idCards); set .@i,.@i+1)
+				{
+					if (.@idArrayInString$ == "")
+					{
+						set .@idArrayInString$, .@idArrayInString$ + .@idCards[.@i];
+					}
+					else
+					{
+						set .@idArrayInString$, .@idArrayInString$ + "," + .@idCards[.@i];
+					}
+				}
+			
+				query_sql("SELECT `id_card` FROM `ym_book` WHERE `id_char`=" + .@targetId + " `position`=1 AND `id_card` IN (" + .@idArrayInString$ + ")", .@idOwnedCards);
+				if (getarraysize(.@idOwnedCards) > 0)
+				{
+					if (.@success == 1)
+					{
+						cutin "GI_CardSuccess", 4;
+						set .@cardId, .@idOwnedCards[rand(0,getarraysize(.@idOwnedCards))];
+						//swap cards
+						callfunc "OnDeleteCard", .@targetId, -1, -1, 1, .@cardId, 0, 1;
+						rentitem .@cardId, 300;
+						specialeffect2 56;
+					}
+					else
+					{
+						cutin "GI_ThiefCardFail", 4;
+						specialeffect2 55;
+					}
+				}
+				else
+				{
+					cutin "GI_ThiefCardFail", 4;
+					specialeffect2 55;
+					dispbottom "[Book] Your target doesn't have matching cards";
+				}
+			}
+			else
+			{
+				dispbottom "[Book] You can't target somebody who's not on the same map.";
+			}
+		}
+		else
+		{
+			specialeffect2 54;
+			dispbottom "[Book] Spell cancelled.";
+		}
+	}
+	else
+	{
+		dispbottom "[Book] You can't used spell out of the System.";
+	}
+	cutin "", 255;
+	close;
+}
+

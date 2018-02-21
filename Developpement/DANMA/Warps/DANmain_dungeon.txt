@@ -1,0 +1,59 @@
+danma_01,20,186,0	warp	dun01-maintown	2,2,mellina,85,138
+
+danma_01,183,33,0	warp	dun01-02	2,2,danma_02,19,33
+danma_02,15,33,0	warp	dun02-01	2,2,danma_01,179,33
+danma_02,286,25,0	warp	dun02-03	2,2,danma_03,19,63
+danma_03,16,63,0	warp	dun03-02	2,2,danma_02,283,28
+
+danma_03,137,126,0	warp	dun03-04	2,2,danma_04,150,147
+danma_04,156,147,0	warp	dun04-03	2,2,danma_03,137,120
+
+danma_04,183,8,0	warp	dun04-05	2,2,danma_05,23,183
+danma_05,23,189,0	warp	dun05-04	2,2,danma_04,181,15
+
+danma_05,184,16,0	warp	dun05-06	2,2,danma_06,146,56
+
+//danma_06,53,128,0	warp	dun06-safe01	2,2,dun_safe_01,163,31
+//dun_safe_01,167,28,0	warp	safe01-dun06	2,2,danma_06,56,131
+
+//dun_safe_01,131,168,0	warp	safe01-dun07	2,2,danma_07,258,268
+//danma_07,261,271,0	warp	dun07-safe01	2,2,dun_safe_01,137,165
+
+danma_07,26,24,0	warp	dun07-08	2,2,danma_08,273,271
+danma_08,278,273,0	warp	dun08-07	2,2,danma_07,25,29
+
+danma_08,145,276,0	warp	dun08-09	2,2,danma_09,63,159
+danma_09,55,163,0	warp	dun09-08	2,2,danma_08,145,270
+
+danma_09,154,12,0	warp	dun09-10	2,2,danma_10,202,261
+danma_10,207,267,0	warp	dun10-09	2,2,danma_09,154,17
+
+danma_10,32,45,0	warp	dun10-11	2,2,danma_11,150,284
+danma_11,150,288,0	warp	dun11-10	2,2,danma_10,37,45
+
+danma_11,136,148,0	warp	dun11-12	2,2,danma_12,87,358
+danma_12,87,364,0	warp	dun12-11	2,2,danma_11,132,149
+
+//dun_safe_02,120,77,0	warp	safe02-dun12	2,2,danma_12,145,81
+//danma_12,149,78,0	warp	dun12-safe02	2,2,dun_safe_02,120,81
+
+//dun_safe_02,120,238,0	warp	safe02-dun13	2,2,danma_13,147,17
+//danma_13,147,12,0	warp	dun13-dun13	2,2,dun_safe_02,120,233
+
+danma_13,148,148,0	warp	dun13-14	2,2,danma_14,163,190
+danma_14,163,196,0	warp	dun14-13	2,2,danma_13,148,154
+
+danma_14,156,9,0	warp	dun14-15	2,2,danma_15,150,289
+danma_15,150,295,0	warp	dun15-14	2,2,danma_14,156,13
+
+danma_15,149,5,0	warp	dun15-16	2,2,danma_16,157,288
+danma_16,157,294,0	warp	dun16-15	2,2,danma_15,149,11
+
+danma_16,150,28,0	warp	dun16-17	2,2,danma_17,148,179
+danma_17,148,184,0	warp	dun17-16	2,2,danma_16,150,30
+
+danma_17,10,69,0	warp	dun17-18	2,2,danma_18,116,28
+danma_18,116,24,0	warp	dun18-17	2,2,danma_17,15,69
+
+//dun_safe_03,120,116,0	warp	safe03-dun18	2,2,danma_18,97,107
+//danma_18,97,102,0	warp	dun18-safe03	2,2,dun_safe_03,120,111

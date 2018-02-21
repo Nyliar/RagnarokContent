@@ -1,0 +1,247 @@
+//crash_in,48,238,4	script	Jeweler::alamuljew	579,{
+green,18,26,4	script	Jeweler::alamuljew	579,{
+
+	set .@npcname$, "[Jeweler]";
+	mes .@npcname$;
+	mes "";
+
+	if (MULTI_CLASS == 1)
+	{
+		mes "Hu? You've heard about Pearls?";
+		mes "But...You're looking for very special Pearls, right?";
+		mes "I mean...Wisdom Pearls.";
+		mes "I must admit that these Pearls...They're just a wonder.";
+		mes "But they're damn rare.";
+		mes "Nowadays, nobody knows how to do some.";
+		mes "An old legend says that an ancient country knows how to create it.";
+		mes "But they're kingdom was destroyed by Loki's Wrath...What a shame, hu?";
+		mes "All I know is that they were forged using a very special water. The purest.";
+		mes "But I don't know how to find some. If only a pure source can raise again...";
+		set MULTI_CLASS, 2;
+	}
+	else if (MULTI_CLASS == 2 && countitem(21097) >= 1)
+	{
+		mes "You...You've found some!";
+		mes "I want it. I'll pay 500 Millions for one!";
+		switch(select("Ok, here's for you","No way!"))
+		{
+			case 1:
+				mes "Thanks!";
+				delitem 21097, 1;
+				set Zeny, Zeny + 500000000;
+				close;
+			case 2:
+				mes "Great. You got it right.";
+				mes "I'm not a simple jeweler.";
+				mes "I'm the only one who can learn you how to use your empty Pearls.";
+				mes "Some monsters can give you a new item from now.";
+				mes "They represents the Wisdom of the class you wanna use.";
+				mes "But that's pretty rare.";
+				mes "Find some, and come back to me.";
+				set MULTI_CLASS, 3;
+				close;
+		}
+	}
+	else if (MULTI_CLASS >= 3)
+	{
+		if (MULTI_CLASS_COUNT == 1)
+		{
+			mes "Sorry, but you can't learn more Essence without having your soul broken...";
+			close;
+		}
+		mes "Do you got an Essence?";
+		set .@ok, 0;
+		for (set .@i,21465; .@i<=21477; set .@i,.@i+1)
+		{
+			if (countitem(.@i) >= 1)
+			{
+				set .@ok, 1;
+			}
+		}
+		if (countitem(21097) >= 1 && .@ok == 1)
+		{
+			mes "Looks like you really got it.";
+			mes "Allright. I can now grant you a Wisdom Pearl.";
+			mes "Don't worry. It's 100% safe, no failure risk.";
+			mes "It'll cost you your Pearl, the Essence of the class you want to learn, and 20.000.000 Zenys.";
+			mes "Allright?";
+			switch(select("Ok","No, no way"))
+			{
+				case 1:
+					next;
+					mes .@npcname$;
+					mes "Perfect.";
+					mes "First, choose the class you wanna learn:";
+
+					// On récupère le choix de l'utilisateur
+					set .@menu$, "Rune Knight:Royal Guard:Warlock:Sorceror:Arch Bishop:Sura:Ranger:Wanderer/Minstrel:Mechanic:Genetic:Guillotine Cross:Shadow Chaser";
+
+    					set .@choice, prompt(.@menu$);
+
+					if (.@choice != 255)
+					{
+						if (.@choice == 1)
+						{
+							set .@idEssence, 21465;
+							setarray .@idClass[0], 4060, 4054, 4008, 7, 4073, 4066, 4015, 14;
+							set .@idOutClass, 4060;
+							set .@idOutPearl, 21774;
+						}
+						else if (.@choice == 2)
+						{
+							set .@idEssence, 21466;
+							setarray .@idClass[0], 4073, 4066, 4015, 14, 4060, 4054, 4008, 7;
+							set .@idOutClass, 4073;
+							set .@idOutPearl, 21775;
+						}
+						else if (.@choice == 3)
+						{
+							set .@idEssence, 21470;
+							setarray .@idClass[0], 4061, 4055, 4010, 9, 4074, 4067, 4017, 16;
+							set .@idOutClass, 4061;
+							set .@idOutPearl, 21779;
+						}
+						else if (.@choice == 4)
+						{
+							set .@idEssence, 21469;
+							setarray .@idClass[0], 4074, 4067, 4017, 16, 4061, 4055, 4010, 9;
+							set .@idOutClass, 4074;
+							set .@idOutPearl, 21778;
+						}
+						else if (.@choice == 5)
+						{
+							set .@idEssence, 21467;
+							setarray .@idClass[0], 4063, 4057, 4009, 8, 4077, 4070, 4016, 15;
+							set .@idOutClass, 4063;
+							set .@idOutPearl, 21776;
+						}
+						else if (.@choice == 6)
+						{
+							set .@idEssence, 21468;
+							setarray .@idClass[0], 4077, 4070, 4016, 15, 4063, 4057, 4009, 8;
+							set .@idOutClass, 4077;
+							set .@idOutPearl, 21777;
+						}
+						else if (.@choice == 7)
+						{
+							set .@idEssence, 21473;
+							setarray .@idClass[0], 4062, 4075, 4056, 4068, 4012, 4020, 11, 19, 4075, 4056, 4069, 4012, 4021, 11, 20, 4076, 4068, 4069, 4020, 4021, 19, 20;
+							set .@idOutClass, 4062;
+							set .@idOutPearl, 21782;
+						}
+						else if (.@choice == 8)
+						{
+							if (Sex == 1)
+							{
+								set .@idEssence, 21474;
+								setarray .@idClass[0], 4075, 4076, 4068, 4069, 4020, 4021, 19, 20, 4062, 4076, 4056, 4069, 4012, 4021, 11, 20;
+								set .@idOutClass, 4075;
+								set .@idOutPearl, 21783;
+							}
+							else 
+							{
+								set .@idEssence, 21475;
+								setarray .@idClass[0], 4075, 4076, 4068, 4069, 4020, 4021, 19, 20, 4062, 4075, 4056, 4068, 4012, 4020, 11, 19;
+								set .@idOutClass, 4076;
+								set .@idOutPearl, 21784;
+							}
+						}
+						else if (.@choice == 9)
+						{
+							set .@idEssence, 21471;
+							setarray .@idClass[0], 4064, 4058, 4011, 10, 4078, 4071, 4019, 18;
+							set .@idOutClass, 4064;
+							set .@idOutPearl, 21780;
+						}
+						else if (.@choice == 10)
+						{
+							set .@idEssence, 21472;
+							setarray .@idClass[0], 4078, 4071, 4019, 18, 4064, 4058, 4011, 10;
+							set .@idOutClass, 4078;
+							set .@idOutPearl, 21781;
+						}
+						else if (.@choice == 11)
+						{
+							set .@idEssence, 21476;
+							setarray .@idClass[0], 4065, 4059, 4013, 12, 4079, 4072, 4012, 17;
+							set .@idOutClass, 4065;
+							set .@idOutPearl, 21785;
+						}
+						else if (.@choice == 12)
+						{
+							set .@idEssence, 21477;
+							setarray .@idClass[0], 4079, 4072, 4012, 17, 4065, 4059, 4013, 12;
+							set .@idOutClass, 4079;
+							set .@idOutPearl, 21786;
+						}
+						
+						if (countitem(.@idEssence) >= 1)
+						{
+							set .@classNok, 0;
+							for(set .@j,0; .@j<getarraysize(.@idClass); set .@j,.@j+1)
+							{
+								if (Class == .@idClass[.@j])
+									set .@classNok, 1;
+								for(set .@k,0; .@k<MULTI_CLASS_COUNT; set .@k,.@k+1)
+								{
+									if (getd ("MULTI_CLASS_" + .@k) == .@idClass[.@j])
+										set .@classNok, 1;
+								}
+							}
+							if (.@classNok == 1)
+							{
+								mes "You can't choose a path you've already refused or followed.";
+							}
+							else
+							{
+								if (Zeny >= 20000000)
+								{
+									delitem .@idEssence, 1;
+									delitem 21097, 1;
+									getitem .@idOutPearl, 1;
+									set Zeny, Zeny - 20000000;
+									set MULTI_CLASS, 4;
+									set MULTI_CLASS_COUNT, MULTI_CLASS_COUNT + 1;
+									setd ("MULTI_CLASS_" + MULTI_CLASS_COUNT, .@idOutClass);
+									donpcevent "alamulcla::OnStartNewClass";
+								}
+								else
+									mes "Sorry, but you don't have enough money.";
+							}
+						}
+						else
+						{
+							mes "You don't have the corresponding Essence.";
+						}
+					}
+					else
+					{
+						mes "That's your choice.";
+					}
+					break;
+				case 2:
+					mes "As you wish.";
+					break;
+			}
+		}
+	}
+	else
+	{
+		mes "Hey! You!";
+		mes "I can bet that you've never seen such a wonderful piece!";
+		mes "Look at this Pearl! It's beautiful, isn't it?";
+	}
+	close;
+
+
+OnWhisperGlobal:
+	mes "classes: ";
+	for(set .@i,1; .@i<=MULTI_CLASS_COUNT; set .@i, .@i+1)
+	{
+		mes "classe " + .@i + ": " + getd ("MULTI_CLASS_" + .@i);
+		mes "xp: " + getd("MULTI_XP_"+.@i);
+		setd("MULTI_LEVEL_"+.@i, 1);
+		mes "level: " + getd("MULTI_LEVEL_"+.@i);
+	}
+	close;
+}

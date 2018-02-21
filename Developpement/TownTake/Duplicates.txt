@@ -1,0 +1,71 @@
+//Artenop / Prontera
+aretnop,128,139,4	duplicate(aleddeco)	Artenop Demon Core#2_2::alardeco	CENERE
+artenop,133,207,4	duplicate(alttg)	Heart Crystal#2::alarhc	CENERE
+artenop,44,104,4	duplicate(aledtf)	Aretnorp Town Flag#2::alartf1	GUILD_FLAG
+artenop,44,104,4	duplicate(aledtf)	Aretnorp Town Flag#2::alartf2	GUILD_FLAG
+artenop,44,104,4	duplicate(aledtf)	Aretnorp Town Flag#2::alartf3	GUILD_FLAG
+artenop,44,104,4	duplicate(aledtf)	Aretnorp Town Flag#2::alartf4	GUILD_FLAG
+artenop,44,104,4	duplicate(aledtf)	Aretnorp Town Flag#2::alartf5	GUILD_FLAG
+artenop,44,104,4	duplicate(aledtf)	Aretnorp Town Flag#2::alartf6	GUILD_FLAG
+artenop,44,104,4	duplicate(aledtf)	Aretnorp Town Flag#2::alartf7	GUILD_FLAG
+artenop,44,104,4	duplicate(aledtf)	Aretnorp Town Flag#2::alartf8	GUILD_FLAG
+
+//Altreba / Alberta
+//altreba,128,139,4	duplicate(aleddeco)	Altreba Demon Core#3::alaltdeco	CENERE
+//altreba,133,207,4	duplicate(alttg)	Heart Crystal#3::alalthc	CENERE
+//altreba,44,104,4	duplicate(aledtf)	Altreba Town Flag#3::alaltf1	GUILD_FLAG
+//altreba,44,104,4	duplicate(aledtf)	Altreba Town Flag#3::alaltf2	GUILD_FLAG
+//altreba,44,104,4	duplicate(aledtf)	Altreba Town Flag#3::alaltf3	GUILD_FLAG
+//altreba,44,104,4	duplicate(aledtf)	Altreba Town Flag#3::alaltf4	GUILD_FLAG
+//altreba,44,104,4	duplicate(aledtf)	Altreba Town Flag#3::alaltf5	GUILD_FLAG
+//altreba,44,104,4	duplicate(aledtf)	Altreba Town Flag#3::alaltf6	GUILD_FLAG
+//altreba,44,104,4	duplicate(aledtf)	Altreba Town Flag#3::alaltf7	GUILD_FLAG
+//altreba,44,104,4	duplicate(aledtf)	Altreba Town Flag#3::alaltf8	GUILD_FLAG
+//
+////Corromc / Morocc
+//corromc,128,139,4	duplicate(aleddeco)	Corromc Demon Core#4::alcordeco	CENERE
+//corromc,133,207,4	duplicate(alttg)	Heart Crystal#4::alcorhc	CENERE
+//corromc,44,104,4	duplicate(aledtf)	Corromc Town Flag#4::alcorf1	GUILD_FLAG
+//corromc,44,104,4	duplicate(aledtf)	Corromc Town Flag#4::alcorf2	GUILD_FLAG
+//corromc,44,104,4	duplicate(aledtf)	Corromc Town Flag#4::alcorf3	GUILD_FLAG
+//corromc,44,104,4	duplicate(aledtf)	Corromc Town Flag#4::alcorf4	GUILD_FLAG
+//corromc,44,104,4	duplicate(aledtf)	Corromc Town Flag#4::alcorf5	GUILD_FLAG
+//corromc,44,104,4	duplicate(aledtf)	Corromc Town Flag#4::alcorf6	GUILD_FLAG
+//corromc,44,104,4	duplicate(aledtf)	Corromc Town Flag#4::alcorf7	GUILD_FLAG
+//corromc,44,104,4	duplicate(aledtf)	Corromc Town Flag#4::alcorf8	GUILD_FLAG
+//
+////Egneff / Geffen
+//egneff,128,139,4	duplicate(aleddeco)	Egneff Demon Core#5::alegndeco	CENERE
+//egneff,133,207,4	duplicate(alttg)	Heart Crystal#5::alegnhc	CENERE
+//egneff,44,104,4	duplicate(aledtf)	Egneff Town Flag#5::alegnf1	GUILD_FLAG
+//egneff,44,104,4	duplicate(aledtf)	Egneff Town Flag#5::alegnf2	GUILD_FLAG
+//egneff,44,104,4	duplicate(aledtf)	Egneff Town Flag#5::alegnf3	GUILD_FLAG
+//egneff,44,104,4	duplicate(aledtf)	Egneff Town Flag#5::alegnf4	GUILD_FLAG
+//egneff,44,104,4	duplicate(aledtf)	Egneff Town Flag#5::alegnf5	GUILD_FLAG
+//egneff,44,104,4	duplicate(aledtf)	Egneff Town Flag#5::alegnf6	GUILD_FLAG
+//egneff,44,104,4	duplicate(aledtf)	Egneff Town Flag#5::alegnf7	GUILD_FLAG
+//egneff,44,104,4	duplicate(aledtf)	Egneff Town Flag#5::alegnf8	GUILD_FLAG
+//
+////Narladeba / Aldebaran
+//narladeba,128,139,4	duplicate(aleddeco)	Narladeba Demon Core#6::alnardeco	CENERE
+//narladeba,133,207,4	duplicate(alttg)	Heart Crystal#6::alnarhc	CENERE
+//narladeba,44,104,4	duplicate(aledtf)	Narladeba Town Flag#6::alnarf1	GUILD_FLAG
+//narladeba,44,104,4	duplicate(aledtf)	Narladeba Town Flag#6::alnarf2	GUILD_FLAG
+//narladeba,44,104,4	duplicate(aledtf)	Narladeba Town Flag#6::alnarf3	GUILD_FLAG
+//narladeba,44,104,4	duplicate(aledtf)	Narladeba Town Flag#6::alnarf4	GUILD_FLAG
+//narladeba,44,104,4	duplicate(aledtf)	Narladeba Town Flag#6::alnarf5	GUILD_FLAG
+//narladeba,44,104,4	duplicate(aledtf)	Narladeba Town Flag#6::alnarf6	GUILD_FLAG
+//narladeba,44,104,4	duplicate(aledtf)	Narladeba Town Flag#6::alnarf7	GUILD_FLAG
+//narladeba,44,104,4	duplicate(aledtf)	Narladeba Town Flag#6::alnarf8	GUILD_FLAG
+//
+////Yanop / Payon
+//yanop,128,139,4	duplicate(aleddeco)	Yanop Demon Core#4::alyandeco	CENERE
+//yanop,133,207,4	duplicate(alttg)	Heart Crystal#4::alyanhc	CENERE
+//yanop,44,104,4	duplicate(aledtf)	Yanop Town Flag#4::alyanf1	GUILD_FLAG
+//yanop,44,104,4	duplicate(aledtf)	Yanop Town Flag#4::alyanf2	GUILD_FLAG
+//yanop,44,104,4	duplicate(aledtf)	Yanop Town Flag#4::alyanf3	GUILD_FLAG
+//yanop,44,104,4	duplicate(aledtf)	Yanop Town Flag#4::alyanf4	GUILD_FLAG
+//yanop,44,104,4	duplicate(aledtf)	Yanop Town Flag#4::alyanf5	GUILD_FLAG
+//yanop,44,104,4	duplicate(aledtf)	Yanop Town Flag#4::alyanf6	GUILD_FLAG
+//yanop,44,104,4	duplicate(aledtf)	Yanop Town Flag#4::alyanf7	GUILD_FLAG
+//yanop,44,104,4	duplicate(aledtf)	Yanop Town Flag#4::alyanf8	GUILD_FLAG

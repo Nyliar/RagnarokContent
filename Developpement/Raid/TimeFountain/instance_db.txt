@@ -1,0 +1,1 @@
+42,TimeFountain,7200,300,1@tf,56,68,2@tf,3@tf,4@tf,5@tf

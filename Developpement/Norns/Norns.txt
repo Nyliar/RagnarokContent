@@ -1,0 +1,1004 @@
+// [========================================================]
+// [=============	 Main Line - Norns      ============]
+// [========================================================]
+// [ Version 1                                              ]
+// [========================================================]
+// [ Original script by: Alayne				    ]
+// [========================================================]
+// [ Description:                                           ]
+// [--------------------------------------------------------]
+// [                                                        ]
+// [ - Rune Midgard main story quest line    	   	    ]
+// [  This file contains explanation and base npcs 	    ]
+// [                                                        ]
+// [========================================================]
+// [ Changelog: (5 last updates)                            ]
+// [--------------------------------------------------------]
+// [                                                        ]
+// [ v0: Creation                      			    ]
+// [                                                        ]
+// [========================================================]
+// [                                                        ]
+// [========================================================]
+
+prontera,165,188,4	script	Verdandi::almqlve	4_F_NYDHOG,{
+	set .@npcname$, "[Verdandi]";
+	set .@skunpcname$, "[Skuld]";
+	set .@urnpcname$, "[Urd]";
+	set .@pcname$, "[" + strcharinfo(0) + "]";
+	
+	mes .@npcname$;
+	if(.speaking == 1)
+	{
+		cutin "ep14_nyd01",1;
+		mes "Wait a moment...I'm busy with someone else...";
+		close;
+	}
+	if(NORNQ == 0)
+	{
+		cutin "ep14_nyd01",1;
+		set .speaking, 1;
+		mes "...I can feel it...";
+		mes "I can feel it in the air...";
+		mes "Skuld! Can you see them?";
+		next;
+		cutin "shaloshi01",2;
+		mes .@skunpcname$;
+		mes "No, Verdandi. I can't. Not yet.";
+		mes "But they've never been this close...";
+		next;
+		cutin "bu_maggi1",0;
+		mes .@urnpcname$;
+		mes "The War will start over again...";
+		mes "Traitor's Army will raise against those of the Father of All Things.";
+		mes "The Universe will collapse soon...";
+		next;
+		cutin "",255;
+		mes .@pcname$;
+		mes "The Ragnarok? It's finally here then?";
+		mes "But...I thought there was more time...";
+		next;
+		cutin "ep14_nyd01",1;
+		mes .@npcname$;
+		mes "Stay calm, Present's Child.";
+		mes "The Ragnarok isn't upon us yet. But soon, it'll occures.";
+		mes "We're the Norns. Our power enables us to read everything.";
+		next;
+		cutin "bu_maggi1",0;
+		mes .@skunpcname$;
+		mes "Past";
+		next;
+		cutin "ep14_nyd01",1;
+		mes .@npcname$;
+		mes "Present";
+		next;
+		cutin "shaloshi01",2;
+		mes .@skunpcname$;
+		mes "And Future.";
+		next;
+		cutin "ep14_nyd01",1;
+		mes .@npcname$;
+		mes "But I can't see the Ragnarok yet, nor as my sister, Skuld.";
+		mes "While she doesn't see it, we still have time.";
+		mes "Cause the Ragnarok can still be latened. Can't be cancelled, but pushed away.";
+		next;
+		cutin "",255;
+		mes .@pcname$;
+		mes "How? How can we do that? They are Gods and Demons...Ases and Giants...";
+		mes "We can't fight them...";
+		next;
+		cutin "bu_maggi1",0;
+		mes .@urnpcname$;
+		mes "You're wrong, mortal!";
+		next;
+		cutin "",255;
+		mes .@pcname$;
+		mes "Wrong? How can it be! It's freaking gods!";
+		next;
+		cutin "shaloshi01",2;
+		mes .@skunpcname$;
+		mes "Looks like you don't like them that much...";
+		next;
+		cutin "",255;
+		mes .@pcname$;
+		mes "Not that I don't like us...But I dislike to have my life threatened by a war I can't even be part of...";
+		next;
+		cutin "ep14_nyd01",1;
+		mes .@npcname$;
+		mes "Then I suppose you can help us.";
+		mes "Do you know why the Gods fear us?";
+		next;
+		cutin "",255;
+		mes .@pcname$;
+		mes "No, not really...";
+		next;
+		cutin "bu_maggi1",0;
+		mes .@urnpcname$;
+		mes "That's cause we know everything about them. Their birth, their life, their death.";
+		next;
+		cutin "ep14_nyd01",1;
+		mes .@npcname$;
+		mes "We're working on the whole Life Thread. Gods are nothing to us.";
+		mes "Therefor, we know how to block them.";
+		next;
+		cutin "",255;
+		mes .@pcname$;
+		mes "To...Block them?";
+		next;
+		cutin "shaloshi01",2;
+		mes .@skunpcname$;
+		mes "The War can be stopped. By Sealing the opposing side.";
+		next;
+		cutin "",255;
+		mes .@pcname$;
+		mes "How can simply think you can seal a God?";
+		next;
+		cutin "ep14_nyd01",1;
+		mes .@npcname$;
+		mes "Don't you listen? We have a Life Thread for all of them.";
+		mes "Take us the items we need, and we can create a Seal for each one of them.";
+		mes "By inserting a fragment of their Life Thread, even a God or a Giant won't be able to get free easily.";
+		next;
+		cutin "shaloshi01",2;
+		mes .@skunpcname$;
+		mes "And THAT is why the Gods fear us.";
+		next;
+		cutin "",255;
+		mes .@pcname$;
+		mes "Well allright. Tell me what you'll need, and I'll bring it to you.";
+		next;
+		cutin "bu_maggi1",0;
+		mes .@urnpcname$;
+		mes "It's not that simple.";
+		mes "There's several needs. First, you'll need to talk to me to find a Seal position.";
+		mes "They're spread all over the world, hidden by the Gods themselves, to reduce our influence.";
+		mes "But if you and the other mortal that help us bring me gold, I can read far in the Past Thread.";
+		next;
+		mes .@urnpcname$;
+		mes "The Golds will help me to restore what have been destroyed. And the hidden will be revealed.";
+		next;
+		cutin "",255;
+		mes .@pcname$;
+		mes "Allright so first, find golds.";
+		next;
+		cutin "ep14_nyd01",1;
+		mes .@npcname$;
+		mes "Once you'll have a Seal base, I'll be able to improve it with elements powers.";
+		mes "For that, I'll need some elemental items, and a lot of magic power.";
+		mes "The needs will depends on the target to seal. I can't say it before I start improving the Seal.";
+		next;
+		cutin "",255;
+		mes .@pcname$;
+		mes "Allright, so basically, items and people. Got it.";
+		next;
+		cutin "shaloshi01",2;
+		mes .@skunpcname$;
+		mes "And finally, I can show you where the targets are.";
+		mes "I'll need sacrifice for that. Blood, mostly, as the Blood is still the more powerfull power source.";
+		next;
+		cutin "",255;
+		mes .@pcname$;
+		mes "All...right, I guess.";
+		next;
+		cutin "shaloshi01",2;
+		mes .@skunpcname$;
+		mes "Using it, I'll be able to tell you where is a target. You'll have to Seal it yourself thought.";
+		mes "Each Seal may need a condition to be used. It can be to beat a Demon, or just to find the Target.";
+		mes "All I can say is the position of the condition.";
+		mes "Then, it all be yours.";
+		next;
+		cutin "",255;
+		mes .@pcname$;
+		mes "Okay...So let's the hunt begin!";
+		//playBGM "start_quest.mp3"
+		set NORNQ, 1;
+	}
+	else if (NORNQ == 1)
+	{
+		cutin "ep14_nyd01",1;
+		mes "Good to see you again, mortal.";
+		mes "What can I do for you?";
+		switch(select("I've found a Seal","Skuld found a Future Thread!","Nothing, I was just wandering..."))
+		{
+			case 1:
+				if(countitem($baseSealItemId) < 1)
+				{
+					next;
+					mes .@npcname$;
+					mes "Sorry, but I don't feel the Seal power on you.";
+					next;
+					cutin "", 255;
+					mes .@pcname$;
+					mes "I'll get back soon with one then.";
+					close;
+				}
+				next;
+				cutin "",255;
+				mes .@pcname$;
+				mes "I've found a Seal thanks to Urd. How can I improve it?";
+				next;
+				cutin "ep14_nyd01",1;
+				mes .@npcname$;
+				mes "Really? Good thing. We need to create a Targeted Seal then.";
+				mes "Which kind of target are you aiming?";
+				goto OnDisplayItemMenu;
+				break;
+			case 2:
+				next;
+				cutin "",255;
+				mes .@pcname$;
+				mes "Look! Skuld found a Future Thread. I bring it back to you so you can Seal it.";
+				next;
+				cutin "ep14_nyd01",1;
+				mes .@npcname$;
+				mes "Good! Give it to me now!";
+				set .@continue, 1;
+				for(set .@i, .targetSealFirstId; .@i<.targetSealLastId && .@continue == 1; set .@i,.@i+2)
+				{
+					if(countitem(.@i) > 0)
+					{
+						next;
+						mes .@npcname$;
+						if(.@i >= .targetSealFirstGiantId)
+						{
+							mes "It is...So dark...But beautiful in the same time...";
+						}
+						else
+						{
+							mes "What a beauty. His Life Thread is really beautiful.";
+						}
+						mes "Nevermind, let me seal it.";
+						delitem .@i, 1;
+						specialeffect 883;
+						mes "Yggdrasil...Forgive me...";
+						query_sql("SELECT `id`,`generalState` FROM `verdandi_quests` WHERE `sealId`=" + (.@i - 1), .@id$,.@generalState);
+						if(.@generalState[0] == 3)
+						{
+							next;
+							mes .@npcname$;
+							mes "I'm sorry but this one has already been sealed...";
+							mes "I can't do it twice...";
+							cutin "", 255;
+							close;
+						}
+						explode(.@composingIds$, .@id$[0], "_");
+						if (atoi(.@composingIds$[0]) <= 2)
+						{
+							//Ase
+							doevent "Ase_" + .@id$[0] + "_1::OnSealTarget";
+						}
+						else
+						{
+							//Giant
+							doevent "Giant_" + .@id$[0] + "_1::OnSealTarget";
+						}
+						next;
+						mes .@npcname$;
+						mes "It's...It's done...Leave me some time now, please.";
+						mes "Modifying the whole Thread is against our nature...";
+						next;
+						cutin "", 255;
+						mes .@pcname$;
+						mes "Well...Sure...";
+						mes "I'll get back with another Seal.";
+						set .@continue, 0;
+					}
+				}
+				if(.@continue == 1)
+				{
+					next;
+					mes .@npcname$;
+					mes "Sorry but...You don't look like having a single Seal...";
+					next;
+					cutin "", 255;
+					mes .@pcname$;
+					mes "Well...Sorry...";
+					mes "I'll get back with a Seal.";
+				}
+				break;
+			case 3:
+				next;
+				cutin "",255;
+				mes .@pcname$;
+				mes "Nothing...I was just wandering around. Sorry to disturb you.";
+				next;
+				cutin "ep14_nyd01",1;
+				mes .@npcname$;
+				mes "Allright. Come back to me when you'll need to improve a Seal.";
+				next;
+				cutin "",255;
+				mes .@pcname$;
+				mes "I will.";
+				break;
+		}
+	}
+	cutin "",255;
+	close;
+	
+OnDisplayItemMenu:
+	set .@menu$, "";
+	set .@mainchoice, select("An Ase","A Giant");
+	switch(.@mainchoice)
+	{
+		case 1:
+			for(set .@i,0; .@i<getarraysize($aseTargetName$); set .@i,.@i+1)
+			{
+				if($aseTargetState[.@i] == 1)
+				{
+					set .@option$, "" + (.@i == 0 ?"":":") + "^839eb6" + $aseTargetName$[.@i] + " (Building)^000000";
+				}
+				else if($aseTargetState[.@i] == 2)
+				{
+					set .@option$, "" + (.@i == 0 ?"":":") + "^62a577" + $aseTargetName$[.@i] + " (Ready)^000000";
+				}
+				else if($aseTargetState[.@i] == 3)
+				{
+					set .@option$, "" + (.@i == 0 ?"":":") + "^41ad38" + $aseTargetName$[.@i] + " (Sealed)^000000";
+				}
+				else
+				{
+					set .@option$, "" + (.@i == 0 ?"":":") + "^FF0000" + $aseTargetName$[.@i] + "^000000";
+				}
+				set .@menu$, .@menu$ + .@option$;
+			}
+			break;
+		case 2:
+			for(set .@i,0; .@i<getarraysize($giantTargetName$); set .@i,.@i+1)
+			{
+				if($giantTargetState[.@i] == 1)
+				{
+					set .@option$, "" + (.@i == 0?"":":") + "^839eb6" + $giantTargetName$[.@i] + " (Building)^000000";
+				}
+				else if($giantTargetState[.@i] == 2)
+				{
+					set .@option$, "" + (.@i == 0?"":":") + "^62a577" + $giantTargetName$[.@i] + " (Ready)^000000";
+				}
+				else if($giantTargetState[.@i] == 3)
+				{
+					set .@option$, "" + (.@i == 0?"":":") + "^41ad38" + $giantTargetName$[.@i] + " (Sealed)^000000";
+				}
+				else
+				{
+					set .@option$, "" + (.@i == 0 ?"":":") + "^FF0000" + $giantTargetName$[.@i] + "^000000";
+				}
+				set .@menu$, .@menu$ + .@option$;
+			}
+			break;
+	}
+	next;
+	mes .@npcname$;
+	mes "Allright. Which Seal do you wish to create?";
+	set .@choice, select(.@menu$);
+	set .@id$, .@mainchoice + "_" + .@choice;
+	
+	set .@query$, "SELECT `generalState` FROM `verdandi_quests` WHERE `id`='" + .@id$ + "'";
+	query_sql(.@query$, .@state);
+	if (.@state[0] == 3)
+	{
+		next;
+		mes .@npcname$;
+		mes "Sorry but this one has already been sealed. There's no need to do it twice.";
+		next;
+		cutin "", 255;
+		mes .@pcname$;
+		mes "You're right, sorry.";
+		close;
+	}
+	next;
+	mes .@npcname$;
+	mes "Allright. Let's see what's written on his Life Thread then.";
+	next;
+	mes .@npcname$;
+	//compose needs menu
+	set .@sqlCommand$, "SELECT * FROM `verdandi_quests` WHERE `id`='" + .@id$ + "'";
+	query_sql(.@sqlCommand$, .@id$, .@desc$, .@item1Id, .@item1Count, .@item1Current,
+	.@item2Id, .@item2Count, .@item2Current, .@item3Id, .@item3Count, .@item3Current,
+	.@item4Id, .@item4Count, .@item4Current, .@item5Id, .@item5Count, .@item5Current);
+	mes "To extract this Life Thread, I'll need: ";
+	set .@menuItem$, "";
+	set .@itemId1, .@item1Id[0];
+	set .@itemCount1, .@item1Count[0];
+	set .@itemCurrent1, .@item1Current[0];
+	set .@menuItem$, callsub(OnAddItemToMenu, .@itemId1, .@itemCount1, .@itemCurrent1, 0);
+	set .@itemId2, .@item2Id[0];
+	set .@itemCount2, .@item2Count[0];
+	set .@itemCurrent2, .@item2Current[0];
+	if (.@itemCount2 > 0)
+	{
+		set .@menuItem$, .@menuItem$ + callsub(OnAddItemToMenu, .@itemId2, .@itemCount2, .@itemCurrent2, 1);
+	}
+	set .@itemId3, .@item3Id[0];
+	set .@itemCount3, .@item3Count[0];
+	set .@itemCurrent3, .@item3Current[0];
+	if (.@itemCount3 > 0)
+	{
+		set .@menuItem$, .@menuItem$ + callsub(OnAddItemToMenu, .@itemId3, .@itemCount3, .@itemCurrent3, 1);
+	}
+	set .@itemId4, .@item4Id[0];
+	set .@itemCount4, .@item4Count[0];
+	set .@itemCurrent4, .@item4Current[0];
+	if (.@itemCount4 > 0)
+	{
+		set .@menuItem$, .@menuItem$ + callsub(OnAddItemToMenu, .@itemId4, .@itemCount4, .@itemCurrent4, 1);
+	}
+	set .@itemId5, .@item5Id[0];
+	set .@itemCount5, .@item5Count[0];
+	set .@itemCurrent5, .@item5Current[0];
+	if (.@itemCount5 > 0)
+	{
+		set .@menuItem$, .@menuItem$ + callsub(OnAddItemToMenu, .@itemId5, .@itemCount5, .@itemCurrent5, 1);
+	}
+	next;
+	mes .@npcname$;
+	mes "So. What do you want to provide?";
+	set .@itemChoice, select(.@menuItem$);
+	next;
+	cutin "",255;
+	mes .@pcname$;
+	mes "I have some " + getitemname(getd(".@itemId" + .@itemChoice)) + ".";
+	next;
+	cutin "ep14_nyd01",1;
+	mes .@npcname$;
+	mes "Allright. How many?";
+	input .@broughtCount;
+	if (.@broughtCount <= countitem(getd(".@itemId" + .@itemChoice)))
+	{
+		next;
+		cutin "",255;
+		mes .@pcname$;		
+		mes "Here you are. " + .@broughtCount + " " + getitemname(getd(".@itemId" + .@itemChoice));
+		next;
+		cutin "ep14_nyd01",1;
+		mes .@npcname$;
+		mes "Perfect.";
+		if (getd(".@itemCurrent" + .@itemChoice) + .@broughtCount > getd(".@itemCount" + .@itemChoice))
+		{
+			mes "There's even too much. I'll take just what is needed.";
+			set .@broughtCount, getd(".@itemCount" + .@itemChoice) - getd(".@itemCurrent" + .@itemChoice);
+		}
+		delitem getd(".@itemId" + .@itemChoice), .@broughtCount;
+		set .@newCount, getd(".@itemCurrent" + .@itemChoice) + .@broughtCount;
+		setd(".@itemCurrent" + .@itemChoice, .@newCount); 
+		set .@query$, "UPDATE `verdandi_quests` SET `item" + .@itemChoice + "IdCurrent`=" + .@newCount + " WHERE `item" + .@itemChoice + "Id`=" + getd(".@itemId" + .@itemChoice) + " AND `id`='" + .@id$ + "'";
+		query_sql(.@query$, .@count);
+		next;
+		cutin "",255;
+		mes .@pcname$;
+		mes "Is the Seal ready now?";
+		next;
+		cutin "ep14_nyd01",1;
+		mes .@npcname$;
+		mes "Hum...Let me check...";
+		set .@ok, 1;
+		for(set .@i,1; .@i<6 && .@ok != 0; set .@i,.@i+1)
+		{
+			set .@itemId, getd(".@itemId" + .@i);
+			set .@itemCount, getd(".@itemCount" + .@i);
+			set .@itemCurrent, getd(".@itemCurrent" + .@i);
+			
+			if (.@itemCurrent != .@itemCount)
+			{
+				set .@ok, 0;
+				set .@missingItemName$, getitemname(.@itemId);
+			}
+		}
+		set .@complete, 1;
+		if(.@ok == 1)
+		{
+			next;
+			mes .@npcname$;		
+			mes "Yes...Yes, the Seal is ready.";
+			mes "I can bound the Life Thread to this one, as soon as you'll have found the Target's position.";
+			next;
+			mes .@npcname$;	
+			mes "Go see Skuld. She can help you for that.";
+			mes "Once she'll have found it's position, bring this with you.";
+			delitem $baseSealItemId, 1;
+			query_sql("SELECT `sealId` FROM `verdandi_quests` WHERE `id`='" + .@id$ + "'", .@sealItem);
+			getitem .@sealItem[0], 1;
+			next;
+			mes .@npcname$;	
+			mes "If you talk to the Target with that, Skuld will be able to find the Condition to fullfill to seal him.";
+			mes "Once done, come back to me and I'll do the Sealing part.";
+			set .@complete, 2;
+		}
+		else
+		{		
+			next;
+			mes .@npcname$;
+			mes "No, the Seal isn't completed yet...";
+			mes "We're still lacking some " + .@missingItemName$ + ".";
+		}
+		if(.@generalState[0] != .@complete)
+		{
+			query_sql("UPDATE `verdandi_quests` SET `generalState`=" + .@complete + " WHERE `id`='" + .@id$ + "'", .@count);
+			callsub OnReinitSealsState;
+		}
+	}
+	else
+	{
+		next;
+		mes .@npcname$;
+		mes "Sorry, but you don't have these items...";
+		goto OnDisplayItemMenu;
+	}	
+	cutin "", 255;
+	close;
+	
+OnAddItemToMenu:
+	set .@itemId, getarg(0);
+	set .@itemCount, getarg(1);
+	set .@itemCurrent, getarg(2);
+	set .@i, getarg(3);
+	set .@color$, "^FF0000";
+	if (.@itemCurrent > 0)
+	{
+		set .@color$, "^839eb6";
+	}
+	else if (.@itemCurrent == .@itemCount)
+	{
+		set .@color$, "^62a577";
+	}
+	mes "	" + .@color$ + "~ " + .@itemCount + " " + getitemname(.@itemId) + " (" + .@itemCurrent + "/" + .@itemCount + ")"; 			
+	set .@menuItem$, .@menuItem$ + (.@i == 0?"":":") + getitemname(.@itemId);	
+	return .@menuItem$;
+
+OnReinitSealsState:
+	query_sql("SELECT `id`,`generalState` FROM `verdandi_quests`", .@id$, .@generalStates);
+	for(set .@i,0; .@i<getarraysize(.@id$); set .@i,.@i+1)
+	{
+		explode(.@tempIds$, .@id$[.@i], "_");
+		if(.@generalStates[.@i] != 0)
+		{
+			switch(atoi(.@tempIds$[0]))
+			{
+				case 1:
+					set $aseTargetState[atoi(.@tempIds$[1]) - 1], .@generalStates[.@i];
+					break;
+				case 2:
+					set $giantTargetState[atoi(.@tempIds$[1]) - 1], .@generalStates[.@i];
+					break;
+			}
+		}
+	}
+	return;
+	
+OnInit:
+	set .speaking, 0;
+	deletearray $aseTargetName$[0], getarraysize($aseTargetName$);
+	deletearray $aseTargetState$[0], getarraysize($aseTargetState$);
+	deletearray $giantTargetName$[0], getarraysize($giantTargetName$);
+	deletearray $giantTargetState$[0], getarraysize($giantTargetState$);
+	setarray $aseTargetName$[0],"Heimdall","Tyr","Njord","Freyja","Thor","Odin";
+	setarray $aseTargetState[0],0,0,0,0,0,0,0,0,0,0,0,0,0;
+	setarray $giantTargetName$[0],"Duneyrr","Hel","Fafnir","Jormungandr","Fenrir","Loki";
+	setarray $giantTargetState[0],0,0,0,0,0,0,0,0,0,0,0;
+	
+	set $baseSealItemId, 27000;
+	set $sealingPointAmount, 300;
+	set $sealItemId, 513;
+	set .targetSealFirstId, 27002;
+	set .targetSealLastId, 27012;
+	set .targetSealFirstGiantId, 27008;
+	
+	callsub OnReinitSealsState;
+	end;
+}
+
+prontera,161,190,5	script	Urd::almqlur	4_F_PINKWOMAN,{
+	set .@npcname$, "[Urd]";
+	set .@pcname$, "[" + strcharinfo(0) + "]";
+	mes .@npcname$;
+	if(NORNQ == 0)
+	{
+		cutin "bu_maggi1",0;
+		mes "...I can do nothing for you right now.";
+		mes "Speak to Verdandi first.";
+	}
+	else if (NORNQ == 1)
+	{
+		cutin "bu_maggi1",0;
+		mes "Good to see you again, mortal.";
+		mes "What can I do for you?";
+		if(select("I need to find a Seal","Nothing, I was just wandering...") == 1)
+		{
+			next;
+			cutin "",255;
+			mes .@pcname$;
+			mes "Do you know where I can find a new Seal?";
+			next;
+			cutin "bu_maggi1",0;
+			mes .@npcname$;
+			mes "Well you know I need Golds to find some.";
+			if (.createdSealCount == 0)
+			{
+				set .createdSealCount, 1;
+			}
+			callfunc "OnParsePrice","A base Seal needs me to melt for ",.baseSealPrice * .createdSealCount;		
+			callfunc "OnParsePrice","And currently, I've been brought ",.currentSealPrice;
+			next;
+			mes .@npcname$;
+			mes "How many do you wish to give me?";
+			input .@donationAmount;
+			if (.@donationAmount > Zeny)
+			{
+				next;
+				mes .@npcname$;
+				mes "Sorry, mortal, but you don't have this much gold.";
+				close;
+			}
+			next;
+			cutin "",255;
+			mes .@pcname$;
+			mes "Here you are. That's all I can give.";
+			next;
+			cutin "bu_maggi1",0;
+			mes .@npcname$;
+			mes "Perfect.";
+			set Zeny, Zeny - .@donationAmount;
+			set .currentSealPrice, .currentSealPrice + .@donationAmount;
+			next;
+			cutin "",255;
+			mes .@pcname$;
+			mes "Is it enough?";
+			if (.currentSealPrice >= .baseSealPrice)
+			{
+				next;
+				cutin "bu_maggi1",0;
+				mes .@npcname$;
+				set .currentSealPrice, 0;
+				//find a seal
+				mes "I...I can see it.";
+				mes "I can see it almost clearly.";
+				mes "It...It is...";
+				callsub OnInvokSealMonster;
+			}
+			else
+			{
+				next;
+				cutin "bu_maggi1",0;
+				mes .@npcname$;
+				callfunc "OnParsePrice","Now, we're still missing ",(.baseSealPrice - .currentSealPrice);
+				mes "Come back later, and I'll may soon be able to find a new Seal.";
+				next;
+				cutin "", 255;
+				mes .@pcname$;
+				mes "Allright. I'll be back soon.";
+			}
+		}
+		else
+		{
+			next;
+			cutin "",255;
+			mes .@pcname$;
+			mes "Nothing...I was just wandering around. Sorry to disturb you.";
+			next;
+			cutin "bu_maggi1",0;
+			mes .@npcname$;
+			mes "Allright. Come back to me when you'll need to find a Seal.";
+			next;
+			cutin "",255;
+			mes .@pcname$;
+			mes "I will.";
+		}
+	}
+	cutin "",255;
+	close;
+	
+OnSealMonsterKilled:
+	getitem $baseSealItemId, 1;
+	end;
+	
+OnInvokSealMonster:
+	set .@rank, rand(0,getarraysize(.nsMaps$)-1);
+	set .@idMonster, .nsMonstersId[.@rank];
+	set .@map$, .nsMaps$[.@rank];
+	set .@mapName$, .nsMapsName$[.@rank];
+	set .@pcname$, "[" + strcharinfo(0) + "]";
+	
+	monster .@map$,0,0,strmobinfo(1,.@idMonster),.@idMonster,1,"almqlur::OnSealMonsterKilled";
+	mes "It is in a monster on " + .@mapName$ + ". Go there quickly...";
+	mes "When you'll have it, bring to Verdandi. She'll be able to create a Targeted Seal.";
+	next;
+	cutin "", 255;
+	mes .@pcname$;
+	mes "I'll be back soon. Thanks!";
+	return;
+	
+OnInit:
+	setarray .nsMaps$[0],"anthell02","gefenia03","odin_tem03","ein_fild04","ra_fild08","ice_dun01","thor_v02",
+	"ve_fild03","mosk_dun02","c_tower3","gef_fild07","gl_chyard","gl_sew04","in_sphinx4","iz_dun03","mjo_dun03",
+	"moc_fild03","moc_pryd06","orcsdun01","pay_dun03","prt_fild07","prt_maze03","xmas_dun01","cmd_fild02","tur_dun04",
+	"ein_dun01","lhz_dun01","abyss_01","tha_t10","kh_dun01","ra_san05","man_fild03","spl_fild03";
+	
+	setarray .nsMapsName$[0],"Anthell lv. 2","Gefenia lv. 3","Odin Temple lv. 3","Einbroch Field 04","Rachel Field 08","Ice Cave lv. 01","Thor Volcano lv. 2",
+	"Veins Field 03","Moscovia Dungeon lv. 02","Clock Tower lv. 03","Geffen Field 07","Glast Heim Churchyard","Glast Heim Sewers lv. 04","Sphinx lv. 04","Bayalan Dungeon lv. 03","Mjolnir Dungeon lv. 03",
+	"Morocc Field 03","Pyramid lv. 06","Orc Dungeon lv. 01","Payon Cave lv. 03","Prontera Field 07","Hidden Temple lv. 03","Toy Factory lv. 01","Comodo Field 02","Turtle Dungeon lv. 04",
+	"Einbroch Mine lv. 01","Bio Laboratory lv. 01","Abyss Lake lv. 01","Thanatos Tower lv. 10","Khiel Hyre Factory lv. 01","Rachel Sanctuary lv. 05","Manuk Field 03","Splendid Field 03";
+		
+	setarray .nsMonstersId[0],1176,1371,1754,1378,1680,1776,1838,
+	1836,1881,1193,1008,1198,1206,1154,1045,1151,
+	1013,1297,1153,1020,1052,1101,1246,1317,1314,
+	1616,1627,1721,1701,1275,1773,1989;
+	
+	set .baseSealPrice, 10000000;
+	end;
+}
+
+function	script	OnParsePrice	{
+	set .@baseMessage$, getarg(0);
+	set .@basePrice, getarg(1);
+	set .@message$, "";
+	set .@price, .@basePrice;
+	if(.@basePrice == 0)
+	{
+		set .@message$, "0";
+	}
+	else
+	{
+		if(.@price / 1000000 >= 1)
+		{
+			set .@millionCount, .@price / 1000000;
+			set .@message$, .@millionCount + ".";
+			set .@price, .@price - .@millionCount * 1000000;
+		}
+		if(.@price / 1000 >= 1)
+		{
+			set .@thousandCount, .@price / 1000;
+			set .@message$, .@message$ + .@thousandCount+ ".";
+			set .@price, .@price - .@thousandCount * 1000;
+		}
+		else
+		{
+			set .@message$, .@message$ + "000.";
+		}
+		if (.@price > 0)
+		{
+			set .@remaining, .@price;
+			set .@message$, .@message$ + .@price;
+		}
+		else
+		{
+			set .@message$, .@message$ + "000";
+		}
+	}
+	
+	set .@message$, .@message$ + "z.";	
+	mes .@baseMessage$ + .@message$;
+	return;
+}
+
+prontera,168,192,4	script	Skuld::almqlsk	4_F_SHALOSH,{
+	set .@npcname$, "[Skuld]";
+	set .@pcname$, "[" + strcharinfo(0) + "]";
+	mes .@npcname$;
+	if(NORNQ == 0)
+	{
+		cutin "shaloshi01",2;
+		mes "...I can do nothing for you right now.";
+		mes "Speak to Verdandi first.";
+	}
+	else if (NORNQ == 1)
+	{
+		if(SKULDID$ == "")
+		{
+			cutin "shaloshi01",2;
+			mes "Good to see you again, mortal.";
+			mes "What can I do for you?";
+			if(select("A Seal is ready. I need to find the Target","Nothing, I was just wandering...") == 1)
+			{
+				next;
+				cutin "",255;
+				mes .@pcname$;
+				mes "I've found a Seal thanks to Urd, and Verdandi is ready to fix it over the thread.";
+				mes "Now, I need to find the target position right?";
+				next;
+				cutin "shaloshi01",2;
+				mes .@npcname$;
+				mes "Correct. To fix a Life Thread, you have to force the Target to come to Midgard.";
+				mes "After that, Verdandi will be able to seal it.";
+				mes "Which one are you aiming to find?";
+				goto OnDisplayTargetSeekMenu;
+			}
+			else
+			{
+				next;
+				cutin "",255;
+				mes .@pcname$;
+				mes "Nothing...I was just wandering around. Sorry to disturb you.";
+				next;
+				cutin "shaloshi01",2;
+				mes .@npcname$;
+				mes "Allright. Come back to me when you'll need to find a Target.";
+				next;
+				cutin "",255;
+				mes .@pcname$;
+				mes "I will.";
+			}
+		}
+		else
+		{
+			query_sql("SELECT `generalState`,`killCount`,`killNeeded` FROM `verdandi_quests` WHERE `id`='" + SKULDID$ + "'", .@generalState, .@killCount, .@killNeeded);
+			if(.@generalState[0] == 2)
+			{
+				if(.@killCount[0] >= .@killNeeded[0])
+				{
+					goto OnKillReady;
+				}
+				else
+				{
+					goto OnMissingKills;
+				}
+			}
+		}
+	}
+	cutin "",255;
+	close;
+	
+OnDisplayTargetSeekMenu:
+	set .@mainchoice, select("A basic Ase","A Major Ase","A basic Giant","A Major Giant");
+	switch(.@mainchoice)
+	{
+		case 1:
+			for(set .@i,0; .@i<getarraysize($aseTargetName$); set .@i,.@i+1)
+			{
+				if($aseTargetState[.@i] == 1)
+				{
+					set .@option$, "" + (.@i == 0 ?"":":") + "^839eb6" + $aseTargetName$[.@i] + " (Building)^000000";
+				}
+				else if($aseTargetState[.@i] == 2)
+				{
+					set .@option$, "" + (.@i == 0 ?"":":") + "^62a577" + $aseTargetName$[.@i] + " (Ready)^000000";
+				}
+				else if($aseTargetState[.@i] == 3)
+				{
+					set .@option$, "" + (.@i == 0 ?"":":") + "^41ad38" + $aseTargetName$[.@i] + " (Sealed)^000000";
+				}
+				else
+				{
+					set .@option$, "" + (.@i == 0 ?"":":") + "^FF0000" + $aseTargetName$[.@i] + "^000000";
+				}
+				set .@menu$, .@menu$ + .@option$;
+			}
+			break;
+		case 2:
+			for(set .@i,0; .@i<getarraysize($giantTargetName$); set .@i,.@i+1)
+			{
+				if($giantTargetState[.@i] == 1)
+				{
+					set .@option$, "" + (.@i == 0?"":":") + "^839eb6" + $giantTargetName$[.@i] + " (Building)^000000";
+				}
+				else if($giantTargetState[.@i] == 2)
+				{
+					set .@option$, "" + (.@i == 0?"":":") + "^62a577" + $giantTargetName$[.@i] + " (Ready)^000000";
+				}
+				else if($giantTargetState[.@i] == 3)
+				{
+					set .@option$, "" + (.@i == 0?"":":") + "^41ad38" + $giantTargetName$[.@i] + " (Sealed)^000000";
+				}
+				else
+				{
+					set .@option$, "" + (.@i == 0 ?"":":") + "^FF0000" + $giantTargetName$[.@i] + "^000000";
+				}
+				set .@menu$, .@menu$ + .@option$;
+			}
+			break;
+	}
+	next;
+	mes .@npcname$;
+	mes "And which one exactly are you looking for?";
+	set .@choice, select(.@menu$);
+	next;
+	mes .@npcname$;
+	set .@id$, .@mainchoice + "_" + .@choice;
+	query_sql("SELECT `generalState`,`killCount`,`killNeeded` FROM `verdandi_quests` WHERE `id`='" + .@id$ + "'", .@generalState, .@killCount, .@killNeeded);
+	if(.@generalState[0] < 2)
+	{
+		mes "Sorry but this Seal is not ready...Go back to Verdandi for this one.";
+		mes "I can't feel a position if the Life Thread hasn't be pulled in Present time.";
+		cutin "",255;
+		close;
+	}
+	mes "Allright...Let me read in the Future Flow.";
+	if(.@killCount[0] < .@killNeeded[0])
+	{
+		goto OnMissingKills;
+	}
+	else
+	{
+		set SKULDID$, .@id$;
+		goto OnKillReady;
+	}
+	cutin "",255;
+	close;
+	
+OnKillReady:
+	mes "Good to see you again.";
+	mes "Oh...You're ready, aren't you?";
+	next;
+	cutin "", 255;
+	mes .@pcname$;
+	mes "*pant* *pant*";
+	mes "Now, do your part of the job, Skuld...";
+	next;
+	cutin "shaloshi01",2;
+	mes .@npcname$;
+	mes "Don't worry, mortal. I admire courage and dedication.";
+	explode(.@id$, SKULDID$, "_");
+	if(.@id$[0] == "1" || .@id$[0] == "2")
+	{
+		set .@base$, "Ase";
+	}
+	else
+	{
+		set .@base$, "Giant";
+	}
+	doevent .@base$ + "_" + SKULDID$ + "_1::OnActivateTarget";	
+	set SKULDID$, "";
+	cutin "",255;
+	close;
+	
+OnMissingKills:
+	mes "But for this, I'll need something...";
+	mes "I need you to kill " + .@killNeeded[0] + " monsters.";
+	next;
+	mes .@npcname$;
+	mes "I need Blood. Lots of Blood. The more I'll have, the clearest the vision will be.";
+	mes "For this Target, I'll need " + (.@killNeeded[0] - .@killCount[0]) + " monsters to get killed.";
+	if (.killType == 1)
+	{
+		mes "Only monsters weaker than you. By " + .lvlDiffMax + " levels maximum.";
+	}
+	else if (.killType == 2)
+	{
+		mes "Only monsters stronger than you. By " + .lvlDiffMax + " levels maximum.";
+	}
+	else if (.killType == 3)
+	{
+		mes "Any kind, as long as there is " + .lvlDiffMax + " levels maximum between yours and theirs.";
+	}
+	else
+	{
+		mes "Doesn't care about the monster itself. I just need its blood.";
+	}
+	next;
+	cutin "", 255;
+	mes .@pcname$;
+	mes "I...I can't do that...";
+	mes "That's just to much...";
+	next;
+	cutin "shaloshi01",2;
+	mes .@npcname$;
+	mes "I understand, really.";
+	mes "But you have no choice...And you're not alone.";
+	set SKULDID$, .@id$;
+	cutin "",255;
+	close;
+	
+OnNPCKillEvent:
+	if(SKULDID$ != "")
+	{
+		set .@monster_lvl, getmonsterinfo(killedrid, 1);
+		if (.killType == 0 || (.killType == 1 && (BaseLevel - .@monster_lvl) > .lvlDiffMax)
+			|| (.killType == 2 && (.@monster_lvl - BaseLevel) > .lvlDiffMax)
+			|| (.killType == 3 && ((.@monster_lvl - BaseLevel) > .lvlDiffMax || (BaseLevel - .@monster_lvl) > .lvlDiffMax)))
+		{
+			query_sql("SELECT `generalState`,`killCount`,`killNeeded` FROM `verdandi_quests` WHERE `id`='" + SKULDID$ + "'", .@generalState, .@killCount, .@killNeeded);
+			if(.@generalState[0] == 2 && .@killCount[0] < .@killNeeded[0])
+			{
+				set .@newKill, .@killCount[0] + 1;
+				query_sql("UPDATE `verdandi_quests` SET `killCount`=" + .@newKill + " WHERE `id`='" + SKULDID$ + "'", .@count);
+				if(.@newKill == .@killNeeded[0])
+				{
+					dispbottom "[ Skuld ] I'm ready to read in blood, mortal. Come back to me.";
+				}
+			}
+		}
+	}
+	end;
+	
+OnInit:
+	set .killType, 0; //0: all, 1: only lower, 2: only higher, 3: only those is lvl range (higher and lower)
+	set .lvlDiffMax, 20; //max lvl difference for type 1/2
+	end;
+}

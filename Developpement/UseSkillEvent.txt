@@ -1,0 +1,65 @@
+-	script	UseSkillNpc	-1,{
+	end;
+
+OnUseSkillEvent:
+	if(gettimetick(2) >= LASTSKILLCHECK + .timetickbetweenchecks)
+	{
+		set LASTSKILLCHECK, gettimetick(2);
+		for(set .@i, 0; .@i<getarraysize(.npcCoordsMap$); set .@i,.@i+1)
+		{
+			if(.npcCoordsMap$[.@i] == strcharinfo(3) && 
+				(.skillIdToUnhide[.@i] == - 1 || @useskillid == .skillIdToUnhide[.@i]))
+			{
+				getmapxy(.@mapP$, .@mapPX, .@mapPY, UNITTYPE_PC);
+				if(((.@mapPX > .npcCoordsX[.@i] - .cellAway) && (.@mapPX < .npcCoordsX[.@i] + .cellAway) )
+					|| ((.@mapPY > .npcCoordsY[.@i] - .cellAway) && (.@mapPY < .npcCoordsY[.@i] + .cellAway)))
+				{
+					doevent .npcToCheck$[.@i] + "::OnUnHide"; 
+				}
+			}
+		}
+	}
+	end;
+
+OnWhisperGlobal:
+	dispbottom "The last skill you used was " + @useskillid + " on coords " + @useskillx + "," + @useskilly;
+	dispbottom "Skill used: " + @useskillid + " on target " + @useskilltarget;
+	end;
+
+OnInitNpcPositions:
+	deletearray(.npcCoordsX[0], getarraysize(.npcCoordsX));
+	deletearray(.npcCoordsY[0], getarraysize(.npcCoordsY));
+	deletearray(.npcCoordsMap$[0], getarraysize(.npcCoordsMap$));
+	set .@countNpc, 0;
+	for(set .@i,0; .@i<getarraysize(.npcToCheck$); set .@i,.@i+1)
+	{
+		getmapxy(.@map$, .@x, .@y, UNITTYPE_NPC, .npcToCheck$[.@i]);
+		set .npcCoordsX[.@countNpc], .@x;
+		set .npcCoordsY[.@countNpc], .@y;
+		set .npcCoordsMap$[.@countNpc], .@map$;
+		set .@countNpc, .@countNpc + 1;
+	}
+	debugmes "Loaded " + .@countNpc + " npcs.";
+	end;
+
+OnInit:
+	setarray .npcToCheck$[0], "alizdeco","alalbdeco","alyudeco","alvedeco","alumdeco","alspdeco","alradeco","alpadeco",
+	"alnideco","almodeco","almordeco","almobdeco","almadeco","almalbdeco","almabdeco","alludeco","allodeco","allideco",
+	"aljadeco","alhudeco","algodeco","algedeco","aleodeco","aleedeco","alecbdeco","aldibdeco","aldebdeco","alcodeco",
+	"albrbdeco","alaydeco","alamdeco","alaldeco",
+	"alhidch00", "alhidch01", "alhidch02", "alhidch03", "alhidch04", "alhidch05",
+	"alhidch06", "alhidch07", "alhidch08", "alhidch09", "alhidch10", "alhidch11",
+	"alhidch12", "alhidch13", "alhidch14", "alhidch15", "alhidch16", "alhidch17",
+	"alhidch18", "alhidch19", "alhidch20";
+	setarray .skillIdToUnhide[0], 362, 362, 362, 362, 362, 362, 362, 362, 
+	362, 362, 362, 362, 362, 362, 362, 362, 362, 362,
+	362, 362, 362, 362, 362, 362, 362, 362, 362, 362, 
+	362, 362, 362, 362,
+	312, 312, 312, 312, 312, 312, 
+	312, 312, 312, 312, 312; //skill to use to unhide the npc. -1 for any skills
+	
+	set .cellAway, 10; //for debug, 10. Normally, 2
+	set .timetickbetweenchecks, 10; //10s by default to prevent double checking
+	goto OnInitNpcPositions;
+	end;
+}

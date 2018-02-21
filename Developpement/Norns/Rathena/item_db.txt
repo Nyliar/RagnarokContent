@@ -1,0 +1,4 @@
+
+6598,Rib_Of_Jormungand,Rib Of Jormungand,3,0,,10000,,,,,,,,,,,,,{},{},{}
+6603,Skin_Of_Hraesvelg,Skin Of Hraesvelg,3,0,,500,,,,,,,,,,,,,{},{},{}
+6604,Essence_Rune_Magic,Essence Rune Magic,3,0,,0,,,,,,,,,,,,,{},{},{}

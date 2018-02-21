@@ -1,0 +1,457 @@
+Hyrule,87,96,5	script	Inconsolable Childs::prtinch	4W_KID,{
+	set .@npcname$, "[Enfant Inconsolable]";
+	setarray .@sentences$, "Depuis ce temps tous les enfants sages",
+				"Ont ecoute mille fois cette chanson du passe",
+				"Par dela le fort ils se sont epouses",
+				"Laissant derriere eux les souliers de Lady Fae...";
+	
+	mes .@npcname$;
+	mes "";
+	mes "Sob! Sob sob!";
+
+	if (L_FAE_Q == 9)
+	{
+		mes "Snif...";
+		mes "Do you know the end?";
+		mes "You know it right?!";
+		switch(select("Yes", "No"))
+		{
+			case 1:
+				mes "Can you sing it to me?";
+				next;
+				set .@correct, 0;
+				for (set .@i, 0; .@i < getarraysize (.@sentences$); set .@i, .@i+1)
+				{
+					input .@sentence$;
+					if (.@sentence$ == .@sentences$[.@i])
+					{
+						set .@correct, .@correct + 1;
+						mes "" + .@sentence$;
+					}
+					else
+					{
+						mes "Hum? No...Something wrong.";
+						break;
+					}
+				}
+				if (.@correct == 4)
+				{
+					next;
+					mes "Wonderful.";
+					mes "I like Lady Fae's song.";
+					mes "I can sing it entirely now.";
+					mes "Thanks a lot.";
+					set L_FAE_Q, 10;
+				}
+				break;
+			case 2:
+				break;
+		}
+	}
+	else if (L_FAE_Q == 1)
+	{
+		mes "Snif...";
+		mes "You...You know Lady Fae's song?";
+		switch(select("Yes", "No"))
+		{
+			case 1:
+				mes "Can you please bring me back a proof that Lady Fae exist?";
+				mes "Sn...Snif! Please!";
+				mes "Sob, sob!";
+				break;
+			case 2:
+				mes "Then listen carefully. You should need it one day.";
+				mes "Nobody escape from Lady Fae.";
+				break;
+		}
+	}
+	else
+		mes "*He is inconsolable*";
+	close;
+
+OnWhisperGlobal:
+	dispbottom "L_FAE_Q: " + L_FAE_Q;
+	end;
+}
+
+Hyrule,95,103,3	script	Child Mother::prticm	4_F_02,{
+	set .@npcname$, "[Elene]";
+	
+	mes .@npcname$;
+	mes "";
+	mes "Childs always have pain to go to bed.";
+	mes "And that's even worth if you doesn't sing the Lady Fae's song.";
+	mes "Do you know it?";
+	if (L_FAE_Q == 10 && #complete == 0)
+	{
+		next;
+		mes .@npcname$;
+		mes "I can feel that you know Her secret.";
+		mes "Don't spoil the childs dream, please.";
+		set BaseExp,BaseExp+1500000;
+		set Zeny, Zeny+2000000;
+		mes "You know, some says that the Shoes never really disappear...";
+		mes "They wait in Her house that somebody come to take them.";
+		mes "But they're kept by a monster even worst than the Cursed Fae...";
+		set #complete, 1;
+	}
+	else if (L_FAE_Q == 1)
+	{
+		next;
+		mes .@npcname$;
+		mes "It appears that Lady Fae come to meet those who discovered the Blow and the Storm.";
+		mes "Some says this sources are somewhere around there.";
+		mes "I wonder if it's true...";
+	}
+	else if (L_FAE_Q == 5)
+	{
+		next;
+		mes .@npcname$;
+		mes "You know have to find Lady Fae.";
+		mes "Some says her house was in the last Fae Empire capital.";
+		mes "I wonder if it's still there.";
+		mes "Fae islands entrance is hidden in the old city, Revencia.";
+		mes "It's a kind of old Law Mansion, under the bridge.";
+	}
+	close;
+}
+
+Hyrule,91,103,1	script	Child Father::prticf	1_M_YOUNGKNIGHT,{
+	set .@npcname$, "[Raimo]";
+	
+	mes .@npcname$;
+	mes "";
+	mes "Childs always have pain to go to bed.";
+	mes "And that's even worth if you doesn't sing the Lady Fae's song.";
+	mes "Do you know it?";
+	if (L_FAE_Q == 10 && #complete == 0)
+	{
+		next;
+		mes .@npcname$;
+		mes "I can feel that you know Her secret.";
+		mes "Don't spoil the childs dream, please.";
+		set BaseExp,BaseExp+1500000;
+		set Zeny, Zeny+2000000;
+		mes "You know, some says that the Shoes never really disappear...";
+		mes "They wait in Her house that somebody come to take them.";
+		mes "But they're kept by a monster even worst than the Cursed Fae...";
+		set #complete, 1;
+	}
+	else if (L_FAE_Q == 1)
+	{
+		next;
+		mes .@npcname$;
+		mes "It appears that Lady Fae come to meet those who discovered the Blow and the Storm.";
+		mes "Some says this sources are somewhere around there.";
+		mes "I wonder if it's true...";
+	}
+	else if (L_FAE_Q >= 2 && L_FAE_Q <= 4)
+	{
+		next;
+		mes .@npcname$;
+		mes "You find the Slivers?";
+		mes "The following of the song speak about Subjucated Gawker.";
+		mes "I thinks I've met some somewhere...";
+		mes "Where was that? Prontera? Geffen? Yuno maybe...";
+	}
+	close;
+}
+
+Hyrule,25,105,5	script	Wind Blow::prtwb	HIDDEN_NPC,{
+	set .@npcname$, "[Wind Blow]";
+	
+	mes .@npcname$;
+	mes "";
+	mes "*The wind blow with strength here.*";
+	set #count_wind, 1;
+	close;
+}
+
+Hyrule,25,84,5	script	Storm Blow::prtsb	HIDDEN_NPC,{
+	set .@npcname$, "[Storm Blow]";
+	
+	mes .@npcname$;
+	mes "";
+	if (L_FAE_Q >= 2)
+	{
+		mes "*You can hear the Storm.*";
+	}
+	else if (L_FAE_Q == 1 && #count_orage < 1)
+	{
+		set #count_orage, #count_orage+1;
+		if (#count_orage >= 1 && #count_wind == 1)
+		{
+			mes "Tonne l'orage...";
+			set L_FAE_Q, 2;
+		}
+	}
+	else
+		mes "Tonne l'Orage...";
+	close;
+}
+
+prontera,110,246,5	script	Subjugated Gawker::prtsg	4_M_04,2,2,{
+	set .@npcname$, "[Subjucated Gawker]";
+	
+	mes .@npcname$;
+	mes "";
+	mes "*He doesn't answer.*";
+	close;
+	
+OnTouch:
+	if (L_FAE_Q == 2)
+	{
+		dispbottom "Soufflent les vents, tonne l'orage";
+		dispbottom "Pleurent les enfants";
+		dispbottom "Dans leur lit sans bouger";
+		dispbottom "Nul ne sait jamais les consoler";
+		dispbottom "Sans raconter l'histoire de Lady Fae";
+		set L_FAE_Q, 3;
+	}
+	end;
+}
+
+Hyrule,54,65,5	script	Singing Gawker::gefsg	4_M_ORIENT02,2,2,{
+	set .@npcname$, "[Singing Gawker]";
+	
+	mes .@npcname$;
+	mes "";
+	mes "*He doesn't answer.*";
+	close;
+	
+OnTouch:
+	if (L_FAE_Q == 3)
+	{
+		dispbottom "Soufflent les vents, tonne l'orage";
+		dispbottom "Jusqu'à l'horizon les badauds envoutés";
+		dispbottom "Nul ne sait les ignorer chanter";
+		dispbottom "Les vertus magiques des souliers de Lady Fae";
+		set L_FAE_Q, 4;
+	}
+	end;
+}
+
+yuno,167,162,5	script	Huming Gawker::yuhg	4_M_01,2,2,{
+	set .@npcname$, "[Huming Gawker]";
+	
+	mes .@npcname$;
+	mes "";
+	mes "*He doesn't answer.*";
+	close;
+	
+OnTouch:
+	if (L_FAE_Q == 4)
+	{
+		dispbottom "Soufflent les vents, tonne l'orage";
+		dispbottom "Lorsqu'on l'aperçoit on ne peut l'oublier mais";
+		dispbottom "Nul ne sait jamais la rattraper";
+		dispbottom "En suivant les traces des souliers de Lady Fae";
+		set L_FAE_Q, 5;
+		hideoffnpc "revlf";
+	}
+	end;
+}
+
+revencia,164,52,5	script	Lady Fae::revlf	BACOSJIN_,2,2,{
+	set .@npcname$, "[Lady Fae]";
+	
+	mes .@npcname$;
+	mes "";
+	mes "*She doesn't answer.*";
+	
+	set L_FAE_Q, 1;
+	close;
+	
+OnTouch:
+	if (L_FAE_Q == 5)
+	{
+		addtimer 10000, strnpcinfo(3)+"::OnShowOff";
+		dispbottom "*Lady Fae smile tenderly at you*";
+	}
+	end;
+
+OnShowOff:
+	hideonnpc  "revlf";
+	dispbottom "A soft voice raise in the air.";
+
+	set L_FAE_Q, 6;
+	
+	dispbottom "";
+	dispbottom "Soufflent les vents, tonne l'orage";
+	dispbottom "En haut de la colline elle a sa maisonnée";
+	dispbottom "Nul ne sait espérer l'approcher";
+	dispbottom "Sans porter les souliers de Lady Fae";
+	sleep2 45000;
+	goto OnShowOn;
+	end;
+
+OnShowOn:
+	hideoffnpc "revlf";
+	end;
+}
+
+zha_in,112,11,5	script	Lady Fae#2::zhalf2	BACOSJIN_,{
+	set .@npcname$, "[Lady Fae]";	
+	if (L_FAE_Q == 8)
+	{
+		mes "Finally, you've come.";
+		mes "I've waiting so much time...";
+		mes "You only have to free me from my curse now.";
+		
+		dispbottom "Soufflent les vents, tonne l'orage";
+		dispbottom "En voyant sa promise il s'est agenouillé";
+		dispbottom "Puis demandant sa main déposa un baiser";
+		dispbottom "Sur les souliers enchantés de Lady Fae";
+		hideonnpc "zhalf2";
+		dispbottom "Depuis ce temps tous les enfants sages";
+		dispbottom "Ont ecoute mille fois cette chanson du passe";
+		dispbottom "Par dela le fort ils se sont epouses";
+		dispbottom "Laissant derriere eux les souliers de Lady Fae...";
+
+		monster "zha_in",112,9,"Lady Fae",1630,1,strnpcinfo(3)+"::OnGuardianDied";
+	}
+	close;
+	
+OnGuardianDied:
+	delitem 29426,1;
+	mes "Thank you, child. Thank you so much.";
+	mes "I can finally rest.";
+	mes "Go, travel around the world, and sing.";
+	mes "Sing the happy ending of Lady Fae.";
+	set L_FAE_Q, 9;
+	close;
+}
+
+zhakastia,119,41,5	script	House Entrance::em	HIDDEN_WARP_NPC,2,2,{
+	end;
+	
+OnTouch:
+	if (L_FAE_Q == 10|| #complete >= 1)
+	{
+		warp "zha_in", 61, 6;
+		hideonnpc  "zhalf2";
+		killmonsterall "zha_in";
+		monster "zha_in",112,9,"Shoes Guardian",3717,1,strnpcinfo(3)+"::OnGuardianDead";
+	}
+	if (L_FAE_Q >= 7)
+	{
+		if (isequipped(29426) || L_FAE_Q == 10)
+		{
+			mes "You got the Lady Fae Shoes";
+			mes "You're ready to met her. Do you wanna try your chance?";
+			switch(select("Yes", "No"))
+			{
+				case 1:
+					dispbottom "Soufflent les vents, tonne l'orage";
+					dispbottom "Il n'a que faire des légendes oubliées";
+					dispbottom "En poussant la porte il espère trouver";
+					dispbottom "Ces yeux qui le hantent ce sont ceux de Lady Fae";
+					sleep2 2500;
+					warp "zha_in", 61, 6;
+					hideoffnpc "zhalf2";
+					set L_FAE_Q, 8;
+					break;
+				case 2:
+					mes "You let the door handle.";
+					mes "A voice raise from the inside, calling you,";
+					mes "but you pass throught.";
+					dispbottom "Soufflent les vents, tonne l'orage";
+					dispbottom "Celle qui tient le fort reste une fille à marier";
+					dispbottom "Elle attend le jour où l'un deux va passer";
+					dispbottom "La porte de la demeure de Lady Fae";
+					break;
+					set L_FAE_Q, 8;
+			}
+			close;
+		}
+		else
+		{
+			warp "prontera", 0, 0;
+			dispbottom "You can go nearest without Lady Fae's Shoes.";
+			dispbottom "Therefor, nobody knows where they are,";
+			dispbottom "but rumour talks about a chest on Fae Island.";
+		}
+	}
+
+	end;
+	
+OnGuardianDead:
+	dispbottom "The Guardian drop Lady Fae's Shoes.";
+	dispbottom "They're finally all yours.";
+
+	if (#complete < 2)
+	{
+		getitem 29426,1;
+		set #complete, 2;
+	}
+	end;
+}
+
+zhakastia,52,108,5	script	Way Through::zhawt	HIDDEN_NPC,6,1,{
+	end;
+	
+OnTouch:
+	if (L_FAE_Q >= 7)
+	{
+		dispbottom "Soufflent les vents, tonne l'orage";
+		dispbottom "Elle prend de sa main la vie des étrangers";
+		dispbottom "Nul ne sait fouler la route aux souliers";
+		dispbottom "Sans trouver la mort aux portes de Lady Fae";
+		sleep2 2500;
+		if (!isequipped(29426))
+			atcommand "@nuke " + strcharinfo(0);
+	}
+	end;
+}
+
+casp_auct01,49,69,5	script	Underground Entrance::esf	HIDDEN_NPC,{
+	if ((L_FAE_Q == 6 && #killedFae == 0) || L_FAE_Q >= 7 || countitem(29426) >= 1)
+	{
+		mes "Do you want to leave for Fae Undergrounds?";
+		switch(select("Yes", "No"))
+		{
+			case 1:
+				warp "casp_cave",76,47;
+				if (L_FAE_Q == 6 && #killedFae == 0)
+				{
+					hideonnpc  "cave-zhakastia";
+					hideonnpc  "cave-auction";
+					monster "casp_cave",41,57,"Lady Fae's Shadow",3718,1,strnpcinfo(3)+"::OnLadyFaeDied";
+				}
+				break;
+			case 2:
+				mes "You passed.";
+				break;
+		}
+	}
+	
+	dispbottom "L'un d'eux s'est épris de la belle aux souliers";
+	dispbottom "Il traverse les champs de fêlons statufiés";
+	close;
+
+OnLadyFaeDied:
+	hideoffnpc "cave-zhakastia";
+	hideoffnpc "cave-auction";
+	dispbottom "You find Lady Fae's Shoes on her Ghost.";
+	set L_FAE_Q, 7;
+	getitem 29426,1;
+	set #killedFae, 1;
+	end;
+}
+
+casp_chc,102,123,5	script	Faes Underground Outdoor::sdsf	HIDDEN_NPC,{
+	if ((L_FAE_Q == 6 && #killedFae == 0) || L_FAE_Q >= 7)
+	{
+		mes "Do you want to leave the Fae Undergrounds?";
+		switch(select("Yes", "No"))
+		{
+			case 1:
+				warp "casp_cave",10,78;
+				break;
+			case 2:
+				mes "You choose to stay a bit more.";
+				break;
+		}
+	}
+	close;
+}

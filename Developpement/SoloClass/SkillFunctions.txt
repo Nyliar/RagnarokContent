@@ -1,0 +1,1221 @@
+-	script	Start_Skills	-1,{
+OnInit:
+	bindatcmd "getbaseskills", "Start_Skills::OnGetSkills";
+	bindatcmd "clearbaseskills", "Start_Skills::OnClearSkills";
+
+	bindatcmd "getweaponskills", "Start_Skills::OnGetWeaponSkills";
+	bindatcmd "clearweaponskills", "Start_Skills::OnClearWeaponSkills";
+	end;
+
+OnGetWeaponSkills:
+	if(CLASSPATH == 2)
+	{
+		callsub OnClearWeaponSkills;
+		set .@eqId, getequipid(EQI_HAND_R);
+		set .@leqId, getequipid(EQI_HAND_L);
+		set .@type, getiteminfo(.@eqId, 11);
+		set .@ltype, getiteminfo(.@leqId, 11);
+		set .@lvl, getiteminfo(.@eqId, 13);
+		set .@llvl, getiteminfo(.@leqId, 13);
+		switch(.@type)
+		{
+			case 1: //Daggers
+				callfunc "OnGetDSkills", .@lvl;
+				break;
+			case 2: //1-H Swords
+				callfunc "OnGet1HSSkills", .@lvl;
+				break;
+			case 3: //2-H Swords
+				callfunc "OnGet2HSSkills", .@lvl;
+				break;
+			case 4: //1-H Spears
+				callfunc "OnGet1HSpSkills", .@lvl;
+				break;
+			case 5: //2-H Spear
+				callfunc "OnGet2HSpSkills", .@lvl;
+				break;
+			case 6: //1-H Axe
+				callfunc "OnGet1HASkills", .@lvl;
+				break;
+			case 7: //2-H Axe
+				callfunc "OnGet2HASkills", .@lvl;
+				break;
+			case 8: //Mace
+				callfunc "OnGetMSkills", .@lvl;
+				break;
+			case 10: //2-H Staff
+				callfunc "OnGet1HStSkills", .@lvl;
+				callfunc "OnGet2HStSkills", .@lvl;
+				break;
+			case 11: //Bows
+				callfunc "OnGetBoSkills", .@lvl;
+				break;
+			case 12: //Knuckles
+				callfunc "OnGetKnSkills", .@lvl;
+				break;
+			case 13: //Instruments
+				callfunc "OnGetISkills", .@lvl;
+				break;
+			case 14: //Whips
+				callfunc "OnGetWSkills", .@lvl;
+				break;
+			case 15: //Books
+				callfunc "OnGetBSkills", .@lvl;
+				break;
+			case 16: //Katar
+				callfunc "OnGetKSkills", .@lvl;
+				break;
+		}
+		
+		switch(.@ltype)
+		{
+			case 3: //Shield
+				callfunc "OnGetSSkills", .@llvl;
+				break;
+		}
+	}
+	end;
+
+OnClearWeaponSkills:
+	if(CLASSPATH == 2)
+	{
+		callfunc "OnClear1HSSkills";
+		callfunc "OnClear2HSSkills";
+		callfunc "OnClear1HSpSkills";
+		callfunc "OnClear2HSpSkills";
+		callfunc "OnClear1HStSkills";
+		callfunc "OnClear2HStSkills";
+		callfunc "OnClear1HASkills";
+		callfunc "OnClear2HASkills";
+		callfunc "OnClear1MSkills";
+		callfunc "OnClearDSSkills";
+		callfunc "OnClearBSSkills";
+		callfunc "OnClearBoSSkills";
+		callfunc "OnClearISkills";
+		callfunc "OnClearKSkills";
+		callfunc "OnClearKnSkills";
+		callfunc "OnClearWSkills";
+	}
+	return;
+
+OnGetSkills:
+	if(CLASSPATH == 2)
+	{
+		skill(NV_FIRSTAID, 1, 3); 
+		skill(NV_TRICKDEAD, 1, 3);
+		skill(TF_PICKSTONE, 1, 3); 
+		skill(TF_THROWSTONE, 1, 3); 
+		skill(SM_SWORD, 10, 3); 
+		skill(SM_RECOVERY, 10, 3); 
+		skill(SM_PROVOKE, 10, 3); 
+		skill(SM_ENDURE, 10, 3);
+		skill(AL_DEMONBANE, 10, 3); 
+		skill(AL_DP, 10, 3); 
+		skill(AC_OWL, 10, 3); 
+		skill(AC_VULTURE, 10, 3); 
+		skill(TF_MISS, 10, 3); 
+		skill(KN_SPEARMASTERY, 10, 3);
+		skill(PR_MACEMASTERY, 10, 3); 
+		skill(AS_RIGHT, 5, 3); 
+		skill(AS_LEFT, 5, 3); 
+		skill(AS_KATAR, 10, 3); 
+		skill(MO_IRONHAND, 10, 3); 
+		skill(SA_DRAGONOLOGY, 5, 3); 
+		skill(TK_RUN, 10, 3);
+		skill(TK_HIGHJUMP, 5, 3); 
+		skill(NJ_TOBIDOUGU, 10, 3); 
+		skill(MC_PUSHCART, 10, 3); 
+		skill(SM_TWOHAND, 10, 3); 
+		skill(AM_AXEMASTERY, 10, 3); 
+	}
+	end;
+
+OnClearSkills:
+	if(CLASSPATH == 2)
+	{
+		skill(NV_FIRSTAID, 0, 3); 
+		skill(NV_TRICKDEAD, 0, 3);
+		skill(TF_PICKSTONE, 0, 3); 
+		skill(TF_THROWSTONE, 0, 3); 
+		skill(SM_SWORD, 0, 3); 
+		skill(SM_RECOVERY, 0, 3); 
+		skill(SM_PROVOKE, 0, 3); 
+		skill(SM_ENDURE, 0, 3);
+		skill(AL_DEMONBANE, 0, 3); 
+		skill(AL_DP, 0, 3); 
+		skill(AC_OWL, 0, 3); 
+		skill(AC_VULTURE, 0, 3); 
+		skill(TF_MISS, 0, 3); 
+		skill(KN_SPEARMASTERY, 0, 3);
+		skill(PR_MACEMASTERY, 0, 3); 
+		skill(AS_RIGHT, 0, 3); 
+		skill(AS_LEFT, 0, 3); 
+		skill(AS_KATAR, 0, 3); 
+		skill(MO_IRONHAND, 0, 3); 
+		skill(SA_DRAGONOLOGY, 0, 3); 
+		skill(TK_RUN, 0, 3);
+		skill(TK_HIGHJUMP, 0, 3); 
+		skill(NJ_TOBIDOUGU, 0, 3); 
+		skill(MC_PUSHCART, 0, 3); 
+		skill(SM_TWOHAND, 0, 3); 
+		skill(AM_AXEMASTERY, 0, 3);
+	}
+	end;
+}
+
+function	script	OnGet2HASkills	{
+	if(CLASSPATH == 2)
+	{
+		callfunc "OnClearAllWeaponSkills";
+		set .@parameter, getarg(0);
+		callfunc "OnGet1HSSkills", .@parameter;
+		
+		switch(.@parameter)
+		{
+			case 4:
+				skill(NC_MAGMA_ERUPTION, 1, 3);
+				skill(GN_CART_TORNADO, 1, 3); 
+			case 3:			
+				skill(GC_WEAPONCRUSH, 1, 3);
+			case 2:
+				skill(KN_AUTOCOUNTER, 1, 3); 
+				skill(KN_BOWLINGBASH, 1, 3); 
+			case 1:
+				skill(NC_MAGICDECOY, 1, 3); 
+				skill(NC_SILVERSNIPER, 1, 3); 
+				break;
+
+		}
+	}
+	return;
+}
+
+function	script	OnClear2HASkills	{
+	if(CLASSPATH == 2)
+	{
+		skill(NC_MAGMA_ERUPTION, 0, 3);
+		skill(GN_CART_TORNADO, 0, 3); 
+		skill(GC_WEAPONCRUSH, 0, 3);
+		skill(KN_AUTOCOUNTER, 0, 3); 
+		skill(KN_BOWLINGBASH, 0, 3); 
+		skill(NC_MAGICDECOY, 0, 3); 
+		skill(NC_SILVERSNIPER, 0, 3); 
+	}
+	return;
+}
+
+function	script	OnGet1HASkills	{
+	if(CLASSPATH == 2)
+	{
+		callfunc "OnClearAllWeaponSkills";
+		set .@parameter, getarg(0);
+		callfunc "OnGet1HSSkills", .@parameter;
+		
+		switch(.@parameter)
+		{
+			case 4:
+				skill(RK_CRUSHSTRIKE, 1, 3); 
+				skill(NC_POWERSWING, 1, 3);
+			case 3:			
+				skill(NC_AXETORNADO, 1, 3); 
+				skill(NC_AXEBOOMERANG, 1, 3);
+				skill(NC_TRAININGAXE, 1, 3);
+			case 2:
+				skill(WS_MELTDOWN, 1, 3); 
+				skill(BS_HAMMERFALL, 1, 3); 
+			case 1:
+				skill(MC_MAMMONITE, 1, 3); 
+				break;
+
+		}
+	}
+	return;
+}
+
+function	script	OnClear1HASkills	{
+	if(CLASSPATH == 2)
+	{
+		skill(RK_CRUSHSTRIKE, 0, 3); 
+		skill(NC_POWERSWING, 0, 3);
+		skill(NC_AXETORNADO, 0, 3); 
+		skill(NC_AXEBOOMERANG, 0, 3);
+		skill(NC_TRAININGAXE, 0, 3);
+		skill(WS_MELTDOWN, 0, 3); 
+		skill(BS_HAMMERFALL, 0, 3); 
+		skill(MC_MAMMONITE, 0, 3); 
+	}
+	return;
+}
+
+function	script	OnGetWSkills	{
+	if(CLASSPATH == 2)
+	{
+		callfunc "OnClearAllWeaponSkills";
+		set .@parameter, getarg(0);
+		callfunc "OnGet1HSSkills", .@parameter;
+		
+		switch(.@parameter)
+		{
+			case 4:
+				skill(BD_SIEGFRIED, 1, 3);
+				skill(BD_INTOABYSS, 1, 3);
+				skill(BD_ROKISWEIL, 1, 3);
+				skill(BD_RINGNIBELUNGEN, 1, 3);
+				skill(BD_DRUMBATTLEFIELD, 1, 3);
+				skill(BD_ETERNALCHAOS, 1, 3);
+				skill(BD_RICHMANKIM, 1, 3);
+				skill(WM_METALICSOUND, 1, 3);
+				skill(WM_POEMOFNETHERWORLD, 1, 3);
+				skill(WM_VOICEOFSIREN, 1, 3);
+				skill(WM_DEADHILLHERE, 1, 3);
+				skill(WM_SIRCLEOFNATURE, 1, 3);
+				skill(WM_GLOOMYDAY, 1, 3);
+				skill(WM_GREAT_ECHO, 1, 3);
+				skill(WM_SONG_OF_MANA, 1, 3);
+				skill(WM_DANCE_WITH_WUG, 1, 3);
+				skill(WM_SOUND_OF_DESTRUCTION, 1, 3);
+				skill(WM_SATURDAY_NIGHT_FEVER, 1, 3);
+				skill(WM_LERADS_DEW, 1, 3);
+				skill(WM_MELODYOFSINK, 1, 3);
+				skill(WM_BEYOND_OF_WARCRY, 1, 3);
+				skill(WM_UNLIMITED_HUMMING_VOICE, 1, 3);
+				skill(CG_ARROWVULCAN, 1, 3);
+				skill(CG_MARIONETTE, 1, 3);
+				skill(CG_TAROTCARD, 1, 3);
+			case 3:			
+				skill(DC_HUMMING, 1, 3); 
+				skill(DC_DONTFORGETME, 1, 3); 
+				skill(DC_FORTUNEKISS, 1, 3); 
+				skill(DC_SERVICEFORYOU, 1, 3); 
+				skill(DC_UGLYDANCE, 1, 3); 
+				skill(WA_SWING_DANCE, 1, 3); 
+				skill(WA_SYMPHONY_OF_LOVER, 1, 3); 
+				skill(WA_MOONLIT_SERENADE, 1, 3); 
+				skill(WM_REVERBERATION, 1, 3); 
+				skill(WM_DOMINION_IMPULSE, 1, 3); 
+				skill(WM_RANDOMIZESPELL, 1, 3);
+			case 2:
+				skill(BD_ENCORE, 1, 3); 
+				skill(BD_ADAPTATION, 1, 3); 
+				skill(DC_SCREAM, 1, 3); 
+			case 1:
+				skill(DC_DANCINGLESSON, 1, 3); 
+				skill(DC_THROWARROW, 1, 3);
+				break;
+
+		}
+	}
+	return;
+}
+
+function	script	OnClearWSkills	{
+	if(CLASSPATH == 2)
+	{
+		skill(BD_SIEGFRIED, 0, 3);
+		skill(BD_INTOABYSS, 0, 3);
+		skill(BD_ROKISWEIL, 0, 3);
+		skill(BD_RINGNIBELUNGEN, 0, 3);
+		skill(BD_DRUMBATTLEFIELD, 0, 3);
+		skill(BD_ETERNALCHAOS, 0, 3);
+		skill(BD_RICHMANKIM, 0, 3);
+		skill(WM_METALICSOUND, 0, 3);
+		skill(WM_POEMOFNETHERWORLD, 0, 3);
+		skill(WM_VOICEOFSIREN, 0, 3);
+		skill(WM_DEADHILLHERE, 0, 3);
+		skill(WM_SIRCLEOFNATURE, 0, 3);
+		skill(WM_GLOOMYDAY, 0, 3);
+		skill(WM_GREAT_ECHO, 0, 3);
+		skill(WM_SONG_OF_MANA, 0, 3);
+		skill(WM_DANCE_WITH_WUG, 0, 3);
+		skill(WM_SOUND_OF_DESTRUCTION, 0, 3);
+		skill(WM_SATURDAY_NIGHT_FEVER, 0, 3);
+		skill(WM_LERADS_DEW, 0, 3);
+		skill(WM_MELODYOFSINK, 0, 3);
+		skill(WM_BEYOND_OF_WARCRY, 0, 3);
+		skill(WM_UNLIMITED_HUMMING_VOICE, 0, 3);
+		skill(CG_ARROWVULCAN, 0, 3);
+		skill(CG_MARIONETTE, 0, 3);
+		skill(CG_TAROTCARD, 0, 3);
+		skill(DC_HUMMING, 0, 3); 
+		skill(DC_DONTFORGETME, 0, 3); 
+		skill(DC_FORTUNEKISS, 0, 3); 
+		skill(DC_SERVICEFORYOU, 0, 3); 
+		skill(DC_UGLYDANCE, 0, 3); 
+		skill(WA_SWING_DANCE, 0, 3); 
+		skill(WA_SYMPHONY_OF_LOVER, 0, 3); 
+		skill(WA_MOONLIT_SERENADE, 0, 3); 
+		skill(WM_REVERBERATION, 0, 3); 
+		skill(WM_DOMINION_IMPULSE, 0, 3); 
+		skill(WM_RANDOMIZESPELL, 0, 3);
+		skill(BD_ENCORE, 0, 3); 
+		skill(BD_ADAPTATION, 0, 3); 
+		skill(DC_SCREAM, 0, 3); 
+		skill(DC_DANCINGLESSON, 0, 3); 
+		skill(DC_THROWARROW, 0, 3);
+	}
+	return;
+}
+
+function	script	OnGetISkills	{
+	if(CLASSPATH == 2)
+	{
+		callfunc "OnClearAllWeaponSkills";
+		set .@parameter, getarg(0);
+		callfunc "OnGet1HSSkills", .@parameter;
+		
+		switch(.@parameter)
+		{
+			case 4:
+				skill(BD_SIEGFRIED, 1, 3);
+				skill(BD_INTOABYSS, 1, 3);
+				skill(BD_ROKISWEIL, 1, 3);
+				skill(BD_RINGNIBELUNGEN, 1, 3);
+				skill(BD_DRUMBATTLEFIELD, 1, 3);
+				skill(BD_ETERNALCHAOS, 1, 3);
+				skill(BD_RICHMANKIM, 1, 3);
+				skill(MI_HARMONIZE, 1, 3);
+				skill(WM_METALICSOUND, 1, 3);
+				skill(WM_POEMOFNETHERWORLD, 1, 3);
+				skill(WM_VOICEOFSIREN, 1, 3);
+				skill(WM_DEADHILLHERE, 1, 3);
+				skill(WM_SIRCLEOFNATURE, 1, 3);
+				skill(WM_GLOOMYDAY, 1, 3);
+				skill(WM_GREAT_ECHO, 1, 3);
+				skill(WM_SONG_OF_MANA, 1, 3);
+				skill(WM_DANCE_WITH_WUG, 1, 3);
+				skill(WM_SOUND_OF_DESTRUCTION, 1, 3);
+				skill(WM_SATURDAY_NIGHT_FEVER, 1, 3);
+				skill(WM_LERADS_DEW, 1, 3);
+				skill(WM_MELODYOFSINK, 1, 3);
+				skill(WM_BEYOND_OF_WARCRY, 1, 3);
+				skill(WM_UNLIMITED_HUMMING_VOICE, 1, 3);
+				skill(CG_ARROWVULCAN, 1, 3);
+				skill(CG_MARIONETTE, 1, 3);
+				skill(CG_TAROTCARD, 1, 3);
+			case 3:			
+				skill(BD_LULLABY, 1, 3); 
+				skill(BA_WHISTLE, 1, 3); 
+				skill(BA_ASSASSINCROSS, 1, 3); 
+				skill(BA_POEMBRAGI, 1, 3); 
+				skill(BA_APPLEIDUN, 1, 3); 
+				skill(MI_RUSH_WINDMILL, 1, 3); 
+				skill(MI_ECHOSONG, 1, 3); 
+				skill(MI_RUSH_WINDMILL, 1, 3); 
+				skill(WM_REVERBERATION, 1, 3); 
+				skill(WM_DOMINION_IMPULSE, 1, 3); 
+				skill(WM_RANDOMIZESPELL, 1, 3);
+			case 2:
+				skill(BD_ENCORE, 1, 3); 
+				skill(BD_ADAPTATION, 1, 3); 
+				skill(BA_DISSONANCE, 1, 3); 
+				skill(BA_FROSTJOKER, 1, 3); 
+			case 1:
+				skill(BA_MUSICALLESSON, 1, 3); 
+				skill(BA_MUSICALSTRIKE, 1, 3); 
+				break;
+
+		}
+	}
+	return;
+}
+
+function	script	OnClearISkills	{
+	if(CLASSPATH == 2)
+	{
+		skill(BD_SIEGFRIED, 0, 3);
+		skill(BD_INTOABYSS, 0, 3);
+		skill(BD_ROKISWEIL, 0, 3);
+		skill(BD_RINGNIBELUNGEN, 0, 3);
+		skill(BD_DRUMBATTLEFIELD, 0, 3);
+		skill(BD_ETERNALCHAOS, 0, 3);
+		skill(BD_RICHMANKIM, 0, 3);
+		skill(MI_HARMONIZE, 0, 3);
+		skill(WM_METALICSOUND, 0, 3);
+		skill(WM_POEMOFNETHERWORLD, 0, 3);
+		skill(WM_VOICEOFSIREN, 0, 3);
+		skill(WM_DEADHILLHERE, 0, 3);
+		skill(WM_SIRCLEOFNATURE, 0, 3);
+		skill(WM_GLOOMYDAY, 0, 3);
+		skill(WM_GREAT_ECHO, 0, 3);
+		skill(WM_SONG_OF_MANA, 0, 3);
+		skill(WM_DANCE_WITH_WUG, 0, 3);
+		skill(WM_SOUND_OF_DESTRUCTION, 0, 3);
+		skill(WM_SATURDAY_NIGHT_FEVER, 0, 3);
+		skill(WM_LERADS_DEW, 0, 3);
+		skill(WM_MELODYOFSINK, 0, 3);
+		skill(WM_BEYOND_OF_WARCRY, 0, 3);
+		skill(WM_UNLIMITED_HUMMING_VOICE, 0, 3);
+		skill(CG_ARROWVULCAN, 0, 3);
+		skill(CG_MARIONETTE, 0, 3);
+		skill(CG_TAROTCARD, 0, 3);
+		skill(BD_LULLABY, 0, 3); 
+		skill(BA_WHISTLE, 0, 3); 
+		skill(BA_ASSASSINCROSS, 0, 3); 
+		skill(BA_POEMBRAGI, 0, 3); 
+		skill(BA_APPLEIDUN, 0, 3); 
+		skill(MI_RUSH_WINDMILL, 0, 3); 
+		skill(MI_ECHOSONG, 0, 3); 
+		skill(MI_RUSH_WINDMILL, 0, 3); 
+		skill(WM_REVERBERATION, 0, 3); 
+		skill(WM_DOMINION_IMPULSE, 0, 3); 
+		skill(WM_RANDOMIZESPELL, 0, 3);
+		skill(BD_ENCORE, 0, 3); 
+		skill(BD_ADAPTATION, 0, 3); 
+		skill(BA_DISSONANCE, 0, 3); 
+		skill(BA_FROSTJOKER, 0, 3); 
+		skill(BA_MUSICALLESSON, 0, 3); 
+		skill(BA_MUSICALSTRIKE, 0, 3); 
+	}
+	return;
+}
+
+function	script	OnGetKSkills	{
+	if(CLASSPATH == 2)
+	{
+		callfunc "OnClearAllWeaponSkills";
+		set .@parameter, getarg(0);
+		
+		switch(.@parameter)
+		{
+			case 4:
+				skill(ASC_EDP, 1, 3);
+				skill(GC_CROSSRIPPERSLASHER, 1, 3);
+				skill(GC_ROLLINGCUTTER, 1, 3); 
+				skill(GC_CROSSIMPACT, 1, 3);
+			case 3:			
+				skill(GC_HALLUCINATIONWALK, 1, 3);
+				skill(GC_PHANTOMMENACE, 1, 3); 
+				skill(GC_POISONINGWEAPON, 1, 3); 
+				skill(GC_ANTIDOTE, 1, 3); 
+				skill(GC_CREATENEWPOISON, 1, 3); 
+				skill(GC_RESEARCHNEWPOISON, 1, 3);
+				skill(GC_DARKILLUSION, 1, 3);
+				skill(ASC_METEORASSAULT, 1, 3);
+			case 2:
+				skill(ASC_BREAKER, 1, 3);
+				skill(ASC_KATAR, 1, 3);
+				skill(AS_GRIMTOOTH, 1, 3); 
+				skill(AS_CLOAKING, 1, 3); 
+			case 1:
+				skill(AS_SONICBLOW, 1, 3); 
+				break;
+
+		}
+	}
+	return;
+}
+
+function	script	OnClearKSkills	{
+	if(CLASSPATH == 2)
+	{
+		skill(ASC_EDP, 0, 3);
+		skill(GC_CROSSRIPPERSLASHER, 0, 3);
+		skill(GC_ROLLINGCUTTER, 0, 3); 
+		skill(GC_CROSSIMPACT, 0, 3);
+		skill(GC_HALLUCINATIONWALK, 0, 3);
+		skill(GC_PHANTOMMENACE, 0, 3); 
+		skill(GC_POISONINGWEAPON, 0, 3); 
+		skill(GC_ANTIDOTE, 0, 3); 
+		skill(GC_CREATENEWPOISON, 0, 3); 
+		skill(GC_RESEARCHNEWPOISON, 0, 3);
+		skill(GC_DARKILLUSION, 0, 3);
+		skill(ASC_METEORASSAULT, 0, 3);
+		skill(ASC_BREAKER, 0, 3);
+		skill(ASC_KATAR, 0, 3);
+		skill(AS_GRIMTOOTH, 0, 3); 
+		skill(AS_CLOAKING, 0, 3); 
+		skill(AS_SONICBLOW, 0, 3); 
+	}
+	return;
+}
+
+function	script	OnGetKnkills	{
+	if(CLASSPATH == 2)
+	{
+		callfunc "OnClearAllWeaponSkills";
+		set .@parameter, getarg(0);
+		
+		switch(.@parameter)
+		{
+			case 4:
+				skill(MO_EXTREMITYFIST, 1, 3);
+				skill(SR_SKYNETBLOW, 1, 3); 
+				skill(SR_TIGERCANNON, 1, 3);
+				skill(SR_HELLGATE, 1, 3);
+				skill(SR_RAMPAGEBLASTER, 1, 3);
+				skill(SR_CRESCENTELBOW, 1, 3);
+			case 3:			
+				skill(SR_LIGHTNINGWALK, 1, 3);
+				skill(SR_FALLENEMPIRE, 1, 3);
+				skill(SR_EARTHSHAKER, 1, 3); 
+				skill(SR_DRAGONCOMBO, 1, 3); 
+				skill(MO_INVESTIGATE, 1, 3); 
+				skill(MO_FINGEROFFENSIVE, 1, 3); 
+				skill(MO_EXPLOSIONSPIRITS, 1, 3);
+				skill(SR_RAISINGDRAGON, 1, 3);
+				skill(MO_STEELBODY, 1, 3); 
+			case 2:
+				skill(SR_KNUCKLEARROW, 1, 3); 
+				skill(MO_DODGE, 1, 3); 
+				skill(MO_COMBOFINISH, 1, 3); 
+				skill(MO_CHAINCOMBO, 1, 3); 
+				skill(MO_BLADESTOP, 1, 3); 
+			case 1:
+				skill(MO_CALLSPIRITS, 1, 3); 
+				skill(MO_ABSORBSPIRITS, 1, 3); 
+				skill(MO_TRIPLEATTACK, 1, 3); 
+				break;
+
+		}
+	}
+	return;
+}
+
+function	script	OnClearKnkills	{
+	if(CLASSPATH == 2)
+	{
+		skill(MO_EXTREMITYFIST, 0, 3);
+		skill(SR_SKYNETBLOW, 0, 3); 
+		skill(SR_TIGERCANNON, 0, 3);
+		skill(SR_HELLGATE, 0, 3);
+		skill(SR_RAMPAGEBLASTER, 0, 3);
+		skill(SR_CRESCENTELBOW, 0, 3);
+		skill(SR_LIGHTNINGWALK, 0, 3);
+		skill(SR_FALLENEMPIRE, 0, 3);
+		skill(SR_EARTHSHAKER, 0, 3); 
+		skill(SR_DRAGONCOMBO, 0, 3); 
+		skill(MO_INVESTIGATE, 0, 3); 
+		skill(MO_FINGEROFFENSIVE, 0, 3); 
+		skill(MO_EXPLOSIONSPIRITS, 0, 3);
+		skill(SR_RAISINGDRAGON, 0, 3);
+		skill(MO_STEELBODY, 0, 3); 
+		skill(SR_KNUCKLEARROW, 0, 3); 
+		skill(MO_DODGE, 0, 3); 
+		skill(MO_COMBOFINISH, 0, 3); 
+		skill(MO_CHAINCOMBO, 0, 3); 
+		skill(MO_BLADESTOP, 0, 3); 
+		skill(MO_CALLSPIRITS, 0, 3); 
+		skill(MO_ABSORBSPIRITS, 0, 3); 
+		skill(MO_TRIPLEATTACK, 0, 3); 
+	}
+	return;
+}
+
+function	script	OnGetBoSkills	{
+	if(CLASSPATH == 2)
+	{
+		callfunc "OnClearAllWeaponSkills";
+		set .@parameter, getarg(0);
+		
+		switch(.@parameter)
+		{
+			case 4:
+				skill(SO_EARTH_INSIGNIA, 1, 3);
+				skill(SO_WIND_INSIGNIA, 1, 3);
+				skill(SO_WATER_INSIGNIA, 1, 3);
+				skill(SO_FIRE_INSIGNIA, 1, 3);
+				skill(SO_EL_ACTION, 1, 3);
+				skill(SO_SUMMON_TERA, 1, 3);
+				skill(SO_SUMMON_VENTUS, 1, 3);
+				skill(SO_SUMMON_AQUA, 1, 3);
+				skill(SO_SUMMON_AGNI, 1, 3);
+				skill(SO_EL_CONTROL, 1, 3);
+				skill(SO_VARETYR_SPEAR, 1, 3);
+				skill(SO_WARMER, 1, 3);
+				skill(SO_CLOUD_KILL, 1, 3);
+				skill(SO_PSYCHIC_WAVE, 1, 3);
+				skill(SO_POISON_BUSTER, 1, 3);
+				skill(SO_DIAMONDDUST, 1, 3);
+				skill(SO_EARTHGRAVE, 1, 3);
+				skill(SO_SPELLFIST, 1, 3);
+				skill(SO_ELECTRICWALK, 1, 3);
+				skill(SO_FIREWALK, 1, 3); 
+				skill(SA_LANDPROTECTOR, 1, 3);
+			case 3:			
+				skill(SA_FREECAST, 1, 3);
+				skill(SA_SPELLBREAKER, 1, 3); 
+				skill(PF_SOULCHANGE, 1, 3); 
+				skill(PF_MEMORIZE, 1, 3); 
+				skill(SA_MAGICROD, 1, 3); 
+				skill(SA_FLAMELAUNCHER, 1, 3); 
+				skill(SA_SEISMICWEAPON, 1, 3); 
+				skill(SA_FROSTWEAPON, 1, 3); 
+				skill(SA_LIGHTNINGLOADER, 1, 3); 
+				skill(SA_CASTCANCEL, 1, 3);
+				skill(SA_DISPELL, 1, 3); 
+			case 2:
+				skill(PF_FOGWALL, 1, 3); 
+				skill(PF_SPIDERWEB, 1, 3);
+				skill(PF_DOUBLECASTING, 1, 3);
+				skill(MG_COLDBOLT, 1, 3);
+				skill(MG_FIREBOLT, 1, 3); 
+				skill(MG_LIGHTNINGBOLT, 1, 3);
+				skill(MG_EARTHSTRIKE, 1, 3);
+				skill(WZ_ICEWALL, 1, 3);
+			case 1:
+				skill(MO_SPIRITSRECOVERY, 1, 3); 
+				skill(MG_SOULSTRIKE, 1, 3);
+				skill(MG_FIREWALL, 1, 3);
+				break;
+
+		}
+	}
+	return;
+}
+
+function	script	OnClearBoSkills	{
+	if(CLASSPATH == 2)
+	{
+		skill(SO_EARTH_INSIGNIA, 1, 3);
+		skill(SO_WIND_INSIGNIA, 1, 3);
+		skill(SO_WATER_INSIGNIA, 1, 3);
+		skill(SO_FIRE_INSIGNIA, 1, 3);
+		skill(SO_EL_ACTION, 1, 3);
+		skill(SO_SUMMON_TERA, 1, 3);
+		skill(SO_SUMMON_VENTUS, 1, 3);
+		skill(SO_SUMMON_AQUA, 1, 3);
+		skill(SO_SUMMON_AGNI, 1, 3);
+		skill(SO_EL_CONTROL, 1, 3);
+		skill(SO_VARETYR_SPEAR, 1, 3);
+		skill(SO_WARMER, 1, 3);
+		skill(SO_CLOUD_KILL, 1, 3);
+		skill(SO_PSYCHIC_WAVE, 1, 3);
+		skill(SO_POISON_BUSTER, 1, 3);
+		skill(SO_DIAMONDDUST, 1, 3);
+		skill(SO_EARTHGRAVE, 1, 3);
+		skill(SO_SPELLFIST, 1, 3);
+		skill(SO_ELECTRICWALK, 1, 3);
+		skill(SO_FIREWALK, 1, 3); 
+		skill(SA_LANDPROTECTOR, 1, 3);
+		skill(SA_FREECAST, 1, 3);
+		skill(SA_SPELLBREAKER, 1, 3); 
+		skill(PF_SOULCHANGE, 1, 3); 
+		skill(PF_MEMORIZE, 1, 3); 
+		skill(SA_MAGICROD, 1, 3); 
+		skill(SA_FLAMELAUNCHER, 1, 3); 
+		skill(SA_SEISMICWEAPON, 1, 3); 
+		skill(SA_FROSTWEAPON, 1, 3); 
+		skill(SA_LIGHTNINGLOADER, 1, 3); 
+		skill(SA_CASTCANCEL, 1, 3);
+		skill(SA_DISPELL, 1, 3); 
+		skill(PF_FOGWALL, 1, 3); 
+		skill(PF_SPIDERWEB, 1, 3);
+		skill(PF_DOUBLECASTING, 1, 3);
+		skill(MG_COLDBOLT, 1, 3);
+		skill(MG_FIREBOLT, 1, 3); 
+		skill(MG_LIGHTNINGBOLT, 1, 3);
+		skill(MG_EARTHSTRIKE, 1, 3);
+		skill(WZ_ICEWALL, 1, 3);
+		skill(MO_SPIRITSRECOVERY, 1, 3); 
+		skill(MG_SOULSTRIKE, 1, 3);
+		skill(MG_FIREWALL, 1, 3);
+	}
+	return;
+}
+
+function	script	OnGetBSkills	{
+	if(CLASSPATH == 2)
+	{
+		callfunc "OnClearAllWeaponSkills";
+		set .@parameter, getarg(0);
+		callfunc "OnGet1HSSkills", .@parameter;
+		
+		switch(.@parameter)
+		{
+			case 4:
+				skill(RA_UNLIMIT, 1, 3);
+				skill(RA_AIMEDBOLT, 1, 3); 
+				skill(RA_ARROWSTORM, 1, 3);
+				skill(WM_SEVERE_RAINSTORM, 1, 3);
+			case 3:			
+				skill(SC_TRIANGLESHOT, 1, 3); 
+				skill(RA_FEARBREEZE, 1, 3); 
+				skill(SN_SHARPSHOOTING, 1, 3);
+				skill(SN_SIGHT, 1, 3);
+			case 2:
+				skill(HT_PHANTASMIC, 1, 3);
+				skill(AC_CONCENTRATION, 1, 3); 
+				skill(AC_DOUBLE, 1, 3); 
+			case 1:
+				skill(AC_OWL, 1, 3); 
+				skill(AC_VULTURE, 1, 3); 
+				skill(AC_SHOWER, 1, 3); 
+				break;
+
+		}
+	}
+	return;
+}
+
+function	script	OnClearBSkills	{
+	if(CLASSPATH == 2)
+	{
+		skill(WM_SEVERE_RAINSTORM, 0, 3);
+		skill(RA_UNLIMIT, 0, 3);
+		skill(RA_AIMEDBOLT, 0, 3); 
+		skill(RA_ARROWSTORM, 0, 3);
+		skill(SC_TRIANGLESHOT, 0, 3); 
+		skill(RA_FEARBREEZE, 0, 3); 
+		skill(SN_SHARPSHOOTING, 0, 3);
+		skill(SN_SIGHT, 0, 3);
+		skill(HT_PHANTASMIC, 0, 3);
+		skill(AC_CONCENTRATION, 0, 3); 
+		skill(AC_DOUBLE, 0, 3); 
+		skill(AC_OWL, 0, 3); 
+		skill(AC_VULTURE, 0, 3); 
+		skill(AC_SHOWER, 0, 3); 
+	}
+	return;
+}
+
+function	script	OnGetDSkills	{
+	if(CLASSPATH == 2)
+	{
+		callfunc "OnClearAllWeaponSkills";
+		set .@parameter, getarg(0);
+		callfunc "OnGet1HSSkills", .@parameter;
+		
+		switch(.@parameter)
+		{
+			case 4:
+				skill(GC_VENOMPRESSURE, 1, 3);
+				skill(GC_COUNTERSLASH, 1, 3);
+				skill(GC_WEAPONBLOCKING, 1, 3);
+				skill(GC_VENOMIMPRESS, 1, 3);
+				skill(SC_DEADLYINFECT, 1, 3);
+				skill(SC_SHADOWFORM, 1, 3);
+				skill(SC_FATALMENACE, 1, 3); 
+				skill(ST_REJECTSWORD, 1, 3);
+			case 3:			
+				skill(RG_STRIPSHIELD, 1, 3);
+				skill(RG_STRIPWEAPON, 1, 3); 
+				skill(RG_STRIPARMOR, 1, 3); 
+				skill(RG_STRIPHELM, 1, 3); 
+				skill(RG_RAID, 1, 3); 
+				skill(AS_VENOMKNIFE, 1, 3); 
+				skill(AS_SPLASHER, 1, 3); 
+				skill(AS_VENOMDUST, 1, 3);
+				skill(AS_POISONREACT, 1, 3);
+			case 2:
+				skill(AS_ENCHANTPOISON, 1, 3);
+				skill(TF_POISON, 1, 3); 
+				skill(TF_HIDING, 1, 3);
+				skill(RG_BACKSTAP, 1, 3);
+			case 1:
+				skill(TF_DOUBLE, 1, 3); 
+				skill(TF_MISS, 1, 3); 
+				skill(TF_STEAL, 1, 3); 
+				break;
+
+		}
+	}
+	return;
+}
+
+function	script	OnClearDSkills	{
+	if(CLASSPATH == 2)
+	{
+		skill(GC_VENOMPRESSURE, 0, 3);
+		skill(GC_COUNTERSLASH, 0, 3);
+		skill(GC_WEAPONBLOCKING, 0, 3);
+		skill(GC_VENOMIMPRESS, 0, 3);
+		skill(SC_DEADLYINFECT, 0, 3);
+		skill(SC_SHADOWFORM, 0, 3);
+		skill(SC_FATALMENACE, 0, 3); 
+		skill(ST_REJECTSWORD, 0, 3);
+		skill(RG_STRIPSHIELD, 0, 3);
+		skill(RG_STRIPWEAPON, 0, 3); 
+		skill(RG_STRIPARMOR, 0, 3); 
+		skill(RG_STRIPHELM, 0, 3); 
+		skill(RG_RAID, 0, 3); 
+		skill(AS_VENOMKNIFE, 0, 3); 
+		skill(AS_SPLASHER, 0, 3); 
+		skill(AS_VENOMDUST, 0, 3);
+		skill(AS_POISONREACT, 0, 3);
+		skill(AS_ENCHANTPOISON, 0, 3);
+		skill(TF_POISON, 0, 3); 
+		skill(TF_HIDING, 0, 3);
+		skill(RG_BACKSTAP, 0, 3);
+		skill(TF_DOUBLE, 0, 3); 
+		skill(TF_MISS, 1, 3); 
+		skill(TF_STEAL, 0, 3); 
+	}
+	return;
+}
+
+function	script	OnGetMSkills	{
+	if(CLASSPATH == 2)
+	{
+		callfunc "OnClearAllWeaponSkills";
+		set .@parameter, getarg(0);
+		callfunc "OnGet1HSSkills", .@parameter;
+		
+		switch(.@parameter)
+		{
+			case 4:
+				skill(AB_DUPLELIGHT, 1, 3);
+				skill(AB_EXPIATIO, 1, 3);
+				skill(AB_ORATIO, 1, 3);
+				skill(AB_ADORAMUS, 1, 3);
+			case 3:			
+				skill(AB_JUDEX, 1, 3); 
+				skill(PR_MAGNUS, 1, 3);
+				skill(PR_LEXAETERNA, 1, 3);
+			case 2:
+				skill(PR_TURNUNDEAD, 1, 3);
+				skill(MG_SAFETYWALL, 1, 3);
+				skill(AL_BLESSING, 1, 3); 
+				skill(AL_ANGELUS, 1, 3);
+				skill(AL_WARP, 1, 3); 
+			case 1:
+				skill(AL_PNEUMA, 1, 3); 
+				skill(AL_HEAL, 1, 3);
+				skill(AL_INCAGI, 1, 3);
+				skill(AL_HOLYWATER, 1, 3);
+				break;
+
+		}
+	}
+	return;
+}
+
+function	script	OnClearMSkills	{
+	if(CLASSPATH == 2)
+	{
+		skill(AB_DUPLELIGHT, 0, 3);
+		skill(AB_EXPIATIO, 0, 3);
+		skill(AB_ORATIO, 0, 3);
+		skill(AB_ADORAMUS, 0, 3);
+		skill(AB_JUDEX, 0, 3); 
+		skill(PR_MAGNUS, 0, 3);
+		skill(PR_LEXAETERNA, 0, 3);
+		skill(PR_TURNUNDEAD, 0, 3);
+		skill(MG_SAFETYWALL, 0, 3);
+		skill(AL_BLESSING, 0, 3); 
+		skill(AL_ANGELUS, 0, 3);
+		skill(AL_WARP, 0, 3); 
+		skill(AL_PNEUMA, 0, 3); 
+		skill(AL_HEAL, 0, 3);
+		skill(AL_INCAGI, 0, 3);
+		skill(AL_HOLYWATER, 0, 3);
+	}
+	return;
+}
+
+function	script	OnGet2HStSkills	{
+	if(CLASSPATH == 2)
+	{
+		callfunc "OnClearAllWeaponSkills";
+		set .@parameter, getarg(0);
+		callfunc "OnGet1HStSkills", .@parameter;
+		
+		switch(.@parameter)
+		{
+			case 4:
+				skill(WL_EARTHSTRAIN, 1, 3);
+				skill(WL_CHAINLIGHTNING, 1, 3);
+				skill(WL_COMET, 1, 3);
+				skill(WL_SIENNAEXECRATE, 1, 3); 
+				skill(WL_JACKFROST, 1, 3);
+				skill(WL_CRIMSONROCK, 1, 3);
+			case 3:			
+				skill(WL_HELLINFERNO, 1, 3);
+				skill(WL_STASIS, 1, 3);
+				skill(WL_RADIUS, 1, 3); 
+				skill(WL_MARSHOFABYSS, 1, 3); 
+				skill(WL_FROSTMISTY, 1, 3); 
+				skill(WL_SOULEXPANSION, 1, 3); 
+				skill(HW_GANBANTEIN, 1, 3);
+				skill(WZ_STORMGUST, 1, 3);
+			case 2:
+				skill(WL_DRAINLIFE, 1, 3);
+				skill(WZ_VERMILION, 1, 3); 
+				skill(WZ_METEOR, 1, 3); 
+				skill(WZ_FROSTNOVA, 1, 3);
+			case 1:
+				skill(WZ_FIREPILLAR, 1, 3);
+				skill(WZ_JUPITEL, 1, 3); 
+				skill(WZ_WATERBALL, 1, 3);
+				break;
+
+		}
+	}
+	return;
+}
+
+function	script	OnClear12HStSkills	{
+	if(CLASSPATH == 2)
+	{
+		skill(WL_EARTHSTRAIN, 1, 3);
+		skill(WL_CHAINLIGHTNING, 1, 3);
+		skill(WL_COMET, 1, 3);
+		skill(WL_SIENNAEXECRATE, 1, 3); 
+		skill(WL_JACKFROST, 1, 3);
+		skill(WL_CRIMSONROCK, 1, 3);
+		skill(WL_HELLINFERNO, 1, 3);
+		skill(WL_STASIS, 1, 3);
+		skill(WL_RADIUS, 1, 3); 
+		skill(WL_MARSHOFABYSS, 1, 3); 
+		skill(WL_FROSTMISTY, 1, 3); 
+		skill(WL_SOULEXPANSION, 1, 3); 
+		skill(HW_GANBANTEIN, 1, 3);
+		skill(WZ_STORMGUST, 1, 3);
+		skill(WL_DRAINLIFE, 1, 3);
+		skill(WZ_VERMILION, 1, 3); 
+		skill(WZ_METEOR, 1, 3); 
+		skill(WZ_FROSTNOVA, 1, 3);
+		skill(WZ_FIREPILLAR, 1, 3);
+		skill(WZ_JUPITEL, 1, 3); 
+		skill(WZ_WATERBALL, 1, 3);
+	}
+	return;
+}
+
+function	script	OnGet1HStSkills	{
+	if(CLASSPATH == 2)
+	{
+		callfunc "OnClearAllWeaponSkills";
+		set .@parameter, getarg(0);
+		
+		switch(.@parameter)
+		{
+			case 4:
+				skill(MG_THUNDERSTORM, 1, 3);
+				skill(MG_ENERGYCOAT, 1, 3); 
+				skill(WZ_HEAVENDRIVE, 1, 3);
+			case 3:			
+				skill(MG_FROSTDIVER, 1, 3);
+				skill(MG_FIREBALL, 1, 3);
+				skill(WZ_QUAGMIRE, 1, 3);
+			case 2:
+				skill(MG_COLDBOLT, 1, 3);
+				skill(MG_FIREBOLT, 1, 3); 
+				skill(MG_LIGHTNINGBOLT, 1, 3);
+				skill(MG_EARTHSTRIKE, 1, 3);
+				skill(WZ_ICEWALL, 1, 3);
+			case 1:
+				skill(MO_SPIRITSRECOVERY, 1, 3); 
+				skill(MG_SOULSTRIKE, 1, 3);
+				skill(MG_FIREWALL, 1, 3);
+				break;
+
+		}
+	}
+	return;
+}
+
+function	script	OnClear1HStSkills	{
+	if(CLASSPATH == 2)
+	{
+		skill(MG_THUNDERSTORM, 0, 3);
+		skill(MG_ENERGYCOAT, 0, 3); 
+		skill(MG_FROSTDIVER, 0, 3);
+		skill(MG_FIREBALL, 0, 3);
+		skill(MG_COLDBOLT, 0, 3);
+		skill(MG_FIREBOLT, 0, 3); 
+		skill(MG_LIGHTNINGBOLT, 0, 3);
+		skill(MG_EARTHSTRIKE, 0, 3);
+		skill(MO_SPIRITSRECOVERY, 0, 3); 
+		skill(MG_SOULSTRIKE, 0, 3);
+		skill(MG_FIREWALL, 0, 3);
+	}
+	return;
+}
+
+
+function	script	OnGet2HSpSkills	{
+	if(CLASSPATH == 2)
+	{
+		callfunc "OnClearAllWeaponSkills";
+		set .@parameter, getarg(0);
+		callfunc "OnGet1HSpSkills", .@parameter;
+		
+		switch(.@parameter)
+		{
+			case 4:
+				skill(LK_SPIRALPIERCE, 1, 3);
+				skill(RK_HUNDREDSPEAR, 1, 3);
+			case 3:			
+				skill(RK_PHANTOMTHRUST, 1, 3);
+				skill(LK_CONCENTRATION, 1, 3); 
+			case 2:
+				skill(KN_PIERCE, 1, 3); 
+				skill(KN_BRANDISHSPEAR, 1, 3); 
+			case 1:
+				skill(KN_SPEARSTAB, 1, 3); 
+				skill(CR_SPEARQUICKEN, 1, 3);
+				break;
+
+		}
+	}
+	return;
+}
+
+function	script	OnClear2HSpSkills	{
+	if(CLASSPATH == 2)
+	{
+		skill(LK_SPIRALPIERCE, 1, 3);
+		skill(RK_HUNDREDSPEAR, 1, 3);
+		skill(RK_PHANTOMTHRUST, 1, 3);
+		skill(LK_CONCENTRATION, 1, 3); 
+		skill(KN_PIERCE, 1, 3); 
+		skill(KN_BRANDISHSPEAR, 1, 3); 
+		skill(KN_SPEARSTAB, 1, 3); 
+		skill(CR_SPEARQUICKEN, 1, 3);
+	}
+	return;
+}
+
+function	script	OnGet1HSpSkills	{
+	if(CLASSPATH == 2)
+	{
+		callfunc "OnClearAllWeaponSkills";
+		set .@parameter, getarg(0);	
+		switch(.@parameter)
+		{
+			case 4:
+				skill(PA_SACRIFICE, 1, 3);
+				skill(LG_OVERBRAND, 1, 3);
+			case 3:			
+				skill(LG_EXEEDBREAK, 1, 3);
+				skill(LG_PINPOINTATTACK, 1, 3); 
+			case 2:
+				skill(LG_BANISHINGPOINT, 1, 3); 
+				skill(LG_CANNONSPEAR, 1, 3); 
+				skill(LG_RAGEBURST, 1, 3);
+			case 1:
+				skill(LG_MOONSLASHER, 1, 3); 
+				skill(CR_SPEARQUICKEN, 1, 3);
+				skill(LG_FORCEOFVANGUARD, 1, 3);
+				break;
+
+		}
+	}
+	return;
+}
+
+function	script	OnClear1HSpSkills	{
+	if(CLASSPATH == 2)
+	{
+		skill(PA_SACRIFICE, 0, 3);
+		skill(LG_OVERBRAND, 0, 3);
+		skill(LG_EXEEDBREAK, 0, 3);
+		skill(LG_PINPOINTATTACK, 0, 3); 
+		skill(LG_BANISHINGPOINT, 0, 3); 
+		skill(LG_CANNONSPEAR, 0, 3); 
+		skill(LG_RAGEBURST, 0, 3);
+		skill(LG_MOONSLASHER, 0, 3); 
+		skill(CR_SPEARQUICKEN, 0, 3);
+		skill(LG_FORCEOFVANGUARD, 0, 3);
+	}
+	return;
+}
+
+function	script	OnGet2HSSkills	{
+	if(CLASSPATH == 2)
+	{
+		callfunc "OnClearAllWeaponSkills";
+		set .@parameter, getarg(0);
+		callfunc "OnGet1HSSkills", .@parameter;
+		
+		switch(.@parameter)
+		{
+			case 4:
+				skill(RK_SONICWAVE, 1, 3);
+				skill(RK_IGNITIONBREAK, 1, 3); 
+				skill(RK_STORMBLAST, 1, 3);
+			case 3:			
+				skill(RK_ENCHANTBLADE, 1, 3);
+				skill(RK_DEATHBOUND, 1, 3); 
+				skill(RK_STONEHARDSKIN, 1, 3); 
+				skill(RK_GIANTGROWTH, 1, 3); 
+				skill(RK_VITALITYACTIVATION, 1, 3); 
+				skill(RK_FIGHTINGSPIRIT, 1, 3);
+				skill(RK_ABUNDANCE, 1, 3);
+			case 2:
+				skill(LK_PARRYING, 1, 3); 
+				skill(RK_WINDCUTTER, 1, 3); 
+			case 1:
+				skill(SM_MAGNUM, 1, 3); 
+				skill(KN_TWOHANDQUICKEN, 1, 3);
+				break;
+
+		}
+	}
+	return;
+}
+
+function	script	OnClear2HSSkills	{
+	if(CLASSPATH == 2)
+	{
+		skill(RK_SONICWAVE, 0, 3);
+		skill(RK_IGNITIONBREAK, 0, 3); 
+		skill(RK_STORMBLAST, 0, 3);
+		skill(RK_ENCHANTBLADE, 0, 3);
+		skill(RK_DEATHBOUND, 0, 3); 
+		skill(RK_STONEHARDSKIN, 0, 3); 
+		skill(RK_GIANTGROWTH, 0, 3); 
+		skill(RK_VITALITYACTIVATION, 0, 3); 
+		skill(RK_FIGHTINGSPIRIT, 0, 3);
+		skill(RK_ABUNDANCE, 0, 3);
+		skill(LK_PARRYING, 0, 3); 
+		skill(RK_WINDCUTTER, 0, 3); 
+		skill(SM_MAGNUM, 0, 3); 
+		skill(KN_TWOHANDQUICKEN, 0, 3);
+	}
+	return;
+}
+
+function	script	OnGet1HSSkills	{
+	if(CLASSPATH == 2)
+	{
+		callfunc "OnClearAllWeaponSkills";
+		set .@parameter, getarg(0);
+		switch(.@parameter)
+		{
+			case 4:
+			case 3:
+				skill(KN_ONEHAND, 1, 3); 
+				skill(KN_ONEHAND, 1, 3); 
+				skill(LK_TENSIONRELAX, 1, 3); 
+				skill(LK_BERSERK, 1, 3); 
+				skill(GN_TRAINING_SWORD, 1, 3);
+			case 2:
+				skill(KN_CHARGEATK, 1, 3); 
+				skill(LK_AURABLADE, 1, 3); 
+				skill(LK_HEADCRUSH, 1, 3); 
+				skill(LK_JOINTBEAT, 1, 3); 
+			case 1:
+				skill(SM_RECOVERY, 1, 3); 
+				skill(SM_BASH, 1, 3); 
+				skill(SM_ENDURE, 1, 3); 
+				skill(SM_MOVINGRECOVERY, 1, 3); 
+				skill(SM_FATALBLOW, 1, 3); 
+				skill(SM_AUTOBERSERK, 1, 3); 
+				break;
+		}
+	}
+	return;
+}
+
+function	script	OnClear1HSSkills	{
+	if(CLASSPATH == 2)
+	{
+		skill(GN_TRAINING_SWORD, 0, 3);
+		skill(KN_ONEHAND, 0, 3); 
+		skill(KN_ONEHAND, 0, 3); 
+		skill(LK_TENSIONRELAX, 0, 3); 
+		skill(LK_BERSERK, 0, 3); 
+		skill(KN_CHARGEATK, 0, 3); 
+		skill(LK_AURABLADE, 0, 3); 
+		skill(LK_HEADCRUSH, 0, 3); 
+		skill(LK_JOINTBEAT, 0, 3); 
+		skill(SM_RECOVERY, 0, 3); 
+		skill(SM_BASH, 0, 3); 
+		skill(SM_ENDURE, 0, 3); 
+		skill(SM_MOVINGRECOVERY, 0, 3); 
+		skill(SM_FATALBLOW, 0, 3); 
+		skill(SM_AUTOBERSERK, 0, 3); 
+	}
+	return;
+}

@@ -1,0 +1,371 @@
+// [========================================================]
+// [=============    	Quest - Valentine   	============]
+// [========================================================]
+// [ Version 1                                              ]
+// [========================================================]
+// [ Original script by: Alayne				    ]
+// [========================================================]
+// [ Description:                                           ]
+// [--------------------------------------------------------]
+// [                                                        ]
+// [ - A quest for Valentine day	 		    ]
+// [========================================================]
+// [ Changelog: (5 last updates)                            ]
+// [--------------------------------------------------------]
+// [                                                        ]
+// [ v0: Creation                      			    ]
+// [                                                        ]
+// [========================================================]
+// [                                                        ]
+// [========================================================]
+
+prt_fild08,356,333,4	script	Lonesome Girl::alvallg	4_F_SHALOSH,5,5,{
+	set .@npcname$, "[Lonesome Girl]";
+	set .@playerName$, "[" + strcharinfo(0) + "]";
+	mes "";
+	if (LONESOME_CHECK == 0)
+	{
+		mes .@npcname$;
+		mes "You... Come closer...";
+	}
+	else
+	{
+		if (SOPHIA_Q == 0)
+		{
+			mes .@npcname$;
+			mes "You.... who are you?";
+			next;
+			mes .@playerName$;
+			mes "M-me...? I am " + strcharinfo(0) + ". W-why do you ask?";
+			next;
+			mes .@npcname$;
+			mes "I am not talking to you, " + strcharinfo(0) + ". I am talking to the spirit that is with you.";
+			next;
+			mes .@playerName$;
+			mes "S-spirit?! Don't do that to strangers! That's rude... and scary.";
+			next;
+			mes .@npcname$;
+			mes "Why don't you reveal yourself?";
+			//emote ...
+			next;
+			mes "[Ghost]";
+			mes "...How can you see me?";
+			next;
+			mes .@npcname$;
+			mes "Because I can. You have a... peculiar emotion in you...";
+			next;
+			mes .@playerName$;
+			mes "Are you even listening to---";
+			hideoffnpc "alvalgh";
+			next;
+			mes .@playerName$;
+			mes "God of Niflheim! It's true! P-please don't hurt me!";
+			next;
+			mes .@npcname$;
+			mes "She will not hurt you...";
+			next;
+			mes "[Ghost]";
+			mes "Yes, please, do not be afraid of me.";
+			emotion e_sob;
+			next;
+			mes .@playerName$;
+			mes "Who... are you?";
+			next;
+			mes "[Olivia]";
+			mes "I am Olivia... and.. (she looks at the Lonesome Girl)";
+			next;
+			set .@npcname$, "[Sophia]";
+			mes .@npcname$;
+			mes "I am Sophia. I can see spirits and feel their emotions. ";
+			next;
+			mes .@playerName$;
+			mes "THAT. IS. AWESOME! Your powers are so cool~";
+			next;
+			mes "(Sophia smiles shyly)";
+			next;
+			mes "[Olivia]";
+			mes "..." + strcharinfo(0) + ". Now that we can talk to each other, can you help me?";
+			next;
+			mes .@playerName$;
+			mes "(You still can't shake the feeling that you're talking to a ghost) Help with what?";
+			next;
+			mes "[Olivia]";
+			mes "Sophia, please?";
+			next;
+			mes .@npcname$;
+			mes "Olivia thinks that if she follows you, since you're an adventurer, she would eventually see her lover. The pain of longing seems to be strong in her, that is why she can not go to the other world.";
+			next;
+			mes .@playerName$;
+			mes "That's... sad. Owright, I will help you with your request! ";
+			next;
+			mes "[Olivia]";
+			mes "Thank you, " + strcharinfo(0) + ". My lover's name is Ayra. The last time we saw each other was when she signed her star contract.";
+			next;
+			mes .@playerName$;
+			mes "Sophia, do you not know where Ayra is?";
+			next;
+			mes .@npcname$;
+			mes "No. That is beyond my power. But you have a lead: She signed a star contract.";
+			next;
+			mes "Go look for Ayra";
+			set SOPHIA_Q, 1;
+			hideonnpc "alvalgh";
+		}	
+		else if (SOPHIA_Q == 2)
+		{
+			mes .@npcname$;
+			mes "Leave me alone, Dark Lord.";
+			next;
+			mes .@playerName$;
+			mes "D-dark Lord?! Where is he?";
+			next;
+			mes .@npcname$;
+			mes "You can not see him, yet.";
+			next;
+			mes .@playerName$;
+			mes "Wasn't he sealed by those brave adventurers Roan and the gang?!";
+			next;
+			mes .@npcname$;
+			mes "Yes, but his spirit was never sealed. He lingers everywhere.";
+			next;
+			mes .@playerName$;
+			mes "How are we supposed to defeat him?";
+			next;
+			mes .@npcname$;
+			mes "You need to gather these items and look for Garcia.";
+			for(set .@i,0; .@i<getarraysize($requirementFixIdSop); set .@i,.@i+1)
+			{
+				mes "	~ " + $requirementFixCountSop[.@i] + " " + getitemname($requirementFixIdSop[.@i]);
+			}
+			set SOPHIA_Q, 3;
+		}
+		else if (SOPHIA_Q >= 4)
+		{
+			if (countitem(18001) < 1)
+			{
+				mes "[Sophia]";
+				mes "I rather die than to server you.";					
+			}
+		}
+		else
+		{
+			mes "[Sophia]";
+			mes "...leave me alone, demon...";
+		}
+	}
+	close;
+	
+OnTouch:
+	set LONESOME_CHECK, 1;
+	end;
+	
+OnInit:
+	setarray $requirementFixIdSop[0],12622,2608,730;
+	setarray $requirementFixCountSop[0],10,1,5;
+	end;
+}
+
+prt_sewb1,97,295,4	script	Sophia::alvalso	4_F_SHALOSH,{
+	set .@npcname$, "[Sophia]";
+	set .@playerName$, "[" + strcharinfo(0) + "]";
+	if (SOPHIA_Q == 5 && countitem(18001) > 0)
+	{
+		mes .@playerName$;
+		mes "Sophia! What are you doing here?!";
+		next;
+		mes .@npcname$;
+		mes "I need to come here or the whole town will be in danger...";
+		next;
+		mes .@playerName$;
+		mes "Here is the item you asked from Garcia! Where is the Dark Lord?";
+		next;
+		mes .@npcname$;
+		mes "Nnng... He's inside me...";
+		next;
+		mes .@playerName$;
+		mes "HOO-WHAT?!";
+		next;
+		mes .@npcname$;
+		mes "Hurry. The... holy bead.";
+		delitem 18001, 1;
+		set SOPHIA_Q, 6;
+		hideoffnpc "alavaldl";
+	}
+	else if (SOPHIA_Q == 6)
+	{
+		mes .@npcname$;
+		mes "*Grunt* Please, weaken Dark Lord...";
+	}
+	else
+	{
+		mes "[Sophia]";
+		mes "...leave me alone, demon...";
+	}
+	close;
+	
+OnInit:
+	hideonnpc strnpcinfo(3);
+	end;
+}
+
+prt_sewb1,100,290,4	script	Dark Lord::alvaldl	DARK_LORD,{
+	set .@npcname$, "[Dark Lord]";
+	set .@playerName$, "[" + strcharinfo(0) + "]";
+	mes .@npcname$;
+	mes "Sophia! You will be my vessel to this world and no one can stop me!";
+	if (SOPHIA_Q == 6)
+	{
+		next;
+		mes .@playerName$;
+		mes "Not while I am around!";
+		next;
+		mes .@npcname$;
+		mes "You dare challenge the might of Dark Lord!?";
+		next;
+		mes .@playerName$;
+		mes "Yes! I will defeat you! Like how Yuufa, Maya, and the others did!";
+		next;
+		mes .@npcname$;
+		mes "They merely defeated an illusion of my self! Muhahaha! You can not beat me!";
+		mes "The only way to beat me is by winning 4 times over 5 on rock-paper-scissors!";
+		
+		//rock-paper-scissor
+		callsub OnRSP;		
+		
+		if(.successCount < 4)
+		{
+			next;
+			mes .@npcname$;
+			mes "Muhahaha! You can't defeat me, mortal! Not even that OP Magnus Exorcismus can defeat me!";
+		}
+		else
+		{
+			mes "How can this be?! A mere human defeated me with only hand symbols! NOooo!!!";
+			next;
+			mes "[Sophia]";
+			mes "Because, Dark Lord, I have found a reason to fight you... Someone who is worth saving--- " + strcharinfo(0) + ". Take care of Garcia for me. (Sophia gave you a very bright and genuine smile)";
+			set SOPHIA_Q, 7;
+			hideonnpc strnpcinfo(3);
+			hideonnpc "alvalso";
+			hideoffnpc "alvallg";
+			getitem 18002, 1;
+			getitem 29395, 1;
+			set SOPHIA_Q, 7;
+		}		
+	}
+	close;
+	
+OnRSP:
+	next;
+	mes "[Rock-Scissor-Paper]";
+	mes "Choose a value:";
+	set .@choice, select("Rock","Paper","Scissor");
+	set .@npcChoice, rand(1,3);
+	switch(.@choice)
+	{
+		case 1:
+			//rock
+			switch(.@npcChoice)
+			{
+				case 1:
+					next;
+					mes "[Rock-Scissor-Paper]";
+					//rock, draw
+					mes "Rock vs Rock - Draw";
+					set .drawCount, .drawCount + 1;
+					break;
+				case 2:
+					next;
+					mes "[Rock-Scissor-Paper]";
+					//paper, fail
+					mes "Rock vs Paper - Fail";
+					set .failCount, .failCount + 1;
+					break;
+				case 3:
+					next;
+					mes "[Rock-Scissor-Paper]";
+					//scissor, win
+					mes "Rock vs Scissor - Win";
+					set .successCount, .successCount + 1;
+					break;
+			}
+			break;
+		case 2:
+			//paper
+			switch(.@npcChoice)
+			{
+				case 1:
+					next;
+					mes "[Rock-Scissor-Paper]";
+					//rock
+					mes "Paper vs Rock - Win";
+					set .successCount, .successCount + 1;
+					break;
+				case 2:
+					next;
+					mes "[Rock-Scissor-Paper]";
+					//paper
+					mes "Paper vs Paper - Fail";
+					set .drawCount, .drawCount + 1;
+					break;
+				case 3:
+					next;
+					mes "[Rock-Scissor-Paper]";
+					//scissor
+					mes "Paper vs Scissor - Fail";
+					set .failCount, .failCount + 1;
+					break;
+			}
+			break;
+		case 3:
+			//scissor
+			switch(.@npcChoice)
+			{
+				case 1:
+					next;
+					mes "[Rock-Scissor-Paper]";
+					//rock
+					mes "Scissor vs Rock - Fail";
+					set .failCount, .failCount + 1;
+					break;
+				case 2:
+					next;
+					mes "[Rock-Scissor-Paper]";
+					//paper
+					mes "Scissor vs Paper - Win";
+					set .successCount, .successCount + 1;
+					break;
+				case 3:
+					next;
+					mes "[Rock-Scissor-Paper]";
+					//scissor
+					mes "Scissor vs Scissor - Win";
+					set .drawCount, .drawCount + 1;
+					break;
+			}
+			break;
+	}
+	set .roundCount, .roundCount + 1;
+	if(.roundCount < 5)
+	{
+		callsub OnRSP;
+	}
+	return;
+	
+OnInit:
+	hideonnpc strnpcinfo(3);
+	end;
+}
+
+prt_fild08,349,337,4	script	Olivia::alvalgh	791,{
+	set .@npcname$, "[Olivia]";
+	set .@playerName$, "[" + strcharinfo(0) + "]";
+	mes "[Ghost]";
+	mes .@npcname$;
+	mes "Bouhhhh!";
+	close;
+	
+OnInit:
+	hideonnpc strnpcinfo(3);
+	end;
+}

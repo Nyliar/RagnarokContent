@@ -1,0 +1,181 @@
+//Ice Kingdom Mini Instance
+
+//fire_king,16,14,3	script	FireMan#fk	412,{
+	set .@npcname$, "[Fireman]";
+	mes .@npcname$;
+	mes "Bonjour Förbrändiens!";
+	mes "Je suis un ancien habitant du Royaume Brûlant.";
+	mes "J'étais là bien avant que vos petites guerres ne débutent,";
+	mes "et je serais là encore bien longtemps après qu'elles se soient terminées.";
+	next;
+	mes .@npcname$;
+	mes "Je suis à même de vous emmener dans les Abysses Flambantes. Cela vous intéresse-t-il?";
+	next;
+	set .@selection,select("Les Abysses Flambantes?:Ok allons-y:Je me suis fait tuer, je peux revenir?:Euh non merci. Fait déjà assez bien chaud ici...");
+
+	switch(.@selection) {
+	case 4:
+		mes .@npcname$;
+		mes "Très bien. Je pense aussi que tu n'as pas le sang assez chaud.";
+		mes "Tu n'as rien à faire en bas.";
+		break;
+	case 3:
+		if (.party_id == getcharid(1))
+		{
+			mes .@npcname$;
+			mes "Très bien. Je te renvoie au début.";
+			warp "grottor_lb",200,180;
+			close;
+		}
+		else
+		{
+			mes .@npcname$;
+			mes "Impossible. Tu ne fait pas partie de ce groupe.";
+			warp "fire_king", 200, 180;
+			close;
+		}
+	case 2:
+		if (BaseLevel > 99) {
+			set .@party_id,getcharid(1);
+			getpartymember .@party_id,2;
+			set .@partymembercount,$@partymembercount;
+			copyarray .@partymembername$[0],$@partymembername$[0],.@partymembercount;
+			copyarray .@partymembercid[0],$@partymembercid[0],.@partymembercount;
+			set .party_id,.@party_id;
+
+			mes .@npcname$;
+			mes "Guerriers au Sang Chaud,";
+			next;
+			mes .@npcname$;
+			mes "Les Abysses Flambante vous attendent.";
+			mes "Il y a peu de chemin à parcourir, mais des épreuves à relever.";
+			mes "Prenez garde, vous ne disposerez que d'une heure. Ensuite, votre sang s'évaporera.";
+			next;
+
+
+			// 5 hour cooldown
+			set .@ins_fi_check,checkquest(60319,PLAYTIME);
+			// 1 hours play limit
+			set .@ins_fi_check2,checkquest(60320,PLAYTIME);
+
+			if (.@ins_fi_check < 2) {
+				if (.@ins_fi_check == -1) {
+					set $ins_lead, getpartyleader(.@party_id,2);
+					set @GID,getcharid(2);
+					if (($ins_lead == getcharid(0)) && (strcharinfo(0)==getguildmaster(@GID)) && (.@partymembercount > 2)) || getgmlevel() > 60) 
+					{
+						set .@instance, instance_create("Abysses Flambantes", .@party_id);
+						if (.@instance < 0) {
+							mes .@npcname$;
+							mes "Le nom du Groupe est donc "+getpartyname(.@party_id)+".";
+							mes "Le nom du Leader est "+.@partymembername$[0]+".";
+							mes "Cependant, je peux pas vous laissez entrer. Réessayez svp.";
+						}
+						else {
+
+							if( instance_attachmap("grottor_lb", .@instance, 1) == "" )
+							{
+								instance_destroy(.@instance);
+								close;
+							}
+
+							instance_set_timeout 3600,300,.@instance;
+							instance_init(.@instance);
+							instance_attach(.@instance);
+
+							// enable first floor
+							donpcevent instance_npcname("ins_fi_1F", instance_id())+"::OnEnable";
+
+							mes .@npcname$;
+							mes "Le nom du Groupe est donc "+getpartyname(.@party_id)+".";
+							mes "Le nom du Leader est "+.@partymembername$[0]+".";
+							mes "Puissiez vous revenir en vie. Et faites attention aux Burst de Chaleur!";
+							next;
+							warpparty "grottor_lb",52,22,.@party_id;
+						}
+					}
+					else {
+						mes .@npcname$;
+						mes "Demandes à ton maître de venir me parler, plutôt.";
+						next;
+						mes .@npcname$;
+						mes "Il faut que ce soit le Maître de Guilde qui lance le Voyage.";
+						next;
+						mes .@npcname$;
+						mes "Et n'oubliez pas que le groupe doit compter au minimum 2 membres!";
+					}
+				}
+				else if ((.@ins_fi_check == 0) || (.@ins_fi_check == 1)) {
+					mes .@npcname$;
+					mes "Désolé, mais vous n'êtes pas encore remis de votre dernier Voyage.";
+				}
+				else if (.@ins_fi_check == 2) {
+					mes .@npcname$;
+					mes "Hum...Je pense que vous êtes prêt.";
+					next;
+					mes .@npcname$;
+					mes "Vous devriez pouvoir redescendre dans les Abysses sans risque.";
+					next;
+					mes .@npcname$;
+					mes "Enfin, sans risque au niveau de votre santé du moins.";
+				}
+			}
+		}
+		else {
+			mes .@npcname$;
+			mes "Désolé, je ne peux pas envoyer une personne qui n'est pas prête. Revenez au niveau 99.";
+		}
+		break;
+	}
+	close2;
+	end;
+}
+
+grottor_lb,16,14,3	script	ins_fi_1F	-1,{
+	end;
+
+OnEnable:
+	initnpctimer;
+	//Naga, Tatacho et Strouf
+	areamonster "grottor_lb",27,72,87,56,"Monstre de Glace",1993,30,instance_npcname("ins_fi_1F", instance_id())+"::OnMyMobDead";
+	areamonster "grottor_lb",27,72,87,56,"Monstre de Glace",1986,30,instance_npcname("ins_fi_1F", instance_id())+"::OnMyMobDead";
+	areamonster "grottor_lb",27,72,87,56,"Monstre de Glace",1968,30,instance_npcname("ins_fi_1F", instance_id())+"::OnMyMobDead";
+	end;
+
+OnTimer45000:
+	attachrid($@partymembercid[rand(0,$@partymembercount)]);
+	percentheal -50,-50;
+	initnpctimer;
+	end;
+
+OnMyMobDead:
+	set .@mob_dead_num,mobcount("grottor_lb",instance_npcname("ins_fi_1F", instance_id())+"::OnMyMobDead");
+	if (.@mob_dead_num < 1)
+	{
+		instance_announce 0, @npcname$ + "On dirait bien que vous avez libéré les Abysses de ces monstres étranges!",bc_map,"0x00ff99";
+		sleep 15000;
+		//Ktu
+		areamonster "grottor_lb",27,72,87,56,"Monstre Givrant",1779,1,instance_npcname("ins_fi_1F", instance_id())+"::OnMyBossDead";
+		instance_announce 0, @npcname$ + "Enfin...Presque...",bc_map,"0x00ff99";
+	}
+	end;
+
+OnMyBossDead:
+	instance_announce 0, @npcname$ + "Bien joué! Je vous remonte dans trente secondes!",bc_map,"0x00ff99";
+	areamonster "grottor_lb",27,72,87,56,"Coffre des Flammes",1333,2;
+	sleep 30000;
+	warparty "fire_king",100,99;
+	end;
+}
+
+fire_king,214,194,0	script	warpInstance	45,2,2,{
+	end;
+
+OnTouch:
+	//entraine une perte de HP pendant une heure, et faiblesse face à l'élément eau
+	sc_start SC_BURNING, 3600000, 0;
+	bonus bSubEle,Ele_Water,-25;
+	bonus bAddEle,Ele_Water,-25;
+	warp "grottor_lb",100,99;
+	end;
+}

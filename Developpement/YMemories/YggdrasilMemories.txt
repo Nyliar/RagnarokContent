@@ -1,0 +1,873 @@
+// [========================================================]
+// [===========   Yggdrasily Memories - Core     ===========]
+// [========================================================]
+// [ Version 2                                              ]
+// [========================================================]
+// [ Original script by: Nyliar                             ]
+// [========================================================]
+// [ Description:                                           ]
+// [--------------------------------------------------------]
+// [                                                        ]
+// [ - Yggdrasily Memories implementation of all commands   ]
+// [ - When whispered, should launch possible actions:      ]
+// [ - Book to call the book                                ]
+// [ - Gain to insert card in Book or transform 	    	]
+//      last obtained item                          	    ]
+// [ - Retrieve to extract card from Book		    		]
+// [========================================================]
+// [ Database structure:				    				]
+// [                                                        ]
+// [ table ym_cards (cards infos)                           ]
+// [    id -> int(11) (card id in database)                 ]
+// [	id_item -> int(11) (item id in database)            ]
+// [	name_item -> varchar(55) (item name in database)    ]
+// [	percent_loot -> int(5)                              ]
+// [	rank -> int(5)                                      ]
+// [	actual_count -> int(5)                              ]
+// [	max_count -> int(5)                                 ]
+// [	sell_price -> int(5)                                ]
+// [                                                        ]
+// [ table ym_book (player book)                            ]
+// [                                                        ]
+// [	id_char -> int(11), PK to char_id (char)            ]
+// [	id_card -> int(11), PK to id (ym_card)              ]
+// [	visible -> bit                                      ]
+// [	protected -> bit                                    ]
+// [	destroygale -> bit                                  ]
+// [                                                        ]
+// [ table ym_player (players)                    	    	]
+// [	                                                    ]
+// [	id_char -> int(11), PK to char_id (char)            ]
+// [	safe_count -> int(5)                                ]
+// [	protected -> bit                                    ]
+// [	reflect -> bit                                      ]
+// [                                                        ]
+// [========================================================]
+// [========================================================]
+// [ Changelog: (5 last updates)                            ]
+// [--------------------------------------------------------]
+// [                                                        ]
+// [ v0: Creation                      			    		]
+// [ v1: Modifications to complet spell functions   	    ]
+// [                                                        ]
+// [========================================================]
+// [                                                        ]
+// [========================================================]
+
+-	script	YggdrasilyMemoriesCore::yggdrasilmemories	-1,{
+	end;
+
+OnInit:
+	set $YMRingId, 29424;
+	set $YMBlisterId, 29425;
+	set $limit_return_day, 7;
+	set $increase_limit_return_price, 10000000;
+	set $blister_price, 250000;
+	set $blister_card_count, 3;
+	set $YMEntryPrice, 1000000; //default 5000000
+	set $ymMaxCardTypePerUser, 3;
+	set $ymCommonSlotCount, 45;
+	
+	setarray $ymMapList$[0],"alde_dun01",
+			"alde_dun02",
+			"alde_dun03",
+			"alde_dun04",
+			"anthell01",
+			"anthell02",
+			"c_tower1",
+			"c_tower2",
+			"c_tower3",
+			"c_tower4",
+			"gef_dun00",
+			"gef_dun01",
+			"gef_dun02",
+			"gef_dun03",
+			"gef_fild00",
+			"gef_fild01",
+			"gef_fild02",
+			"gef_fild03",
+			"gef_fild04",
+			"gef_fild05",
+			"gef_fild06",
+			"gef_fild07",
+			"gef_fild08",
+			"gef_fild09",
+			"gef_fild10",
+			"gef_fild11",
+			"gef_fild12",
+			"gef_fild13",
+			"gef_fild14",
+			"gef_tower",
+			"gl_cas01",
+			"gl_cas02",
+			"gl_church",
+			"gl_chyard",
+			"gl_dun01",
+			"gl_dun02",
+			"gl_knt01",
+			"gl_knt02",
+			"gl_prison",
+			"gl_prison1",
+			"gl_sew01",
+			"gl_sew02",
+			"gl_sew03",
+			"gl_sew04",
+			"gl_step",
+			"glast_01",
+			"in_orcs01",
+			"in_sphinx1",
+			"in_sphinx2",
+			"in_sphinx3",
+			"in_sphinx4",
+			"in_sphinx5",
+			"iz_dun00",
+			"iz_dun01",
+			"iz_dun02",
+			"iz_dun03",
+			"iz_dun04",
+			"mjo_dun01",
+			"mjo_dun02",
+			"mjo_dun03",
+			"mjolnir_01",
+			"mjolnir_02",
+			"mjolnir_03",
+			"mjolnir_04",
+			"mjolnir_05",
+			"mjolnir_06",
+			"mjolnir_07",
+			"mjolnir_08",
+			"mjolnir_09",
+			"mjolnir_10",
+			"mjolnir_11",
+			"mjolnir_12",
+			"moc_fild01",
+			"moc_fild02",
+			"moc_fild03",
+			"moc_fild07",
+			"moc_pryd01",
+			"moc_pryd02",
+			"moc_pryd03",
+			"moc_pryd04",
+			"moc_pryd05",
+			"moc_pryd06",
+			"orcsdun01",
+			"orcsdun02",
+			"pay_arche",
+			"pay_dun00",
+			"pay_dun01",
+			"pay_dun02",
+			"pay_dun03",
+			"pay_dun04",
+			"pay_fild01",
+			"pay_fild02",
+			"pay_fild03",
+			"pay_fild04",
+			"pay_fild05",
+			"pay_fild06",
+			"pay_fild07",
+			"pay_fild08",
+			"pay_fild09",
+			"pay_fild10",
+			"pay_fild11",
+			"prt_fild00",
+			"prt_fild01",
+			"prt_fild02",
+			"prt_fild03",
+			"prt_fild04",
+			"prt_fild05",
+			"prt_fild06",
+			"prt_fild07",
+			"prt_fild08",
+			"prt_fild09",
+			"prt_fild10",
+			"prt_fild11",
+			"prt_maze01",
+			"prt_maze02",
+			"prt_maze03",
+			"prt_monk",
+			"prt_sewb1",
+			"prt_sewb2",
+			"prt_sewb3",
+			"prt_sewb4",
+			"xmas_dun01",
+			"xmas_dun02",
+			"xmas_fild01",
+			"beach_dun",
+			"beach_dun2",
+			"beach_dun3",
+			"cmd_fild01",
+			"cmd_fild02",
+			"cmd_fild03",
+			"cmd_fild04",
+			"cmd_fild05",
+			"cmd_fild06",
+			"cmd_fild07",
+			"cmd_fild08",
+			"cmd_fild09",
+			"tur_dun01",
+			"tur_dun02",
+			"tur_dun03",
+			"tur_dun04",
+			"tur_dun05",
+			"tur_dun06",
+			"mag_dun01",
+			"mag_dun02",
+			"yuno_fild01",
+			"yuno_fild02",
+			"yuno_fild03",
+			"yuno_fild04",
+			"ama_dun01",
+			"ama_dun02",
+			"ama_dun03",
+			"ama_fild01",
+			"gon_dun01",
+			"gon_dun02",
+			"gon_dun03",
+			"gon_fild01",
+			"um_dun01",
+			"um_dun02",
+			"um_fild01",
+			"um_fild02",
+			"um_fild03",
+			"um_fild04",
+			"nif_fild01",
+			"nif_fild02",
+			"lou_dun03",
+			"lou_dun02",
+			"lou_dun01",
+			"lou_fild01",
+			"gefenia01",
+			"gefenia02",
+			"gefenia03",
+			"gefenia04",
+			"ayothaya",
+			"ayo_fild01",
+			"ayo_fild02",
+			"ayo_dun01",
+			"ayo_dun02",
+			"yuno_fild05",
+			"yuno_fild07",
+			"yuno_fild08",
+			"yuno_fild09",
+			"yuno_fild11",
+			"yuno_fild12",
+			"airport",
+			"ein_dun01",
+			"ein_dun02",
+			"ein_fild06",
+			"ein_fild07",
+			"ein_fild08",
+			"ein_fild09",
+			"ein_fild10",
+			"ein_in01",
+			"ein_fild03",
+			"ein_fild04",
+			"lhz_fild02",
+			"lhz_fild03",
+			"lhz_fild01",
+			"lighthalzen",
+			"juperos_01",
+			"juperos_02",
+			"hu_fild07",
+			"hu_fild05",
+			"hu_fild04",
+			"hu_fild01",
+			"yuno_fild06",
+			"abyss_01",
+			"abyss_02",
+			"abyss_03",
+			"tha_t01",
+			"tha_t02",
+			"tha_t03",
+			"tha_t04",
+			"tha_t07",
+			"tha_t05",
+			"tha_t06",
+			"tha_t08",
+			"tha_t09",
+			"tha_t10",
+			"tha_t11",
+			"tha_t12",
+			"odin_tem01",
+			"odin_tem02",
+			"odin_tem03",
+			"hu_fild02",
+			"hu_fild03",
+			"hu_fild06",
+			"ein_fild01",
+			"ein_fild02",
+			"ein_fild05",
+			"yuno_fild10",
+			"kh_kiehl02",
+			"kh_kiehl01",
+			"kh_dun02",
+			"kh_dun01",
+			"ra_fild01",
+			"ra_fild02",
+			"ra_fild03",
+			"ra_fild04",
+			"ra_fild05",
+			"ra_fild06",
+			"ra_fild07",
+			"ra_fild08",
+			"ra_fild09",
+			"ra_fild10",
+			"ra_fild11",
+			"ra_fild12",
+			"ra_fild13",
+			"ra_san01",
+			"ra_san02",
+			"ra_san03",
+			"ra_san04",
+			"ra_san05",
+			"ice_dun01",
+			"ice_dun02",
+			"ice_dun03",
+			"ice_dun04",
+			"thor_v01",
+			"thor_v02",
+			"thor_v03",
+			"ve_fild01",
+			"ve_fild02",
+			"ve_fild03",
+			"ve_fild04",
+			"ve_fild05",
+			"ve_fild06",
+			"ve_fild07",
+			"abbey01",
+			"abbey02",
+			"abbey03",
+			"mosk_fild01",
+			"mosk_fild02",
+			"mosk_dun01",
+			"mosk_dun02",
+			"mosk_dun03",
+			"moc_fild20",
+			"moc_fild21",
+			"moc_fild22",
+			"mid_camp",
+			"man_fild01",
+			"man_fild03",
+			"spl_fild02",
+			"spl_fild03",
+			"man_fild02",
+			"spl_fild01";
+	setarray $ymMapListTown$[0],"alberta",
+			"aldebaran",
+			"geffen",
+			"morocc",
+			"payon",
+			"prontera",
+			"xmas",
+			"comodo",
+			"amatsu",
+			"gonryun",
+			"umbala",
+			"niflheim",
+			"louyang",
+			"jawaii",
+			"geffenia",
+			"ayothaya",
+			"einbech",
+			"einbroch",
+			"lighthalzen",
+			"hugel",
+			"yuno",
+			"rachel",
+			"veins",
+			"moscovia",
+			"manuk",
+			"splendide",
+			"brasilis";
+	
+	//copyarray $ymMapList$[0], $yggdrasilArrayMap$[0], getarraysize($yggdrasilArrayMap$);
+	//copyarray $ymMapNameListTown$[0], $townByLandingMapName$[0], getarraysize($townByLandingMapName$);
+	//copyarray $ymMapListTown$[0], $townByLandingMap$[0], getarraysize($townByLandingMap$);
+	end;
+	
+OnLootCard:
+	//if the ring is on
+	if (callfunc("IsPlayerOn") || callfunc("IsPlayerOnTown"))
+	{
+		//get random loot
+		//retrieve cards which percent loot is tinyer or equal to selected value
+		set .@percentLoot, rand(0,10000);
+		query_sql("SELECT `id_card`, `actual_count` FROM `ym_cards` WHERE `percentloot` >= " + .@percentLoot + "", .@idCards, .@actualCount);
+		//get one in random selected cards
+		if (getarraysize(.@idCards) > 0)
+		{
+			set .@choiceRand, rand(0,getarraysize(.@idCards)-1);
+			set .@cardId, .@idCards[.@choiceRand];
+			//get item
+			rentitem .@cardId, 300;
+			logmes "[Yggdrasil Memories] " + strcharinfo(0) + " obtains a rental " + getitemname(.@cardId) + ".";
+		}
+	}
+	end;
+
+OnWhisperGlobal:
+OnClock0000:
+	query_sql("SELECT DISTINCT `id_char` FROM `ym_player`", .@idChar);
+
+	set .@idCharList$, "";
+	for(set .@i,0; .@i<getarraysize(.@idChar); set .@i,.@i+1)
+	{
+		if (.@idCharList$ == "")
+		{
+			set .@idCharList$, .@idCharList$ + .@idChar[.@i];
+		}
+		else
+		{
+			set .@idCharList$, .@idCharList$ + "," + .@idChar[.@i];
+		}
+	}
+
+	query_sql("SELECT `account_id` FROM `char` WHERE `char_id` IN (" + .@idCharList$ +")", .@idAccount);
+
+	set .@idAccountList$, "";
+	for(set .@i,0; .@i<getarraysize(.@idAccount); set .@i,.@i+1)
+	{
+		if (.@idAccountList$ == "")
+		{
+			set .@idAccountList$, .@idAccountList$ + .@idAccount[.@i];
+		}
+		else
+		{
+			set .@idAccountList$, .@idAccountList$ + "," + .@idAccount[.@i];
+		}
+	}
+
+	query_sql("SELECT `lastlogin` FROM `login` WHERE `account_id` IN (" + .@idAccountList$ +")", .@lastLogin$);
+	
+	//dateformat 2015-11-23 13:36:02
+	set .@currentMonth, gettime(GETTIME_MONTH);
+	set .@currentYear, gettime(GETTIME_YEAR);
+
+	for(set .@i,0; .@i<getarraysize(.@lastLogin$); set .@i,.@i+1)
+	{
+		set .@clear, 0;
+		explode(.@explodedDateTime$, "" + .@lastLogin$[.@i], " ");
+		explode(.@explodedDate$, .@explodedDateTime$[0], "-");
+
+		if (getarraysize(.@explodedDate$) > 2)
+		{	
+			set .@compareDay$, .@explodedDate$[2];
+			set .@compareMonth$, .@explodedDate$[1];
+			set .@compareYear$, .@explodedDate$[0];
+
+			if (atoi(.@compareYear$) < .@currentYear)
+			{
+				//more than year, clear
+				set .@clear, 1;
+			}
+			else if(atoi(.@compareMonth$) < .@currentMonth)
+			{
+				if (.@currentMonth - atoi(.@compareMonth$) > 1)
+				{
+					//more than one month, clear
+					set .@clear, 1;
+				}
+			}
+		}
+
+		if (.@clear == 1)
+		{
+			set .@cleaningId, .@idChar[.@i];
+			query_sql("SELECT `id_card` FROM `ym_book` WHERE `id_char`=" + .@cleaningId, .@cardIds);
+			//reduce cards owned count
+			for(set .@j,0; .@j<getarraysize(.@cardIds); set .@j,.@j+1)
+			{
+				query_sql("UPDATE `ym_cards` SET `actualCount`=`actualCount`-1 WHERE `id_card`=" + .@cardIds[.@j], .@count);
+			}
+			//clear book
+			query_sql("DELETE FROM `ym_book` WHERE `id_char`=" + .@cleaningId, .@count);
+			//clear player entry
+			query_sql("DELETE FROM `ym_player` WHERE `id_char`=" + .@cleaningId, .@count);
+		}
+	}
+	end;
+
+OnPCLogOnEvent:
+	//check if ring has been taken off and limite time has been passed
+	if (GMOFF == 1 && ReturnLimitTick > gettimetick(2)) {
+		//if so, clear all cards
+		callfunc "OnClearArray", getcharid(0);
+	}
+	end;
+}
+
+function	script	OnEquipRing	{
+	set GMON, 1;
+	
+	query_sql("SELECT `id_char` FROM `ym_player` WHERE `id_char`=" + getcharid(0), .@id);
+	if (getarraysize(.@id) == 0)
+	{
+		query_sql("INSERT INTO `ym_player` (`id_char`,`visible`,`protected`,`reflect`,`safe_count`) VALUES (" + getcharid(0) + ",1,0,0,0)", .@count);
+		dispbottom "[Book] Welcome in Yggdrasil Memories.";
+	}
+	else
+	{
+		dispbottom "[Book] Welcome back in Yggdrasil Memories.";
+	}
+	end;
+}
+
+function	script	OnUnequipRing	{
+	set ReturnLimitTick, gettimetick(2) + (86400 * $limit_return_day);
+	set GMON, 0;
+	dispbottom "[Book] You're leaving Yggdrasil Memories. The time limit to return is " + $limit_return_day + " days.";
+	end;
+}
+
+function	script	OnOpenBlister	{
+	//if the ring is on
+	if (callfunc("IsPlayerOn") || callfunc("IsPlayerOnTown"))
+	{
+		for (set .@i,0; .@i < $blister_card_count; set .@i,.@i+1)
+		{
+			//get random loot
+			//retrieve cards which percent loot is tinyer or equal to selected value
+			set .@percentLoot, rand(0,10000);
+			query_sql("SELECT `id_card`, `actual_count` FROM `ym_cards` WHERE `rank` <= 6 AND `percentloot` >= " + .@percentLoot + "", .@idCards, .@actualCount);
+			if (getarraysize(.@idCards) <= 0)
+			{
+				query_sql("SELECT `id_card`, `actual_count` FROM `ym_cards` WHERE `rank` <= 5", .@idCards, .@actualCount);
+			}
+			//get one in random selected cards
+			set .@choiceRand, rand(0,getarraysize(.@idCards)-1);
+			set .@cardId, .@idCards[.@choiceRand];
+			//get item
+			rentitem .@cardId, 300;
+			logmes "[Yggdrasil Memories] " + strcharinfo(0) + " obtains a rental " + getitemname(.@cardId) + ".";
+		}
+	}
+}
+
+function	script	IsPlayerOn	{
+	set .@in, 0;
+	if (getequipid(EQI_ACC_L) == $YMRingId
+		|| getequipid(EQI_ACC_R) == $YMRingId)
+	{
+		for (set .@i,0; .@i<getarraysize($ymMapList$) && .@in != 1; set .@i,.@i+1)
+		{
+			if (strcharinfo(3) == $ymMapList$[.@i] && $hidden_started != 1)
+			{
+				set .@in, 1;
+			}
+		}
+	}
+
+	return .@in;
+}
+
+function	script	IsPlayerOnTown	{
+	set .@in, 0;
+	if (getequipid(EQI_ACC_L) == $YMRingId
+		|| getequipid(EQI_ACC_R) == $YMRingId)
+	{
+		for (set .@i,0; .@i<getarraysize($ymMapListTown$) && .@in != 1; set .@i,.@i+1)
+		{
+			if (strcharinfo(3) == $ymMapListTown$[.@i])
+			{
+				set .@in, 1;
+			}
+		}
+		if (strcharinfo(3) == "mal_in02")
+		{
+			set .@in, 1;
+		}
+	}
+
+	return .@in;
+}
+		
+
+function	script	OnDeleteCard	{
+	set .@ownerId, getarg(0);
+	set .@rankCardMin, getarg(1);
+	set .@rankCardMax, getarg(2);
+	set .@fixed, getarg(3);
+	set .@cardId, getarg(4);
+	set .@deleteItem, getarg(5);
+	set .@position, getarg(6);
+
+	if (.@cardId != -1)
+	{
+		//retrieve potential card list
+		set .@query$, "SELECT `id_card`, `actual_count` FROM `ym_cards`";
+		if (.@fixed != -1)
+		{
+			set .@query$, .@query$ + "WHERE `fixed` = " + .@fixed + "";
+		}
+		if (.@rankCardMin > 0)
+		{
+			if (.@rankCardMax == -1)
+				set .@rankCardMax , .@rankCardMin + 1;
+		}
+		if (.@rankCardMax > 0)
+		{
+			if (.@rankCardMin == -1)
+				set .@rankCardMin, .@rankCardMax - 1;
+		}
+
+		if (.@rankCardMin > 0 && .@rankCardMax > 0)
+		{
+			set .@query$, .@query$ + "AND `rank` >= " + .@rankCardMin +  " AND `rank` <= " + .@rankMax + "";
+		}
+		
+		query_sql(.@query$, .@idCards, .@actualCount);
+
+		set .@idArrayInString$, "";
+		
+		if (getarraysize(.@idCards))
+		{
+			//compute id in string to used it in join function
+			for(set .@i,0; .@i<getarraysize(.@idCards); set .@i,.@i+1)
+			{
+				if (.@idArrayInString$ == "")
+				{
+					set .@idArrayInString$, .@idArrayInString$ + .@idCards[.@i];
+				}
+				else
+				{
+					set .@idArrayInString$, .@idArrayInString$ + "," + .@idCards[.@i];
+				}
+			}
+			
+			//delete item
+			if (.@deleteItem == 1 && countitem(.@cardId) >= 1)
+				delitem .@cardId, 1;
+			//remove card from owned db
+			query_sql("DELETE FROM `ym_book` WHERE `id_card`=" + .@cardId + " AND `position` = " + .@position + "", .@count);	
+			//retrieve choosen card in global list
+			query_sql("SELECT `id`, `actual_count` FROM `ym_cards` WHERE `id_card`=" + .@cardId + "", .@choosenDbId, .@choosenActualCount);
+			set .@newActualCount, (.@choosenActualCount[0] - 1);
+			if (.@newActualCount < 0)
+				set .@newActualCount, 0;
+			if (getarraysize(.@choosenDbId) == 1)
+			{
+				//update actual count
+				query_sql("UPDATE `ym_cards` SET `actual_count`=" + .@newActualCount + " WHERE `id_item` = " + .@choosenDbId[0], .@count);
+			}
+		}
+	}
+	else
+	{
+		query_sql("SELECT `id_card` FROM `ym_book` WHERE `id_char`=" + .@ownerId + "", .@idCards);
+		if (getarraysize(.@idCards) > 0)
+		{
+			set .@cardId, .@idCards[rand(0, getarraysize(.@idCards) - 1)];
+			//remove card from owned db
+			set .@query$, "DELETE FROM `ym_book` WHERE `id_card`=" + .@cardId + " AND `id_char`=" + .@ownerId;
+			if (.@position != -1)
+			{
+				set .@query$, .@query$ + "  AND `position` = " + .@position;
+			}
+			query_sql(.@query$, .@count);	
+			//retrieve choosen card in global list
+			query_sql("SELECT `id_card`, `actual_count` FROM `ym_cards` WHERE `id_card`=" + .@cardId + "", .@choosenDbId, .@choosenActualCount);
+			set .@newActualCount, (.@choosenActualCount[0] - 1);
+			if (.@newActualCount < 0)
+				set .@newActualCount, 0;
+			if (getarraysize(.@choosenDbId) >= 1)
+			{
+				//update actual count
+				set .@query$, "UPDATE `ym_cards` SET `actual_count`=" + .@newActualCount + " WHERE `id_card` = " + .@choosenDbId[0];
+				query_sql(.@query$, .@count);
+			}
+			if (.@deleteItem == 1)
+				delitem .@cardId, 1;
+		}
+	}
+	return;
+}
+
+function	script	OnSeeCard	{
+	set .@targetId, getarg(0);
+	set .@rankCardMin, getarg(1);
+	set .@rankCardMax, getarg(2);
+	set .@fixed, getarg(3);
+	set .@userId, getarg(0);
+
+	set .@query$, "SELECT `id_card`, `name_item`, `max_count` FROM `ym_cards` ";
+	if (.@fixed == 1)
+	{
+		set .@query$, .@query$ + "WHERE `fixed` = 1";
+	}
+	query_sql(.@query$, .@idCards, .@name$, .@maxCount);
+	//compute id in string to used it in join function
+	for(set .@i,0; .@i<getarraysize(.@idCards); set .@i,.@i+1)
+	{
+		if (.@idArrayInString$ == "")
+		{
+			set .@idArrayInString$, .@idArrayInString$ + .@idCards[.@i];
+		}
+		else
+		{
+			set .@idArrayInString$, .@idArrayInString$ + "," + .@idCards[.@i];
+		}
+	}
+
+	set .@query$, "SELECT `id_card` FROM `ym_book` WHERE `id_char` = " + .@targetId + " AND `position` = " + .@fixed + " AND `id_card` IN (" + .@idArrayInString$ + ")";
+
+	query_sql(.@query$, .@idOwnedCards);
+	set .@idArrayInString$, "";
+	for(set .@i,0; .@i<getarraysize(.@idOwnedCards); set .@i,.@i+1)
+	{
+		if (.@idArrayInString$ == "")
+		{
+			set .@idArrayInString$, .@idArrayInString$ + .@idOwnedCards[.@i];
+		}
+		else
+		{
+			set .@idArrayInString$, .@idArrayInString$ + "," + .@idOwnedCards[.@i];
+		}
+	}
+			
+	set .@cardPerPage, 9;
+	set .@currentCard, 0;
+	next;
+	if (.@fixed == 0)
+	{
+		//display free slots
+		for (set .@i, 0; .@i<getarraysize(.@idCards); set .@i,.@i+1)
+		{
+			set .@compare, compare(.@idArrayInString$, ""+.@idCards[.@i]);
+			if (.@compare != 0)
+			{
+				set .@nameOwned$[getarraysize(.@nameOwned$)], .@name$[.@i];						
+			}
+		}
+		
+		mes "Common Slots: " + getarraysize(.@nameOwned$) + "/45";
+		for (set .@i, 0; .@i<getarraysize(.@nameOwned$); set .@i,.@i+1)
+		{
+			mes " ~ " + .@nameOwned$[.@i] + "";
+			
+			set .@currentCard, .@currentCard + 1;
+			if (.@currentCard > .@cardPerPage)
+			{
+				next;
+				mes "[Book]";
+				set .@currentCard, 0;
+			}
+		}
+	}
+	else
+	{
+		mes "Fixed Slots: " + getarraysize(.@idOwnedCards) + "/99";
+		//display fixed slots
+		for (set .@i, 0; .@i<getarraysize(.@idCards); set .@i,.@i+1)
+		{
+			if (compare(.@idArrayInString$, ""+.@idCards[.@i]) == 0)
+			{
+				mes "^FF0000 " + .@i + " ~ " + .@name$[.@i] + "^000000";
+			}
+			else
+			{
+				mes "^00FF00 " + .@i + " ~ " + .@name$[.@i] + "^000000";
+			}
+			
+			set .@currentCard, .@currentCard + 1;
+			if (.@currentCard > .@cardPerPage)
+			{
+				next;
+				mes "[Book]";
+				set .@currentCard, 0;
+			}
+		}
+	}
+	
+	return;
+}
+
+function	script	CheckCardOn	{
+	set .@cardName$, getarg(0);
+	if (callfunc("IsPlayerOn") || callfunc("IsPlayerOnTown"))
+	{
+		query_sql("SELECT `id_card` FROM `ym_cards` WHERE `name_item`='" + .@cardName$ + "'", .@idCards);
+		if (getarraysize(.@idCards) > 0)
+		{
+			query_sql("SELECT `id` FROM `ym_book` WHERE `id_card`=" + .@idCards[0], .@id);
+			if (getarraysize(.@id) > 0)
+			{
+				return 1;
+			}
+		}
+		return 0;
+	}
+	return 0;
+}		
+
+function	script	OnCheckCardPosition	{
+	set .@ownerId, getarg(0);
+	
+	//select common card in fixed slots
+	query_sql("SELECT `id_card` FROM `ym_cards` WHERE `fixed`=0", .@idCards);
+	set .@idArrayInString$, "";
+	
+	//compute id in string to used it in join function
+	for(set .@i,0; .@i<getarraysize(.@idCards); set .@i,.@i+1)
+	{
+		if (.@idArrayInString$ == "")
+		{
+			set .@idArrayInString$, .@idArrayInString$ + .@idCards[.@i];
+		}
+		else
+		{
+			set .@idArrayInString$, .@idArrayInString$ + "," + .@idCards[.@i];
+		}
+	}
+	//delete found cards
+	set .@query$, "SELECT `id_card` FROM `ym_book` WHERE `id_char`=" + .@ownerId + " AND `id_card` IN (" + .@idArrayInString$ + ") AND `position`=1";
+	query_sql(.@query$, .@idCard);
+	for(set .@i,0; .@i<getarraysize(.@idCard); set .@i,.@i+1)
+	{
+		callfunc "OnDeleteCard",.@ownerId,-1,-1,0,.@idCard[.@i],0,1;
+	}
+	return;
+}
+
+function	script	OnChangeCardOwner	{
+	set .@cardId, getarg(0);
+	set .@ownerId, getarg(1);
+	set .@newOwnerId, getarg(2);
+	//update cards owner
+	query_sql("UPDATE `ym_book` SET `id_char`=" + .@newOwnerId + " WHERE `id_char`=" + .@ownerId + " AND `id_card`=" + .@cardId + "",.@count);
+	return;
+}
+
+function	script	OnClearBook	{
+	set .@ownerId, getarg(1);
+	//update cards owner
+	query_sql("DELETE FROM `ym_book` WHERE `id_char`=" + .@ownerId,.@count);
+	return;
+}
+
+function	script	OnInsertCard	{
+	//update actual count
+	set .@newActualCount, getarg(0) + 1;
+	set .@cardId, getarg(1);
+	set .@ownerId, getarg(2);
+	set .@position, getarg(3);
+	set .@clone, getarg(4);
+	set .@originalCard, getarg(5);
+
+	if (.@position == 1)
+	{
+		query_sql("SELECT `id` FROM `ym_book` WHERE `id_char`=" + .@ownerId + " AND `id_card`=" + .@cardId, .@id);
+		if (getarraysize(.@id) != 0)
+		{
+			dispbottom "You already own this card. Insertion failed.";
+			return 0;
+		}
+	}
+	
+	//update cards owner
+	set .@query$, "INSERT INTO `ym_book` (`id_card`, `id_char`, `position`, `clone`, `idOriginal`) VALUES (" + .@cardId + ", " + .@ownerId + ", " + .@position + ", " + .@clone + ", " + .@originalCard + ")";
+	query_sql(.@query$,.@count);
+	//update actual count
+	query_sql("UPDATE `ym_cards` SET `actual_count`=" + .@newActualCount + " WHERE `id_card` = " + .@cardId,.@count);
+	dispbottom "[Book] Your card has been inserted.";
+	return 1;
+}

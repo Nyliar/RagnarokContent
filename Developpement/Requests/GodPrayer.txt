@@ -1,0 +1,187 @@
+prontera,233,318,4	script	Demon Lord Statue::aladlsta	4_M_DEATH2,{
+	set .@npcname$, "[Demon Lord Statue]";
+	mes .@npcname$;
+	mes "This is a statue the Demon Lord put here to prove that nobody can escape his power.";
+	mes "There's also a message.";
+	next;
+	mes "[Demon Lord]";
+	mes "Just so you know it, I know you're in there.";
+	mes "Humans, you live here under my good will.";
+	mes "I'm a mercyfull god. But also an unbreakable ruler.";
+	next;
+	mes "[Demon Lord]";
+	mes "I decide of everything that happens here.";
+	mes "If I want to make something disappear, I'll do it. And you won't have anything to say about it.";
+	mes "On the other hand, I can easily make your wish come true.";
+	mes "Let your ideas flow to me. And if one of those please me, I'll make it happen.";
+	next;
+	mes .@npcname$;
+	if(getgmlevel() == 99)
+	{
+		mes "Welcome, master.";
+		switch(select("See the suggestions","Reset the suggestions","Add Suggestion"))
+		{
+			case 1:
+				goto OnSeeSuggestion;
+				break;
+			case 2:
+				goto OnClearSuggestion;
+				break;
+			case 3:
+				goto OnAddSuggestion;
+				break;
+		}
+	}
+	else
+	{
+		mes "If you want to, you can suggest any of your ideas.";
+		mes "Keep it clear, concise. If you need to exchange with the Demon Lord, add it in the description.";
+		mes "Do you want to add an idea?";
+		switch(select("Yes","No","See the suggestions"))
+		{
+			case 1:
+				goto OnAddSuggestion;
+				break;
+			case 2:
+				break;
+			case 3:
+				goto OnSeeSuggestion;
+				break;
+		}
+	}
+	close;
+	
+OnClearSuggestion:
+	set .@npcname$, "[Demon Lord Statue]";
+	next;
+	mes .@npcname$;
+	mes "Are you sure you want to delete all suggestions?";
+	if(select("Yes","No") == 1)
+	{
+		deletearray $suggestionTitle$[0], getarraysize($suggestionTitle$);
+		deletearray $suggestionDesc$[0], getarraysize($suggestionDesc$);
+		deletearray $suggestionVote[0], getarraysize($suggestionVote);
+		deletearray $suggestionAnswer$[0], getarraysize($suggestionAnswer$);
+	}
+	close;
+	
+OnAddSuggestion:
+	set .@npcname$, "[Demon Lord Statue]";
+	next;
+	mes .@npcname$;
+	if(getarraysize($suggestionDesc$) >= .maximumSuggestion)
+	{
+		mes "The suggestion panel is full.";
+		mes "Please wait for the Demon Lord to treat some of the existing ones.";
+	}
+	else
+	{
+		mes "First, enter a title.";
+		input .@title$;
+		next;
+		mes .@npcname$;
+		mes "Next, enter a description (keep it short, max 255 char. If you need more, ask for a contact with the Demon Lord)";
+		input .@desc$;
+		next;
+		mes .@npcname$;
+		mes "Here's your suggestion:";
+		mes "Title: " + .@title$;
+		mes "Description: " + .@desc$;
+		next;
+		mes .@npcname$;
+		mes "Confirm?";
+		if(select("Yes","No") == 1)
+		{
+			set $suggestionTitle$[getarraysize($suggestionTitle$)], .@title$;
+			set $suggestionDesc$[getarraysize($suggestionDesc$)], .@desc$;
+			set $suggestionVote[getarraysize($suggestionVote)], 1;
+			set $suggestionAnswer$[getarraysize($suggestionAnswer$)], "";
+			next;
+			mes .@npcname$;
+			mes "Suggestion saved.";
+		}
+	}
+	close;
+	
+OnVoteForSuggestion:
+	set .@npcname$, "[Demon Lord Statue]";
+	next;
+	mes .@npcname$;
+	set .@i, getarg(0);
+	mes "Title: " + $suggestionTitle$[.@i];
+	mes "Description: " + $suggestionDesc$[.@i];
+	mes "Votes: " + $suggestionVote[.@i];
+	if($suggestionAnswer$[.@i] != "")
+	{
+		mes "^0000FFAnswer: "  + $suggestionAnswer$[.@i] + "^000000";
+	}
+	else
+	{
+		mes "^FF0000Not answered yet.^000000";
+	}
+	if(getgmlevel() < 99)
+	{
+		next;
+		mes .@npcname$;
+		mes "Do you wish to vote for this suggestion?";
+		mes "It'll cost you 1.000z.";
+		if(select("Yes","No") == 1 && Zeny >= 1000)
+		{
+			set Zeny, Zeny - 1000;
+			set $suggestionVote[.@i], $suggestionVote[.@i] + 1;
+		}
+	}
+	else
+	{
+		next;
+		mes .@npcname$;
+		if($suggestionAnswer$[.@i] == "")
+		{
+			mes "Do you wish to answer to this suggestion?";
+		}
+		else
+		{
+			mes "Do you wish to modify your answer?";
+		}
+		if(select("Yes","No") == 1)
+		{
+			input .@answer$;
+			next;
+			mes .@npcname$;
+			mes "Suggestion answered.";
+			set $suggestionAnswer$[.@i], .@answer$;
+		}
+		else
+		{
+			next;
+			mes .@npcname$;
+			mes "Do you wish to delete it?";
+			if(select("Yes","No") == 1)
+			{
+				deletearray $suggestionTitle$[.@i], 1;
+				deletearray $suggestionDesc$[.@i], 1;
+				deletearray $suggestionVote[.@i], 1;
+				deletearray $suggestionAnswer$[.@i], 1;		
+				mes "Suggestion deleted";	
+			}
+		}
+	}
+	return;
+	
+OnSeeSuggestion:
+	if(getarraysize($suggestionTitle$) == 0)
+	{
+		next;
+		mes .@npcname$;
+		mes "No suggestion has been entered.";
+	}
+	for(set .@i,0; .@i<getarraysize($suggestionTitle$); set .@i,.@i+1)
+	{
+		callsub(OnVoteForSuggestion, .@i);
+	}
+	close;
+	
+OnInit:
+	set .maximumSuggestion, 25;
+	end;
+}

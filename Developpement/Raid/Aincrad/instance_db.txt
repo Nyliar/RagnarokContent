@@ -1,0 +1,11 @@
+41,Aincrad,7200,300,0@ain,56,68,1@ain,2@ain,3@ain,4@ain,5@ain,6@ain,7@ain,8@ain,9@ain,10@ain,
+11@ain,12@ain,13@ain,14@ain,15@ain,16@ain,17@ain,18@ain,19@ain,20@ain,
+21@ain,22@ain,23@ain,24@ain,25@ain,26@ain,27@ain,28@ain,29@ain,30@ain,
+31@ain,32@ain,33@ain,34@ain,35@ain,36@ain,37@ain,38@ain,39@ain,40@ain,
+41@ain,42@ain,43@ain,44@ain,45@ain,46@ain,47@ain,48@ain,49@ain,50@ain,
+51@ain,52@ain,53@ain,54@ain,55@ain,56@ain,57@ain,58@ain,59@ain,60@ain,
+61@ain,62@ain,63@ain,64@ain,65@ain,66@ain,67@ain,68@ain,69@ain,70@ain,
+71@ain,72@ain,73@ain,74@ain,75@ain,76@ain,77@ain,78@ain,79@ain,80@ain,
+81@ain,82@ain,83@ain,84@ain,85@ain,86@ain,87@ain,88@ain,89@ain,90@ain,
+91@ain,92@ain,93@ain,94@ain,95@ain,96@ain,97@ain,98@ain,99@ain,100@ain,
+101@ain,102@ain,103@ain,104@ain,105@ain,106@ain,107@ain

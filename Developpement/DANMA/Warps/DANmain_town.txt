@@ -1,0 +1,23 @@
+//Resting area
+mellina,42,152,0	warp	maintown_in01	2,2,mellina_in,69,166
+mellina_in,69,163,0	warp	in01-maintown	2,2,mellina,45,150
+
+//registration
+mellina,40,57,0	warp	maintown_in02	2,2,mellina_in,47,106
+mellina_in,51,105,0	warp	in02-maintown	2,2,mellina,44,59
+
+//tool deal
+mellina,59,116,0	warp	maintown_in03	2,2,mellina_in,130,71
+mellina_in,134,71,0	warp	in03-maintown	2,2,mellina,59,111
+
+//smith faction
+mellina,56,95,0	warp	maintown_in04	2,2,mellina_in,228,18
+mellina_in,228,14,0	warp	in04-maintown	2,2,mellina,56,90
+
+//apothecary
+mellina,118,94,0	warp	maintown_in05	2,2,mellina_in,59,72
+mellina_in,59,77,0	warp	in05-maintown	2,2,mellina,117,88
+
+//healer
+mellina,143,113,0	warp	maintown_in06	2,2,mellina_in,129,146
+mellina_in,129,142,0	warp	in06-maintown	2,2,mellina,143,110

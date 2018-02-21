@@ -1,0 +1,209 @@
+-	script	General en Chef::General en Chef	-1,{
+	
+set .@npc$, "[^FF0000General en Chef^000000]";
+
+set @GID,getcharid(2);
+
+switch( atoi(strnpcinfo(2)) ) {
+	case 0:
+		set @guildid, GetCastleData("ice_combat", 1);
+      		break;
+	case 1:
+		set @guildid, GetCastleData("fire_combat", 1);
+    	   break;
+	case 2:
+		set @guildid, GetCastleData("combat01", 1);
+       	break;
+	case 3:
+		set @guildid, GetCastleData("combat02", 1);
+       	break;
+}
+
+if (@GID == @guildid)
+{
+	if(strcharinfo(0)==getguildmaster(@GID)) goto L_GuildMasterG;
+	else goto L_GuildMemberG;
+}
+else
+{
+	mes .@npc$; 
+	mes "Soyez le bienvenue, voyageur.";
+	close;
+}
+close;
+
+OnClock0001:
+	set COUNT_Q, 0;
+	set $ACTIVE_Q$, "free";
+
+L_GuildMasterG:
+	mes .@npc$; 
+	mes "Soyez le bienvenu, votre Majesté.";
+	mes "Que puis-je faire pour vous?";
+	switch(select("Je souhaite partir en Guerre!:Je voudrais connaître l'état des Armées:Rien du tout, je visite mes nouveaux appartements."))
+	{
+		case 1:
+			mes "En Guerre?";
+			mes "Vous souhaitez remettre votre Royaume en jeu?";
+			switch(select("Oui:Non"))
+			{
+				case 1:
+					next;
+					mes "Très bien, votre Majesté.";
+					mes "Je dois d'abord vérifier l'état de nos armées.";
+					set .type, 1;
+					callsub L_checktime;
+				case 2:
+					next;
+					mes "Très bien.";
+					mes "A votre service, " + (Sex?"lady":"ser");
+					close;					
+			}
+		case 2:
+			mes "Très bien, votre Majesté.";
+			mes "Laissez-moi vérifier cela pour vous.";
+			goto L_checktime;
+			if (.@check$ == "ok")
+			{
+				mes "On dirait bien que les épées sont prêtes à chanter, Sire.";
+				mes "Les soldats sont prêts,";
+				mes "nous n'attendons que votre Ordre.";
+				close;
+			}
+			else
+			{
+				mes "Désolé, Majesté,";
+				mes "mais les troupes ne sont pas prêtes.";
+				close;	
+			}
+		case 3:
+			mes "Très bien.";
+			mes "A votre service, " + (Sex?"lady":"ser");
+			close;
+	}	
+
+L_GuildMemberG:
+	mes .@npc$; 
+	mes "Bonjour Lord "+ strcharinfo(0) + ".";
+	mes "Quest-ce que je peux faire pour vous?";
+	switch(select("Je souhaite descendre dans les Caves:Je désire connaître l'état des Coffres:Je voudrais connaître l'état des Armées:Rien, je passais dans le coin."))
+	{
+		case 1:
+			mes "Les Caves?";
+			mes "Désolé " + (Sex?"lady":"ser") + ", mais je ne peux pas faire ça.";
+			mes "Voyez avec la Main du Roi";
+			close;
+		case 2:
+			mes "J'ai bien peur de ne pouvoir vous aider.";
+			mes "Allez plutôt voir les Grand Argentier.";
+			close;
+		case 3:
+			mes "Très bien, même si seule sa Majesté peut déclencher la Guerre.";
+			mes "Laissez-moi vérifier cela pour vous.";
+			goto L_checktime;
+		case 4: 
+			mes "Très bien.";
+			mes "A votre service, " + (Sex?"lady":"ser");
+			close;
+	}	
+		
+L_declenchement:
+	switch( atoi(strnpcinfo(2)) ) {
+		case 0:
+			set $kingdom$, "Gelé";
+			set $kingdommap$, "ice_combat";
+			getitem 21006, 1;
+			equip 21006;
+			warp "ice_combat", 71, 91;
+			break;
+		case 1:
+			set $kingdom$, "Brûlant";
+			set $kingdommap$, "fire_combat";
+			getitem 21007, 1;
+			equip 21007;
+			warp "fire_combat", 114,75;
+			break;
+		case 2:
+			set $kingdom$, "Venteux";
+			set $kingdommap$, "combat01";
+			getitem 21008, 1;
+			equip 21008;
+			warp "combat01", 114,68;
+			break;
+		case 3:
+			set $kingdom$, "Dévorant";
+			set $kingdommap$, "combat02";
+			getitem 21009, 1;
+			equip 21009;
+			warp "combat02", 97,94;
+			break;
+	}
+	donpcevent "declenchement_choisi::OnBegin";
+	close;
+
+L_checktime:
+	if ($ACTIVE_Q$ == "active")
+	{
+		set .@check$, "fail";
+	}
+	else
+	{
+		//wait 0 signifie qu'une demi heure est passé depuis le dernier pop de coffres aléatoires
+		if( $wait == 0 )
+		{
+			//si le Déclenchement Choisi n'a pas déjà été activé deux fois pour la guilde courante
+			if (COUNT_Q >= 2)
+			{
+				set .@check$, "fail";
+			}
+			else if ( ( gettime(3)==10 && gettime(2)<40 ) ) || ( gettime(3)==19 && gettime(2)<40 ) )
+			{
+				set .@check$, "fail";
+			}
+			else		
+			{
+				set .@check$, "ok";
+			}
+		}
+		else
+		{
+			set .@check$, "fail";
+		}
+	}
+
+	if (.@check$ == "ok")
+	{
+		next;
+		mes "On dirait bien que les épées vont chanter, Majesté.";
+		mes "Les soldats sont prêts,";
+		mes "nous n'attendons que votre Ordre.";
+		mes "type: " + .type;
+		if (.type == 1)
+		{
+			mes "Souhaitez vous partir en guerre?";
+			switch(select("Oui:Non"))
+			{
+				case 1:
+					next;
+					mes "Alors, allons-y";
+					set COUNT_Q, COUNT_Q+1;
+					set $ACTIVE_Q$, "active";
+					set $kingID, getcharid(0);
+					goto L_declenchement;
+				case 2:
+					next;
+					mes "Très bien.";
+					mes "A votre service, " + (Sex?"lady":"ser");
+					close;	
+			}
+		}
+		close;
+	}
+	else
+	{
+		next;
+		mes "Désolé, Majesté,";
+		mes "mais les troupes ne sont pas prêtes.";
+		close;	
+	}
+}

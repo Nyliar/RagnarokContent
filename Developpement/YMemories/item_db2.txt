@@ -1,0 +1,306 @@
+// Items Database
+//
+// Structure of Database:
+// ID,AegisName,Name,Type,Buy,Sell,Weight,ATK,DEF,Range,Slots,Job,Class,Gender,Loc,wLV,eLV[:maxLevel],Refineable,View,{ Script },{ OnEquip_Script },{ OnUnequip_Script }
+//
+// Healing Items
+//=============================================================
+29263,Steal,Steal,2,10000,5000,50,0,0,0,0,0xFFFFFFFF,63,2,0,0,0,,0,{callfunc "YM_Steal";},{},{}
+29264,Fluoroscopy,Fluoroscopy,2,10000,5000,50,0,0,0,0,0xFFFFFFFF,63,2,0,0,0,,0,{callfunc "YM_Fluoroscopy";},{},{}
+29265,DefensiveWall,DefensiveWall,2,10000,5000,50,0,0,0,0,0xFFFFFFFF,63,2,0,0,0,,0,{callfunc "YM_DefensiveWall";},{},{}
+29266,Reflection,Reflection,2,10000,5000,50,0,0,0,0,0xFFFFFFFF,63,2,0,0,0,,0,{callfunc "YM_Reflection";},{},{}
+29267,MagneticForce,MagneticForce,2,10000,5000,50,0,0,0,0,0xFFFFFFFF,63,2,0,0,0,,0,{callfunc "YM_MagneticForce";},{},{}
+29268,Pickpocket,Pickpocket,2,10000,5000,50,0,0,0,0,0xFFFFFFFF,63,2,0,0,0,,0,{callfunc "YM_PickPocket";},{},{}
+29269,Thief,Thief,2,10000,5000,50,0,0,0,0,0xFFFFFFFF,63,2,0,0,0,,0,{callfunc "YM_Thief";},{},{}
+29270,Trade,Trade,2,10000,5000,50,0,0,0,0,0xFFFFFFFF,63,2,0,0,0,,0,{callfunc "YM_Trade";},{},{}
+29271,Return,Return,2,10000,5000,50,0,0,0,0,0xFFFFFFFF,63,2,0,0,0,,0,{callfunc "YM_Return";},{},{}
+29272,Clone,Clone,2,10000,5000,50,0,0,0,0,0xFFFFFFFF,63,2,0,0,0,,0,{callfunc "YM_Clone";},{},{}
+29273,Railguide,Railguide,2,10000,5000,50,0,0,0,0,0xFFFFFFFF,63,2,0,0,0,,0,{callfunc "YM_Railguide";},{},{}
+29274,Departure,Departure,2,10000,5000,50,0,0,0,0,0xFFFFFFFF,63,2,0,0,0,,0,{callfunc "YM_Departure";},{},{}
+29275,Drift,Drift,2,10000,5000,50,0,0,0,0,0xFFFFFFFF,63,2,0,0,0,,0,{callfunc "YM_Drift";},{},{}
+29276,Collision,Collision,2,10000,5000,50,0,0,0,0,0xFFFFFFFF,63,2,0,0,0,,0,{callfunc "YM_Collision";},{},{}
+29277,CastleGate,CastleGate,2,10000,5000,50,0,0,0,0,0xFFFFFFFF,63,2,0,0,0,,0,{callfunc "YM_CastleGate";},{},{}
+29278,Penetrate,Penetrate,2,10000,5000,50,0,0,0,0,0xFFFFFFFF,63,2,0,0,0,,0,{callfunc "YM_Penetrate";},{},{}
+29279,BlackoutCurtain,BlackoutCurtain,2,10000,5000,50,0,0,0,0,0xFFFFFFFF,63,2,0,0,0,,0,{callfunc "YM_BlackoutCurtain";},{},{}
+29280,Trace,Trace,2,10000,5000,50,0,0,0,0,0xFFFFFFFF,63,2,0,0,0,,0,{callfunc "YM_Trace";},{},{}
+29281,Stone_,Stone,2,10000,5000,50,0,0,0,0,0xFFFFFFFF,63,2,0,0,0,,0,{callfunc "YM_StoneThrow";},{},{}
+29282,Guidepost,Guidepost,2,10000,5000,50,0,0,0,0,0xFFFFFFFF,63,2,0,0,0,,0,{callfunc "YM_Guidepost";},{},{}
+29283,Analysis,Analysis,2,10000,5000,50,0,0,0,0,0xFFFFFFFF,63,2,0,0,0,,0,{callfunc "YM_Analysis";},{},{}
+29284,Lottery,Lottery,2,10000,5000,50,0,0,0,0,0xFFFFFFFF,63,2,0,0,0,,0,{callfunc "YM_Lottery";},{},{}
+29285,Adhesion,Adhesion,2,10000,5000,50,0,0,0,0,0xFFFFFFFF,63,2,0,0,0,,0,{callfunc "YM_Adhesion";},{},{}
+29286,Purify,Purify,2,10000,5000,50,0,0,0,0,0xFFFFFFFF,63,2,0,0,0,,0,{callfunc "YM_Purify";},{},{}
+29287,Recycle,Recycle,2,10000,5000,50,0,0,0,0,0xFFFFFFFF,63,2,0,0,0,,0,{callfunc "YM_Recycle";},{},{}
+29288,List,List,2,10000,5000,50,0,0,0,0,0xFFFFFFFF,63,2,0,0,0,,0,{callfunc "YM_List";},{},{}
+29289,Accompany,Accompany,2,10000,5000,50,0,0,0,0,0xFFFFFFFF,63,2,0,0,0,,0,{callfunc "YM_Accompany";},{},{}
+29290,Contact,Contact,2,10000,5000,50,0,0,0,0,0xFFFFFFFF,63,2,0,0,0,,0,{callfunc "YM_Contact";},{},{}
+29291,Winner_Joy,Winner_Joy,3,10000,5000,50,0,0,0,0,0xFFFFFFFF,63,2,0,0,0,,0,{},{},{}
+29292,Elemental Furor,Elemental Furor,2,10000,5000,50,0,0,0,0,0xFFFFFFFF,63,2,0,0,0,,0,{},{},{}
+29293,Champions Arena,Champions Arena,2,10000,5000,50,0,0,0,0,0xFFFFFFFF,63,2,0,0,0,,0,{},{},{}
+29294,Celestial Beast,Celestial Beast,2,10000,5000,50,0,0,0,0,0xFFFFFFFF,63,2,0,0,0,,0,{},{},{}
+29295,Lonely Mountain,Lonely Mountain,2,10000,5000,50,0,0,0,0,0xFFFFFFFF,63,2,0,0,0,,0,{},{},{}
+29296,Endless Tower,Endless Tower,2,10000,5000,50,0,0,0,0,0xFFFFFFFF,63,2,0,0,0,,0,{},{},{}
+29297,Endless Cellar,Endless Cellar,2,10000,5000,50,0,0,0,0,0xFFFFFFFF,63,2,0,0,0,,0,{},{},{}
+29298,Valhalla Garden,Valhalla Garden,2,10000,5000,50,0,0,0,0,0xFFFFFFFF,63,2,0,0,0,,0,{},{},{}
+29299,Blue_Planet,Blue_Planet,2,10000,5000,50,0,0,0,0,0xFFFFFFFF,63,2,0,0,0,,0,{},{},{}
+29300,Black and White Temple,Black and White Temple,2,10000,5000,50,0,0,0,0,0xFFFFFFFF,63,2,0,0,0,,0,{},{},{}
+29301,Entertainer,Entertainer,2,10000,5000,50,0,0,0,0,0xFFFFFFFF,63,2,0,0,0,,0,{},{},{}
+29302,Hela_Kriss,Hela_Kriss,2,10000,5000,50,0,0,0,0,0xFFFFFFFF,63,2,0,0,0,,0,{},{},{}
+29303,Heavy_Bow,Heavy_Bow,2,10000,5000,50,0,0,0,0,0xFFFFFFFF,63,2,0,0,0,,0,{},{},{}
+29304,Death_Demon,Death_Demon,2,10000,5000,50,0,0,0,0,0xFFFFFFFF,63,2,0,0,0,,0,{},{},{}
+29305,Thor_Hammer,Thor_Hammer,2,10000,5000,50,0,0,0,0,0xFFFFFFFF,63,2,0,0,0,,0,{},{},{}
+29306,Vorpalin Weapon,Vorpalin Weapon,2,10000,5000,50,0,0,0,0,0xFFFFFFFF,63,2,0,0,0,,0,{},{},{}
+29307,Charging_Bobine,Charging_Bobine,2,10000,5000,50,0,0,0,0,0xFFFFFFFF,63,2,0,0,0,,0,{},{},{}
+29308,Winter_Orb,Winter_Orb,2,10000,5000,50,0,0,0,0,0xFFFFFFFF,63,2,0,0,0,,0,{},{},{}
+29309,Saint_Sword,Saint_Sword,2,10000,5000,50,0,0,0,0,0xFFFFFFFF,63,2,0,0,0,,0,{},{},{}
+29310,First Enigma,First Enigma,2,10000,5000,50,0,0,0,0,0xFFFFFFFF,63,2,0,0,0,,0,{},{},{}
+29311,Epic Adventurer,Epic Adventurer,2,10000,5000,50,0,0,0,0,0xFFFFFFFF,63,2,0,0,0,,0,{},{},{}
+29312,Shining_Alexandrite,Shining_Alexandrite,2,10000,5000,50,0,0,0,0,0xFFFFFFFF,63,2,0,0,0,,0,{},{},{}
+29313,Tree of Plenty,Tree of Plenty,2,10000,5000,50,0,0,0,0,0xFFFFFFFF,63,2,0,0,0,,0,{},{},{}
+29314,Golden Scale,Golden Scale,2,10000,5000,50,0,0,0,0,0xFFFFFFFF,63,2,0,0,0,,0,{},{},{}
+29315,Fickle Genie,Fickle Genie,2,10000,5000,50,0,0,0,0,0xFFFFFFFF,63,2,0,0,0,,0,{},{},{}
+29316,Angel Breath,Angel Breath,2,10000,5000,50,0,0,0,0,0xFFFFFFFF,63,2,0,0,0,,0,{},{},{}
+29317,Imp Wink,Imp Wink,2,10000,5000,50,0,0,0,0,0xFFFFFFFF,63,2,0,0,0,,0,{},{},{}
+29318,Singing_Siren,Singing_Siren,2,10000,5000,50,0,0,0,0,0xFFFFFFFF,63,2,0,0,0,,0,{},{},{}
+29319,Swap Ticket,Swap Ticket,2,10000,5000,50,0,0,0,0,0xFFFFFFFF,63,2,0,0,0,,0,{},{},{}
+29320,Miniature Dragon,Miniature Dragon,2,10000,5000,50,0,0,0,0,0xFFFFFFFF,63,2,0,0,0,,0,{},{},{}
+29321,God_Eyes,God_Eyes,2,10000,5000,50,0,0,0,0,0xFFFFFFFF,63,2,0,0,0,,0,{},{},{}
+29322,Solidity,Solidity,2,10000,5000,50,0,0,0,0,0xFFFFFFFF,63,2,0,0,0,,0,{callfunc "YM_Solidity";},{},{}
+29323,Aegis_Shield,Aegis_Shield,2,10000,5000,50,0,0,0,0,0xFFFFFFFF,63,2,0,0,0,,0,{},{},{}
+29324,Elemental_Knuckle,Elemental_Knuckle,2,10000,5000,50,0,0,0,0,0xFFFFFFFF,63,2,0,0,0,,0,{},{},{}
+29325,Dead_Ring,Dead_Ring,2,10000,5000,50,0,0,0,0,0xFFFFFFFF,63,2,0,0,0,,0,{},{},{}
+29326,Absorption_Shield,Absorption_Shield,2,10000,5000,50,0,0,0,0,0xFFFFFFFF,63,2,0,0,0,,0,{},{},{}
+29327,Energy_Shield,Energy_Shield,2,10000,5000,50,0,0,0,0,0xFFFFFFFF,63,2,0,0,0,,0,{},{},{}
+29328,Guided_Boomerang,Guided_Boomerang,2,10000,5000,50,0,0,0,0,0xFFFFFFFF,63,2,0,0,0,,0,{},{},{}
+29329,Trapping_Thread,Trapping_Thread,2,10000,5000,50,0,0,0,0,0xFFFFFFFF,63,2,0,0,0,,0,{},{},{}
+29330,Mimir Hunter,Mimir Hunter,2,10000,5000,50,0,0,0,0,0xFFFFFFFF,63,2,0,0,0,,0,{},{},{}
+29331,Yggdrasil Crystal,Yggdrasil Crystal,2,10000,5000,50,0,0,0,0,0xFFFFFFFF,63,2,0,0,0,,0,{},{},{}
+29332,Rune Master,Rune Master,2,10000,5000,50,0,0,0,0,0xFFFFFFFF,63,2,0,0,0,,0,{},{},{}
+29333,Witch_Broom,Witch_Broom,2,10000,5000,50,0,0,0,0,0xFFFFFFFF,63,2,0,0,0,,0,{},{},{}
+29334,Invisible_Garment,Invisible_Garment,2,10000,5000,50,0,0,0,0,0xFFFFFFFF,63,2,0,0,0,,0,{},{},{}
+29335,Ase Fruit User,Ase Fruit User,2,10000,5000,50,0,0,0,0,0xFFFFFFFF,63,2,0,0,0,,0,{},{},{}
+29336,Fish Master,Fish Master,2,10000,5000,50,0,0,0,0,0xFFFFFFFF,63,2,0,0,0,,0,{},{},{}
+29337,Mining skilled,Mining skilled,2,10000,5000,50,0,0,0,0,0xFFFFFFFF,63,2,0,0,0,,0,{},{},{}
+29338,White Horn King,White Horn King,2,10000,5000,50,0,0,0,0,0xFFFFFFFF,63,2,0,0,0,,0,{},{},{}
+29339,Maze Visitor,Maze Visitor,2,10000,5000,50,0,0,0,0,0xFFFFFFFF,63,2,0,0,0,,0,{},{},{}
+29340,Pregnancy Stone,Pregnancy Stone,2,10000,5000,50,0,0,0,0,0xFFFFFFFF,63,2,0,0,0,,0,{},{},{}
+29341,Ancient Wise King,Ancient Wise King,2,10000,5000,50,0,0,0,0,0xFFFFFFFF,63,2,0,0,0,,0,{},{},{}
+29342,Poltergeist_Pillow,Poltergeist_Pillow,2,10000,5000,50,0,0,0,0,0xFFFFFFFF,63,2,0,0,0,,0,{},{},{}
+29343,Token of Siegfried,Token of Siegfried,2,10000,5000,50,0,0,0,0,0xFFFFFFFF,63,2,0,0,0,,0,{},{},{}
+29344,Mvp Sweeper,Mvp Sweeper,2,10000,5000,50,0,0,0,0,0xFFFFFFFF,63,2,0,0,0,,0,{},{},{}
+29345,Saint_Wall,Saint_Wall,2,10000,5000,50,0,0,0,0,0xFFFFFFFF,63,2,0,0,0,,0,{},{},{}
+29346,Gladiate_,Gladiate_,2,10000,5000,50,0,0,0,0,0xFFFFFFFF,63,2,0,0,0,,0,{},{},{}
+29347,Death_Scythe,Death_Scythe,2,10000,5000,50,0,0,0,0,0xFFFFFFFF,63,2,0,0,0,,0,{},{},{}
+29348,Spell_Master_Scroll,Spell_Master_Scroll,2,10000,5000,50,0,0,0,0,0xFFFFFFFF,63,2,0,0,0,,0,{},{},{}
+29349,Spell_Master_Pen,Spell_Master_Pen,2,10000,5000,50,0,0,0,0,0xFFFFFFFF,63,2,0,0,0,,0,{},{},{}
+29350,Beast_Claw,Beast_Claw,2,10000,5000,50,0,0,0,0,0xFFFFFFFF,63,2,0,0,0,,0,{},{},{}
+29351,Infinite Stair,Infinite Stair,2,10000,5000,50,0,0,0,0,0xFFFFFFFF,63,2,0,0,0,,0,{},{},{}
+29352,Bloody_Cape,Bloody_Cape,2,10000,5000,50,0,0,0,0,0xFFFFFFFF,63,2,0,0,0,,0,{},{},{}
+29353,Lady Fae Liberator,Lady Fae Liberator,2,10000,5000,50,0,0,0,0,0xFFFFFFFF,63,2,0,0,0,,0,{},{},{}
+29354,Jormungand Killer,Jormungand Killer,2,10000,5000,50,0,0,0,0,0xFFFFFFFF,63,2,0,0,0,,0,{},{},{}
+29355,Holy_Barrier,Holy_Barrier,2,10000,5000,50,0,0,0,0,0xFFFFFFFF,63,2,0,0,0,,0,{},{},{}
+29356,Centaure_Domination,Centaure_Domination,2,10000,5000,50,0,0,0,0,0xFFFFFFFF,63,2,0,0,0,,0,{},{},{}
+29357,Risky Dice,Risky Dice,2,10000,5000,50,0,0,0,0,0xFFFFFFFF,63,2,0,0,0,,0,{callfunc "YM_RiskyDice";},{},{}
+29358,Collection,Collection,2,10000,5000,50,0,0,0,0,0xFFFFFFFF,63,2,0,0,0,,0,{callfunc "YM_Holy_Water";},{},{}
+29359,Ase Fruit Seeker,Ase Fruit Seeker,2,10000,5000,50,0,0,0,0,0xFFFFFFFF,63,2,0,0,0,,0,{},{},{}
+29360,Sex Undecided,Sex Undecided,2,10000,5000,50,0,0,0,0,0xFFFFFFFF,63,2,0,0,0,,0,{},{},{}
+29361,Pitcher_of_Eternal_Water,Pitcher_of_Eternal_Water,2,10000,5000,50,0,0,0,0,0xFFFFFFFF,63,2,0,0,0,,0,{},{},{}
+29362,Parrot_Candy,Parrot_Candy,2,10000,5000,50,0,0,0,0,0xFFFFFFFF,63,2,0,0,0,,0,{},{},{}
+29363,Elixir of Life,Elixir of Life,2,10000,5000,50,0,0,0,0,0xFFFFFFFF,63,2,0,0,0,,0,{},{},{}
+29364,Paladin_Necklace,Paladin_Necklace,2,10000,5000,50,0,0,0,0,0xFFFFFFFF,63,2,0,0,0,,0,{},{},{}
+29365,Compromise,Compromise,2,10000,5000,50,0,0,0,0,0xFFFFFFFF,63,2,0,0,0,,0,{callfunc "YM_Compromise";},{},{}
+29366,Rob,Rob,2,10000,5000,50,0,0,0,0,0xFFFFFFFF,63,2,0,0,0,,0,{},{},{}
+29367,777,777,2,10000,5000,50,0,0,0,0,0xFFFFFFFF,63,2,0,0,0,,0,{},{},{}
+29368,Sleeping Girl,Sleeping Girl,2,10000,5000,50,0,0,0,0,0xFFFFFFFF,63,2,0,0,0,,0,{},{},{}
+29369,Gold Dust Girl,Gold Dust Girl,2,10000,5000,50,0,0,0,0,0xFFFFFFFF,63,2,0,0,0,,0,{},{},{}
+29370,Leap,Leap,2,10000,5000,50,0,0,0,0,0xFFFFFFFF,63,2,0,0,0,,0,{callfunc "YM_Leap";},{},{}
+29371,Levy,Levy,2,10000,5000,50,0,0,0,0,0xFFFFFFFF,63,2,0,0,0,,0,{callfunc "YM_Levy";},{},{}
+29372,Shot,Shot,2,10000,5000,50,0,0,0,0,0xFFFFFFFF,63,2,0,0,0,,0,{callfunc "YM_Shot";},{},{}
+29373,Ghostring,Ghostring,2,10000,5000,50,0,0,0,0,0xFFFFFFFF,63,2,0,0,0,,0,{},{},{}
+29374,Byorgue,Byorgue,2,10000,5000,50,0,0,0,0,0xFFFFFFFF,63,2,0,0,0,,0,{},{},{}
+29375,Angel ing,Angel ing,2,10000,5000,50,0,0,0,0,0xFFFFFFFF,63,2,0,0,0,,0,{},{},{}
+29376,Deviling,Deviling,2,10000,5000,50,0,0,0,0,0xFFFFFFFF,63,2,0,0,0,,0,{},{},{}
+29377,Bloody Knight,Bloody Knight,2,10000,5000,50,0,0,0,0,0xFFFFFFFF,63,2,0,0,0,,0,{},{},{}
+29378,Kobold Leader,Kobold Leader,2,10000,5000,50,0,0,0,0,0xFFFFFFFF,63,2,0,0,0,,0,{},{},{}
+29379,Goblin Leader,Goblin Leader,2,10000,5000,50,0,0,0,0,0xFFFFFFFF,63,2,0,0,0,,0,{},{},{}
+29380,Gryphon,Gryphon,2,10000,5000,50,0,0,0,0,0xFFFFFFFF,63,2,0,0,0,,0,{},{},{}
+29381,Transform,Transform,2,10000,5000,50,0,0,0,0,0xFFFFFFFF,63,2,0,0,0,,0,{callfunc "YM_Transform";},{},{}
+29382,Corruption,Corruption,2,10000,5000,50,0,0,0,0,0xFFFFFFFF,63,2,0,0,0,,0,{callfunc "YM_Corruption";},{},{}
+29383,Mastering,Mastering,2,10000,5000,50,0,0,0,0,0xFFFFFFFF,63,2,0,0,0,,0,{},{},{}
+29384,Vocal,Vocal,2,10000,5000,50,0,0,0,0,0xFFFFFFFF,63,2,0,0,0,,0,{},{},{}
+29385,Eclipse,Eclipse,2,10000,5000,50,0,0,0,0,0xFFFFFFFF,63,2,0,0,0,,0,{},{},{}
+29386,Dragon Fly,Dragon Fly,2,10000,5000,50,0,0,0,0,0xFFFFFFFF,63,2,0,0,0,,0,{},{},{}
+29387,Toad,Toad,2,10000,5000,50,0,0,0,0,0xFFFFFFFF,63,2,0,0,0,,0,{},{},{}
+29388,Vagabond Wolf,Vagabond Wolf,2,10000,5000,50,0,0,0,0,0xFFFFFFFF,63,2,0,0,0,,0,{},{},{}
+29389,Sightvision,Sightvision,2,10000,5000,50,0,0,0,0,0xFFFFFFFF,63,2,0,0,0,,0,{callfunc "YM_Sightvision";},{},{}
+29390,Blue Planet,Blue Planet,3,10000,5000,50,0,0,0,0,0xFFFFFFFF,63,2,0,0,0,,0,{},{},{}
+29391,Charging Bobine,Charging Bobine,3,10000,5000,50,0,0,0,0,0xFFFFFFFF,63,2,0,0,0,,0,{},{},{}
+29392,Winter Orb,Winter Orb,3,10000,5000,50,0,0,0,0,0xFFFFFFFF,63,2,0,0,0,,0,{},{},{}
+29393,Saint Sword,Saint Sword,3,10000,5000,50,0,0,0,0,0xFFFFFFFF,63,2,0,0,0,,0,{},{},{}
+29394,Shining Alexandrite,Shining Alexandrite,3,10000,5000,50,0,0,0,0,0xFFFFFFFF,63,2,0,0,0,,0,{},{},{}
+29395,God Eyes,God Eyes,3,10000,5000,50,0,0,0,0,0xFFFFFFFF,63,2,0,0,0,,0,{},{},{}
+29396,Aegis Shield,Aegis Shield,3,10000,5000,50,0,0,0,0,0xFFFFFFFF,63,2,0,0,0,,0,{},{},{}
+29397,Witch Broom,Witch Broom,3,10000,5000,50,0,0,0,0,0xFFFFFFFF,63,2,0,0,0,,0,{},{},{}
+29398,Invisible Garment,Invisible Garment,3,10000,5000,50,0,0,0,0,0xFFFFFFFF,63,2,0,0,0,,0,{},{},{}
+29399,Elemental Knuckle,Elemental Knuckle,3,10000,5000,50,0,0,0,0,0xFFFFFFFF,63,2,0,0,0,,0,{},{},{}
+29400,Winner Joy,Winner Joy,3,10000,5000,50,0,0,0,0,0xFFFFFFFF,63,2,0,0,0,,0,{},{},{}
+29401,Hela Kris,Hela Kris,3,10000,5000,50,0,0,0,0,0xFFFFFFFF,63,2,0,0,0,,0,{},{},{}
+29402,Dead Ring,Dead Ring,3,10000,5000,50,0,0,0,0,0xFFFFFFFF,63,2,0,0,0,,0,{},{},{}
+29403,Pitcher of Eternal Water,Pitcher of Eternal Water,3,10000,5000,50,0,0,0,0,0xFFFFFFFF,63,2,0,0,0,,0,{},{},{}
+29404,Parrot Candy,Parrot Candy,3,10000,5000,50,0,0,0,0,0xFFFFFFFF,63,2,0,0,0,,0,{},{},{}
+29405,Absorption Shield,Absorption Shield,3,10000,5000,50,0,0,0,0,0xFFFFFFFF,63,2,0,0,0,,0,{},{},{}
+29406,Energy Shield,Energy Shield,3,10000,5000,50,0,0,0,0,0xFFFFFFFF,63,2,0,0,0,,0,{},{},{}
+29407,Guided Boomerang,Guided Boomerang,3,10000,5000,50,0,0,0,0,0xFFFFFFFF,63,2,0,0,0,,0,{},{},{}
+29408,Trapping Thread,Trapping Thread,3,10000,5000,50,0,0,0,0,0xFFFFFFFF,63,2,0,0,0,,0,{},{},{}
+29409,Gladiate,Gladiate,3,10000,5000,50,0,0,0,0,0xFFFFFFFF,63,2,0,0,0,,0,{},{},{}
+29410,Death Scythe,Death Scythe,3,10000,5000,50,0,0,0,0,0xFFFFFFFF,63,2,0,0,0,,0,{},{},{}
+29411,Spell Master Scroll,Spell Master Scroll,3,10000,5000,50,0,0,0,0,0xFFFFFFFF,63,2,0,0,0,,0,{},{},{}
+29412,Spell Master Pen,Spell Master Pen,3,10000,5000,50,0,0,0,0,0xFFFFFFFF,63,2,0,0,0,,0,{},{},{}
+29413,Beast Claw,Beast Claw,3,10000,5000,50,0,0,0,0,0xFFFFFFFF,63,2,0,0,0,,0,{},{},{}
+29414,Paladin Necklace,Paladin Necklace,3,10000,5000,50,0,0,0,0,0xFFFFFFFF,63,2,0,0,0,,0,{},{},{}
+29415,Poltergeist Pillow,Poltergeist Pillow,3,10000,5000,50,0,0,0,0,0xFFFFFFFF,63,2,0,0,0,,0,{},{},{}
+29416,Saint Wall,Saint Wall,3,10000,5000,50,0,0,0,0,0xFFFFFFFF,63,2,0,0,0,,0,{},{},{}
+29417,Heavy Bow,Heavy Bow,3,10000,5000,50,0,0,0,0,0xFFFFFFFF,63,2,0,0,0,,0,{},{},{}
+29418,Death Demon,Death Demon,3,10000,5000,50,0,0,0,0,0xFFFFFFFF,63,2,0,0,0,,0,{},{},{}
+29419,Bloody Cape,Bloody Cape,3,10000,5000,50,0,0,0,0,0xFFFFFFFF,63,2,0,0,0,,0,{},{},{}
+29420,Singing Siren,Singing Siren,3,10000,5000,50,0,0,0,0,0xFFFFFFFF,63,2,0,0,0,,0,{},{},{}
+29421,Holy Barrier,Holy Barrier,3,10000,5000,50,0,0,0,0,0xFFFFFFFF,63,2,0,0,0,,0,{},{},{}
+29422,Centaure Domination,Centaure Domination,3,10000,5000,50,0,0,0,0,0xFFFFFFFF,63,2,0,0,0,,0,{},{},{}
+29423,Thor Hammer,Thor Hammer,3,10000,5000,50,0,0,0,0,0xFFFFFFFF,63,2,0,0,0,,0,{},{},{}
+29424,Y.MRing,Y.MRing,5,30000,15000,50,0,0,0,0,0,2147483646,63,2,136,0,50,,0,0,0,,0,0,0,,0,,0,,{},{callfunc "OnEquipRing";},{callfunc "OnUnequipRing";}
+29425,Blister,Blister,2,10000,5000,50,0,0,0,0,0xFFFFFFFF,63,2,0,0,0,,0,{callfunc "OnOpenBlister";},{},{}
+29426,Lady Fae Shoes,Lady Fae Shoes,5,35000,17500,400,0,0,2,0,0,2147483646,63,2,64,0,0,{},{},{}
+29427,Vorpalin Sword,Vorpalin Sword,4,1000,500,1800,160,0,0,1,2,16514,63,2,34,4,80,{},{},{}
+29428,Vorpalin Book,Vorpalin Book,4,1000,500,800,137,0,0,1,2,4260096,63,2,2,4,80,{},{},{}
+29429,Vorpalin Staff,Vorpalin Staff,4,1000,500,400,15,0,0,1,3,8487701,63,2,2,4,80,{},{},{}
+29430,Vorpalin Bow,Vorpalin Bow,4,1000,500,900,150,0,0,5,2,657416,63,2,34,4,80,{},{},{}
+29431,Vorpalin Spear,Vorpalin Spear,4,1000,500,2900,210,0,0,3,2,16514,2,2,2,4,80,{},{},{}
+29432,Vorpalin Whistle,Vorpalin Whistle,4,1000,500,400,150,0,0,1,2,524288,63,1,2,1,2,{},{},{}
+29433,Vorpalin Whip,Vorpalin Whip,4,1000,500,400,150,0,0,1,2,524288,63,0,2,1,2,{},{},{}
+29434,Vorpalin Knuckle,Vorpalin Knuckle,4,1000,500,600,150,0,0,1,0,33024,63,2,2,4,0,{},{},{}
+29435,Vorpalin Axe,Vorpalin Axe,4,1000,500,2500,250,0,0,1,2,279714,2,2,34,4,80,{},{},{}
+29436,Vorpalin Mace,Vorpalin Mace,4,1000,500,1300,137,0,0,1,2,312755,63,2,2,4,80,{},{},{}
+29437,Vorpalin Katar,Vorpalin Katar,4,1000,500,1500,180,0,0,1,2,4096,63,2,34,4,80,{},{},{}
+29438,Vorpalin Dagger,Vorpalin Dagger,4,1000,500,1600,139,0,0,1,2,2124381935,63,2,2,4,80,{},{},{}
+29439,Vorpalin Huuma,Vorpalin Huuma,4,1000,500,3000,150,0,0,1,2,33554432,63,2,34,4,80,{},{},{}
+29440,Vorpalin Pistol,Vorpalin Pistol,4,1000,500,800,130,0,0,7,2,16777216,63,2,34,4,80,{},{},{}
+29441,Kilo-Kilo Fruit,Kilo-Kilo Fruit,5,20,10,100,0,0,0,0,0xFFFFFFFF,63,2,1,0,0,,0,{set MaxWeight,MaxWeight+3000;},{},{}
+29442,Caoutchouc Fruit,Caoutchouc Fruit,5,20,10,100,0,0,0,0,0xFFFFFFFF,63,2,1,0,0,,0,{bonus bAtkRange,5;},{},{}
+29443,Fragment Fruit,Fragment Fruit,5,20,10,100,0,0,0,0,0xFFFFFFFF,63,2,1,0,0,,0,{nude;},{},{}
+29444,Sweep Fruit,Sweep Fruit,5,20,10,100,0,0,0,0,0xFFFFFFFF,63,2,1,0,0,,0,{bonus bSpeedRate,15;},{},{}
+29445,Explosion Fruit,Explosion Fruit,5,20,10,100,0,0,0,0,0xFFFFFFFF,63,2,1,0,0,,0,{bonus2 bAddMonsterDropItem,643,50;},{},{}
+29446,Candle Fruit,Candle Fruit,5,20,10,100,0,0,0,0,0xFFFFFFFF,63,2,1,0,0,,0,{bonus2 bAddMonsterDropItem,660,25;},{},{}
+29447,Gluttony Fruit,Gluttony Fruit,5,20,10,100,0,0,0,0,0xFFFFFFFF,63,2,1,0,0,,0,{skill "BS_GREED",1;},{},{}
+29448,Travesty Fruit,Travesty Fruit,5,20,10,100,0,0,0,0,0xFFFFFFFF,63,2,1,0,0,,0,{},{change sex;},{}
+29449,Cuttin Fruit,Cuttin Fruit,5,20,10,100,0,0,0,0,0xFFFFFFFF,63,2,1,0,0,,0,{bonus3 bAddEff,Eff_Bleeding,100,ATF_TARGET;},{},{}
+29450,Oursin Fruit,Oursin Fruit,5,20,10,100,0,0,0,0,0xFFFFFFFF,63,2,1,0,0,,0,{bonus3 bAutoSpell,"AL_DECAGI",5,10;},{},{}
+29451,Lazy Fruit,Lazy Fruit,5,20,10,100,0,0,0,0,0xFFFFFFFF,63,2,1,0,0,,0,{bonus bSpeedRate,-15;},{},{}
+29452,Spring Fruit,Spring Fruit,5,20,10,100,0,0,0,0,0xFFFFFFFF,63,2,1,0,0,,0,{skill "TK_HIGHJUMP",1;},{},{}
+29453,Doorman Fruit,Doorman Fruit,5,20,10,100,0,0,0,0,0xFFFFFFFF,63,2,1,0,0,,0,{skill "AL_TELEPORT",1;},{},{}
+29454,Bubble Fruit,Bubble Fruit,5,20,10,100,0,0,0,0,0xFFFFFFFF,63,2,1,0,0,,0,{bonus3 bAutoSpell,"WZ_WATERBALL",3,10;},{},{}
+29455,Berry Fruit,Berry Fruit,5,20,10,100,0,0,0,0,0xFFFFFFFF,63,2,1,0,0,,0,{bonus2 bAddMonsterDropItem,607,25;},{},{}
+29456,Rusty Fruit,Rusty Fruit,5,20,10,100,0,0,0,0,0xFFFFFFFF,63,2,1,0,0,,0,{bonus2 bSubEle,Ele_Neutral,10;},{},{}
+29457,Wheel Fruit,Wheel Fruit,5,20,10,100,0,0,0,0,0xFFFFFFFF,63,2,1,0,0,,0,{bonus3 bAutoSpellWhenHit,"AL_INCAGI",5,10;},{},{}
+29458,Resurrection Fruit,Resurrection Fruit,5,20,10,100,0,0,0,0,0xFFFFFFFF,63,2,1,0,0,,0,{skill "SL_KAUPE",1;},{},{}
+29459,Shadow Fruit,Shadow Fruit,5,20,10,100,0,0,0,0,0xFFFFFFFF,63,2,1,0,0,,0,{bonus bIntravision,0;},{},{}
+29460,Ectoplasmer Fruit,Ectoplasmer Fruit,5,20,10,100,0,0,0,0,0xFFFFFFFF,63,2,1,0,0,,0,{bonus3 bAddEff,Eff_Stan,100,ATF_TARGET;},{},{}
+29461,Passion Fruit,Passion Fruit,5,20,10,100,0,0,0,0,0xFFFFFFFF,63,2,1,0,0,,0,{bonus3 bAutoSpell,"DC_WINKCHARM",1,10;},{},{}
+29462,Invisibility Fruit,Invisibility Fruit,5,20,10,100,0,0,0,0,0xFFFFFFFF,63,2,1,0,0,,0,{skill "AS_CLOAKING",6;},{},{}
+29463,Cushion Fruit,Cushion Fruit,5,20,10,100,0,0,0,0,0xFFFFFFFF,63,2,1,0,0,,0,{bonus2 bAddMonsterDropItem,5059,10;},{},{}
+29464,Toxin Fruit,Toxin Fruit,5,20,10,100,0,0,0,0,0xFFFFFFFF,63,2,1,0,0,,0,{bonus3 bAddEff,Eff_Poison,10,ATF_SELF;},{},{}
+29465,Hormone Fruit,Hormone Fruit,5,20,10,100,0,0,0,0,0xFFFFFFFF,63,2,1,0,0,,0,{bonus bStr,5;},{},{}
+29466,Shears Fruit,Shears Fruit,5,20,10,100,0,0,0,0,0xFFFFFFFF,63,2,1,0,0,,0,{bonus3 bAddEff,Eff_Bleeding,10,ATF_SELF;},{},{}
+29467,Tremor Fruit,Tremor Fruit,5,20,10,100,0,0,0,0,0xFFFFFFFF,63,2,1,0,0,,0,{bonus3 bAutoSpell,"NPC_EARTHQUAKE",6,10;},{},{}
+29468,Wringing Fruit,Wringing Fruit,5,20,10,100,0,0,0,0,0xFFFFFFFF,63,2,1,0,0,,0,{bonus2 bAddMonsterDropItem,12065,10;},{},{}
+29469,Target Fruit,Target Fruit,5,20,10,100,0,0,0,0,0xFFFFFFFF,63,2,1,0,0,,0,{bonus bHit,15;},{},{}
+29470,Bovidae Fruit,Bovidae Fruit,5,20,10,100,0,0,0,0,0xFFFFFFFF,63,2,1,0,0,,0,{},{disguise 889;},{undisguise;}
+29471,Human Fruit,Human Fruit,5,20,10,100,0,0,0,0,0xFFFFFFFF,63,2,1,0,0,,0,{},{disguise 800;},{undisguise;}
+29472,Fowl Fruit,Fowl Fruit,5,20,10,100,0,0,0,0,0xFFFFFFFF,63,2,1,0,0,,0,{},{disguise 800;},{undisguise;}
+29473,Excavator Fruit,Excavator Fruit,5,20,10,100,0,0,0,0,0xFFFFFFFF,63,2,1,0,0,,0,{},{disguise 1145;},{undisguise;}
+29474,Canidae Fruit,Canidae Fruit,5,20,10,100,0,0,0,0,0xFFFFFFFF,63,2,1,0,0,,0,{},{disguise 1783;},{undisguise;}
+29475,Horse Fruit,Horse Fruit,5,20,10,100,0,0,0,0,0xFFFFFFFF,63,2,1,0,0,,0,{},{disguise 1427;},{undisguise;}
+29476,Leopard Fruit,Leopard Fruit,5,20,10,100,0,0,0,0,0xFFFFFFFF,63,2,1,0,0,,0,{},{disguise 1524;},{undisguise;}
+29477,Donkey Fruit,Donkey Fruit,5,20,10,100,0,0,0,0,0xFFFFFFFF,63,2,1,0,0,,0,{},{disguise 955;},{undisguise;}
+29478,Wolf Fruit,Wolf Fruit,5,20,10,100,0,0,0,0,0xFFFFFFFF,63,2,1,0,0,,0,{},{disguise 1795;},{undisguise;}
+29479,Pachyderm Fruit,Pachyderm Fruit,5,20,10,100,0,0,0,0,0xFFFFFFFF,63,2,1,0,0,,0,{},{disguise 1990;},{undisguise;}
+29480,Anaconda Fruit,Anaconda Fruit,5,20,10,100,0,0,0,0,0xFFFFFFFF,63,2,1,0,0,,0,{},{disguise 1025;},{undisguise;}
+29481,Cobra Fruit,Cobra Fruit,5,20,10,100,0,0,0,0,0xFFFFFFFF,63,2,1,0,0,,0,{},{disguise 1119;},{undisguise;}
+29482,Pyro Fruit,Pyro Fruit,5,20,10,100,0,0,0,0,0xFFFFFFFF,63,2,1,0,0,,0,{if (rand(1000)<250)sc_startSC_BURNING,10000,0;bonus3 bAutoSpell,"NJ_BAKUENRYU",2,10;},{},{}
+29483,Fulguro Fruit,Fulguro Fruit,5,20,10,100,0,0,0,0,0xFFFFFFFF,63,2,1,0,0,,0,{if (rand(1000)<250)sc_startSC_STUN,10000,0;bonus3 bAutoSpell,"WZ_JUPITEL",2,10;},{},{}
+29484,Sand Fruit,Sand Fruit,5,20,10,100,0,0,0,0,0xFFFFFFFF,63,2,1,0,0,,0,{if (rand(1000)<250)sc_startSC_STONE,10000,0;bonus3 bAutoSpell,"WZ_HEAVENDRIVE",2,10;},{},{}
+29485,Givro Fruit,Givro Fruit,5,20,10,100,0,0,0,0,0xFFFFFFFF,63,2,1,0,0,,0,{if (rand(1000)<250)sc_startSC_FREEZING,10000,0;bonus3 bAutoSpell,"WZ_STORMGUST",2,10;},{},{}
+29486,Tenebra Fruit,Tenebra Fruit,5,20,10,100,0,0,0,0,0xFFFFFFFF,63,2,1,0,0,,0,{if (rand(1000)<250)sc_startSC_CURSE,10000,0;bonus3 bAutoSpell,"NPC_GRANDDARKNESS",2,10;},{},{}
+29487,Lightning Fruit,Lightning Fruit,5,20,10,100,0,0,0,0,0xFFFFFFFF,63,2,1,0,0,,0,{if (rand(1000)<250)sc_startSC_BLIND,10000,0;bonus3 bAutoSpell,"WZ_VERMILION",2,10;},{},{}
+29488,Magma Fruit,Magma Fruit,5,20,10,100,0,0,0,0,0xFFFFFFFF,63,2,1,0,0,,0,{if (rand(1000)<250)sc_startSC__IGNORANCE,10000,0;bonus3 bAutoSpell,"WZ_METEOR",2,10;},{},{}
+29489,Swamp Fruit,Swamp Fruit,5,20,10,100,0,0,0,0,0xFFFFFFFF,63,2,1,0,0,,0,{if (rand(1000)<250)sc_startSC_POISON,10000,0;bonus3 bAutoSpell,"WZ_QUAGMIRE",5,10;bonus3 bAutoSpell,"CR_ACIDDEMONSTRATION",1,10;},{},{}
+29490,Smoke Fruit,Smoke Fruit,5,20,10,100,0,0,0,0,0xFFFFFFFF,63,2,1,0,0,,0,{if (rand(1000)<250)sc_startSC_CONFUSION,10000,0;bonus3 bAutoSpell,"PF_FOGWALL",5,10;bonus3 bAutoSpell,"GS_DUST",2,10;},{},{}
+29491,Yggdrasil Crystal Red,Yggdrasil Crystal Red,3,600,300,5,0,0,0,0,0xFFFFFFFF,63,2,0,0,0,,0,{},{},{}
+29492,Yggdrasil Crystal Yellow,Yggdrasil Crystal Yellow,3,600,300,5,0,0,0,0,0xFFFFFFFF,63,2,0,0,0,,0,{},{},{}
+29493,Yggdrasil Crystal Blue,Yggdrasil Crystal Blue,3,600,300,5,0,0,0,0,0xFFFFFFFF,63,2,0,0,0,,0,{},{},{}
+29494,Yggdrasil Crystal Green,Yggdrasil Crystal Green,3,600,300,5,0,0,0,0,0xFFFFFFFF,63,2,0,0,0,,0,{},{},{}
+29495,Yggdrasil Crystal Purple,Yggdrasil Crystal Purple,3,600,300,5,0,0,0,0,0xFFFFFFFF,63,2,0,0,0,,0,{},{},{}
+29496,Yggdrasil Crystal Black,Yggdrasil Crystal Black,3,600,300,5,0,0,0,0,0xFFFFFFFF,63,2,0,0,0,,0,{},{},{}
+29497,Yggdrasil Crystal White,Yggdrasil Crystal White,3,600,300,5,0,0,0,0,0xFFFFFFFF,63,2,0,0,0,,0,{},{},{}
+29498,RedCoreShard,Red Shard,3,1000000,,250,,,,,,,,,,,,,{},{},{}
+29499,BlueCoreShard,Blue Shard,3,1000000,,250,,,,,,,,,,,,,{},{},{}
+29500,GreezenCoreShard,Greezen Shard,3,1000000,,250,,,,,,,,,,,,,{},{},{}
+29501,YellowCoreShard,Yellow Shard,3,1000000,,250,,,,,,,,,,,,,{},{},{}
+29502,DarkCoreShard,Dark Shard,3,1000000,,250,,,,,,,,,,,,,{},{},{}
+29503,LesserCoreShard,Lesser Shard,3,10,,50,,,,,,,,,,,,,{},{},{}
+29504,ImpureCoreShard,Impure Shard,3,100,,100,,,,,,,,,,,,,{},{},{}
+29505,RawCoreShard,Raw Shard,3,1000,,200,,,,,,,,,,,,,{},{},{}
+29506,grimoire_h,Grimoire of Healing,2,20,,100,,,,,,,,,,,,,{skill 28,1,3;},{},{}
+29507,grimoire_fb,Grimoire of Fire Bolt,2,20,,100,,,,,,,,,,,,,{skill 19,1,3;},{},{}
+29508,grimoire_cb,Grimoire of Cold Bolt,2,20,,100,,,,,,,,,,,,,{skill 14,1,3;},{},{}
+29509,grimoire_lb,Grimoire of Lightning Bolt,2,20,,100,,,,,,,,,,,,,{skill 20,1,3;},{},{}
+29510,grimoire_isp,Grimoire of Increase Spiritual Power,2,20,,100,,,,,,,,,,,,,{skill 9,1,3;},{},{}
+29511,grimoire_nb,Grimoire of Napalm Beat,2,20,,100,,,,,,,,,,,,,{skill 11,1,3;},{},{}
+29512,grimoire_ss,Grimoire of SoulS trike,2,20,,100,,,,,,,,,,,,,{skill 13,1,3;},{},{}
+29513,grimoire_fd,Grimoire of Frost Diver,2,20,,100,,,,,,,,,,,,,{skill 15,1,3;},{},{}
+29514,grimoire_sc,Grimoire of Stone Curse,2,20,,100,,,,,,,,,,,,,{skill 16,1,3;},{},{}
+29515,grimoire_fb,Grimoire of Fire Ball,2,20,,100,,,,,,,,,,,,,{skill 17,1,3;},{},{}
+29516,grimoire_fw,Grimoire of Fire Wall,2,20,,100,,,,,,,,,,,,,{skill 18,1,3;},{},{}
+29517,grimoire_ts,Grimoire of ThunderStorm,2,20,,100,,,,,,,,,,,,,{skill 21,1,3;},{},{}
+29518,grimoire_st,Grimoire of Sightrasher,2,20,,100,,,,,,,,,,,,,{skill 81,1,3;},{},{}
+29519,grimoire_ms,Grimoire of MeteorStorm,2,20,,100,,,,,,,,,,,,,{skill 83,1,3;},{},{}
+29520,grimoire_jt,Grimoire of Jupitel Thunder,2,20,,100,,,,,,,,,,,,,{skill 84,1,3;},{},{}
+29521,grimoire_lov,Grimoire of Lord of Vermillion,2,20,,100,,,,,,,,,,,,,{skill 85,1,3;},{},{}
+29522,grimoire_wb,Grimoire of Water Ball,2,20,,100,,,,,,,,,,,,,{skill 86,1,3;},{},{}
+29523,grimoire_iw,Grimoire of Ice Wall,2,20,,100,,,,,,,,,,,,,{skill 87,1,3;},{},{}
+29524,grimoire_fn,Grimoire of Frost Nova,2,20,,100,,,,,,,,,,,,,{skill 88,1,3;},{},{}
+29525,grimoire_sg,Grimoire of Storm Gust,2,20,,100,,,,,,,,,,,,,{skill 89,1,3;},{},{}
+29526,grimoire_ed,Grimoire of Earth Drive,2,20,,100,,,,,,,,,,,,,{skill 90,1,3;},{},{}
+29527,grimoire_hd,Grimoire of Heavens Drive,2,20,,100,,,,,,,,,,,,,{skill 91,1,3;},{},{}
+29528,grimoire_mc,Grimoire of Magic Crasher,2,20,,100,,,,,,,,,,,,,{skill 365,1,3;},{},{}
+29529,grimoire_sd,Grimoire of Soul Drain,2,20,,100,,,,,,,,,,,,,{skill 364,1,3;},{},{}
+29530,grimoire_ab,Grimoire of Abracadabra,2,20,,100,,,,,,,,,,,,,{skill 290,1,3;},{},{}
+29531,scroll_ms,Scroll of Mist Slash,2,20,,100,,,,,,,,,,,,,{skill 528,1,3;},{},{}
+29532,scroll_ss,Scroll of Shadow Slash,2,20,,100,,,,,,,,,,,,,{skill 530,1,3;},{},{}
+29533,scroll_is,Scroll of Illusionary Shadow,2,20,,100,,,,,,,,,,,,,{skill 532,1,3;},{},{}
+29534,scroll_cfb,Scroll of Crimson Fire Blossom,2,20,,100,,,,,,,,,,,,,{skill 534,1,3;},{},{}
+29535,scroll_dff,Scroll of Dragon Fire Formation,2,20,,100,,,,,,,,,,,,,{skill 536,1,3;},{},{}
+29536,scroll_lsi,Scroll of Lightning Spear of Ice,2,20,,100,,,,,,,,,,,,,{skill 537,1,3;},{},{}
+29537,scroll_wet,Scroll of Water Escape Technique,2,20,,100,,,,,,,,,,,,,{skill 538,1,3;},{},{}
+29538,scroll_wb,Scroll of Wind Blade,2,20,,100,,,,,,,,,,,,,{skill 540,1,3;},{},{}
+29539,scroll_lc,Scroll of Lightning Crash,2,20,,100,,,,,,,,,,,,,{skill 541,1,3;},{},{}
+29540,scroll_nw,Scroll of North Wind,2,20,,100,,,,,,,,,,,,,{skill 542,1,3;},{},{}
+29541,scroll_s,Scroll of Soul,2,20,,100,,,,,,,,,,,,,{skill 543,1,3;},{},{}
+29542,scroll_y,Advanced Scroll of Yamikumo,2,20,,100,,,,,,,,,,,,,{skill 3001,1,3;},{},{}
+29543,scroll_j,Advanced Scroll of Jyumonjikiri,2,20,,100,,,,,,,,,,,,,{skill 3004,1,3;},{},{}
+29544,scroll_s,Advanced Scroll of Setsudan,2,20,,100,,,,,,,,,,,,,{skill 3005,1,3;},{},{}
+29545,scroll_bk,Advanced Scroll of Bakuretsu Kunai,2,20,,100,,,,,,,,,,,,,{skill 3006,1,3;},{},{}
+29546,scroll_hk,Advanced Scroll of Happo Kunai,2,20,,100,,,,,,,,,,,,,{skill 3007,1,3;},{},{}
+29547,scroll_hsr,Advanced Scroll of Huuma Shuriken Ranka,2,20,,100,,,,,,,,,,,,,{skill 3009,1,3;},{},{}
+29549,scroll_z,Advanced Scroll of Zanzou,2,20,,100,,,,,,,,,,,,,{skill 3012,1,3;},{},{}
+29548,scroll_ms,Advanced Scroll of MeikyoShisui,2,20,,100,,,,,,,,,,,,,{skill 3011,1,3;},{},{}
+29550,scroll_ky,Advanced Scroll of Kyougaku,2,20,,100,,,,,,,,,,,,,{skill 3013,1,3;},{},{}
+29551,scroll_jy,Advanced Scroll of Jyusatsu,2,20,,100,,,,,,,,,,,,,{skill 3014,1,3;},{},{}
+29552,scroll_kh,Advanced Scroll of Kahu Enten,2,20,,100,,,,,,,,,,,,,{skill 3015,1,3;},{},{}
+29553,scroll_hh,Advanced Scroll of Hyouhu Hubuki,2,20,,100,,,,,,,,,,,,,{skill 3016,1,3;},{},{}
+29554,scroll_ks,Advanced Scroll of Kazehu Seiran,2,20,,100,,,,,,,,,,,,,{skill 3017,1,3;},{},{}
+29555,scroll_dk,Advanced Scroll of Dohu Koukai,2,20,,100,,,,,,,,,,,,,{skill 3018,1,3;},{},{}
+29556,scroll_tk,Advanced Scroll of Technique Kaihou,2,20,,100,,,,,,,,,,,,,{skill 3019,1,3;},{},{}
+29557,scroll_z,Advanced Scroll of Zenkai,2,20,,100,,,,,,,,,,,,,{skill 3020,1,3;},{},{}
+29558,scroll_g,Advanced Scroll of Genwaku,2,20,,100,,,,,,,,,,,,,{skill 3021,1,3;},{},{}
+
+
+

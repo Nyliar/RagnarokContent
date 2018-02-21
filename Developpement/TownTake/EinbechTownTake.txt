@@ -1,0 +1,179 @@
+einbech,134,186,0	script	Einbech Demon Core#19::aleedeco	CENERE,{
+	mes "[Demon Lord]";
+	if(.townCrystalOn == 0)
+	{
+		mes "This town is under my command!";
+	}
+	else
+	{
+		if(getd("$townGuild" + strnpcinfo(2)) == -1)
+		{
+			mes "You canno't simply take this town alone...";
+		}
+		if(getd("$townGuild" + strnpcinfo(2)) == getcharid(2))
+		{
+			mes "You might have defeated me once...But I'll find a way to get back, believe me...";
+		}
+		else
+		{
+			mes "Hey...Do you want to get this town for yourself?";
+			mes "Then kill those bastards Guild Leader, and I'll give it as a reward to you!";
+		}
+	}
+	close2;
+	goto OnMove;
+	close;
+
+OnTownLeaderDied:
+	announce "[Demon Lord]", bc_map;
+	announce "Ahahahahaha I told you I would be back!", bc_map;
+	announce "Raise, my army! Kill those filthy Humans!", bc_map;
+	set .townCrystalOn, 0;
+	setd ("$townGuild" + strnpcinfo(2), -1);
+	set .moving, 1;
+	initnpctimer;
+	goto OnPopMonsters;
+	end;
+	
+OnUnHide:
+	if(isnight() && .townCrystalOn == 1)
+	{
+		set .moving, 0;
+		for(set .@i,0; .@i<getarraysize(.waveMobIds); set .@i,.@i+1)
+		{
+			monster strnpcinfo(4), 0, 0, "--ja--", .waveMobIds[.@i], .waveMobCount[.@i], strnpcinfo(3) + "::OnWaveDied";
+		}
+		initnpctimer;
+		announce "[Demon Lord]", bc_map;
+		announce "You won't keep me in here forever!", bc_map;
+		announce "Raise, my army! Kill those filthy Humans!", bc_map;
+	}
+	end;
+	
+OnMove:
+OnTimer15000:
+	if(.moving == 0)
+	{
+		stopnpctimer;
+		do
+		{		
+			set .movex,rand(0,150);
+			set .movey,rand(0,150);
+			set .map$,strnpcinfo(4);
+		}
+		while(!checkcell(.map$,.movex,.movey,cell_chkpass));
+		movenpc strnpcinfo(3),.movex,.movey;
+		initnpctimer;
+	}
+	end;
+	
+OnTimer300000:
+	//after a delay of 30 minutes, failed, kill all monsters and repop on midnight
+	mapannounce strnpcinfo(4), "[Demon Core] You've failed to take the town back. Come back tomorrow to try again.", bc_red;
+	stopnpctimer;
+	killmonsterall strnpcinfo(4);
+	end;
+	
+OnClock0000:
+	goto OnPopMonsters;
+	end;
+
+OnNormalDied:
+	//nothing, used for mob count
+	end;
+	
+OnMvpDied:
+	//nothing, used for Crystal unhide
+	set .townCrystalOn, 1;
+	dispbottom "[Yggdrasil] You have to block the Demon Lord Eye into a Holy place to free the city...Hurry up!";
+	end;
+	
+OnWaveDied:
+	if(mobcount(strnpcinfo(4), strnpcinfo(3) + "::OnWaveDied") == 0)
+	{
+		if( getcharid(2) != -1)
+		{
+			setd("$townGuild" + strnpcinfo(2), getcharid(2));
+			announce "Einbech town has been freed by the Guild " + getguildname(getd("$townGuild" + strnpcinfo(2))) + ".", bc_all|bc_blue;
+		}
+		else
+		{
+			announce "Einbech town has been freed by " + strnpcinfo(0) + ". But as he doesn't belong to a guild, the Town will be taken back within no time...", bc_all|bc_blue;
+		}
+	}
+	end;
+
+OnPopMonsters:
+	if(getd("$townGuild" + strnpcinfo(2)) == -1)
+	{
+		for(set .@i,0; .@i<getarraysize(.mobIds) - 1; set .@i,.@i+1)
+		{
+			monster strnpcinfo(4), 0, 0, "--ja--", .mobIds[.@i], .mobCount[.@i], strnpcinfo(3) + "::OnNormalDied";
+		}		
+		monster strnpcinfo(4), 0, 0, "--ja--", .mobIds[getarraysize(.mobIds) - 1], .mobCount[getarraysize(.mobIds) - 1], strnpcinfo(3) + "::OnMvpDied";
+		set .townCrystalOn, 0;
+	}
+	end;
+	
+OnInit:
+	setarray .mobIds[0],1002,1063,1052,1031,1051,1388; //last id must be a mvp
+	setarray .mobCount[0],50,50,25,15,25,1;
+
+	copyarray .waveMobIds[0], $waveMobIds[0], getarraysize($waveMobIds);
+	copyarray .waveMobCount[0], $waveMobCount[0], getarraysize($waveMobCount);
+
+	set .townCrystalOn, 1;
+	set .moving, 1;
+	set .@guildName$, getguildname(getd("$townGuild" + strnpcinfo(2)));
+	if(.@guildName$ == "null")
+	{
+		setd("$townGuild" + strnpcinfo(2), -1);
+	}
+	initnpctimer;
+	goto OnPopMonsters;
+	end;
+}
+
+einbech,134,186,0	script	Einbech Town Flag#19::alprttf	GUILD_FLAG,{
+	mes "[Town Flag]";
+	if(getd("$townGuild" + strnpcinfo(2)) != -1)
+	{
+		set .@guildName$, getguildname(getd("$townGuild" + strnpcinfo(2)));
+		if(.@guildName$ != "null")
+		{
+			mes "This town has been freed by the Guild ^0000FF " + .@guildName$ + ". ^000000";
+		}
+		else
+		{	
+			//guild disbanded, clear
+			setd("$townGuild" + strnpcinfo(2), -1);
+			mes "^FF0000 This town is under Demon Lord's domination. ^000000";
+		}
+	}
+	else
+	{
+		mes "^FF0000 This town is under Demon Lord's domination. ^000000";
+	}
+	close;
+	
+OnChangeFlag:
+	flagemblem(getd("$townGuild" + strnpcinfo(2)));
+	end;
+	
+OnInit:
+	if(getd("$townGuild" + strnpcinfo(2)) != -1)
+	{
+		flagemblem(getd("$townGuild" + strnpcinfo(2)));
+	}
+	end;
+}
+
+einbech,134,186,0	duplicate(alprttf)	Einbech Town Flag#19::alprttf1	GUILD_FLAG
+einbech,134,186,0	duplicate(alprttf)	Einbech Town Flag#19::alprttf2	GUILD_FLAG
+einbech,134,186,0	duplicate(alprttf)	Einbech Town Flag#19::alprttf3	GUILD_FLAG
+einbech,134,186,0	duplicate(alprttf)	Einbech Town Flag#19::alprttf4	GUILD_FLAG
+einbech,134,186,0	duplicate(alprttf)	Einbech Town Flag#19::alprttf5	GUILD_FLAG
+einbech,134,186,0	duplicate(alprttf)	Einbech Town Flag#19::alprttf6	GUILD_FLAG
+einbech,134,186,0	duplicate(alprttf)	Einbech Town Flag#19::alprttf7	GUILD_FLAG
+
+

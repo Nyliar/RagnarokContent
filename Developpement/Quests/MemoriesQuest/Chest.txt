@@ -1,0 +1,37 @@
+einbech,130,247,0	script	Memories Chest#0::almemch0	HIDDEN_WARP_NPC,{
+	set .@npcname$, "[Hidden Spot]";
+	mes .@npcname$;
+	if(.treasureAvailable == 1)
+	{
+		mes "You found a strange item, laying on the chest bottom.";
+		getitem $memoryId[atoi(strnpcinfo(2))], 1;
+		set .treasureAvailable, 0;
+		initnpctimer;
+	}
+	else
+	{
+		mes "Somebody already took this Memory.";
+	}
+	close;
+	
+OnTimer6000000: //one hour delay
+	stopnpctimer;
+	setnpcdisplay strnpcinfo(3), HIDDEN_WARP_NPC;
+	set .treasureAvailable, 1;
+	end;
+	
+OnUnHideChest:
+	setnpcdisplay strnpcinfo(3), 4_TREASURE_BOX;
+	end;
+	
+OnInit:
+	defpattern 1, $memKeyWord$[atoi(strnpcinfo(2))], strnpcinfo(3)"::OnUnHideChest";
+	activatepset 1;
+	end;
+}
+
+ice_dun03,250,80,0	duplicate(almemch0)	Memories Chest#1::almemch1	HIDDEN_WARP_NPC
+ice_dun03,250,80,0	duplicate(almemch0)	Memories Chest#2::almemch2	HIDDEN_WARP_NPC
+ice_dun03,250,80,0	duplicate(almemch0)	Memories Chest#3::almemch3	HIDDEN_WARP_NPC
+ice_dun03,250,80,0	duplicate(almemch0)	Memories Chest#4::almemch4	HIDDEN_WARP_NPC
+ice_dun03,250,80,0	duplicate(almemch0)	Memories Chest#5::almemch5	HIDDEN_WARP_NPC

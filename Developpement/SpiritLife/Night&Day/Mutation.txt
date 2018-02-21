@@ -1,0 +1,148 @@
+prt_church,91,127,5	script	NightDaySystem	HIDDEN_WARP_NPC,{
+	end;
+	
+OnPCLoginEvent:
+OnMutationRestart:
+	if(isnight())
+	{
+		addtimer 1000 * .delayBetweenMutations, strnpcinfo(3) + "::OnMutationOn";
+	}
+	end;
+	
+OnMutationOn:
+	if(isnight())
+	{
+		if(MUTATIONRACE == 0)
+		{
+			set MUTATIONRACE, rand(0,10);
+		}
+		if(rand(0,100) <= .minPercentMutationRate)
+		{
+			switch(MUTATIONRACE)
+			{
+				case 0:
+					//wolf
+					set .@id, 1785;
+					break;
+				case 1:
+					//orc
+					set .@id, 1439;
+					break;
+				case 2:
+				case 4:
+				case 6:
+					//human
+					break;
+				case 3:
+					//kobold
+					set .@id, 1296;
+					break;
+				case 5:
+					//spider
+					set .@id, 2092;
+					break;
+				case 7:
+					//undead
+					set .@id, (Sex == 0 ? 2473 : 2474);
+					break;
+				case 8:
+					//elves
+					set .@id, 1884;
+					break;
+				case 9:
+					//demon
+					set .@id, (Sex == 0 ? 1374 : 1370);
+					break;
+				case 10:
+					//elemental
+					switch(rand(0,3))
+					{
+						case 0:
+							set .@id, 2116;							
+							break;
+						case 1:
+							set .@id, 2119;	
+							break;
+						case 2:
+							set .@id, 2122;	
+							break;
+						case 3:
+							set .@id, 2125;	
+							break;
+					}
+					break;
+			}
+			if(.@id > 0)
+			{
+				disguise .@id;
+				set MUTATIONON, 1;
+				dispbottom "[Cardinal System] Your beast spirit took advantage over your human's one.";
+				//1 minute mutation
+				addtimer 60000, strnpcinfo(3) + "::OnMutationOff";
+				sc_start(SC_SILENCE, 60000, 0);
+			}
+			else
+			{
+				addtimer 1000 * .delayBetweenMutations, strnpcinfo(3) + "::OnMutationOn";
+			}
+		}
+		else
+		{
+			addtimer 1000 * .delayBetweenMutations, strnpcinfo(3) + "::OnMutationOn";
+		}
+	}
+	else
+	{
+		addtimer 1000 * .delayBetweenMutations, strnpcinfo(3) + "::OnMutationOn";
+	}
+	end;
+	
+OnPCLoadMapEvent:
+	if(MUTATIONON == 1)
+	{
+		set .@found, 0;
+		for(set .@i,0; .@i<getarraysize($ymMapListTown) && .@found == 0; set .@i,.@i+1)
+		{
+			if(strcharinfo(3) == $ymMapListTown[.@i])
+			{
+				set .@found, 1;
+			}
+		}
+		dispbottom "[Cardinal System] Beasts are forbidden in town. The Guards will attack you in a few minutes!";
+		addtimer 60000, strnpcinfo(3) + "::OnGuardAppear";
+	}
+	end;
+	
+OnGuardAppear:
+	getmapxy(.@mapname$, .@mapx, .@mapy, UNITTYPE_PC);
+	set TOWNMAP$, .@mapname$;
+	areamonster(.@mapname$, .@mapx - 10, .@mapy - 10, .@mapx + 10, .@mapy + 10, "Town Guards", 2543, 10, strnpcinfo(3) + "::OnGuardDie");
+	addtimer 180000, strnpcinfo(3) + "::OnGuardClear";
+	end;
+	
+OnGuardClear:
+	killmonster TOWNMAP$, strnpcinfo(3) + "::OnGuardDie";
+	end;
+	
+OnGuardDie:
+	getmapxy(.@mapname$, .@mapx, .@mapy, UNITTYPE_PC);
+	areamonster(.@mapname$, .@mapx - 10, .@mapy - 10, .@mapx + 10, .@mapy + 10, "Town Guards", 2543, 1, strnpcinfo(3) + "::OnGuardDie");
+	end;
+	
+OnMutationOff:
+	if(!isnight())
+	{
+		dispbottom "[Cardinal System] You regained your sense.";
+		set MUTATIONON, 0;
+		undisguise;
+		//5 minutes delay after mutation
+		addtimer 300000, strnpcinfo(3) + "::OnMutationRestart";
+		sc_end(SC_SILENCE);
+	}
+	end;
+	
+OnInit:
+	set .delayBetweenMutations, 6; //range of 10s before next check. Default, 1 minutes
+	set .minPercentMutationRate, 10;
+	end;
+}

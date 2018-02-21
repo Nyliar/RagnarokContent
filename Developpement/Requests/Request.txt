@@ -1,0 +1,168 @@
+prontera,239,313,4	script	Technical Request::alatere	4_SYS_MSG,{
+	set .@npcname$, "[Technical Request]";
+	mes .@npcname$;
+	mes "If you have any request for a bug or something missing, please add a ticket here.";
+	if(getgmlevel() == 99)
+	{
+		next;
+		mes .@npcname$;
+		mes "Welcome, master.";
+		switch(select("See the tickets","Reset the tickets"))
+		{
+			case 1:
+				goto OnSeeTicket;
+				break;
+			case 2:
+				goto OnClearTicket;
+				break;
+		}
+	}
+	else
+	{
+		next;
+		mes .@npcname$;
+		mes "Do you want to add a Ticket?";
+		switch(select("Yes","No","See the Tickets"))
+		{
+			case 1:
+				goto OnAddTicket;
+				break;
+			case 2:
+				//nothing
+				break;
+			case 3:
+				goto OnSeeTicket;
+				break;
+		}
+	}
+	close;
+	
+OnClearTicket:
+	set .@npcname$, "[Technical Request]";
+	next;
+	mes .@npcname$;
+	mes "Are you sure you want to delete all Tickets?";
+	if(select("Yes","No") == 1)
+	{
+		deletearray $TicketTitle$[0], getarraysize($TicketTitle$);
+		deletearray $TicketDesc$[0], getarraysize($TicketDesc$);
+		deletearray $TicketVote[0], getarraysize($TicketVote);
+		deletearray $TicketAnswer$[0], getarraysize($TicketAnswer$);
+	}
+	close;
+	
+OnAddTicket:
+	set .@npcname$, "[Technical Request]";
+	next;
+	mes .@npcname$;
+	if(getarraysize($TicketDesc$) < .maximumTicket)
+	{
+		mes "The Ticket panel is full.";
+		mes "Please wait for the admins to treat some of the existing ones.";
+	}
+	else
+	{
+		mes "First, enter a title.";
+		input .@title$;
+		next;
+		mes .@npcname$;
+		mes "Next, enter a description (keep it short, max 255 char. If you need more, ask for a contact with the Admins)";
+		input .@desc$;
+		next;
+		mes .@npcname$;
+		mes "Here's your Ticket:";
+		mes "Title: " + .@title$;
+		mes "Description: " + .@desc$;
+		next;
+		mes .@npcname$;
+		mes "Confirm?";
+		if(select("Yes","No") == 1)
+		{
+			set $TicketTitle$[getarraysize($TicketTitle$)], .@title$;
+			set $TicketDesc$[getarraysize($TicketDesc$)], .@desc$;
+			set $TicketVote[getarraysize($TicketVote)], 1;
+			set $TicketAnswer$[getarraysize($TicketAnswer$)], "";
+			next;
+			mes .@npcname$;
+			mes "Ticket saved.";
+		}
+	}
+	close;
+	
+OnVoteForTicket:
+	set .@npcname$, "[Technical Request]";
+	set .@i, getarg(0);
+	mes "Title: " + $TicketTitle$[.@i];
+	mes "Description: " + $TicketDesc$[.@i];
+	mes "Votes: " + $TicketVote[.@i];
+	if($TicketAnswer$[.@i] != "")
+	{
+		mes "^0000FFAnswer: "  + $TicketAnswer$[.@i] + "^000000";
+	}
+	else
+	{
+		mes "^FF0000Not answered yet.^000000";
+	}
+	if(getgmlevel() < 99)
+	{
+		next;
+		mes .@npcname$;
+		mes "Do you wish to increase the rate for this Ticket?";
+		if(select("Yes","No") == 1)
+		{
+			set $TicketVote[.@i], $TicketVote[.@i] + 1;
+		}
+	}
+	else
+	{
+		next;
+		mes .@npcname$;
+		if($TicketAnswer$[.@i] == "")
+		{
+			mes "Do you wish to answer to this ticket?";
+		}
+		else
+		{
+			mes "Do you wish to modify your answer?";
+		}
+		if(select("Yes","No") == 1)
+		{
+			input .@answer$;
+			next;
+			mes .@npcname$;
+			mes "Ticket answered.";
+			set $TicketAnswer$[.@i], .@answer$;
+		}
+		else
+		{
+			next;
+			mes .@npcname$;
+			mes "Do you wish to delete it?";
+			if(select("Yes","No") == 1)
+			{
+				deletearray $TicketTitle$[.@i], 1;
+				deletearray $TicketDesc$[.@i], 1;
+				deletearray $TicketVote[.@i], 1;
+				deletearray $TicketAnswer$[.@i], 1;			
+			}
+		}
+	}
+	return;
+	
+OnSeeTicket:
+	if(getarraysize($TicketTitle$) == 0)
+	{
+		next;
+		mes .@npcname$;
+		mes "No ticket has been entered.";
+	}
+	for(set .@i,0; .@i<getarraysize($TicketTitle$); set .@i,.@i+1)
+	{
+		callsub(OnVoteForTicket, .@i);
+	}
+	close;
+	
+OnInit:
+	set .maximumTicket, 50;
+	end;
+}

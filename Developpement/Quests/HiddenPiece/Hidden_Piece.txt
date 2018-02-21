@@ -1,0 +1,241 @@
+//hidden piece
+//Hyrule,133,176,4	script	HiddenPiece::alahidpie	-1,{
+prontera,156,175,4	script	HiddenPiece::alahidpie	-1,{
+	end;
+
+OnNPCKillEvent:
+	if(killedrid == 2022)
+	{
+		set $nyddhog_killed, 1;
+		hideoffnpc "cappill1";
+	}
+	else if(killedrid == 1832)
+	{
+		set $ifrit_killed, 1;
+		hideoffnpc "cappill2";
+	}
+	else if(killedrid == 1252)
+	{
+		set $hatii_killed, 1;
+		hideoffnpc "cappill3";
+	}
+
+	else if(killedrid == 2087)
+	{
+		set $scaraba_killed, 1;
+		hideoffnpc "cappill4";
+	}
+	goto OnCheckStartEvent;
+	end;
+
+OnCloseEvent:
+	set $nyddhog_killed, 0;
+	set $ifrit_killed, 0;
+	set $hatii_killed, 0;
+	set $scaraba_killed, 0;
+
+	set $nyddhog_spawn_stopped, 0;
+	set $nyddhog_hidden,0;
+	set $ifrit_spawn_stopped, 0;
+	set $ifrit_hidden,0;
+	set $hatii_spawn_stopped, 0;
+	set $hatii_hidden,0;
+	set $scaraba_spawn_stopped, 0;
+	set $scaraba_hidden,0;
+	
+	set $checkinon, 0;
+	set .vulnerableNpc, 1;
+	set $hidden_started, 0;
+
+	donpcevent "cappill1::OnCloseEvent";
+	donpcevent "cappill2::OnCloseEvent";
+	donpcevent "cappill3::OnCloseEvent";
+	donpcevent "cappill4::OnCloseEvent";
+	end;
+
+OnPillarUnactivated:
+	if (.vulnerableNpc == 1 && ($nyddhog_spawn_stopped == 0
+		|| $ifrit_spawn_stopped == 0
+		|| $hatii_spawn_stopped == 0
+		|| $scaraba_spawn_stopped == 0))
+	{
+		//make mvp vulnerable
+		set .vulnerableNpc, 0;
+		unitskilluseid .mvpGID,"NPC_INVINCIBLE",1;
+		announce "[Hidden Piece] The monsters are invicible again! Flee!", bc_all;
+	}
+	end;
+
+OnPillarStopped:
+	if (.vulnerableNpc == 0 && ($nyddhog_spawn_stopped == 1
+		&& $ifrit_spawn_stopped == 1
+		&& $hatii_spawn_stopped == 1
+		&& $scaraba_spawn_stopped == 1))
+	{
+		//make mvp vulnerable
+		set .vulnerableNpc, 1;
+		unitskilluseid .mvpGID,"NPC_INVINCIBLEOFF",1;
+		announce "[Hidden Piece] The monsters are vulnerable! Kill them! Now!", bc_all;
+	}
+	end;
+
+OnCheckStartEvent:
+	if ($hidden_started == 0 && $nyddhog_killed == 1
+		&& $ifrit_killed == 1
+		&& $hatii_killed == 1
+		&& $scaraba_killed == 1)
+	{
+		//start!
+		stopnpctimer;
+		set $checkinon, 0;
+		set $hidden_started, 1;
+		donpcevent "cappill1::OnAllMvpKilled";
+		donpcevent "cappill2::OnAllMvpKilled";
+		donpcevent "cappill3::OnAllMvpKilled";
+		donpcevent "cappill4::OnAllMvpKilled";
+		set .idMonster, rand(1002,2087);
+		if(.idMonster == 1917)
+		{
+			set .idMonster, 1002;
+		}
+		//HERCULES
+		//set .lastMobId, areamonster(.hiddenMap$,0,0,250,250,strmobinfo(1,.idMonster),.idMonster,1);
+		//RATHENA
+		areamonster(.hiddenMap$,0,0,250,250,strmobinfo(1,.idMonster),.idMonster,1);
+		set .lastMobId, $@mobId[0];
+		unitskilluseid .lastMobId,"NPC_INVINCIBLE",1;
+		night;
+		announce "[Hidden Piece] Midgard inhabitants. The Darkest Hour has arrived.",bc_all;
+		sleep 1500;
+		announce "[Hidden Piece] Somebody has freed the deepest, cruelest monster we've ever met.",bc_all;
+		sleep 1500;
+		announce "[Hidden Piece] We won't be able to kill it without your help.",bc_all;
+		sleep 1500;
+		announce "[Hidden Piece] Our entire world's gonna be changed by this monster!",bc_all;
+		sleep 1500;
+		announce "[Hidden Piece] All of you, please. Help us! For our world! For our freedom! Fight!",bc_all;
+
+		//spawn mvp monster (wounded morocc)
+		set .idMvpMonster, 1917;
+		//HERCULES
+		//set .mvpGID, areamonster(.hiddenMap$,0,0,250,250,strmobinfo(1,.idMvpMonster),.idMvpMonster,1,strnpcinfo(3)+"::OnMvpKilled",2);		
+		//RATHENA
+		areamonster(.hiddenMap$,0,0,250,250,strmobinfo(1,.idMvpMonster),.idMvpMonster,1,strnpcinfo(3)+"::OnMvpKilled",2);		
+		set .mvpGID, $@mobId[0];
+		unitskilluseid .mvpGID,"NPC_INVINCIBLE",1;
+
+		set .vulnerableNpc, 0;
+	
+		initnpctimer;
+	}
+	end;
+
+OnPCLoginEvent:
+	if ($hidden_started == 1)
+	{
+		attachrid getcharid(0);
+		dispbottom "[Hidden Piece] Midgard inhabitants. The Darkest Hour has arrived.";
+		sleep 1500;
+		dispbottom "[Hidden Piece] Somebody has freed the deepest, cruelest monster we've ever met.";
+		sleep 1500;
+		dispbottom "[Hidden Piece] We won't be able to kill it without your help.";
+		sleep 1500;
+		dispbottom "[Hidden Piece] Our entire world's gonna be changed by this monster!";
+		sleep 1500;
+		dispbottom "[Hidden Piece] All of you, please. Help us! For our world! For our freedom! Fight!";
+	}
+	end;
+
+OnMvpKilled:
+	day;
+	announce "[Hidden Piece] Thanks to all of you! Here's your reward!",bc_all;
+	stopnpctimer;
+	killmonsterall .hiddenMap$;
+	
+	//spawn random chest all around the capitale
+	for (set .@i, 0; .@i<.count_chest_reward; set .@i, .@i+1)
+	{
+		set .idMonster, rand(1324,1336);
+		areamonster .hiddenMap$,0,0,250,250,strmobinfo(1,.idMonster),.idMonster,1,strnpcinfo(3);
+	}
+	goto OnCloseEvent;
+	end;
+
+OnMobKilled:
+	set .count_mob, .count_mob - 1;
+	end;
+
+OnTimer15000:
+	if (.vulnerableNpc == 0)
+	{
+		set .countDelay, .countDelay + 1;
+		if (.countDelay == 240)
+		{
+			//one day delay, the event is a failure
+			stopnpctimer;
+			goto OnCloseEvent;
+		}
+		else
+		{
+			//make last monster invulnerable
+			unitskilluseid .lastMobId,"NPC_INVINCIBLE",1;
+			//make mvp invulnerable while pillar aren't stopped
+			unitskilluseid .mvpGID,"NPC_INVINCIBLE",1;
+
+			//spawn a random custom mob on the capitale
+			if (.count_mob < .count_mob_max)
+			{
+				set .idMonster, rand(1002,2087);
+				if(.idMonster == 1917)
+				{
+					set .idMonster, 1002;
+				}
+				//HERCULES
+				//set .lastMobId, areamonster(.hiddenMap$,0,0,250,250,strmobinfo(1,.idMonster),.idMonster,1);
+				//RATHENA
+				areamonster(.hiddenMap$,0,0,250,250,strmobinfo(1,.idMonster),.idMonster,1);
+				set .lastMobId, $@mobId[0];
+
+				set .count_mob, .count_mob + 1;
+				if (.debug)
+					announce "[Hidden Piece] Poping monster " + .idMonster, bc_all;
+			}
+
+			setnpctimer 0;
+		}
+	}
+	end;
+
+OnTimer30000:
+	if ($checkinon && ($nydhogg_killed == 0
+		|| $ifrit_killed == 0
+		|| $hatii_killed == 0
+		|| $scaraba_killed == 0))
+	{
+		set $nydhogg_killed, 0;
+		set $ifrit_killed, 0;
+		set $hatii_killed, 0;
+		set $scaraba_killed, 0;
+
+		hideonnpc "cappill1";
+		hideonnpc "cappill2";
+		hideonnpc "cappill3";
+		hideonnpc "cappill4";
+	}
+	end;
+
+OnInit:
+	set $nydhogg_killed, 0;
+	set $ifrit_killed, 0;
+	set $hatii_killed, 0;
+	set $scaraba_killed, 0;
+	set .count_chest_reward, 10;
+	set .count_mob_max, 250;
+	set $checkinOn, 0;
+	set $hidden_started, 0;
+	set .vulnerableNpc, 1;
+	set .hiddenMap$, "prontera";
+	set .debug, 0;
+	end;
+}
+

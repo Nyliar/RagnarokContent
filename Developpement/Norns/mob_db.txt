@@ -1,0 +1,227 @@
+
+{
+	Id: 2526
+	SpriteName: "E_BANDIT"
+	Name: "Dark Magician"
+		Lv: 141
+	Hp: 253145
+	Sp: 1
+	Exp: 44214
+	JExp: 38034
+	AttackRange: 1
+	Attack: [1612, 2450]
+	Def: 74
+	Mdef: 312
+	Stats: {
+		Str: 136
+		Agi: 99
+		Vit: 61
+		Int: 121
+		Dex: 121
+		Luk: 49
+	}
+	ViewRange: 10
+	ChaseRange: 12
+	Size: "Size_Medium"
+	Race: "RC_DemiHuman"
+	Element: ("Ele_Ghost", 3)
+	Mode: {
+		CanMove: true
+		Aggressive: true
+		CastSensorIdle: true
+		CanAttack: true
+		ChangeTargetMelee: true
+		ChangeTargetChase: true
+	}
+	MoveSpeed: 180
+	AttackDelay: 1152
+	AttackMotion: 864
+	DamageMotion: 288
+	MvpExp: 0
+	Drops: {
+	}
+},
+{
+	Id: 3100
+	SpriteName: "MM_MANA_BLACK"
+	Name: "Black Mana"
+	Lv: 1
+	Hp: 100
+	Sp: 1
+	Exp: 0
+	JExp: 0
+	AttackRange: 1
+	Attack: [2,3]
+	Def: 1
+	Mdef: 1
+	Stats: {
+		Str: 1
+		Agi: 1
+		Vit: 1
+		Int: 1
+		Dex: 1
+		Luk: 1
+	}
+	ViewRange: 10
+	ChaseRange: "Size_Small"
+	Race: "RC_Formless"
+	Element: ("Ele_Neutral",1)
+	Mode: {
+		CanMove: true
+		Aggressive: true
+		CastSensorIdle: true
+		CanAttack: true
+		Detector: true
+		CastSensorChase: true
+		ChangeChase: true
+		ChangeTargetMelee: true
+		ChangeTargetChase: true
+		Plant: true
+	}
+	MoveSpeed: 500
+	AttackDelay: 1500
+	AttackMotion: 500
+	DamageMotion: 1000
+	MvpExp: 0
+	Drops: {
+	}
+},
+{
+	Id: 3287
+	SpriteName: "MH_ATROCE"
+	Name: "Middle Fenrir"
+	Lv: 155
+	Hp: 14000000
+	Sp: 1
+	Exp: 20173060
+	JExp: 19779080
+	AttackRange: 1
+	Attack: [7450,12530]
+	Def: 100
+	Mdef: 130
+	Stats: {
+		Str: 250
+		Agi: 120
+		Vit: 190
+		Int: 40
+		Dex: 250
+		Luk: 50
+	}
+	ViewRange: 10
+	ChaseRange: "Size_Large"
+	Race: "RC_Brute"
+	Element: ("Ele_Neutral",1)
+	Mode: {
+		CanMove: true
+		Aggressive: true
+		CastSensorIdle: true
+		CanAttack: true
+		Detector: true
+		CastSensorChase: true
+		ChangeChase: true
+		ChangeTargetMelee: true
+		ChangeTargetChase: true
+		Boss: true
+	}
+	MoveSpeed: 150
+	AttackDelay: 576
+	AttackMotion: 600
+	DamageMotion: 240
+	MvpExp: 0
+	Drops: {
+		
+	}
+},
+{
+	Id: 3626
+	SpriteName: "EP16_2_H_HUNTER_V "
+	Name: "Hunter"
+	Lv: 110
+	Hp: 14000000
+	Sp: 1
+	Exp: 20173060
+	JExp: 19779080
+	AttackRange: 1
+	Attack: [3450,7250]
+	Def: 100
+	Mdef: 130
+	Stats: {
+		Str: 250
+		Agi: 120
+		Vit: 190
+		Int: 40
+		Dex: 250
+		Luk: 50
+	}
+	ViewRange: 10
+	ChaseRange: "Size_Medium"
+	Race: "RC_DemiHuman"
+	Element: ("Ele_Ghost",1)
+	Mode: {
+		CanMove: true
+		Aggressive: true
+		CastSensorIdle: true
+		CanAttack: true
+		Detector: true
+		CastSensorChase: true
+		ChangeChase: true
+		ChangeTargetMelee: true
+		ChangeTargetChase: true
+		Boss: true
+	}
+	MoveSpeed: 150
+	AttackDelay: 576
+	AttackMotion: 600
+	DamageMotion: 240
+	MvpExp: 0
+	Drops: {
+		
+	}
+},
+
+{
+	Id: 3628
+	SpriteName: "EP16_2_H_HUNTER_EV"
+	Name: "Hel"
+	Lv: 150
+	Hp: 45000000
+	Sp: 1
+	Exp: 20173060
+	JExp: 19779080
+	AttackRange: 1
+	Attack: [7450,12530]
+	Def: 100
+	Mdef: 130
+	Stats: {
+		Str: 250
+		Agi: 120
+		Vit: 190
+		Int: 40
+		Dex: 250
+		Luk: 50
+	}
+	ViewRange: 10
+	ChaseRange: "Size_Medium"
+	Race: "RC_DemiHuman"
+	Element: ("Ele_Ghost",4)
+	Mode: {
+		CanMove: true
+		Aggressive: true
+		CastSensorIdle: true
+		CanAttack: true
+		Detector: true
+		CastSensorChase: true
+		ChangeChase: true
+		ChangeTargetMelee: true
+		ChangeTargetChase: true
+		Boss: true
+	}
+	MoveSpeed: 75
+	AttackDelay: 576
+	AttackMotion: 600
+	DamageMotion: 240
+	MvpExp: 0
+	Drops: {
+		
+	}
+},

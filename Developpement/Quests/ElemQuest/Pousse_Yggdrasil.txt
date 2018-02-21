@@ -1,0 +1,275 @@
+shitsu,55,47,4	script	Yggdrasil Shoot::yggshoo	613,5,5,{
+	end;
+
+OnBloomAwake:
+	switch($element_rank)
+	{
+		case 0:
+			set .bloomLife, 2;
+			set .maxBloomLife, 2;
+			setarray .monstersIdCount[0],1,1,2;
+			set .waveDelay, 60000;
+			break;
+		case 1:
+			set .bloomLife, 4;
+			set .maxBloomLife, 4;
+			setarray .monstersIdCount[0],2,2,4;
+			set .waveDelay, 45000;
+			break;
+		case 2:
+			set .bloomLife, 7;
+			set .maxBloomLife, 7;
+			setarray .monstersIdCount[0],4,4,6;
+			set .waveDelay, 30000;
+			break;
+		case 3:
+			set .bloomLife, 16;
+			set .maxBloomLife, 16;
+			setarray .monstersIdCount[0],8,8,8;
+			set .waveDelay, 15000;
+			break;
+	}
+	set .bloom_started, 0;
+	end;
+
+OnTimer15000:
+	if ($element_rank == 3)
+	{
+		hideoffnpc "yggshomob" + rand(1,4);
+		donpcevent "yggshomob" + rand(1,4) + "::OnReachTarget";
+	}
+	else if ($element_rank == 1)
+	{ 
+		hideoffnpc "yggshomob" + rand(1,4);
+		donpcevent "yggshomob" + rand(1,4) + "::OnReachTarget";
+	}
+	end;
+
+OnTimer30000:
+	if ($element_rank == 2)
+	{
+		hideoffnpc "yggshomob" + rand(1,4);
+		donpcevent "yggshomob" + rand(1,4) + "::OnReachTarget";
+	}
+	end;
+
+OnTimer60000:
+	if ($element_rank == 0)
+	{
+		hideoffnpc "yggshomob" + rand(1,4);
+		donpcevent "yggshomob" + rand(1,4) + "::OnReachTarget";
+	}
+	end;
+
+OnBloomTouched:
+	set .bloomLife, .bloomLife - 1;
+	mapannounce .eventMap$,"The Shoot can survive only " + .bloomLife + " more. Help her!",0;
+	if (.bloomLife == 0)
+	{
+		mapannounce .eventMap$,"The Bloom died under the monsters attacks. You failed protecting her.",0; 
+		set .bloom_started, 0;
+		stopnpctimer;
+		killmonsterall .eventMap$;
+		hideonnpc "yggshomob1";
+		hideonnpc "yggshomob2";
+		hideonnpc "yggshomob3";
+		hideonnpc "yggshomob4";
+	}
+	else
+	{
+		mapannounce .eventMap$,"Protect the bloom! Next wave in " + .waveDelay + "!",0;
+		stopnpctimer;
+		initnpctimer;
+	}
+	end;
+
+OnMobKilled:
+	stopnpctimer;
+	set .@mob_dead_num,mobcount(.eventMap$,"yggshoo::OnMobKilled");
+	if (.@mob_dead_num < 1)
+	{
+		goto OnAllMobKilled;
+	}
+	else
+	{
+		setnpctimer 0;
+	}
+	end;
+
+OnAllMobKilled:
+	mapannounce .eventMap$,"Congratulations! The Bloom is safe right now!",0;
+	mapannounce .eventMap$,"Here's you reward!",0;
+
+	stopnpctimer;
+
+	getpartymember $elemental_party_id,2;
+
+	set .@countParty, $@partymembercount;
+	copyarray .@partyAccountId[0], $@partymemberaid[0], .@countParty;
+	if (.@countParty <= 1)
+		set .@reward_rank, rand(0,3);
+	else if (.@countParty > 1 && .@countParty <= 3)
+		set .@reward_rank, rand(0,2);
+	else if (.@countParty > 4)
+		set .@reward_rank, rand(0,1);
+
+	set .@givenReward, 0;
+	set .@rewardCount, rand(2,10) - .@reward_rank;
+	for(set .@i,0; .@i<.@countParty && .@givenReward < (4 - .@reward_rank); set .@i,.@i+1)
+	{
+		attachrid .@partyAccountId[.@i];
+		for(set .@j,0; .@j<.@rewardCount; set .@j,.@j+1)
+		{
+			set .@id, .rewardId_ys[rand(0,getarraysize(.rewardId_ys) - 1)];
+			getitem .@id, 1;
+		}
+		logmes "[Yggdrasil Quest] " + strcharinfo(0) + " obtains 1 " + getitemname(.@id);
+		set .@givenReward, .@givenReward + 1;
+	}
+	set .bloom_started, 0;
+	set $elemental_party_id, 0;
+	end;
+
+OnStartWaves:
+	if (.bloom_started == 0)
+	{
+		switch($element_rank)
+		{
+			case 0:
+				set .@countFenrir, 1;
+				set .@countNydd, 1;
+				set .@countDuneyrr, 2;
+				break;
+			case 1:
+				set .@countFenrir, 2;
+				set .@countNydd, 2;
+				set .@countDuneyrr, 3;
+				break;
+			case 2:
+				set .@countFenrir, 3;
+				set .@countNydd, 3;
+				set .@countDuneyrr, 5;
+				break;
+			case 3:
+				set .@countFenrir, 4;
+				set .@countNydd, 4;
+				set .@countDuneyrr, 8;
+				break;
+		}	
+
+		monster .eventMap$,0,0,"Fenrir",1785,.@countFenrir,strnpcinfo(3)+"::OnMobKilled";
+		monster .eventMap$,0,0,"Nydhogg",2022,.@countNydd,strnpcinfo(3)+"::OnMobKilled";
+		monster .eventMap$,0,0,"Duneyrr",2018,.@countDuneyrr,strnpcinfo(3)+"::OnMobKilled";
+
+		hideonnpc "yggshomob1";
+		hideonnpc "yggshomob2";
+		hideonnpc "yggshomob3";
+		hideonnpc "yggshomob4";
+
+		mapannounce .eventMap$,"Protect the bloom! Next wave in " + .waveDelay + "!",0;
+		initnpctimer;
+
+		set .bloom_started, 1;
+	}
+	end;
+
+OnTouch:
+	if ($favor_elem_quest == 2)
+	{
+		if (.bloomLife < .maxBloomLife)
+		{
+			specialeffect2 216;
+			switch($elemental_rank)
+			{
+				case 0:
+					percentheal -25,-25;
+					set .bloomLife, .bloomLife + 1;
+					break;
+				case 1:
+					percentheal -50,-50;
+					set .bloomLife, .bloomLife + 1;
+					break;
+				case 2:
+					percentheal -75,-75;
+					set .bloomLife, .bloomLife + 1;
+					break;
+				case 3:
+					percentheal -90,-90;
+					set .bloomLife, .bloomLife + 1;
+					break;
+			}
+			message strcharinfo(0),"The Bloom healed herself with your life. She'll survive a bit longer.";
+			mapannounce .eventMap$,"The Shoot can survive " + .bloomLife + " more attacks. Help her!",0;
+		}
+	}
+	end;
+	
+OnInit:
+	setarray .rewardId_ys[0],6307,7597,7825;
+	for(set .@i,0; .@i<getarraysize(.rewardId_ys); set .@i,.@i+1)
+	{
+		setitemscript(.rewardId_ys[.@i], "{ callfunc \"OnSummonAsked\", " + .@i + "; }", 0);
+	}
+	.eventMap$ = .eventMap$;
+	end;
+}
+
+
+function	script	OnSummonAsked	{
+	set .@invokType, getarg(0);
+	if (.@invokType == 0)
+	{
+		//Dangerous: Ifrit, Beelzebub, Khiel, Injustice, Banshee, Loli, Wind Ghost
+		setarray .@summonId[0], 1832, 1874, 1734, 1257, 1868, 1505, 1450;
+	}
+	else if (.@invokType == 1)
+	{
+		//Cac: Atroce, Valk, Baphomet, Raydric, Bloody knight, Obeaune, Ancient Worm
+		setarray .@summonId[0], 1785, 1891, 1039, 1163, 1569, 1425, 1567;
+	}
+	else if (.@invokType == 2)
+	{
+		//Magic: Gloom, Amon, DL, Anubis, Necro, Archdam, Blazer
+		setarray .@summonId[0], 1768, 1511, 1272, 1098, 1870, 1668, 1598;
+	}
+	else
+	{
+		//Poring?
+		setarray .@summonId[0], 1002;
+	}
+	set .@rank, rand(0,getarraysize(.@summonId) - 1);
+	set .@timeout, 180;
+	if (.@rank < 3)
+	{
+		set .@timeout, 30;
+	}
+	summon "--ja--",.@summonId[.@rank],.@timeout;
+	end;
+}
+
+/*shitsu,48,58,4	duplicate(yggshoo)	Yggdrasil Shoot::yggshoo2	613,5,5
+shitsu,48,47,4	duplicate(yggshoo)	Yggdrasil Shoot::yggshoo3	613,5,5
+shitsu,55,58,4	duplicate(yggshoo)	Yggdrasil Shoot::yggshoo4	613,5,5
+
+//Duneyrr: 2018, Nydd: 2022, Atroce: 1785
+shitsu,46,61,4	script	Fenrir#1::yggshomob1	1785,5,5,{
+	end;
+
+OnInit:
+	hideonnpc strnpcinfo(3);
+	end;
+
+OnReachTarget:
+	specialeffect 901;
+	donpcevent "yggshoo" + strnpcinfo(2) + "::OnBloomTouched";
+	sleep2 5000;
+	hideonnpc strnpcinfo(3);
+	end;
+}
+
+
+shitsu,58,60,4	duplicate(yggshomob1)	Nyddhog#2::yggshomob2	2022,5,5
+shitsu,57,45,4	duplicate(yggshomob1)	Duneyrr#3::yggshomob3	2018,5,5
+shitsu,45,46,4	duplicate(yggshomob1)	Duneyrr#4::yggshomob4	2018,5,5
+*/
+

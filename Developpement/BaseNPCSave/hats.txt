@@ -1,0 +1,552 @@
+//===== Hercules Script ======================================
+//= Warpeuse villes/Dungeons pour Rose Of Sharon
+//===== Par: =================================================
+//= Lyyn
+//===== Version du Script: =================================== 
+//= 0.1
+//===== Compatible Avec: =====================================
+//= Hercules (.@i++ | .@i = 5; | etc)
+//===== Commentaires =========================================
+//= Quêtes de hats.
+//===== Changelog ============================================
+//=
+//=		0.1 : Création du script avec Petite Fille#pro_in02 + Le chat	
+//============================================================
+
+
+/*=============================================================
+//	Azma (ahah) permet de créer 4 hats mais demande l'accomplisement d'une petite quête avant.
+//
+//
+//	Hats à créer : http://forum.artefact-ro.fr/topic/463-hats-à-mettre-en-quête/?p=4052
+//
+//	Variables :
+//
+//		azmahats : pour la progression de la quête
+=============================================================*/
+prontera,174,139,5	script	Petite Fille#pro_in02	891,{
+	
+	function close3;		// Fermeture avec cutin qui se barre (si envoyé avec un argument comme "close3(1)", pas de close !)
+	function tristesse;		// Pour éviter de copier/coller le même code.
+	function manqueItem;	// Informe qu'il manque des items
+	function byebye;		// byebye
+	
+	.@char$ = "[" + strcharinfo(0) + "]";
+	
+	switch(azmahats) {
+		
+		case 0:
+		// Début de la quête
+			mes "^919191Une petite fille pleure devant vous...^000000";
+			emotion e_sob;
+			sleep2 2000;
+			next;
+			
+			if(select("La réconforter:La laisser pleurer") == 2) {
+				tristesse();
+			}
+			
+			mes .@char$;
+			mes "Et bien ma petite, pourquoi tant de tristesse ?";
+			next;
+			
+			emotion e_sob;
+			mes .npc2$;
+			mes "...";
+			next;
+			
+			if(select("Insister:Laisser tomber") == 2) {
+				tristesse();
+			}
+			
+			mes .@char$;
+			mes "Allons allons, calme-toi. Dis-moi ton nom, pour commencer.";
+			next;
+			
+			mes .npc2$;
+			mes "...";
+			next;
+			
+			cutin .cutin$, 2;
+			mes .npc2$;
+			mes "... Je m'appelle Azma.";
+			next;
+			
+			/*if(select("Fuir", "°°°°°°°°°°°°°") == 1) {
+				mes "^919191Vous partez sans demander votre reste^000000";
+				close;
+			}
+			else {
+				mes "^919191Vous convulsez et mourrez dans d'atroces souffrances.";
+				close2;
+				percentheal -100,-100;
+				end;
+			}
+			*/
+			
+			cutin "", 255;
+			mes .@char$;
+			mes "Bien, Azma. Peux-tu me dire ce qu'il passe ?";
+			next;
+			
+			cutin .cutin$, 2;
+			mes .npc$;
+			mes "Et bien... Un chat m'a volé ma poupée favorite.";
+			next;
+			
+			mes .npc$;
+			mes "Mes parents m'interdisent de sortir de la ville, mais j'ai pu voir le chat courir vers les ^FF0000plaines, au nord^000000.";
+			next;
+			
+			cutin "", 255;
+			mes .@char$;
+			mes "Je vois. Et bien, comme je suis gentil" + ((Sex) ? "" : "le") + ", je vais te rapporter cette poupée.";
+			next;
+			
+			cutin .cutin$, 2;
+			mes .npc$;
+			mes "Il faut que ce soit ^FF0000la mienne^000000, elle m'est très importante !";
+			next;
+			
+			cutin "", 255;
+			mes .@char$;
+			mes "Bien entendu. Tu vas vite la récupérer !";
+			next;
+			
+			cutin .cutin$, 2;
+			mes .npc$;
+			mes "Merci " + ((Sex) ? "monsieur" : "madame") + " !";
+			azmahats = 1;
+			close3();
+		
+		case 1:
+		// Il faut récupérer la poupée près du chat
+			cutin .cutin$, 2;
+			
+			mes .npc$;
+			mes "Le chat est parti avec ma poupée... Au nord de la ville...";
+			close2;
+			
+			cutin "", 255;
+			emotion e_sob;
+			end;
+
+		case 2:
+		// Poupée récupérée, on la rend à Azma.	
+			
+			cutin .cutin$, 2;
+			
+			if(!countitem(7206)) {
+				mes .npc$;
+				mes "... Vous avez perdu ma poupée ?";
+				close2;
+				
+				cutin "", 255;
+				emotion e_sob;
+				end;
+			}
+			
+			emotion e_heh;
+			
+			mes .npc$;
+			mes "Ma poupée ! Merci de me l'avoir rapportée !";
+			next;
+			
+			mes .npc$;
+			mes "Vu que tu m'as aidée, je vais te confier un petit secret...";
+			next;
+			
+			mes .npc$;
+			mes "Mes parents sont artisants couturiers et je le serai également plus tard. Pour le moment, je m'entraîne à confectionner certains habits originaux.";
+			next;
+			
+			mes .npc$;
+			mes "Si tu m'apportes les matériaux nécessaires, je pourrai te faire profiter de mes services !";
+			next;
+			
+			emotion e_lv;
+			mes .npc$;
+			mes "Merci encore de m'avoir rendu ma chère poupée.";
+			close2;
+			
+			cutin "", 255;
+			delitem 7206, 1;
+			azmahats = 3;
+			end;
+		
+		case 3:
+			cutin .cutin$, 2;
+			
+			mes .npc$;
+			mes "Hey, contente de te revoir ! Souhaites-tu que je te confectionne quelque chose ?";
+			next;
+			switch(prompt("Oui:En savoir plus")) {
+				
+				case 1:
+					mes .npc$;
+					mes "Chouette ! Que veux-tu que je te prépare ?";
+					next;
+					switch(prompt("Neko Mimi Kafra", "Gangster Scarf", "Piece of White Cloth", "Flapping Angeling")) {
+						
+						case 1:
+							// Neko Mimi Kafra
+							mes .npc$;
+							mes "Souhaites-tu vraiment cet objet ?";
+							next;
+							
+							switch(prompt("Oui:Non")) {
+								case 1:
+									if(
+										countitem(675)		< 1		||
+										countitem(5057)		< 1		||
+										countitem(5020)		< 1		||
+										countitem(975)		< 1		||
+										countitem(949)		< 200
+									)
+									{
+										manqueItem();
+									}
+									else {
+										delitem 675,	1;
+										delitem 5057,	1;
+										delitem 5020,	1;
+										delitem 975,	1;
+										delitem 949,	200;
+										
+										logmes("[Craft Hat] " + strcharinfo(0) + " a craft un Neko Mimi Kafra (id : 5387)");
+										specialeffect 154;
+										getitem 5387,	1;
+										
+										mes .npc$;
+										mes "Et voilà ! J'espère que ce petit ruban te plaira. Les oreilles de chats t'iront à ravir.";
+										close3();
+									}
+								case 2:
+									byebye();
+								case 255:
+									close3(1);
+							}
+						case 2:
+							// Gangster Scarf
+							mes .npc$;
+							mes "Souhaites-tu vraiment cet objet ?";
+							next;
+							
+							switch(prompt("Oui:Non")) {
+								case 1:
+									if(
+										countitem(10019)	< 1		||
+										countitem(675)		< 2		||
+										countitem(7217)		< 30	||
+										countitem(7218)		< 30	||
+										countitem(7216)		< 200
+									)
+									{
+										manqueItem();
+									}
+									else {
+										delitem 10019,	1;
+										delitem 675,	2;
+										delitem 7217,	30;
+										delitem 7218,	30;
+										delitem 7216,	200;
+										
+										logmes("[Craft Hat] " + strcharinfo(0) + " a craft un Gangster Scarf (id : 5361)");
+										specialeffect 154;
+										getitem 5361,	1;
+										
+										mes .npc$;
+										mes "C'est terminé ! Cette écharpe a du style, tout comme toi !";
+										close3();
+									}
+								case 2:
+									byebye();
+								case 255:
+									close3(1);
+							}
+						case 3:
+							// Piece of White Cloth
+							mes .npc$;
+							mes "Souhaites-tu vraiment cet objet ?";
+							next;
+							
+							switch(prompt("Oui:Non")) {
+								case 1:
+									if(
+										countitem(675)		< 1		||
+										countitem(982)		< 1		||
+										countitem(2209)		< 1		||
+										countitem(1059)		< 60	||
+										countitem(7166)		< 100
+									)
+									{
+										manqueItem();
+									}
+									else {
+										delitem 675,	1;
+										delitem 982,	1;
+										delitem 2209,	1;
+										delitem 1059,	60;
+										delitem 7166,	100;
+										
+										logmes("[Craft Hat] " + strcharinfo(0) + " a craft un Piece of White Cloth (id : 5559)");
+										specialeffect 154;
+										getitem 5559,	1;
+										
+										mes .npc$;
+										mes "Oui ! La reliure est parfaite ! C'est fini, n'oublie pas de faire un noeud afin de ne pas perdre ce que je viens de te confectionner.";
+										close3();
+									}
+								case 2:
+									byebye();
+								case 255:
+									close3(1);
+							}
+						case 4:
+							// Flapping Angeling
+							mes .npc$;
+							mes "Souhaites-tu vraiment cet objet ?";
+							next;
+							
+							switch(prompt("Oui:Non")) {
+								case 1:
+									if(
+										countitem(5035)		< 1		||
+										countitem(2254)		< 1		||
+										countitem(675)		< 2		||
+										countitem(1006)		< 3		||
+										countitem(1061)		< 100
+									)
+									{
+										manqueItem();
+									}
+									else {
+										logmes("[Craft Hat] " + strcharinfo(0) + " a craft un Flapping Angeling (id : 5334)");
+										specialeffect 154;
+										delitem 5035, 1;
+										delitem 2254, 1;
+										delitem 675, 2;
+										delitem 1006, 3;
+										delitem 1061, 100;
+										getitem 5334,	1;
+										
+										mes .npc$;
+										mes "Les Angelings sont vraiment les plus mignons. La magie contenue dans les livres permet de faire bouger les ailes. C'est parfait !";
+										close3();
+									}
+								case 2:
+									byebye();
+								case 255:
+									close3(1);
+							}
+						case 255:
+							close3(1);
+					}
+				
+				case 2:
+					mes .npc$;
+					mes "Pour créer des vêtements, j'ai besoin que tu m'apportes les matériaux nécessaires...";
+					mes "\n";
+					mes "Voici la liste de ce que je peux te créer :";
+					next;
+					
+					mes .npc$;
+					mes "^FF0000Neko Mimi Kafra [1]^000000";
+					mes "    - 1 * "	+ getitemname(675);		// Silver Coin
+					mes "    - 1 * "	+ getitemname(5057);	// Black Cat Ears [0]
+					mes "    - 1 * "	+ getitemname(5020);	// Kafra Band
+					mes "    - 1 * "	+ getitemname(975);		// Scarlet Dyestuff
+					mes "    - 200 * "	+ getitemname(949);		// Feather
+					mes "\n\n";
+					mes "^FF0000Gangster Scarf^000000";
+					mes "    - 1 * "	+ getitemname(10019);	// Red Scarf
+					mes "    - 2 * "	+ getitemname(675);		// Silver Coin
+					mes "    - 30 * "	+ getitemname(7217);	// Spool
+					mes "    - 30 * "	+ getitemname(7218);	// Decomposed Ropse
+					mes "    - 200 * "	+ getitemname(7216);	// Red Muffler
+					mes "\n\n";
+					mes "^FF0000Piece of White Cloth^000000";
+					mes "    - 1 * "	+ getitemname(675);		// Silver Coin
+					mes "    - 1 * "	+ getitemname(982);		// White Dyestuff
+					mes "    - 1 * "	+ getitemname(2209);	// Ribbon [1]
+					mes "    - 60 * "	+ getitemname(1059);	// Fabric
+					mes "    - 100 * "	+ getitemname(7166);	// Soft Silk
+					mes "\n\n";
+					mes "^FF0000Flapping Angeling [1]^000000";
+					mes "    - 1 * "	+ getitemname(5035);	// Poring Hat
+					mes "    - 1 * "	+ getitemname(2254);	// Angel Wing
+					mes "    - 2 * "	+ getitemname(675);		// Silver Coin
+					mes "    - 3 * "	+ getitemname(1006);	// Old Magicbook
+					mes "    - 100 * "	+ getitemname(1061);	// Witch Starsand
+					next;
+					
+					mes .npc$;
+					mes "J'espère que tu me donneras du boulot bientôt !";
+					close3();
+				
+				case 255:
+					close3(1);
+			}
+	}
+	
+	
+	OnInit:
+		.npc$	= "[Azma]";
+		.npc2$	= "[Petite Fille]";
+		.cutin$	= "jpn_pieris01";
+		end;
+
+	function tristesse {
+		mes "^919191Vous partez en laissant la pauvre petite fille dans son triste état...^000000";
+		close;
+	}
+	
+	function manqueItem {
+		mes .npc$;
+		mes "Je suis désolée, mais il te manque certains objets...";
+		close3();
+	}
+	
+	function byebye {
+		mes .npc$;
+		mes "Reviens me voir si tu changes d'avis !";
+		close3();
+	}
+
+	function close3 {
+		// Fermer une boîte de dialogue en virant le cutin
+		if(!getarg(0, 0)) close2;
+		cutin "", 255;
+		end;
+	}
+}
+
+prt_fild01,147,99,5	script	Chat#vilainmatou	876,{
+
+	function chatattack;
+
+	.@char$ = "[" + strcharinfo(0) + "]";
+
+	soundeffect "leaf_cat_die.wav", 0;
+	mes .npc$;
+	mes "^FF0000Kssshhhh !^000000";
+	mes "\n";
+	mes "^919191Ce vilain matou n'a pas l'air commode...^000000";
+
+	switch(azmahats) {
+		
+		case 0:
+		// Pas de quête lancée	
+			close;
+		case 1:
+		// On doit récupérer la poupée.
+			next;
+			
+			mes "^919191Vous apercevez une poupée entre les pattes du féroce animal...^000000";
+			next;
+			
+			if(select("Récupérer la poupée:Partir") == 2) {
+				mes "^919191Au regard du félin, vous sentez une irrépressible envie de fuir...^000000";
+				close;
+			}
+
+			
+			// Si on apporte du poisson, on récupère le butin, sinon, on se fait griffer. Aïe !
+			
+			.@fish = -1;	// id du premier fish trouvé, si ça reste à 0, on en a pas !
+			
+			for(.@i = 0; .@i < getarraysize(.fishID) && .@fish == -1; .@i++) {
+				if(countitem(.fishID[.@i]) > 0) .@fish = .@i;	// Poisson trouvé !
+			}
+			
+			if(.@fish == -1) {
+				// Pas de poisson trouvé, le vilain chat attaque !
+				chatattack();
+				mes "^919191Le chat vous a attaqué. Peut-être qu'un peu de ^FF0000poisson^919191 le calmerait...^000000";
+				close;
+			}
+			
+			mes "^919191Peut-être que lui jeter un peu de ^FF0000poisson^919191 le distraira.";
+			if(select("Jeter du poisson:Partir") == 2) {
+				
+			}
+			else {
+				delitem .fishID[.@fish], 1;
+				
+				mes "\n";
+				mes "^919191Le chat a attrapé le morceau de poisson...^000000";
+				next;
+				
+				if(select("Attraper la poupée:Partir") == 2) {
+					mes "^919191La nourriture donnée ne semble pas avoir apaisé le chat... Vous préférez partir...^000000";
+					close;
+				}
+				
+				.@r = rand(0, 3);	// 25% de chance de réussir à avoir la poupée. 0 = réussite
+				
+				if(.@r) {
+					chatattack();
+					mes "^919191Le chat a remarqué votre main s'approchant doucement de sa possession... Il vous a griffé très rapidement.";
+					close;
+				}
+				
+				getitem 7206, 1;	// Black Cat Doll
+				azmahats = 2;
+				mes "^919191Vous réussissez à attraper rapidement la poupée pendant un moment de distraction de la bête effrayante.";
+				
+				next;
+				
+				soundeffect "leaf_cat_stand.wav", 0;
+				mes .npc$;
+				mes "Maaaooowww~~";
+				close;
+			}
+		
+		default:
+			next;
+			
+			mes "^919191Ce chat avait dérobé une poupée... Et il a l'air bien en colère depuis que je lui ai reprise...";
+			close;
+	}
+	
+	function chatattack {
+		soundeffect "leaf_cat_attack.wav", 0;
+		specialeffect2 122;
+		percentheal -10, 0;
+	}
+	
+	OnInit:
+		.npc$ = "[Chat]";
+		setarray .fishID,	1023, 579, 6039, 544, 624;	// Tous les ID de poissons à check
+		end;
+}
+
+// NPC Décoratifs
+
+prontera,177,134,3	script	Mère#pro_in02	532,{
+	.@npc$ = "[Mère]";
+	
+	if(azmahats < 3) {
+		mes .@npc$;
+		mes "Ma fille ne cesse de regarder par la fenêtre, elle m'inquiète...";
+		close;
+	}
+	
+	mes .@npc$;
+	mes "Depuis que vous lui avez rendu sa poupée, ma fille a de nouveau la joie de vivre. Merci.";
+	close;
+}
+
+prontera,179,136,1	script	Père#pro_in02	531,{
+	.@npc$ = "[Père]";
+	
+	if(azmahats < 3) {
+		mes .@npc$;
+		mes "Mais qu'y a-t'il de si intéressant dehors ?";
+		close;
+	}
+	
+	mes .@npc$;
+	mes "Ma fille passe beaucoup de temps avec cette poupée. Elle doit vraiment l'aimer.";
+	close;
+}

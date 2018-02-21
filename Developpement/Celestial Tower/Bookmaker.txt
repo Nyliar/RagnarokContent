@@ -1,0 +1,158 @@
+// [========================================================]
+// [==========     System - Celestial Tower     ============]
+// [========================================================]
+// [ Version 1                                              ]
+// [========================================================]
+// [ Original script by: Alayne				    ]
+// [========================================================]
+// [ Description:                                           ]
+// [--------------------------------------------------------]
+// [                                                        ]
+// [ - A pvp system, based on Celestial Tower in HxH	    ]
+// [ - Players have to climb a tower, step by step	    ]
+// [ - each winning can be associated with a reward,	    ]
+// { betting, special or normal match...		    	    ]
+// [                                                        ]
+// [========================================================]
+// [                                                        ]
+// [ -Database structure: celestial_bookmaker		    ]
+// [	- id	(INT)						    ]
+// [	- char_id	(INT)					    ]
+// [	- betValue (TINYINT)					    ]
+// [	- betReward (TINYINT)				    ]
+// [	- betFoeName (VARCHAR)				    ]
+// [	- betName (VARCHAR)					    ]
+// [	- betCost (DOUBLE)					    ]
+// [	- betClaimed (TINYINT)				    ]
+// [                                                        ]
+// [========================================================]
+// [                                                        ]
+// [ Changelog: (5 last updates)                            ]
+// [                                                        ]
+// [--------------------------------------------------------]
+// [                                                        ]
+// [ v0: Creation                      			    ]
+// [                                                        ]
+// [========================================================]
+// [                                                        ]
+// [========================================================]
+
+ars_fild21,206,171,5	script	Celestial Bookmaker::ctbok	49,{	
+	set .@npcname$, "[Myrian]";
+	mes .@npcname$;
+	mes "Welcome here, my little boy.";
+	mes "You're here in the dark place, where people bet their soul for money.";
+	mes "That's not an exact science, but you can do some money pretty easily.";
+	mes "On the other hand, there's always a luck notion.";
+	next;
+	mes .@npcname$;
+	mes "When winning a bet, you obtain a ratio depending about your bet, the odds, and the total amount betted.";
+	mes "For instance, if you bet 10.000z upon a 1.2 odds fighters, with a total amount betted of 60.000z and a maximum bet of 25.000z, you'll get 13.333z.";
+	mes "For 25.000z (the max bet), you'll earn 50.000z.";
+	mes "Not so bad, hu?";
+	mes "On the other hand, if it's the loser, you'll completely lose your bet.";
+	if ($enableBookmake == 1)
+	{
+		mes "Interested?";
+		if (select("Yes","No") == 1)
+		{
+			next;
+			mes .@npcname$;
+			mes "Perfect, I can feel that we're gonna make some profits together, he?";
+			mes "So...You're about to make a bet upon the incoming duel?";
+			mes "Upon which fighter head?";
+			mes "Give me his name, without error.";
+			input .@betName$;
+			if (.@betName$ == $fighter$ || .@betName$ == $challenger$)
+			{
+				next;
+				mes .@npcname$;
+				mes "Kekekeke.";
+				if (.@betName$ == $fighter$)
+				{
+					set .@betFoe$, $challenger$;
+					query_sql("SELECT `betCost` FROM `celestial_tower` WHERE `char_id`=" + $fighterId, .@betCost);
+				}
+				else
+				{
+					set .@betFoe$, $fighter$;
+					query_sql("SELECT `betCost` FROM `celestial_tower` WHERE `char_id`=" + $challengerId, .@betCost);
+				}
+				mes "His bet odds is at " + .@betCost[0];
+				mes "How many do you wanna bet?";
+				input .@betAmount;
+				
+				next;
+				mes .@npcname$;
+				mes "" + .@betAmount + "z, you're sure?";
+				if (select("Yes","No") == 1)
+				{
+					next;
+					mes .@npcname$;
+					if (Zeny >= .@betAmount)
+					{
+						mes "Perfect...";
+						mes "Come back after the fight if you've bet on the right horse, 'kay?";
+						set .@query$, "INSERT INTO `celestial_bookmaker` (`char_id`,`betValue`,`betReward`,`betFoeName`,`betName`,`betCost`,`betClaimed`) VALUES (" + getcharid(0) + "," + .@betAmount + ",0,'" + .@betFoe$ + "','" + .@betName$ + "'," + .@betCost[0] + ",0)";
+						debugmes "query: " + .@query$;
+						query_sql(.@query$, .@count); 
+						set Zeny, Zeny - .@betAmount;
+					}
+					else
+					{
+						mes "You don't have that money...";
+					}
+				}
+				else
+				{	
+					next;
+					mes .@npcname$;
+					mes "You should hurry, there's no more time left...";
+				}
+			}
+			else
+			{
+				next;
+				mes .@npcname$;
+				mes "I told you to give me the right name, didn't I?";
+			}
+		}
+		else
+		{
+			next;
+			mes .@npcname$;
+			mes "Then leave. There's people waiting...";
+		}
+	}
+	else
+	{	
+		next;
+		mes .@npcname$;
+		mes "You're here to obtain some money you've betted, hu?";
+		mes "Let's see that.";
+		query_sql("SELECT `id`,`betReward` FROM `celestial_bookmaker` WHERE `char_id`=" + getcharid(0) + " AND `betClaimed`=0", .@id, .@betReward);
+		if (getarraysize(.@betReward) > 0)
+		{
+			next;
+			mes .@npcname$;			
+			mes "Congratulations. There's " + getarraysize(.@betReward) + " you can claim.";
+			mes "Give me a second to prepare your money.";
+			for (set .@i,0; .@i<getarraysize(.@betReward);set .@i,.@i+1)
+			{
+				set .@amount, .@amount + .@betReward[.@i];
+				query_sql("UPDATE `celestial_bookmaker` SET `betClaimed`=1 WHERE `id`=" + .@id[.@i], .@count);
+			}
+			next;
+			mes .@npcname$;	
+			mes "Here's your money, " + .@amount + "Zenies.";
+			mes "Congratulations.";
+			set Zeny, Zeny + .@amount;
+			mes "Come back later, 'kay?";
+		}
+		else
+		{
+			mes "There's no bet you can claim...";
+		}
+	}
+	close;
+}

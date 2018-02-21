@@ -1,0 +1,18 @@
+function	script	AddPoints	{
+	set .@accountID, getarg(0);
+	set .@amount, getarg(1);
+	set .@pointType, getarg(2);
+ 
+	if (.@pointType == 0)
+	{
+		set #CASHPOINTS, #CASHPOINTS + .@amount;
+		message rid2name(.@accountID), "You just won " + .@amount + " Point" + (.@amount > 1 ? "s" : "") + " !";
+	}
+	else
+	{
+		set #FIGHTERPOINTS, #FIGHTERPOINTS + .@amount;
+		message rid2name(.@accountID), "You just won " + .@amount + " Point" + (.@amount > 1 ? "s" : "") + " !";
+	}
+
+	return;
+}

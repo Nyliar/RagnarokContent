@@ -1,0 +1,225 @@
+prontera,169,180,0	script	Frozen Knight::alttgc	4_M_FROZEN_KN,3,3,{
+	if(strnpcinfo(3) != "alttgc")
+	{
+		.@npcName$ = "[Heart Crystal]";
+		mes .@npcName$;
+		mes "Do you want to go back to normal world?";
+		if(.warpBackId != -1)
+		{
+			mes "It requires a " + getitemname(.warpBackId) + ".";
+			if(countitem(.warpBackId) < 1)
+			{
+				close;
+			}
+			if(select("Ok","No") == 1)
+			{
+				delitem .warpBackId, 1;
+			}
+		}
+		warp "Save",0,0;
+		close;
+	}
+	.@npcName$ = "[Frozen Knight]";
+	.@cntFound = 0;
+	for(.@i = 0; .@i<30; .@i++)
+	{
+		if(getd("$townGuild" + .@i) == getcharid(2) && getguildmasterid(getcharid(2)) == getcharid(0))
+		{
+			.@cntFound++;
+		}
+	}
+	if(.@cntFound > 0)
+	{
+		//town owing guild (at least 1)
+		mes .@npcName$;
+		mes "You're the leader of a Guild which freed a Town.";
+		mes "As so, you're able to receive a reward each day for doing so.";
+		if(NEXTTIMEREWARD >= gettimetick(2) || NEXTTIMEREWARD == 0)
+		{
+			next;
+			mes .@npcname$;
+			if(gettime(GETTIME_HOUR) == 18 || gettime(GETTIME_HOUR) == 19)
+			{
+				next;
+				mes .@npcname$;
+				mes "You can only retrieve once a day, between 6 and 7pm.";
+				close;
+			}
+			mes "Do you wish to receive your reward?";
+			if(select("Yes","No") == 1)
+			{
+				next;
+				mes .@npcname$;
+				
+				//get time until next midnight
+				.@remseconds = 60 - gettime(GETTIME_SECOND);
+				.@remminutes = 60 - gettime(GETTIME_MINUTE);
+				.@remhours = 24 - gettime(GETTIME_HOUR);
+				.@remTime = (.@remhours * 60 + .@remminutes * 60 + .@remseconds);
+			
+				NEXTTIMEREWARD = gettimetick(2) + .@remTime;
+				
+				//get number of day since last retrieve
+				if(LASTTIMEREWARD == 0)
+				{
+					.@dayCount = 1;
+				}
+				else
+				{
+					.@tickCount = gettimetick(2) - LASTTIMEREWARD;
+					.@dayCount = .@tickCount / 24;
+				}
+				getitem .rewardId, .rewardCount * .@dayCount;
+				LASTTIMEREWARD = gettimetick(2);
+			}
+		}
+		else
+		{
+			next;
+			mes .@npcname$;
+			mes "You allready retrieved your reward for today.";
+			mes "You can only retrieve once a day, between 6 and 7pm.";
+		}
+	}
+	else
+	{
+		//no town owning guild
+		mes .@npcName$;
+		mes "You in front of the Giant Crystal Core.";
+		mes "This is a place that contains the power of all Demon Core in all Towns.";
+		mes "When a Guild frees a town, the Crystal is able to deliver them a reward each day they'll get the town held.";
+		mes "Rewards can be retrieved each day from 18pm to 19pm.";
+	}
+	close;
+	
+OnNormalDied:
+OnWaveDied:
+	//nothing, used for mob count
+	end;	
+	
+OnTouch:
+	if(strnpcinfo(3) != "alttgc")
+	{
+		if(getd("$townGuild" + strnpcinfo(2)) != -1)
+		{
+			.@guildName$ = getguildname(getd("$townGuild" + strnpcinfo(2)));
+			if(.@guildName$ != "null")
+			{
+				
+			}
+		}		
+		else
+		{
+			.@mobCount = mobcount(strnpcinfo(4), "alttgc::OnWaveDied");
+			.@mobCount = .@mobCount + mobcount(strnpcinfo(4), "alttgc::OnWaveDied");
+			if(.@mobCount == 0)
+			{
+				dispbottom "[Heart Crystal] Stay within 5m radius for 2 minutes to take the town.";
+				TOWNCHECK = 0;
+				addtimer 1000, strnpcinfo(3) + "::OnCheckDistance";
+			}
+			else
+			{
+				dispbottom "[Heart Crystal] The Crystal has been freed.";
+			}
+		}
+	}
+	end;
+	
+OnCheckDistance:
+	TOWNCHECK += 10;
+	if(TOWNCHECK < 120)
+	{
+		getmapxy(.@map$, .@x, .@y, UNITTYPE_PC);
+		getmapxy(.@nmap$, .@nx, .@ny, UNITTYPE_NPC);
+		if(.@map$ == .@nmap$
+			&& .@x >= .@nx - 5 && .@x <= .@nx + 5
+			&& .@y >= .@ny - 5 && .@y <= .@ny + 5)
+		{
+			addtimer 1000, strnpcinfo(3) + "::OnCheckDistance";
+		}
+	}
+	else
+	{
+		goto OnTownTake;
+	}
+	end;	
+	
+OnTownTake:
+	if(getcharid(2) != -1)
+	{
+		setd("$townGuild" + strnpcinfo(2), getcharid(2));
+		announce "Izlude town has been freed by the Guild " + getguildname(getd("$townGuild" + strnpcinfo(2))) + ".", bc_all|bc_blue;
+	}
+	else
+	{
+		announce "Izlude town has been freed by " + strnpcinfo(0) + ". But as he doesn't belong to a guild, the Town will be taken back within no time...", bc_all|bc_blue;
+	}
+	end;
+
+OnPCKillEvent:
+	if(strnpcinfo(3) == "alttgc")
+	{
+		.@killer = getcharid(3);
+		attachrid(killedrid);
+		for(.@i = 0; .@i<30; .@i++)
+		{
+			if(getguildmasterid(getcharid(2)) == killedrid && getd("$townGuild" + .@i) == getcharid(2))
+			{
+				doevent .npcNames$[.@i] + "::OnTownLeaderDied";
+			}
+		}
+	}
+	end;
+
+OnWhisperGlobal:
+	if(strnpcinfo(3) == "alttgc")
+	{
+		for(.@i = 0; .@i<30; .@i++)
+		{
+			setd("$townGuild" + .@i, -1);
+		}
+	}
+	end;
+
+OnInit:
+	setarray .npcNames$[0], "aleddeco","alardeco","alaltdeco","algedeco","alcordeco","alyadeco","alanadeco";
+	setarray $waveMobIds1[0],1023,1213,1122,1123;
+	setarray $waveMobCount1[0],25,15,25,25;
+	setarray $waveMobIds2[0],1133,1134,1392;
+	setarray $waveMobCount2[0],25,15,10;
+	setarray $waveMobIds3[0],1002;
+	setarray $waveMobCount3[0],2;
+	setarray $waveMobIds4[0],1002;
+	setarray $waveMobCount4[0],2;
+	setarray $waveMobIds5[0],1002;
+	setarray $waveMobCount5[0],2;
+
+	$holyId = 512;
+	setarray $ttMobIds1[0],1002,50,1063,50,1052,25,1031,15,1051,25,1388,1; //last id must be a mvp
+	setarray $ttMobIds2[0],1002,50,1063,50,1052,25,1031,15,1051,25,1388,1; //last id must be a mvp
+	
+	.rewardId = $shardIds[0];
+	.rewardCount = 500; //reward count per day since last retrieve
+	.warpBackId = 512;
+	end;
+}
+
+function	script	OpenWarpToMirror	{
+	setarray .@startMap$[0],"izlude","prontera","alberta","geffen","morocc","payon","aldebaran";
+	setarray .@outMap$[0],"edulzi","artenop","altreba","egneff","corromc","yanop","narladeba";
+	
+	.@found = -1;
+	for(i = 0; i<getarraysize(.@startMap$) && .@found == -1; .@i++)
+	{
+		if(strcharinfo(3) == .@startMap$[.@i])
+		{
+			.@found = 1;
+			getmapxy(.@map$, .@x, .@y, UNITTYPE_PC);
+			warpportal .@x,.@y,.@outMap$[.@i],.@x,.@y;
+		}
+	}
+	end;	
+}
+
+

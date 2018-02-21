@@ -1,0 +1,227 @@
+Hyrule,35,211,6	script	Etherian Angel::ea	811,{
+
+set .@npcname$, "[Etherian Angel]";
+set .@price, 1000000;
+
+	if (RACE_SYS == 0)
+	{
+		if(degoe == 1)goto ASGo_Etheria;
+		if(legoe == 1)goto ALGo_Etheria;
+		if(hagoe == 1)goto VGo_Etheria;
+		if(mwgoe == 1)goto JGo_Etheria;
+		if(oagoe == 1)goto ABGo_Etheria;
+		if(dsgoe == 1)goto MGo_Etheria;
+	}
+
+	else if(deqdone >= 1 || RACE_SYS == 1)goto L_GM;
+	else if(leqdone >= 1 || RACE_SYS == 2)goto L_GM;
+	else if(mwqdone >= 1 || RACE_SYS == 3)goto L_GM;
+	else if(haqdone >= 1 || RACE_SYS == 4)goto L_GM;
+	else if(oaqdone >= 1 || RACE_SYS == 5)goto L_GM;
+	else if(dsqdone >= 1 || RACE_SYS == 6)goto L_GM;
+	else if(BaseLevel < 50 || JobLevel < 50) goto L_LowLevel;
+      
+	mes .@npcname$;
+	mes "Choose from of the 6 races. It'll become yours once the quest will be fulfilled.";
+	close;
+
+	L_LowLevel:
+		mes .@npcname$;
+		mes "Choose from of the 6 races. It'll become yours once the quest will be fulfilled.";
+		mes "On the other, you can only change your race after reaching lvl 50 in both base and job.";
+		close;
+
+	L_GM:
+		mes .@npcname$;
+		mes "What can I do for you, child?";
+		if(((deqdone >= 1 || RACE_SYS == 1) && countitem(30408) == 0)
+			|| ((leqdone >= 1 || RACE_SYS == 2) && countitem(30407) == 0)
+			|| ((mwqdone >= 1 || RACE_SYS == 3) && countitem(30409) == 0)
+			|| ((haqdone >= 1 || RACE_SYS == 4) && countitem(30411) == 0)
+			|| ((oaqdone >= 1 || RACE_SYS == 5) && countitem(30406) == 0)
+			|| ((dsqdone >= 1 || RACE_SYS == 6) && countitem(30410) == 0)) 
+				goto L_NOTEQUIP;
+		next;
+		menu "I can't handle it...I want to change my Race!",-,"Well...Nothing.",L_Nothin;
+			mes .@npcname$;
+			mes "Sure, child. But don't think it'll be free and easy.";
+			mes "First of all, you'll need to get back to Human, and I'll have to erase your memories from all race members memories...";
+			next;
+			mes .@npcname$;
+			mes "I'll need " + .@price + "z.";
+			mes "You'll lose all your race advantages. Plus, you'll lose a level in both base and job.";
+			mes "That the price to get back to your ancient life?";
+			next;
+			menu "I...I wanna be me again.",-,"What the...No way?!",L_Nuts;
+
+			mes .@npcname$;
+			if(Zeny < .@price) goto L_NotEnuf;
+			set Zeny,Zeny-.@price;
+			mes "Allright. I'll change you back then.";
+			mes "Get ready.";
+			
+			set deqdone,0;
+			set deqstart,0;
+			set degoe,0;
+			set leqdone,0;
+			set leqstart,0;
+			set legoe,0;
+			set haqdone,0;
+			set haqstart,0;
+			set hagoe,0;
+			set mwqdone,0;
+			set mwqstart,0;
+			set mwgoe,0;
+			set oaqdone,0;
+			set oaqstart,0;
+			set oagoe,0;
+			set dsqdone,0;
+			set dsqstart,0;
+			set dsgoe,0;
+			atcommand ("@blvl -1");
+			atcommand ("@jlvl -1");
+			set RACE_SYS, -1;
+			close;
+
+OnWhisperGlobal:
+	dispbottom "deqdone : " + deqdone;
+	dispbottom "leqdone : " + leqdone;
+	dispbottom "mwqdone : " + mwqdone;
+	dispbottom "haqdone : " + haqdone;
+	dispbottom "oaqdone : " + oaqdone;
+	dispbottom "dsqdone : " + dsqdone;
+	dispbottom "RACE_SYS : " + RACE_SYS;
+	end;
+	
+	L_NOTEQUIP:
+		next;
+		mes .@npcname$;
+		mes "Sorry but I can do nothing for you, as you're not a member of a race...";
+		mes "I can clearly see you don't have the right Ears.";
+		close;
+			
+	L_Nothin:
+		mes .@npcname$;
+		mes "Have a nice mortal life.";
+		close;
+
+	L_Nuts:
+		mes .@npcname$;
+		mes "I warned you it won't be free.";
+		close;
+
+	L_NotEnuf:
+		mes "Sorry but your not ready for that...";
+		close;
+
+//Alfe Sombre Quest
+	ASGo_Etheria:
+		callfunc "change_race", "Somber Dwarf", "ASGo_Etheria", "deqstart", "deqdone", "deqgoe", 3;
+
+//Alfe Lumineux Quest
+	ALGo_Etheria:
+		callfunc "change_race", "Light Alfe", "ALGo_Etheria", "leqstart", "leqdone", "leqgoe", 2;
+
+//Vane Quest
+	VGo_Etheria:
+		callfunc "change_race", "Vane", "VGo_Etheria", "haqstart", "haqdone", "haqgoe", 6;
+
+//Jotun Quest
+	JGo_Etheria:
+		callfunc "change_race", "Jotun", "JGo_Etheria", "mwqstart", "mwqdone", "mwqgoe", 4;
+
+//Alfe Brumeux Quest
+	ABGo_Etheria:
+		callfunc "change_race", "Mist Alfe", "ABGo_Etheria", "oaqstart", "oaqdone", "oaqgoe", 1;
+
+//Muspel Quest
+	MGo_Etheria:
+		callfunc "change_race", "Muspelheimer", "MGo_Etheria", "dsqtart", "dsqdone", "dsqgoe", 5;
+}
+
+function	script	change_race	{
+		mes .@npcname$;
+		mes "So, you've fulfilled the quest to become a " + getarg(0) + ".";
+		next;
+		mes .@npcname$;
+		mes "Are sure of your choice? There's no return, except for high price.";
+		next;
+		menu "Yes, I'm sure!",-,"I...No, I don't want.",L_dequit,"I...I'll come back later...",L_No;
+
+			mes .@npcname$;
+			mes "Perfect. Starting from this day, you'll be known as ^ff0000" + strcharinfo(0) + "^000000, a powerfull " + getarg(0) + ".";
+			mapannounce strcharinfo(3),"" + strcharinfo(0) + " just became a " + getarg(0) + ".",bc_blue;
+			next;
+			
+			//get specific item
+			switch(getarg(5))
+			{
+				case 1:
+					//Mist Alfe
+					getitem 30406, 1;
+					break;
+				case 2:
+					//Light Alfe
+					getitem 30407, 1;
+					break;
+				case 3:
+					//Sombre Dwarf
+					getitem 30408, 1;
+					break;
+				case 4:
+					//Jotun
+					getitem 30409, 1;
+					break;
+				case 5:
+					//Muspelheimer
+					getitem 30410, 1;
+					break;
+				case 6:
+					//Vane
+					getitem 30411, 1;
+					break;
+			}
+						
+			set getd(getarg(2)), 0;
+			set getd(getarg(3)), 3;
+			set getd(getarg(4)), 0;	
+			set RACE_SYS, getarg(5);
+			close;
+
+		L_No:
+			mes .@npcname$;
+			mes "Take your time, child.";
+			close;
+
+		L_dequit:
+			mes .@npcname$;
+			mes "You abandon. Are you sure?";
+			next;
+			mes .@npcname$;
+			mes "You've already fulfilled so much. Do you understand that this mean cancel all this hard work?";
+			next;
+			menu "Ahahaha! I didn't understand! Go on, then!",-,"Yes, I thought of it",L_dereallyquit,"Well...I'll come back later...",L_No;
+
+			callfunc "change_race", getarg(0), getarg(1), getarg(2), getarg(3), getarg(4), getarg(5);
+
+		L_dereallyquit:
+			mes .@npcname$;
+			mes "Perfect then...";
+			next;
+			set getd(getarg(2)), 0;
+			set getd(getarg(3)), 0;
+			set getd(getarg(4)), 0;
+			close;
+
+		DEQuest_Done:
+			mes .@npcname$;
+			mes "You're now a " + getarg(0) + ". Go child, live your life.";
+			if(getgmlevel()>39) goto L_GM;
+			close;
+}
+
+//===========================================================
+// +--------------------------------------------+
+// | End of Etheria |
+// +--------------------------------------------+
+//===========================================================

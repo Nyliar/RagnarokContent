@@ -1,0 +1,286 @@
+treasure02,101,153,5	script	BloodCrystal#4::alabc38	OBJ_A2,{
+	set .@npcname$, "[Blood Crystal]";
+	mes .@npcname$;
+	mes "Current fill level: " + .fillPercent + "%"; 
+	mes "Would do you want to do?";
+	switch(select("Fill the Crystal","Retrieve a Spirit Life","Nothing"))
+	{
+		case 1:
+			next;
+			mes .@npcname$;
+			mes "You're about to fill Life in Blood Crystal.";
+			mes "How many Shards do you wish to give to the Crystal?";
+			mes "'0' means 'as much as possible'.";
+			input .@shardCount;
+			if(.@shardCount == 0)
+			{
+				set .@shardCount, countitem($shardIds[0]);
+			}
+			if(.@shardCount > countitem($shardIds[0]))
+			{
+				next;
+				mes .@npcname$;
+				mes "You don't have those items.";
+				close;
+			}
+			if(.popAvailable != 1)
+			{
+				next;
+				mes .@npcname$;
+				mes "The Guardian has allready been killed. Wait for " + $repopHourCount + " hours to summon it again.";
+				close;
+			}
+			delitem $shardIds[0], .@shardCount;
+			set .@fillRequired, 1000 + atoi(strnpcinfo(2)) * 50;
+			set .fillItemCount, .fillItemCount + .@shardCount;
+			set .fillPercent,  .fillItemCount * 100 / .@fillRequired;
+			if(.fillPercent >= 100)
+			{
+				set .fillPercent, 100;
+				next;
+				mes .@npcname$;
+				mes "The Crystal has been filled.";
+				for(set .@i,.mapToCheck[0]; .@i<.mapToCheck[1]; set .@i,.@i+1)
+				{
+					set .@mobCount, .@mobCount + mobcount("treasure0" + .@i, "CardinalSystem::OnNormalDied");
+				}
+				if(.@mobCount == 0)
+				{
+					set .@percentHeal, 0 - atoi(strnpcinfo(2));
+					percentheal .@percentHeal, .@percentHeal;
+					set .popAvailable, 0;	
+					setnpcdisplay strnpcinfo(3), OBJ_B2, 1;
+					//special effect
+					specialeffect 862;
+					//summon boss
+					monster strnpcinfo(4), 0, 0, "--ja--", .bossId, 1, "CardinalSystem::OnGuardianDied";
+					initnpctimer;
+					set .loopCount, 0;
+				}
+				else
+				{
+					mes "The Guardian will appears after total dungeon cleaning.";
+				}
+				setd("$" + strnpcinfo(3), 1);
+			}
+			else
+			{
+				next;
+				mes .@npcname$;
+				mes "The Crystal has been filled up to " + .fillPercent + "%";
+			}
+			break;
+		case 2:
+			next;
+			mes .@npcname$;
+			if(SPIRITLIFE == $maxSpiritLife)
+			{
+				mes "You can't get more than " + $maxSpiritLife + " Spirit Lifes.";
+				close;
+			}
+			if(SPIRIT == 0)
+			{
+				mes "You can't retrieve a Spirit Life while you're not in Spirit mode.";
+				close;
+			}
+			if(.fillPercent > $minFillPercentToRetrieveLife)
+			{
+				set .fillPercent, 0;
+				set SPIRITLIFE, SPIRITLIFE + 1;
+				set SPIRIT, 0;
+				specialeffect2 372;
+				undisguise();
+				mes "The Crystal has been emptied. You've raised from the dead.";
+			}
+			else
+			{
+				mes "The Crystal isn't filled enough to allow Spirit Life retrieve.";
+			}
+			break;
+		case 3:
+			next;
+			mes .@npcname$;
+			mes "Action cancelled.";
+			break;
+	}
+	close;
+
+OnTimer360000:
+	stopnpctimer;
+	set .loopCount, .loopCount + 1;
+	if(.loopCount >= $repopHourCount)
+	{
+		goto OnClearGauge;
+	}
+	initnpctimer;
+	end;
+
+OnClearGauge:
+	setnpcdisplay strnpcinfo(3), OBJ_A2;
+	set .fillPercent, 0;
+	set .fillItemCount, 0;
+	end;
+	
+OnPopMonsters:
+	callsub OnClearMonsters;
+//== treasure01 - Sunken Ship F1 ===========================
+	monster "treasure01",0,0,"--ja--",1070,20,"CardinalSystem::OnNormalDied";
+	monster "treasure01",0,0,"--ja--",1179,5,"CardinalSystem::OnNormalDied";
+	monster "treasure01",0,0,"--ja--",1179,5,"CardinalSystem::OnNormalDied";
+	monster "treasure01",107,39,"--ja--",1077,3,"CardinalSystem::OnNormalDied";
+	monster "treasure01",107,39,"--ja--",1068,1,"CardinalSystem::OnNormalDied";
+	monster "treasure01",29,38,"--ja--",1077,3,"CardinalSystem::OnNormalDied";
+	monster "treasure01",68,66,"--ja--",1068,4,"CardinalSystem::OnNormalDied";
+	monster "treasure01",34,112,"--ja--",1071,5,"CardinalSystem::OnNormalDied";
+	monster "treasure01",106,111,"--ja--",1071,5,"CardinalSystem::OnNormalDied";
+	monster "treasure01",106,111,"--ja--",1071,5,"CardinalSystem::OnNormalDied";
+	monster "treasure01",67,161,"--ja--",1068,1,"CardinalSystem::OnNormalDied";
+	monster "treasure01",67,160,"--ja--",1068,1,"CardinalSystem::OnNormalDied";
+	monster "treasure01",68,161,"--ja--",1068,1,"CardinalSystem::OnNormalDied";
+	monster "treasure01",68,160,"--ja--",1068,1,"CardinalSystem::OnNormalDied";
+	monster "treasure01",69,161,"--ja--",1068,1,"CardinalSystem::OnNormalDied";
+	monster "treasure01",69,160,"--ja--",1068,1,"CardinalSystem::OnNormalDied";
+	monster "treasure01",70,161,"--ja--",1068,1,"CardinalSystem::OnNormalDied";
+	monster "treasure01",70,160,"--ja--",1068,1,"CardinalSystem::OnNormalDied";
+	monster "treasure01",48,161,"--ja--",1068,1,"CardinalSystem::OnNormalDied";
+	monster "treasure01",48,160,"--ja--",1068,1,"CardinalSystem::OnNormalDied";
+	monster "treasure01",49,161,"--ja--",1068,1,"CardinalSystem::OnNormalDied";
+	monster "treasure01",49,160,"--ja--",1068,1,"CardinalSystem::OnNormalDied";
+	monster "treasure01",50,161,"--ja--",1068,1,"CardinalSystem::OnNormalDied";
+	monster "treasure01",50,160,"--ja--",1068,1,"CardinalSystem::OnNormalDied";
+	monster "treasure01",51,161,"--ja--",1068,1,"CardinalSystem::OnNormalDied";
+	monster "treasure01",51,160,"--ja--",1068,1,"CardinalSystem::OnNormalDied";
+	monster "treasure01",86,161,"--ja--",1068,1,"CardinalSystem::OnNormalDied";
+	monster "treasure01",86,160,"--ja--",1068,1,"CardinalSystem::OnNormalDied";
+	monster "treasure01",87,161,"--ja--",1068,1,"CardinalSystem::OnNormalDied";
+	monster "treasure01",87,160,"--ja--",1068,1,"CardinalSystem::OnNormalDied";
+	monster "treasure01",88,161,"--ja--",1068,1,"CardinalSystem::OnNormalDied";
+	monster "treasure01",88,160,"--ja--",1068,1,"CardinalSystem::OnNormalDied";
+	monster "treasure01",89,161,"--ja--",1068,1,"CardinalSystem::OnNormalDied";
+	monster "treasure01",89,160,"--ja--",1068,1,"CardinalSystem::OnNormalDied";
+	monster "treasure01",60,182,"--ja--",1068,1,"CardinalSystem::OnNormalDied";
+	monster "treasure01",76,182,"--ja--",1068,1,"CardinalSystem::OnNormalDied";
+	monster "treasure01",82,154,"--ja--",1077,3,"CardinalSystem::OnNormalDied";
+	monster "treasure01",54,154,"--ja--",1077,3,"CardinalSystem::OnNormalDied";
+	monster "treasure01",58,165,"--ja--",1071,2,"CardinalSystem::OnNormalDied";
+	monster "treasure01",69,165,"--ja--",1071,2,"CardinalSystem::OnNormalDied";
+	monster "treasure01",79,165,"--ja--",1071,2,"CardinalSystem::OnNormalDied";
+	monster "treasure01",150,162,"--ja--",1071,3,"CardinalSystem::OnNormalDied";
+	monster "treasure01",150,162,"--ja--",1068,1,"CardinalSystem::OnNormalDied";
+	monster "treasure01",163,161,"--ja--",1071,3,"CardinalSystem::OnNormalDied";
+	monster "treasure01",163,161,"--ja--",1068,1,"CardinalSystem::OnNormalDied";
+	monster "treasure01",163,151,"--ja--",1071,3,"CardinalSystem::OnNormalDied";
+	monster "treasure01",163,151,"--ja--",1068,1,"CardinalSystem::OnNormalDied";
+	monster "treasure01",163,141,"--ja--",1071,3,"CardinalSystem::OnNormalDied";
+	monster "treasure01",163,141,"--ja--",1068,1,"CardinalSystem::OnNormalDied";
+	monster "treasure01",162,71,"--ja--",1068,1,"CardinalSystem::OnNormalDied";
+	monster "treasure01",162,70,"--ja--",1068,1,"CardinalSystem::OnNormalDied";
+	monster "treasure01",163,71,"--ja--",1068,1,"CardinalSystem::OnNormalDied";
+	monster "treasure01",163,70,"--ja--",1068,1,"CardinalSystem::OnNormalDied";
+	monster "treasure01",164,71,"--ja--",1068,1,"CardinalSystem::OnNormalDied";
+	monster "treasure01",164,70,"--ja--",1068,1,"CardinalSystem::OnNormalDied";
+	monster "treasure01",165,71,"--ja--",1068,1,"CardinalSystem::OnNormalDied";
+	monster "treasure01",165,70,"--ja--",1068,1,"CardinalSystem::OnNormalDied";
+	monster "treasure01",164,59,"--ja--",1179,5,"CardinalSystem::OnNormalDied";
+	monster "treasure01",158,63,"--ja--",1068,1,"CardinalSystem::OnNormalDied";
+	monster "treasure01",159,63,"--ja--",1068,1,"CardinalSystem::OnNormalDied";
+	monster "treasure01",158,62,"--ja--",1068,1,"CardinalSystem::OnNormalDied";
+	monster "treasure01",159,62,"--ja--",1068,1,"CardinalSystem::OnNormalDied";
+	monster "treasure01",160,60,"--ja--",1071,10,"CardinalSystem::OnNormalDied";
+	monster "treasure01",158,45,"--ja--",1068,1,"CardinalSystem::OnNormalDied";
+	monster "treasure01",158,44,"--ja--",1068,1,"CardinalSystem::OnNormalDied";
+	monster "treasure01",158,43,"--ja--",1068,1,"CardinalSystem::OnNormalDied";
+	monster "treasure01",158,42,"--ja--",1068,1,"CardinalSystem::OnNormalDied";
+	monster "treasure01",158,41,"--ja--",1068,1,"CardinalSystem::OnNormalDied";
+	monster "treasure01",158,40,"--ja--",1068,1,"CardinalSystem::OnNormalDied";
+	monster "treasure01",159,45,"--ja--",1068,1,"CardinalSystem::OnNormalDied";
+	monster "treasure01",159,44,"--ja--",1068,1,"CardinalSystem::OnNormalDied";
+	monster "treasure01",159,43,"--ja--",1068,1,"CardinalSystem::OnNormalDied";
+	monster "treasure01",159,42,"--ja--",1068,1,"CardinalSystem::OnNormalDied";
+	monster "treasure01",159,41,"--ja--",1068,1,"CardinalSystem::OnNormalDied";
+	monster "treasure01",159,40,"--ja--",1068,1,"CardinalSystem::OnNormalDied";
+	monster "treasure01",168,45,"--ja--",1068,1,"CardinalSystem::OnNormalDied";
+	monster "treasure01",168,44,"--ja--",1068,1,"CardinalSystem::OnNormalDied";
+	monster "treasure01",168,43,"--ja--",1068,1,"CardinalSystem::OnNormalDied";
+	monster "treasure01",168,42,"--ja--",1068,1,"CardinalSystem::OnNormalDied";
+	monster "treasure01",168,41,"--ja--",1068,1,"CardinalSystem::OnNormalDied";
+	monster "treasure01",168,40,"--ja--",1068,1,"CardinalSystem::OnNormalDied";
+	monster "treasure01",169,45,"--ja--",1068,1,"CardinalSystem::OnNormalDied";
+	monster "treasure01",169,44,"--ja--",1068,1,"CardinalSystem::OnNormalDied";
+	monster "treasure01",169,43,"--ja--",1068,1,"CardinalSystem::OnNormalDied";
+	monster "treasure01",169,42,"--ja--",1068,1,"CardinalSystem::OnNormalDied";
+	monster "treasure01",169,41,"--ja--",1068,1,"CardinalSystem::OnNormalDied";
+	monster "treasure01",169,40,"--ja--",1068,1,"CardinalSystem::OnNormalDied";
+
+//== treasure02 - Sunken Ship F2 ===========================
+	monster "treasure02",0,0,"--ja--",1120,1,"CardinalSystem::OnNormalDied";
+	monster "treasure02",0,0,"--ja--",1179,5,"CardinalSystem::OnNormalDied";
+	monster "treasure02",0,0,"--ja--",1208,1,"CardinalSystem::OnNormalDied";
+	monster "treasure02",0,0,"--ja--",1216,22,"CardinalSystem::OnNormalDied";
+	monster "treasure02",0,0,"--ja--",1070,20,"CardinalSystem::OnNormalDied";
+	monster "treasure02",0,0,"--ja--",1071,5,"CardinalSystem::OnNormalDied";
+	monster "treasure02",0,0,"--ja--",1191,3,"CardinalSystem::OnNormalDied";
+	monster "treasure02",95,57,"--ja--",1068,1,"CardinalSystem::OnNormalDied";
+	monster "treasure02",96,57,"--ja--",1068,1,"CardinalSystem::OnNormalDied";
+	monster "treasure02",101,57,"--ja--",1068,1,"CardinalSystem::OnNormalDied";
+	monster "treasure02",102,57,"--ja--",1068,1,"CardinalSystem::OnNormalDied";
+	monster "treasure02",107,57,"--ja--",1068,1,"CardinalSystem::OnNormalDied";
+	monster "treasure02",108,57,"--ja--",1068,1,"CardinalSystem::OnNormalDied";
+	monster "treasure02",101,50,"--ja--",1216,5,"CardinalSystem::OnNormalDied";
+	monster "treasure02",102,68,"--ja--",1179,1,"CardinalSystem::OnNormalDied";
+	monster "treasure02",102,80,"--ja--",1179,1,"CardinalSystem::OnNormalDied";
+	monster "treasure02",102,88,"--ja--",1179,1,"CardinalSystem::OnNormalDied";
+	monster "treasure02",100,85,"--ja--",1068,1,"CardinalSystem::OnNormalDied";
+	monster "treasure02",101,85,"--ja--",1068,1,"CardinalSystem::OnNormalDied";
+	monster "treasure02",102,85,"--ja--",1068,1,"CardinalSystem::OnNormalDied";
+	monster "treasure02",103,85,"--ja--",1068,1,"CardinalSystem::OnNormalDied";
+	monster "treasure02",100,136,"--ja--",1068,1,"CardinalSystem::OnNormalDied";
+	monster "treasure02",101,136,"--ja--",1068,1,"CardinalSystem::OnNormalDied";
+	monster "treasure02",102,136,"--ja--",1068,1,"CardinalSystem::OnNormalDied";
+	monster "treasure02",103,136,"--ja--",1068,1,"CardinalSystem::OnNormalDied";
+	monster "treasure02",100,143,"--ja--",1068,1,"CardinalSystem::OnNormalDied";
+	monster "treasure02",101,143,"--ja--",1068,1,"CardinalSystem::OnNormalDied";
+	monster "treasure02",102,143,"--ja--",1068,1,"CardinalSystem::OnNormalDied";
+	monster "treasure02",103,143,"--ja--",1068,1,"CardinalSystem::OnNormalDied";
+	monster "treasure02",101,150,"--ja--",1179,1,"CardinalSystem::OnNormalDied";
+	monster "treasure02",101,151,"--ja--",1191,1,"CardinalSystem::OnNormalDied";
+	monster "treasure02",101,151,"--ja--",1191,1,"CardinalSystem::OnNormalDied";
+	monster "treasure02",101,151,"--ja--",1216,1,"CardinalSystem::OnNormalDied";
+	monster "treasure02",101,126,"--ja--",1216,1,"CardinalSystem::OnNormalDied";
+	monster "treasure02",101,135,"--ja--",1216,1,"CardinalSystem::OnNormalDied";
+	monster "treasure02",38,74,"--ja--",1071,3,1,"CardinalSystem::OnNormalDied";
+	monster "treasure02",38,74,"--ja--",1216,5,"CardinalSystem::OnNormalDied";
+	monster "treasure02",170,71,"--ja--",1071,1,"CardinalSystem::OnNormalDied";
+	monster "treasure02",168,77,"--ja--",1071,1,"CardinalSystem::OnNormalDied";
+	monster "treasure02",164,67,"--ja--",1071,1,"CardinalSystem::OnNormalDied";
+	monster "treasure02",155,43,"--ja--",1071,6,"CardinalSystem::OnNormalDied";
+	monster "treasure02",178,143,"--ja--",1071,1,"CardinalSystem::OnNormalDied";
+	monster "treasure02",178,140,"--ja--",1071,1,"CardinalSystem::OnNormalDied";
+	monster "treasure02",184,143,"--ja--",1071,1,"CardinalSystem::OnNormalDied";
+	monster "treasure02",157,143,"--ja--",1179,1,"CardinalSystem::OnNormalDied";
+	monster "treasure02",151,138,"--ja--",1179,1,"CardinalSystem::OnNormalDied";
+	monster "treasure02",45,144,"--ja--",1179,1,"CardinalSystem::OnNormalDied";
+	monster "treasure02",52,139,"--ja--",1179,1,"CardinalSystem::OnNormalDied";
+	monster "treasure02",23,142,"--ja--",1143,1,"CardinalSystem::OnNormalDied";
+	end;
+
+OnClearMonsters:	
+OnClock0000:
+	killmonsterall "treasure01";
+	killmonsterall "treasure02";
+	set .popAvailable, 1;
+	setd("$" + strnpcinfo(3), 0);
+	return;
+	
+OnInit:
+	set .fillPercent, 0;
+	if(getd("$" + strnpcinfo(3)) >= 1)
+	{
+		set .fillPercent, 100;
+	}
+	setarray .mapToCheck[0],1,2;
+	set .bossId, 1112;
+	set .popAvailable, 1;
+	end;
+}
+

@@ -1,0 +1,376 @@
+// [========================================================]
+// [==========     System - Celestial Tower 2   ============]
+// [========================================================]
+// [ Version 1                                              ]
+// [========================================================]
+// [ Original script by: Alayne				    ]
+// [========================================================]
+// [ Description:                                           ]
+// [--------------------------------------------------------]
+// [                                                        ]
+// [ - CT npc: betting, registering, floo control...	    ]
+// [                                                        ]
+// [========================================================]
+// [========================================================]
+// [                                                        ]
+// [ Changelog: (5 last updates)                            ]
+// [                                                        ]
+// [--------------------------------------------------------]
+// [                                                        ]
+// [ v0: Creation                      			    ]
+// [                                                        ]
+// [========================================================]
+// [                                                        ]
+// [========================================================]
+
+ars_fild21,246,159,2	script	Celestial Tower::ctreg	76,{
+	set .@npcname$, "[Alastor]";
+	mes .@npcname$;
+	mes "";
+	mes "Welcome here, my little boy.";
+	if (.minLevel < BaseLvl)
+	{
+		//cutin "no_nen";
+		mes "I think it's a bit early for you to come here.";
+		mes "You don't see anything right here, hu?";
+		mes "Come back when you'll see."; 
+		close;
+	}
+	else
+	{
+		if (floor < 50)
+		{
+			//cuttin "nen";
+			mes "Hum...Looks like you're already able to see.";
+			mes "Under a certain limit, people can't feel the aura difference between fighters.";
+			mes "It's a minimum restriction here.";
+			mes "Otherwise, people end up in a grave.";
+			mes "And we don't like it.";
+			next;
+			mes .@npcname$;
+			mes "Now you're here, what about having a little fight, hum?";
+			mes "You're here at the Celestial Tower entrance. It's a place where all fighters come to seek glory.";
+			mes "There's special rules, according to your level.";
+			mes "But I'm not quite sure you can't go far enough to learn more about this rules, anyway.";
+			if (select("Show here who's not a great fighter!","You're probably right...") == 1)
+			{
+				next;
+				mes .@npcname$;			
+				mes "Ahahaha!";
+				mes "You're a real fighter. Good.";
+				mes "That will prevent you from being cushed without mercy.";
+				mes "What do you want?";
+				if (select("Register for fights","Learn more about the rules") == 1)
+				{
+					goto OnRegistrationAsked;
+				}
+				else
+				{
+					goto OnRulesAsked;
+				}
+			}
+			else
+			{
+				next;
+				mes .@npcname$;
+				mes "Well, well, well...";
+				mes "Not sure you should even fight on lowest level with this fighting spirit.";
+				mes "You gonna be crushed...";
+				mes "Come back later.";
+			}
+		}
+	}
+	close;
+	
+OnRegistrationAsked:
+	next;
+	mes .@npcname$;		
+	if (floor > 0)
+	{
+		mes "You've already registered to the tower...";
+		mes "No need to come back several times.";
+		mes "Unless you lose a fight under lv.50.";
+	}
+	else
+	{
+		mes "So you wanna register.";
+		mes "Perfect.";
+		mes "You'll better have a look at rules.";
+		mes "It's an advice.";
+		mes "The registration price is " + .registrationFee + ". Interested?";
+		if (select("Yes","No") == 1)
+		{
+			next;
+			mes .@npcname$;	
+			if (Zeny > .registrationFee)
+			{
+				set Zeny, Zeny - .registrationFee;
+				mes "Perfect.";
+				mes "You're now registered.";
+				mes "Talk to the watcher to ask for a fight.";
+				query_sql("INSERT INTO `celestial_tower` (`char_id`,`account_id`,`floor`,`winCount`,`lossCount`,`totalWinCount`,`totalLossCount`,`fightRefused`,`lastFightDay`,`rewardRetrieveDay`,`floorMaster`) VALUES (" + getcharid(0) + "," + getcharid(3) + ",1,0,0,0,0,0,0,0,0)", .@count);
+			}
+			else
+			{
+				mes "You lack some money, boy.";
+			}
+		}
+		else
+		{
+			next;
+			mes .@npcname$;		
+			mes "See you soon, then.";
+		}
+	}
+	close;
+	
+OnRulesAsked:
+	next;
+	mes .@npcname$;		
+	if (floor < 50)
+	{
+		mes "Well, at this level, that's pretty simple.";
+		mes "A fight, a winner, a loser.";
+		mes "The winner can go further, the loser can simply try again.";
+		mes "A loss, and you'll start from the begining again.";
+		mes "That's the same until level 50.";
+		mes "Once there, the rule changes.";
+		mes "But I don't have the right to tell you more.";
+		mes "Not yet, at least.";
+		mes "Just keep in mind that there's 150 level in the tower.";
+		mes "And to be the better, you'll have to be on top.";
+	}
+	else if (floor < 100)
+	{
+		mes "At this point, things become a little bit harder.";
+		mes "You have to win " + $100WinDue + " fights to increase your level by 1.";
+		mes "On the other hand, one loss still makes you lose.";
+		mes "But, you don't go back to lvl 0.";
+		mes "When loosing, you get back by " + $100BackRange + " lvl.";
+		mes "The minimum is 50.";
+		mes "Which mean that if you lose at lv.51 or 59, you'll get back to lv.50.";
+		mes "But a winning is much reward than util lv.50. It increase by " + $100rewardFeeBase + "z per level.";
+	}
+	else if (floor < 150)
+	{
+		mes "So you've climb this far.";
+		mes "Congrats.";
+		mes "But now, things are really serious.";
+		mes "You're now on floor 100+.";
+		mes "Right now, to win and go over one level, you'll have to win " + $150WinDue + " fights before losing " + $150LossDue + ".";
+		mes "When doing so, you're able to fight the floor master.";
+		mes "If you beat him, you can still progress, or choose to stay as the floor master.";
+		mes "There's, as you've already understand, only 50 floors masters maximum in the world.";
+		mes "Those people are authorized to fight in the Arena, a gigantic Battle Royal fight which occures sometimes.";
+		next;
+		mes .@npcname$;		
+		mes "There's a last thing to know.";
+		mes "When you become a Floor Master, you earn some money each day you spend as a Master.";
+		mes "The amount is merely or roughly " + $150rewardFeeBase + " * the floor level you master.";
+		mes "On the other hand, you HAVE to answer to fight ask.";
+		mes "Decline 2 demand, or spend more than 3 days without fighting, and you won't be paid anymore.";
+		mes "Thus, to prevent the administration to lose too much money.";
+	}
+	close;
+	
+OnInit:
+	set .minLevel, 50;
+	set .registrationFee, 150000;
+	
+	set $50fightFee, 1000;
+	set $100fightFee, 3000;
+	set $150fightFee, 10000;
+	
+	set $50rewardFee, 1500;
+	set $100rewardFeeBase, 3000;
+	set $150rewardFeeBase, 7000;
+	
+	set $100WinDue, 2;
+	set $100BackRange, 10;
+	set $150WinDue, 10;
+	set $150LossDue, 4;
+	end;
+}
+
+ars_fild21,257,172,2	script	1+ Watcher::ct50wa	61,{
+	set .@npcname$, "[Watcher]";
+	mes .@npcname$;
+	mes "";
+	mes "Hello to you.";
+	set .@query$, "SELECT `floor` FROM `celestial_tower` WHERE `char_id`=" + getcharid(0);
+	query_sql(.@query$, .@floor);
+	if (getarraysize(.@floor) > 0 && .@floor[0] < 50)
+	{
+		mes "I bet you're here for a fight.";
+		mes "There's a fee for each fight.";
+		mes "Until lvl 50, it's " + $50fightFee + "z per match.";
+		mes "Still interested?";
+		if (select("Yes","No") == 1 && Zeny > $50fightFee)
+		{
+			next;
+			mes .@npcname$;
+			mes "Perfect.";
+			mes "I'll look for a partner for you then.";
+			set CTFIGHTFEE, $50fightFee;
+			close2;
+			callfunc ("LookForFighter", getcharid(0), getcharid(3), 0);
+		}
+		else
+		{
+			next;
+			mes .@npcname$;
+			mes "See you soon then.";
+			close;
+		}
+	}
+	else
+	{
+		mes "Sorry, but I can do nothing for you.";
+		mes "You should see the corresponding watcher.";
+		close;
+	}
+}
+
+ars_fild21,265,172,5	script	50+ Watcher::ct100wa	68,{
+	set .@npcname$, "[Watcher]";
+	mes .@npcname$;
+	mes "";
+	mes "Hello to you.";
+	set .@query$, "SELECT `floor` FROM `celestial_tower` WHERE `char_id`=" + getcharid(0);
+	query_sql(.@query$, .@floor);
+	if (getarraysize(.@floor) > 0 && .@floor[0] >= 50 && .@floor[0] < 100)
+	{
+		mes "I bet you're here for a fight.";
+		mes "There's a fee for each fight.";
+		mes "Until lvl 100, it's " + $100fightFee + "z per match.";
+		mes "Still interested?";
+		if (select("Yes","No") == 1 && Zeny > $100fightFee)
+		{
+			next;
+			mes .@npcname$;
+			mes "Perfect.";
+			mes "I'll look for a partner for you then.";
+				set CTFIGHTFEE, $100fightFee;
+			close2;
+			callfunc ("LookForFighter", getcharid(0), getcharid(3), 0);
+		}
+		else
+		{
+			next;
+			mes .@npcname$;
+			mes "See you soon then.";
+			close;
+		}
+	}
+	else
+	{
+		mes "Sorry, but I can do nothing for you.";
+		mes "You should see the corresponding watcher.";
+		close;
+	}
+}
+
+ars_fild21,257,165,5	script	100+ Watcher::ct150wa	69,{
+	set .@npcname$, "[Watcher]";
+	mes .@npcname$;
+	mes "";
+	mes "Hello to you.";
+	set .@query$, "SELECT `floor`,`winCount` FROM `celestial_tower` WHERE `char_id`=" + getcharid(0);
+	query_sql(.@query$, .@floor, .@win);
+	if (getarraysize(.@floor) > 0 && .@floor[0] >= 100 && .@floor[0] < 150)
+	{
+		mes "I bet you're here for a fight.";
+		mes "There's a fee for each fight.";
+		mes "Until lvl 150, it's " + $150fightFee + "z per match.";
+		mes "Still interested?";
+		if (select("Yes","No") == 1 && Zeny > $150fightFee)
+		{
+			next;
+			mes .@npcname$;
+			mes "Perfect.";
+			if (.@win[0] == $150WinDue)
+			{
+				mes "You've earn the right to fight the FloorMaster.";
+				mes "I'll check it right now.";
+				close2;
+				callfunc ("LookForFighter", getcharid(0), getcharid(3), 1);
+			}
+			else
+			{
+				mes "I'll look for a partner for you then.";
+				set CTFIGHTFEE, $150fightFee;
+				close2;
+				callfunc ("LookForFighter", getcharid(0), getcharid(3), 0);
+			}
+		}
+		else
+		{
+			next;
+			mes .@npcname$;
+			mes "See you soon then.";
+			close;
+		}
+	}
+	else
+	{
+		mes "Sorry, but I can do nothing for you.";
+		mes "You should see the corresponding watcher.";
+		close;
+	}
+}
+
+ars_fild21,257,158,5	script	100+ Rewarder::ct150re	57,{
+	set .@npcname$, "[Rewarder]";
+	mes .@npcname$;
+	mes "";
+	mes "Hello to you.";
+	mes "I bet you're here to claim your reward as a floor master, right?";
+	mes "I know it's kinda boring to came here days after days, but you don't have the choice anyway.";
+	mes "Let's see that, hu?";
+	if (select("Yes","No") == 1)
+	{
+		next;
+		goto OnReward150;
+	}
+	else
+	{
+		next;
+		mes .@npcname$;
+		mes "Oh...Ok.";
+		mes "See you soon then.";
+		close;
+	}
+	
+OnReward150:
+	set .@npcname$, "[Rewarder]";
+	query_sql("SELECT `floor`,`floorMaster` FROM `celestial_tower` WHERE `char_id`=" + getcharid(0), .@floor, .@floorMaster);
+	if (getarraysize(.@floor) > 0)
+	{
+		if (.@floor[0] < 100 || .@floorMaster[0] == 0)
+		{
+			mes .@npcname$;
+			mes "But...But you're not a floor master...";
+			mes "I can't do nothing for you...";
+		}
+		else
+		{
+			set .@rewardFee, $150rewardFeeBase * .@floor[0];
+			query_sql("SELECT `fightRefused`,`lastFightDay`,`rewardRetrieveDay` FROM `celestial_tower` WHERE `char_id`=" + getcharid(0), .@fightRefused, .@lastFightDay, .@rewardRetrieveDay);
+			if (.@fightRefused[0] >= 3 || (gettimetick(2) - .@lastFightDay[0]) >= 43200 * 3)
+			{
+				mes "Sorry but you've passed the limits to earn money.";
+				mes "To earn some money again, you'll have to take at least one fight as the floor master.";
+			}
+			else
+			{
+				mes "Here's your money.";
+				mes "Continue working hard to climb the Tower.";
+				set .@rewardDayCount, (gettimetick(2) - .@rewardRetrieveDay[0]) / 43200;
+				set Zeny, Zeny + .@rewardDayCount * $150rewardFeeBase;
+				//update value to prevent several retrieve
+				query_sql("UPDATE `celestial_tower` SET `rewardRetrieveDay`=" + gettimetick(2) + " WHERE `char_id`=" + getcharid(0), .@count);
+			}
+		}
+	}
+	close;
+}

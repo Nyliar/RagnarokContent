@@ -1,0 +1,266 @@
+//nouvelle quete: La Faveur des Elements
+//Principe: apporter un item de chaque élément, selon la variable aléatoire définie en début de semaine
+//sur chacun des 4 piédestals éparpillés dans le monde
+//Les items possibles: 
+//Elemental Stone
+//Armes Elemental
+//Armures Elemental
+//Cards Elemental
+//Piédestals protégés par des mvps, caché dans les donjons / instances
+//Si réussite, warp vers une map à part
+//invocation d'un big MvP custom
+//Si kill mvp, choix d'un item libre à chaque personne de la team.
+//Quete pouvant être remplie 1 fois par mois pour l'item
+//Sinon une fois par semaine pour des coffres fixes
+
+shitsu	mapflag	loadevent
+
+//dep_lb,14,82,4	script	Ground Master::prtgrdmas	900,{
+prontera,91,350,4	script	Ground Master::prtgrdmas	900,{
+	set .@npcname$, "[Ground Master]";
+	mes .@npcname$;
+	mes "";
+	mes "Good day to you, " + strcharinfo(0);
+	mes "I'm known as the chief of the Guild of Guilds.";
+	mes "I am the one who discovered all the unknown realms,";
+	mes "I'm the one who found Caspen, and get the Mornanie rallied.";
+	mes "I was the first one to hear about the Astral Temple and the Arena.";
+	mes "I am the one who named the Crash or Turtle Island.";
+	mes "I am THE Guild Leader.";
+
+	if (.debug)
+	{
+		set $favor_elem_quest, 1;
+		set $elemental_party_id, 0;
+	}
+
+	if (LQUEST == 5)
+	{
+		if (#elemental_favor_q == 10)
+		{
+			if ($favor_elem_quest == 1 && $elemental_party_id == 0)
+			{
+				next;
+				mes "My spirit raised.";
+				mes "I am the door to the Bloom.";
+				mes "I can now warp you right to her.";
+				mes "Are you ready to help Her?";
+				switch(select("Yes","No","You should stop bier, bro"))
+				{
+					case 1:
+						next;
+						mes "Great. Here's the problem we encounter.";
+						mes "As I said, all the demons are attacking the Yggdrasil under Loki's orders.";
+						mes "He sends the worst of our foes to destroy us.";
+						mes "Fenrir, the Wolf, Nydhogg, the Dragon, and Dáinn, Dvalinn, Duneyrr and Duraþrór, the four Stags.";
+						mes "All together, they're about to destroy Yggdrasil, to make the Gods fall.";
+						mes "It would be the end of all worlds.";
+						next;
+						mes .@npcname$;
+						mes "That's where you appear.";
+						mes "Midgardians are quite surpriseful.";
+						mes "They can be a pain, or a wonder, it depends.";
+						mes "But in all case, they are great fighters!";
+						mes "Kill all these monsters.";
+						mes "And then you'll have to fight against Loki.";
+						next;
+						mes .@npcname$;
+						mes "Keep in mind that you'll have to protect the Bloom.";
+						mes "If She dies, the Tree of Life won't be able to raise again.";
+						mes "The reward will be dependent on the time you need to protect her.";
+						mes "And of course, the success of your fighting.";
+						mes "The Bloom is able to cure herself. But it would cost you something.";
+						mes "When you see her life going down, hurry up to her.";
+						mes "She'll know what to do.";
+						next;
+						mes .@npcname$;
+						mes "Good luck!";
+
+						getpartymember 0,getcharid(1);
+						set .@countParty, $@partymembercount;
+						if (.@countParty == 0)
+							set $element_rank, 0;
+						else if (.@countParty >= 1 && .@countParty <= 3)
+							set $element_rank, 1;
+						else if (.@countParty >= 4 && .@countParty <= 6)
+							set $element_rank, 2;
+						else if (.@countParty > 6)
+							set $element_rank, 3;
+
+						set  $favor_elem_quest, 2;
+						donpcevent "yggshoo::OnBloomAwake";
+
+						set .@map$, "shitsu";
+						killmonster .@map$,"All";
+						if (getcharid(1) != 0)
+						{
+							getpartymember getcharid(1), 2;
+							copyarray .@partyAid[0], $@partymemberaid[0], getarraysize($@partymemberaid);
+							for (set .@i,0; .@i < getarraysize(.@partyAid); set .@i, .@i+1)
+							{
+								attachrid(.@partyAid);
+								if (strnpcinfo(4) == strcharinfo(3))
+								{
+									warp .@map$,51,35;
+								}
+							}
+						}
+						else
+							warp .@map$,51,35;
+
+						set $elemental_leader_id, getcharid(3);
+						set $elemental_party_id, getcharid(1);
+						donpcevent "yggshoo::OnStartWaves";
+						break;
+					case 3:
+						next;
+						mes "Stop being stupid. There's no time for that!";
+						mes "I'll wait for you.";
+						break;
+					case 2:
+						next;
+						mes .@npcname$;
+						mes "Allright. I'll wait for you to be ready.";
+						mes "But don't wait to long. Yggdrasil is pretty weak this time...";
+						break;
+				}
+			}
+			else if ($favor_elem_quest == 2)
+			{
+				next;
+				mes .@npcname$;
+				mes "Want to be warped again?";
+				switch(select("Yes please","No, not yet"))
+				{
+					case 1:
+						if (getcharid(1) == $elemental_party_id)
+						{
+							set .@map$, "shitsu";
+							warp .@map$,51,35;
+						}
+						else
+						{
+							mes "Sorry, you're not part of that team.";
+						}
+						break;
+					case 2:
+						mes "Hurry up! The Bloom is in danger!";
+						break;
+				}
+			}
+			else
+			{
+				mes "Sorry, I'm a bit busy right now...";
+			}
+		}
+		else
+		{
+			next;
+			mes "I can smell that you've visited lot of countries.";
+			mes "You've met and helped a lot of people, and they've helped you in return.";
+			mes "You seem ready to hear about the very last secret.";
+			mes "Then open your ears, and listen for the sea's song.";
+			next;
+			mes "It's a very old song, that I first heard while traveling upon the sea.";
+			mes "It speaks about an old legend, an horrible monster, and an infinite treasure.";
+			mes "I don't know how much of it is true, but every legend starts with some true story, right?";
+			mes "Here's what I heard about this song.";
+			mes "You better keep it in mind...";
+			next;
+			mes "Ahoy, ahoy,";
+			mes "A violin tune sweeps the sea,";
+			mes "Ahoy, ahoy,";
+			mes "Tides are raging freely,";
+			next;
+			mes "Ahoy, ahoy,";
+			mes "The hull shatters on a reef,";
+			mes "Ahoy, AHOY!";
+			mes "And the sunset mocks us without grief.";
+			next;
+			mes "That's all I know.";
+			mes "Your turn to discover this secret.";
+			set #elemental_favor_q, 1; 
+		}
+	}
+	close; 
+
+OnInit:
+	set .debug, 1;
+	end;
+}
+
+comodo,55,161,4	script	Marin Blow::amm1	-1,2,2,{
+	end;
+
+OnTouch:
+	if (#elemental_favor_q > 0 && #amm1 == 0)
+	{
+		dispbottom "Ahoy, ahoy,";
+		dispbottom "Drifted by the Waves...";
+		set #elemental_favor_q, #elemental_favor_q+1;
+		set #amm1, 1;
+	}
+	else
+	{
+		dispbottom "The wind seems to carry some sentences, but you can't succeed in understanding it.";
+	}
+	end;
+
+OnInit:
+	set .debug, 1;
+	end;
+}
+
+alberta,215,196,4	script	Marin Blow::amm2	-1,2,2,{
+	end;
+
+OnTouch:
+	if (#elemental_favor_q > 0 && #amm2 == 0)
+	{
+		dispbottom "Ahoy, ahoy,";
+		dispbottom "Carried by the Wind...";
+		set #elemental_favor_q, #elemental_favor_q+1;
+		set #amm2, 1;
+	}
+	else
+	{
+		dispbottom "The wind seems to carry some sentences, but you can't succeed in understanding it.";
+	}
+	end;
+}
+
+alb2trea,102,70,4	script	Marin Blow::amm3	-1,2,2,{
+	end;
+
+OnTouch:
+	if (#elemental_favor_q > 0 && #amm3 == 0)
+	{
+		dispbottom "Ahoy, ahoy,";
+		dispbottom "Torned by the Earth....";
+		set #elemental_favor_q, #elemental_favor_q+1;
+		set #amm3, 1;
+	}
+	else
+	{
+		dispbottom "The wind seems to carry some sentences, but you can't succeed in understanding it.";
+	}
+	end;
+}
+
+hugel,218,166,4	script	Marin Blow::amm4	-1,2,2,{
+	end;
+
+OnTouch:
+	if (#elemental_favor_q > 0 && #amm4 == 0)
+	{
+		dispbottom "Ahoy, ahoy";
+		dispbottom "Vanished the golden Flames.";
+		set #elemental_favor_q, #elemental_favor_q+1;
+		set #amm4, 1;
+	}
+	else
+	{
+		dispbottom "The wind seems to carry some sentences, but you can't succeed in understanding it.";
+	}
+	end;
+}

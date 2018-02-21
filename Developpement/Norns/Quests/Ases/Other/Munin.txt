@@ -1,0 +1,275 @@
+// [========================================================]
+// [===========  	 Main Line - Munin	============]
+// [========================================================]
+// [ Version 1                                              ]
+// [========================================================]
+// [ Original script by: Alayne				    ]
+// [========================================================]
+// [ Description:                                           ]
+// [--------------------------------------------------------]
+// [                                                        ]
+// [ - Rune Midgard main story quest line    	   	    ]
+// [  This file contains explanation and base npcs 	    ]
+// [                                                        ]
+// [========================================================]
+// [ Changelog: (5 last updates)                            ]
+// [--------------------------------------------------------]
+// [                                                        ]
+// [ v0: Creation                      			    ]
+// [                                                        ]
+// [========================================================]
+// [                                                        ]
+// [========================================================]
+
+cmd_fild01,97,225,4	script	Munin::Ase_1_2_1	4_SERVICE_30_F_01,{ //10146
+	set .@npcname$, "[Munin]";
+	set .@pcname$, "[" + strcharinfo(0) + "]";
+	
+	mes .@npcname$;
+	//cutin Munin
+	mes "Who are you, mortal?";
+	mes "I'm Munin, one of the two crows of the Father of all Things.";
+	mes "Thanks to us, Odin is able to see everything accross Yggdrasil branches.";
+	query_sql("SELECT `sealId`,`generalState` FROM `verdandi_quests` WHERE `id`='1_2'", .@sealItem, .@generalState);
+	if(MUNRIDDLEQ == 0)
+	{
+		if(countitem(.@sealItem[0]) > 0 && .@generalState[0] == 2)
+		{
+			switch(rand(0,10))
+			{
+				case 0:
+				case 1:
+				case 2:
+					//nothing, stop talking from this point
+					break;
+				case 3:
+					next;
+					mes .@npcname$;
+					mes "You look a bit strange...Are you hidding something from me?";
+					break;
+				case 4:
+					next;
+					mes .@npcname$;
+					mes "When somebody tells you his name, it's polite to tell him yours, isn't it?";
+					break;
+				case 5:
+					next;
+					mes .@npcname$;
+					mes "...Are you sure I've never seen you before?";
+					break;
+				case 6:
+					next;
+					mes .@npcname$;
+					mes "There's a strange smell over you...What is it?";
+					break;
+				case 7:
+					next;
+					mes .@npcname$;
+					mes "There's a strange aura issuing from you...What is it?";
+					break;
+				case 8:
+					next;
+					mes .@npcname$;
+					mes "Go away. I'm a bit busy now.";
+					break;
+				case 9:
+					next;
+					mes .@npcname$;
+					mes "That's kinda strange you've been able to see me...Who are you?";
+					break;
+				case 10:
+					next;
+					cutin "", 255;
+					mes .@pcname$;
+					mes "What do you think about the War?";
+					next;
+					//cutin Hugin
+					mes .@npcname$;
+					mes "The Ragnarok? Soon we'll erase these filthy monsters of Loki's army from the Universe.";
+					mes "Soon...";
+					next;
+					cutin "", 255;
+					mes .@pcname$;
+					mes "Thanks...You remove my last hesitations.";
+					delitem .@sealItem[0], 1;
+					goto OnSealActivated;
+					break;
+			}
+		}
+	}
+	else
+	{
+		next;
+		mes .@npcname$;
+		mes "So what about trying to answer my riddle, hu?";
+		mes "Don't think it'll be easy, I've seen lots and lots of things as Father's Eye.";
+		mes "And if you're wrong, I'll eat one of yours!";
+		mes "Are you ready?";
+		if(select("Go on!","N...NOOOOO!") == 1)
+		{
+			next;
+			cutin "", 255;
+			mes .@pcname$;
+			mes "Go on! Ask your riddle!";
+			next;
+			//cutin munin
+			mes .@npcname$;			
+			mes "If my name is ^FF0000Munin^000000,";
+			mes "My brother's is ^00FF00Hugr^000000.";
+			mes "As we're both ^0000FF'followers'^000000,";
+			mes "What are we called for?";
+			input .@answer$;
+			next;
+			mes .@pcname$;
+			mes "I know! The answer is " + .@answer$;
+			if (.@answer$ == "fylgjur" || .@answer$ == "Fylgjur" || .@answer$ == "fylgja" || .@answer$ == "Fylgja")
+			{
+				next;
+				mes .@npcname$;
+				mes "...";
+				mes "You're right.";
+				mes "You can go.";
+				next;
+				//condition fullfilled
+				set .@skuname$, "[Skuld]";
+				cutin "shaloshi01",2;
+				mes .@skuname$;
+				mes "I got him! I found his Future Thread. Take it to Verdandi now!";
+				getitem $muninSealItemId, 1;
+				next;
+				mes "[" + strcharinfo(0) + "]";
+				mes "On my way!";
+				close;
+			}
+			else
+			{
+				next;
+				mes .@npcname$;
+				mes "...";
+				next;
+				mes .@npcname$;
+				mes "......";
+				next;
+				mes .@npcname$;
+				mes "...........";
+				next;
+				mes .@npcname$;
+				mes "He...";
+				percentheal -50, -50;
+				sc_start SC_BLIND, 60000, 0;
+			}
+		}
+		else
+		{
+			next;
+			mes .@npcname$;
+			mes "Ke ke ke...You're right to fear me!";
+		}
+	}
+	close;
+	
+OnSealActivated:
+	set .@skuldName$, "[Skuld]";
+	next;
+	cutin "shaloshi01",2;
+	mes .@skuldName$;
+	mes "" + strcharinfo(0) + ", I've found he's weakness.";
+	mes "To seal him, you'll have to find an answer to his question...Simple as that, hu?!";
+	mes "Once done, come back to Verdandi. She'll be able to Seal him completely.";
+	next;
+	cutin "", 255;
+	mes "[" + strcharinfo(0) + "]";
+	mes "I'm on it.";
+	set MUNRIDDLEQ, 1;
+	close;
+	
+OnSealTarget:
+	specialeffect 910; //inspiration
+	hideonnpc strnpcinfo(3);
+	hideonnpc "Ase_1_2_2";
+	hideonnpc "Ase_1_2_3";
+	hideonnpc "Ase_1_2_4";
+	query_sql("UPDATE `verdandi_quests` SET `generalState`=3 WHERE `id`='1_2'", .@count);
+	announce " [Verdandi] The Ase Munin has been Sealed successfully thanks to " + strcharinfo(0) + " and his team.",bc_all,"0x00FF99";
+	getpartymember getcharid(2),2;
+	for( set .@pt, 0; .@pt < $@partymembercount; set .@pt, .@pt+1 ){
+		if( attachrid( $@partymemberaid[.@pt] ) ){
+			callfunc("AddPoints", getcharid(3), $sealingPointAmount);
+			logmes "" + strcharinfo(0) + " obtains " + ($sealingPointAmount) + " points from sealing Munin.";
+		}
+	}
+	close;	
+	
+OnActivateTarget:
+	set .@activatedRank, rand(1,4);
+	cutin "shaloshi01",2;
+	set .@skuldName$, "[Skuld]";	
+	explode(.@id$, strnpcinfo(3), "_");
+	set .@realid$, .@id$[1] + "_"  + .@id$[2];
+	set .@npcname$, .@id$[0] + "_"  + .@realid$ + "_" + .@activatedRank;
+	hideoffnpc .@npcname$;
+	mes .@skuldName$;
+	mes "" + strcharinfo(0) + ", I've found him.";
+	mes "He's on Comodo Field 0" + .@activatedRank + ".";
+	next;
+	cutin "", 255;
+	mes "[" + strcharinfo(0) + "]";
+	mes "I'll get him.";
+	set .@query$, "UPDATE `verdandi_quests` SET `ActivatedNpc`=" + .@activatedRank + " WHERE `id`='" + .@realid$ + "'";
+	query_sql(.@query$, .@count);
+	close;
+	
+OnMyMobKilled:
+	set .monsterInvoked, .monsterInvoked - 1;
+	query_sql("SELECT `generalState` FROM `verdandi_quests` WHERE `id`='1_2'", .@generalState);
+	if(.@generalState[0] != 3)
+	{
+		monster .influencedMaps$[rand(0,getarraysize(.influencedMaps$) - 1)],0,0,"--ja--",.monsterIds[rand(0,getarraysize(.monsterIds) - 1)],1,"Ase_1_2_1::OnMyMobKilled";
+	}
+	end;
+	
+OnCallMonsters:
+	query_sql("SELECT `generalState` FROM `verdandi_quests` WHERE `id`='1_2'", .@generalState);
+	if(.@generalState[0] != 3)
+	{
+		set .@size, getarraysize(.monsterIds);
+		for(set .@i,0; .@i<.@size && .monsterInvoked < .monsterInvokLimit; set .@i,.@i+1)
+		{
+			set .@invokCount, rand(1,10);
+			monster .influencedMaps$[rand(0,getarraysize(.influencedMaps$) - 1)],0,0,"--ja--",.monsterIds[rand(0,getarraysize(.monsterIds) - 1)],.@invokCount,"Ase_1_2_1::OnMyMobKilled";
+			set .monsterInvoked, .monsterInvoked + .@invokCount;
+		}
+	}
+	end;
+
+OnTimer10000:
+	if (strnpcinfo(3) == "Ase_1_2_1")
+	{
+		query_sql("SELECT `ActivatedNpc`,`generalState` FROM `verdandi_quests` WHERE `id`='1_2'", .@npc$, .@generalState);
+		if(.@npc$[0] != "0" && .@npc$[0] != "" && .@generalState[0] == 2)
+		{
+			hideoffnpc "Ase_1_2_" + .@npc$[0];
+		}
+		stopnpctimer;
+	}
+	end;
+	
+OnInit:
+	hideonnpc strnpcinfo(3);
+	initnpctimer;
+	set .monsterInvokLimit, 183;
+	set .monsterInvoked, 0;
+	setarray .monsterIds[0], 2363, 1408, 1629, 1376;
+	setarray .influencedMaps$[0], "cmd_fild01", "cmd_fild02", "cmd_fild03", "cmd_fild04", "cmd_fild05", "cmd_fild06", "cmd_fild07", "cmd_fild08", "cmd_fild09";
+	set $muninSealItemId, 27004;
+	if(strnpcinfo(3) == "Ase_1_2_1")
+	{
+		initnpctimer;
+		goto OnCallMonsters;
+	}
+	end;
+}
+
+cmd_fild02,369,364,4	duplicate(Ase_1_2_1)	Munin::Ase_1_2_2	4_SERVICE_30_F_01
+cmd_fild03,269,240,4	duplicate(Ase_1_2_1)	Munin::Ase_1_2_3	4_SERVICE_30_F_01
+cmd_fild04,276,148,4	duplicate(Ase_1_2_1)	Munin::Ase_1_2_4	4_SERVICE_30_F_01

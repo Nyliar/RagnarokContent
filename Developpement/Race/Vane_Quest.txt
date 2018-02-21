@@ -1,0 +1,229 @@
+//Vane Master
+ars_fild13,191,35,5	script	Etherian Vane::ev 	2131,{
+
+	set .@npcname$, "[Etherian Vane]";
+	if(degoe == 1)goto OtherQuest_Started;
+	if(legoe == 1)goto OtherQuest_Started;
+	if(hagoe == 1)goto HAGo_Etheria;
+	if(mwgoe == 1)goto OtherQuest_Started;
+	if(oagoe == 1)goto OtherQuest_Started;
+	if(dsgoe == 1)goto OtherQuest_Started;
+	if(deqstart == 1)goto OtherQuest_Started;
+	if(leqstart == 1)goto OtherQuest_Started;
+	if(haqstart >= 1)goto HAQuest_Started;
+	if(mwqstart == 1)goto OtherQuest_Started;
+	if(oaqstart == 1)goto OtherQuest_Started;
+	if(dsqstart == 1)goto OtherQuest_Started;
+	if(deqdone == 1)goto OtherQuest_Done;
+	if(leqdone == 1)goto OtherQuest_Done;
+	if(haqdone == 1)goto HAQuest_Done;
+	if(mwqdone == 1)goto OtherQuest_Done;
+	if(oaqdone == 1)goto OtherQuest_Done;
+	if(dsqdone == 1)goto OtherQuest_Done;
+	if(BaseLevel < 50 || JobLevel < 50) goto L_LowLevel;
+      
+	mes .@npcname$;
+	mes "Hello to you. I'm the Etherian Vane. I represent the Vanes.";
+	mes "Vanes are inhabitants from the third world. We're some minor gods.";
+	next;
+	menu "Can you tell me more?.",HAInfo,"I'd like to become one of yours!",-,"I don't really care.",HANo;
+
+	mes .@npcname$;
+	mes "To become a Vane, you'll have to prove you deserve it.";
+	next;
+	mes .@npcname$;
+	mes "Vanes acquired the capacity of a rageous wind, which blows endlessly upon our world.";
+	mes "We're able to reach the weakest peace of any armor. Nothing can really stop us.";
+	next;
+	mes .@npcname$;
+	mes "But to learn that, you'll have to prove me you deserve it.";
+	next;
+	mes .@npcname$;
+	mes "There's a place in Midgard where lots of humans lose life when crashing..";
+	next;
+	mes .@npcname$;
+	mes "You'll find there a Vane. He'll tell you more about us.";
+	next;
+	mes .@npcname$;
+	mes "Once this done, you'll be able to learn more about the Blow.";
+	set haqstart,1;
+	close;
+
+HAQuest_Started:
+	mes .@npcname$;
+	mes "So. What did you learnt?";
+	next;
+	menu "I'd like to abandon",L_sure,"I've got all I need!",HAQuest_AlmostDone,"I'm working on it.",HANo;
+
+	L_sure:
+		mes .@npcname$;
+		mes "Vanes are untakable ennemies. We don't surrender!";
+		next;
+		menu "No...No I want to continue.",L_conti,"I...I'm sure!",L_quit;
+
+		L_conti:
+			mes .@npcname$;
+			mes "Allright...Then leave.";
+			close;
+		L_quit:
+			mes .@npcname$;
+			mes "Allright. You'll be able to start again.";
+			mes "But don't talk about us. To no one.";
+			set haqstart,0;
+			set haqdone,0;
+			set hagoe,0;
+			close;
+
+		L_LowLevel:
+			mes .@npcname$;
+			mes "I'm the Etherian Vane. You can't become one of us.";
+			mes "For that, you'll need a higher level. In both base and job, you're required to be lvl 50.";
+			next;
+			mes .@npcname$;
+			mes "Do you wish to learn more?";
+			next;
+			menu "Yes please.",HAInfo,"No thanks!",Quit;
+
+//Holy Avenger Information
+		
+		HAInfo:
+		mes .@npcname$;
+		mes "Vanes live in Vanaheim, the third world of Yggdrasil, starting from the top.";
+		next;
+		mes .@npcname$;
+		mes "We're a bunch of minor divinity, protected and ruled by the Asgard Gods.";
+		next;
+		mes .@npcname$;
+		mes "We've learn to control the Blow, and it's multiple forms.";
+		next;
+		mes .@npcname$;
+		mes "Just like the wind, we're able to pierce any enemy defense.";
+		next;
+		mes .@npcname$;
+		mes "But as a wind blow, we're also sometimes completely blocked...";
+		close;
+
+//Dialogues
+
+		HANo:
+			mes .@npcname$;
+			mes "Allright, as you wish.";
+			close;
+
+		HAQuest_Done:
+			mes .@npcname$;
+			mes "Welcome, Vane. May the Blow carry you where you want.";
+			close;
+
+		HAQuest_AlmostDone:
+			if(countitem(996)<75 || countitem(2684)<5 || countitem(992)<50) goto HAQuest_NotEnuf;
+			mes .@npcname$;
+			mes "I can feel that you've finally completed this quest.";
+			next;
+			mes .@npcname$;
+			mes "You're now ready to become one of us.";
+			mes "Go find the Etherian Angel. She'll guide you in this ultimate ordeal.";
+			mes "Once you'll be one of us, seek Yarmon. He'll teach you more about the Blowing Orbs.";
+			set hagoe,1;
+			delitem 996, 75;
+			delitem 2684, 5;
+			delitem 992, 50;
+			close;
+		
+		HAGo_Etheria:
+			mes .@npcname$;
+			mes "Go find the Etherian Angel. She'll guide you in this ultimate ordeal.";
+			close;
+
+		OtherQuest_Done:
+			mes .@npcname$;
+			mes "Leave this place. You now belong to another race.";
+			close;
+
+		OtherQuest_Started:
+			mes .@npcname$;
+			mes "Leave this place. You've started to work for another race. Cancel it, and come back to me, if you change your mind.";
+			close;
+
+		HAQuest_NotEnuf:
+			mes .@npcname$;
+			mes "Sorry but you lack some items. Here's what I need:";
+			next;
+			mes .@npcname$;
+			mes "- ^5555FF75 Rough Wind^000000.";
+			mes "- ^5555FF5 Ring of Wind^000000.";
+			mes "- ^5555FF50 Wind of Verdure^000000.";
+			close;
+
+	Quit:
+		mes "That's your choice.";
+		close;
+}
+
+ars_fild33,31,80,5	script	Vane Sifol::vs	2022,{
+	set .@npcname$, "[Sifol]";
+
+	mes .@npcname$;
+	mes "...";
+	if (haqstart == 1)
+	{
+		mes "So you've decided to become one of us.";
+		mes "Do you really now what you've chosen?";
+		mes "The Blow isn't really mercyfull. Not for your ennemies, nor for you.";
+		mes "You're ready for that? Then embrace the Blow Path.";
+		next;
+		mes .@npcname$;
+		mes "Vanes only rely on their own strength.";
+		mes "Prove me your merit. And take this back to the Etherian Vane.";
+			mes "- ^5555FF75 Rough Wind^000000.";
+			mes "- ^5555FF5 Ring of Wind^000000.";
+			mes "- ^5555FF50 Wind of Verdure^000000.";
+		next;
+		mes .@npcname$;	
+		mes "If you succeed, you'll learn the Blow.";
+		mes "You'll be able to pierce the strongest defense.";
+		mes "But on the other hand, you'll sometimes miss the easiest attack...";
+		mes "Plus, it won't be enough alone. So take care!";
+		mes "On top of that, you'll learn how to use the Blowing Orbs.";
+		mes "They'll let you use another power from the Blow Path.";
+		set haqstart, 2;
+	}
+	close;
+}
+
+ars_fild49,135,57,5	script	Vane Hulan::vh	1449,{
+	set .@npcname$, "[Hulan]";
+
+	mes .@npcname$;
+	mes "...";
+	if (haqdone > 0 && haqdone <= 1 || haqstart == 1)
+	{
+		mes "You're not ready. Leave!";
+	}
+	else if (haqdone == 3)
+	{
+		mes "A feel a great Blow out of you.";
+		mes "You're like a sharp, fierce wind.";
+		next;
+		mes .@npcname$;
+		mes "But you're not here for that, isn't it?";
+		mes "You're here for the Blowing Orbs.";
+		mes "Each ones can be used separately, one at a time.";
+		mes "You can only find them in Vanaheim.";
+		next;
+		mes "The first one, the 'Marine Brise',";
+			//EL_GUST, 8419 (lvl 1)
+		mes "allows you to increase your movement speed.";
+		mes "The second one, the 'Solid Air',";
+			//SO_VACUUM_EXTREME, 2453 (lvl 2)
+		mes "forbid your ennemies from moving while emprisonning them in a tornado.";
+		mes "Finally, the rarest one, the 'Void'";
+			//WL_STASIS, 2209  (lvl 3)
+		mes "creates a barrier around you where nobody can speak, and so, use spells.";
+		next;
+		mes "These are the Blowing Orbs. Only our race can use them. We're a kind of...Necromancer I guess.";
+	}
+	else
+		mes "I don't speak to other races.";
+	close;	
+}

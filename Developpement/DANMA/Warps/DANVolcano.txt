@@ -1,0 +1,14 @@
+danma_19,21,223,0	warp	dun19-maintown	2,2,mellina,85,138
+
+danma_19,201,37,0	warp	thor_v2-1	1,1,danma_20,78,203
+
+danma_20,192,60,0	warp	thor_v2-2	1,1,danma_21,35,262
+danma_20,73,203,0	warp	thor_v3-1	1,1,danma_19,196,37
+
+danma_21,30,262,0	warp	thor_v3-2	1,1,danma_20,187,58
+danma_21,30,262,0	warp	thor_v3-2	1,1,danma_22,126,66
+
+danma_22,126,70,0	warp	mag01-02	1,1,danma_21,30,262
+danma_22,242,241,0	warp	mag01-02	1,1,danma_23,47,30
+
+danma_23,47,28,0	warp	mag02-01	1,1,danma_22,242,239

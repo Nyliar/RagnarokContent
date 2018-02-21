@@ -1,0 +1,303 @@
+//===== Hercules Script =======================================
+//= GvG Betting NPC
+//===== By: ==================================================
+//= Alayne
+//===== Current Version: =====================================
+//= 1.0
+//===== Compatible With: ===================================== 
+//= Hercules
+//===== Description: =========================================
+//= Random hunting missions for party only (7 members min).
+//= Rewards are based on quest difficulty.
+//============================================================
+
+prontera,166,180,2	script	PvP Bookmaker::alapvpboo	934,{
+	set .@npcname$, "[Bookmaker]";
+	mes .@npcname$;
+	mes "";
+	mes "Hello, I am Lucky the one who manage Player vs Player challenge.";
+	mes "This feature will improved your personnal fighting skills.";
+	
+	if (.pvpFree == 1)
+	{
+		switch(select("Register a Provocation","Answer a Provocation","Informations","Nervermind"))
+		{
+			case 1:
+				next;
+				mes .@npcname$;
+				mes "Allright. Fill this form please.";
+				next;
+				mes "-" + strcharinfo(0) + " is filling the form - ";
+				next;
+				mes .@npcname$;
+				mes "Perfect.";
+				mes "So you want to register as a Target, " + strcharinfo(0) + ", right?";
+				mes "You now have to choose an option.";
+				set .@bet_value, 0;
+				set .@members_value, 0;
+				switch(select("Zeny bet","Free challenge"))
+				{
+					case 1:
+						set .@continue, 0;
+						do{
+							next;
+							mes .@npcname$;
+							mes "Allright, in a bet challenge, you'll have to give me a start bet.";
+							mes "The minimum value is " + .minimumBet + "z, and the maximum " + .maximumBet + "z.";
+							mes "Please, enter your bet value.";
+							input .@bet_value;
+							if (Zeny < .@bet_value)
+							{
+								next;
+								mes .@npcname$;
+								mes "Sorry, but you don't have that much money...";
+								mes "Stop making me losing my time...";
+								close;
+							}
+							else
+							{
+								next;
+								mes .@npcname$;
+								if (.@bet_value < .minimumBet || .@bet_value > .maximumBet)
+								{
+									mes "Please choose a bet in the given range.";
+								}
+								else
+								{
+									mes "Perfect.";
+									set .@continue, 1;
+								}
+							}
+						}while(.@continue == 0);
+						break;
+					case 2:
+						//nothing here
+						break;
+				}
+				next;
+				mes .@npcname$;
+				mes "Perfect.";
+				mes "Wait a second.";
+				if (.@bet_value > 0)
+				{
+					set Zeny, Zeny - .@bet_value;
+					announce "" + strcharinfo(0) + " is inviting you for a challenge for " + .@bet_value + "z bet, If you want to accept his/her invitation talk to PvP Bookmaker.",bc_red|bc_all;					
+				}
+				else
+				{
+					announce "" + strcharinfo(0) + " is inviting you for a challenge for free, If you want to accept their invitation, talk to PvP Bookmaker.",bc_red|bc_all;
+				}
+				mes "You'll be contacted if somebody answers to your provocation.";
+				
+				set .registeredPlayerId[getarraysize(.registeredPlayerId)], getcharid(3);
+				set .registeredPlayerBetValue[getarraysize(.registeredPlayerBetValue)], .@bet_value;
+				break;
+			case 2:
+				next;
+				mes .@npcname$;
+				mes "Ho! You're here to answer a provocation?";		
+				set .@check_start, 0;			
+				do
+				{
+					next;
+					mes .@npcname$;
+					mes "Perfect! Tell me, which one?";
+					
+					setarray .@availablePlayerId[0], 0;
+					setarray .@availablePlayerBet[0], 0;
+					
+					set .@originId, getcharid(3);
+					
+					for (set .@i,0; .@i < getarraysize(.registeredPlayerId); set .@i, .@i+1)
+					{
+						//check valid teams
+						if(attachrid(.registeredPlayerId[.@i]) == 1)
+						{
+							set .@betValue, .registeredPlayerBetValue[.@i];
+							if (.@betValue > 0)
+							{
+								set .@menu$, .@menu$ + ( .@i ? ":" : "" ) + "Fighter " + strcharinfo(0) + ", bet value - " + .@betValue + ".";
+							}
+							else
+							{
+								set .@menu$, .@menu$ + ( .@i ? ":" : "" ) + "Fighter " + strcharinfo(0) + ", bet value - for free.";
+							}	
+							set .@availablePlayerId[getarraysize(.@availablePlayerId)], .registeredPlayerId[.@i];
+							set .@availablePlayer$[getarraysize(.@availablePlayer$)], strcharinfo(0);
+							set .@availablePlayerBet[getarraysize(.@availablePlayerBet)], .registeredPlayerBetValue[.@i];
+						}
+					}
+					
+					attachrid(.@originId);
+					
+					set .@choice, prompt(.@menu$) - 1;	
+					if (.@choice != 254)
+					{
+						next;
+						mes .@npcname$;
+						set .@registeredPlayerId, .@availablePlayerId[.@choice];
+						set .@betValue, .@availablePlayerBet[.@choice];
+						mes "You want to fight against " + .@availablePlayer$[.@choice] + ", for " + .@betValue > 0 ? (.@betValue + "z") : "free" + " right?";
+						if (select("Yes","No") == 1)
+						{
+							set .@check_start, 1;
+							mes "Allright, let's check if everything's ok then.";
+						}
+					}
+					else
+					{
+						close;
+					}
+				}
+				while(.@check_start == 0);
+
+				next;
+				mes .@npcname$;
+			
+				if (Zeny < .@betValue)
+				{
+					mes "Sorry, but you lack some zeny.";
+					close;
+				}
+				
+				set .@ok, 1;
+				
+				if (getcharid(3) == .@registeredPlayerId)
+				{
+					mes "You can't fight yourself...";	
+					close;
+				}
+
+				mes "Everything seems to be allright.";
+				mes "You'll be warped soon.";
+				
+				set $player1Id, .@originId;
+				set $player2Id, .@registeredPlayerId;
+				set $betValue, .@betValue;	
+	
+				set Zeny, Zeny - $betValue;				
+				
+				warp $mapname$, .startX[0], .startY[0];
+				attachrid(.@registeredPlayerId);
+				warp $mapname$, .startX[1], .startY[1];
+				
+				//clean selected guild from selectable
+				deletearray .registeredPlayerId[.@choice], 1;
+				deletearray .registeredPlayerBetValue[.@choice], 1;
+				
+				set .pvpFree, 0;
+				
+				donpcevent "pvpbecor::OnPlayersWarped";
+				
+				break;
+			case 3:
+				next;
+				mes .@npcname$;
+				mes "- Option [ Information ]";
+				mes "This is a PvP Feature event where you can challenge anybody on this server while using zeny for bet or free.";
+				mes "If you choose to play with zeny bet the 2 players will fight for the amount of zeny. They will bet, and whoever win get the 80% of total zeny.";
+				mes "If you choose to play for free you will not lose anything.";
+				break;
+			case 4:
+				next;
+				mes .@npcname$;
+				mes "Allright, come back when you want.";
+				break;
+		}
+	}
+	else
+	{
+		mes "Sorry, somebody is already inside the area.";
+		mes "Try again in a moment please.";
+	}
+	close;
+	
+OnFightEnded:
+	set .pvpFree, 1;
+	
+	//clear actual values to prevent errors on next fight
+	set $betValue, -1;
+	set $player1Id, -1;
+	set $player2Id, -1;
+	end;
+	
+OnInit:
+	setarray .registeredPlayerId[0], 0;
+	setarray .registeredPlayerBetValue[0], 0;
+	set $mapname$, "pvp_n_2-5";
+	setarray .startX[0], 133,65,99,99;
+	setarray .startY[0], 100,99,134,65;
+	set .pvpFree, 1;
+	set .minimumBet, 2000;
+	set .maximumBet, 5000;
+	end;
+}
+
+pvp_n_1-5,83,117,6	script	PvPCore::pvpbecor	-1,{
+	end;
+	
+OnPlayersWarped:
+	set .count, 0;
+	initnpctimer;
+	setcell strnpcinfo(4),79,101,79,98,cell_walkable,0;
+	setcell strnpcinfo(4),120,101,120,98,cell_walkable,0;
+	setcell strnpcinfo(4),100,81,98,81,cell_walkable,0;
+	setcell strnpcinfo(4),100,120,98,120,cell_walkable,0;
+	end;
+
+OnTimer1000:
+OnTimer2000:
+OnTimer3000:
+OnTimer4000:
+OnTimer5000:
+OnTimer6000:
+OnTimer7000:
+OnTimer8000:
+OnTimer9000:
+OnTimer10000:
+	set .count, .count + 1;
+	if (.count < 10)
+	{
+		announce "Fight starts in " + (10 - .count) + "s...",bc_npc|bc_map;
+	}
+	else
+	{
+		announce "FIGHT!",bc_npc|bc_map;
+		stopnpctimer;
+		setcell strnpcinfo(4),79,101,79,98,cell_walkable,1;
+		setcell strnpcinfo(4),120,101,120,98,cell_walkable,1;
+		setcell strnpcinfo(4),100,81,98,81,cell_walkable,1;
+		setcell strnpcinfo(4),100,120,98,120,cell_walkable,1;
+	}
+	end;	
+	
+OnPCDieEvent:
+	charcommand("#load");
+	charcommand("#alive");
+	
+	set .@loserName$, strcharinfo(0);
+	
+	//victory for the other team
+	if(killerrid == $player1Id)
+	{
+		set .@winningId, $player1Id;
+		set .@losingId, $guild2Id;
+	}
+	if (killerrid == $player2Id)
+	{
+		set .@winningId, $player2Id;
+		set .@losingId, $player1Id;
+	}
+	//bet rewards
+	if (attachrid(.@winningId) && $betValue > 0)
+	{
+		//only retrieve 80% of the total bet value
+		set Zeny, Zeny + ($betValue * 2 * 80 / 100);
+		dispbottom "You've won " + ($betValue * 2 * 80 / 100) + "z from bets. Congrats.";
+	}
+	
+	//announce
+	announce "The Battle between " + .@loserName$ + " and " + strcharinfo(0) + " is done. " + strcharinfo(0) + " wins, PvP Bookmaker is now available again for registration.",bc_red|bc_all;
+	donpcevent "alapvpboo::OnFightEnded";
+	end;
+}

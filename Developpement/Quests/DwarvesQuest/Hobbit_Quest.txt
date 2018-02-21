@@ -1,0 +1,449 @@
+// [========================================================]
+// [===========      The Lonely Mountain         ===========]
+// [========================================================]
+// [ Version 1                                              ]
+// [========================================================]
+// [ Original script by: Alayne                             ]
+// [========================================================]
+// [ Description:                                           ]
+// [--------------------------------------------------------]
+// [                                                        ]
+// [ - The Lonely Mountain Quest			           ]
+// [ - Based on the Hobbit - I See Fire		           ]
+// [ - Based on Far Over the Misty Mountain		    ]
+// [========================================================]
+// [ Changelog: (5 last updates)                            ]
+// [--------------------------------------------------------]
+// [                                                        ]
+// [ v0: Creation                      			    ]
+// [                                                        ]
+// [========================================================]
+// [                                                        ]
+// [========================================================]
+
+//Oh, misty eye of the mountain below
+//Keep careful watch of my brothers' souls
+//And should the sky be filled with fire and smoke
+//Keep watching over Durin's sons
+
+prontera,168,177,2	script	Old Magician::prtoldmag	741,{
+	set .@npcname$, "[Old Magician]";
+	mes .@npcname$;
+	mes " ";
+	mes "Hello to you, young Adventurer";
+	if (MOUNTAIN_Q == 0 && LQUEST == 5)
+	{
+		mes "*He seems to be judging you*";
+		next;
+		mes "[" + strcharinfo(0) + "] Do as you wish..."
+		next;
+		mes .@npcname$;
+		mes "Oh, don't misunderstand me.";
+		mes "I'm not of this kind.";
+		mes "On the other hand, I think that maybe you can match...";
+		if (LQUEST == 5)
+		{
+			mes "If you're interested in a small adventure, you should go find my friends.";
+			mes "You'll find them pretty quickly. They're small and...Thick.";
+			set MOUNTAIN_Q, 1;
+		}
+	}
+	else if (MOUNTAIN_Q == 8)
+	{
+		mes "So, you've made the Erudor's Dwarves change their mind about you.";
+		mes "That was I was waiting for.";
+		mes "They give you the quest part where you have to find the Key?";
+		mes "And the Seal Stones?";
+		mes "Nothing less...";
+		mes "That's not the easiest part, believe me.";
+		next;
+		mes .@npcname$;
+		mes "I can't go with you, my duty is somewhere else.";
+		mes "On the other hand, I can guide you a little bit.";
+		mes "You've already heard the dwarves song, I guess.";
+		mes "There's in fact another one.";
+		mes "Listen carefully.";
+		next;
+		mes .@npcname$;
+		mes "Oh, misty eye of the mountain below";
+		mes "Keep careful watch of my brothers' souls";
+		mes "And should the sky be filled with fire and smoke";
+		mes "Keep watching over Durin's sons";
+		next;
+		mes .@npcname$;
+		mes " ";
+		mes "If this is to end in fire";
+		mes "Then we should all burn together";
+		mes "Watch the flames climb high into the night";
+		next;
+		mes .@npcname$;
+		mes " ";
+		mes "Calling out father, oh,";
+		mes "Stand by and we will";
+		mes "Watch the flames burn auburn on";
+		mes "The mountain side high";
+		next;
+		mes .@npcname$;
+		mes "I'm pretty sure you'll find the answer one more time.";
+		mes "Once done, come to the Mountain with the items you'll gather.";
+		mes "Oh and here's an advice: Take several stones.";
+	}
+	close;
+}
+
+prontera,168,177,2	script	Dwarf Iok::prtdwa	741,{
+	set .@npcname$, "[Dwarf]";
+	mes .@npcname$;
+	mes "";
+	if (MOUNTAIN_Q == 0)
+	{
+		mes "Hello to you, " + strcharinfo(0);
+		mes "My friends and I are waiting for a strong ally.";
+		mes "A wizard. And not a little one.";
+		mes "We'll need at least that to take our land back.";
+	}
+	else
+	{
+		mes "Who talk to you about us?";
+		mes "Boarf, doesn't matter. That's not me who should evaluate you.";
+		mes "Go see our leader.";
+	}
+	close;
+
+OnDwarfSinging:
+	if(MOUNTAIN_SING == 1 && strnpcinfo(3) == "prtdwa")
+	{
+		sleep 3000;
+		npctalk "The dwarves of yore made mighty spells,";
+		npctalk "While hammers fell like ringing bells";
+		npctalk "In places deep, where dark things sleep,";
+		npctalk "In hollow halls beneath the fells.";
+		set MOUNTAIN_SING, 2;
+		donpcevent "prtdwa1::OnDwarfSinging";
+	}
+	else if(MOUNTAIN_SING == 2 && strnpcinfo(3) == "prtdwa1")
+	{
+		sleep 3000;
+		npctalk "For ancient king and elvish lord,";
+		npctalk "There many a gleaming golden hoard";
+		npctalk "They shaped and wrought, and light they caught";
+		npctalk "To hide in gems on hilt of sword.";
+		set MOUNTAIN_SING, 3;
+		donpcevent "prtdwa2::OnDwarfSinging";
+	}
+	else if(MOUNTAIN_SING == 3 && strnpcinfo(3) == "prtdwa2")
+	{
+		sleep 3000;
+		npctalk "On silver necklaces they strung";
+		npctalk "The flowering stars, on crowns they hung";
+		npctalk "The dragon-fire, in twisted wire";
+		npctalk "They meshed the light of moon and sun.";
+		set MOUNTAIN_SING, 4;
+		donpcevent "prtdwa3::OnDwarfSinging";
+	}
+	else if(MOUNTAIN_SING == 4 && strnpcinfo(3) == "prtdwa3")
+	{
+		sleep 3000;
+		npctalk "Goblets they carved there for themselves";
+		npctalk "And harps of gold; where no man delves";
+		npctalk "There lay they long, and many a song";
+		npctalk "Was sung unheard by men or elves.";
+		set MOUNTAIN_SING, 5;
+		donpcevent "prtdwa4::OnDwarfSinging";
+	}
+	else if(MOUNTAIN_SING == 5 && strnpcinfo(3) == "prtdwa4")
+	{
+		sleep 3000;
+		npctalk "The pines were roaring on the height,";
+		npctalk "The winds were moaning in the night.";
+		npctalk "The fire was red, it flaming spread;";
+		npctalk "The trees like torches blazed with light.";
+		set MOUNTAIN_SING, 6;
+		donpcevent "prtdwa5::OnDwarfSinging";
+	}
+	else if(MOUNTAIN_SING == 6 && strnpcinfo(3) == "prtdwa5")
+	{
+		sleep 3000;
+		npctalk "The bells were ringing in the dale";
+		npctalk "And men looked up with faces pale";
+		npctalk "Then dragon's ire more fierce than fire";
+		npctalk "Laid low their towers and houses frail.";
+		set MOUNTAIN_SING, 7;
+		donpcevent "prtdwachi::OnDwarfSinging";
+	}
+	close;
+}
+
+//Deepest Cave
+prontera,168,177,2	script	Dwarf Dilr::prtdwa6	741,{
+	set .@npcname$, "[Dwarf]";
+	mes .@npcname$;
+	mes "";
+	mes "Hello to you. I'm Dilr, son of Lilr, nephew of Yhiur.";
+	if (MOUNTAIN_Q == 2)
+	{
+		mes "The King calls me?";
+		mes "Then the Dragon Hunt hour has finally come.";
+		mes "We'll take back our homeland, by the strength of our axes.";	
+		mes "Go. I'll join when we'll leave.";
+		set MOUNTAIN_Q, 3;
+		hideonnpc "prtdwa6";
+		donpcevent "prtdwa6-2::OnShowOnDwarfs";
+	}
+	close;
+}
+
+//Elvish Lord
+prontera,168,177,2	script	Dwarf Ruil::prtdwa7	741,{
+	set .@npcname$, "[Dwarf]";
+	mes .@npcname$;
+	mes "";
+	mes "Hello to you. I'm Ruil, son of Buil, nephew of Yhiur.";
+	if (MOUNTAIN_Q == 3)
+	{
+		mes "The King calls me?";
+		mes "Then the Dragon Hunt hour has finally come.";
+		mes "We'll take back our homeland, by the strength of our axes.";	
+		mes "Go. I'll join when we'll leave.";
+		set MOUNTAIN_Q, 4;
+		hideonnpc "prtdwa7";
+		donpcevent "prtdwa7-2::OnShowOnDwarfs";
+	}
+	close;
+}
+
+//Moon and Sun
+prontera,168,177,2	script	Dwarf Buil::prtdwa8	741,{
+	set .@npcname$, "[Dwarf]";
+	mes .@npcname$;
+	mes "";
+	mes "Hello to you. I'm Buil, father of Ruil, brother of Yhiur.";
+	if (MOUNTAIN_Q == 4)
+	{
+		mes "The King calls me?";
+		mes "Then the Dragon Hunt hour has finally come.";
+		mes "We'll take back our homeland, by the strength of our axes.";	
+		mes "Go. I'll join when we'll leave.";
+		set MOUNTAIN_Q, 5;
+		hideonnpc "prtdwa8";
+		donpcevent "prtdwa8-2::OnShowOnDwarfs";
+	}
+	close;
+}
+
+//Harps of Gold
+prontera,168,177,2	script	Dwarf Duil::prtdwa9	741,{
+	set .@npcname$, "[Dwarf]";
+	mes .@npcname$;
+	mes "";
+	mes "Hello to you. I'm Duil, brother of Buil, from the Red Mountains.";
+	if (MOUNTAIN_Q == 5)
+	{
+		mes "The King calls me?";
+		mes "Then the Dragon Hunt hour has finally come.";
+		mes "We'll take back our homeland, by the strength of our axes.";	
+		mes "Go. I'll join when we'll leave.";
+		set MOUNTAIN_Q, 6;
+		hideonnpc "prtdwa9";
+		donpcevent "prtdwa9-2::OnShowOnDwarfs";
+	}
+	close;
+}
+
+//Pines
+prontera,168,177,2	script	Dwarf Bufor::prtdwa10	741,{
+	set .@npcname$, "[Dwarf]";
+	mes .@npcname$;
+	mes "";
+	mes "Hello to you. I'm Bufor, fighter of Yhiur.";
+	if (MOUNTAIN_Q == 6)
+	{
+		mes "The King calls me?";
+		mes "Then the Dragon Hunt hour has finally come.";
+		mes "We'll take back our homeland, by the strength of our axes.";	
+		mes "Go. I'll join when we'll leave.";
+		set MOUNTAIN_Q, 7;
+		hideonnpc "prtdwa10";
+		donpcevent "prtdwa10-2::OnShowOnDwarfs";
+	}
+	close;
+}
+
+//Bells
+prontera,168,177,2	script	Dwarf Rumor::prtdwa11	741,{
+	set .@npcname$, "[Dwarf]";
+	mes .@npcname$;
+	mes "";
+	mes "Hello to you. I'm Rumor, brother of Yhiur.";
+	if (MOUNTAIN_Q == 7)
+	{
+		mes "The King calls me?";
+		mes "Then the Dragon Hunt hour has finally come.";
+		mes "We'll take back our homeland, by the strength of our axes.";	
+		mes "Go. I'll join when we'll leave.";
+		set MOUNTAIN_Q, 8;
+		hideonnpc "prtdwa11";
+		donpcevent "prtdwa11-2::OnShowOnDwarfs";
+	}
+	close;
+}
+
+einbroch,61,69,0	duplicate(prtdwa)	Dwarf Goij::prtdwa1	709
+einbroch,61,69,0	duplicate(prtdwa)	Dwarf Fulo::prtdwa2	709
+einbroch,61,69,0	duplicate(prtdwa)	Dwarf Edni::prtdwa3	709
+einbroch,61,69,0	duplicate(prtdwa)	Dwarf Triul::prtdwa4	709
+einbroch,61,69,0	duplicate(prtdwa)	Dwarf Morl::prtdwa5	709
+
+prontera,168,177,2	script	Dwarf Dilr::prtdwa6-2	741,{
+	set .@npcname$, "[Dwarf]";
+	mes .@npcname$;
+	if (MOUNTAIN_Q == 7)
+	{
+		mes "Go back to Yhuir. We're ready to leave.";
+	}
+	else
+	{
+		mes "We're a bit busy right now. Sorry.";
+	}
+	close;
+
+OnShowOnDwarfs:
+	hideoffnpc strnpcinfo(3);
+	end;
+
+OnShowOffDwarfs:
+	hideonnpc strnpcinfo(3);
+	end;
+	
+OnInit:
+	hideonnpc strnpcinfo(3);
+	end;
+}
+
+scaphis,61,69,0	duplicate(prtdwa6-2)	Dwarf Ruil::prtdwa7-2	709
+scaphis,61,69,0	duplicate(prtdwa6-2)	Dwarf Buil::prtdwa8-2	709
+scaphis,61,69,0	duplicate(prtdwa6-2)	Dwarf Duil::prtdwa9-2	709
+scaphis,61,69,0	duplicate(prtdwa6-2)	Dwarf Bufor::prtdwa10-2	709
+scaphis,61,69,0	duplicate(prtdwa6-2)	Dwarf Rumor::prtdwa11-2	709
+
+prontera,168,177,2	script	Dwarf Chief Yhiur::prtdwachi	741,{
+	set .@npcname$, "[Yhiur]";
+	mes .@npcname$;
+	mes "";
+	if (MOUNTAIN_Q == 0)
+	{
+		mes "Hello to you, " + strcharinfo(0);
+		mes "My friends and I are waiting for a strong ally.";
+		mes "A wizard. And not a little one.";
+		mes "We'll need at least that to take our land back.";
+	}
+	else if (MOUNTAIN_Q == 1)
+	{
+		mes "So, this wizard send you here?";
+		mes "I really can't figure out why...";
+		mes "You doesn't look strong, nor intelligent.";
+		mes "But if he found something on you, I should definitely try.";
+		next;
+		mes .@npcname$;
+		mes "As you can see it, we are dwarves.";
+		mes "Before telling you anything more, I should find what's inside you.";
+		mes "And for that, we should discover how far you can understand us.";
+		mes "We're actually 7 here.";
+		mes "But in fact, our company is made of 13 personnes, including the wizard.";
+		mes "We'll sing a song to you.";
+		mes "Then, you'll have to understand what to do. By yourself. None of us will help you.";
+		mes "Come back to us when you'll be ready.";
+		next;
+		mes "*Dwarves come closer to the fireplace.*";
+		next;
+		npctalk "Far over the misty mountains cold";
+		npctalk "To dungeons deep, and caverns old";
+		npctalk "We must away ere break of day";
+		npctalk "To seek the pale enchanted gold.";
+		set MOUNTAIN_SING, 1;
+		donpcevent "prtdwa::OnDwarfSinging";
+	}
+	else if (MOUNTAIN_Q == 2)
+	{
+		mes "DO you wanna hear the Dwarves song again?";
+		if (switch(select("Yes","No") == 1)
+		{
+			mes "*Dwarves come closer to the fireplace.*";
+			next;
+			npctalk "Far over the misty mountains cold";
+			npctalk "To dungeons deep, and caverns old";
+			npctalk "We must away ere break of day";
+			npctalk "To seek the pale enchanted gold.";
+			set MOUNTAIN_SING, 1;
+			donpcevent "prtdwa::OnDwarfSinging";
+		}
+		else
+		{
+			mes "You're not ready to hear the next part.";
+		}
+	}
+	else if (MOUNTAIN_Q == 7)
+	{
+		mes "Then, you've find them all.";
+		mes "Perfect. We're ready.";
+		mes "I'll tell you why we're here.";
+		mes "A long, long time ago, live a kindgom called Erudor.";
+		mes "That was the Dwarves Realm, the Gold Smith.";
+		mes "We were producing lot of items, made out of the purest gold.";
+		mes "Between our hands, the smallest nugget was transformed into a wonder.";
+		mes "And one day, a Dragon appeared.";
+		mes "We fight hardly, but finally, we had to give up our homes.";
+		mes "Erudor sunk into a memory lapse.";
+		next;
+		mes .@npcname$;	
+		mes "Until today.";
+		mes "Today, beyond the other Dwarves unbelieving, we'll reconquer Erudor.";
+		mes "And for that, we'll need you.";
+		mes "The Dragon is the last of your worries.";
+		mes "We'll have to find the lost key to enter in Erudor.";
+		mes "Then to find something to hunt the beast down of its gold mountains.";
+		mes "Finally, we'll have to make it go out to kill it.";
+		mes "It won't be easy, believe me.";
+		mes "But let's go. We're leaving!";
+		mes "Go. Find the Magician. And find us back to Mountain Foot.";
+		mes "We'll wait as long as possible.";
+
+		set MOUNTAIN_Q, 8;
+
+		donpcevent "prtdwa6-2::OnShowOffDwarfs";
+		donpcevent "prtdwa7-2::OnShowOffDwarfs";
+		donpcevent "prtdwa8-2::OnShowOffDwarfs";
+		donpcevent "prtdwa9-2::OnShowOffDwarfs";
+		donpcevent "prtdwa10-2::OnShowOffDwarfs";
+		donpcevent "prtdwa11-2::OnShowOffDwarfs";
+		
+		donpcevent "prtdwachi-2::OnShowOnDwarfs";
+		donpcevent "prtdwa6-3::OnShowOnDwarfs";
+		donpcevent "prtdwa7-3::OnShowOnDwarfs";
+		donpcevent "prtdwa8-3::OnShowOnDwarfs";
+		donpcevent "prtdwa9-3::OnShowOnDwarfs";
+		donpcevent "prtdwa10-3::OnShowOnDwarfs";
+		donpcevent "prtdwa11-3::OnShowOnDwarfs";
+	}
+	close;
+
+OnDwarfSinging:
+	if(MOUNTAIN_SING == 7) 
+	{
+		npctalk "Far over the misty mountains cold";
+		npctalk "To dungeons deep and caverns old";
+		npctalk "We must away, ere break of day,";
+		npctalk "To claim our long-forgotten gold.";
+		set MOUNTAIN_Q, 2;
+		mes .@npcname$;
+		mes "";
+		mes "I hope you've understand.";
+		hideoffnpc "prtdwa6";
+		hideoffnpc "prtdwa7";
+		hideoffnpc "prtdwa8";
+		hideoffnpc "prtdwa9";
+		hideoffnpc "prtdwa10";
+		hideoffnpc "prtdwa11";
+	}
+	close;
+}

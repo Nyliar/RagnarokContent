@@ -1,0 +1,45 @@
+For those who don't know the difference:
+-A dungeons is based over players. One or several players can go inside the dungeons, alone or in team
+-An instance is based over teams. A single player generally can't enter inside an instance, as it's too hard to finish alone
+-A raid is based over several teams, or a guild. A single team might not be able to complete alone, due to particular options or increased difficulty.
+
+On ragnarok, raid doesn't exists. only dungeons and instances.
+
+the general aim of those isntances are to bring players to a raid, developped for ragnarok
+it's based over the Norns, nordic witches that can read past, present and future
+the global line is that the Norns ask the player to help them to fight against the Ases and the Giants, to prevent the Ragnarok, which is now really close to happen
+to protect everything, they decided to require help
+the general line is then divided into three steps
+first, the Norns will require the players to complete an item quest to create a Seal for a given god or giant
+for a single player it'll be really long.
+on the other hand, players can cooperate to complete it
+which means for instance if I ask 750 fluff, one can bring 100, another 300, and another 350
+
+ok so then, when the players will have created a Seal, the Norns will find where the target is
+let's say we're considering Fenrir
+a Giant
+ok so players now have the Fenrir Seals, and now where he is
+a hidden place
+When they reach this point, they'll find an instance
+so there'll be one instance per Giant and Ases
+right now, I'm willing to create 12 differents
+each one will be based over the mythology
+for instance, Fenrir's one, that I'm currently working one, will require to free Fenrir, and then prevent him to rush to kill the Ases that trapped him
+that's the second point. First one will be the item quests, second one the instances
+now the third one ^^
+
+now, let's consider each boss will loot an item at 100%
+representing a key
+so we have Fenrir Key, Odin Key, Thor....
+and so on
+when each instance will be defeated at least one, the Norns will reveal their real goal
+they want to take Gods and Giants place, and rule over the Yggdrasil. They really want to prevent the Ragnarok, but for that, they're ready to become dictators
+Once all of those targets will be defeated, they'll retreat in their palace, the Time Fountain
+which is the Raid
+To enter in this one, 12 différents players will have to cooperate to only make the entrance appear, by using those 12 keys the instances drops
+
+once in, they're will be content like a big dungeon with riddle and monsters, like in instance
+finally, they'll reach the Norns, the final boss
+but the matter is that none can be killed while the others live, as Past, Present and Future are definitely bound
+kill one, within 5 minutes, if the others aren't, she'll raised again
+that's why one team won't be enough to fulfill the Raid

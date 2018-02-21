@@ -1,0 +1,251 @@
+anthell02,254,39,5	script	BloodCrystal#3::alabc5	OBJ_A2,{
+	set .@npcname$, "[Blood Crystal]";
+	mes .@npcname$;
+	mes "Current fill level: " + .fillPercent + "%"; 
+	mes "Would do you want to do?";
+	switch(select("Fill the Crystal","Retrieve a Spirit Life","Nothing"))
+	{
+		case 1:
+			next;
+			mes .@npcname$;
+			mes "You're about to fill Life in Blood Crystal.";
+			mes "How many Shards do you wish to give to the Crystal?";
+			mes "'0' means 'as much as possible'.";
+			input .@shardCount;
+			if(.@shardCount == 0)
+			{
+				set .@shardCount, countitem($shardIds[0]);
+			}
+			if(.@shardCount > countitem($shardIds[0]))
+			{
+				next;
+				mes .@npcname$;
+				mes "You don't have those items.";
+				close;
+			}
+			if(.popAvailable != 1)
+			{
+				next;
+				mes .@npcname$;
+				mes "The Guardian has allready been killed. Wait for " + $repopHourCount + " hours to summon it again.";
+				close;
+			}
+			delitem $shardIds[0], .@shardCount;
+			set .@fillRequired, 1000 + atoi(strnpcinfo(2)) * 50;
+			set .fillItemCount, .fillItemCount + .@shardCount;
+			set .fillPercent,  .fillItemCount * 100 / .@fillRequired;
+			if(.fillPercent >= 100)
+			{
+				set .fillPercent, 100;
+				next;
+				mes .@npcname$;
+				mes "The Crystal has been filled.";
+				for(set .@i,.mapToCheck[0]; .@i<=.mapToCheck[1]; set .@i,.@i+1)
+				{
+					set .@mobCount, .@mobCount + mobcount("anthell0" + .@i, "CardinalSystem::OnNormalDied");
+				}
+				if(.@mobCount == 0)
+				{
+					set .@percentHeal, 0 - atoi(strnpcinfo(2));
+					percentheal .@percentHeal, .@percentHeal;
+					set .popAvailable, 0;	
+					setnpcdisplay strnpcinfo(3), OBJ_B2, 1;
+					//special effect
+					specialeffect 862;
+					//summon boss
+					monster strnpcinfo(4), 0, 0, "--ja--", .bossId, 1, "CardinalSystem::OnGuardianDied";
+					initnpctimer;
+					set .loopCount, 0;
+				}
+				else
+				{
+					mes "The Guardian will appears after total dungeon cleaning.";
+				}
+				setd("$" + strnpcinfo(3), 1);
+			}
+			else
+			{
+				next;
+				mes .@npcname$;
+				mes "The Crystal has been filled up to " + .fillPercent + "%";
+			}
+			break;
+		case 2:
+			next;
+			mes .@npcname$;
+			if(SPIRITLIFE == $maxSpiritLife)
+			{
+				mes "You can't get more than " + $maxSpiritLife + " Spirit Lifes.";
+				close;
+			}
+			if(SPIRIT == 0)
+			{
+				mes "You can't retrieve a Spirit Life while you're not in Spirit mode.";
+				close;
+			}
+			if(.fillPercent > $minFillPercentToRetrieveLife)
+			{
+				set .fillPercent, 0;
+				set SPIRITLIFE, SPIRITLIFE + 1;
+				set SPIRIT, 0;
+				specialeffect2 372;
+				undisguise();
+				mes "The Crystal has been emptied. You've raised from the dead.";
+			}
+			else
+			{
+				mes "The Crystal isn't filled enough to allow Spirit Life retrieve.";
+			}
+			break;
+		case 3:
+			next;
+			mes .@npcname$;
+			mes "Action cancelled.";
+			break;
+	}
+	close;
+
+OnTimer360000:
+	stopnpctimer;
+	set .loopCount, .loopCount + 1;
+	if(.loopCount >= $repopHourCount)
+	{
+		goto OnClearGauge;
+	}
+	initnpctimer;
+	end;
+
+OnClearGauge:
+	setnpcdisplay strnpcinfo(3), OBJ_A2;
+	set .fillPercent, 0;
+	set .fillItemCount, 0;
+	end;
+	
+OnPopMonsters:
+	callsub OnClearMonsters;
+//== F1 =============================
+	monster "anthell01",0,0,"--ja--",1160,50,"CardinalSystem::OnNormalDied";
+	monster "anthell01",0,0,"--ja--",1105,40,"CardinalSystem::OnNormalDied";
+	monster "anthell01",0,0,"--ja--",1005,20,"CardinalSystem::OnNormalDied";
+	monster "anthell01",0,0,"--ja--",1095,15,"CardinalSystem::OnNormalDied";
+	monster "anthell01",0,0,"--ja--",1176,10,"CardinalSystem::OnNormalDied";
+	monster "anthell01",0,0,"--ja--",1121,1,"CardinalSystem::OnNormalDied";
+		
+	monster "anthell01",43,166,"--ja--",1097,1,"CardinalSystem::OnNormalDied";
+	monster "anthell01",30,187,"--ja--",1097,1,"CardinalSystem::OnNormalDied";
+	monster "anthell01",29,186,"--ja--",1097,1,"CardinalSystem::OnNormalDied";
+	monster "anthell01",38,186,"--ja--",1097,1,"CardinalSystem::OnNormalDied";
+	monster "anthell01",37,186,"--ja--",1097,1,"CardinalSystem::OnNormalDied";
+	monster "anthell01",36,186,"--ja--",1097,1,"CardinalSystem::OnNormalDied";
+	monster "anthell01",35,186,"--ja--",1097,1,"CardinalSystem::OnNormalDied";
+	monster "anthell01",36,187,"--ja--",1097,1,"CardinalSystem::OnNormalDied";
+	monster "anthell01",44,166,"--ja--",1097,1,"CardinalSystem::OnNormalDied";
+	monster "anthell01",45,165,"--ja--",1097,1,"CardinalSystem::OnNormalDied";
+	monster "anthell01",40,168,"--ja--",1097,1,"CardinalSystem::OnNormalDied";
+	monster "anthell01",41,168,"--ja--",1097,1,"CardinalSystem::OnNormalDied";
+	monster "anthell01",42,168,"--ja--",1097,1,"CardinalSystem::OnNormalDied";
+	monster "anthell01",42,167,"--ja--",1097,1,"CardinalSystem::OnNormalDied";
+	monster "anthell01",42,166,"--ja--",1097,1,"CardinalSystem::OnNormalDied";
+	monster "anthell01",42,165,"--ja--",1097,1,"CardinalSystem::OnNormalDied";
+	monster "anthell01",41,165,"--ja--",1097,1,"CardinalSystem::OnNormalDied";
+	monster "anthell01",43,165,"--ja--",1097,1,"CardinalSystem::OnNormalDied";
+	monster "anthell01",44,165,"--ja--",1097,1,"CardinalSystem::OnNormalDied";
+	monster "anthell01",38,184,"--ja--",1097,1,"CardinalSystem::OnNormalDied";
+	monster "anthell01",38,183,"--ja--",1097,1,"CardinalSystem::OnNormalDied";
+	monster "anthell01",37,183,"--ja--",1097,1,"CardinalSystem::OnNormalDied";
+	monster "anthell01",102,121,"--ja--",1097,1,"CardinalSystem::OnNormalDied";
+	monster "anthell01",104,123,"--ja--",1097,1,"CardinalSystem::OnNormalDied";
+	monster "anthell01",104,122,"--ja--",1097,1,"CardinalSystem::OnNormalDied";
+	monster "anthell01",104,120,"--ja--",1097,1,"CardinalSystem::OnNormalDied";
+	monster "anthell01",103,120,"--ja--",1097,1,"CardinalSystem::OnNormalDied";
+	monster "anthell01",103,121,"--ja--",1097,1,"CardinalSystem::OnNormalDied";
+	monster "anthell01",102,121,"--ja--",1097,1,"CardinalSystem::OnNormalDied";
+	monster "anthell01",105,124,"--ja--",1097,1,"CardinalSystem::OnNormalDied";
+	monster "anthell01",101,121,"--ja--",1097,1,"CardinalSystem::OnNormalDied";
+	monster "anthell01",100,121,"--ja--",1097,1,"CardinalSystem::OnNormalDied";
+	monster "anthell01",99,127,"--ja--",1097,1,"CardinalSystem::OnNormalDied";
+	monster "anthell01",97,123,"--ja--",1097,1,"CardinalSystem::OnNormalDied";
+	monster "anthell01",97,127,"--ja--",1097,1,"CardinalSystem::OnNormalDied";
+	monster "anthell01",97,126,"--ja--",1097,1,"CardinalSystem::OnNormalDied";
+	monster "anthell01",97,125,"--ja--",1097,1,"CardinalSystem::OnNormalDied";
+	monster "anthell01",97,124,"--ja--",1097,1,"CardinalSystem::OnNormalDied";
+	monster "anthell01",98,121,"--ja--",1097,1,"CardinalSystem::OnNormalDied";
+	monster "anthell01",99,121,"--ja--",1097,1,"CardinalSystem::OnNormalDied";
+	monster "anthell01",98,127,"--ja--",1097,1,"CardinalSystem::OnNormalDied";
+	monster "anthell01",28,266,"--ja--",1097,1,"CardinalSystem::OnNormalDied";
+	monster "anthell01",30,262,"--ja--",1097,1,"CardinalSystem::OnNormalDied";
+	monster "anthell01",30,261,"--ja--",1097,1,"CardinalSystem::OnNormalDied";
+	monster "anthell01",31,264,"--ja--",1097,1,"CardinalSystem::OnNormalDied";
+	monster "anthell01",31,263,"--ja--",1097,1,"CardinalSystem::OnNormalDied";
+	monster "anthell01",31,262,"--ja--",1097,1,"CardinalSystem::OnNormalDied";
+	monster "anthell01",32,263,"--ja--",1097,1,"CardinalSystem::OnNormalDied";
+	monster "anthell01",40,270,"--ja--",1097,1,"CardinalSystem::OnNormalDied";
+	monster "anthell01",40,269,"--ja--",1097,1,"CardinalSystem::OnNormalDied";
+	monster "anthell01",40,268,"--ja--",1097,1,"CardinalSystem::OnNormalDied";
+	monster "anthell01",30,263,"--ja--",1097,1,"CardinalSystem::OnNormalDied";
+	monster "anthell01",30,264,"--ja--",1097,1,"CardinalSystem::OnNormalDied";
+	monster "anthell01",30,265,"--ja--",1097,1,"CardinalSystem::OnNormalDied";
+	monster "anthell01",29,266,"--ja--",1097,1,"CardinalSystem::OnNormalDied";
+	monster "anthell01",28,265,"--ja--",1097,1,"CardinalSystem::OnNormalDied";
+	monster "anthell01",28,264,"--ja--",1097,1,"CardinalSystem::OnNormalDied";
+	monster "anthell01",28,263,"--ja--",1097,1,"CardinalSystem::OnNormalDied";
+	monster "anthell01",28,262,"--ja--",1097,1,"CardinalSystem::OnNormalDied";
+	monster "anthell01",29,265,"--ja--",1097,1,"CardinalSystem::OnNormalDied";
+	monster "anthell01",29,264,"--ja--",1097,1,"CardinalSystem::OnNormalDied";
+	monster "anthell01",29,263,"--ja--",1097,1,"CardinalSystem::OnNormalDied";
+	monster "anthell01",29,262,"--ja--",1097,1,"CardinalSystem::OnNormalDied";
+	monster "anthell01",40,267,"--ja--",1097,1,"CardinalSystem::OnNormalDied";
+	monster "anthell01",40,266,"--ja--",1097,1,"CardinalSystem::OnNormalDied";
+	monster "anthell01",31,194,"--ja--",1097,1,"CardinalSystem::OnNormalDied";
+	monster "anthell01",33,195,"--ja--",1097,1,"CardinalSystem::OnNormalDied";
+	monster "anthell01",33,196,"--ja--",1097,1,"CardinalSystem::OnNormalDied";
+	monster "anthell01",30,190,"--ja--",1097,1,"CardinalSystem::OnNormalDied";
+	monster "anthell01",31,190,"--ja--",1097,1,"CardinalSystem::OnNormalDied";
+	monster "anthell01",32,189,"--ja--",1097,1,"CardinalSystem::OnNormalDied";
+	monster "anthell01",32,198,"--ja--",1097,1,"CardinalSystem::OnNormalDied";
+	monster "anthell01",32,187,"--ja--",1097,1,"CardinalSystem::OnNormalDied";
+	monster "anthell01",32,186,"--ja--",1097,1,"CardinalSystem::OnNormalDied";
+	monster "anthell01",30,195,"--ja--",1097,1,"CardinalSystem::OnNormalDied";
+	monster "anthell01",31,195,"--ja--",1097,1,"CardinalSystem::OnNormalDied";
+	monster "anthell01",32,196,"--ja--",1097,1,"CardinalSystem::OnNormalDied";
+	monster "anthell01",40,265,"--ja--",1097,1,"CardinalSystem::OnNormalDied";
+	monster "anthell01",41,269,"--ja--",1097,1,"CardinalSystem::OnNormalDied";
+	monster "anthell01",41,268,"--ja--",1097,1,"CardinalSystem::OnNormalDied";
+	monster "anthell01",41,267,"--ja--",1097,1,"CardinalSystem::OnNormalDied";
+	monster "anthell01",41,266,"--ja--",1097,1,"CardinalSystem::OnNormalDied";
+	monster "anthell01",41,265,"--ja--",1097,1,"CardinalSystem::OnNormalDied";
+	monster "anthell01",30,198,"--ja--",1097,1,"CardinalSystem::OnNormalDied";
+	monster "anthell01",31,198,"--ja--",1097,1,"CardinalSystem::OnNormalDied";
+	monster "anthell01",32,197,"--ja--",1097,1,"CardinalSystem::OnNormalDied";
+	monster "anthell01",31,186,"--ja--",1097,1,"CardinalSystem::OnNormalDied";
+	
+//== F2 =============================
+	monster "anthell02",0,0,"--ja--",1095,50,"CardinalSystem::OnNormalDied";
+	monster "anthell02",0,0,"--ja--",1176,30,"CardinalSystem::OnNormalDied";
+	monster "anthell02",0,0,"--ja--",1005,20,"CardinalSystem::OnNormalDied";
+	monster "anthell02",0,0,"--ja--",1097,15,"CardinalSystem::OnNormalDied";
+	monster "anthell02",0,0,"--ja--",1105,15,"CardinalSystem::OnNormalDied";
+	monster "anthell02",0,0,"--ja--",1160,15,"CardinalSystem::OnNormalDied";
+	monster "anthell02",0,0,"--ja--",1121,3,"CardinalSystem::OnNormalDied";
+	end;
+	
+OnClearMonsters:	
+OnClock0000:
+	killmonsterall "anthell01";
+	killmonsterall "anthell02";
+	set .popAvailable, 1;
+	setd("$" + strnpcinfo(3), 0);
+	return;
+	
+OnInit:
+	set .fillPercent, 0;
+	if(getd("$" + strnpcinfo(3)) >= 1)
+	{
+		set .fillPercent, 100;
+	}
+	setarray .mapToCheck[0],1,2;
+	set .bossId, 1147;
+	set .popAvailable, 1;
+	end;
+}
+
