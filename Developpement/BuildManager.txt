@@ -1,0 +1,1130 @@
+//===== Alayne Scripts =======================================
+//= Build Master
+//===== By: ================================================== 
+//= Alayne
+//===== Current Version: ===================================== 
+//=
+//= 1.0 - Creation
+//=
+//===== Compatible With: ===================================== 
+//= rAthena SVN
+//= hercules SVN
+//===== Description: ========================================= 
+//=
+//= A npc enabling to save, restore and manage builds
+//=
+//===== Todo Remaining: ======================================
+//
+//===== Additional Comments: =================================
+//
+//
+//============================================================
+
+prontera,145,164,3	script	Build Master::alabuma	4_M_ROYALGUARD,{
+	.@npcname$ = "[Build Manager]";
+	mes .@npcname$;
+	mes "Hello to you, " + strcharinfo(0) + ".";
+	mes "I'm the Build Manager.";
+	mes "I can save, restore and let you manage some builds.";
+	mes "What can I do for you?";
+	switch(select("Stats Build","Skills Build","Equips Build"))
+	{
+		case 1:
+			goto OnStatBuild;
+			break;
+		case 2:
+			goto OnSkillBuild;
+			break;
+		case 3:
+			goto OnStuffBuild;
+			break;
+	}
+	close;
+	
+OnStatBuild:
+	next;
+	mes .@npcname$;
+	mes "Allright, let's see your stats builds then.";
+	switch(select("Restore Stats Build","Save Current Stats","Manage Builds"))
+	{
+		case 1:
+			goto OnStRestore;
+			break;
+		case 2:
+			goto OnStSave;
+			break;
+		case 3:
+			goto OnStManage;
+			break;
+	}
+	end;
+	
+OnStRestore:
+	next;
+	mes .@npcname$;
+	if(.paid == 1)
+	{
+		mes "I'll ask you " + .stPrice + " for this.";
+		if(select("Okay","Cancel") == 1)
+		{
+			if(Zeny >= .stPrice)
+			{
+				Zeny -= .stPrice;
+				next;
+				mes .@npcname$;
+			}
+			else
+			{
+				next;
+				mes .@npcname$;
+				mes "You don't have this money...";
+				close;
+			}
+		}
+	}
+	if(STBUILDCNT > 0)
+	{
+		mes "Choose a build to restore.";
+		.@menu$ = "";
+		explode(.@names$, STBUILDNAME$, "|");
+		for(.@i = 0; .@i < STBUILDCNT; .@i++)
+		{
+			.@menu$ += (.@i == 0 ? "" : ":") + replacestr(.@names$[.@i], "_", " ");
+		}
+		.@choice = select(.@menu$) - 1;
+		next;
+		mes .@npcname$;
+		mes "Okay, so we're switching to the " + replacestr(.@names$[.@i], "_", " ") + ", right?";
+		switch(select("Confirm","Let me change"))
+		{
+			case 1:
+				specialeffect 512;
+				.@stats = getd("STBUILD" + .@choice);
+				.@stats2 = getd("STBUILD" + .@choice + "_2");
+				.@statsr = getd("STBUILD" + .@choice + "_R");
+				resetstatus;
+				statusup2 bStr,  .@stats & 255 - 1;
+				statusup2 bInt, (.@stats >> 8)  & 255 - 1;
+				statusup2 bDex, (.@stats >> 16) & 255 - 1;
+				statusup2 bLuk, .@stats2 & 255 - 1;
+				statusup2 bVit, (.@stats2 >> 8) & 255 - 1;
+				statusup2 bAgi, (.@stats2 >> 16) & 255 - 1;
+				set StatusPoint, .@statsr;
+				specialeffect2 513;
+				next;
+				mes .@npcname$;
+				mes "Here you are my friend.";
+				break;
+			case 2:
+				goto OnStRestore;
+			case 255:
+				break;
+		}
+	}
+	else
+	{
+		mes "You need to save some builds before you'll be able to restore one...";
+	}
+	close;
+	
+OnStSave:
+	next;
+	mes .@npcname$;
+	if(STBUILDCNT >= .allowedBuildPerType)
+	{
+		mes "You've allready reached the highest count of build I can manage.";
+		mes "Delete another one before asking to save a new one.";
+	}
+	else
+	{
+		mes "So you wanna save your current build, hu?";
+		mes "We're considering this build.";
+		next;
+		mes .@npcname$;
+		mes "STR: " + bStr;
+		mes "AGI: " + bAgi;
+		mes "VIT: " + bVit;
+		mes "INT: " + bInt;
+		mes "LUK: " + bLuk;
+		mes "DEX: " + bDex;
+		mes "--------------";
+		mes "Remaining Points: " + StatusPoint;
+		next;
+		mes .@npcname$;
+		mes "Are we allright?";
+		if(select("Yes","No") == 1)
+		{
+			next;
+			mes .@npcname$;
+			mes "Okay, so please, enter a name for this build (less than 25 characters).";
+			input .@name$;
+			if(getstrlen(.@name$))
+			{
+				next;
+				mes .@npcname$;
+				mes "I told you, less than 25 characters...";
+				mes "Come back when you'll be ready...";
+				close;
+			}
+			next;
+			mes .@npcname$;
+			if(.paid == 1)
+			{
+				mes "I'll ask you " + .stPrice + " for this.";
+				if(select("Okay","Cancel") == 1)
+				{
+					if(Zeny >= .stPrice)
+					{
+						Zeny -= .stPrice;
+						next;
+						mes .@npcname$;
+					}
+					else
+					{
+						next;
+						mes .@npcname$;
+						mes "You don't have this money...";
+						close;
+					}
+				}
+			}
+			mes "Perfect";
+			mes "Here we go.";
+			specialeffect 512;
+			.@stats = bStr | (bInt << 8) | (bDex << 16) ;
+			.@stats2 = bLuk | (bVit << 8) | (bAgi << 16);
+			
+			STBUILDCNT++;
+			
+			setd("STBUILD" + STBUILDCNT, .@stats);
+			setd("STBUILD" + STBUILDCNT + "_2", .@stats2);
+			setd("STBUILD" + STBUILDCNT + "_R", StatusPoint);
+			
+			explode(.@names$, STBUILDNAME$, "|");
+			.@names$[STBUILDCNT - 1] = .@name$;
+			STBUILDNAME$ = implode(.@names$, "|");
+			
+			specialeffect2 513;
+			next;
+			mes .@npcname$;
+			mes "Here you are my friend.";
+		}
+	}
+	close;
+	
+OnStManage:
+	next;
+	mes .@npcname$;
+	mes "Allright, please select a build.";
+	.@menu$ = "";
+	explode(.@names$, STBUILDNAME$, "|");
+	for(.@i = 0; .@i < STBUILDCNT; .@i++)
+	{
+		.@menu$ += (.@i == 0 ? "" : ":") + replacestr(.@names$[.@i], "_", " ");
+	}
+	.@choice = select(.@menu$) - 1;
+	mes "Build " + .@names$[.@choice] + ". Retrieving informations...";
+	.@stats = getd("STBUILD" + .@choice);
+	.@stats2 = getd("STBUILD" + .@choice + "_2");
+	.@statsr = getd("STBUILD" + .@choice + "_R");
+	.@Str =  .@stats & 255 - 1;
+	.@Int = (.@stats >> 8)  & 255 - 1;
+	.@Dex = (.@stats >> 16) & 255 - 1;
+	.@Luk = .@stats2 & 255 - 1;
+	.@Vit = (.@stats2 >> 8) & 255 - 1;
+	.@Agi = (.@stats2 >> 16) & 255 - 1;
+	.@stPoints = .@statsr;
+	next;
+	mes .@npcname$;
+	mes "--------" + .@names$[.@choice] + "---------";
+	mes "STR: " + .@Str;
+	mes "AGI: " + .@Agi;
+	mes "VIT: " + .@Vit;
+	mes "INT: " + .@Int;
+	mes "LUK: " + .@Luk;
+	mes "DEX: " + .@Dex;
+	mes "--------------";
+	mes "Remaining Points: " + .@stPoints;
+	
+	next;
+	mes .@npcname$;
+	mes "What do you want to do with this build?";
+	if(select("Keep it as it is","Delete it") == 2)
+	{
+		specialeffect 512;
+		
+		if(.@choice < STBUILDCNT)
+		{
+			for(.@i=.@choice+1; .@i<=STBUILDCNT; .@i++)
+			{
+				.@stats = getd("STBUILD" + (.@i + 1));
+				.@stats2 = getd("STBUILD" + (.@i + 1) + "_2");
+				.@statsr = getd("STBUILD" + (.@i + 1) + "_R");
+								
+				setd("STBUILD" + .@i, .@stats);
+				setd("STBUILD" + .@i + "_2", .@stats2);
+				setd("STBUILD" + .@i + "_R", .@statsr);
+				
+				.@names$[.@i] = .@names$[.@i+1];
+			}
+		}	
+		
+		setd("STBUILD" + STBUILDCNT, 0);
+		setd("STBUILD" + STBUILDCNT + "_2", 0);
+		setd("STBUILD" + STBUILDCNT + "_R", 0);
+		
+		STBUILDCNT--;
+		deletearray .@names$[.@choice], 1;
+		STBUILDNAME$ = implode(.@names$, "|");
+		specialeffect2 513;
+	}
+	close;
+	
+
+OnStuffBuild:
+	next;
+	mes .@npcname$;
+	mes "Allright, let's see your stuff builds then.";
+	switch(select("Restore Stuffs Build","Save Current Stuffs","Manage Builds"))
+	{
+		case 1:
+			goto OnSRestore;
+			break;
+		case 2:
+			goto OnSSave;
+			break;
+		case 3:
+			goto OnSManage;
+			break;
+	}
+	end;
+	
+OnSRestore:
+	next;
+	mes .@npcname$;
+	if(.paid == 1)
+	{
+		mes "I'll ask you " + .sPrice + " for this.";
+		if(select("Okay","Cancel") == 1)
+		{
+			if(Zeny >= .sPrice)
+			{
+				Zeny -= .sPrice;
+				next;
+				mes .@npcname$;
+			}
+			else
+			{
+				next;
+				mes .@npcname$;
+				mes "You don't have this money...";
+				close;
+			}
+		}
+	}
+	if(SBUILDCNT > 0)
+	{
+		mes "Choose a build to restore.";
+		.@menu$ = "";
+		explode(.@names$, SBUILDNAME$, "|");
+		for(.@i = 0; .@i < SBUILDCNT; .@i++)
+		{
+			.@menu$ += (.@i == 0 ? "" : ":") + replacestr(.@names$[.@i], "_", " ");
+		}
+		.@choice = select(.@menu$) - 1;
+		next;
+		mes .@npcname$;
+		mes "Okay, so we're switching to the " + replacestr(.@names$[.@i], "_", " ") + " build, right?";
+		mes "Remember that I'll be able to auto equip the items only if you have it on you.";
+		mes "Also, if you have several item of the same kind, I'll take the first one...";
+		switch(select("Confirm","Let me change"))
+		{
+			case 1:
+				specialeffect 512;
+				.@stuff = getd("SBUILD" + .@choice);
+				.@stuff2 = getd("SBUILD" + .@choice + "_2");
+				.@stuff3 = getd("SBUILD" + .@choice + "_3");
+				.@stuff4 = getd("SBUILD" + .@choice + "_4");
+				
+				.@tHead =  .@stuff & 255 - 1;
+				.@mHead = (.@stuff >> 8)  & 255 - 1;
+				.@lHead = (.@stuff >> 16) & 255 - 1;
+				.@arm = .@stuff2 & 255 - 1;
+				.@lHand = (.@stuff2 >> 8) & 255 - 1;
+				.@rHand = (.@stuff2 >> 16) & 255 - 1;
+				.@gar = .@stuff3 & 255 - 1;
+				.@sho = (.@stuff3 >> 8) & 255 - 1;
+				.@rAcc = .@stuff4 & 255 - 1;
+				.@lAcc = (.@stuff4 >> 8) & 255 - 1;
+	
+				equip(.@tHead);
+				equip(.@mHead);
+				equip(.@lHead);
+				equip(.@arm);
+				equip(.@lHand);
+				equip(.@rHand);
+				equip(.@gar);
+				equip(.@sho);
+				equip(.@rAcc);
+				equip(.@lAcc);
+				
+				specialeffect2 513;
+				next;
+				mes .@npcname$;
+				mes "Here you are my friend.";
+				break;
+			case 2:
+				goto OnStRestore;
+			case 255:
+				break;
+		}
+	}
+	else
+	{
+		mes "You need to save some builds before you'll be able to restore one...";
+	}
+	close;
+	
+OnStSave:
+	next;
+	mes .@npcname$;
+	if(SBUILDCNT >= .allowedBuildPerType)
+	{
+		mes "You've allready reached the highest count of build I can manage.";
+		mes "Delete another one before asking to save a new one.";
+	}
+	else
+	{
+		mes "So you wanna save your current build, hu?";
+		mes "We're considering this build.";
+		next;
+		mes .@npcname$;
+		mes "Top Headgear: " + getequipid(EQI_HEAD_TOP);
+		mes "Mid Headgear: " + getequipid(EQI_HEAD_MID);
+		mes "Low Headgear: " + getequipid(EQI_HEAD_LOW);
+		mes "Armor: " + getequipid(EQI_ARMOR);
+		mes "Left Hand: " + getequipid(EQI_HAND_L);
+		mes "Right Hand: " + getequipid(EQI_HAND_R);
+		mes "Garment: " + getequipid(EQI_GARMENT);
+		mes "Shoes: " + getequipid(EQI_SHOES);
+		mes "Right Accessory: " + getequipid(EQI_ACC_R);
+		mes "Left Accessory: " + getequipid(EQI_ACC_L);
+		next;
+		mes .@npcname$;
+		mes "Are we allright?";
+		if(select("Yes","No") == 1)
+		{
+			next;
+			mes .@npcname$;
+			mes "Okay, so please, enter a name for this build (less than 25 characters).";
+			input .@name$;
+			if(getstrlen(.@name$))
+			{
+				next;
+				mes .@npcname$;
+				mes "I told you, less than 25 characters...";
+				mes "Come back when you'll be ready...";
+				close;
+			}
+			next;
+			mes .@npcname$;
+			if(.paid == 1)
+			{
+				mes "I'll ask you " + .sPrice + " for this.";
+				if(select("Okay","Cancel") == 1)
+				{
+					if(Zeny >= .sPrice)
+					{
+						Zeny -= .sPrice;
+						next;
+						mes .@npcname$;
+					}
+					else
+					{
+						next;
+						mes .@npcname$;
+						mes "You don't have this money...";
+						close;
+					}
+				}
+			}
+			mes "Perfect";
+			mes "Here we go.";
+			specialeffect 512;
+			.@stuff = getequipid(EQI_HEAD_TOP) | (getequipid(EQI_HEAD_MID) << 8) | (getequipid(EQI_HEAD_LOW) << 16);
+			.@stuff2 = getequipid(EQI_ARMOR) | (getequipid(EQI_HAND_L) << 8) | (getequipid(EQI_HAND_R) << 16);
+			.@stuff3 = getequipid(EQI_GARMENT) | (getequipid(EQI_SHOES) << 8);
+			.@stuff4 = getequipid(EQI_ACC_R) | (getequipid(EQI_ACC_L) << 8);
+			
+			SBUILDCNT++;
+			
+			setd("SBUILD" + SBUILDCNT, .@stuff);
+			setd("SBUILD" + SBUILDCNT + "_2", .@stuff2);
+			setd("SBUILD" + SBUILDCNT + "_3", .@stuff3);
+			setd("SBUILD" + SBUILDCNT + "_4", .@stuff4);
+			
+			explode(.@names$, SBUILDNAME$, "|");
+			.@names$[SBUILDCNT - 1] = .@name$;
+			SBUILDNAME$ = implode(.@names$, "|");
+			
+			specialeffect2 513;
+			next;
+			mes .@npcname$;
+			mes "Here you are my friend.";
+		}
+	}
+	close;
+	
+OnStManage:
+	next;
+	mes .@npcname$;
+	mes "Allright, please select a build.";
+	.@menu$ = "";
+	explode(.@names$, SBUILDNAME$, "|");
+	for(.@i = 0; .@i < SBUILDCNT; .@i++)
+	{
+		.@menu$ += (.@i == 0 ? "" : ":") + replacestr(.@names$[.@i], "_", " ");
+	}
+	.@choice = select(.@menu$) - 1;
+	mes "Build " + .@names$[.@choice] + ". Retrieving informations...";
+	
+	.@stuff = getd("SBUILD" + .@choice);
+	.@stuff2 = getd("SBUILD" + .@choice + "_2");
+	.@stuff3 = getd("SBUILD" + .@choice + "_3");
+	.@stuff4 = getd("SBUILD" + .@choice + "_4");
+	
+	.@tHead =  .@stuff & 255 - 1;
+	.@mHead = (.@stuff >> 8)  & 255 - 1;
+	.@lHead = (.@stuff >> 16) & 255 - 1;
+	.@arm = .@stuff2 & 255 - 1;
+	.@lHand = (.@stuff2 >> 8) & 255 - 1;
+	.@rHand = (.@stuff2 >> 16) & 255 - 1;
+	.@gar = .@stuff3 & 255 - 1;
+	.@sho = (.@stuff3 >> 8) & 255 - 1;
+	.@rAcc = .@stuff4 & 255 - 1;
+	.@lAcc = (.@stuff4 >> 8) & 255 - 1;
+				
+	next;
+	mes .@npcname$;
+	mes "--------" + .@names$[.@choice] + "---------";
+	
+	mes "Top Headgear: " + getequipid(.@tHead);
+	mes "Mid Headgear: " + getequipid(.@mHead);
+	mes "Low Headgear: " + getequipid(.@lHead);
+	mes "Armor: " + getequipid(.@arm);
+	mes "Left Hand: " + getequipid(.@lHand);
+	mes "Right Hand: " + getequipid(.@rHand);
+	mes "Garment: " + getequipid(.@gar);
+	mes "Shoes: " + getequipid(.@sho);
+	mes "Right Accessory: " + getequipid(.@rAcc);
+	mes "Left Accessory: " + getequipid(.@lAcc);
+		
+	mes "--------------";
+	
+	next;
+	mes .@npcname$;
+	mes "What do you want to do with this build?";
+	if(select("Keep it as it is","Delete it") == 2)
+	{
+		specialeffect 512;
+		
+		if(.@choice < SBUILDCNT)
+		{
+			for(.@i=.@choice+1; .@i<=SBUILDCNT; .@i++)
+			{
+				.@stuff = getd("SBUILD" + (.@i + 1));
+				.@stuff2 = getd("SBUILD" + (.@i + 1) + "_2");
+				.@stuff3 = getd("SBUILD" + (.@i + 1) + "_3");
+				.@stuff4 = getd("SBUILD" + (.@i + 1) + "_4");
+								
+				setd("SBUILD" + .@i, .@stuff);
+				setd("SBUILD" + .@i + "_2", .@stuff2);
+				setd("SBUILD" + .@i + "_3", .@stuff3);
+				setd("SBUILD" + .@i + "_4", .@stuff4);
+				
+				.@names$[.@i] = .@names$[.@i+1];
+			}
+		}	
+		
+		setd("SBUILD" + SBUILDCNT, 0);
+		setd("SBUILD" + SBUILDCNT + "_2", 0);
+		setd("SBUILD" + SBUILDCNT + "_3", 0);
+		setd("SBUILD" + SBUILDCNT + "_4", 0);
+		
+		SBUILDCNT--;
+		deletearray .@names$[.@choice], 1;
+		SBUILDNAME$ = implode(.@names$, "|");
+		specialeffect2 513;
+	}
+	close;	
+	
+	
+OnSkillBuild:
+	next;
+	mes .@npcname$;
+	mes "Allright, let's see your skills builds then.";
+	switch(select("Restore Skills Build","Save Current Skills","Manage Builds"))
+	{
+		case 1:
+			goto OnSkRestore;
+			break;
+		case 2:
+			goto OnSkSave;
+			break;
+		case 3:
+			goto OnSkManage;
+			break;
+	}
+	end;
+	
+OnSkRestore:
+	next;
+	mes .@npcname$;
+	if(.paid == 1)
+	{
+		mes "I'll ask you " + .skPrice + " for this.";
+		if(select("Okay","Cancel") == 1)
+		{
+			if(Zeny >= .skPrice)
+			{
+				Zeny -= .skPrice;
+				next;
+				mes .@npcname$;
+			}
+			else
+			{
+				next;
+				mes .@npcname$;
+				mes "You don't have this money...";
+				close;
+			}
+		}
+	}
+	if(SKBUILDCNT > 0)
+	{
+		mes "Choose a build to restore.";
+		.@menu$ = "";
+		explode(.@names$, SKBUILDNAME$, "|");
+		for(.@i = 0; .@i < SKBUILDCNT; .@i++)
+		{
+			.@menu$ += (.@i == 0 ? "" : ":") + replacestr(.@names$[.@i], "_", " ");
+		}
+		.@choice = select(.@menu$) - 1;
+		next;
+		mes .@npcname$;
+		mes "Okay, so we're switching to the " + replacestr(.@names$[.@i], "_", " ") + " build, right?";
+		mes "Remember that I'll be able to auto equip the items only if you have it on you.";
+		mes "Also, if you have several item of the same kind, I'll take the first one...";
+		switch(select("Confirm","Let me change"))
+		{
+			case 1:
+				specialeffect 512;
+				.@stuff = getd("SKBUILD" + .@choice);
+				
+				.@tHead =  .@stuff & 255 - 1;
+				.@mHead = (.@stuff >> 8)  & 255 - 1;
+				.@lHead = (.@stuff >> 16) & 255 - 1;
+				.@arm = .@stuff2 & 255 - 1;
+				.@lHand = (.@stuff2 >> 8) & 255 - 1;
+				.@rHand = (.@stuff2 >> 16) & 255 - 1;
+				.@gar = .@stuff3 & 255 - 1;
+				.@sho = (.@stuff3 >> 8) & 255 - 1;
+				.@rAcc = .@stuff4 & 255 - 1;
+				.@lAcc = (.@stuff4 >> 8) & 255 - 1;
+	
+				equip(.@tHead);
+				equip(.@mHead);
+				equip(.@lHead);
+				equip(.@arm);
+				equip(.@lHand);
+				equip(.@rHand);
+				equip(.@gar);
+				equip(.@sho);
+				equip(.@rAcc);
+				equip(.@lAcc);
+				
+				specialeffect2 513;
+				next;
+				mes .@npcname$;
+				mes "Here you are my friend.";
+				break;
+			case 2:
+				goto OnStRestore;
+			case 255:
+				break;
+		}
+	}
+	else
+	{
+		mes "You need to save some builds before you'll be able to restore one...";
+	}
+	close;
+	
+OnInitSkillList:
+	switch(Class)
+	{				
+		case Job_Star_Gladiator:
+		case Job_Star_Gladiator2:
+			copyarray .@skillList[getarraysize(.@skillList)], .TkSkillList[0], getarraysize(.TkSkillList);
+			copyarray .@skillList[getarraysize(.@skillList)], .SgSkillList[0], getarraysize(.SgSkillList);
+			copyarray .@skillNames$[getarraysize(.@skillNames$)], .TkSkillList$[0], getarraysize(.TkSkillList$);
+			copyarray .@skillNames$[getarraysize(.@skillNames$)], .SgSkillList$[0], getarraysize(.SgSkillList$);
+			copyarray .@skillMaxLvls[getarraysize(.@skillMaxLvls)], .TkSkillList[0], getarraysize(.TkSkillListLvl);
+			copyarray .@skillMaxLvls[getarraysize(.@skillMaxLvls)], .SgSkillList[0], getarraysize(.SgSkillListLvl);
+			break;
+		case Job_Soul_Linker:
+			copyarray .@skillList[getarraysize(.@skillList)], .TkSkillList[0], getarraysize(.TkSkillList);
+			copyarray .@skillList[getarraysize(.@skillList)], .SlSkillList[0], getarraysize(.SlSkillList);
+			copyarray .@skillNames$[getarraysize(.@skillNames$)], .TkSkillList[0], getarraysize(.TkSkillList$);
+			copyarray .@skillNames$[getarraysize(.@skillNames$)], .SlSkillList$[0], getarraysize(.SlSkillList$);
+			copyarray .@skillMaxLvls[getarraysize(.@skillMaxLvls)], .TkSkillList[0], getarraysize(.TkSkillListLvl);
+			copyarray .@skillMaxLvls[getarraysize(.@skillMaxLvls)], .SlSkillList[0], getarraysize(.SlSkillListLvl);
+			break;
+		case Job_Summoner:
+			copyarray .@skillList[getarraysize(.@skillList)], .SSkillList[0], getarraysize(.SSkillList);
+			copyarray .@skillNames$[getarraysize(.@skillNames$)], .SSkillList$[0], getarraysize(.SSkillList$);
+			copyarray .@skillMaxLvls[getarraysize(.@skillMaxLvls)], .SSkillList[0], getarraysize(.SSkillListLvl);
+			break;
+			
+			
+		case Job_Rune_Knight:
+		case Job_Rune_Knight_T:
+		case Job_Rune_Knight2:
+		case Job_Rune_Knight2_T:
+			copyarray .@skillList[getarraysize(.@skillList)], .RkSkillList[0], getarraysize(.RkSkillList);
+			copyarray .@skillNames$[getarraysize(.@skillNames$)], .RkSkillList$[0], getarraysize(.RkSkillList$);
+			copyarray .@skillMaxLvls[getarraysize(.@skillMaxLvls)], .RkSkillListLvl[0], getarraysize(.RkSkillListLvl);
+		case Job_Lord_Knight:
+		case Job_Lord_Knight2:
+			copyarray .@skillList[getarraysize(.@skillList)], .LkSkillList[0], getarraysize(.LkSkillList);
+			copyarray .@skillNames$[getarraysize(.@skillNames$)], .LkSkillList$[0], getarraysize(.LkSkillList$);
+			copyarray .@skillMaxLvls[getarraysize(.@skillMaxLvls)], .LkSkillListLvl[0], getarraysize(.LkSkillListLvl);
+			break;
+			
+		case Job_Arch_Bishop:
+		case Job_Arch_Bishop_T:
+			copyarray .@skillList[getarraysize(.@skillList)], .AbSkillList[0], getarraysize(.AbSkillList);
+			copyarray .@skillNames$[getarraysize(.@skillNames$)], .AbSkillList$[0], getarraysize(.AbSkillList$);
+			copyarray .@skillMaxLvls[getarraysize(.@skillMaxLvls)], .AbSkillListLvl[0], getarraysize(.AbSkillListLvl);
+		case Job_High_Priest:
+			copyarray .@skillList[getarraysize(.@skillList)], .HpSkillList[0], getarraysize(.HpSkillList);
+			copyarray .@skillNames$[getarraysize(.@skillNames$)], .HpSkillList$[0], getarraysize(.HpSkillList$);
+			copyarray .@skillMaxLvls[getarraysize(.@skillMaxLvls)], .HpSkillListLvl[0], getarraysize(.HpSkillListLvl);
+			break;
+			
+		case Job_Warlock:
+		case Job_Warlock_T:
+			copyarray .@skillList[getarraysize(.@skillList)], .WaSkillList[0], getarraysize(.WaSkillList);
+			copyarray .@skillNames$[getarraysize(.@skillNames$)], .WaSkillList$[0], getarraysize(.WaSkillList$);
+			copyarray .@skillMaxLvls[getarraysize(.@skillMaxLvls)], .WaSkillListLvl[0], getarraysize(.WaSkillListLvl);
+		case Job_High_Wizard:
+			copyarray .@skillList[getarraysize(.@skillList)], .HwSkillList[0], getarraysize(.HwSkillList);
+			copyarray .@skillNames$[getarraysize(.@skillNames$)], .HwSkillList$[0], getarraysize(.HwSkillList$);
+			copyarray .@skillMaxLvls[getarraysize(.@skillMaxLvls)], .HwSkillListLvl[0], getarraysize(.HwSkillListLvl);
+			break;
+			
+		case Job_Mechanic:
+		case Job_Mechanic_T:
+		case Job_Mechanic2:
+		case Job_Mechanic2_T:
+			copyarray .@skillList[getarraysize(.@skillList)], .MeSkillList[0], getarraysize(.MeSkillList);
+			copyarray .@skillNames$[getarraysize(.@skillNames$)], .MeSkillList$[0], getarraysize(.MeSkillList$);
+			copyarray .@skillMaxLvls[getarraysize(.@skillMaxLvls)], .MeSkillListLvl[0], getarraysize(.MeSkillListLvl);
+		case Job_Whitesmith:
+			copyarray .@skillList[getarraysize(.@skillList)], .WsSkillList[0], getarraysize(.WsSkillList);
+			copyarray .@skillNames$[getarraysize(.@skillNames$)], .MeSkillList$[0], getarraysize(.WsSkillList$);
+			copyarray .@skillMaxLvls[getarraysize(.@skillMaxLvls)], .WsSkillListLvl[0], getarraysize(.WsSkillListLvl);
+			break;
+			
+		case Job_Ranger:
+		case Job_Ranger_T:
+		case Job_Ranger2:
+		case Job_Ranger2_T:
+			copyarray .@skillList[getarraysize(.@skillList)], .RaSkillList[0], getarraysize(.RaSkillList);
+			copyarray .@skillNames$[getarraysize(.@skillNames$)], .RaSkillList$[0], getarraysize(.RaSkillList$);
+			copyarray .@skillMaxLvls[getarraysize(.@skillMaxLvls)], .RaSkillListLvl[0], getarraysize(.RaSkillListLvl);
+		case Job_Sniper:
+			copyarray .@skillList[getarraysize(.@skillList)], .SnSkillList[0], getarraysize(.SnSkillList);
+			copyarray .@skillNames$[getarraysize(.@skillNames$)], .SnSkillList$[0], getarraysize(.SnSkillList$);
+			copyarray .@skillMaxLvls[getarraysize(.@skillMaxLvls)], .SnSkillListLvl[0], getarraysize(.SnSkillListLvl);
+			break;
+			
+		case Job_Guillotine_Cross:
+		case Job_Guillotine_Cross_T:
+			copyarray .@skillList[getarraysize(.@skillList)], .GcSkillList[0], getarraysize(.GcSkillList);
+			copyarray .@skillNames$[getarraysize(.@skillNames$)], .GcSkillList$[0], getarraysize(.GcSkillList$);
+			copyarray .@skillMaxLvls[getarraysize(.@skillMaxLvls)], .GcSkillListLvl[0], getarraysize(.GcSkillListLvl);
+		case Job_Assassin_Cross:
+			copyarray .@skillList[getarraysize(.@skillList)], .AcSkillList[0], getarraysize(.AcSkillList);
+			copyarray .@skillNames$[getarraysize(.@skillNames$)], .AcSkillList$[0], getarraysize(.AcSkillList$);
+			copyarray .@skillMaxLvls[getarraysize(.@skillMaxLvls)], .AcSkillListLvl[0], getarraysize(.AcSkillListLvl);
+			break;
+			
+			
+		case Job_Royal_Guard:
+		case Job_Royal_Guard_T:
+		case Job_Royal_Guard2:
+		case Job_Royal_Guard2_T:
+			copyarray .@skillList[getarraysize(.@skillList)], .RGSkillList[0], getarraysize(.RGSkillList);
+			copyarray .@skillNames$[getarraysize(.@skillNames$)], .RGSkillList$[0], getarraysize(.RGSkillList$);
+			copyarray .@skillMaxLvls[getarraysize(.@skillMaxLvls)], .RGSkillListLvl[0], getarraysize(.RGSkillListLvl);
+		case Job_Paladin:
+		case Job_Paladin2:
+			copyarray .@skillList[getarraysize(.@skillList)], .PaSkillList[0], getarraysize(.PaSkillList);
+			copyarray .@skillNames$[getarraysize(.@skillNames$)], .PaSkillList$[0], getarraysize(.PaSkillList$);
+			copyarray .@skillMaxLvls[getarraysize(.@skillMaxLvls)], .PaSkillListLvl[0], getarraysize(.PaSkillListLvl);
+			break;
+			
+		case Job_Sura:
+		case Job_Sura_T:
+			copyarray .@skillList[getarraysize(.@skillList)], .SuSkillList[0], getarraysize(.SuSkillList);
+			copyarray .@skillNames$[getarraysize(.@skillNames$)], .SuSkillList$[0], getarraysize(.SuSkillList$);
+			copyarray .@skillMaxLvls[getarraysize(.@skillMaxLvls)], .SuSkillListLvl[0], getarraysize(.SuSkillListMaxLvl);
+		case Job_Champion:
+			copyarray .@skillList[getarraysize(.@skillList)], .ChSkillList[0], getarraysize(.ChSkillList);
+			copyarray .@skillNames$[getarraysize(.@skillNames$)], .ChSkillList$[0], getarraysize(.ChSkillList$);
+			copyarray .@skillMaxLvls[getarraysize(.@skillMaxLvls)], .ChSkillListLvl[0], getarraysize(.ChSkillListLvl);
+			break;
+			
+		case Job_Sorcerer:
+		case Job_Sorcerer_T:
+			copyarray .@skillList[getarraysize(.@skillList)], .SoSkillList[0], getarraysize(.SoSkillList);
+			copyarray .@skillNames$[getarraysize(.@skillNames$)], .SoSkillList$[0], getarraysize(.SoSkillList$);
+			copyarray .@skillMaxLvls[getarraysize(.@skillMaxLvls)], .SoSkillListLvl[0], getarraysize(.SoSkillListLvl);
+			break;
+		case Job_Professor:
+			copyarray .@skillList[getarraysize(.@skillList)], .PrSkillList[0], getarraysize(.PrSkillList);
+			copyarray .@skillNames$[getarraysize(.@skillNames$)], .PrSkillList$[0], getarraysize(.PrSkillList$);
+			copyarray .@skillMaxLvls[getarraysize(.@skillMaxLvls)], .PrSkillListLvl[0], getarraysize(.PrSkillListLvl);
+			break;
+		
+		case Job_Shadow_Chaser:
+		case Job_Shadow_Chaser_T:
+			copyarray .@skillList[getarraysize(.@skillList)], .ScSkillList[0], getarraysize(.ScSkillList);
+			copyarray .@skillNames$[getarraysize(.@skillNames$)], .ScSkillList$[0], getarraysize(.ScSkillList$);
+			copyarray .@skillMaxLvls[getarraysize(.@skillMaxLvls)], .ScSkillListLvl[0], getarraysize(.ScSkillListMaxLvl);
+		case Job_Stalker:
+			copyarray .@skillList[getarraysize(.@skillList)], .ThSkillList[0], getarraysize(.ThSkillList);
+			copyarray .@skillList[getarraysize(.@skillList)], .StSkillList[0], getarraysize(.StSkillList);
+			copyarray .@skillNames$[getarraysize(.@skillNames$)], .ThSkillList$[0], getarraysize(.ThSkillList$);
+			copyarray .@skillNames$[getarraysize(.@skillNames$)], .StSkillList$[0], getarraysize(.StSkillList$);
+			copyarray .@skillMaxLvls[getarraysize(.@skillMaxLvls)], .ThSkillListLvl[0], getarraysize(.ThSkillListLvl);
+			copyarray .@skillMaxLvls[getarraysize(.@skillMaxLvls)], .StSkillList[0], getarraysize(.StSkillListLvl);
+			break;
+			
+		case Job_Genetic:
+		case Job_Genetic_T:
+			copyarray .@skillList[getarraysize(.@skillList)], .GeSkillList[0], getarraysize(.GeSkillList);
+			copyarray .@skillNames$[getarraysize(.@skillNames$)], .GeSkillList[0], getarraysize(.GeSkillList);
+			copyarray .@skillMaxLvls[getarraysize(.@skillMaxLvls)], .GeSkillList[0], getarraysize(.GeSkillListMaxLvl);
+			break;
+		case Job_Creator:
+			copyarray .@skillList[getarraysize(.@skillList)], .CrSkillList[0], getarraysize(.CrSkillList);
+			copyarray .@skillNames$[getarraysize(.@skillNames$)], .CrSkillList$[0], getarraysize(.CrSkillList$);
+			copyarray .@skillMaxLvls[getarraysize(.@skillMaxLvls)], .CrSkillListLvl[0], getarraysize(.CrSkillListLvl);
+			break;
+			
+		case Job_Minstrel:
+		case Job_Minstrel_T:
+			copyarray .@skillList[getarraysize(.@skillList)], .MiSkillList[0], getarraysize(.MiSkillList);
+			copyarray .@skillNames$[getarraysize(.@skillNames$)], .MiSkillList$[0], getarraysize(.MiSkillList$);
+			copyarray .@skillMaxLvls[getarraysize(.@skillMaxLvls)], .MiSkillListLvl[0], getarraysize(.MiSkillListLvl);
+		case Job_Clown:
+			copyarray .@skillList[getarraysize(.@skillList)], .ClSkillList[0], getarraysize(.ClSkillList);
+			copyarray .@skillNames$[getarraysize(.@skillNames$)], .ClSkillList$[0], getarraysize(.ClSkillList$);
+			copyarray .@skillMaxLvls[getarraysize(.@skillMaxLvls)], .ClSkillListLvl[0], getarraysize(.ClSkillListLvl);
+			break;
+			
+		case Job_Wanderer:
+		case Job_Wanderer_T:
+			copyarray .@skillList[getarraysize(.@skillList)], .WanSkillList[0], getarraysize(.WanSkillList);
+			copyarray .@skillNames$[getarraysize(.@skillNames$)], .WanSkillList$[0], getarraysize(.WanSkillList$);
+			copyarray .@skillMaxLvls[getarraysize(.@skillMaxLvls)], .WanSkillListLvl[0], getarraysize(.WanSkillListLvl);
+		case Job_Gypsy:
+			copyarray .@skillList[getarraysize(.@skillList)], .GiSkillList[0], getarraysize(.GiSkillList);
+			copyarray .@skillNames$[getarraysize(.@skillNames$)], .GiSkillList$[0], getarraysize(.GiSkillList$);
+			copyarray .@skillMaxLvls[getarraysize(.@skillMaxLvls)], .GiSkillListLvl[0], getarraysize(.GiSkillListLvl);
+			break;
+			
+		case Job_Kagerou:
+			copyarray .@skillList[getarraysize(.@skillList)], .KaSkillList[0], getarraysize(.KaSkillList);
+			copyarray .@skillNames$[getarraysize(.@skillNames$)], .KaSkillList$[0], getarraysize(.KaSkillList$);
+			copyarray .@skillMaxLvls[getarraysize(.@skillMaxLvls)], .KaSkillListLvl[0], getarraysize(.KaSkillListLvl);
+			break;
+			
+		case Job_Oboro:
+			copyarray .@skillList[getarraysize(.@skillList)], .ObSkillList[0], getarraysize(.ObSkillList);
+			copyarray .@skillNames$[getarraysize(.@skillNames$)], .ObSkillList$[0], getarraysize(.ObSkillList$);
+			copyarray .@skillMaxLvls[getarraysize(.@skillMaxLvls)], .ObSkillListLvl[0], getarraysize(.ObSkillListLvl);
+			break;
+			
+		case Job_Rebellion:
+			copyarray .@skillList[getarraysize(.@skillList)], .ReSkillList[0], getarraysize(.ReSkillList);
+			copyarray .@skillNames$[getarraysize(.@skillNames$)], .ReSkillList$[0], getarraysize(.ReSkillList$);
+			copyarray .@skillMaxLvls[getarraysize(.@skillMaxLvls)], .ReSkillListLvl[0], getarraysize(.ReSkillListLvl);
+			break;
+			
+		default:
+			mes "Sorry but I can only work with Advanced / Trans / Third classes.";
+			close;
+	}
+	return;
+	
+OnSkSave:
+	next;
+	mes .@npcname$;
+	if(SKBUILDCNT >= .allowedBuildPerType)
+	{
+		mes "You've allready reached the highest count of build I can manage.";
+		mes "Delete another one before asking to save a new one.";
+	}
+	else
+	{
+		mes "So you wanna save your current build, hu?";
+		mes "Let's considere it then.";
+		next;
+		mes .@npcname$;
+		
+		callsub OnInitSkillList;
+		
+		next;
+		mes .@npcname$;
+		mes "Are we allright?";
+		if(select("Yes","No") == 1)
+		{
+			next;
+			mes .@npcname$;
+			mes "Okay, so please, enter a name for this build (less than 25 characters).";
+			input .@name$;
+			if(getstrlen(.@name$))
+			{
+				next;
+				mes .@npcname$;
+				mes "I told you, less than 25 characters...";
+				mes "Come back when you'll be ready...";
+				close;
+			}
+			next;
+			mes .@npcname$;
+			if(.paid == 1)
+			{
+				mes "I'll ask you " + .skPrice + " for this.";
+				if(select("Okay","Cancel") == 1)
+				{
+					if(Zeny >= .skPrice)
+					{
+						Zeny -= .skPrice;
+						next;
+						mes .@npcname$;
+					}
+					else
+					{
+						next;
+						mes .@npcname$;
+						mes "You don't have this money...";
+						close;
+					}
+				}
+			}
+			mes "Perfect";
+			mes "Here we go.";
+			specialeffect 512;
+			
+			.@skillLvl$ = "";
+			for(.@i = 0; .@i<getarraysize(.@skillList); .@i++)
+			{
+				.@skillLvl$ += (.@i == 0 ? "" : "|") + getskilllv(.@skillList[.@i]);
+			}
+			
+			SKBUILDCNT++;
+			
+			setd("SKBUILD" + SKBUILDCNT + "$", .@skillLvl$);
+			setd("SKBUILD" + SKBUILDCNT + "_C", Class);
+			
+			explode(.@names$, SKBUILDNAME$, "|");
+			.@names$[SKBUILDCNT - 1] = .@name$;
+			SKBUILDNAME$ = implode(.@names$, "|");
+			
+			specialeffect2 513;
+			next;
+			mes .@npcname$;
+			mes "Here you are my friend.";
+		}
+	}
+	close;
+	
+OnSkManage:
+	next;
+	mes .@npcname$;
+	mes "Allright, please select a build.";
+	.@menu$ = "";
+	explode(.@names$, SKBUILDNAME$, "|");
+	for(.@i = 0; .@i < SKBUILDCNT; .@i++)
+	{
+		.@menu$ += (.@i == 0 ? "" : ":") + .@names$[.@i];
+	}
+	.@choice = select(.@menu$) - 1;
+	mes "Build " + .@names$[.@choice] + ". Retrieving informations...";
+	
+	.@skillLvl$ = getd("SKBUILD" + .@choice + "$");
+	explode(.@skillsLvl$, .@skillLvl$, "|");
+	.@class = getd("SKBUILD" + .@choice + "_C");
+					
+	next;
+	mes .@npcname$;
+	callsub OnInitSkillList;
+	mes "--------" + .@names$[.@choice] + "---------";
+	mes "Active Class: " + .@class;
+	mes "--------------";
+	mes "Skills List:";
+	for(.@i = 0; .@i<getarraysize(.@skillList); .@i++)
+	{
+		mes "	Skill " + .@skillNames$[.@i] + " (lvl" + .@skillsLvl$[.@i] + "/" + .@skillMaxLvls[.@i] + ")";
+	}
+		
+	mes "--------------";
+	
+	next;
+	mes .@npcname$;
+	mes "What do you want to do with this build?";
+	if(select("Keep it as it is","Delete it") == 2)
+	{
+		specialeffect 512;
+		
+		if(.@choice < SKBUILDCNT)
+		{
+			for(.@i=.@choice+1; .@i<=SKBUILDCNT; .@i++)
+			{
+				.@stuff = getd("SKBUILD" + (.@i + 1));
+				.@stuff2 = getd("SKBUILD" + (.@i + 1) + "_2");
+				.@stuff3 = getd("SKBUILD" + (.@i + 1) + "_3");
+				.@stuff4 = getd("SKBUILD" + (.@i + 1) + "_4");
+								
+				setd("SKBUILD" + .@i, .@stuff);
+				setd("SKBUILD" + .@i + "_2", .@stuff2);
+				setd("SKBUILD" + .@i + "_3", .@stuff3);
+				setd("SKBUILD" + .@i + "_4", .@stuff4);
+				
+				.@names$[.@i] = .@names$[.@i+1];
+			}
+		}	
+		
+		setd("SKBUILD" + SKBUILDCNT, 0);
+		setd("SKBUILD" + SKBUILDCNT + "_2", 0);
+		setd("SKBUILD" + SKBUILDCNT + "_3", 0);
+		setd("SKBUILD" + SKBUILDCNT + "_4", 0);
+		
+		SKBUILDCNT--;
+		deletearray .@names$[.@choice], 1;
+		SKBUILDNAME$ = implode(.@names$, "|");
+		specialeffect2 513;
+	}
+	close;	
+	
+OnInit:
+	.allowedBuildPerType = 5;
+	.paid = 0; //set to 1 to ask a price to change build
+	.stPrice = 5000;
+	.sPrice = 10000;
+	.skPrice = 15000;
+	
+	//Classes T
+	setarray .LkSkillList[0],2,3,4,5,6,7,8,
+	55,56,57,58,59,60,61,62,63,64,
+	355,356,357,358,359,360;
+	setarray .LkSkillListMaxLvl[0],10,10,10,10,10,10,
+	10,10,10,10,5,10,5,10,1,5,
+	5,10,5,1,1,1;
+	setarray .LkSkillList$[0],"Sword Mastery","Two-Handed Sword Mastery","Increase HP Recovery","Bash","Provoke","Magnum Break","Endure",
+	"Spear Mastery","Pierce","Brandish Spear","Spear Stab","Spear Boomerang","Twohand Quicken","Counter Attack","Bowling Bash","Peco Peco Riding","Cavalier Mastery",
+	"Aura Blade","Parrying","Concentration","Tension Relax","Frenzy","Fury";
+	setarray .PaSkillList[0],0;
+	setarray .PaSkillListMaxLvl[0],0;
+	setarray .PaSkillList$[0],0;
+	setarray .HwSkillList[0],0;
+	setarray .HwSkillListMaxLvl[0],0;
+	setarray .HwSkillList$[0],0;
+	setarray .PrSkillList[0],0;
+	setarray .PrSkillListMaxLvl[0],0;
+	setarray .PrSkillList$[0],0;
+	setarray .HpSkillList[0],0;
+	setarray .HpSkillListMaxLvl[0],0;
+	setarray .HpSkillList$[0],0;
+	setarray .ChSkillList[0],0;
+	setarray .ChSkillListMaxLvl[0],0;
+	setarray .ChSkillList$[0],0;
+	setarray .WsSkillList[0],0;
+	setarray .WsSkillListMaxLvl[0],0;
+	setarray .WsSkillList$[0],0;
+	setarray .CrSkillList[0],0;
+	setarray .CrSkillListMaxLvl[0],0;
+	setarray .CrSkillList$[0],0;
+	setarray .SnSkillList[0],0;
+	setarray .SnSkillListMaxLvl[0],0;
+	setarray .SnSkillList$[0],0;
+	setarray .ClSkillList[0],0;
+	setarray .ClSkillListMaxLvl[0],0;
+	setarray .ClSkillList$[0],0;
+	setarray .GiSkillList[0],0;
+	setarray .GiSkillListMaxLvl[0],0;
+	setarray .GiSkillList$[0],0;
+	setarray .AcSkillList[0],0;
+	setarray .AcSkillListMaxLvl[0],0;
+	setarray .AcSkillList$[0],0;
+	setarray .StSkillList[0],0;
+	setarray .StSkillListMaxLvl[0],0;
+	setarray .StSkillList$[0],0;
+	setarray .ReSkillList[0],0;
+	setarray .ReSkillListMaxLvl[0],0;
+	setarray .ReSkillList$[0],0;
+	setarray .KaSkillList[0],0;
+	setarray .KaSkillListMaxLvl[0],0;
+	setarray .KaSkillList$[0],0;
+	setarray .ObSkillList[0],0;
+	setarray .ObSkillListMaxLvl[0],0;
+	setarray .ObSkillList$[0],0;
+	//Classes 3 And Extended
+	setarray .RKSkillList[0],2001,2002,2003,2004,2005,2006,2007,
+	2008,2009,2010,2011,2020,5004,5014;
+	setarray .RKSkillListMaxLvl[0],5,5,10,10,5,5,5,
+	10,5,10,5,10,1;
+	setarray .RKSkillList$[0],"Enchant Blade","Sonic Wave","Death Bound","Hundred Spear","Wind Cutter","Ignition Break","Dragon Training",
+	"Dragon Breath","Dragon Howling","Rune Mastery","Phantom Thrust","Dragon Breath - Water","Full Throttle";
+	setarray .RGSkillList[0],0;
+	setarray .RGSkillListMaxLvl[0],0;
+	setarray .RGSkillList$[0],0;
+	setarray .RaSkillList[0],0;
+	setarray .RaSkillListMaxLvl[0],0;
+	setarray .RaSkillList$[0],0;
+	setarray .MiSkillList[0],0;
+	setarray .MiSkillListMaxLvl[0],0;
+	setarray .MiSkillList$[0],0;
+	setarray .WanSkillList[0],0;
+	setarray .WanSkillListMaxLvl[0],0;
+	setarray .WanSkillList$[0],0;
+	setarray .WaSkillList[0],0;
+	setarray .WaSkillListMaxLvl[0],0;
+	setarray .WaSkillList$[0],0;
+	setarray .SoSkillList[0],0;
+	setarray .SoSkillListMaxLvl[0],0;
+	setarray .SoSkillList$[0],0;
+	setarray .MeSkillList[0],0;
+	setarray .MeSkillListMaxLvl[0],0;
+	setarray .MeSkillList$[0],0;
+	setarray .GeSkillList[0],0;
+	setarray .GeSkillListMaxLvl[0],0;
+	setarray .GeSkillList$[0],0;
+	setarray .AbSkillList[0],0;
+	setarray .AbSkillListMaxLvl[0],0;
+	setarray .AbSkillList$[0],0;
+	setarray .SuSkillList[0],0;
+	setarray .SuSkillListMaxLvl[0],0;
+	setarray .SuSkillList$[0],0;
+	setarray .GcSkillList[0],0;
+	setarray .GcSkillListMaxLvl[0],0;
+	setarray .GcSkillList$[0],0;
+	setarray .ScSkillList[0],0;
+	setarray .ScSkillListMaxLvl[0],0;
+	setarray .ScSkillList$[0],0;
+	end;
+}
