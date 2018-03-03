@@ -12,8 +12,6 @@
 
 OnStartWBoss:
 	.@force = 1;
-OnClock0030:
-OnClock0230:
 OnClock0430:
 OnClock0630:
 OnClock0830:
@@ -30,16 +28,16 @@ OnClock2230:
 		set .@spawnRand, rand(0, getarraysize(.wbMap$)-1);
 		set .lastRandId, rand(0, getarraysize(.wBossIds) - 1);
 		//RATHENA
-		monster .wbMap$[.@spawnRand],82,55,.wBossName$[.lastRandId],.wBossIds[.lastRandId],1,strnpcinfo(3) + "::OnWorldBossDied",2; 
-		set .wBossId, $@mobId[0];
-		setunitdata .wBossId, UMOB_MAXHP, .wBossHp[.@spawnRand];
+		//monster .wbMap$[.@spawnRand],82,55,.wBossName$[.lastRandId],.wBossIds[.lastRandId],1,strnpcinfo(3) + "::OnWorldBossDied",2; 
+		//set .wBossId, $@mobId[0];
+		//setunitdata .wBossId, UMOB_MAXHP, .wBossHp[.@spawnRand];
 		//HERCULES
-		//set .wBossId, monster(.wbMap$[.@spawnRand],0, 0,.wBossName$[.lastRandId],.wBossIds[.lastRandId],1,strnpcinfo(3) + "::OnWorldBossDied",2); 
-		//setunitdata(.wBossId, UDT_MAXHP, .wBossHp[.@spawnRand]);
+		set .wBossId, monster(.wbMap$[.@spawnRand],0, 0,.wBossName$[.lastRandId],.wBossIds[.lastRandId],1,strnpcinfo(3) + "::OnWorldBossDied",2); 
+		setunitdata(.wBossId, UDT_MAXHP, .wBossHp[.@spawnRand]);
 		
 		set .@chosenMap$, .@chosenMap$ + .wbMapName$[.@spawnRand] + "]";
 		
-		announce "[ System ] World Boss appeared in " + .@chosenMap$ + " !",bc_map,0xFF0000;
+		announce "[ System ] World Boss appeared in " + .@chosenMap$ + " !",bc_all,0xFF0000;
 		set .nextPopDay, gettimetick(2) + 259200; //next pop in 3 days, 60 for debug (1 min)
 		
 		set $lastPopMap$, .wbMap$[.@spawnRand];
@@ -60,7 +58,7 @@ OnClock2230:
 	}
 	end;
 	
-OnTimer10000:	
+OnTimer1000:	
 	set .timerCount, .timerCount + 10;
 	freeloop(1);
 	if(.timerCount == .bossAliveDuration * 60)
@@ -72,15 +70,8 @@ OnTimer10000:
 		killmonster $lastPopMap$, strnpcinfo(3) + "::OnCloneDied";
 		killmonster $lastPopMap$, strnpcinfo(3) + "::OnReducedBossDied";
 
-		for(set .@i,0; .@i<getarraysize($wbFighters); set .@i,.@i+1)
-		{
-			if(attachrid($wbFighters[.@i]) == 1)
-			{
-				set $wordBossPop, 0;
-				announce "[ System ] World Boss vanished without being killed...",bc_map,0x00FF00;
-				end;
-			}
-		}		
+		set $wordBossPop, 0;
+		announce "[ System ] World Boss vanished without being killed...",bc_map,0x00FF00;
 	}
 	set .@cellRange, 25;
 	switch(.timerCount)
@@ -89,11 +80,11 @@ OnTimer10000:
 			//1 min
 			mapannounce $lastPopMap$, "[ World Boss ] Raise! Raise, my army!", bc_map, 0xFF0000;
 			//RATHENA
-			getunitdata(.wBossId, .@worldBossData);
-			set .@x, .@worldBossData[UMOB_X];
-			set .@y, .@worldBossData[UMOB_Y];
+			//getunitdata(.wBossId, .@worldBossData);
+			//set .@x, .@worldBossData[UMOB_X];
+			//set .@y, .@worldBossData[UMOB_Y];
 			//HERCULES
-			//getmapxy(.@map$, .@x, .@y, UNITTYPE_MOB, .wBossId);
+			getmapxy(.@map$, .@x, .@y, UNITTYPE_MOB, .wBossId);
 			for(set .@i,0; .@i<getarraysize(.wbSlaveMobsId); set .@i,.@i+1)
 			{
 				for(set .@j,0; .@j<.wbSlaveMobsCount[.@i]; set .@j,.@j+1)
@@ -106,11 +97,11 @@ OnTimer10000:
 			//2 min, all summon cast skills
 			mapannounce $lastPopMap$, "[ World Boss ] You are all far beyond my control!", bc_map, 0xFF0000;
 			//RATHENA
-			getunitdata(.wBossId, .@worldBossData);
-			set .@x, .@worldBossData[UMOB_X];
-			set .@y, .@worldBossData[UMOB_Y];
+			//getunitdata(.wBossId, .@worldBossData);
+			//set .@x, .@worldBossData[UMOB_X];
+			//set .@y, .@worldBossData[UMOB_Y];
 			//HERCULES
-			//getmapxy(.@map$, .@x, .@y, UNITTYPE_MOB, .wBossId);
+			getmapxy(.@map$, .@x, .@y, UNITTYPE_MOB, .wBossId);
 			for(set .@i,0; .@i<getarraysize(.wbSlaveMobsId); set .@i,.@i+1)
 			{
 				areamobuseskill $lastPopMap$, .@x, .@y, .@cellRange * 2, .wbSlaveMobsId[.@i], .wbSummonSkillId[.lastRandId], 5, 3000,1,e_gg,3;
@@ -122,15 +113,19 @@ OnTimer10000:
 			monster $lastPopMap$,0,0,.wBossName$[.lastRandId],.wBossIds[.lastRandId],15,strnpcinfo(3) + "::OnReducedBossDied"; 
 			copyarray .@tempMobId[0], $@mobId[0], 15;
 			//RATHENA
-			getunitdata(.wBossId, .@worldBossData);
-			set .@hp, .@worldBossData[UMOB_HP];
+			//getunitdata(.wBossId, .@worldBossData);
+			//set .@hp, .@worldBossData[UMOB_HP];
 			//HERCULES
-			//set .@hp, getunitdata(.wBossId, UDT_HP);
+			set .@hp, getunitdata(.wBossId, UDT_HP);
 			set .@tempHp, .@hp / 15;
 			for(set .@i,0; .@i<getarraysize(.@tempMobId); set .@i,.@i+1)
 			{	
-				setunitdata .@tempMobId[.@i], UMOB_MAXHP, .@tempHp;
-				setunitdata .@tempMobId[.@i], UMOB_HP, .@tempHp;
+				//RATHENA
+				//setunitdata .@tempMobId[.@i], UMOB_MAXHP, .@tempHp;
+				//setunitdata .@tempMobId[.@i], UMOB_HP, .@tempHp;
+				//HERCULES
+				setunitdata .@tempMobId[.@i], UDT_MAXHP, .@tempHp;
+				setunitdata .@tempMobId[.@i], UDT_HP, .@tempHp;
 			}
 			break;
 		case 240:
@@ -142,11 +137,11 @@ OnTimer10000:
 				set .@deadSplit, 2;
 			}
 			//RATHENA
-			getunitdata(.wBossId, .@worldBossData);
-			set .@x, .@worldBossData[UMOB_X];
-			set .@y, .@worldBossData[UMOB_Y];
+			//getunitdata(.wBossId, .@worldBossData);
+			//set .@x, .@worldBossData[UMOB_X];
+			//set .@y, .@worldBossData[UMOB_Y];
 			//HERCULES
-			//getmapxy(.@map$, .@x, .@y, UNITTYPE_MOB, .wBossId);
+			getmapxy(.@map$, .@x, .@y, UNITTYPE_MOB, .wBossId);
 			for(set .@i,0; .@i<getarraysize(.deadMonstersId); set .@i,.@i+1)
 			{
 				areamonster $lastPopMap$, .@x - .@cellRange, .@y - .@cellRange, .@x + .@cellRange, .@y + .@cellRange, "Dead Corpses", .deadMonstersId[.@i], .@deadSplit, strnpcinfo(3) + "::OnSaveDied";  
@@ -156,11 +151,11 @@ OnTimer10000:
 			//5 min, pop clone of each player
 			mapannounce $lastPopMap$, "[ World Boss ] Fight against your own power you're so proud of, shall you?!", bc_map, 0xFF0000;
 			//RATHENA
-			getunitdata(.wBossId, .@worldBossData);
-			set .@x, .@worldBossData[UMOB_X];
-			set .@y, .@worldBossData[UMOB_Y];
+			//getunitdata(.wBossId, .@worldBossData);
+			//set .@x, .@worldBossData[UMOB_X];
+			//set .@y, .@worldBossData[UMOB_Y];
 			//HERCULES
-			//getmapxy(.@map$, .@x, .@y, UNITTYPE_MOB, .wBossId);
+			getmapxy(.@map$, .@x, .@y, UNITTYPE_MOB, .wBossId);
 			for(set .@i,0; .@i<getarraysize($wbFighters); set .@i,.@i+1)
 			{
 				if(attachrid($wbFighters[.@i]) == 1 && strcharinfo(3) == $lastPopMap$)
@@ -177,11 +172,11 @@ OnTimer10000:
 			//6 min
 			mapannounce $lastPopMap$, "[ World Boss ] Raise! Raise, my army!", bc_map, 0xFF0000;
 			//RATHENA
-			getunitdata(.wBossId, .@worldBossData);
-			set .@x, .@worldBossData[UMOB_X];
-			set .@y, .@worldBossData[UMOB_Y];
+			//getunitdata(.wBossId, .@worldBossData);
+			//set .@x, .@worldBossData[UMOB_X];
+			//set .@y, .@worldBossData[UMOB_Y];
 			//HERCULES
-			//getmapxy(.@map$, .@x, .@y, UNITTYPE_MOB, .wBossId);
+			getmapxy(.@map$, .@x, .@y, UNITTYPE_MOB, .wBossId);
 			for(set .@i,0; .@i<getarraysize(.wbSlaveMobsId); set .@i,.@i+1)
 			{
 				for(set .@j,0; .@j<.wbSlaveMobsCount[.@i]; set .@j,.@j+1)
@@ -194,17 +189,21 @@ OnTimer10000:
 			//7 min, autocast earthquake at 10% hp cost
 			mapannounce $lastPopMap$, "[ World Boss ] STOP BOTHERING ME, HUMANS!", bc_map, 0xFF0000;
 			//RATHENA
-			getunitdata(.wBossId, .@worldBossData);
-			set .@hp, .@worldBossData[UMOB_HP];
-			set .@mhp, .@worldBossData[UMOB_MAXHP];
-			set .@x, .@worldBossData[UMOB_X];
-			set .@y, .@worldBossData[UMOB_Y];
+			//getunitdata(.wBossId, .@worldBossData);
+			//set .@hp, .@worldBossData[UMOB_HP];
+			//set .@mhp, .@worldBossData[UMOB_MAXHP];
+			//set .@x, .@worldBossData[UMOB_X];
+			//set .@y, .@worldBossData[UMOB_Y];
 			//HERCULES
-			//set .@hp, getunitdata(.wBossId, UDT_HP);
-			//getmapxy(.@map$, .@x, .@y, UNITTYPE_MOB, .wBossId);
-			if(.@worldBossData[UMOB_HP] > 10 * .@mhp / 100)
+			set .@hp, getunitdata(.wBossId, UDT_HP);
+			set .@mhp, getunitdata(.wBossId, UDT_MAXHP);
+			getmapxy(.@map$, .@x, .@y, UNITTYPE_MOB, .wBossId);
+			if(.@hp > 10 * .@mhp / 100)
 			{
-				setunitdata .wBossId, UMOB_HP, .@hp - 10 * .@mhp / 100;
+				//RATHENA
+				//setunitdata .wBossId, UMOB_HP, .@hp - 10 * .@mhp / 100;
+				//HERCULES
+				setunitdata .wBossId, UDT_HP, .@hp - 10 * .@mhp / 100;
 				set .@id, .wbSlaveMobsId[rand(getarraysize(.wbSlaveMobsId) - 1)];
 				areamobuseskill $lastPopMap$, .@x, .@y, .@cellRange * 2, .@id, 653, 3, 3000, 1, e_gg, 3;
 			}
@@ -241,26 +240,30 @@ OnTimer10000:
 			set .@mobCount, mobcount($lastPopMap$, strnpcinfo(3) + "::OnReducedBossDied");
 			killmonster $lastPopMap$, strnpcinfo(3) + "::OnReducedBossDied";
 			//RATHENA
-			getunitdata(.wBossId, .@worldBossData);
-			set .@hp, .@worldBossData[UMOB_HP];
-			set .@mhp, .@worldBossData[UMOB_MAXHP];
-			if( .@hp + .@mobCount * 50000 > .@mhp )
-				setunitdata .wBossId, UMOB_HP, .@mhp;
-			else
-				setunitdata .wBossId, UMOB_HP, .@hp + .@mobCount * 50000;
+			//getunitdata(.wBossId, .@worldBossData);
+			//set .@hp, .@worldBossData[UMOB_HP];
+			//set .@mhp, .@worldBossData[UMOB_MAXHP];
+			//if( .@hp + .@mobCount * 50000 > .@mhp )
+			//	setunitdata .wBossId, UMOB_HP, .@mhp;
+			//else
+			//	setunitdata .wBossId, UMOB_HP, .@hp + .@mobCount * 50000;
 			//HERCULES
-			//set .@hp, getunitdata(.wBossId, UDT_HP);
-			//setunitdata .wBossId, UDT_HP, .@hp + .@mobCount * 50000;
+			set .@hp, getunitdata(.wBossId, UDT_HP);
+			set .@mhp, getunitdata(.wBossId, UDT_MAXHP);
+			if( .@hp + .@mobCount * 50000 > .@mhp )
+				setunitdata .wBossId, UDT_HP, .@mhp;
+			else
+				setunitdata .wBossId, UDT_HP, .@hp + .@mobCount * 50000;
 			break;
 		case 660:
 			//11 min, slave skill area
 			mapannounce $lastPopMap$, "[ World Boss ] Life and death are nothing to me!", bc_map, 0xFF0000;
 			//RATHENA
-			getunitdata(.wBossId, .@worldBossData);
-			set .@x, .@worldBossData[UMOB_X];
-			set .@y, .@worldBossData[UMOB_Y];
+			//getunitdata(.wBossId, .@worldBossData);
+			//set .@x, .@worldBossData[UMOB_X];
+			//set .@y, .@worldBossData[UMOB_Y];
 			//HERCULES
-			//getmapxy(.@map$, .@x, .@y, UNITTYPE_MOB, .wBossId);
+			getmapxy(.@map$, .@x, .@y, UNITTYPE_MOB, .wBossId);
 			for(set .@i,0; .@i<getarraysize(.wbSlaveMobsId); set .@i,.@i+1)
 			{
 				//BASILICA 362 (5) OR EVILLAND 670 (1)
@@ -295,11 +298,11 @@ OnPopClone:
 	{
 		set .@cellRange, 25;
 		//RATHENA
-		getunitdata(.wBossId, .@worldBossData);
-		set .@x, .@worldBossData[UMOB_X];
-		set .@y, .@worldBossData[UMOB_Y];
+		//getunitdata(.wBossId, .@worldBossData);
+		//set .@x, .@worldBossData[UMOB_X];
+		//set .@y, .@worldBossData[UMOB_Y];
 		//HERCULES
-		//getmapxy(.@map$, .@x, .@y, UNITTYPE_MOB, .wBossId);
+		getmapxy(.@map$, .@x, .@y, UNITTYPE_MOB, .wBossId);
 		clone $lastPopMap$, rand(.@x - .@cellRange, .@x + .@cellRange), rand(.@y - .@cellRange, .@y + .@cellRange), strnpcinfo(3) + "::OnCloneDied", getcharid(0);
 	}
 	end;
@@ -342,7 +345,7 @@ OnInit:
 	setarray .wbMapName$[0],
 		"Prontera";
 	setarray .wBossIds[0],
-		2320,2483,1917,2942,2131;
+		2320;//,2483,1917,2942,2131;
 	setarray .wBossHp[0],
 		20000000,30000000,40000000,50000000,60000000;
 	//Storm Gust, Meteor Storm, Lord of Vermillion, Bowling Bash, Kyrie Eleison
