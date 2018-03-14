@@ -71,7 +71,7 @@ OnTimer1000:
 		killmonster $lastPopMap$, strnpcinfo(3) + "::OnReducedBossDied";
 
 		set $wordBossPop, 0;
-		announce "[ System ] World Boss vanished without being killed...",bc_map,0x00FF00;
+		announce "[ System ] World Boss vanished without being killed...",bc_all,0x00FF00;
 	}
 	set .@cellRange, 25;
 	switch(.timerCount)
