@@ -15,7 +15,7 @@
 //
 //= Script automatique de l'event "Chercher le Cubeception".
 //= Actif toutes les deux heures à partir 00h00.
-prontera,163,292,3	script	Cubeception Guard	413,{
+prontera,163,292,3	script	Cubeception Guard	627,{ //4_M_PROFESSORWORM
 	set .@GMLevel,60;	// GM level required to access NPC.
 	set .@npcname$, "[Cubceptionnist]";
 
@@ -51,7 +51,7 @@ prontera,163,292,3	script	Cubeception Guard	413,{
 		case 1:
 			mes .@npcname$; mes "Perfect. Good luck !";
 			set $@event_cubeception_tabI,$@event_cubeception_tabI+1;
-			set $event_cubreception_playerInGame$[$@event_cubeception_tabI],strcharinfo(0);
+			set $event_cc_pig$[$@event_cubeception_tabI],strcharinfo(0);
 			close2;
 			$eventcubUsersAId[getarraysize(.eventUsersAId)] = getcharid(3);
 			warp .eventMap$,0,0;
@@ -93,7 +93,7 @@ prontera,163,292,3	script	Cubeception Guard	413,{
 	}
 
 	OnInit:
-		set $event_cubreception_playerInGame$,0;
+		set event_cc_pig$,0;
 		set $@event_cubeception_tabI,0;
 		set .eventMap$, "geffen";
 		setarray $eventcubUsersAId[0],0;
@@ -147,11 +147,11 @@ OnClock1200:
 			mapannounce .eventMap$,"Nobody win the event. What a shame !",bc_map | bc_blue;
 			sleep 3000;
 			for(set .@tmp1,1;.@tmp1<=$@event_cubeception_tabI;set .@tmp1,.@tmp1+1){
-	           	charcommand "#size "+$event_cubreception_playerInGame$[.@tmp1];
+	           	charcommand "#size "+event_cc_pig$[.@tmp1];
 				sleep 500;
 		    }
 		    sleep 2000;
-	   		deletearray $event_cubreception_playerInGame$,$@event_cubeception_tabI+1;
+	   		deletearray event_cc_pig$,$@event_cubeception_tabI+1;
 	   		set $@event_cubeception_tabI,0;
 
 			for (set .@i,0; .@i<getarraysize($eventcubUsersAId); set .@i,.@i+1)
@@ -198,11 +198,11 @@ OnClock1200:
 			killmonsterall .eventMap$;
 			set $@Cubeception_Actif, 0;
 			for(set .@tmp1,1;.@tmp1<=$@event_cubeception_tabI;set .@tmp1,.@tmp1+1){
-	           	charcommand "#size "+$event_cubreception_playerInGame$[.@tmp1];
+	           	charcommand "#size "+event_cc_pig$[.@tmp1];
 				sleep 500;
 		    }
 		    sleep 2000;
-	   		deletearray $event_cubreception_playerInGame$,$@event_cubeception_tabI+1;
+	   		deletearray event_cc_pig$,$@event_cubeception_tabI+1;
 	   		set $@event_cubeception_tabI,0;
 			for (set .@i,0; .@i<getarraysize($eventcubUsersAId); set .@i,.@i+1)
 			{
