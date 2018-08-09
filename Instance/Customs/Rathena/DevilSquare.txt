@@ -26,7 +26,7 @@
 // [                                                        ]
 // [========================================================]
 
-prontera,145,167,4	script	Devil Square Guardian::aldevsq	465,{
+prt_q,145,167,4	script	Devil Square Guardian::aldevsq	465,{
 OnStart:
 	set .@party_id, getcharid(1);
 	set .@is_leader, ( getcharid(0) == getpartyleader(.@party_id,2) );
@@ -180,7 +180,7 @@ OnPCLogoutEvent:
 	end;
 
 OnInit:
-	setarray .base_level,60,250;
+	setarray .base_level,60,255;
 	setarray $time_ds_limit,7200,300;
 	setarray .map$,"2@ds";
 	set .map_size, getarraysize( .map$ );
@@ -198,7 +198,7 @@ end;
 
 function	floor_monster	{
 	set .@npc_name$, getarg(0);
-	set .@map$, instance_mapname("2@ds", $instance_ds);
+	set .@map$, instance_mapname("2@ds", instance_id());
 	switch( 'instance_ds_floor ){
 		case 1:
 			setarray .@monster,1735,1736,1668,1745,1198,1388;
@@ -288,7 +288,7 @@ function	floor_reward	{
 OnInstanceInit:
 	set .@map$, strnpcinfo(4);
 	
-	set .@npc_name$, instance_npcname( strnpcinfo(0) );
+	set .@npc_name$, instance_npcname( strnpcinfo(0), instance_id() );
 	//HERCULES
 	//setmapflag .@map$,mf_zone,"Memorial Dungeon";
 	set 'instance_ds_floor, 1;
@@ -322,13 +322,13 @@ OnFloorSummon:
 	sleep 3000;
 	set .@map$, strnpcinfo(4);
 	
-	set .@npc_name$, instance_npcname( strnpcinfo(0) );
+	set .@npc_name$, instance_npcname( strnpcinfo(0), instance_id() );
 	floor_monster( .@npc_name$ );
 	end;
 
 OnGuardianDied:
 	set .@map$, strnpcinfo(4);
-	set .@npc_name$, instance_npcname( strnpcinfo(0) );
+	set .@npc_name$, instance_npcname( strnpcinfo(0), instance_id() );
 
 	killmonsterall .@map$, .@npc_name$ + "::OnNormalDied";
 	
@@ -344,7 +344,7 @@ OnGuardianDied:
 
 OnNormalDied: 
 	set .@map$, strnpcinfo(4);
-	set .@npc_name$, instance_npcname( strnpcinfo(0) );
+	set .@npc_name$, instance_npcname( strnpcinfo(0), instance_id() );
 	
 	//if there's no more monsters to kill, change level
 	if( mobcount( .@map$,.@npc_name$+"::OnNormalDied" ) == 0 ){
