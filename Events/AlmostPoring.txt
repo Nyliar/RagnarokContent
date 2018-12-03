@@ -108,13 +108,13 @@ OnPopoNameDead:
 			
 	if (.rewardMode == 1)
 	{
-		set .@id,rand( getarraysize(.@Prix) );
-		getitem .@Prix[.@id],1; // Prix reçus
+		set .@id,rand( getarraysize(.reward) );
+		getitem .reward[.@id],1;
 	}
 	else
 	{
 		logmes "[AlmostPoring] " + strcharinfo(0) + " wins the event and obtains " + .rewardAmt + " Currency Points.";
-		callfunc ("AddPoints",getcharid(3),.rewardAmt);
+		// callfunc ("AddPoints",getcharid(3),.rewardAmt);
 	}
 
 	goto OnEventEnd;
