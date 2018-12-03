@@ -35,7 +35,6 @@ prontera,163,288,6	script	Almost Poring::almopo	909,{
 		}
 	}
 	else {
-		mes .@npcname$;
 		mes "Sorry the event isn't active now...";
 		close;
 	}
@@ -110,7 +109,7 @@ OnPopoNameDead:
 	if (.rewardMode == 1)
 	{
 		set .@id,rand( getarraysize(.@Prix) );
-		getitem .@Prix[.@id],1; // Prix reçus
+		getitem .@Prix[.@id],1; // Prix reÃ§us
 	}
 	else
 	{
