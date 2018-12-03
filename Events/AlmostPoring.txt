@@ -1,7 +1,4 @@
 prontera,163,288,6	script	Almost Poring::almopo	909,{
-	set .eventMap$, "poring_w01";
-	
-	set .@npcname$, "[Almost Poring]";
 	mes .@npcname$;
 	
 	if ($@StartAlmostPoring == 1) {
@@ -153,6 +150,7 @@ OnInit:
 	7145;	// T-Shirt
 	set .rewardAmt, 250;
 	set .eventMap$, "poring_w01";
+	set .@npcname$, "[Almost Poring]";
 	setarray $eventalpUsersAId[0],0;
 	end;
 }
