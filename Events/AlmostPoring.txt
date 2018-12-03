@@ -1,5 +1,5 @@
 prontera,163,288,6	script	Almost Poring::almopo	909,{
-	mes .@npcname$;
+	mes .npcname$;
 	
 	if ($@StartAlmostPoring == 1) {
 		mes " ";
@@ -8,7 +8,7 @@ prontera,163,288,6	script	Almost Poring::almopo	909,{
 		switch( select ("~ Yes:~ No:~ Rules") )
 		{
 			case 1:
-				mes .@npcname$;
+				mes .npcname$;
 				mes " ";
 				mes "Allright, let's go !";
 				close2;
@@ -17,13 +17,13 @@ prontera,163,288,6	script	Almost Poring::almopo	909,{
 				end;
 				
 			case 2:
-				mes .@npcname$;
+				mes .npcname$;
 				mes " ";
 				mes "Farewell then.";
 				close;
 				
 			case 3:
-				mes .@npcname$;
+				mes .npcname$;
 				mes " ";
 				mes "The one who find the Almost Poring wins.";
 				mes "Be careful, errors can be deadly !";
@@ -150,7 +150,7 @@ OnInit:
 	7145;	// T-Shirt
 	set .rewardAmt, 250;
 	set .eventMap$, "poring_w01";
-	set .@npcname$, "[Almost Poring]";
+	set .npcname$, "[Almost Poring]";
 	setarray $eventalpUsersAId[0],0;
 	end;
 }
