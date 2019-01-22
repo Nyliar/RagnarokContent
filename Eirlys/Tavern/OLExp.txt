@@ -1,0 +1,123 @@
+// [========================================================]
+// [=============     Tavern Offline Exp	============]
+// [========================================================]
+// [ Version 1                                              ]
+// [========================================================]
+// [ Original script by: Nyliar				    ]
+// [========================================================]
+// [ Description:                                           ]
+// [--------------------------------------------------------]
+// [                                                        ]
+// [ - The tavern's offline exp system	    	   	    ]
+// [========================================================]
+// [ Changelog: (5 last updates)                            ]
+// [--------------------------------------------------------]
+// [                                                        ]
+// [ v0: Creation                      			    ]
+// [                                                        ]
+// [                                                        ]
+// [========================================================]
+// [                                                        ]
+// [========================================================]
+
+prt_in,113,82,5	script	Inn Keeper::eitaols	-1,{
+	if(.payingBonus)
+	{
+		.@npcname$ = "[Inn Keeper Lola]";
+		mes .@npcname$;
+		mes "Welcome to the Tavern!";
+		mes "Do you like a room for the night?";
+		mes "That's " + .roomPrice + "z.";
+		if(select("Yes","No") == 1)
+		{
+			next;
+			mes .@npcname$;
+			if(Zeny > .roomPrice)
+			{
+				mes "Thanks, hope you'll enjoy your stay.";
+				Zeny -= .roomPrice;
+				charcommand "#kick " + strcharinfo(0);
+			}
+			else
+			{
+				mes "Sorry but you're lacking money...";
+			}
+		}
+		close2;
+	}
+	end;
+
+OnPCLogin:
+	if(strcharinfo(3) == strnpcinfo(4) && OL_TIME_OUT > 0)
+	{
+		dispbottom "[Tavern] Time to wake up!";
+		sc_start SC_BLIND, 1000, 0;
+		
+		//same map, stop ol exp system
+		@OL_TIME_IN = gettimetick(2);
+		@diff_tick = OL_TIME_OUT - @OL_TIME_IN;
+		
+		.@bExp = @diff_tick * .expRate / 1000;
+		.@jExp = @diff_tick * .jexpRate / 1000;
+		
+		if(.@bExp > .expCap)
+		{
+			.@bExp = .expCap;
+		}
+		if(.@jExp > .expCap)
+		{
+			.@jExp = .expCap;
+		}
+		
+		.@dExp$ = callsub("DisplayNumber", .@bExp); 
+		.@djExp$ = callsub("DisplayNumber", .@bExp); 
+		
+		sc_end SC_BLIND;
+		
+		getexp .@bExp, .@jExp;
+		dispbottom "[Tavern] You've earned [" + .@dExp$ + "," + .@djExp$ + "] exp points while sleeping.";
+	}
+	end;
+	
+DisplayNumber:
+	.@exp$ = "";
+	.@currExp = getarg(1);
+	if(.@currExp > 1000000)
+	{
+		.@million = .@currExp / 1000000;
+		.@exp$ += .@million + "M.";
+		.@currExp = .@currExp - (.@million * 1000000);
+	}
+	if(.@currExp > 1000)
+	{
+		.@thousands = .@currExp / 1000;
+		.@exp$ += .@thousands + ".";
+		.@currExp = .@currExp - (.@thousands * 1000);
+	}
+	return .@exp$;
+
+OnPCLogout:
+	if(strcharinfo(3) == strnpcinfo(4))
+	{
+		//same map, start ol exp system
+		OL_TIME_OUT = gettimetick(2);
+	}
+	else
+	{
+		OL_TIME_OUT = -1;
+	}
+	end;
+
+OnInit:
+	.expRate = 1000; //1000 exp pt per second. Report to hour to get realistic amounts
+	.jexpRate = 500; //500 exp pt per second. Report to hour to get realistic amounts
+	.expCap = 1000000;
+	.payingBonus = 0; //set to 4 to display npc and require room buy
+	.roomPrice = 10000; //in zenies
+	
+	if(.payingBonus)
+	{
+		setnpcdisplay strnpcinfo(3), 4_F_NYDDHOG; //change sprite here
+	}
+	end;
+}
