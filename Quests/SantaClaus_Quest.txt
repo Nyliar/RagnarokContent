@@ -12,9 +12,9 @@ xmas_fild01,192,111,4	script	Santa Clause::prtsancla	4_M_SANTA,{
 		if(CHRISTMASQ == 0)
 		{
 			mes "Can you help me, my friend?";
-			mes "My imp started a strike three days ago...Christmas is really near now, and my basket is still empty...";
+			mes "My imps started a strike three days ago...Christmas is really near now, and my sleigh is still empty...";
 			mes "Can you help me get the childrens their gifts?";
-			mes "But you should hurry up...Only 3 hours lefts before I must leave...";
+			mes "You must hurry up...I can only stay for 3 hours before I must leave...";
 			set CHRISTMASQ, 1;
 			set .christmasLoot, 1;
 			initnpctimer;
@@ -22,7 +22,7 @@ xmas_fild01,192,111,4	script	Santa Clause::prtsancla	4_M_SANTA,{
 		else
 		{
 			mes "Thank you for your help! You've been my savior...";
-			mes "Here's a little gift, a bit earlier than the others but he...You've helped Santa!";
+			mes "Here's a little gift, a bit earlier than the others but hey...You've helped Santa!";
 			switch(.rankReached)
 			{
 				case 0:
@@ -86,7 +86,7 @@ xmas_fild01,192,111,4	script	Santa Clause::prtsancla	4_M_SANTA,{
 		else
 		{
 			mes "Sorry my child, but I'm a bit busy right now...";
-			mes "Damn imps...";
+			mes "Damned imps...";
 		}
 	}
 	close;
@@ -102,7 +102,7 @@ OnNPCKillEvent:
 	set .@monster_lvl, getmonsterinfo(killedrid, 1);
 	//higher the monster lvl, higher the chance
 	//1 chance over 4 for a 40 -> 50 lvl monster, 1/6 for 60 -> 70...
-	if (rand(0,100) <= (.@monster_lvl / 10) * 10 && CHRISTMASQ == 1 && .christmasLoot == 1)
+	if (CHRISTMASQ == 1 && .christmasLoot == 1 && rand(0,100) <= (.@monster_lvl / 10) * 10)
 	{
 		getitem .giftIds[rand(0,getarraysize(.giftIds) - 1)], 1;
 	}
