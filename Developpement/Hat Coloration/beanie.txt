@@ -1,0 +1,73 @@
+manuk,215,169, 5	script	Beanie	881,{
+
+	set .@npcname$,"[Beanie]";
+	
+	//Black Beanie 2014
+	setarray @itemBB[0], 5076, 983, 7230;
+	setarray @countitemBB[0], 1, 2, 2;
+	
+	//Blue Beanie 2015
+	setarray @itemBLB[0], 5076, 978, 7230;
+	setarray @countitemBLB[0], 1, 2, 2;
+
+	//Cyan Beanie 2016
+	setarray @itemCB[0], 5076, 978, 982, 7230;
+	setarray @countitemCB[0], 1, 2, 2, 2;
+
+	//Gold Beanie 2017
+	setarray @itemGB[0], 5076, 976, 7230;
+	setarray @countitemGB[0], 1, 2, 2;
+	
+	//Green Beanie 2018
+	setarray @itemGNB[0], 5076, 979, 7230;
+	setarray @countitemGNB[0], 1, 2, 2;
+	
+	//Purple  Beanie 2019
+	setarray @itemPB[0], 5076, 981, 7230;
+	setarray @countitemPB[0], 1, 2, 2;
+	
+	//Red Beanie 2020
+	setarray @itemRB[0], 5076, 975, 7230;
+	setarray @countitemRB[0], 1, 2, 2;
+	
+	
+	
+	mes .@npcname$;
+	mes "Bonjour ^3333FF" + strcharinfo(0) + "^000000!";
+	mes "Je peux te proposer quelque hats pour customiser ton Beanie.";
+	mes	"Ca t'interesse?!";
+	next;
+	mes .@npcname$;
+	mes "Voici ce que je peux te proposer:";
+	next;
+
+	switch(select("Black Beanie:Blue Beanie:Cyan Beanie:Gold Beanie:Green Beanie:Purple Beanie:Red Beanie:^777777Rien, merci...^000000"))
+	{
+		case 1 :
+ 		callfunc "mes_getitem_colo",.@npcname$,20014,@itemBB,@countitemBB, 1000000;
+
+		case 2 :
+ 		callfunc "mes_getitem_colo",.@npcname$,20015,@itemBLB,@countitemBLB, 1000000;
+
+		case 3 :
+ 		callfunc "mes_getitem_colo",.@npcname$,20016,@itemCB,@countitemCB, 1000000;
+
+		case 4 :
+ 		callfunc "mes_getitem_colo",.@npcname$,20017,@itemGB,@countitemGB, 1000000;
+
+		case 5 :
+		callfunc "mes_getitem_colo",.@npcname$,20018,@itemGNB,@countitemGNB, 1000000;
+
+		case 6 :
+ 		callfunc "mes_getitem_colo",.@npcname$,20019,@itemPB,@countitemPB, 1000000;
+		
+		case 7 :
+		callfunc "mes_getitem_colo",.@npcname$,2020,@itemRB,@countitemRB, 1000000;
+
+		// Quitter
+		case 8 :
+		mes @npcname$;
+		mes "Très bien. A bientôt !";
+		close;
+	}
+}

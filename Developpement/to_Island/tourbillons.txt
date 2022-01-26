@@ -1,0 +1,103 @@
+//tourbillons. 
+//Calc chance on touching it
+//chance to get back to thalys: 20%
+//chance to go to destination: 10%
+//chance to lose your mono: 1%
+//chance to enter in vanaheim: 1%
+//chance to being attacked by monster: 10%
+
+mer1,14,25,4	script	tourbillon::tourbillon1	723,2,2,{
+	end;
+	
+OnTouch:
+	set .@result, rand(0,50);
+
+	if ((.@result > 30))
+	{
+		callsub OnResetStateM;
+		warp "thalys_s", 289, 100;
+		dispbottom "Vous revenez à votre point de départ.";
+		undisguise;	
+	}
+	else if (.@result > 20 && .@result < 30)
+	{
+		callsub OnResetStateM;
+		warp @map$, @xdest, @ydest;
+		dispbottom "Vous arrivez directement à votre destination. Quelle chance!";
+		undisguise;
+	}
+	else if (.@result > 10 && .@result < 20)
+	{
+		dispbottom "Un monstre géant apparait! C'est le Roi des Mers!";
+		getmapxy(@mapname$,@mapx,@mapy,0,strcharinfo(0));
+		monster @mapname$,@mapx,@mapy,"Kraken",2194,1,"tourbillon1::OnMobKill"; 
+		undisguise;
+	}
+	else if (.@result == 1)
+	{
+		set SHIP, 0;	
+		callsub OnResetStateM;
+		warp "thalys_s", 289, 100;
+		dispbottom "Votre Mono a été englouti par le tourbillon...";
+		undisguise;
+	}
+	else if (.@result == 2)
+	{
+		callsub OnResetStateM;
+		warp "pirate_city", 208, 57;
+		dispbottom "Vous arrivez sur une plage que vous ne connaissez pas...";
+		undisguise;
+	}
+	else
+	{
+		dispbottom "Prenez garde, où le tourbillon vous engloutira.";
+	}
+	end;
+
+OnMobKill:
+	callsub OnResetStateM;
+	warp @map$, @xdest, @ydest;
+	dispbottom "Votre combat vous a fait dériver jusqu'à votre destination. Quelle chance!";
+	close;
+
+OnResetStateM:
+	attachrid($idattach);
+	for (set .@i, 0; .@i<getarraysize($map$); set .@i, .@i+1)
+	{
+		if (@warpm$ == ("mer" + (.@i+1)))
+		{
+			set $statem[.@i], 0;
+		}
+	}
+	deltimer strnpcinfo(3)+"::OnCalcAtk";
+	return;
+}
+
+mer1,115,41,0	duplicate(tourbillon1)	Tourbillon::tourbillon2	723,2,2
+mer1,115,41,0	duplicate(tourbillon1)	Tourbillon::tourbillon3	723,2,2
+mer1,115,41,0	duplicate(tourbillon1)	Tourbillon::tourbillon4	723,2,2
+mer1,115,41,0	duplicate(tourbillon1)	Tourbillon::tourbillon5	723,2,2
+
+mer2,115,41,0	duplicate(tourbillon1)	Tourbillon::tourbillon6	723,2,2
+mer2,115,41,0	duplicate(tourbillon1)	Tourbillon::tourbillon7	723,2,2
+mer2,115,41,0	duplicate(tourbillon1)	Tourbillon::tourbillon8	723,2,2
+mer2,115,41,0	duplicate(tourbillon1)	Tourbillon::tourbillon9	723,2,2
+mer2,115,41,0	duplicate(tourbillon1)	Tourbillon::tourbillon10	723,2,2
+
+mer3,115,41,0	duplicate(tourbillon1)	Tourbillon::tourbillon11	723,2,2
+mer3,115,41,0	duplicate(tourbillon1)	Tourbillon::tourbillon12	723,2,2
+mer3,115,41,0	duplicate(tourbillon1)	Tourbillon::tourbillon13	723,2,2
+mer3,115,41,0	duplicate(tourbillon1)	Tourbillon::tourbillon14	723,2,2
+mer3,115,41,0	duplicate(tourbillon1)	Tourbillon::tourbillon15	723,2,2
+
+mer4,115,41,0	duplicate(tourbillon1)	Tourbillon::tourbillon16	723,2,2
+mer4,115,41,0	duplicate(tourbillon1)	Tourbillon::tourbillon17	723,2,2
+mer4,115,41,0	duplicate(tourbillon1)	Tourbillon::tourbillon18	723,2,2
+mer4,115,41,0	duplicate(tourbillon1)	Tourbillon::tourbillon19	723,2,2
+mer4,115,41,0	duplicate(tourbillon1)	Tourbillon::tourbillon20	723,2,2
+
+mer5,115,41,0	duplicate(tourbillon1)	Tourbillon::tourbillon21	723,2,2
+mer5,115,41,0	duplicate(tourbillon1)	Tourbillon::tourbillon22	723,2,2
+mer5,115,41,0	duplicate(tourbillon1)	Tourbillon::tourbillon23	723,2,2
+mer5,115,41,0	duplicate(tourbillon1)	Tourbillon::tourbillon24	723,2,2
+mer5,115,41,0	duplicate(tourbillon1)	Tourbillon::tourbillon25	723,2,2

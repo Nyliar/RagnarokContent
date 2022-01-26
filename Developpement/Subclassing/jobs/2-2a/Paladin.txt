@@ -1,0 +1,96 @@
+//Le Livre d'Ymir http://www.bookofymir.net/
+//traduit par Myllena
+//===== eAthena Script ======================================= 
+//= Advance Class jobchanger after kRO Normals.
+//===== By: ==================================================
+//= Nana
+//= finished, optimized and tested by Lupus
+//===== Current Version: ===================================== 
+//= 1.3
+//===== Compatible With: ===================================== 
+//= eAthena 1.0 +
+//===== Description: ========================================= 
+//= Advance Class jobchanger after kRO Normals.
+//===== Additional Comments: ================================= 
+//= v1.1 Made all into functions, additional checks, etc. [Lupus]
+//= v1.2 Made numbers into constants. [Vicious]
+//= 1.3 Now saves/restores all the quest skills [Lupus]
+//============================================================ 
+
+valkyrie,53,39,3	script	Paladin#Valkyrie	752,{
+	if (SUBCLASSING == 1 && Class != 4015 && Class != 4008)
+	{
+		mes "[Paladin]";
+		mes "Tu as choisi le métier de Paladin en tant que classe Vane?";
+		mes "Es-tu bien sûr de ton choix? Il n'y a pas de machine arrière.";
+		switch(select("Oui","Non","Je ne sais pas, tu peux m'en dire plus?"))
+		{
+			case 1:
+				mes "Très bien. Qu'il en soit ainsi.";
+				set SUBCLASSING, 4015; 
+				getitem 21098, 1;
+				break;
+			case 2:
+				mes "Tu as raison. Réfléchis bien.";
+				break;
+			case 3:
+				mes "Tu veux en savoir plus? Bien sûr!";
+				mes "C'est logique. Vu le poids de ta décision sur ton futur.";
+				mes "En tant que Paladin, tu peux accéder aux skills suivants:";
+				mes "Pressure, Sacrifice, Gospel, Shield Chain, Divine Protection, Demon Bane.";
+				mes "Heal, Auto Guard, Shield Charge et Reflect Shield.";
+				mes "Voilà, tu en sais un peu plus. Réfléchis bien.";
+				break;
+		} 
+		close;
+	}
+	else if (ADVJOB == 0 || Upper != 1) {
+		set .@karma_d,rand(1,10);
+		if (.@karma_d > 4) {
+			mes "[Paladin]";
+			mes "Félicitations.";
+			mes "Honneur aux Guerriers!";
+			close;
+		}
+		mes "[Paladin]";
+		mes "N'oubliez jamais que la Guerre Sainte approche!";
+		mes "Nous devons nous tenir prêts!";
+		mes "Puisse la lumière de la justice éclairer toujours notre chemin!";
+		close;
+	}
+	else if (ADVJOB == Job_Paladin && Class == Job_Swordman_High && JobLevel > 39) {
+		mes "[Paladin]";
+		mes "La Guerre Sainte arrivera sur nous avant que nous ayons eu le temps de dire 'ouf'. Plus que jamais, nous avons besoin d'hommes et de femmes forts pour combattre pour le bien et la justice.";
+		next;
+		mes "[Paladin]";
+		mes "Souhaitez-vous rejoindre le côté des justes en tant que Paladin?";
+		next;
+		if (select("Non.:Oui.") == 1) {
+			mes "[Paladin]";
+			mes "Revenez quand vous vous sentirez prêt.";
+			next;
+			mes "[Paladin]";
+			mes "Honneur aux Guerriers!";
+			close;
+		}
+		if (SkillPoint) {
+			mes "[Paladin]";
+			mes "Vous n'avez pas terminé votre apprentissage.";
+			close;
+		}
+		jobchange Job_Paladin;
+		set ADVJOB,0;
+		mes "[Paladin]";
+		mes "Félicitations.";
+		mes "En tant que Paladin, j'espère que vous protègerez les plus faibles que vous, afin d'apporter la victoire durant la guerre imminente entre le bien et le mal.";
+		close;
+	}
+
+	mes "[Paladin]";
+	mes "Bienvenue au Walhalla, le Hall des Honneurs.";
+	next;
+	mes "[Paladin]";
+	mes "Faites comme chez vous.";
+	mes "Honneur aux Guerriers!";
+	close;
+}

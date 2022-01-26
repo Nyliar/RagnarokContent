@@ -1,0 +1,94 @@
+//Pousse Yggdrasil
+mora,181,174,4	script	Marque Elemental 1#1::me1	-1,{
+	switch(atoi(strnpcinfo(2)))
+	{
+		case 4:
+			set .@npcname$, "[Earth Mark]";
+			set .@appearance, "a rock.";
+			set .@previousElement, y;
+		case 2:
+			set .@npcname$, "[Water Mark]";
+			set .@appearance, "a drop";
+			set .@previousElement, y;	
+		case 3:
+			set .@npcname$, "[Air Mark]";
+			set .@appearance, "a gust of wind.";
+			set .@previousElement, y;
+		case 1:
+			set .@npcname$, "[Fire Mark]";
+			set .@appearance, "a flame.";
+			set .@previousElement, y;
+	}
+
+	set .@countTime, 120000 - atoi(strnpcinfo(2)) * 3000;	
+
+	mes .@npcname$;
+	if (#elemental_favor_q < 10)
+	{
+		mes "A strange mark adorn this wall.";
+		mes "It vaguely looks like " + .@appearance;
+	}
+	else
+	{
+		if (countitem($elemental_mark_item[atoi(strnpcinfo(2)) - 1])>=1)
+		{
+			mes "Do you wish to insert the Elemental Mark?";
+			switch(select("Yes","No"))
+			{
+				case 1:
+					if (.rightTime == 1)
+					{
+						delitem $elemental_mark_item[atoi(strnpcinfo(2)) - 1], 1;
+						mes "You insert the Mark.";
+						if (!atoi(strnpcinfo(2)) == 4)
+						{
+							mes "You only have " + .@countTime + " seconds left to act next.";
+							donpcevent "me"+(strnpcinfo(2)+1)+"::onTimerStart";
+						}
+						else
+						{
+							mapannounce strnpcinfo(4),"The four Elemental Marks have been actived.",bc_map|bc_yellow;
+							mapannounce strnpcinfo(4),"The door towards the Shoot is open...",bc_map|bc_yellow;
+							mapannounce strnpcinfo(4),"It's located where it all began...",bc_map|bc_yellow;
+							set $favor_elem_quest, 1;
+						}
+					}
+					else if (.rightTime == 0)
+					{
+						mes "It's already too late. You have to start again at the first Mark.";
+					}
+					else
+					{
+						mes "This Mark seems to be inactive.";
+					}
+					break;
+				case 2:
+					mes "You move aside carefully.";
+					break;
+			}
+		}
+		else
+		{
+			mes "You lack what it takes to proceed.";
+		}
+	}
+	close;
+
+OnInit:
+	set .rightTime, -1;
+	end;
+
+OnTimerStart:
+	set .rightTime, 1;
+	set .@countTime, 120000 - (atoi(strnpcinfo(2)) - 1) * 3000;	//9s, 6s puis 3s
+	addtimer .@countTime, "me"+(strnpcinfo(2))+"::OnTimerEnded";	
+	end;
+
+OnTimerEnded:
+	set .@rightTime, 0;
+	end;
+}
+
+mora,116,91,4	duplicate(me1)	Marque Elementaire 2#2::me2	-1
+mora,104,159,4	duplicate(me1)	Marque Elementaire 3#3::me3	-1
+mora,45,127,4	duplicate(me1)	Marque Elementaire 4#4::me4	-1

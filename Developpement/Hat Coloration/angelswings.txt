@@ -1,0 +1,80 @@
+alberta, 69, 238, 5	script	Angels Wings	100,{
+
+	set .@npcname$,"[Angels Wings]";
+	
+	//Black Angels Wings 20571
+	setarray @itemBAW[0], 2254, 983, 7230;
+	setarray @countitemBAW[0], 1, 2, 2;
+	
+	//Blue Angels Wings 20572
+	setarray @itemBLAW[0], 2254, 978, 7230;
+	setarray @countitemBLAW[0], 1, 2, 2;
+
+	//Cyan Angels Wings 20573
+	setarray @itemCAW[0], 2254, 978, 982, 7230;
+	setarray @countitemCAW[0], 1, 2, 2, 2;
+
+	//Gold Angels Wings 20574
+	setarray @itemGAW[0], 2254, 976, 7230;
+	setarray @countitemGAW[0], 1, 2, 2;
+	
+	//Green Angels Wings 20575
+	setarray @itemGNAW[0], 2254, 979, 7230;
+	setarray @countitemGNAW[0], 1, 2, 2;
+	
+	//Purple  Angels Wings 20576
+	setarray @itemPAW[0], 2254, 981, 7230;
+	setarray @countitemPAW[0], 1, 2, 2;
+	
+	//Red Angels Wings 20006
+	setarray @itemRAW[0], 2254, 975, 7230;
+	setarray @countitemRAW[0], 1, 2, 2;
+	
+	//White  Angels Wings 20577
+	setarray @itemWAW[0], 2254, 982, 7230;
+	setarray @countitemWAW[0], 1, 2, 2;
+	
+	
+	
+	mes .@npcname$;
+	mes "Bonjour ^3333FF" + strcharinfo(0) + "^000000!";
+	mes "Je peux te proposer quelque hats pour customiser ton Angels Wings.";
+	mes	"Ca t'interesse?!";
+	next;
+	mes .@npcname$;
+	mes "Voici ce que je peux te proposer:";
+	next;
+
+	switch(select("Black Angels Wings:Blue Angels Wings:Cyan Angels Wings:Gold Angels Wings:Green Angels Wings:Purple Angels Wings:Red Angels Wings:White Angels Wings:^777777Rien, merci...^000000"))
+	{
+		case 1 :
+ 		callfunc "mes_getitem_colo",.@npcname$,20000,@itemBAW,@countitemBAW, 1000000;
+
+		case 2 :
+ 		callfunc "mes_getitem_colo",.@npcname$,20001,@itemBLAW,@countitemBLAW, 1000000;
+
+		case 3 :
+ 		callfunc "mes_getitem_colo",.@npcname$,20002,@itemCAW,@countitemCAW, 1000000;
+
+		case 4 :
+ 		callfunc "mes_getitem_colo",.@npcname$,20003,@itemGAW,@countitemGAW, 1000000;
+
+		case 5 :
+		callfunc "mes_getitem_colo",.@npcname$,20004,@itemGNAW,@countitemGNAW, 1000000;
+
+		case 6 :
+ 		callfunc "mes_getitem_colo",.@npcname$,20005,@itemPAW,@countitemPAW, 1000000;
+		
+		case 7 :
+		callfunc "mes_getitem_colo",.@npcname$,20006,@itemRAW,@countitemRAW, 1000000;
+
+		case 8 :
+ 		callfunc "mes_getitem_colo",.@npcname$,20007,@itemWAW,@countitemWAW, 1000000;
+
+		// Quitter
+		case 9 :
+		mes @npcname$;
+		mes "Très bien. A bientôt !";
+		close;
+	}
+}

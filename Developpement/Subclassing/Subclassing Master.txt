@@ -1,0 +1,50 @@
+//Subclassing Master
+casp_dun02,153,185,5	script	Odin	412,{
+	set .@npcname$, "[Odin]";
+	mes .@npcname$;
+	mes "";
+	mes "Bonjour à toi, " + strnpcinfo(0);
+	mes "Je suis Odin, le Père de tous les Dieux.";
+	mes "Tu as acquis au cours de ton existence une maîtrise sans égal de ta classe.";
+	mes "Tu peux désormais accéder au niveau suivant, et devenir un Héros d'Asgard.";
+	mes "Les Héros sont catalogués parmis les Vanes, les divinités mineures, comme Baldr ou Freya.";
+	if (BaseLevel == 99 && JobLevel == 70)
+	{
+		next;
+		mes "Veux-tu devenir un Vane?";
+		switch(select("Je veux devenir un Vane","Non, merci"))
+		{
+			case 1:
+				mes "Pour devenir un Vane, tu dois être au niveau maximum.";
+				mes "Pour cela, tu es prêt.";
+				mes "Tu dois ensuite faire preuve de bravoure.";
+				mes "Ce que tu as démontré en venant jusqu'à ma fille, la Valkyrie,";
+				mes "puis jusqu'à moi. Tu es donc prêt pour cela aussi.";
+				mes "Reste donc à démontrer que tu as la capacité à devenir un Vane.";
+				next;
+				mes "Pour cela, tu devras trouver les Perles de Savoir.";
+				mes "Et pour les utiliser, je vais te donner ma ceinture personnelle,";
+				mes "Meginjard. Il ne s'agit pas d'une des pâles copies qui traine en Midgard.";
+				mes "Meginjard te permet d'y encastrer des Perles de Savoir.";
+				mes "Une fois ceci fait, tu pourras devenir un Vane.";				
+				next;
+				mes "Mais avant toute chose, tu dois choisir ta classe Vane.";
+				mes "Pour cela, je vais te renvoyer vers les Maitres de Classe.";
+				mes "Parles à celui qui t'intéresse. Mais n'oublie pas!";
+				mes "On ne peux avoir qu'une classe Vane, et celle-ci sera forcément";
+				mes "incomplète. A toi de bien réfléchir.";
+				next;
+				mes "Pour finir, retiens bien que tu ne peux choisir une voie que tu as déjà refusée.";
+				mes "Un Seigneur Chevalier ne peux devenir un Paladin, un Haut Mage ne peux devenir Professeur...";
+				mes "En dehors de ça, tout t'es permis.";
+				mes "Tu recevras Meginjard de la main de ton Second Maitre.";
+				set SUBCLASSING, 1;
+				warp "valkyrie",48,8;
+				break;
+			case 2:
+				mes "Très bien. Reviens me voir quand tu seras prêt.";
+				break;
+		}
+	}
+	close;
+}

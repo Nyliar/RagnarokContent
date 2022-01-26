@@ -1,0 +1,70 @@
+//Le Livre d'Ymir http://www.bookofymir.net/
+//traduit par Myllena
+//===== eAthena Script ======================================= 
+//= Advance Class jobchanger after kRO Normals.
+//===== By: ==================================================
+//= Nana
+//= finished, optimized and tested by Lupus
+//===== Current Version: ===================================== 
+//= 1.3
+//===== Compatible With: ===================================== 
+//= eAthena 1.0 +
+//===== Description: ========================================= 
+//= Advance Class jobchanger after kRO Normals.
+//===== Additional Comments: ================================= 
+//= v1.1 Made all into functions, additional checks, etc. [Lupus]
+//= v1.2 Made numbers into constants. [Vicious]
+//= 1.3 Now saves/restores all the quest skills [Lupus]
+//= 1.3a Corrected a Little Typo error. [Samuray22]
+//	-Thanks to Myllena.
+//============================================================ 
+
+valkyrie,53,54,3	script	Clown#Valkyrie	741,{
+	if (ADVJOB == 0 || Upper != 1) {
+		set .@karma_d,rand(1,10);
+		if (.@karma_d > 4) {
+			mes "[Clown]";
+			mes "Félicitations.";
+			mes "Honneur aux Guerriers!";
+			close;
+		}
+		mes "[Clown]";
+		mes "Voulez-vous chanter une chanson avec moi?";
+		mes "Sha la la la la~";
+		close;
+	}
+	else if (ADVJOB == Job_Clown && Class == Job_Archer_High && JobLevel > 39) {
+		mes "[Clown]";
+		mes "Le monde des mortels est si morne... Il a besoin de chansons enjouées, afin de redonner le moral aux gens qui se battent contre le Mal.";
+		next;
+		mes "[Clown]";
+		mes "Souhaitez-vous devenir Clown?";
+		next;
+		if (select("Non.:Oui.") == 1) {
+			mes "[Clown]";
+			mes "Revenez quand vous vous sentirez prêt.";
+			next;
+			mes "[Clown]";
+			mes "Honneur aux Guerriers!";
+			close;
+		}
+		if (SkillPoint) {
+			mes "[Clown]";
+			mes "Vous n'avez pas terminé votre apprentissage.";
+			close;
+		}
+		jobchange Job_Clown;
+		set ADVJOB,0;
+		mes "[Clown]";
+		mes "Félicitations!";
+		mes "En tant que Clown, j'espère que vos chansons rapporteront l'espoir à vos alliés, et le désespoir à vos ennemis.";
+		close;
+	}
+	mes "[Clown]";
+	mes "Bienvenue au Walhalla, le Hall des Honneurs.";
+	next;
+	mes "[Clown]";
+	mes "Faites comme chez vous.";
+	mes "Honneur aux Guerriers!";
+	close;
+}

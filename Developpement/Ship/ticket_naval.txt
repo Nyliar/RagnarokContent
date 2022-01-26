@@ -1,0 +1,88 @@
+tha_s_in,385,58,1	script	Guichetière Navale	882,{
+	set .@npcname$, "[Aïné]";
+
+	mes .@npcname$;
+	mes "";
+
+	mes "Bonjour, " + strcharinfo(0);
+	mes "Que puis-je faire pour vous?";
+	mes "Je peux vous vendre toute sorte de Ticket, qui vous permettront de voyager à destination d'une Ile de votre choix.";
+	next;
+	switch(select("Je voudrais un ticket svp.","Je voudrais obtenir un Mono.","Rien, je passais seulement pour visiter."))
+	{
+		case 1:
+			mes "Un Ticket? Bien sûr.";
+			mes "Pour commencer, veuillez choisir un mode de transport.";
+			mes "Les Biplaces sont plus rapides, mais les Tickets sont plus chers. Elles sont aussi attaquées plus souvent.";
+			next;
+			mes "Les Pirates semblent avoir compris que les personnes riches font au plus vite.";
+			mes "Les Grandes Navettes sont donc plus sûres. Et aucun de ces deux modes ne va aussi vite que les Monos.";
+			next;
+			switch(select("Un Biplace","Une Navette","Bon bah je vais prendre mon Mono"))
+			{
+				case 1:
+					mes "Très bien. Un Ticket pour un Biplace donc.";
+					mes "Cela coûte 25000 Zenys.";
+					mes "Vous êtes d'accord?";	
+					next;
+					switch(select("Oui","Non"))
+					{
+						case 1:
+							if (Zeny < 25000)
+							{
+								mes "Désolé, vous n'avez pas assez d'argent.";
+								break;
+							}
+							else
+							{
+								set Zeny, Zeny - 25000;
+								mes "Voici votre billet. Adressez-vous à l'Embarquement Biplace.";
+								set BIPLACE, 1;
+								getitem 21061,1;
+							}
+							break;
+						case 2:
+							mes "Très bien. Au plaisir.";
+							close;
+					}
+					break;
+				case 2:
+					mes "Très bien. Un Ticket pour une Navette donc.";
+					mes "Cela coûte 10000 Zenys.";
+					mes "Vous êtes d'accord?";
+					next;
+					switch(select("Oui","Non"))
+					{
+						case 1:
+							if (Zeny < 10000)
+							{
+								mes "Désolé, vous n'avez pas assez d'argent.";
+								break;
+							}
+							else
+							{
+								set Zeny, Zeny - 10000;
+								mes "Voici votre billet. Adressez-vous à l'Embarquement Navette.";
+								set NAVETTE, 1;
+								getitem 21062,1;
+							}
+							break;
+						case 2:
+							mes "Très bien. Au plaisir.";
+							close;
+					}
+					break;
+				case 3:
+					mes "Bien. Au plaisir.";
+					close;
+			}
+		case 3:
+			mes "La Sailor Company vous souhaite la bienvenue dans le monde marin.";
+			break;
+		case 2:
+			mes "Vous n'êtes pas au bon guichet.";
+			mes "Veuillez vous adresser au Responsable Domptage, bureau 3.";
+			break;
+	}
+	close;
+}

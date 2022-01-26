@@ -1,0 +1,116 @@
+capitale,261,170,5	script	Luminuous Sister::lusis	71,{
+
+	if (LANGUAGE == 2)
+	{
+		set .@npc$, "[^FF0000Luminuous Sister^000000]";
+	}
+	else if (LANGUAGE == 1)
+	{
+		set .@npc$, "[^FF0000Soeur Lumineuse^000000]";
+	}
+
+	mes .@npc$; 
+	mes "...";
+	if (LANGUAGE == 2)
+	{
+		mes "Do you know who I am?";
+		switch(select("A God Servant?:Well...No, but why not knowing better each other?:A Crowned"))
+		{
+			case 1: 
+				mes "Sorry, I don't have time to play.";
+				mes "Go, pray, and may the light come down on you.";
+				close;
+			case 2:
+				mes "Sorry, I don't have time to play.";
+				mes "Go, pray, and may the light come down on you.";
+				close;
+			case 3:
+				if ( ACE_Q == 1 || ACE_Q == 2 )
+				{
+					mes "...";
+					mes ".....";
+					mes "........";
+					mes "Looks like we're Brothers";
+					setnpcdisplay "lusis", 415;
+					set ACE_Q, ACE_Q+1;
+					if ( ACE_Q == 2 )
+					{
+						mes "Look for one more of our Brothers.";
+						mes "Good luck, welcome on the Crowned Path.";
+					}
+					else if ( ACE_Q == 3 )
+					{
+						mes "Looks like you're ready.";
+						mes "Welcome on the Crowned Path.";
+						mes "Go back to the Spades Ace,";
+						mes "and tell him what you've become: A Crowned.";
+					}
+					next;
+					mes "See you soon, brother.";
+					setnpcdisplay "lusis", 720;
+					close;
+				}
+				else
+				{
+					mes "I don't think you know who I am.";
+					mes "But the chance is a part of our Path.";
+					mes "Come back later.";
+					close;
+				}
+		}
+	}
+	else if (LANGUAGE == 1)
+	{
+		mes "Tu sais qui je suis?";
+		switch(select("Une nonne?:Hum....Non, mais pourquoi ne pas se connaitre mieux?:Une Couronnée"))
+		{
+			case 1: 
+				mes "Le Royaume des dieux appartient aux gens de foi.";
+				mes "Prie, et peut-être la Lumière te baignera";
+				close;
+			case 2:
+				mes "Désolé, mais je n'ai pas le temps pour ça.";
+				mes "Part, prie, et ne reviens que quand tu sauras";
+				close;
+			case 3:
+				if ( ACE_Q == 1 || ACE_Q == 2 )
+				{
+					mes "...";
+					mes ".....";
+					mes "........";
+					mes "On dirait bien que nous sommes Frère et Soeur";
+					setnpcdisplay "lusis", 415;
+					set ACE_Q, ACE_Q+1;
+					if ( ACE_Q == 2 )
+					{
+						mes "Cherche encore un de nos Frères.";
+						mes "Bon courage sur le chemin des Couronnés";
+					}
+					else if ( ACE_Q == 3 )
+					{
+						mes "Tu es prêt on dirait.";
+						mes "Rejoins le Chemin des Couronnés";
+						mes "Retourne voir l'As de Pique,";
+						mes "et dit lui qui tu es devenu: Un Couronné";
+					}
+					next;
+					mes "A bientôt, frere";
+					setnpcdisplay "lusis", 720;
+					close;
+				}
+				else
+				{
+					mes "Je ne crois pas que tu saches qui je suis.";
+					mes "Mais la chance est une partie du chemin.";
+					mes "Reviens plus tard";
+					close;
+				}
+		}
+	}
+	close;
+}
+
+dicastes01,224,254,0	duplicate(lusis)	Luminuous Sister::lusis2	77
+eclage,177,56,0	duplicate(lusis)	Luminuous Sister::lusis3	73
+dewata,202,81,0	duplicate(lusis)	Luminuous Sister::lusis4	75
+yuno,152,12,0	duplicate(lusis)	Luminuous Sister::lusis5	76

@@ -1,0 +1,13 @@
+scaphis,62,99,0	duplicate(Ase_Crystal)	Crystal d'Ase#ac0::scaphis	1915,2,2
+//prt_fild10,293,285,0	duplicate(Ase_Crystal)	Crystal d'Ase#ac0::Ile du Temple	1915,2,2
+1@pi,75,84,0	duplicate(Ase_Crystal)	Crystal d'Ase#ac1::1@pi	1914,2,2
+zodiac,97,123,0	duplicate(Ase_Crystal)	Crystal d'Ase#ac2::zodiac	1914,2,2
+//prt_fild10,293,285,0	duplicate(Ase_Crystal)	Crystal d'Ase#ac0::Ile d'Ase	1915,2,2
+colisland,129,116,0	duplicate(Ase_Crystal)	Crystal d'Ase#ac3::colisland	1915,2,2
+fiesta,119,103,0	duplicate(Ase_Crystal)	Crystal d'Ase#ac4::fiesta	1915,2,2
+tortue,157,92,0	duplicate(Ase_Crystal)	Crystal d'Ase#ac5::tortue	1915,2,2
+crash,133,64,0	duplicate(Ase_Crystal)	Crystal d'Ase#ac6::crash	1915,2,2
+revencia,44,253,0	duplicate(Ase_Crystal)	Crystal d'Ase#ac7::Ile des Faes	1915,2,2
+mornanie,142,78,0	duplicate(Ase_Crystal)	Crystal d'Ase#ac8::Mornanie	1915,2,2
+mysterio,61,75,0	duplicate(Ase_Crystal)	Crystal d'Ase#ac9::Mysterio	1915,2,2
+caspen,239,272,0	duplicate(Ase_Crystal)	Crystal d'Ase#ac10::Caspen	1915,2,2

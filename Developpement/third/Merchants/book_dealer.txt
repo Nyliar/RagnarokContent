@@ -1,0 +1,296 @@
+//prt_in,40,113,4	script	High Book Seller	915,{ 
+	set .npcname$, "[High Book Seller]";
+	mes .npcname$;
+
+	mes "Hello there.";
+	mes "I'm a huge fan of books. And you?";
+	mes "I can exchange you some very rare.";
+	mes "I'm particularly interested in Old MagicBook. I trade you one of mine against 2 of these.";
+	mes "I'll also ask you some money.";
+	switch(select("Allright, show me","No, thanks"))
+	{
+		case 1:
+			next;
+			mes "Sure. Here's what I got:";
+			switch(prompt("Fire Bolt","Cold Bolt","Lightning Bolt","Storm Gust","Lord Of Vermillion","Meteor Storm","Thunder Storm","Jupitel Thunder","Water Ball","Heaven's Drive","Earth Spike","Drain Life","Les livres ultra rares"))
+			{
+				case 1:
+					mes "Sure.";
+					if (countitem(1006)>=2 && countitem(671)>=1)
+					{
+						mes "Perfect, you got everything.";
+						delitem 1006, 2;
+						delitem 671, 1;
+						getitem 6189, 1;
+						mes "See you soon.";
+					}
+					else	
+					{
+						mes "Sorry, but you don't have what I need...";
+					}
+					break;
+				case 2:
+					mes "Sure.";
+					if (countitem(1006)>=2 && countitem(671)>=1)
+					{
+						mes "Perfect, you got everything.";
+						delitem 1006, 2;
+						delitem 671, 1;
+						getitem 6190, 1;
+						mes "See you soon.";
+					}
+					else	
+					{
+						mes "Sorry, but you don't have what I need...";
+					}
+					break;
+				case 3:
+					mes "Sure.";
+					if (countitem(1006)>=2 && countitem(671)>=1)
+					{
+						mes "Perfect, you got everything.";
+						delitem 1006, 2;
+						delitem 671, 1;
+						getitem 6191, 1;
+						mes "See you soon.";
+					}
+					else	
+					{
+						mes "Sorry, but you don't have what I need...";
+					}
+					break;
+				case 4:
+					mes "Sure.";
+					if (countitem(1006)>=2 && countitem(671)>=1)
+					{
+						mes "Perfect, you got everything.";
+						delitem 1006, 2;
+						delitem 671, 1;
+						getitem 6192, 1;
+						mes "See you soon.";
+					}
+					else	
+					{
+						mes "Sorry, but you don't have what I need...";
+					}
+					break;
+				case 5:
+					mes "Sure.";
+					if (countitem(1006)>=2 && countitem(671)>=1)
+					{
+						mes "Perfect, you got everything.";
+						delitem 1006, 2;
+						delitem 671, 1;
+						getitem 6193, 1;
+						mes "See you soon.";
+					}
+					else	
+					{
+						mes "Sorry, but you don't have what I need...";
+					}
+					break;
+				case 6:
+					mes "Sure.";
+					if (countitem(1006)>=2 && countitem(671)>=1)
+					{
+						mes "Perfect, you got everything.";
+						delitem 1006, 2;
+						delitem 671, 1;
+						getitem 6194, 1;
+						mes "See you soon.";
+					}
+					else	
+					{
+						mes "Sorry, but you don't have what I need...";
+					}
+					break;
+				case 7:
+					mes "Sure.";
+					if (countitem(1006)>=2 && countitem(671)>=1)
+					{
+						mes "Perfect, you got everything.";
+						delitem 1006, 2;
+						delitem 671, 1;
+						getitem 6197, 1;
+						mes "See you soon.";
+					}
+					else	
+					{
+						mes "Sorry, but you don't have what I need...";
+					}
+					break;
+				case 8:
+					mes "Sure.";
+					if (countitem(1006)>=2 && countitem(671)>=1)
+					{
+						mes "Perfect, you got everything.";
+						delitem 1006, 2;
+						delitem 671, 1;
+						getitem 6198, 1;
+						mes "See you soon.";
+					}
+					else	
+					{
+						mes "Sorry, but you don't have what I need...";
+					}
+					break;
+				case 9:
+					mes "Sure.";
+					if (countitem(1006)>=2 && countitem(671)>=1)
+					{
+						mes "Perfect, you got everything.";
+						delitem 1006, 2;
+						delitem 671, 1;
+						getitem 6199, 1;
+						mes "See you soon.";
+					}
+					else	
+					{
+						mes "Sorry, but you don't have what I need...";
+					}
+					break;
+				case 10:
+					mes "Sure.";
+					if (countitem(1006)>=2 && countitem(671)>=1)
+					{
+						mes "Perfect, you got everything.";
+						delitem 1006, 2;
+						delitem 671, 1;
+						getitem 6200, 1;
+						mes "See you soon.";
+					}
+					else	
+					{
+						mes "Sorry, but you don't have what I need...";
+					}
+					break;
+				case 11:
+					mes "Sure.";
+					if (countitem(1006)>=2 && countitem(671)>=1)
+					{
+						mes "Perfect, you got everything.";
+						delitem 1006, 2;
+						delitem 671, 1;
+						getitem 6201, 1;
+						mes "See you soon.";
+					}
+					else	
+					{
+						mes "Sorry, but you don't have what I need...";
+					}
+					break;
+				case 12:
+					mes "Sure.";
+					if (countitem(1006)>=2 && countitem(671)>=1)
+					{
+						mes "Perfect, you got everything.";
+						delitem 1006, 2;
+						delitem 671, 1;
+						getitem 6205, 1;
+						mes "See you soon.";
+					}
+					else	
+					{
+						mes "Sorry, but you don't have what I need...";
+					}
+					break;
+				case 13:
+					mes "Hum...I see you're only looking for very rare.";
+					mes "I can actually offer you some very very rare books.";
+					mes "But they cost a lot much.";
+					mes "I can only trade against 5 Old MagicBook, 200.000 Zenys and 5 Gold Coins.";
+					mes "Here's what I have.";
+					switch(select("Comet","Tetra Vortex","Earth Strain","Chain Lightning","Crimson Rock"))
+					{
+						case 1:
+							mes "Sure.";
+							if (countitem(1006)>=5 && countitem(671)>=5 && Zeny >= 200000)
+							{
+								mes "Perfect, you got everything.";
+								delitem 1006, 5;
+								delitem 671, 5;
+								set Zeny, Zeny - 200000;
+								getitem 6195, 1;
+								mes "See you soon.";
+							}
+							else	
+							{
+								mes "Sorry, but you don't have what I need...";
+							}
+							break;
+						case 2:
+							mes "Sure.";
+							if (countitem(1006)>=5 && countitem(671)>=5 && Zeny >= 200000)
+							{
+								mes "Perfect, you got everything.";
+								delitem 1006, 5;
+								delitem 671, 5;
+								set Zeny, Zeny - 200000;
+								getitem 6196, 1;
+								mes "See you soon.";
+							}
+							else	
+							{
+								mes "Sorry, but you don't have what I need...";
+							}
+							break;
+						case 3:
+							mes "Sure.";
+							if (countitem(1006)>=5 && countitem(671)>=5 && Zeny >= 200000)
+							{
+								mes "Perfect, you got everything.";
+								delitem 1006, 5;
+								delitem 671, 5;
+								set Zeny, Zeny - 200000;
+								getitem 6202, 1;
+								mes "See you soon.";
+							}
+							else	
+							{
+								mes "Sorry, but you don't have what I need...";
+							}
+							break;
+						case 4:
+							mes "Sure.";
+							if (countitem(1006)>=5 && countitem(671)>=5 && Zeny >= 200000)
+							{
+								mes "Perfect, you got everything.";
+								delitem 1006, 5;
+								delitem 671, 5;
+								set Zeny, Zeny - 200000;
+								getitem 6203, 1;
+								mes "See you soon.";
+							}
+							else	
+							{
+								mes "Sorry, but you don't have what I need...";
+							}
+							break;
+						case 5:
+							mes "Sure.";
+							if (countitem(1006)>=5 && countitem(671)>=5 && Zeny >= 200000)
+							{
+								mes "Perfect, you got everything.";
+								delitem 1006, 5;
+								delitem 671, 5;
+								set Zeny, Zeny - 200000;
+								getitem 6204, 1;
+								mes "See you soon.";
+							}
+							else	
+							{
+								mes "Sorry, but you don't have what I need...";
+							}
+							break;
+					}
+					case 255:
+						mes "As you wish.";
+						break;
+			}
+			break;
+		case 2:
+			mes "As you wish.";
+			break;
+	}
+	close;
+}

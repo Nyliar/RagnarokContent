@@ -1,0 +1,80 @@
+izlude, 166,101, 5	script	copola	93,{
+
+	set .@npcname$,"[copola]";
+	
+	//Black Coppola 20042
+	setarray @itemBC[0], 5200, 983, 7230;
+	setarray @countitemBC[0], 1, 2, 2;
+	
+	//Blue Coppola 20043
+	setarray @itemBLC[0], 5200, 978, 7230;
+	setarray @countitemBLC[0], 1, 2, 2;
+
+	//Cyan Coppola 20044
+	setarray @itemCC[0], 5200, 978, 982, 7230;
+	setarray @countitemCC[0], 1, 2, 2, 2;
+
+	//Gold Coppola 20045
+	setarray @itemGC[0], 5200, 976, 7230;
+	setarray @countitemGC[0], 1, 2, 2;
+	
+	//Green Coppola 20046
+	setarray @itemGNC[0], 5200, 979, 7230;
+	setarray @countitemGNC[0], 1, 2, 2;
+	
+	//Purple  Coppola 2047
+	setarray @itemPC[0], 520, 981, 7230;
+	setarray @countitemPC[0], 1, 2, 2;
+	
+	//Red Coppola 2048
+	setarray @itemRC[0], 520, 975, 7230;
+	setarray @countitemRC[0], 1, 2, 2;
+	
+	//White  Coppola 2049
+	setarray @itemWC[0], 520, 982, 7230;
+	setarray @countitemWC[0], 1, 2, 2;
+	
+	
+	
+	mes .@npcname$;
+	mes "Bonjour ^3333FF" + strcharinfo(0) + "^000000!";
+	mes "Je peux te proposer quelque hats pour customiser ton Coppola.";
+	mes	"Ca t'interesse?!";
+	next;
+	mes .@npcname$;
+	mes "Voici ce que je peux te proposer:";
+	next;
+
+	switch(select("Black Coppola:Blue Coppola:Cyan Coppola:Gold Coppola:Green Coppola:Purple Coppola:Red Coppola:White Coppola:^777777Rien, merci...^000000"))
+	{
+		case 1 :
+ 		callfunc "mes_getitem_colo",.@npcname$,2042,@itemBC,@countitemBC, 1000000;
+
+		case 2 :
+ 		callfunc "mes_getitem_colo",.@npcname$,2043,@itemBLC,@countitemBLC, 1000000;
+
+		case 3 :
+ 		callfunc "mes_getitem_colo",.@npcname$,2044,@itemCC,@countitemCC, 1000000;
+
+		case 4 :
+ 		callfunc "mes_getitem_colo",.@npcname$,2045,@itemGC,@countitemGC, 1000000;
+
+		case 5 :
+		callfunc "mes_getitem_colo",.@npcname$,2046,@itemGNC,@countitemGNC, 1000000;
+
+		case 6 :
+ 		callfunc "mes_getitem_colo",.@npcname$,2047,@itemPC,@countitemPC, 1000000;
+		
+		case 7 :
+		callfunc "mes_getitem_colo",.@npcname$,2048,@itemRC,@countitemRC, 1000000;
+
+		case 8 :
+ 		callfunc "mes_getitem_colo",.@npcname$,2049,@itemWC,@countitemWC, 1000000;
+
+		// Quitter
+		case 9 :
+		mes @npcname$;
+		mes "Très bien. A bientôt !";
+		close;
+	}
+}

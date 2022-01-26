@@ -1,0 +1,17 @@
+-	script	Ponton de Débarquement::Ponton de Débarquement	-1,2,2,{
+	end;
+
+OnTouch:
+	query_sql("SELECT COUNT(*) FROM `visited_islands` WHERE `char_id` = " + getcharid(0,strcharinfo(0)) + " AND `map`= '" + strcharinfo(3) + "'", @count);
+	if (@count)
+	{
+		//déjà présente dans la liste
+	}
+	else
+	{
+		//add value
+		query_sql("INSERT INTO `visited_islands` (`char_id`,`map`,`activated`) VALUES (" + getcharid(0,strcharinfo(0)) + ", '" + strcharinfo(3) + "', 0)");
+	}
+	close;
+}
+

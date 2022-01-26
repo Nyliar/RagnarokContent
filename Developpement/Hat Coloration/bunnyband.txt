@@ -1,0 +1,73 @@
+comodo, 205, 69, 5	script	Bunny Band	51,{
+
+	set .@npcname$,"[Bunny Band]";
+	
+	//Black Bunny Band 20035
+	setarray @itemBB[0], 2214, 983, 7146;
+	setarray @countitemBB[0], 1, 2, 2;
+	
+	//Blue Bunny Band 20036
+	setarray @itemBLB[0], 2214, 978, 7146;
+	setarray @countitemBLB[0], 1, 2, 2;
+
+	//Cyan Bunny Band 20037
+	setarray @itemCB[0], 2214, 978, 982, 7146;
+	setarray @countitemCB[0], 1, 2, 2, 2;
+
+	//Gold Bunny Band 20038
+	setarray @itemGB[0], 2214, 976, 7146;
+	setarray @countitemGB[0], 1, 2, 2;
+	
+	//Green Bunny Band 20039
+	setarray @itemGNB[0], 2214, 979, 7146;
+	setarray @countitemGNB[0], 1, 2, 2;
+	
+	//Purple  Bunny Band 2040
+	setarray @itemPB[0], 2214, 981, 7230;
+	setarray @countitemPB[0], 1, 2, 2;
+	
+	//Red Bunny Band 2041
+	setarray @itemRB[0], 2214, 975, 7230;
+	setarray @countitemRB[0], 1, 2, 2;
+	
+	
+	
+	mes .@npcname$;
+	mes "Bonjour ^3333FF" + strcharinfo(0) + "^000000!";
+	mes "Je peux te proposer quelque hats pour customiser ton Bunny Band.";
+	mes	"Ca t'interesse?!";
+	next;
+	mes .@npcname$;
+	mes "Voici ce que je peux te proposer:";
+	next;
+
+	switch(select("Black Bunny Band:Blue Bunny Band:Cyan Bunny Band:Gold Bunny Band:Green Bunny Band:Purple Bunny Band:Red Bunny Band:^777777Rien, merci...^000000"))
+	{
+		case 1 :
+ 		callfunc "mes_getitem_colo",.@npcname$,2035,@itemBB,@countitemBB, 1000000;
+
+		case 2 :
+ 		callfunc "mes_getitem_colo",.@npcname$,2036,@itemBLB,@countitemBLB, 1000000;
+
+		case 3 :
+ 		callfunc "mes_getitem_colo",.@npcname$,2037,@itemCB,@countitemCB, 1000000;
+
+		case 4 :
+ 		callfunc "mes_getitem_colo",.@npcname$,2038,@itemGB,@countitemGB, 1000000;
+
+		case 5 :
+		callfunc "mes_getitem_colo",.@npcname$,2039,@itemGNB,@countitemGNB, 1000000;
+
+		case 6 :
+ 		callfunc "mes_getitem_colo",.@npcname$,2040,@itemPB,@countitemPB, 1000000;
+		
+		case 7 :
+		callfunc "mes_getitem_colo",.@npcname$,2041,@itemRB,@countitemRB, 1000000;
+
+		// Quitter
+		case 8 :
+		mes @npcname$;
+		mes "Très bien. A bientôt !";
+		close;
+	}
+}

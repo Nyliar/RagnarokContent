@@ -1,0 +1,266 @@
+casp_fild01,175,223,0	script	Salle d'Attente#CLONE_R	723,{
+	end;
+	
+	OnInit:
+		disablenpc "Salle d'Attente#CLONE_R";
+		waitingroom "Salle d'Attente", 10,"Salle d'Attente#CLONE_R::OnStartArena",1;
+		enablewaitingroomevent;
+		end;
+	
+	OnStartArena:
+		warpwaitingpc "pvp_n_1-3", 99, 95;
+		attachrid($@warpwaitingpc[0]);
+		if(GARDIEN_Q < 1 || CLONE_PRET < 1 || CLONE_Q == 2)
+		{
+			warp "casp_fild01",168,182;;
+			end;
+		}
+		disablewaitingroomevent;
+		donpcevent "Cloneur#CLONE_R::OnEnable";
+		//donpcevent "Gardien de la Porte#CLONE::OnDisable";
+		end;
+		
+	OnStart:
+		enablewaitingroomevent;
+		end;
+}
+
+pvp_n_1-3,99,95,0	script	Get Char_id#CLONE	-1,2,2,{
+
+	OnTouch:
+		set .name, getcharid(0);
+		savepoint "casp_fild01",168,182;
+		end;
+}
+
+casp_fild01,175,223,0	script	Mirroir du Mal#CLONE	739,5,5,{
+	
+	set .@npc_name$, "[Mirroir du Mal]";
+	mes .@npc_name$;
+	mes "Approche mon ami,n'ai pas peur...";
+	close2;
+	end;
+		
+	OnTouch:
+		mes "[Mirroir du Mal]";
+		if(GARDIEN_Q < 1)
+		{
+			mes "Comment es-tu arrivé ici ?!";
+			mes "Vas-t'en !";
+			close2;
+			warp "caspen", 0, 0;
+			end;
+		}
+		switch(CLONE_Q)
+		{
+			case 0:
+				mes "Bonjour mon ami...";
+				mes "Je suis le Mirroir du Mal, mais en réalité je ne fais pas le Mal...";
+				mes "Je le créé !";
+				next;
+				mes "[Mirroir du Mal]";
+				mes "Et oui je suis capable de prendre la partie mauvaise d'une personne et la concentrer dans le Clone parfait de cette personne...";
+				mes "Cela est nécessaire pour effectuer l'Eveil, et je serai ravis de pouvoir d'aider !";
+				next;
+				mes "[Mirroir du Mal]";
+				mes "Sais-tu comment cela va se dérouler ?";
+				next;
+				if(select("Oui, et je suis prêt !:J'aimerai plus d'informations") == 1)
+				{
+					mes "[Mirroir du Mal]";
+					if(CLONE_PRET == 1)
+					{
+						mes "Très bien je vois que tu es prêt, alors tu sais ce qu'il te reste à faire...";
+						mes "Bonne chance à toi !";
+						close;
+					}
+					else
+					{
+						mes "Je ne t'ai même pas dit comment ça va se passer...";
+						mes "Très bien, comme tu veux...";
+						if(CLONE_PRET == 0)
+						{
+							if(AB_Q && countitem(22000) > 0) delitem 22000,1;
+							if(GE_Q && countitem(22001) > 0) delitem 22001,1;
+							if(GLT_Q && countitem(22002) > 0) delitem 22002,1;
+							if(ME_Q && countitem(22003) > 0) delitem 22003,1;
+							if(MI_Q && countitem(22004) > 0) delitem 22004,1;
+							if(RA_Q && countitem(22005) > 0) delitem 22005,1;
+							if(RG_Q && countitem(22006) > 0) delitem 22006,1;
+							if(RK_Q && countitem(22007) > 0) delitem 22007,1;
+							if(SC_Q && countitem(22008) > 0) delitem 22008,1;
+							if(SR_Q && countitem(22009) > 0) delitem 22009,1;
+							if(SU_Q && countitem(22010) > 0) delitem 22010,1;
+							if(WAN_Q && countitem(22011) > 0) delitem 22011,1;
+							if(WAR_Q && countitem(22012) > 0) delitem 22012,1;
+						}
+						mes "Bonne chance.";
+						set CLONE_PRET, 1;
+						close;
+					}
+				}
+				mes "[Mirroir du Mal]";
+				if(CLONE_PRET != 1)
+				{
+				mes "Laisse moi t'expliquer comment vont se dérouler les choses:";
+				mes "Tout d'abord je vais te demander le totem que tu as normalement en ta possession.";
+				next;
+				mes "[Mirroir du Mal]";
+				mes "*prend le totem*";
+				if(AB_Q && countitem(22000) > 0) delitem 22000,1;
+				if(GE_Q && countitem(22001) > 0) delitem 22001,1;
+				if(GLT_Q && countitem(22002) > 0) delitem 22002,1;
+				if(ME_Q && countitem(22003) > 0) delitem 22003,1;
+				if(MI_Q && countitem(22004) > 0) delitem 22004,1;
+				if(RA_Q && countitem(22005) > 0) delitem 22005,1;
+				if(RG_Q && countitem(22006) > 0) delitem 22006,1;
+				if(RK_Q && countitem(22007) > 0) delitem 22007,1;
+				if(SC_Q && countitem(22008) > 0) delitem 22008,1;
+				if(SR_Q && countitem(22009) > 0) delitem 22009,1;
+				if(SU_Q && countitem(22010) > 0) delitem 22010,1;
+				if(WAN_Q && countitem(22011) > 0) delitem 22011,1;
+				if(WAR_Q && countitem(22012) > 0) delitem 22012,1;
+				next;
+				mes "[Mirroir du Mal]";
+				mes "Voilà merci bien !";
+				}
+				mes "Laisse-moi t'expliquer brievement ce qui va se passer";
+				mes "Pour ta dernière épreuve tu devras tuer le mal qui est en toi, et pour cela je vais créer un clone renfermant tout le mal caché au fond de toi";
+				mes "Alors ne baisse pas ta garde, le mal est puissant !";
+				mes "Je te souhaite bonne chance, pour participer il te suffit d'entrer dans la chatroom et d'attendre qu'il n'y ait pas de participant en cours.";
+				mes "Bonne chance !";
+				set CLONE_PRET, 1;
+				close;
+			
+			case 1:
+				mes "Quoi ? Tu es mort ? Malheureux...";
+				mes "Je suis d'humeure clémente, je veux bien te redonner une chance...";
+				mes "Sauf si tu ne veux pas tout de suite ?";
+				next;
+				if(select("Non c'est bon, et je suis prêt !:Je préfère aller me heal") == 2)
+				{
+					mes "[Mirroir du Mal]";
+					mes "Très bien, reviens me voir après !";
+					close;
+				}
+					mes "[Mirroir du Mal]";
+					mes "Très bien, tu sais ce qu'il te reste à faire !";
+					mes "Bonne chance à toi !";
+					close;
+					
+			case 2:
+				mes "Félicitations ! Tu a terminé cette épreuve !";
+				mes "Tu peux maitenant terminer ta quête, va parler au gardien il t'en dira un peu plus !";
+				mes "Adieu !";
+				close;
+			
+		}
+}
+
+pvp_n_1-3,1,1,0	script	Cloneur#CLONE_R	-1,{
+	end;
+	
+	OnEnable:
+		initnpctimer;
+		end;
+		
+	OnPCDieEvent:
+		if(strcharinfo(3)=="pvp_n_1-3")
+		{
+			donpcevent "Cloneur#CLONE_R::OnReset";
+			mapannounce "pvp_n_1-3","Vous êtes mort ! Retour au point de départ.",bc_map;
+			set CLONE_Q,1;
+			warp "SavePoint",0,0;
+			atcommand strcharinfo(0) + ":!alive";
+		}
+		end;
+		
+	L_End:
+		end;
+		
+	OnMyMobDead:
+		set CLONE_Q,2;
+		warp "SavePoint",0,0;
+		donpcevent "Salle d'Attente#CLONE_R::OnStart";
+		end;
+		
+	OnReset:
+		killmonsterall "pvp_n_1-3";
+		donpcevent "Salle d'Attente#CLONE_R::OnStart";
+		end;
+
+	OnPCLogoutEvent:
+		if (strcharinfo(3) == "pvp_n_1-3")
+		{
+			donpcevent "Cloneur#CLONE_R::OnReset";
+			end;
+		}
+		
+	OnTimer5000:
+		mapannounce "pvp_n_1-3","Mirroir du Mal: Bien, je vais bientôt créer ton clone",bc_map;
+		end;
+
+	OnTimer7000:
+		mapannounce "pvp_n_1-3","Mirroir du Mal: Le but de cette épreuve est simple, tu dois tuer ton clone...",bc_map;
+		end;
+
+	OnTimer9000:
+		mapannounce "pvp_n_1-3","Mirroir du Mal: ... avant que celui-ci ne te tue bien évidemment !",bc_map;
+		end;
+
+	OnTimer11000:
+		mapannounce "pvp_n_1-3","Mirroir du Mal: Tiens-toi prêt, ton clone sera spawn dans quelques secondes !",bc_map;
+		end;
+
+	OnTimer13000:
+		mapannounce "pvp_n_1-3","Mirroir du Mal: Il y a un délai de 2 minutes. Au delà, je tuerais tout le monde !",bc_map;
+		end;
+
+	OnTimer15000:
+		mapannounce "pvp_n_1-3","Mirroir du Mal: 5",bc_map;
+		end;
+		
+	OnTimer16000:
+		mapannounce "pvp_n_1-3","Mirroir du Mal: 4",bc_map;
+		end;
+		
+	OnTimer17000:
+		mapannounce "pvp_n_1-3","Mirroir du Mal: 3",bc_map;
+		end;
+		
+	OnTimer18000:
+		mapannounce "pvp_n_1-3","Mirroir du Mal: 2",bc_map;
+		end;
+		
+	OnTimer19000:
+		mapannounce "pvp_n_1-3","Mirroir du Mal: 1",bc_map;
+		end;
+		
+	OnTimer20000:
+		mapannounce "pvp_n_1-3","Mirroir du Mal: C'est parti !!!",bc_map;
+		clone "pvp_n_1-3",99,87,"Cloneur#CLONE_R::OnMyMobDead",getvariableofnpc(.name, "Get Char_id#CLONE");
+		end;
+
+	OnTimer60000:
+		mapannounce "pvp_n_1-3","Mirroir du Mal: Une minute restante...",bc_map;
+		end;
+
+	OnTimer130000:
+		mapannounce "pvp_n_1-3","Mirroir du Mal: Moins de 10 secondes...",bc_map;
+		end;
+	
+	OnTimer140000:
+		mapannounce "pvp_n_1-3","Mirroir du Mal: Fin du temps imparti. Nettoyage de la map !",bc_map;
+		if ( getmapxy("pvp_n_1-3", .@x, .@y, 0, getvariableofnpc(.name, "Get Char_id#CLONE")) == 0 )
+		{
+			atcommand "!nuke " + getvariableofnpc(.name, "Get Char_id#CLONE");
+			set CLONE_Q,1;
+			warp "SavePoint",0,0;
+			atcommand getvariableofnpc(.name, "Get Char_id#CLONE") + ":!alive";
+		}
+		donpcevent "Cloneur#CLONE_R::OnReset";
+		stopnpctimer;
+		end;		
+}
+
+pvp_n_1-3	mapflag	noreturn

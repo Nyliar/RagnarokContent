@@ -1,0 +1,80 @@
+moscovia, 268, 227, 5	script	Usakoring Hat	125,{
+
+	set .@npcname$,"[Usakoring Hat]";
+	
+	//Black Usakoring Hat 20178
+	setarray @itemBUH[0], 20270, 983, 7230;
+	setarray @countitemBUH[0], 1, 2, 2;
+
+	//Blue Usakoring Hat 20179
+	setarray @itemBLUH[0], 20270, 978, 7230;
+	setarray @countitemBLUH[0], 1, 2, 2;
+	
+	//Cyan Usakoring Hat 20180
+	setarray @itemCUH[0], 20270, 978, 975, 7230;
+	setarray @countitemCUH[0], 1, 2, 2, 2;
+
+	//Gold Usakoring Hat 20181
+	setarray @itemGUH[0], 20270, 976, 7230;
+	setarray @countitemGUH[0], 1, 2, 2;
+
+	//Green Usakoring Hat 20182
+	setarray @itemGNUH[0], 20270, 979, 7230;
+	setarray @countitemGNUH[0], 1, 2, 2;
+	
+	//Purple  Usakoring Hat 20183
+	setarray @itemPUH[0], 20270, 981, 7230;
+	setarray @countitemPUH[0], 1, 2, 2;
+
+	//red  Usakoring Hat 20183
+	setarray @itemRUH[0], 20270, 981, 7230;
+	setarray @countitemRH[0], 1, 2, 2;
+	
+	//White Usakoring Hat 20184
+	setarray @itemWUH[0], 20270, 975, 7230;
+	setarray @countitemWUH[0], 1, 2, 2; 
+	
+	
+	
+	mes .@npcname$;
+	mes "Bonjour ^3333FF" + strcharinfo(0) + "^000000!";
+	mes "Je peux te proposer quelque hats pour customiser ton Usakoring Hat.";
+	mes	"Ca t'interesse?!";
+	next;
+	mes .@npcname$;
+	mes "Voici ce que je peux te proposer:";
+	next;
+
+	switch(select("Black Usakoring Hat:Blue Usakoring Hat:Cyan Usakoring Hat:Gold Usakoring Hat:Purple Usakoring Hat:White Usakoring Hat:Green Usakoring Hat:Red Usakoring Hat:^777777Rien, merci...^000000"))
+	{
+		case 1 :
+ 		callfunc "mes_getitem_colo",.@npcname$,20263,@itemBUH,@countitemBUH, 1000000;
+
+		case 2 :
+		callfunc "mes_getitem_colo",.@npcname$,20264,@itemBLUH,@countitemBLUH, 1000000;
+
+		case 3 :
+ 		callfunc "mes_getitem_colo",.@npcname$,20265,@itemCUH,@countitemCUH, 1000000;
+
+		case 4 :
+ 		callfunc "mes_getitem_colo",.@npcname$,20266,@itemGUH,@countitemGUH, 1000000;
+
+		case 5 :
+ 		callfunc "mes_getitem_colo",.@npcname$,20268,@itemPUH,@countitemPUH, 1000000;
+
+		case 6 :
+		callfunc "mes_getitem_colo",.@npcname$,20271,@itemWUH,.countintemWUH,1000000;
+
+		case 7 :
+		callfunc "mes_getitem_colo",.@npcname$,20267,@itemGNUH,.countintemGNUH,1000000;
+
+		case 8 :
+		callfunc "mes_getitem_colo",.@npcname$,20269,@itemRUH,.countintemRUH,1000000;
+
+		// Quitter
+		case 9 :
+		mes @npcname$;
+		mes "Très bien. A bientôt !";
+		close;
+	}
+}

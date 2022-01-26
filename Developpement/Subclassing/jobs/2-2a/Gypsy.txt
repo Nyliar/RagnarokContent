@@ -1,0 +1,97 @@
+//Le Livre d'Ymir http://www.bookofymir.net/
+//traduit par Myllena, corrigé par Fern
+//===== eAthena Script ======================================= 
+//= Advance Class jobchanger after kRO Normals.
+//===== By: ==================================================
+//= Nana
+//= finished, optimized and tested by Lupus
+//===== Current Version: ===================================== 
+//= 1.3
+//===== Compatible With: ===================================== 
+//= eAthena 1.0 +
+//===== Description: ========================================= 
+//= Advance Class jobchanger after kRO Normals.
+//===== Additional Comments: ================================= 
+//= v1.1 Made all into functions, additional checks, etc. [Lupus]
+//= v1.2 Made numbers into constants. [Vicious]
+//= 1.3 Now saves/restores all the quest skills [Lupus]
+//============================================================ 
+
+valkyrie,53,56,3	script	Bohémienne#Valkyrie	101,{
+	if (SUBCLASSING == 1 && Class != 4020 && Class != 4021 && Class != 4012)
+	{
+		mes "[Bohémienne]";
+		mes "Tu as choisi le métier de Gipsy en tant que classe Vane?";
+		mes "Es-tu bien sûr de ton choix? Il n'y a pas de machine arrière.";
+		switch(select("Oui","Non","Je ne sais pas, tu peux m'en dire plus?"))
+		{
+			case 1:
+				mes "Très bien. Qu'il en soit ainsi.";
+				set SUBCLASSING, 4021; 
+				getitem 21098, 1;
+				break;
+			case 2:
+				mes "Tu as raison. Réfléchis bien.";
+				break;
+			case 3:
+				mes "Tu veux en savoir plus? Bien sûr!";
+				mes "C'est logique. Vu le poids de ta décision sur ton futur.";
+				mes "En tant que Gipsy, tu peux accéder aux skills suivants:";
+				mes "Arrow Vulcan, Marionnette Control, Longing For Freedom, Tarot Card of Fate.";
+				mes "Throw Arrow et Scream.";
+				mes "Voilà, tu en sais un peu plus. Réfléchis bien.";
+				break;
+		} 
+		close;
+	}
+	else if (ADVJOB == 0 || Upper != 1) {
+		set .@karma_d,rand(1,10);
+		if (.@karma_d > 4) {
+			mes "[Bohémienne]";
+			mes "Félicitations.";
+			mes "Honneur aux Guerriers!";
+			close;
+		}
+		mes "[Bohémienne]";
+		mes "Un pas à gauche,";
+		mes "un pas à droite~!";
+		mes "Et balance...!";
+		mes "Danser est plus qu'un simple passe-temps. Pour moi, c'est un mode de vie~";
+		close;
+	}
+	else if (ADVJOB == Job_Gypsy && Class == Job_Archer_High && JobLevel > 39) {
+		mes "[Bohémienne]";
+		mes "La terre de Rune-Midgard a besoin de femmes talentueuses pour changer subtilement la balance des batailles entre le bien et le mal.";
+		next;
+		mes "[Bohémienne]";
+		mes "Souhaitez-vous devenir Bohémienne?";
+		next;
+		if (select("Non.:Oui.") == 1) {
+			mes "[Bohémienne]";
+			mes "Revenez quand vous vous sentirez prête.";
+			next;
+			mes "[Bohémienne]";
+			mes "Honneur aux Guerriers!";
+			close;
+		}
+		if (SkillPoint) {
+			mes "[Bohémienne]";
+			mes "Vous n'avez pas terminé votre apprentissage.";
+			close;
+		}
+		jobchange Job_Gypsy;
+		set ADVJOB,0;
+		mes "[Bohémienne]";
+		mes "Félicitations!";
+		mes "En tant que Bohémienne, je sais que vos performances feront chavirer les coeurs de tous ceux qui vous regarderont danser...";
+		close;
+	}
+
+	mes "[Bohémienne]";
+	mes "Bienvenue au Walhalla, le Hall des Honneurs.";
+	next;
+	mes "[Bohémienne]";
+	mes "Faites comme chez vous.";
+	mes "Honneur aux Guerriers!";
+	close;
+}

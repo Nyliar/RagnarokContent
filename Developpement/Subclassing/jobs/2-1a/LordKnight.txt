@@ -1,0 +1,98 @@
+//Le Livre d'Ymir http://www.bookofymir.net/
+//traduit par Myllena
+//===== eAthena Script ======================================= 
+//= Advance Class jobchanger after kRO Normals.
+//===== By: ==================================================
+//= Nana
+//= finished, optimized and tested by Lupus
+//===== Current Version: ===================================== 
+//= 1.3
+//===== Compatible With: ===================================== 
+//= eAthena 1.0 +
+//===== Description: ========================================= 
+//= Advance Class jobchanger after kRO Normals.
+//===== Additional Comments: ================================= 
+//= v1.1 Made all into functions, additional checks, etc. [Lupus]
+//= v1.2 Made numbers into constants. [Vicious]
+//= 1.3 Now saves/restores all the quest skills [Lupus]
+//============================================================ 
+
+valkyrie,44,39,5	script	Seigneur Chevalier::Valkyrie	56,{
+	if (SUBCLASSING == 1  && Class != 4008 && Class != 4015)
+	{
+		mes "[Seigneur Chevalier]";
+		mes "Tu as choisi le métier de Lord Knight en tant que classe Vane?";
+		mes "Es-tu bien sûr de ton choix? Il n'y a pas de machine arrière.";
+		switch(select("Oui","Non", "Je ne sais pas encore. Quels skills sont disponibles?"))
+		{
+			case 1:
+				mes "Très bien. Qu'il en soit ainsi.";
+				set SUBCLASSING, 4008; 
+				getitem 21098, 1;
+				break;
+			case 2:
+				mes "Tu as raison. Réfléchis bien.";
+				break;
+			case 3:
+				mes "Tu veux en savoir plus? Bien sûr!";
+				mes "C'est logique. Vu le poids de ta décision sur ton futur.";
+				mes "En tant que Lord Knight, tu peux accéder aux skills suivants:";
+				mes "Aura Blade, Parrying, Concentration, Tension Relax, Head Crush, Join Beat.";
+				mes "Auto Counter et Bowling Bash.";
+				mes "Voilà, tu en sais un peu plus. Réfléchis bien.";
+				break;
+		} 
+		close;
+	}
+	else if (ADVJOB == 0 || Upper != 1) {
+		set .@karma_d,rand(1,10);
+		if (.@karma_d > 4) {
+			mes "[Seigneur Chevalier]";
+			mes "Félicitations.";
+			mes "Honneur aux Guerriers!";
+			close;
+		}
+		mes "[Seigneur Chevalier]";
+		mes "Nous autres Chevaliers portons une grande responsabilité... Servir, et protéger.";
+		next;
+		mes "[Seigneur Chevalier]";
+		mes "Même au prix de nos vies, nous devons maintenir la paix et nous sacrifier pour nos camarades.";
+		close;
+	}
+	else if (ADVJOB == Job_Lord_Knight && Class == Job_Swordman_High && JobLevel > 39) {
+		mes "[Seigneur Chevalier]";
+		mes "Votre temps est venu!";
+		mes "Le monde a encore besoin de vous.";
+		next;
+		mes "[Seigneur Chevalier]";
+		mes "Souhaitez-vous devenir Seigneur Chevalier?";
+		next;
+		if (select("Non.:Oui.") == 1) {
+			mes "[Seigneur Chevalier]";
+			mes "Revenez quand vous vous sentirez prêt.";
+			next;
+			mes "[Seigneur Chevalier]";
+			mes "Honneur aux Guerriers!";
+			close;
+		}
+		if (SkillPoint) {
+			mes "[Seigneur Chevalier]";
+			mes "Vous n'avez pas terminé votre apprentissage.";
+			close;
+		}
+		jobchange Job_Lord_Knight;
+		set ADVJOB,0;
+		mes "[Seigneur Chevalier]";
+		mes "Félicitations!";
+		mes "En tant que Seigneur Chevalier, j'espère que vous serez en première ligne de toutes les batailles, afin de mener vos alliés à la victoire!";
+		close;
+	}
+
+	mes "[Seigneur Chevalier]";
+	mes "Bienvenue au Walhalla, le Hall des Honneurs.";
+	next;
+	mes "[Seigneur Chevalier]";
+	mes "Faites comme chez vous.";
+	mes "Honneur aux Guerriers!";
+	close;
+}

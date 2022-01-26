@@ -1,0 +1,181 @@
+// [========================================================]
+// [===========      Grim Reaper - Council       ===========]
+// [========================================================]
+// [ Version 1                                              ]
+// [========================================================]
+// [ Original script by: Alayne                             ]
+// [========================================================]
+// [ Description:                                           ]
+// [--------------------------------------------------------]
+// [                                                        ]
+// [ - Grim Reaper quests serie			           ]
+// [ - Hamelin flute player quest			           ]
+// [ - Way to obtain magic and rang bonus item		    ]
+// [========================================================]
+// [ Changelog: (5 last updates)                            ]
+// [--------------------------------------------------------]
+// [                                                        ]
+// [ v0: Creation                      			    ]
+// [                                                        ]
+// [========================================================]
+// [                                                        ]
+// [========================================================]
+
+capitale,127,194,6	script	Grim::thagri	467,{
+	set .@npcname$, "[Grim]";
+
+	mes .@npcname$;
+	mes "";
+	
+	if (LANGUAGE == 2)
+	{
+		if (REAPQ == 0)
+		{
+			mes "Sorry, I'm a bit busy right now.";
+			mes "I'm in hunting.";
+			mes "The first rule when you hunt something,";
+			mes "is to be completely inoticable.";
+			mes "Your target should never that you're hunting it.";
+			mes "Best way for this: Be there without being there.";
+			mes "Grims all know how to do this.";
+		}
+		else
+		{
+			if (REAPDROPQ == 0)
+			{
+				mes "...Where have you heard about us?";
+				mes "A Wesen? We should kill them all!";
+				mes "They're simply...Beast. No, even worst than that.";
+				mes "None of them shall live. We live to hunt them down.";
+				mes "Wait a second...How can I tell you all this without hesitation?";
+				next;
+				mes .@npcname$;
+				mes "*Smell*";
+				mes "You're one of us!";
+				mes "And you don't even know it!";
+				mes "Unbelievable.";
+				mes "Right now, I'll be your master.";
+				mes "You already know how to chase these beasts down.";
+				mes "Now, you need a tool for that.";
+				mes "Bring me a Reaper representation.";
+				mes "I'll change it for you.";
+				set REAPDROPQ, 1;
+			}
+			else if (REAPDROPQ == 1)
+			{
+				if (countitem(1466) >= 1)
+				{
+					mes "Great. You're now a Reaper.";
+					mes "Yes, it's simple as that.";
+					mes "You got it in your blood, there's no better proof.";
+					mes "From now, you should go back and see that thing that first sent you.";
+					set REAPQ, 2;
+				}
+				else
+				{
+					mes "I can't do more for you.";
+					mes "You've got to understand that alone.";
+					mes "Bring me a Reaper representation.";
+				}
+			}
+			else
+			{
+				mes "You again? You wanna know more about Hunting?";
+				mes "You got to know that there's two kind of Wesen.";
+				mes "The commonest are...normal. You won't see a difference with normal people.";
+				mes "The others, the Frusth Wesen, are violent.";
+				mes "They're those we're hunting on Council demand.";
+				mes "They're pretty good at hiding, though.";
+				mes "They almost everytime live in city, under human form.";
+				mes "To unhide them, you've got to find an object, on those of their spicie.";
+				mes "An object they're not supposed to let down.";
+				next;
+				mes .@npcname$;
+				mes "These objects are their weakest point.";
+				mes "It let them know that you're hunting them, and that you're ready to kill all their spicie if needed.";
+				mes "In general, they loose their mind, and transform.";
+				mes "Then they attack, or flee.";
+				mes "In both case, they become target to hunt down.";
+				mes "But remember that you need your Reaper's Tool to let them drop.";
+				mes "If you don't know which monster to kill, find your target first.";
+				mes "It surely will reveals itself.";
+			}
+		}
+	}
+	else if (LANGUAGE == 1)
+	{
+		if (REAPQ == 0)
+		{
+			mes "Désolé, je suis un peu occupé la.";
+			mes "Je chasse.";
+			mes "La première règle quand tu chasses,";
+			mes "c'est d'être absolument imperceptible.";
+			mes "Ta cible ne doit jamais savoir que tu la chasses.";
+			mes "Et le mieux pour ça: être là sans vraiment l'être.";
+			mes "Les Grims savent tous faire ça.";
+		}
+		else
+		{
+			if (REAPDROPQ == 0)
+			{
+				mes "...Où as-tu entendu parler de nous?";
+				mes "Un Wesen? On devrait tous les tuer!";
+				mes "Ce sont des...Bêtes. Non, même pire que ça.";
+				mes "Aucun d'entre eux ne devrait exister. Nous vivons pour les chasser.";
+				mes "Attends une seconde...Pourquoi je te dis tout ça sans hésitation?";
+				next;
+				mes .@npcname$;
+				mes "*Sent*";
+				mes "Tu es l'un d'entre nous!";
+				mes "Et tu ne le sais même pas!";
+				mes "Incroyable.";
+				mes "A partir de maintenant, je t'apprendrais.";
+				mes "Tu sais déjà comment chasser ces bestioles.";
+				mes "Maintenant, tu as besoin d'un outil pour ça.";
+				mes "Apporte moi la représentation d'un Reaper.";
+				mes "Je te le changerais.";
+				set REAPDROPQ, 1;
+			}
+			else if (REAPDROPQ == 1)
+			{
+				if (countitem(1466) >= 1)
+				{
+					mes "Bien. Tu es désormais un Reaper.";
+					mes "Oui, c'est aussi simple que ça.";
+					mes "Tu l'as dans le sang, et il n'y a pas de meilleure preuve.";
+					mes "Maintenant, tu devrais retourner voir celui qui t'as envoyé ici en premier.";
+					set REAPQ, 2;
+				}
+				else
+				{
+					mes "Je ne peux rien de plus pour toi.";
+					mes "Tu dois comprendre seul.";
+					mes "Amène moi la représentation d'un Reaper.";
+				}
+			}
+			else
+			{
+				mes "Te revoilà? Tu veux en savoir plus sur la Chasse?";
+				mes "Il faut savoir qu'il existe deux sortes de Wesen.";
+				mes "Les plus communs sont...normaux. Tu ne les différencieras pas des gens normaux.";
+				mes "Les autres, les Frusth Wesen, sont agressifs et violent.";
+				mes "C'est ceux que nous chassons à la demande du Conseil Wesen.";
+				mes "Ils sont durs à débusquer.";
+				mes "En règle général, ils vivent sous forme humaine dans les villes.";
+				mes "Pour les débusquer, il faut chasser ceux de leur espèce jusqu'à obtenir un objet précis.";
+				mes "Un objet qu'ils ne sont pas censé lâcher.";
+				next;
+				mes .@npcname$;
+				mes "Ces objets sont leur point faible.";
+				mes "Il leur fait comprendre que tu les cherches, et que tu es prêt à éliminer la moitié de leur espéce s'il le faut.";
+				mes "En général, ca suffit à les faire craquer, et ils se transforment.";
+				mes "Puis soit ils attaquent, soit ils fuient.";
+				mes "Dans les cas, ce sont des cibles à abattre.";
+				mes "Cependant, rappelle toi que tu dois avoir ton Outil de Reaper pour qu'ils drop.";
+				mes "Si tu ne sais pas quel monstre tuer, trouve d'abord ta cible.";
+				mes "En te parlant, elle se dévoilera forcément.";
+			}
+		}
+	}
+	close;
+}

@@ -1,0 +1,2097 @@
+prt_fild08,163,368,5	script	Holen::prthol	52,{
+	set .@npcname$, "[Holen]";
+
+	mes .@npcname$;
+	mes "";
+	
+	if(LANGUAGE == 2)
+	{
+		mes "Good day to you, " + strcharinfo(0);
+		if (XP_Q >= 2)
+		{
+			next;
+			if (XP_Q == 2)
+			{
+				mes .@npcname$;
+				mes "";
+				mes "Hi, my friend. You're here for the story, I bet.";
+				if (countitem(7803) >= 1)
+				{
+					mes "Well done.";
+					mes "You can keep it, I only wanted to test you.";
+					mes "Looks like your ready for all, right?";
+					mes "You just stole a book after all...";
+					next;
+					mes "You've juste find the first secret for easy training.";
+					mes "Do fear anything. If you fear death,";
+					mes "you'll never succeed.";
+					mes "Let's move on our story.";
+					next;
+					mes "I've put the thing on my mouth.";
+					mes "I can't swallow it, bite it, nothing.";
+					mes "I've juste have it in the mouth, and it began to glow,";
+					mes "just as some dust falling from the sky. And THERE...";
+					mes "Know what comes...";
+					mes "I need you to bring this book to the second library.";
+					mes "With ink, paper and bamboo, to repair it.";
+					mes "50 of each should be enought.";
+					mes "I'll wait you here.";
+					set XP_Q, 3;
+					close;
+				}
+				else
+				{
+					mes "You know what I need right?";
+					mes "Bring me back that book!";
+					mes "And don't forget: Ink, paper and Bamboo to repair it.";
+					mes "50 of each!";
+					close;
+				}
+			}
+			else if (XP_Q == 4)
+			{
+				mes .@npcname$;
+				mes "";
+				mes "Hi, my friend. You're here for the story, I bet.";
+				if (countitem(14532) >= 1)
+				{
+					mes "Well done.";
+					delitem 14532, 1;
+					mes "You can keep it, I just wanted to test you.";
+					getitem 14532, 1;
+					mes "So, you hurt a grandpa";
+					mes "to obey to me. Great!";
+					next;
+					mes "You've just find the second secret.";
+					mes "Never step back,";
+					mes "cause some missions you'll receive will disgust you.";
+					mes "But let's go further on our story.";
+					next;
+					mes "The light falls all around me.";
+					mes "I was feeling like...irradiated. Glowing myself.";
+					mes "I started to float out of my body when...";
+					mes "Guess?";
+					mes "I need you to bring this book to a friend of mine.";
+					mes "You'll find him in Yuno.";
+					mes "Look for the Counterfeiter.";
+					mes "You'll have to bring him some old boxes:";
+					mes "12 OBB, 2 OPB, 10 GB";
+					mes "I'll wait here.";
+					set XP_Q, 5;
+					close;
+				}
+				else
+				{
+					mes "You know what I need right?";
+					mes "Bring me back that book!";
+					mes "To meet the Counterfeiter, bring 12 OBB, 2 OPB, 10 GB";
+					close;
+				}
+			}
+			else if (XP_Q == 6)
+			{
+				mes .@npcname$;
+				mes "";
+				mes "Hi, my friend. You're here for the story, I bet.";
+				if (countitem(14533) >= 1 && XP_Q == 6)
+				{
+					mes "Nice Job.";
+					delitem 14533, 1;
+					mes "You can keep it.";
+					getitem 14533, 1;
+					mes "You pass the third step.";
+					mes "You got to keep everything. It can be useful one day.";
+					mes "But let move on our story.";
+					next;
+					mes "The warm has come inside me.";
+					mes "I was floating, losing my conscience";
+					mes "my feeling. Just like if I was loosing my body.";
+					mes "Go on?";
+					mes "For the next step, you must bring this book to Brasilis.";
+					mes "Look for the Amplifier.";
+					mes "I warned him, he'll wait for you.";
+					mes "Bring it to him.";
+					mes "I'll wait here.";
+					set XP_Q, 7;
+					close;
+				}
+				else
+				{
+					mes "You know what I need right?";
+					mes "Bring me back that book!";
+					close;
+				}
+			}
+			else if (XP_Q == 8)
+			{
+				mes .@npcname$;
+				mes "";
+				mes "Hi, my friend. You're here for the story, I bet.";
+				if (countitem(14545) >= 1 && XP_Q == 8)
+				{
+					mes "Good job.";
+					delitem 14545, 1;
+					mes "You can keep it, I just wanna test you.";
+					getitem 14545, 1;
+					mes "You passed the fourth ordeal.";
+					mes "But let's go on our story.";
+					next;
+					mes "I was seeing my body, lying back there.";
+					mes "It's quite hard to explain. I was feeling, but not really.";
+					mes "It was like empathy for a stranger.";
+					mes "Then, I need you to bring that in Dicastes.";
+					mes "Find the Multiplier.";
+					mes "He'll need some little things.";
+					mes "25 Bread, 25 Fresh Fish, 5 Illusion Flower, and 50 Mould Powder";
+					mes "I'll wait here.";
+					set XP_Q, 9;
+					close;
+				}
+				else
+				{
+					mes "You know what I need right?";
+					mes "Bring me back that packet!";
+					mes "Find the Multiplier.";
+					mes "He'll need some little things.";
+					mes "25 Bread, 25 Fresh Fish, 5 Illusion Flower, and 50 Mould Powder";				
+					close;
+				}
+			}
+			else if (XP_Q == 10)
+			{
+				mes .@npcname$;
+				mes "";
+				mes "Hi, my friend. You're here for the story, I bet.";
+				if (countitem(13758) >= 1)
+				{
+					mes "Well done.";
+					mes "I'll keep it, ok?";
+					delitem 13758, 1;
+					mes "You've reach the end of my story.";
+					mes "Never fool, or we'll know it one day.";
+					mes "And Gods only know how you'll pay for it.";
+					mes "That's the end.";
+					next;
+					mes "I only feel for a soft blow on me.";
+					mes "The glowing dust was all around me. And it comes to me.";
+					mes "It enters in me. And a Fae appear in front of me.";
+					mes "It was her which spread this dust. By eating this...thing,";
+					mes "I've jailed her in me. And by releasing her, she spreads";	
+					mes "her Fae Dust. Find a Fae around Prontera,";
+					mes "I know there's some.";
+					set XP_Q, 11;
+					close;
+				}
+				else
+				{
+					mes "You know what I need right?";
+					mes "Bring me back that book!";
+					close;
+				}
+			}
+		}
+		else
+		{
+			mes "Looks like you need some help, aren't you?";
+			mes "I know, I know. You're dreaming about becoming a 'great Adventurer',";
+			mes "but unfortunately, you don't know where and when train?";
+			mes "There's no secret! Training! Training and Training again is the success key.";
+			mes "I don't have the goal to help people who doesn't deserve it.";
+			mes "Are you training hard?";
+			next;
+			switch(select("Yeah! I'm already training hard!","I'm merely...lazy..."))
+			{
+				case 1:	
+					mes .@npcname$;
+					mes "";
+					mes "Look like you're training hard.";
+					mes "In this case, I'll tell you about my secret.";
+					mes "Are you ok?";
+					next;
+					mes "On the other hand, I can also give you some infos...";
+					switch(select("The secret! The secret!","The infos, please"))
+					{
+						case 1:
+							mes .@npcname$;
+							mes "";
+							if (XP_Q == 0)
+							{
+								mes "I've found something strange in a cave some years ago.";
+								mes "It was shining in a cave not far from hear.";
+								mes "I don't really know what it was but";
+								mes "A strange force brought me to bite in it...";
+								mes "Do you wanna know more?";
+								switch(select("Yeah, tell me!","No thanks, it's disgusting..."))
+								{
+									case 1:
+										mes "Allright, but you'll have to pay the bill.";
+										mes "Wanna know the next? Bring me a book";
+										mes "that you'll find in prontera Library.";
+										mes "I'll be waiting here.";
+										set XP_Q, 1;
+										close;
+									case 2:	
+										mes "Well, your choice.";
+										mes "You'll never know the easy exp secret.";
+										close;
+								}
+							}
+							break;
+						case 2:
+							next;
+							mes .@npcname$;
+							mes "";
+							mes "That's only general infos.";
+							mes "Not sure it will correspond to what you're expecting for,";
+							mes "don't come crying after hearing it.";
+							mes "I can give you infos according to you job.";
+							mes "It'll cost you 1M your level divided by 10.";
+							mes "1M for level 10 to 19, 2M for 20 to 29";
+							mes "and so on.";
+							mes "It's free until level 30.";
+							mes "Allright?";
+							next;
+							switch(select("Yes","Well, no..."))
+							{
+								case 1:	
+									if (BaseLevel >= 30)
+									{
+										if (Zeny >= BaseLevel/10*1000000)
+										{
+											mes .@npcname$;
+											mes "Allright, I'll take your money.";
+											set Zeny, Zeny-(BaseLevel/10*1000000);
+											mes "Now, everything depends on your class and level.";
+											close;
+										}
+										else
+										{
+											mes .@npcname$;
+											mes "You don't have enough money.";
+											mes "For you, I need " + BaseLevel/10*1000000 + "zeny.";
+											close;
+										}
+									}
+									else
+									{
+										mes .@npcname$;
+										mes "First step are almost the same for everybody.";
+										mes "Some Poring, a bit of Payon Cave 1...";
+										mes "Once level 20, you can varry.";
+										mes "Mandragora for long range classes,";
+										mes "Payon Cave 2 for the others.";
+										close;
+									}
+									close;
+								case 2:
+									mes "Then you'll come back.";
+									mes "When you'll need me.";
+									mes "And believe me, you'll come back.";
+									close;
+							}
+							close;
+					}
+				case 2:
+					mes .@npcname$;
+					mes "";
+					mes "You moron!";
+					mes "I won't give you my secret if you're that lazy...";
+					mes "Come back you'll be ready to sweap to go further!";
+					close;	
+			}
+		}
+	}
+	else if (LANGUAGE == 1)
+	{
+		mes "Bien le bonjour, " + strcharinfo(0);
+		if (XP_Q >= 2)
+		{
+			next;
+			if (XP_Q == 2)
+			{
+				mes .@npcname$;
+				mes "";
+				mes "Salut, l'ami. Tu es là pour l'histoire je parie.";
+				if (countitem(7803) >= 1)
+				{
+					mes "Joli travail.";
+					mes "Tu peux le garder, je voulais juste te tester.";
+					mes "On dirait que tu es prêt à tout hein?";
+					mes "Tu viens de voler un livre après tout...";
+					next;
+					mes "Tu viens de découvrir le premier secret de l'xp facile.";
+					mes "N'avoir peur de rien. Si tu crains de mourir,";
+					mes "tu ne t'en sortiras jamais.";
+					mes "Mais reprenons notre histoire.";
+					next;
+					mes "J'ai donc mis l'objet dans ma bouche.";
+					mes "Je ne pouvais pas l'avaler, pas le mâcher, rien.";
+					mes "Je l'avais juste dans la bouche. Une lumière s'est mise à briller,";
+					mes "comme une poussière qui tombait et LA...";
+					mes "Tu connais la suite...";
+					mes "J'ai besoin que tu amène ce livre à la seconde bibliothèque.";
+					mes "Avec de l'encre, du papier et de quoi enluminer le livre. Du Bambou.";
+					mes "Cinquante de chaque devrais suffire.";
+					mes "J'attendrais ici.";
+					set XP_Q, 3;
+					close;
+				}
+				else
+				{
+					mes "Tu sais ce dont j'ai besoin non?";
+					mes "Rapporte moi ce livre!";
+					mes "N'oublie pas l'encre, du papier et de quoi enluminer le livre. Du Bambou. Pour le bouquiniste.";
+					mes "Cinquante de chaque devrais suffire ";
+					close;
+				}
+			}
+			else if (XP_Q == 4)
+			{
+				mes .@npcname$;
+				mes "";
+				mes "Salut, l'ami. Tu es là pour l'histoire je parie.";
+				if (countitem(14532) >= 1)
+				{
+					mes "Joli travail.";
+					delitem 14532, 1;
+					mes "Tu peux le garder, je voulais juste te tester.";
+					getitem 14532, 1;
+					mes "Tu as donc frapper un vieillard";
+					mes "pour obéir à mes instructions. Bravo.";
+					next;
+					mes "Tu viens de découvrir le second secret de l'xp facile.";
+					mes "Ne reculer devant rien,";
+					mes "car certaines missions qu'on te confiera seront insultantes selon toi.";
+					mes "Mais reprenons notre histoire.";
+					next;
+					mes "La lumière tombé comme une pluie fine.";
+					mes "Je me sentais irradier, une chaleur douce m'envahit.";
+					mes "Je commençais à flotter au dessus du sol quand soudain...";
+					mes "Devine?";
+					mes "J'ai besoin que tu amène ce livre à un ami à moi.";
+					mes "Tu le trouvera à Yuno.";
+					mes "Cherche Le Faussaire.";
+					mes "Il faudra aussi lui fournir un ensemble de boîtes:";
+					mes "12 OBB, 2 OPB, 10 GB";
+					mes "J'attendrais ici.";
+					set XP_Q, 5;
+					close;
+				}
+				else
+				{
+					mes "Tu sais ce dont j'ai besoin non?";
+					mes "Rapporte moi ce livre!";
+					mes "Pour contacter le Faussaire, prévois 12 OBB, 2 OPB, 10 GB";
+					close;
+				}
+			}
+			else if (XP_Q == 6)
+			{
+				mes .@npcname$;
+				mes "";
+				mes "Salut, l'ami. Tu es là pour l'histoire je parie.";
+				if (countitem(14533) >= 1 && XP_Q == 6)
+				{
+					mes "Joli travail.";
+					delitem 14533, 1;
+					mes "Tu peux le garder, je voulais juste te tester.";
+					getitem 14533, 1;
+					mes "Tu as passé la troisième étape.";
+					mes "Il faut tout garder, ca peut toujours servir.";
+					mes "Mais reprenons notre histoire.";
+					next;
+					mes "La chaleur m'avais envahi.";
+					mes "Je me sentais toujours flotter, mais je perdais peu à peu";
+					mes "mes sensations. Comme si je quittais mon corps.";
+					mes "On continue?";
+					mes "Pour la suite, il faudra que tu emmène ton livre à Brasilis.";
+					mes "Cherche L'Amplificateur.";
+					mes "Je l'ai prévenu, il t'attendra.";
+					mes "Apporte lui ";
+					mes "J'attendrais ici.";
+					set XP_Q, 7;
+					close;
+				}
+				else
+				{
+					mes "Tu sais ce dont j'ai besoin non?";
+					mes "Rapporte moi ce livre!";
+					close;
+				}
+			}
+			else if (XP_Q == 8)
+			{
+				mes .@npcname$;
+				mes "";
+				mes "Salut, l'ami. Tu es là pour l'histoire je parie.";
+				if (countitem(14545) >= 1 && XP_Q == 8)
+				{
+					mes "Joli travail.";
+					delitem 14545, 1;
+					mes "Tu peux le garder, je voulais juste te tester.";
+					getitem 14545, 1;
+					mes "Tu as passé la quatrième épreuve.";
+					mes "Mais reprenons notre histoire.";
+					next;
+					mes "Je voyais mon corps en bas.";
+					mes "Je ressentais, mais pas vraiment. C'est très dur à exprimer.";
+					mes "Je ne ressentais que comme par empathie envers un étranger.";
+					mes "Pour la suite, il faudra que tu emmène ton livre à El Dicastes.";
+					mes "Cherche Le Multiplicateur.";
+					mes "Il aura besoin de pas mal de petites choses.";
+					mes "25 Bread, 25 Fresh Fish, 5 Illusion Flower, et 50 Mould Powder";
+					mes "J'attendrais ici.";
+					set XP_Q, 9;
+					close;
+				}
+				else
+				{
+					mes "Tu sais ce dont j'ai besoin non?";
+					mes "Rapporte moi le paquet!";
+					mes "Pour que le Multiplicateur t'aide, prévois 25 Bread, 25 Fresh Fish, 5 Illusion Flower, et 50 Mould Powder";
+					close;
+				}
+			}
+			else if (XP_Q == 10)
+			{
+				mes .@npcname$;
+				mes "";
+				mes "Salut, l'ami. Tu es là pour l'histoire je parie.";
+				if (countitem(13758) >= 1)
+				{
+					mes "Joli travail.";
+					mes "Je vais prendre ça, ok?";
+					delitem 13758, 1;
+					mes "Tu es arrivé au bout de mon histoire.";
+					mes "Ne triche jamais, sinon on le saura.";
+					mes "Et seuls les Dieux savent comment ils te le feront payer.";
+					mes "Voilà la fin.";
+					next;
+					mes "Je ne ressentais qu'une douce brise qui soufflait.";
+					mes "La poussière qui m'environnait fonça sur moi.";
+					mes "Et la lumière entra en moi. Une Fae se tenait devant moi.";
+					mes "C'était elle qui laissait cette poussière. En mangeant le truc,";
+					mes "je l'avais emprisonné en moi. Et en sortant, elle libéra";	
+					mes "sa poussière de Fae. Cherche donc une Fae autour de Thalys,";
+					mes "je sais qu'il y en a.";
+					set XP_Q, 11;
+					close;
+				}
+				else
+				{
+					mes "Tu sais ce dont j'ai besoin non?";
+					mes "Rapporte moi ce livre!";
+					close;
+				}
+			}
+		}
+		else
+		{
+			mes "On dirait que tu as besoin d'aide, je me trompe?";
+			mes "Je sais, je sais. Tu rêves de devenir un grand aventurier,";
+			mes "mais malheureusement, tu ne sais pas où ni comment xp, pas vrai?";
+			mes "Il n'y a pas de secret! L'entraînement! L'entraînement est la clé de tout.";
+			mes "Je n'ai pas pour vocation d'aider les personnes qui ne se donne pas de mal.";
+			mes "Est-ce que c'est ton cas?";
+			next;
+			switch(select("Moi je me donne du mal! Remarque moi tout ces cals!","J'suis plutôt du genre...Feignant..."))
+			{
+				case 1:	
+					mes .@npcname$;
+					mes "";
+					mes "En effet, on dirait que tu t'entraîne dur.";
+					mes "Dans ce cas, je peux te parler de mon secret.";
+					mes "Ca te dit?";
+					next;
+					mes "Sinon, je peux aussi te donner des infos sur où xp...";
+					switch(select("Le secret! Le secret!","Les infos, stp"))
+					{
+						case 1:
+							mes .@npcname$;
+							mes "";
+							if (XP_Q == 0)
+							{
+								mes "J'ai trouvé il y a quelques années un objet curieux.";
+								mes "Ca brillait dans le noir d'une grotte, prêt du Port de Bienvenue.";
+								mes "Je ne sais toujours pas vraiment ce que c'est, mais";
+								mes "une force inconnue m'a poussé à en manger un bout et...";
+								mes "Tu veux en savoir plus?";
+								switch(select("Oui, raconte!","Euh, non en fait, c'est assez glauque..."))
+								{
+									case 1:
+										mes "Pour ça, il va falloir payer la Douloureuse.";
+										mes "Si tu veux connaître la suite, apporte moi le livre ";
+										mes "que tu trouveras à la bibliothèque de Prontera.";
+										mes "J'attendrais dans le coin.";
+										set XP_Q, 1;
+										close;
+									case 2:	
+										mes "Alors tant pis pour toi.";
+										mes "Tu ne connaîtra jamais le mystère de l'xp rapide.";
+										close;
+								}
+							}
+							break;
+						case 2:
+							next;
+							mes .@npcname$;
+							mes "";
+							mes "Il ne s'agit que d'infos générales.";
+							mes "Pas sûre qu'elles correspondent à ce que tu attends,";
+							mes "ne vient pas te plaindre derrière.";
+							mes "Je peux te donner des infos selon ton niveau.";
+							mes "Ca te coûtera 1M de fois la dizaine de ton niveau.";
+							mes "1M pour les niveaux 10 à 19, 2M pour les niveaux 20 à 29";
+							mes "et ainsi de suite jusqu'à 14M pour les derniers levels.";
+							mes "J'offre mes services jusqu'au niveau 30.";
+							mes "Ca te dit toujours?";
+							next;
+							switch(select("Oui","Euh, non en fait..."))
+							{
+								case 1:	
+									if (BaseLevel >= 30)
+									{
+										if (Zeny >= BaseLevel/10*1000000)
+										{
+											mes .@npcname$;
+											mes "Bien. Je prends donc mon dû.";
+											set Zeny, Zeny-(BaseLevel/10*1000000);
+											mes "Tout dépends de ta classe et de ton niveau maintenant.";
+											close;
+										}
+										else
+										{
+											mes .@npcname$;
+											mes "Tu n'as pas la somme qui correspond.";
+											mes "Pour toi, j'ai besoin de " + BaseLevel/10*1000000 + "zeny.";
+											close;
+										}
+									}
+									else
+									{
+										mes .@npcname$;
+										mes "Les premières étapes sont quasiment les même pour tous.";
+										mes "Un peu de Poring, un peu de Payon Cave 1...";
+										mes "A partir du niveau 20 on peut varier.";
+										mes "Les Mandragora pour les classes à distance,";
+										mes "et Payon Cave 2 pour les autres.";
+										close;
+									}
+									close;
+								case 2:
+									mes "Dans ce cas, reviens plus tard.";
+									mes "Quand tu auras besoin de moi.";
+									mes "Et je sais que ce moment viendra.";
+									close;
+							}
+							close;
+					}
+				case 2:
+					mes .@npcname$;
+					mes "";
+					mes "Espèce d'idiot!";
+					mes "Tant pis, je ne te donnerais pas mon secret...";
+					mes "Reviens quand tu seras prêt à suer pour avancer!";
+					close;	
+			}
+		}
+	}
+	close;
+}
+
+prt_in,159,62,5	script	Book::prtinb	111,{
+	if(LANGUAGE == 2)
+	{
+		mes "*You find a strange book.";
+		mes "It looks old, but a strange glow escape from it.*";
+
+		if (XP_Q == 1)
+		{
+			next;
+			mes "Take the book?";
+			switch(select("Yes","No"))
+			{
+				case 1:
+					mes "You just stole a book.";
+					mes "But the bookman have seen you!";
+					mes "Run!";
+					set XP_Q, 2;
+					getitem 7803, 1;
+					warp "prontera", 0, 0;
+					break;
+				case 2:
+					mes "Good. Stealing's bad.";
+					break;
+			}
+		}
+	}
+	else if (LANGUAGE == 1)
+	{
+		mes "*Vous apercevez un livre étrange.";
+		mes "La tranche est usée, mais il émane de lui";
+		mes "une lueur diaphane.*";
+
+		if (XP_Q == 1)
+		{
+			next;
+			mes "Souhaitez prendre le livre?";
+			switch(select("Oui","Non"))
+			{
+				case 1:
+					mes "Vous venez de voler un livre.";
+					mes "La bibliothécaire vous a vu!";
+					mes "Courez vite!";
+					set XP_Q, 2;
+					getitem 7803, 1;
+					warp "prontera", 0, 0;
+					break;
+				case 2:
+					mes "C'est bien, voler c'est mal.";
+					break;
+			}
+		}
+	}
+	close;
+}
+
+prt_in,160,88,5	script	Gren::prting	59,{
+	mes "[Gren]";
+	
+	if(LANGUAGE == 2)
+	{
+		mes "Welcome to the Prontera Library.";
+		mes "I'm an old scribe, but I miss some work...";
+		mes "I feel it...I feel you've got something for me. Right?";
+
+		if (XP_Q == 3)
+		{
+			next;
+			if (DROPXP_Q == 1)
+			{
+				mes "[Gren]";
+				if (countitem(1024)>=25 && countitem(7111)>=25 && countitem(7150)>=25 && countitem(7151)>=50 && countitem(7158)>=10)
+				{
+					mes "You got it all? Perfect.";
+					mes "Gimme a second.";
+					next;
+					mes "Here you are!";
+					mes "I'll give your book back.";
+					getitem 14532, 1;
+					delitem 1024, 25;
+					delitem 7111, 25;
+					delitem 7150, 25;
+					delitem 7151, 50;
+					delitem 7158, 10;
+					set DROPXP_Q, 0;
+					set XP_Q, 4;
+					mes "It's all your now.";
+					close;
+				}
+				else
+				{
+					mes "Sorry, but your missing something.";
+					close;
+				}
+			}
+			else
+			{
+				mes "Show him the book?";
+				switch(select("Yes","No"))
+				{
+					case 1:
+						mes "But...But...This book...";
+						mes "Look at it's state!";
+						mes "You're a Barbarian!";
+						mes "Oh...It's not your fault?";
+						mes "Sorry.";
+						mes "I can restore this book,";
+						mes "but I'm gonna miss some stuff.";
+						next;
+						mes "First, Ink, Paper and cardboard.";
+						mes "What? You got it all?";
+						mes "Perfect! I can start then!";
+						mes "But I also need...";
+						mes "Oil paper, to replace the spoilt leaf, and liquor jar, even broken one.";
+						mes "50, and 10 should be enought.";
+						set DROPXP_Q, 1;
+						close;
+					case 2:
+						mes "You leave without showing him.";
+						close;
+				}
+			}
+		}
+	}
+	else if (LANGUAGE == 1)
+	{
+		mes "Bienvenue dans le bibliothèque.";
+		mes "Je suis un ancien scribe, mais je manque un peu de travail...";
+		mes "Je sens...Je sens que tu as quelque chose à me proposer! Non?";
+
+		if (XP_Q == 3)
+		{
+			next;
+			if (DROPXP_Q == 1)
+			{
+				mes "[Gren]";
+				if (countitem(1024)>=25 && countitem(7111)>=25 && countitem(7150)>=25 && countitem(7151)>=50 && countitem(7158)>=10)
+				{
+					mes "Vous avez tout? Parfait.";
+					mes "Une seconde, je termine.";
+					next;
+					mes "Et voilà!";
+					mes "Je vous rends le livre.";
+					getitem 14532, 1;
+					delitem 1024, 25;
+					delitem 7111, 25;
+					delitem 7150, 25;
+					delitem 7151, 50;
+					delitem 7158, 10;
+					set DROPXP_Q, 0;
+					set XP_Q, 4;
+					mes "A vous d'en faire ce que bon vous semble.";
+					close;
+				}
+				else
+				{
+					mes "Désolé, mais il vous en manque.";
+					close;
+				}
+			}
+			else
+			{
+				mes "Lui montrer le livre?";
+				switch(select("Oui","Non"))
+				{
+					case 1:
+						mes "Mais...Mais...Ce livre...";
+						mes "Mais dans quel état vous l'avez mis!";
+						mes "Espèce de barbare!";
+						mes "Oh...Ce n'est pas vous alors?";
+						mes "Désolé, j'ai tendance à m'emballer.";
+						mes "Je peux traiter et restaurer ce livre";
+						mes "mais il va me manquer du matériel.";
+						next;
+						mes "Pour commencer, de l'encre, du papier et du carton.";
+						mes "Quoi? Vous avez déjà tout ça?";
+						mes "Magnifique! Je peux commencer!";
+						mes "Mais il me faudra aussi...";
+						mes "Du papier huildé, pour remplacer les feuilles abîmées, et des jar de liqueur, même brisées.";
+						mes "50, et 10, ca devrait suffire.";
+						set DROPXP_Q, 1;
+						close;
+					case 2:
+						mes "Vous repartez dans l'autre sens.";
+						close;
+				}
+			}
+		}
+	}
+	close;
+}
+
+yuno_in01,96,93,5	script	Jewelry Box::bab	111,{
+	if(LANGUAGE == 2)
+	{
+		mes "*You see a lot of jewels*";
+		if (XP_Q == 5 && DROPXP_Q == 1)
+		{
+			if (rand(1,STONE_C) == 1)
+			{
+				mes "*An alarm ring...*";
+				mes "*You've been caught.*";
+				mes "*You gonna be jailed.*";
+				atcommand "!jailfor 5mn " + strcharinfo(0);
+			}
+			mes "*You took the stone.*";
+			getitem 718, 1;
+			set STONE_C, STONE_C-1;
+		}
+	}
+	else if (LANGUAGE == 1)
+	{
+		mes "*Vous voyez un ensemble de pierres précieuses*";
+		if (XP_Q == 5 && DROPXP_Q == 1)
+		{
+			if (rand(1,STONE_C) == 1)
+			{
+				mes "*Une alarme retenti...*";
+				mes "*Vous vous êtes fait attraper.*";
+				mes "*Vous allez être enfermé pendant 5 minutes.*";
+				atcommand "!jailfor 5mn " + strcharinfo(0);
+			}
+			mes "*Vous prenez la pierre.*";
+			getitem 718, 1;
+			set STONE_C, STONE_C-1;
+		}
+	}
+	close;
+}
+
+yuno_in04,116,106,5	script	Precious Book::bab2	111,{
+	if(LANGUAGE == 2)
+	{
+		mes "*You see a precious book.*";
+		if (XP_Q == 5 && DROPXP_Q == 1)
+		{
+			if (rand(1,STONE_C) == 1)
+			{
+				mes "*An alarm ring...*";
+				mes "*You've been caught.*";
+				mes "*You gonna be jailed.*";
+				atcommand "!jailfor 5mn " + strcharinfo(0);
+			}
+			mes "*You took the stone.*";
+			getitem 719, 1;
+			set STONE_C, STONE_C-1;
+		}
+	}
+	else if (LANGUAGE == 1)
+	{
+		mes "*Vous voyez un Livre précieuses*";
+		if (XP_Q == 5 && DROPXP_Q == 1)
+		{
+			if (rand(1,STONE_C) == 1)
+			{
+				mes "*Une alarme retenti...*";
+				mes "*Vous vous êtes fait attraper.*";
+				mes "*Vous allez être enfermé pendant 5 minutes.*";
+				atcommand "!jailfor 5mn " + strcharinfo(0);
+			}
+			mes "*Vous prenez la pierre.*";
+			getitem 719, 1;
+			set STONE_C, STONE_C-1;
+		}
+	}
+	close;
+}
+
+yuno_in01,95,24,5	script	Incrusted Sword::yuis	111,{
+	if(LANGUAGE == 2)
+	{
+		mes "*You see a wonderful sword*";
+		if (XP_Q == 5 && DROPXP_Q == 1)
+		{
+			if (rand(1,STONE_C) == 1)
+			{
+				mes "*An alarm ring...*";
+				mes "*You've been caught.*";
+				mes "*You gonna be jailed.*";
+				atcommand "!jailfor 5mn " + strcharinfo(0);
+			}
+			mes "*You took the stone.*";
+			getitem 720, 1;
+			set STONE_C, STONE_C-1;
+		}
+	}
+	else if (LANGUAGE == 1)
+	{
+		mes "*Vous voyez une épée magnifique dont la garde est sertie.*";
+		if (XP_Q == 5 && DROPXP_Q == 1)
+		{
+			if (rand(1,STONE_C) == 1)
+			{
+				mes "*Une alarme retenti...*";
+				mes "*Vous vous êtes fait attraper.*";
+				mes "*Vous allez être enfermé pendant 5 minutes.*";
+				atcommand "!jailfor 5mn " + strcharinfo(0);
+			}
+			mes "*Vous prenez la pierre.*";
+			getitem 720, 1;
+			set STONE_C, STONE_C-1;
+		}
+	}
+	close;
+}
+
+yuno_in01,109,28,5	script	Shining Shield::yuss	111,{
+	if(LANGUAGE == 2)
+	{
+		mes "*You see a shining shield.*";
+		if (XP_Q == 5 && DROPXP_Q == 1)
+		{
+			if (rand(1,STONE_C) == 1)
+			{
+				mes "*An alarm ring...*";
+				mes "*You've been caught.*";
+				mes "*You gonna be jailed.*";
+				atcommand "!jailfor 5mn " + strcharinfo(0);
+			}
+			mes "*You took the stone.*";
+			getitem 721, 1;
+			set STONE_C, STONE_C-1;
+		}
+	}
+	else if (LANGUAGE == 1)
+	{
+		mes "*Vous voyez un bouclier qui brille.*";
+		if (XP_Q == 5 && DROPXP_Q == 1)
+		{
+			if (rand(1,STONE_C) == 1)
+			{
+				mes "*Une alarme retenti...*";
+				mes "*Vous vous êtes fait attraper.*";
+				mes "*Vous allez être enfermé pendant 5 minutes.*";
+				atcommand "!jailfor 5mn " + strcharinfo(0);
+			}
+			mes "*Vous prenez la pierre.*";
+			getitem 721, 1;
+			set STONE_C, STONE_C-1;
+		}
+	}
+	close;
+}
+
+yuno_in03,182,43,5	script	Exposition Tube::yuet	111,{
+	if(LANGUAGE == 2)
+	{
+		mes "*You can see a button made in precious rock.*";
+		if (XP_Q == 5 && DROPXP_Q == 1)
+		{
+			if (rand(1,STONE_C) == 1)
+			{
+				mes "*An alarm ring...*";
+				mes "*You've been caught.*";
+				mes "*You gonna be jailed.*";
+				atcommand "!jailfor 5mn " + strcharinfo(0);
+			}
+			mes "*You took the stone.*";
+			getitem 722, 1;
+			set STONE_C, STONE_C-1;
+		}
+	}
+	else if (LANGUAGE == 1)
+	{
+		mes "*Vous voyez une pierre qui sert de bouton*";
+		if (XP_Q == 5 && DROPXP_Q == 1)
+		{
+			if (rand(1,STONE_C) == 1)
+			{
+				mes "*Une alarme retenti...*";
+				mes "*Vous vous êtes fait attraper.*";
+				mes "*Vous allez être enfermé pendant 5 minutes.*";
+				atcommand "!jailfor 5mn " + strcharinfo(0);
+			}
+			mes "*Vous prenez la pierre.*";
+			getitem 722, 1;
+			set STONE_C, STONE_C-1;
+		}
+	}
+	close;
+}
+
+yuno_in04,185,111,5	script	Study Table::yust	111,{
+	if(LANGUAGE == 2)
+	{
+		mes "*There's a precious rock on the table.*";
+		if (XP_Q == 5 && DROPXP_Q == 1)
+		{
+			if (rand(1,STONE_C) == 1)
+			{
+				mes "*An alarm ring...*";
+				mes "*You've been caught.*";
+				mes "*You gonna be jailed.*";
+				atcommand "!jailfor 5mn " + strcharinfo(0);
+			}
+			mes "*You took the stone.*";
+			getitem 723, 1;
+			set STONE_C, STONE_C-1;
+		}
+	}
+	else if (LANGUAGE == 1)
+	{
+		mes "*Vous voyez une des pierre sur la table.*";
+		if (XP_Q == 5 && DROPXP_Q == 1)
+		{
+			if (rand(1,STONE_C) == 1)
+			{
+				mes "*Une alarme retenti...*";
+				mes "*Vous vous êtes fait attraper.*";
+				mes "*Vous allez être enfermé pendant 5 minutes.*";
+				atcommand "!jailfor 5mn " + strcharinfo(0);
+			}
+			mes "*Vous prenez la pierre.*";
+			getitem 723, 1;
+			set STONE_C, STONE_C-1;
+		}
+	}
+	close;
+}
+
+yuno_in01,170,102,5	script	Ring::yur	111,{
+	if(LANGUAGE == 2)
+	{
+		mes "*A ring is on the floor.*";
+		if (XP_Q == 5 && DROPXP_Q == 1)
+		{
+			if (rand(1,STONE_C) == 1)
+			{
+				mes "*An alarm ring...*";
+				mes "*You've been caught.*";
+				mes "*You gonna be jailed.*";
+				atcommand "!jailfor 5mn " + strcharinfo(0);
+			}
+			mes "*You took the stone.*";
+			getitem 724, 1;
+			set STONE_C, STONE_C-1;
+		}
+	}
+	else if (LANGUAGE == 1)
+	{
+		mes "*Une bague traîne sur le comptoir.*";
+		if (XP_Q == 5 && DROPXP_Q == 1)
+		{
+			if (rand(1,STONE_C) == 1)
+			{
+				mes "*Le barman vous saisi la main...*";
+				mes "*Vous vous êtes fait attraper.*";
+				mes "*Vous allez être enfermé pendant 5 minutes.*";
+				atcommand "!jailfor 5mn " + strcharinfo(0);
+			}
+			mes "*Vous prenez la pierre.*";
+			getitem 724, 1;
+			set STONE_C, STONE_C-1;
+		}
+	}
+	close;
+}
+
+yuno_in04,38,124,5	script	Incrusted Column::bab3	111,{
+	if(LANGUAGE == 2)
+	{
+		mes "*Something shining on it.*";
+		if (XP_Q == 5 && DROPXP_Q == 1)
+		{
+			if (rand(1,STONE_C) == 1)
+			{
+				mes "*An alarm ring...*";
+				mes "*You've been caught.*";
+				mes "*You gonna be jailed.*";
+				atcommand "!jailfor 5mn " + strcharinfo(0);
+			}
+			mes "*You took the stone.*";
+			getitem 725, 1;
+			set STONE_C, STONE_C-1;
+		}
+	}
+	else if (LANGUAGE == 1)
+	{
+		mes "*Vous voyez un trepied qui brill.*";
+		if (XP_Q == 5 && DROPXP_Q == 1)
+		{
+			if (rand(1,STONE_C) == 1)
+			{
+				mes "*Une alarme retenti...*";
+				mes "*Vous vous êtes fait attraper.*";
+				mes "*Vous allez être enfermé pendant 5 minutes.*";
+				atcommand "!jailfor 5mn " + strcharinfo(0);
+			}
+			mes "*Vous prenez la pierre.*";
+			getitem 725, 1;
+			set STONE_C, STONE_C-1;
+		}
+	}
+	close;
+}
+
+yuno_in03,18,92,5	script	Precious Canne::yupc	111,{
+	if(LANGUAGE == 2)
+	{
+		mes "*A precious rock shine on top of that.*";
+		if (XP_Q == 5 && DROPXP_Q == 1)
+		{
+			if (rand(1,STONE_C) == 1)
+			{
+				mes "*An alarm ring...*";
+				mes "*You've been caught.*";
+				mes "*You gonna be jailed.*";
+				atcommand "!jailfor 5mn " + strcharinfo(0);
+			}
+			mes "*You took the stone.*";
+			getitem 726, 1;
+			set STONE_C, STONE_C-1;
+		}
+	}
+	else if (LANGUAGE == 1)
+	{
+		mes "*Une pierre brille au sommet de la canne.*";
+		if (XP_Q == 5 && DROPXP_Q == 1)
+		{
+			if (rand(1,STONE_C) == 1)
+			{
+				mes "*Une alarme retenti...*";
+				mes "*Vous vous êtes fait attraper.*";
+				mes "*Vous allez être enfermé pendant 5 minutes.*";
+				atcommand "!jailfor 5mn " + strcharinfo(0);
+			}
+			mes "*Vous prenez la pierre.*";
+			getitem 726, 1;
+			set STONE_C, STONE_C-1;
+		}
+	}
+	close;
+}
+
+yuno_in01,37,167,5	script	Incrusted Watch::yuiw	111,{
+	if(LANGUAGE == 2)
+	{
+		mes "*The sun shine on this watch.*";
+		if (XP_Q == 5 && DROPXP_Q == 1)
+		{
+			if (rand(1,STONE_C) == 1)
+			{
+				mes "*An alarm ring...*";
+				mes "*You've been caught.*";
+				mes "*You gonna be jailed.*";
+				atcommand "!jailfor 5mn " + strcharinfo(0);
+			}
+			mes "*You took the stone.*";
+			getitem 727, 1;
+			set STONE_C, STONE_C-1;
+		}
+	}
+	else if (LANGUAGE == 1)
+	{
+		mes "*Le soleil s'accroche sur une montre posé là.*";
+		if (XP_Q == 5 && DROPXP_Q == 1)
+		{
+			if (rand(1,STONE_C) == 1)
+			{
+				mes "*Une alarme retenti...*";
+				mes "*Vous vous êtes fait attraper.*";
+				mes "*Vous allez être enfermé pendant 5 minutes.*";
+				atcommand "!jailfor 5mn " + strcharinfo(0);
+			}
+			mes "*Vous prenez la pierre.*";
+			getitem 727, 1;
+			set STONE_C, STONE_C-1;
+		}
+	}
+	close;
+}
+
+yuno_in04,14,127,5	script	Jewelry Box::bab4	111,{
+	if(LANGUAGE == 2)
+	{
+		mes "*There's a lot of precious jewel in there.*";
+		if (XP_Q == 5 && DROPXP_Q == 1)
+		{
+			if (rand(1,STONE_C) == 1)
+			{
+				mes "*An alarm ring...*";
+				mes "*You've been caught.*";
+				mes "*You gonna be jailed.*";
+				atcommand "!jailfor 5mn " + strcharinfo(0);
+			}
+			mes "*You took the stone.*";
+			getitem 728, 1;
+			set STONE_C, STONE_C-1;
+		}
+	}
+	else if (LANGUAGE == 1)
+	{
+		mes "*Vous voyez un ensemble de pierres précieuses.*";
+		if (XP_Q == 5 && DROPXP_Q == 1)
+		{
+			if (rand(1,STONE_C) == 1)
+			{
+				mes "*Une alarme retenti...*";
+				mes "*Vous vous êtes fait attraper.*";
+				mes "*Vous allez être enfermé pendant 5 minutes.*";
+				atcommand "!jailfor 5mn " + strcharinfo(0);
+			}
+			mes "*Vous prenez la pierre.*";
+			getitem 728, 1;
+			set STONE_C, STONE_C-1;
+		}
+	}
+	close;
+}
+
+yuno_in01,124,170,5	script	Hair Clip::yuhc	111,{
+	if(LANGUAGE == 2)
+	{
+		mes "*A hairpin where a rock shines.*";
+		if (XP_Q == 5 && DROPXP_Q == 1)
+		{
+			if (rand(1,STONE_C) == 1)
+			{
+				mes "*An alarm ring...*";
+				mes "*You've been caught.*";
+				mes "*You gonna be jailed.*";
+				atcommand "!jailfor 5mn " + strcharinfo(0);
+			}
+			mes "*You took the stone.*";
+			getitem 729, 1;
+			set STONE_C, STONE_C-1;
+		}
+	}
+	else if (LANGUAGE == 1)
+	{
+		mes "*Une pince à cheveux en nacre où brille une pierre précieuse.*";
+		if (XP_Q == 5 && DROPXP_Q == 1)
+		{
+			if (rand(1,STONE_C) == 1)
+			{
+				mes "*Une alarme retenti...*";
+				mes "*Vous vous êtes fait attraper.*";
+				mes "*Vous allez être enfermé pendant 5 minutes.*";
+				atcommand "!jailfor 5mn " + strcharinfo(0);
+			}
+			mes "*Vous prenez la pierre.*";
+			getitem 729, 1;
+			set STONE_C, STONE_C-1;
+		}
+	}
+	close;
+}
+
+yuno,191,91,5	script	The Counterfeiter::yucf	735,{
+	if(LANGUAGE == 2)
+	{
+		mes "[The Counterfeiter]";
+		mes "Salut p'tit gars.";
+		mes "Je sens pas ce que tu viens faire par là, mais t'es trop propre.";
+		mes "Tu vas t'attirer des ennuis, crois moi...";
+
+		if (XP_Q == 5)
+		{
+			next;
+			if (DROPXP_Q == 1)
+			{
+				mes "[The Counterfeiter]";
+				mes "So? You've got my rocks?";
+				if (countitem(718)>=1 && countitem(719)>=1 && countitem(720)>=1 && countitem(721)>=1 && countitem(722)>=1
+					&& countitem(723)>=1 && countitem(724)>=1 && countitem(725)>=1 && countitem(726)>=1 && countitem(727)>=1
+					&& countitem(728)>=1 && countitem(729)>=1)
+				{
+					delitem 718, 1;
+					delitem 719, 1;
+					delitem 720, 1;
+					delitem 721, 1;
+					delitem 722, 1;
+					delitem 723, 1;
+					delitem 724, 1;
+					delitem 725, 1;
+					delitem 726, 1;
+					delitem 727, 1;
+					delitem 728, 1;
+					delitem 729, 1;
+
+					mes "Well done, boy.";
+					mes "Wait a bit.";
+					if (countitem(14532) >= 1 && XP_Q == 5)
+					{
+						//progressbar "0xFF0000", 2000;
+						mes "Here you are!";
+						mes "I've boosted it a bit. That's not official, but...";
+						mes "Who cares, hu?";
+						getitem 14533, 1;
+						set DROPXP_Q, 0;
+						set XP_Q, 6;
+						mes "Take it back to Holen. And not a word on our...arrangement.";
+					}
+					else
+					{
+						mes "You've used the book?";
+						mes "You fool! Holen will kill ya!";
+						mes "I don't know everyting 'bout tha'!";	
+					}
+				}
+				else
+				{
+					mes "Don't try fooling me.";
+					mes "Your missing some!";
+					mes "Bring them back all.";
+					goto OnShowMark;
+				}
+				close;
+			}
+			else
+			{
+				mes "Show him the book?";
+				switch(select("Yes","No"))
+				{
+					case 1:
+						next;
+						mes "[The Counterfeiter]";
+						mes "Ah! You're sent by Holen, this son of a bit**!";
+						mes "His mother was a hot noble...";
+						mes "But you're not here for that, he!";
+						mes "Did you bring all to me?";
+						next;
+						if (countitem(603)>=12 && countitem(617)>=2 && countitem(644)>=10)
+						{
+							delitem 603, 12;
+							delitem 617, 2;
+							delitem 644, 10;
+							mes "Well done, guy but...";
+							mes "I won't work for free. You got to pay.";
+							mes "300 Millions. Not less, not more.";
+							mes "Allright. We can have a deal. I've hear about";
+							mes "A lot of rock. One per month of a year.";
+							next;
+							mes "This city's wealthy got it all.";
+							mes "So, stole them. For me.";
+							mes "They don't even care about it...";
+							mes "Bring them back, and I'll help you.";
+							mes "But careful, don't be caught!";
+							mes "Or you'll end up in jail...";
+							mes "The more you stole, the more you look after their wealth.";
+							mes "Wish you good luck ahahahaha!";
+							set DROPXP_Q, 1;
+							set STONE_C, 15;
+							goto OnShowMark;
+						}
+						else
+						{
+							mes "I can't work like that.";
+							mes "Get me my 12 OBB, 2 OPB, 10 GB";
+						}
+						close;
+					case 2:
+						mes "You're passing through.";
+						close;
+				}
+			}
+		}
+	}
+	else if (LANGUAGE == 1)
+	{
+		mes "[Le Faussaire]";
+		mes "Salut p'tit gars.";
+		mes "Je sens pas ce que tu viens faire par là, mais t'es trop propre.";
+		mes "Tu vas t'attirer des ennuis, crois moi...";
+
+		if (XP_Q == 5)
+		{
+			next;
+			if (DROPXP_Q == 1)
+			{
+				mes "[Le Faussaire]";
+				mes "Alors? T'as mes cailloux?";
+				if (countitem(718)>=1 && countitem(719)>=1 && countitem(720)>=1 && countitem(721)>=1 && countitem(722)>=1
+					&& countitem(723)>=1 && countitem(724)>=1 && countitem(725)>=1 && countitem(726)>=1 && countitem(727)>=1
+					&& countitem(728)>=1 && countitem(729)>=1)
+				{
+					delitem 718, 1;
+					delitem 719, 1;
+					delitem 720, 1;
+					delitem 721, 1;
+					delitem 722, 1;
+					delitem 723, 1;
+					delitem 724, 1;
+					delitem 725, 1;
+					delitem 726, 1;
+					delitem 727, 1;
+					delitem 728, 1;
+					delitem 729, 1;
+
+					mes "Joli, gamin.";
+					mes "Attends un peu.";
+					if (countitem(14532) >= 1 && XP_Q == 5)
+					{
+						//progressbar "0xFF0000", 2000;
+						mes "Et voilà!";
+						mes "Je l'ai un peu boosté. C'est pas officiel, mais bon...";
+						mes "Qui s'en occupe, hein?";
+						getitem 14533, 1;
+						set DROPXP_Q, 0;
+						set XP_Q, 6;
+						mes "Ramène ça à Holen. Et pas un mot sur notre deal.";
+					}
+					else
+					{
+						mes "Je rêve ou t'as utilisé le livre?";
+						mes "Espèce de malade! Holen va te faire la peau";
+						mes "Moi, j'y suis pour rien!";	
+					}
+				}
+				else
+				{
+					mes "Essaye pas de m'avoir.";
+					mes "Il en manque!";
+					mes "Ramènes une Pierre précieuse de chaque mois.";
+					goto OnShowMark;
+				}
+				close;
+			}
+			else
+			{
+				mes "Lui montrer le livre?";
+				switch(select("Oui","Non"))
+				{
+					case 1:
+						next;
+						mes "[Le Faussaire]";
+						mes "Ah! T'es l'envoyé de ce bâtard de Holen!";
+						mes "Sa mère était une noble un peu trop canaille...";
+						mes "Bref, t'es pas là pour ça.!";
+						mes "T'as amené tout ce qui était prévu?";
+						next;
+						if (countitem(603)>=12 && countitem(617)>=2 && countitem(644)>=10)
+						{
+							delitem 603, 12;
+							delitem 617, 2;
+							delitem 644, 10;
+							mes "Joli p'tit gars, mais...";
+							mes "J'bosse pas gratos. Va falloir casquer.";
+							mes "Ca va te coûter 300 Millions. Pas moins.";
+							mes "Enfin on peut s'arranger. J'ai entendu parler";
+							mes "d'un joli ensemble de pierraille. Une par mois de l'année.";
+							next;
+							mes "Les riches de la ville les ont récupéré.";
+							mes "Alors vole leur à ton tour. Pour moi.";
+							mes "Ils s'en occupent pas, les égarent n'importe où...";
+							mes "Ramènes les, et j'bosserais à l'oeil.";
+							mes "Mais surtout, te fais pas chopper!";
+							mes "Sinon, tu devras attendre un moment en prison...";
+							mes "Plus tu voleras, et plus les gens feront gaffe.";
+							mes "Je te souhaite bonne chance ahahahaha!";
+							set DROPXP_Q, 1;
+							set STONE_C, 15;
+							goto OnShowMark;
+						}
+						else
+						{
+							mes "J'peux pas bosser dans ces conditions.";
+							mes "Ramène moi donc mes 12 OBB, 2 OPB, 10 GB";
+						}
+						close;
+					case 2:
+						mes "Vous passez votre chemin.";
+						close;
+				}
+			}
+		}
+	}
+	close;
+
+OnShowMark:
+	if(LANGUAGE == 2)
+	{
+		mes "Here's a clue for you. I'll mark the place where you can find them.";
+		mes "Come to me again to see it again.";
+	}
+	else if (LANGUAGE == 1)
+	{
+		mes "Tient, je vais t'aider. Voila les emplacements.";
+	}
+	viewpoint 1,245,144,1,0xFF0000;
+	viewpoint 1,338,203,2,0xFF0000;
+	viewpoint 1,95,184,3,0xFF0000;
+	viewpoint 1,120,138,4,0xFF0000;
+	viewpoint 1,51,105,5,0xFF0000;
+	viewpoint 1,278,290,6,0xFF0000;
+	viewpoint 1,264,90,7,0xFF0000;
+	close;
+}
+
+
+
+brasilis,249,325,5	script	Amplifier::braamp	107,{
+	if(LANGUAGE == 2)
+	{
+		mes "[Amplifier]";
+		mes "Hi, young traveler.";
+		mes "What a nice weather, hu?";
+		
+		if (XP_Q == 7)
+		{
+			next;
+			if (DROPXP_Q == 1)
+			{
+				mes "[Amplifier]";
+				mes "So? Do you got it all?";
+				if (countitem(2236)>=1 && countitem(1006)>=5 && countitem(7099)>=25)
+				{
+					mes "Great! Now, I can work!";
+					mes "Wait a moment.";
+					if (countitem(14533) >= 1 && XP_Q == 7)
+					{
+						//progressbar "0xFF0000", 2000;
+						mes "Here you are!";
+						mes "I revealed it's hidden power.";
+						getitem 14545, 1;
+						delitem 2236, 1;
+						delitem 1006, 5;
+						delitem 7099, 25;
+						set DROPXP_Q, 0;
+						set XP_Q, 8;
+						mes "Take it back to Holen. And don't talk about the scrolls.";
+						mes "He doesn't like scrolls...";
+					}
+					else
+					{
+						mes "I can't work without the initial book, you know!";
+					}
+				}
+				else
+				{
+					mes "No way.";
+					mes "Some are missing...";
+					mes "You have to bring me 1 Santa Hat, 5 Old Magic Book and 25 Worn-out Magic Scroll";			
+				}
+				close;
+			}
+			else
+			{
+				mes "You're here for Holen?";
+				switch(select("Yes","No"))
+				{
+					case 1:
+						next;
+						mes "[Amplifier]";
+						mes "I see that you've got something...interesting!";
+						mes "But it's power not yet complete.";
+						mes "I can change that. Unfortunately,";
+						mes "I'm missing some power to do that. I gonna need some stuff.";
+						mes "Something to call mana.";
+						mes "And something to trace runes. Or even already existing ones.";
+						mes "Finally, a pointed hat. All wizard need a pointed hat.";
+						mes "So we said 1 Santa Hat, 5 Old Magic Book and 25 Worn-out Magic Scroll";
+						set DROPXP_Q, 1;
+						close;
+					case 2:
+						mes "You're passing by.";
+						close;
+				}
+			}
+		}
+	}
+	else if (LANGUAGE == 1)
+	{
+		mes "[Amplificateur]";
+		mes "Bonjour, jeune voyageur.";
+		mes "Il fait beau aujourd'hui, pas vrai?";
+		
+		if (XP_Q == 7)
+		{
+			next;
+			if (DROPXP_Q == 1)
+			{
+				mes "[Amplificateur]";
+				mes "Alors? T'as ce qu'il me faut?";
+				if (countitem(2236)>=1 && countitem(1006)>=5 && countitem(7099)>=25)
+				{
+					mes "Bravo! Je peux maintenant opérer!";
+					mes "Attends un peu.";
+					if (countitem(14533) >= 1 && XP_Q == 7)
+					{
+						//progressbar "0xFF0000", 2000;
+						mes "Et voilà!";
+						mes "J'ai révélé son pouvoir caché.";
+						getitem 14545, 1;
+						delitem 2236, 1;
+						delitem 1006, 5;
+						delitem 7099, 25;
+						set DROPXP_Q, 0;
+						set XP_Q, 8;
+						mes "Ramène ça à Holen. Et ne lui parle pas des parchemins.";
+						mes "Il aime pas les parchemins...";
+					}
+					else
+					{
+						mes "Je peux pas travailler sans le livre de base voyons!";
+					}
+				}
+				else
+				{
+					mes "Impossible.";
+					mes "Il en manque...";
+					mes "Tu dois m'amener 1 Santa Hat, 5 Old Magic Book et 25 Worn-out Magic Scroll";			
+				}
+				close;
+			}
+			else
+			{
+				mes "Tu viens de la part de Holen?";
+				switch(select("Oui","Non"))
+				{
+					case 1:
+						next;
+						mes "[Amplificateur]";
+						mes "Je vois que tu as avec toi un livre...intéressant!";
+						mes "Mais sa puissance n'est pas encore complète.";
+						mes "Je peux changer ça. Malheureusement,";
+						mes "je manque de pouvoirs pour cela. Je vais avoir besoin d'objets.";
+						mes "Il me faut de quoi appeler le mana.";
+						mes "Il me faut également de quoi tracer les runes. Ou des toutes faites, même.";
+						mes "Enfin, il me faut un chapeau pointu. Tout les mages en ont.";
+						mes "Nous disons donc 1 Santa Hat, 5 Old Magic Book et 25 Worn-out Magic Scroll";
+						set DROPXP_Q, 1;
+						close;
+					case 2:
+						mes "Vous passez votre chemin.";
+						close;
+				}
+			}
+		}
+	}
+	close;
+}
+
+
+dicastes01,219,241,5	script	The Multiplier::dictm	711,{
+	if(LANGUAGE == 2)
+	{
+		mes "[The Multiplier]";
+		mes "And today, I tell you so...";
+		mes "Gods blessed me with a mystic poweeeerrrr!!!";
+		mes "I can multiply bread, or whatever you want!";
+		
+		if (XP_Q == 9)
+		{
+			next;
+			if (DROPXP_Q == 1)
+			{
+				mes "[The Multiplier]";
+				mes "So? You got it all?";
+				if (countitem(642)>=5 && countitem(641)>=5 && countitem(1007)>=5)
+				{
+					mes "Perfect!";
+					mes "Give me a second.";
+					if (countitem(14545) >= 1 && XP_Q == 9)
+					{
+						//progressbar "0xFF0000", 2000;
+						mes "Here you are!";
+						mes "Now you've got plenty!";
+						getitem 13758, 1;
+						delitem 642, 5;
+						delitem 641, 5;
+						delitem 1007, 5;
+						set DROPXP_Q, 0;
+						mes "I let you the initial one, I don't deserve it.";
+						set XP_Q, 10;
+						mes "Take it back to Holen.";
+						mes "And don't try fooling him. He's not as clear as he looks...";
+					}
+					else
+					{
+						mes "No multiplication without the original one.";
+						mes "You've been too glutton!";
+					}
+				}
+				else
+				{
+					mes "No way.";
+					mes "You're missing some. I can't work without that.";
+					mes "You need 5 Books of Devil, 5 Contract in Shadows and 5 Necklace of Wisdom";	
+				}
+				close;
+			}
+			else
+			{
+				mes "Holen sent you?";
+				switch(select("Yes","No"))
+				{
+					case 1:
+						next;
+						mes "[The Multiplier]";
+						mes "Pfff. Time's hard for fooler!";
+						mes "I don't really have magic power.";
+						mes "Bu honestly, I can duplicate things,";
+						mes "all I miss is stuff to do it...";
+						mes "Do you brought what you was supposed to?";
+						if (countitem(580)>=25 && countitem(579)>=25 && countitem(710)>=5 && countitem(7001)>=50)
+						{
+							mes "Perfect! With that, I can fool normal people!";
+							mes "Just a bit of magic dust and POUF! Pieces in my pocket.";
+							mes "I'll help you. But I need things to duplicate your book.";
+							mes "Let's say...5 Books of Devil, 5 Contract in Shadows and 5 Necklace of Wisdom";
+							mes "I'll wait here.";
+							delitem 580, 25;
+							delitem 579, 25;
+							delitem 710,5;
+							delitem 7001,50;
+							set DROPXP_Q, 1;
+						}
+						close;
+					case 2:
+						mes "You pretend not to see him.";
+						close;
+				}
+			}
+		}
+	}
+	else if (LANGUAGE == 1)
+	{
+		mes "[Le Multiplicateur]";
+		mes "Et aujourd'hui, je vous le dis...";
+		mes "les Dieux m'ont bénis d'un pouvoir mystiqueee!!!";
+		mes "Je peux multiplier les painsss et tout ce que vous voudrezzzz";
+		
+		if (XP_Q == 9)
+		{
+			next;
+			if (DROPXP_Q == 1)
+			{
+				mes "[Le Multiplicateur]";
+				mes "Alors? Tu as tout?";
+				if (countitem(642)>=5 && countitem(641)>=5 && countitem(1007)>=5)
+				{
+					mes "Parfait!";
+					mes "Donne moi une seconde.";
+					if (countitem(14545) >= 1 && XP_Q == 9)
+					{
+						//progressbar "0xFF0000", 2000;
+						mes "Et voilà!";
+						mes "Manant, t'en a plein!";
+						getitem 13758, 1;
+						delitem 642, 5;
+						delitem 641, 5;
+						delitem 1007, 5;
+						set DROPXP_Q, 0;
+						mes "Je te laisse l'original, j'en ai pas besoin.";
+						set XP_Q, 10;
+						mes "Ramène ça à Holen.";
+						mes "Essaye pas de le gruger. Il a l'air clean mais en fait...";
+					}
+					else
+					{
+						mes "Pas de duplication sans original.";
+						mes "T'as été trop gourmand!";
+					}
+				}
+				else
+				{
+					mes "Impossible.";
+					mes "Il en manque. Je peux pas bosser sans matières premières.";
+					mes "On a dit 5 Books of Devil, 5 Contract in Shadows et 5 Necklace of Wisdom";	
+				}
+				close;
+			}
+			else
+			{
+				mes "C'est Holen qui t'envoie?";
+				switch(select("Oui","Non"))
+				{
+					case 1:
+						next;
+						mes "[Le Multiplicateur]";
+						mes "Pfff. Les temps sont durs pour les Charlos!";
+						mes "J'ai pas vraiment de pouvoirs.";
+						mes "Mais je suis sincère, je peux dupliquer,";
+						mes "tout ce qui me manque, c'est de quoi le faire...";
+						mes "T'as amené ce qui était prévu?";
+						if (countitem(580)>=25 && countitem(579)>=25 && countitem(710)>=5 && countitem(7001)>=50)
+						{
+							mes "Parfait! Avec ça, je vais tromper les gogos!";
+							mes "Un peu d'illusionisme et pouf! Dans la poche les pièces.";
+							mes "J'vais t'aider. Mais il me faudra de quoi dupliquer ton livre.";
+							mes "Disons...5 Books of Devil, 5 Contract in Shadows et 5 Necklace of Wisdom";
+							mes "J'attendrais dans le coin.";
+							delitem 580, 25;
+							delitem 579, 25;
+							delitem 710,5;
+							delitem 7001,50;
+							set DROPXP_Q, 1;
+						}
+						close;
+					case 2:
+						mes "Vous faites semblant de ne pas le voir.";
+						close;
+				}
+			}
+		}
+	}
+	close;
+}
+
+prt_fild08,323,254,5	script	Shining::scint	802,{
+	if(LANGUAGE == 2)
+	{
+		mes "*A weak glow shine in front of you.*";
+		if (XP_Q == 11)
+		{
+			next;
+			if (DROPXP_Q == 1)
+			{
+				if (encours == 1)	
+				{
+					mes "*The light is about to disappear*";
+					mes "[Fairy]";
+					mes "Alors? Tu as trouvé?";
+					if (countitem(1061)>=10 && countitem(710)>=5 && countitem(7327)>=30)
+					{
+						delitem 1061, 10;
+						delitem 710, 5;
+						delitem 7327, 30;
+						mes "*You put the witch starsand on the fae.*";
+						//progressbar "0xFF0000", 2000;
+						mes "*You lay the fae on the Illusion Flowers.*";
+						//progressbar "0xFF0000", 2000;
+						mes "*You enlight her with the Flashlight.*";
+						//progressbar "0xFF0000", 2000;
+						mes "*The Fae start to glow again*";
+						setnpcdisplay "scint", 441;
+						next;
+						mes "Thanks! You've saved me!";
+						mes "By swallowing me, this man stole all my magic,";
+						mes "that's what make him stronger.";
+						mes "But it won't last. THis is the real Fae Gift!";
+						mes "I give it to you as a reward.";
+						mes "First, a Fae Kiss.";
+						getexp 1000000,0;
+						mes "Take also that. Use them with caution, that's pretty rare.";
+						getitem 12261, 5;
+						set DROPXP_Q, 0;
+						set XP_Q, 12;
+						setnpcdisplay "scint", 802;
+					}
+					else
+					{
+						mes "No way.";
+						mes "You're missing...I'm gonna die...";
+						mes "Bring me back Witch Starsand, to help me recreate dust,";
+						mes "10";
+						mes "Then, Illusion Flower, to communicate with Freya,";
+						mes "5";
+						mes "And light, given by Flashlights,";
+						mes "30...";
+					}
+				close;
+				}
+				else
+				{
+					if (countitem(1061)>=10 && countitem(710)>=5 && countitem(7327)>=30)
+					{
+						mes "*You're making the ritual, unsuccessfully.*";
+						delitem 1061, 10;
+						delitem 710, 5;
+						delitem 7327, 30;
+					}
+					else
+					{
+						mes "*THe Fae try to get the object.";
+						mes "Unfortunately, some are missing.*";
+						delitem 1061, countitem(1061);
+						delitem 710, countitem(710);
+						delitem 7327, countitem(7327);
+					}
+					set DROPXP_Q, 0;
+					mes "*The glowing dies in your hands.*";
+					mes "*The Fae just died*";
+					mes "Faes doesn't really die. Wind carry them,";
+					mes "and they rebirth, somewhere not so far.";
+					mes "Find the Fae, and help her again.";
+					mes "Please...";
+					set .diecount, .diecount+1;
+					if (.diecount == 9)
+						set .diecount, 1;
+					close2;
+					disablenpc "scint";
+					
+					do
+					{		
+							set .movex,rand(0,150);
+							set .movey,rand(0,150);
+							set .map$,strcharinfo(3);
+					}
+					while(!checkcell(.map$,.movex,.movey,cell_chkpass));
+					movenpc strnpcinfo(3),.movex,.movey;				
+					enablenpc "scint";
+					set .faedead, 0;
+					close;
+				}
+			}
+			else
+			{
+				mes "[Fairy]";
+				mes "Help me!";
+				mes "A bad man swallow me one day,";
+				mes "and since that, I can't fly again.";
+				mes "He stole me my Fae Dust...";
+				mes "Help me, and I'll help you in return...";
+				next;
+				mes "Bring me back Witch Starsand, to help me recreate dust,";
+				mes "10";
+				mes "Then, Illusion Flower, to communicate with Freya,";
+				mes "5";
+				mes "And light, given by Flashlights,";
+				mes "30...";
+				next;
+				mes "Quickly, my glow is dying...";
+				mes "I'll dye in about 15 minutes...";
+				addtimer 900000, strnpcinfo(3)+"::OnFaeDead";
+				set encours, 1;
+				set DROPXP_Q, 1;
+			}
+		}
+	}
+	else if (LANGUAGE == 1)
+	{
+		mes "*Une faible lumière danse devant vos yeux.*";
+		if (XP_Q == 11)
+		{
+			next;
+			if (DROPXP_Q == 1)
+			{
+				if (encours == 1)	
+				{
+					if (w == 1)
+					{
+						if (countitem(1061)>=10 && countitem(710)>=5 && countitem(7327)>=30)
+						{
+							mes "*Vous accomplissez le rituel, en vain.*";
+							delitem 1061, 10;
+							delitem 710, 5;
+							delitem 7327, 30;
+						}
+						else
+						{
+							mes "*La Fae attire les objets, pour tenter de se soigner.";
+							mes "Hélas, il en manque, et il est trop tard.*";
+							delitem 1061, countitem(1061);
+							delitem 710, countitem(710);
+							delitem 7327, countitem(7327);
+						}
+						set DROPXP_Q, 0;
+						mes "*La lumière s'éteint au creux de vos mains.*";
+						mes "*La Fae vient de mourir*";
+						mes "Les Faes ne meurent pas. Le vent les porte,";
+						mes "Puis elles renaissent, plus loin.";
+						mes "Retrouve la Fae, et aide la de nouveau.";
+						mes "S'il te plait...";
+						set .diecount, .diecount+1;
+						if (.diecount == 9)
+							set .diecount, 1;
+						close2;
+						disablenpc "scint";
+						
+						do
+						{		
+								set .movex,rand(0,150);
+								set .movey,rand(0,150);
+								set .map$,strcharinfo(3);
+						}
+						while(!checkcell(.map$,.movex,.movey,cell_chkpass));
+						movenpc strnpcinfo(3),.movex,.movey;				
+						enablenpc "scint";
+						set .faedead, 0;
+						close;
+					}
+					else
+					{
+						mes "*La lumière menace de s'éteindre*";
+						mes "[Fairy]";
+						mes "Alors? Tu as trouvé?";
+						if (countitem(1061)>=10 && countitem(710)>=5 && countitem(7327)>=30)
+						{
+							delitem 1061, 10;
+							delitem 710, 5;
+							delitem 7327, 30;
+							mes "*Vous versez la Poussière de Sorcière sur la Fae.*";
+							//progressbar "0xFF0000", 2000;
+							mes "*Vous couchez la Fae sur les Fleurs d'Illusions.*";
+							//progressbar "0xFF0000", 2000;
+							mes "*Vous l'inondez de Lumière.*";
+							//progressbar "0xFF0000", 2000;
+							mes "*La lumière se ravive*";
+							setnpcdisplay "Scintillement", 441;
+							next;
+							mes "Merci, tu m'as sauvé!";
+							mes "En m'avalant, cette homme à pris ma poussière,";
+							mes "c'est ce qui l'a rendu plus fort.";
+							mes "Mais ca ne durera pas. Voilà le vrai cadeau des Faes!";
+							mes "Je te le donne en remerciement.";
+							mes "Voici déjà le Baiser des Faes.";
+							getexp 1000000,0;
+							mes "Prends aussi ceci. Utilise les avec parciemonie, c'est très rare.";
+							getitem 12261, 5;
+							set DROPXP_Q, 0;
+							set XP_Q, 12;
+							setnpcdisplay "Scintillement", 802;
+						}
+						else
+						{
+							mes "Impossible.";
+							mes "Il t'en manque. Je vais mourir...";
+							mes "Rapporte moi de la Poussière de Sorcière, pour relancer ma production,";
+							mes "10";
+							mes "Ensuite, des Fleurs d'Illusions, pour communiquer avec Freya,";
+							mes "5";
+							mes "Et enfin, de la Lumière, fournit par des Flashlight,";
+							mes "30...";
+						}
+						close;
+					}
+				}
+				else
+				{
+					if (countitem(1061)>=10 && countitem(710)>=5 && countitem(7327)>=30)
+					{
+						mes "*Vous accomplissez le rituel, en vain.*";
+						delitem 1061, 10;
+						delitem 710, 5;
+						delitem 7327, 30;
+					}
+					else
+					{
+						mes "*La Fae attire les objets, pour tenter de se soigner.";
+						mes "Hélas, il en manque, et il est trop tard.*";
+						delitem 1061, countitem(1061);
+						delitem 710, countitem(710);
+						delitem 7327, countitem(7327);
+					}
+					set DROPXP_Q, 0;
+					mes "*La lumière s'éteint au creux de vos mains.*";
+					mes "*La Fae vient de mourir*";
+					mes "Les Faes ne meurent pas. Le vent les porte,";
+					mes "Puis elles renaissent, plus loin.";
+					mes "Retrouve la Fae, et aide la de nouveau.";
+					mes "S'il te plait...";
+					set .diecount, .diecount+1;
+					if (.diecount == 9)
+						set .diecount, 1;
+					close2;
+					disablenpc "scint";
+					
+					do
+					{		
+							set .movex,rand(0,150);
+							set .movey,rand(0,150);
+							set .map$,strcharinfo(3);
+					}
+					while(!checkcell(.map$,.movex,.movey,cell_chkpass));
+					movenpc strnpcinfo(3),.movex,.movey;				
+					enablenpc "scint";
+					close;
+				}
+			}
+			else
+			{
+				mes "[Fairy]";
+				mes "Au secours!";
+				mes "Un homme mauvais m'a avalé un jour,";
+				mes "et depuis, je ne peux plus voler.";
+				mes "Il m'a volé toute ma poussière de Fae...";
+				mes "Aide moi, et je t'aiderais en retour...";
+				next;
+				mes "Rapporte moi de la Poussière de Sorcière, pour relancer ma production,";
+				mes "10";
+				mes "Ensuite, des Fleurs d'Illusions, pour communiquer avec Freya,";
+				mes "5";
+				mes "Et enfin, de la Lumière, fournit par des Flashlight,";
+				mes "30...";
+				next;
+				mes "Vite, ma lumière s'éteint...";
+				mes "Je mourrais d'ici à 15 minutes...";
+				addtimer 900000, strnpcinfo(3)+"::OnFaeDead";
+				set encours, 1;
+				set DROPXP_Q, 1;
+			}
+		}
+	}		
+	close;
+	
+OnInit:
+	set .diecount, 0;
+	set .faedead, 0;
+	close;
+
+OnFaeDead:
+	set .faedead, 1;
+	deltimer strnpcinfo(3)+"::OnFaeDead";
+	close;
+}

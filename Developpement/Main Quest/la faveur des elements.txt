@@ -1,0 +1,127 @@
+//nouvelle quete: La Faveur des Elements
+//Principe: apporter un item de chaque élément, selon la variable aléatoire définie en début de semaine
+//sur chacun des 4 piédestals éparpillés dans le monde
+//Les items possibles: 
+//Elemental Stone
+//Armes Elemental
+//Armures Elemental
+//Cards Elemental
+//Piédestals protégés par des mvps, caché dans les donjons / instances
+//Si réussite, warp vers une map à part
+//invocation d'un big MvP custom
+//Si kill mvp, choix d'un item libre à chaque personne de la team.
+//Quete pouvant être remplie 1 fois par mois pour l'item
+//Sinon une fois par semaine pour des coffres fixes
+
+tha_in1,46,44,4	script	Ground Master::prtgrdmas	747,{
+	set .@npcname$, "[Ground Master]";
+	mes .@npcname$;
+	mes "";
+	mes "Good day to you, " + strcharinfo(0);
+	mes "I'm know as the chief of the Guild of Guild.";
+	mes "I am the one who discover all the unknown realm,";
+	mes "I'm the one who find Caspen, and get the Mornanie rallied.";
+	mes "I was the first one to hear about the Astral Island and the Arena.";
+	mes "I am the one who named the Crash or Turtle Island.";
+	mes "I am the Guild Leader.";
+	if (Q_NAH_COMPLETE == 1 && #quetemysterio == 5 && #complete == 1 && Q_RUNE_COMPLETE == 1)
+	{
+		if (#elemental_favor_q == 10 && $favor_elem_quest == 1)
+		{
+			next;
+			mes "My spirit raised.";
+			mes "I am the door to the Bloom.";
+			mes "I can now warp you right to her.";
+			mes "May you find there what you were seeking for.";
+			set .@map$, "";
+			warp .@map$, x,y;
+		}
+		else
+		{
+		next;
+		mes "I can smell that you've visited lot of countries.";
+		mes "You've met and helped lots of people, and they helped you in return.";
+		mes "You seems ready to hear about the very last secret.";
+		mes "Then open your ears, and listen for the sea's song.";
+		next;
+		mes "It's a very old song, that I first ear while traveling upon the sea.";
+		mes "It speaks about an old legend, an horrible monster, and an infinite treasure.";
+		mes "I don't know how much it's true, but all legend starts with some true story, right?";
+		mes "Here's what I hear about this song.";
+		mes "You better keep it in mind...";
+		next;
+		mes "Ohé, ohé,";
+		mes "Un Air de Violon qui portent sur les flots,";
+		mes "Ohé, ohé,";
+		mes "Un rouleau se forme sur la crête des eaux.";
+		next;
+		mes "Ohé, Ohé,";
+		mes "Un récif qui crève la coque,";
+		mes "Ohé, OHE!";
+		mes "Et le soleil couchant qui de nous se moque.";
+		next;
+		mes "That's all I know.";
+		mes "Your turn to discover this secret.";
+		set #elemental_favor_q, 1; 
+		}
+	}
+	close; 
+}
+
+mer1,46,44,4	script	air marin::amm1	-1,2,2,{
+	if (#elemental_favor_q > 0)
+	{
+		dispbottom "Ohé, ohé,";
+		dispbottom "Par les Flots balloté...";
+		set #elemental_favor_q, #elemental_favor_q+1;
+		callfunc "move_to_random";
+	}
+}
+
+mer2,46,44,4	script	air marin::amm2	-1,2,2,{
+	if (#elemental_favor_q > 0)
+	{
+		dispbottom "Ohé, ohé,";
+		dispbottom "Dans les Airs emporté...";
+		set #elemental_favor_q, #elemental_favor_q+1;
+		callfunc "move_to_random";
+	}
+}
+
+mer3,46,44,4	script	air marin::amm3	-1,2,2,{
+	if (#elemental_favor_q > 0)
+	{
+		dispbottom "Ohé, ohé,";
+		dispbottom "Par la Terre déchiré...";
+		set #elemental_favor_q, #elemental_favor_q+1;
+		callfunc "move_to_random";
+	}
+}
+
+mer4,46,44,4	script	air marin::amm4	-1,2,2,{
+	if (#elemental_favor_q > 0)
+	{
+		dispbottom "Ohé, ohé,";
+		dispbottom "Finissent les Flammes de l'Or révelées.";
+		set #elemental_favor_q, #elemental_favor_q+1;
+		callfunc "move_to_random";
+	}
+}
+
+function	script	move_to_random	{
+	do
+	{
+		if (@nummap == 0 || @nummap == 1 || @nummap == 2)
+		{ 
+    			set .movex,rand(80,160);
+    			set .movey,rand(80,310);
+		}
+		else if (@nummap == 3 || @nummap == 4)
+		{ 
+    			set .movex,rand(80,310);
+    			set .movey,rand(80,160);
+		}
+	}
+	while(!checkcell(@warpm$,.movex,.movey,cell_chkpass));
+	movenpc strnpcinfo(3),.movex,.movey;			
+}

@@ -1,0 +1,129 @@
+caspen,60,277,8	script	Gardien	413,{
+
+	set .@npc_name$, "[Gardien]";
+	set GARDIEN_Q, 0;
+	
+	mes .@npc_name$;
+	mes "Bonjour " + strcharinfo(0);
+	if( !(CHARLO_Q && (AB_Q == 1 || GE_Q == 1 || GLT_Q == 1 || ME_Q == 1 || MI_Q == 1 || RA_Q == 1 || RG_Q == 1 || RK_Q == 1 || SC_Q == 1 || SR_Q == 1 || SU_Q == 1 || WAN_Q == 1 || WAR_Q == 1 )) )
+	{
+		if (CLONE_Q == 4)
+		{
+			mes "Je ne te suis plus d'aucune utilité.";
+			mes "A bientôt !";
+			close;
+		}
+		else
+		{
+			mes "Tu n'as rien à faire ici, vas-t'en !";
+			close;
+		}
+	}
+	else
+	{
+		if(CLONE_Q == 1)
+		{
+			mes "Veux-tu retenter ta chance ?";
+			next;
+			switch(select("Oui, bien sure !:Non, plus tard."))
+			{
+				case 2:
+					mes .@npc_name$;
+					mes "Très bien, reviens me voir plus tard.";
+					close;
+					
+				case 1:
+					mes .@npc_name$;
+					mes "Très bien, tu sais déjà comment ça marche alors, bonne chance !";
+					close2;
+					set GARDIEN_Q, 1;
+					warp "casp_fild01",173,47;
+					end;
+			}
+		}
+		
+		else if (CLONE_Q == 2)
+		{
+			mes "Félicitations ! Tu peux enfin terminer ta quête !";
+			if(Upper)
+			{
+				if (Class != 4001)
+				{	
+					mes "Tu n'as plus qu'à aller voir le vieux sage qui se trouve quelque part aux alentours de Caspen";
+					mes "Je te préviens, les monstres ici ne sont pas faibles, et si tu ne leur montre pas que tu es le chef...";
+					mes "Bonne chance à toi, à bientôt !";
+				}
+				else
+				{
+					mes "Tu dois quand même passer Classe 1 High !";
+					mes "Puis tu n'auras plus qu'à aller voir le vieux sage qui se trouve quelque part aux alentours de Caspen";
+					mes "Bonne chance à toi, à bientôt !";
+				}
+			}
+			else
+			{
+				mes "Tu dois quand même aller rebirth avant, et passer Classe 1 High !";
+				mes "Puis tu n'auras plus qu'à aller voir le vieux sage qui se trouve quelque part aux alentours de Caspen";
+				mes "Bonne chance à toi, à bientôt !";
+			}
+			
+			set CLONE_Q,4;
+			if(AB_Q) set AB_Q, AB_Q + 1;
+			else if(GE_Q) set GE_Q, GE_Q + 1;
+			else if(GLT_Q) set GLT_Q, GLT_Q + 1;
+			else if(ME_Q) set ME_Q, ME_Q + 1;
+			else if(MI_Q) set MI_Q, MI_Q + 1;
+			else if(RA_Q) set RA_Q, RA_Q + 1;
+			else if(RG_Q) set RG_Q, RG_Q + 1;
+			else if(RK_Q) set RK_Q, RK_Q + 1;
+			else if(SC_Q) set SC_Q, SC_Q + 1;
+			else if(SR_Q) set SR_Q, SR_Q + 1;
+			else if(SU_Q) set SU_Q, SU_Q + 1;
+			else if(WAN_Q) set WAN_Q, WAN_Q + 1;
+			else if(WAR_Q) set WAR_Q, WAR_Q + 1;
+			close2;
+			savepoint "caspen",0,0;
+			warp "casp_fild01",173,47;
+			end;
+		}
+		
+		else
+		{
+			mes "Que viens-tu faire ici ?";
+			next;
+			switch(select("Je cherche le Mirroir du Mal.:Rien, je me balade."))
+			{
+				case 2:
+					mes .@npc_name$;
+					mes "D'accord, bonne journée à toi alors";
+					mes "A bientôt !";
+					close;
+					
+				case 1:
+					mes .@npc_name$;
+					mes "Le Mirroir du Mal se trouve juste derrière cette barrière.";
+					mes "Veux-tu aller lui parler ?";
+					next;
+					switch(select("Oui, evidemment !:Non merci"))
+					{
+						case 2:
+							mes .@npc_name$;
+							mes "Très bien, reviens plus tard";
+							mes "A bientôt !";
+							close;
+						
+						case 1:
+							mes .@npc_name$;
+							mes "Très bien alors je t'y emmenne, même si ce n'est pas loin du tout...";
+							mes "Il t'expliquera en détail en quoi consiste ta dernière épreuve avant d'accomplir ton Eveil.";
+							mes "Je te souhaite bonne chance, à bientôt !";
+							close2;
+							set GARDIEN_Q, 1;
+							set CLONE_Q, 0;
+							warp "casp_fild01",173,47;
+							end;							
+					}
+			}		
+		}
+	}
+}

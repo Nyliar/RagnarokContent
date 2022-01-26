@@ -1,0 +1,73 @@
+lighthalzen, 37, 65, 5	script	Gangster Scarf	411,{
+
+	set .@npcname$,"[Gangster Scarf]";
+	
+	//Black Gangster Scarf 20571
+	setarray @itemBGS[0], 5361, 983, 7230;
+	setarray @countitemBGS[0], 1, 2, 2;
+	
+	//Blue Gangster Scarf 20572
+	setarray @itemBLGS[0], 5361, 978, 7230;
+	setarray @countitemBLGS[0], 1, 2, 2;
+
+	//Cyan Gangster Scarf 20573
+	setarray @itemCGS[0], 5361, 978, 982, 7230;
+	setarray @countitemCGS[0], 1, 2, 2, 2;
+
+	//Gold Gangster Scarf 20574
+	setarray @itemGGS[0], 5361, 976, 7230;
+	setarray @countitemGGS[0], 1, 2, 2;
+	
+	//Green Gangster Scarf 20575
+	setarray @itemGNGS[0], 5361, 979, 7230;
+	setarray @countitemGNGS[0], 1, 2, 2;
+	
+	//Purple  Gangster Scarf 20576
+	setarray @itemPGS[0], 5361, 981, 7230;
+	setarray @countitemPGS[0], 1, 2, 2;
+	
+	//White  Gangster Scarf 20577
+	setarray @itemWGS[0], 5361, 982, 7230;
+	setarray @countitemWGS[0], 1, 2, 2;
+	
+	
+	
+	mes .@npcname$;
+	mes "Bonjour ^3333FF" + strcharinfo(0) + "^000000!";
+	mes "Je peux te proposer quelque hats pour customiser ton Gangster Scarf.";
+	mes	"Ca t'interesse?!";
+	next;
+	mes .@npcname$;
+	mes "Voici ce que je peux te proposer:";
+	next;
+
+	switch(select("Black Gangster Scarf:Blue Gangster Scarf:Cyan Gangster Scarf:Gold Gangster Scarf:Green Gangster Scarf:Purple Gangster Scarf:White Gangster Scarf:^777777Rien, merci...^000000"))
+	{
+		case 1 :
+ 		callfunc "mes_getitem_colo",.@npcname$,20571,@itemBGS,@countitemBGS, 1000000;
+
+		case 2 :
+ 		callfunc "mes_getitem_colo",.@npcname$,20572,@itemBLGS,@countitemBLGS, 1000000;
+
+		case 3 :
+ 		callfunc "mes_getitem_colo",.@npcname$,20573,@itemCGS,@countitemCGS, 1000000;
+
+		case 4 :
+ 		callfunc "mes_getitem_colo",.@npcname$,20574,@itemGGS,@countitemGGS, 1000000;
+
+		case 5 :
+		callfunc "mes_getitem_colo",.@npcname$,20575,@itemGNGS,@countitemGNGS, 1000000;
+
+		case 6 :
+ 		callfunc "mes_getitem_colo",.@npcname$,20576,@itemPGS,@countitemPGS, 1000000;
+
+		case 7 :
+ 		callfunc "mes_getitem_colo",.@npcname$,20577,@itemWGS,@countitemWGS, 1000000;
+
+		// Quitter
+		case 8 :
+		mes @npcname$;
+		mes "Très bien. A bientôt !";
+		close;
+	}
+}

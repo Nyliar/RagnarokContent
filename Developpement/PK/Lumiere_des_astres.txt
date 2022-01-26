@@ -1,0 +1,109 @@
+melodya,49,57,5	script	Crowned King::melcrk	456,{
+	if (LANGUAGE == 2)
+	{
+		set .@npc$, "[^FF0000Crowned King^000000]";
+	}
+	else if (LANGUAGE == 1)
+	{
+		set .@npc$, "[^FF0000Roi Couronné^000000]";
+	}
+	
+	mes .@npc$; 
+	if (LANGUAGE == 2)
+	{
+		mes "My name is Krielm, the king of all Crowned.";
+		mes "You've answered to my call, and a Sha dies under your attack.";
+		mes "Right now, you can claim a reward according to the value of your Karma.";
+	}
+	else if (LANGUAGE == 1)
+		mes "Je suis Krielm, le roi de tout les Couronnés.";
+		mes "Tu as répondu à mon appel, et un Sha est mort sous tes attaques.";
+		mes "Tu peux désormais obtenir une récompense selon la valeur de ton Karma.";
+	}
+	callfunc "get_reward_kpk", Karma;
+	close;
+}
+
+function	script	get_reward_kpk	{
+	if ( getarg(0) > 0 && getarg(0) < 30 )
+	{
+		if (LANGUAGE == 2)
+		{
+			mes "Sorry, you're not ready for this.";
+			mes "Work hard on the Crowned Path.";
+		}
+		else if (LANGUAGE == 1)
+		{
+			mes "Désolé, tu n'es pas encore prêt pour cette puissance.";
+			mes "Continue ton oeuvre.";
+		}
+		close;
+	}
+	else if ( getarg(0) > 30 && getarg(0) < 50 )
+	{
+		setarray .@reward$[0], "Siegfried Boots","Tyr's Boots","Kvasir's Boots","Forsete's Boots";
+		setarray .@rewardid[0], 23017,23014,23020,23023;
+		setarray .@rewardPrice[0], 15,15,15,15;
+	}
+	else if ( getarg(0) > 50 && getarg(0) < 75 )
+	{
+		setarray .@reward$[0], "Siegfried Boots","Tyr's Boots","Kvasir's Boots","Forsete's Boots",
+		"Siegfried Garment","Tyr's Garment","Kvasir's Garment","Forsete's Garment";
+		setarray .@rewardid[0], 23017,23014,23020,23023,
+		23016,23013,23019,23022;
+		setarray .@rewardPrice[0], 15,15,15,15,
+		30,30,30,30;
+	}
+	else if ( getarg(0) > 75 )
+	{
+		setarray .@reward$[0], "Siegfried Boots","Tyr's Boots","Kvasir's Boots","Forsete's Boots",
+		"Siegfried Garment","Tyr's Garment","Kvasir's Garment","Forsete's Garment"; 
+		"Siegfried Clothes","Tyr's Clothes","Kvasir's Clothes","Forsete's Clothes";
+		setarray .@rewardid[0], 23017,23014,23020,23023,
+		23016,23013,23019,23022,
+		23015,23012,23018,23021;
+		setarray .@rewardPrice[0], 15,15,15,15,
+		30,30,30,30,
+		45,45,45,45;
+	}
+	if (LANGUAGE == 2)
+	{
+		mes "First of all, you should know that by taking a reward, you'll down your Karma.";
+		mes "Therefor, you're Crowned Ranking will get down. And you'll loose the advantages it give you.";
+		mes "If you're okay with that, then go on, choose a reward.";
+	}
+	else if (LANGUAGE == 1)
+	{
+		mes "Tout d'abord, tu dois savoir que choisir une récompense diminuera ton Karma.";
+		mes "Par conséquent, ton Rang de Couronné descendra en fonction. Et tu perdras les avantages que cela te procure.";
+		mes "Si cela te convient, alors choisit ta récompense.";
+	}
+	// On créé un menu dynamique
+    for ( set .@i, 0; .@i<getarraysize(.@reward$); set .@i, .@i+1 )
+	{
+    	set .@menu$, .@menu$ + ( .@i ? ":" : "" ) + .@reward$[.@i];
+	}
+	set .@choice, prompt(.@menu$);
+	if (.@choice != 255)
+	{
+		if (LANGUAGE == 2)
+		{
+			mes "Here's your reward.";
+		}
+		else if (LANGUAGE == 1)
+		{
+			mes "Voici ta récompense.";
+		}
+		getitem .@rewardid[.@choice];
+		set Karma, Karma - .@rewardPrice[.@choice]);
+		if (LANGUAGE == 2)
+		{
+			mes "Go on the Crowned Path.";
+		}
+		else if (LANGUAGE == 1)
+		{
+			mes "Continue ta progression sur la Voie du Couronné.";
+		}
+	}
+	close;
+}

@@ -1,0 +1,19 @@
+//Source de Sagesse
+crash_in,68,32,4	script	Source de Sagesse::sds	111,{
+	mes "*Vous entendez de l'eau qui coule*";
+	if (countitem(713) >= 1 && SUBCLASSING >= 1)
+	{
+		mes "Désirez vous puisez un peu d'eau dans la Source?";
+		switch(select("Oui","Non"))
+		{
+			case 1:
+				delitem 713, 1;
+				getitem 12400,1;
+				break;
+			case 2:
+				mes "*Vous vous éloignez sans puisez d'eau.";
+				break;
+		}
+	}
+	close;
+}

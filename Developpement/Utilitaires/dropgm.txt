@@ -1,0 +1,67 @@
+thalys,55,231,2	script	Eroki	47,{
+	set .@npcname$, "[Eroki]";
+	
+	mes .@npcname$;
+	mes "";
+	mes "Hello " + strcharinfo(0);
+	mes "Je peux te vider de tes objets. Intéressé?";
+	switch(select("Oui","Je préfèrerais un par un","Non"))
+	{
+		case 1:
+			mes "Prends garde! Je supprimerais TOUT tes items,";
+			mes "équipements compris. Tout ce que tu as sur toi quoi.";
+			mes "Penses à stocker ce que tu ne veux pas perdre.";
+			mes "On y va?";
+			switch(select("Oui","Non"))
+			{
+				case 1:
+					clearitem;
+					break;
+				case 2:
+					mes "Reviens me voir une fois ton inventaire vidé, d'accord?";
+					break;
+			}
+			break;
+		case 2:
+			next;
+			deletearray .@menu$[0], getarraysize(.@menu$);
+			deletearray @inventorylist_id[0], getarraysize(@inventorylist_id);
+			getinventorylist;
+			mes "Pas de problème. Voyons déjà ce que tu as...";
+			for ( set .@i, 0; .@i<getarraysize(@inventorylist_id); set .@i, .@i+1 )
+			{
+       			set .@menu$, .@menu$ + ( .@i ? ":" : "" ) + getitemname(@inventorylist_id[.@i]);
+				set .@items[.@i], @inventorylist_id[.@i];
+			}
+			set .@count, 0;
+			do
+			{
+    				set .@choice, prompt(.@menu$) - 1;
+				if (.@choice != 255)
+				{
+					set .@itemChoosen[.@count], .@items[.@choice];	
+					next;
+					mes "On parle bien de " + getitemname(.@itemChoosen[.@count]) + " Ok?";
+				}
+				set .@sellcount[.@count], countitem(.@itemChoosen[.@count]);
+				mes "On a fini sa petite sélection?";
+				set .@ended, 0;
+				if (select("Oui","Non") == 1)
+					set .@ended, 1;
+				else
+					set .@count, .@count+1;
+				next;
+			}while(.@ended == 0);
+
+			for ( set .@i, 0; .@i<getarraysize(.@itemChoosen); set .@i, .@i+1 )
+			{
+				delitem .@itemChoosen[.@i], .@sellcount[.@i];
+			}
+			break;
+		case 3:
+			mes "Comme tu veux.";
+			break;
+	}
+	mes "Au plaisir.";
+	close;
+}

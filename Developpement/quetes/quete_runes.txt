@@ -1,0 +1,721 @@
+capitale,149,167,5	script	Fehu::geffeh	435,{
+	set .@npcname$, "[Fehu]";
+	
+	mes .@npcname$;
+	mes "";
+	
+if(LANGUAGE == 2)
+{
+if (checkquest(60359,HUNTING) == 2)
+	{
+		if (RUNE_Q == 1)
+		{
+			mes "Well done. We're ready to invoke Uruz.";
+			mes "I must warn you. Uruz power is pretty...massive.";
+			mes "Ready?";
+			mes "Let's go.";
+			heal rand(0,2500),rand(0,2500);
+			getitem 12730,1;
+			set RUNE_Q, 2;
+			mes "Keep all your runes safe, we'll need them for the Restauration step.";
+			next;
+		}
+		mes "Next step is to forge Naudhiz.";
+		mes "Naudhiz symbolising the sacrifice's fire.";
+		mes "Do I need to tell more?";
+		erasequest 60359;
+		setquest 60360;
+	}
+	else if (checkquest(60360) == 2)
+	{
+		if (RUNE_Q == 2)
+		{
+			mes "Well done. I'm impressed you accepted this easily.";
+			mes "Hers's Naudhiz, created in your pain and sacrifice.";
+			getitem 12725,1;
+			set RUNE_Q, 3;
+			next;
+		}
+		mes "Next step is to forge Raidho";
+		mes "Raidho is a cure rune, which put back the body in it's initial form.";
+		mes "By extension, ritual, danse and rythm are bounded to it.";
+		mes "I'll need 100 White Herb.";
+		mes "It's also the rune of Valor, Ethic and Honnor.";
+		mes "Raidho also evoke the knight, or at least a fighter.";
+		mes "Therefor, you'll have to kill 30 Enignem Cenia fighters.";
+		erasequest 60360;
+		setquest 60361;
+	}
+	else if (checkquest(60361,HUNTING) == 2)
+	{	
+		if (RUNE_Q == 3 && countitem(509)>=100)
+		{
+			mes "Well done. You've ascomplished wonders of chivalry.";
+			mes "And I have enough herb to cure your wounds.";
+			mes "I'm gonna create Raidho.";
+			getitem 12726, 1;
+			delitem 509, 100;
+			set RUNE_Q, 4;
+			mes "Raidho power crystallised. Here's for you.";
+			getitem 12704, 1;
+			next;
+			mes "Next one: Berkano.";
+			mes "Berkano is here to remind us to keep our feet on Earth.";
+			mes "It can lead us to consider Berkano as a rebirth symbol.";
+			mes "Once again, it's pretty obvious, right?";
+			erasequest 60361;
+			setquest 60362;
+		}
+		else
+		{
+			mes "Raidho is a cure rune, which put back the body in it's initial form.";
+			mes "By extension, ritual, danse and rythm are bounded to it.";
+			mes "I'll need 100 White Herb.";
+			mes "It's also the rune of Valor, Ethic and Honnor.";
+			mes "Raidho also evoke the knight, or at least a fighter.";
+			mes "Therefor, you'll have to kill 30 Enignem Cenia fighters.";
+		}
+	}
+	else if (checkquest(60362) == 1)
+	{
+		if ( Class >= 4001 )
+		{
+			if (RUNE_Q == 4)
+			{
+				mes "Congratulation. You've known the rebirthing.";
+				mes "I'll forge Berkano with the power you've unleashed.";
+				getitem 12727, 1;
+				set RUNE_Q, 5;
+				completequest 60362;
+				next;
+			}
+			mes "Next one is Isa.";
+			mes "Isa represents what's static, cold. The Ice element.";
+			mes "Kill 75 Ice Titan to forge this one.";
+			erasequest 60362;
+			setquest 60363;
+		}
+	}
+	else if (checkquest(60363,HUNTING) == 2)
+	{
+		mes "Rune etape: " + RUNE_Q;
+		if (RUNE_Q == 5)
+		{
+			mes "Well done. Isa is ready.";
+			getitem 12728, 1;
+			set RUNE_Q, 6;
+			next;
+		}
+		mes "We can now access to Ansuz.";
+		mes "Ansuz the initial blow, the conscience which unify to Thurisaz to make Human Being of a primitive being.";
+		mes "We've got to capture this blow.";
+		mes "You can find it in Rough Wind and Wind of Verdure.";
+		mes "100 each.";
+		setquest 60364;
+		erasequest 60363;
+	}
+	else if (checkquest(60364) == 1)
+	{	
+		if (RUNE_Q == 6 && countitem(992) >= 100 && countitem(996)>=100)
+		{
+			mes "You've become a Human. I can feel Ansuz blowing in you.";
+			mes "Here's the crystallisation.";
+			getitem 12729, 1;
+			completequest 60364;
+			delitem 992, 100;
+			delitem 996, 100;
+			set RUNE_Q, 7;
+			next;
+			mes "Next one is Thurisaz.";
+			mes "Like Thor, the Storm God, his rune represent the electricity, as dangerous as fertile.";
+			mes "It's also a luminuous rune, stretchly bounded to Sowilo.";
+			mes "Bring me back some Level 5 Lightening Bolt. 100.";
+			setquest 60365;
+			erasequest 60364;
+		}
+		else
+		{
+			mes "Ansuz the initial blow, the conscience which unify to Thurisaz to make Human Being of a primitive being.";
+			mes "We've got to capture this blow.";
+			mes "You can find it in Rough Wind and Wind of Verdure.";
+			mes "100 of each.";
+		}
+	}
+	else if (checkquest(60364) == 2)
+	{
+		mes "Next one is Thurisaz.";
+		mes "Like Thor, the Storm God, his rune represent the electricity, as dangerous as fertile.";
+		mes "It's also a luminuous rune, stretchly bounded to Sowilo.";
+		mes "Bring me back some Level 5 Lightening Bolt. 100.";
+		setquest 60365;
+		erasequest 60364;
+		completequest 60365;
+	}
+	else if (checkquest(60365) == 1)
+	{
+		if ( RUNE_Q == 7 && countitem(693)>=100 )
+		{
+			mes "Congratulation. I can feel the storm in you.";
+			mes "Here's your rune.";
+			getitem 12731, 1;
+			delitem 693,100;
+			set RUNE_Q, 8;
+			completequest 60365;
+			next;
+			mes "Next one is Perthro.";
+			mes "Perthro symbolises the link between unconscient in each of us and the environement.";
+			mes "It's only our job to take part of the cards Odin give us as a Fate.";
+			mes "Perthro is a rune destined to Frigg, Odin's wife.";
+			mes "Then, you'll need an object belonging to Frigg.";
+			setquest 60366;
+			erasequest 60365;
+		}
+		else
+		{
+		mes "Like Thor, the Storm God, his rune represent the electricity, as dangerous as fertile.";
+		mes "It's also a luminuous rune, stretchly bounded to Sowilo.";
+		mes "Bring me back some Level 5 Lightening Bolt. 100.";
+		}
+	}
+	else if (checkquest(60365) == 2)
+	{
+		mes "La suivante est Perthro.";
+		mes "Perthro symbolise l'interaction entre le libre arbitre conscient de la personne et les contraintes de l'environnement présent.";
+		mes "C'est à nous qu'il appartient de tirer le meilleur des cartes que le Destin nous accorde.";
+		mes "Perthro est une rune dédiée à la déesse Frigg, la femme d'Odin.";
+		mes "Il nous faut donc un élément symbolisant Frigg.";
+		setquest 60366;
+		erasequest 60365;
+	}
+	else if (checkquest(60366) == 1)
+	{
+		if (RUNE_Q == 8 && countitem(5124) >= 1)
+		{
+			mes "Well. Perthro get's finallized with that.";
+			getitem 12732, 1;
+			delitem 5124, 1;
+			set RUNE_Q, 9;
+			completequest 60366;
+			mes "The last one, Hagalaz, is the linking rune.";
+			mes "It represent the link between all past events, which make the present as it is.";
+			mes "Hagalaz is created by the power of each other rune.";
+			mes "Look. Here it is!";
+			getitem 12733, 1;
+			erasequest 60366;
+			setquest 60367;
+			mes "Let me a day to ascomplished the last ordeal.";
+			mes "Come back in a day.";
+		}
+		else
+		{
+			mes "Perthro symbolises the link between unconscient in each of us and the environement.";
+			mes "It's only our job to take part of the cards Odin give us as a Fate.";
+			mes "Perthro is a rune destined to Frigg, Odin's wife.";
+			mes "Then, you'll need an object belonging to Frigg.";
+		}
+	}
+	else if (checkquest(60366) == 2)
+	{
+		mes "Let me a day to ascomplished the last ordeal.";
+		mes "Come back in a day.";
+		erasequest 60366;
+	}
+	else if (checkquest(60367,PLAYTIME) == 2)
+	{
+		mes "The Restauration can only be fullfilled by killing the runes thief.";
+		mes "But he now knows that we'll looking after him.";
+		mes "You'll have to find and kill him as soon as you'll accept this ordeal.";
+		mes "The reward will be given by Odin himself.";
+		mes "Are you ready?";
+		switch(select("Yes", "No"))
+		{
+			case 1:
+				mes "Perfect. Then you'll have to find and kill this extremly malficient monster.";
+				mes "You must kill Baphomet.";
+				mes "You have a week, from now.";
+				mes "I'll wait, praying for your success.";
+				completequest 60367;
+				erasequest 60367;
+				setquest 60368;
+				break;
+			case 2:
+				mes "Allright. Here's your reward for all you've done until there.";
+				set BaseExp,BaseExp+1500000;
+				mes "I'll wait here for some help to kill this monster.";
+				mes "Thanks again.";
+				break;
+		}
+	}
+	else if (checkquest(60368, HUNTING) == 1)
+	{
+		mes "...I see you failed.";
+		mes "I'm gonna take some powers Odin gave me.";
+		mes "I'll erase Baphomet memory, just before your attack.";
+		mes "Try again...";
+		erasequest 60368;	
+		setquest 60368;
+	}
+	else if (checkquest(60368, HUNTING) == 2)
+	{
+		mes "Unbelievable.";
+		mes "You've succeed.";
+		mes "I can make the Restauration.";
+		set .checksucces, 1;
+		for (set .@i, 12725; .@i<=12733; set .@i, .@i+1)
+		{
+			if (countitem(.@i) < 1)
+				set .checksucces, 0;
+		}
+		if (.checksucces == 1)
+		{
+			mes "Restauration has been done.";
+			mes "I'll give you the power Odin gave me.";
+			set BaseExp,BaseExp+1500000;
+			mes "Thanks, fighter. You've won a place in Valhalla.";
+			erasequest 60368;
+			mes "You can choose a reward, Odin accept to give it to you.";
+			mes "You can choose one of this godly stuff piece.";
+			next;
+			set .menu$, "";
+			setarray .@itemname$[0], "Freya Soul Shield", "Freya Soul Scarf", "Freya Soul Circlet", "Freya Soul Robe", "Freya Spirit Sandals", "Freya Spirit Bracelet", "Freya's Crown", "Freya's Boots", "Freya's Manteau", "Freya's Clothes";
+			for ( set .@i, 0; .@i<getarraysize(.@itemname$); set .@i, .@i+1 )
+			{
+        			set .menu$, .menu$ + ( .@i ? ":" : "" ) + .@itemname$[.@i];
+			}
+	
+			set .@choice, prompt(.menu$);
+			switch(.@choice)
+			{
+				case 1:
+					getitem 2144, 1;
+					break;
+				case 2:
+					getitem 2555, 1;
+					break;
+				case 3:
+					getitem 5540, 1;
+					break;
+				case 4:
+					getitem 15003, 1;
+					break;
+				case 5:
+					getitem 2451,1;
+					break;
+				case 6:
+					getitem 2811,1;
+					break;
+				case 7:
+					getitem 5306,1;
+					break;
+				case 8:
+					getitem 2428,1;
+					break;
+				case 9:
+					getitem 2533,1;
+					break;
+				case 10:
+					getitem 2369,1;
+					break;
+				case 255:
+					break;
+			}
+			if (.@choice != 255)
+				set RUNE_Q, 0;
+		}
+	}	
+	else if (RUNE_Q >= 1)
+	{
+		mes "Do it quickly, I beg you.";
+	}
+	else
+	{
+		mes "...I am Fehu.";
+		mes "I'm the Initial Energy,";
+		mes "I'm the start and the End of all things.";
+		mes "Runes have been stolen from God Chest.";
+		mes "Would you help me to find them all?";
+		next;
+		switch (select("Yes", "No"))
+		{
+			case 1:
+				mes "Thanks. We must find them all as quick as possible.";
+				mes "Without that, gods wrath will fall on Earth again.";
+				mes "Odin send me there to help you in this task.";
+				mes "I'll act like a guide.";
+				mes "We first have to find Uruz.";
+				next;
+				mes "Uruz is the uncontrollable wave, the impetuous natural strength running on Earth.";
+				mes "It's a kind of solid liquid, water and fire, a fire stream which can't be controlled, except with Isa.";
+				mes "To forge it, we need to find Fire and Liquid.";
+				mes "Kill 15 Aqua Elemental and 15 Lava Golem, before comming back...";
+				setquest 60359;
+				set RUNE_Q, 1;
+				break;
+			case 2:
+				mes "Then I've got nothing to tell you.";
+				break;
+		}
+	}
+	close;
+}
+else if (LANGUAGE == 1)
+{
+	if (checkquest(60359,HUNTING) == 2)
+	{
+		if (RUNE_Q == 1)
+		{
+			mes "Parfait. Nous avons de quoi invoquer Uruz.";
+			mes "Je te préviens, le pouvoir d'Uruz n'est pas négligeable.";
+			mes "Prêt?";
+			mes "Allons-y.";
+			heal rand(0,2500),rand(0,2500);
+			getitem 12730,1;
+			set RUNE_Q, 2;
+			mes "Garde bien tes Runes, nous en aurons besoin pour finaliser la Restauration.";
+			next;
+		}
+		mes "La prochaine étape est de forger Naudhiz";
+		mes "Naudhiz symbolise le feu du sacrifice";
+		mes "Ai-je besoin d'en dire plus?";
+		erasequest 60359;
+		setquest 60360;
+	}
+	else if (checkquest(60360) == 2)
+	{
+		if (RUNE_Q == 2)
+		{
+			mes "Bravo. Je suis admiratif que tu ais accepté si facilement.";
+			mes "Voici Naudhiz, créé dans ta douleur et ton sacrifice.";
+			getitem 12725,1;
+			set RUNE_Q, 3;
+			next;
+		}
+		mes "La prochaine étape est de forger Raidho";
+		mes "Raidho est une bonne rune pour guérir car elle remet le corps dans sa forme propre";
+		mes "et par extension, le rituel, la danse et le rythme lui sont associés.";
+		mes "Il me faudra donc 100 White Herb.";
+		mes "Elle est aussi la rune de l'ordre, des valeurs, et de l'éthique, c'est pourquoi elle est en relation avec les codes d'honneur, et de la loi";
+		mes "Raidho évoque ainsi le chevalier, ou le guerrier";
+		mes "Il te faudra donc chasser 30 guerriers Enignem Cenia.";
+		erasequest 60360;
+		setquest 60361;
+	}
+	else if (checkquest(60361,HUNTING) == 2)
+	{	
+		if (RUNE_Q == 3 && countitem(509)>=100)
+		{
+			mes "Félicitation. Tu as accompli des merveilles de Chevalerie.";
+			mes "Et j'ai de quoi soigner tes blessures avec tes herbes.";
+			mes "Je vais créer Raidho.";
+			getitem 12726, 1;
+			delitem 509, 100;
+			set RUNE_Q, 4;
+			mes "La puissance de Raidho c'est cristallisée. Voila pour toi.";
+			getitem 12704, 1;
+			next;
+			mes "Passons à la suite: Berkano.";
+			mes "Berkano est la pour nous rappeler qu'il faut redescendre sur Terre.";
+			mes "Cela peut amener à considérer Berkano comme un symbole de la réincarnation.";
+			mes "A nouveau, c'est transparent, pas vrai?";
+			erasequest 60361;
+			setquest 60362;
+		}
+		else
+		{
+			mes "Raidho est une bonne rune pour guérir car elle remet le corps dans sa forme propre";
+			mes "et par extension, le rituel, la danse et le rythme lui sont associés.";
+			mes "Il me faudra donc 100 White Herb.";
+			mes "Elle est aussi la rune de l'ordre, des valeurs, et de l'éthique, c'est pourquoi elle est en relation avec les codes d'honneur, et de la loi";
+			mes "Raidho évoque ainsi le chevalier, ou le guerrier";
+			mes "Il te faudra donc chasser 20 guerriers Enignem Cenia.";
+		}
+	}
+	else if (checkquest(60362) == 1)
+	{
+		if ( Class >= 4001 )
+		{
+			if (RUNE_Q == 4)
+			{
+				mes "Félicitation. Tu as connu la renaissance.";
+				mes "Je vais forger Berkano avec le rejet d'énergie que tu as dégagé.";
+				getitem 12727, 1;
+				set RUNE_Q, 5;
+				completequest 60362;
+				next;
+			}
+			mes "La suivante est Isa.";
+			mes "Isa représente tout ce qui est statique, le présent, et l'élément Glace.";
+			mes "Tue 75 Ice Titan pour forger cette rune.";
+			erasequest 60362;
+			setquest 60363;
+		}
+	}
+	else if (checkquest(60363,HUNTING) == 2)
+	{
+		mes "Rune etape: " + RUNE_Q;
+		if (RUNE_Q == 5)
+		{
+			mes "Un grand bravo. Isa est prête.";
+			getitem 12728, 1;
+			set RUNE_Q, 6;
+			next;
+		}
+		mes "Nous pouvons nous attaquer à Ansuz.";
+		mes "Ansuz est le souffle, le souffle primordial , la conscience qui s'ajoute a Thurisaz pour faire de l'être instinctif un être humain.";
+		mes "Nous devons capturer ce souffle.";
+		mes "Tu le trouvera dans les Rough Wind et les Wind of Verdure.";
+		mes "100 de chaque.";
+		setquest 60364;
+		erasequest 60363;
+	}
+	else if (checkquest(60364) == 1)
+	{	
+		if (RUNE_Q == 6 && countitem(992) >= 100 && countitem(996)>=100)
+		{
+			mes "Tu es devenu un Etre Humain à part entière. Je sans Ansuz bouilloner en toi.";
+			mes "En voici la cristallisation.";
+			getitem 12729, 1;
+			completequest 60364;
+			delitem 992, 100;
+			delitem 996, 100;
+			set RUNE_Q, 7;
+			next;
+			mes "La suivante est Thurisaz.";
+			mes "Comme Thor est le dieu de l'orage, sa rune représente le tonnerre, qui est tout aussi dangereux qu'il est fertilisateur.";
+			mes "C'est aussi donc une rune lumineuse. Intimement liée à Sowilo, c'est une rune de l'électricité, de l'électrocution.";
+			mes "Ramènes moi des Level 5 Lightening Bolt. 100.";
+			setquest 60365;
+			erasequest 60364;
+		}
+		else
+		{
+			mes "Ansuz est le souffle, le souffle primordial , la conscience qui s'ajoute a Thurisaz pour faire de l'être instinctif un être humain.";
+			mes "Nous devons capturer ce souffle.";
+			mes "Tu le trouvera dans les Rough Wind et les Wind of Verdure.";
+			mes "100 de chaque.";
+		}
+	}
+	else if (checkquest(60364) == 2)
+	{
+		mes "La suivante est Thurisaz.";
+		mes "Comme Thor est le dieu de l'orage, sa rune représente le tonnerre, qui est tout aussi dangereux qu'il est fertilisateur.";
+		mes "C'est aussi donc une rune lumineuse. Intimement liée à Sowilo, c'est une rune de l'électricité, de l'électrocution.";
+		mes "Ramènes moi des Level 5 Lightening Bolt. 100.";
+		setquest 60365;
+		erasequest 60364;
+		completequest 60365;
+	}
+	else if (checkquest(60365) == 1)
+	{
+		if ( RUNE_Q == 7 && countitem(693)>=100 )
+		{
+			mes "Félicitation. Je sens la force de l'orage en toi.";
+			mes "Voici ta rune.";
+			getitem 12731, 1;
+			delitem 693,100;
+			set RUNE_Q, 8;
+			completequest 60365;
+			next;
+			mes "La suivante est Perthro.";
+			mes "Perthro symbolise l'interaction entre le libre arbitre conscient de la personne et les contraintes de l'environnement présent.";
+			mes "C'est à nous qu'il appartient de tirer le meilleur des cartes que le Destin nous accorde.";
+			mes "Perthro est une rune dédiée à la déesse Frigg, la femme d'Odin.";
+			mes "Il nous faut donc un élément symbolisant Frigg.";
+			setquest 60366;
+			erasequest 60365;
+		}
+		else
+		{
+			mes "Comme Thor est le dieu de l'orage, Thurizas représente le tonnerre, qui est tout aussi dangereux qu'il est fertilisateur.";
+			mes "C'est aussi donc une rune lumineuse. Intimement liée à Sowilo, c'est une rune de l'électricité, de l'électrocution.";
+			mes "Ramènes moi des Level 5 Lightening Bolt. 100.";
+		}
+	}
+	else if (checkquest(60365) == 2)
+	{
+		mes "La suivante est Perthro.";
+		mes "Perthro symbolise l'interaction entre le libre arbitre conscient de la personne et les contraintes de l'environnement présent.";
+		mes "C'est à nous qu'il appartient de tirer le meilleur des cartes que le Destin nous accorde.";
+		mes "Perthro est une rune dédiée à la déesse Frigg, la femme d'Odin.";
+		mes "Il nous faut donc un élément symbolisant Frigg.";
+		setquest 60366;
+		erasequest 60365;
+	}
+	else if (checkquest(60366) == 1)
+	{
+		if (RUNE_Q == 8 && countitem(5124) >= 1)
+		{
+			mes "Bien. Perthro est donc finalisé avec ceci.";
+			getitem 12732, 1;
+			delitem 5124, 1;
+			set RUNE_Q, 9;
+			completequest 60366;
+			mes "La dernière, Hagalaz, est la rune de la liaison.";
+			mes "Elle représente les motifs et successions d'évènements passés, qui font que le présent est ce qu'il est.";
+			mes "Hagalaz est créée par la détention de chacun des autres Runes.";
+			mes "Regarde. La voila!";
+			getitem 12733, 1;
+			erasequest 60366;
+			setquest 60367;
+			mes "Laisse moi me reposer un peu, et reviens pour la dernière étape de la restauration.";
+			mes "Reviens d'ici une journée.";
+		}
+		else
+		{
+			mes "Perthro symbolise l'interaction entre le libre arbitre conscient de la personne et les contraintes de l'environnement présent.";
+			mes "C'est à nous qu'il appartient de tirer le meilleur des cartes que le Destin nous accorde.";
+			mes "Perthro est une rune dédiée à la déesse Frigg, la femme d'Odin.";
+			mes "Il nous faut donc un élément symbolisant Frigg.";
+		}
+	}
+	else if (checkquest(60366) == 2)
+	{
+		mes "Laisse moi me reposer un peu, et reviens pour la dernière étape de la restauration.";
+		mes "Reviens d'ici une journée.";
+		erasequest 60366;
+	}
+	else if (checkquest(60367,PLAYTIME) == 2)
+	{
+		mes "La restauration ne peux s'accomplir qu'en tuant le voleur des Runes.";
+		mes "Néanmoins, il sait dès à présent que nous venons. Le temps nous est compté.";
+		mes "Il te faudra donc le chasser dès que tu auras accepter de remplir cette ultime étape.";
+		mes "La récompense que tu recevras sera sans commune mesure. Odin lui-même m'a donné ce pouvoir.";
+		mes "Es-tu prêt?";
+		switch(select("Oui", "Non"))
+		{
+			case 1:
+				mes "Parfait. Tu dois donc chasser un monstre fabuleux, extrêmement maléfique.";
+				mes "Tu dois tuer Baphomet.";
+				mes "Et tu dois le faire dans un délai d'une semaine, à compter de maintenant.";
+				mes "J'attendrais en priant pour ta réussite.";
+				completequest 60367;
+				erasequest 60367;
+				setquest 60368;
+				break;
+			case 2:
+				mes "Très bien. Je vais quand même te remercier pour tout ce que tu as fait.";
+				set BaseExp,BaseExp+1500000;
+				mes "J'attendrais ici qu'on vienne m'aider à vaincre le démon.";
+				mes "Merci encore.";
+				break;
+		}
+	}
+	else if (checkquest(60368, HUNTING) == 1)
+	{
+		mes "...Je vois que tu as échoué.";
+		mes "Je vais puiser dans les pouvoirs qu'Odin m'a donné.";
+		mes "J'effacerais un peu de la mémoire de Baphomet cette attaque.";
+		mes "Retente ta chance...";
+		erasequest 60368;	
+		setquest 60368;
+	}
+	else if (checkquest(60368, HUNTING) == 2)
+	{
+		mes "Incroyable.";
+		mes "Tu as réussi.";
+		mes "Je vais pouvoir pratiquer la restauration.";
+		set .checksucces, 1;
+		for (set .@i, 12725; .@i<=12733; set .@i, .@i+1)
+		{
+			if (countitem(.@i) < 1)
+				set .checksucces, 0;
+		}
+		if (.checksucces == 1)
+		{
+			mes "La restauration est terminé.";
+			mes "Je vais te transférer ce qui me reste du pouvoir d'Odin.";
+			set BaseExp,BaseExp+1500000;
+			mes "Félicitation, Guerrier. Tu as gagné ta place au Valhalla.";
+			erasequest 60368;
+			mes "Choisi à présent une récompense. Odin me permet de te le donner.";
+			mes "Tu peux choisir parmis l'une des pièces d'équipements divines.";
+			next;
+			set .menu$, "";
+			setarray .@itemname$[0], "Freya Soul Shield", "Freya Soul Scarf", "Freya Soul Circlet", "Freya Soul Robe", "Freya Spirit Sandals", "Freya Spirit Bracelet", "Freya's Crown";
+			for ( set .@i, 0; .@i<getarraysize(.@itemname$); set .@i, .@i+1 )
+			{
+        			set .menu$, .menu$ + ( .@i ? ":" : "" ) + .@itemname$[.@i];
+			}
+	
+			set .@choice, prompt(.menu$);
+			switch(.@choice)
+			{
+				case 1:
+					getitem 2144, 1;
+					break;
+				case 2:
+					getitem 2555, 1;
+					break;
+				case 3:
+					getitem 5540, 1;
+					break;
+				case 4:
+					getitem 15003, 1;
+					break;
+				case 5:
+					getitem 2451,1;
+					break;
+				case 6:
+					getitem 2811,1;
+					break;
+				case 7:
+					getitem 5306,1;
+					break;
+				case 8:
+					getitem 2428,1;
+					break;
+				case 9:
+					getitem 2533,1;
+					break;
+				case 10:
+					getitem 2369,1;
+					break;
+				case 255:
+					break;
+			}
+			if (.@choice != 255)
+				set RUNE_Q, 0;
+		}
+	}	
+	else if (RUNE_Q >= 1)
+	{
+		mes "Fais vite, je t'en prie.";
+	}
+	else
+	{
+		mes "...Je suis Fehu.";
+		mes "Je représente l'Energie Primordiale,";
+		mes "Je suis le Début et la Fin de toute chose.";
+		mes "Les Runes ont été volées du Coffre des Dieux.";
+		mes "M'aideras-tu à les retrouver toutes?";
+		next;
+		switch (select("Oui", "Non"))
+		{
+			case 1:
+				mes "Merci. Nous devons absolument les retrouver.";
+				mes "Sans cela, la puissance des Dieux s'abattra encore une fois sur Terre.";
+				mes "Odin m'envoie ici pour t'aider dans ta tâche.";
+				mes "Je serais une sorte de guide.";
+				mes "Nous devons commencer par trouver Uruz.";
+				next;
+				mes "Uruz est la rune de la vague qui s'abat, de la force naturelle incontrôlable et impérieuse.";
+				mes "elle est à la fois liquide et de feu, une eau de feu, un métal en fusion coulant qu'on ne saurait maîtriser, si ce n'est par Isa.";
+				mes "Pour la forger, nous devons donc détruire le Liquide et le Feu.";
+				mes "Tue 15 Aqua Elemental et 15 Lava Golem, avant de revenir me voir...";
+				setquest 60359;
+				set RUNE_Q, 1;
+				break;
+			case 2:
+				mes "Je n'ai rien à te dire alors.";
+				break;
+		}
+	}
+	close;
+}
+	
+OnPCDieEvent:
+	if (checkquest(60360) == 1)
+	{
+		completequest(60360);
+	}
+}

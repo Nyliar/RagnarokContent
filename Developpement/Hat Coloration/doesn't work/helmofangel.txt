@@ -1,0 +1,72 @@
+dicastes01, 93,259, 5	script	Helm of Angel	64,{
+
+	set .@npcname$,"[Helm of Angel]";
+	
+	//Black Helm of Angel 20101
+	setarray .itemBHoA[0], 5170, 983, 7146;
+	setarray .countitemBHoA[0], 1, 2, 200;
+
+	//Gold Helm of Angel 20097
+	setarray .itemGHoA[0], 5170, 976, 7146;
+	setarray .countitemGHoA[0], 1, 2, 200;
+
+	//Green Helm of Angel 20100
+	setarray .itemGNHoA[0], 5170, 976, 7146;
+	setarray .countitemGNHoA[0], 1, 2, 200;
+	
+	//Blue Helm of Angel 20102
+	setarray .itemBHoA[0], 5170, 978, 7146;
+	setarray .countitemBHoA[0], 1, 2, 200;
+	
+	//Purple Helm of Angel 20098
+	setarray .itemPHoA[0], 5170, 981, 7146;
+	setarray .countitemPHoA[0], 1, 2, 200;
+	
+	//Red Helm of Angel 20099
+	setarray .itemRHoA[0], 5170, 975, 7146;
+	setarray .countitemRHoA[0], 1, 2, 200;
+	
+	//Cyan Helm of Angel 20096
+	setarray .itemCHoA[0], 5170, 978, 982, 7146;
+	setarray .countitemCHoA[0], 1, 2, 2, 200;
+		
+	
+	mes .@npcname$;
+	mes "Bonjour ^3333FF" + strcharinfo(0) + "^000000!";
+	mes "Je peux te proposer quelque hats pour customiser ton Helm of Angel.";
+	mes	"Ca t'interesse?!";
+	next;
+	mes .@npcname$;
+	mes "Voici ce que je peux te proposer:";
+	next;
+
+	switch(select("Black Helm of Angel:Gold Helm of Angel:Green Helm of Angel:Blue Helm of Angel:Cyan Helm of Angel:Purple Helm of Angel:Red Helm of Angel:^777777Rien, merci...^000000"))
+	{
+		case 1 :
+ 		callfunc "mes_getitem",.@npcname$,20101,.itemBHoA,.countitemBHoA, 1000000;
+
+		case 2 :
+ 		callfunc "mes_getitem",.@npcname$,20097,.itemGHoA,.countitemGHoA, 1000000;
+		
+		case 3 :
+ 		callfunc "mes_getitem",.@npcname$,20100,.itemGNHoA,.countitemGNHoA, 1000000;
+
+		case 4 :
+		callfunc "mes_getitem",.@npcname$,20102,.itemBHoA,.countitemBHoA, 1000000;
+
+		case 5 :
+		callfunc "mes_getitem",.@npcname$,20096,.itemCHoA,.countitemCHoA, 1000000;
+		
+		case 6 :
+		callfunc "mes_getitem",.@npcname$,20098,.itemPHoA,.countitemPHoA, 1000000;
+		
+		case 7 :
+		callfunc "mes_getitem",.@npcname$,20099,.itemRHoA,.countitemRHoA, 1000000;
+
+		// Quitter
+		case 8 :
+		mes @npcname$;
+		mes "Très bien. A bientôt !";
+		close;
+	}
+}

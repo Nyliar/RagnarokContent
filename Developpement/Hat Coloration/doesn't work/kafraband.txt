@@ -1,0 +1,71 @@
+genasia, 107, 101, 5	script	Kafra Band	64,{
+
+	set .@npcname$,"[Kafra Band]";
+
+	//Black Kafra Band 20215
+	setarray .itemBKB[0], 20474, 983, 7146;
+	setarray .countitemBKB[0], 1, 2, 200;
+
+	//Blue Kafra Band 20217
+	setarray .itemBLKB[0], 20474, 978, 7146;
+	setarray .countitemBLKB[0], 1, 2, 200;
+
+	//Cyan Kafra Band 20217
+	setarray .itemCKB[0], 20474, 978, 982, 7146;
+	setarray .countitemCKB[0], 1, 2, 2, 200;
+
+	//Green Kafra Band 20219
+	setarray .itemGNKB[0], 20474, 976, 7146;
+	setarray .countitemGNKB[0], 1, 2, 200;
+	
+	//Purple Kafra Band 20220
+	setarray .itemPKB[0], 20474, 981, 7146;
+	setarray .countitemPKB[0], 1, 2, 200;
+	
+	//Red Kafra Band 20221
+	setarray .itemRKB[0], 20474, 975, 7146;
+	setarray .countitemRKB[0], 1, 2, 200;
+
+	//White Kafra Band 20222
+	setarray .itemRKB[0], 20474, 982, 7146;
+	setarray .countitemRKB[0], 1, 2, 200;
+	
+	mes .@npcname$;
+	mes "Bonjour ^3333FF" + strcharinfo(0) + "^000000!";
+	mes "Je peux te proposer quelque hats pour customiser ton Kafra Band.";
+	mes	"Ca t'interesse?!";
+	next;
+	mes .@npcname$;
+	mes "Voici ce que je peux te proposer:";
+	next;
+
+	switch(select("Green Kafra Band:Cyan Kafra Band:Purple Kafra Band:Red Kafra Band:White Kafra Band:Black Kafra Band:Blue Kafra Band:^777777Rien, merci...^000000"))
+	{	
+		case 1 :
+ 		callfunc "mes_getitem",.@npcname$,20473,.itemGNKB,.countitemGNKB, 1000000;
+
+		case 2 :
+		callfunc "mes_getitem",.@npcname$,20472,.itemCKB,.countitemCKB, 1000000;
+		
+		case 3 :
+		callfunc "mes_getitem",.@npcname$,20475,.itemPKB,.countitemPKB, 1000000;
+		
+		case 4 :
+		callfunc "mes_getitem",.@npcname$,20476,.itemRKB,.countitemRKB, 1000000;
+
+		case 5 :
+		callfunc "mes_getitem",.@npcname$,20477,.itemWKB,.countitemWKB, 1000000;
+
+		case 6 :
+		callfunc "mes_getitem",.@npcname$,20470,.itemBKB,.countitemBKB, 1000000;
+
+		case 7 :
+		callfunc "mes_getitem",.@npcname$,20471,.itemBLKB,.countitemBLKB, 1000000;
+
+		// Quitter
+		case 8 :
+		mes @npcname$;
+		mes "Très bien. A bientôt !";
+		close;
+	}
+}

@@ -1,0 +1,66 @@
+prt_in,40,97,1	script	Master Drawer	712,{
+	set .npcname$, "[Master Drawer]";
+	mes .npcname$;
+	mes "Hello,";
+	mes "While I was traveling, I've become a drawing master renown everywhere.";
+	mes "I know the drawing secret, their effects on human body.";
+	mes "I can also sell you items to do the same.";
+	switch(select("Interesting","No thanks, really."))
+	{
+		case 1:
+			next;
+			mes .npcname$;
+			mes "Of course!";
+			mes "But it won't be free, 5.000 zeny will be enough.";
+			mes "Still interested?";
+			switch(select("I'm ready.","Sure! Give me just more time."))
+			{
+				case 1:
+					next;
+					mes .npcname$;
+					mes "Allright. What do you need?";
+					switch(prompt("Surface Paint","Face Paint"))
+					{
+						case 1:
+							set .@item, 6123;
+							break;
+						case 2:
+							set .@item, 6120;
+							break;
+						case 255:
+							mes "As you wish.";
+							close;
+					}
+					mes "How many?";
+					next;
+					input .@count;
+					if (Zeny >= 5000*.@count)
+					{
+						mes .npcname$;
+						mes "Allright. Here's what you need";
+						set Zeny, Zeny-5000*.@count;
+						getitem .@item, .@count;
+						break;
+					}else
+					{
+						mes .npcname$;
+						mes "You don't have what I need.";
+						close;
+					}
+				
+				case 2:
+					next;
+					mes .npcname$;
+					mes "Come back soon.";
+					break;
+			}
+			break;
+		
+		case 2:
+			next;
+			mes .npcname$;
+			mes "You don't know what you miss.";
+			break;
+	}
+	close;
+}

@@ -1,0 +1,16 @@
+thalys, 148,165, 5	script Kafra Warping Board	837,{
+	set .@npcname$, "[Kafra Warping Board]";
+
+	mes .@npcname$;	
+	mes "";
+	mes "Fonctionnement du Kafra Warping System:";
+	mes "La Kafra peut vous warper vers toutes les villes et donjons.";
+	mes "Pour cela, il vous faut activer les points d'arrivés.";
+	mes "Par défaut, la Kafra peut vous envoyer vers Prontera, Geffen, Morocc et Thalys.";
+	mes "Pour les autres villes / donjons, vous devrez trouver Scar, les Jumeaux activateurs.";
+	mes "Ceux-ci vous proposeront d'activer l'emplacement où vous vous trouvez contre une modique somme.";
+	mes "Il parait qu'il existe aussi un Warper peu scrupuleux qui pourrait débloquer des Arrivées.";
+	mes "Personne ne sait où il se trouve.";
+	mes "";
+	mes "La Kafra Warping Company.";
+}

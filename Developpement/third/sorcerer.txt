@@ -1,0 +1,201 @@
+caspen,109,230,8	script	Maitre Sorcerer	993,{
+
+	mes "[Maitre Sorcerer]";
+	if (class == 4017 || class == 16)
+	{
+		if ( SR_Q < 1)
+		{
+			mes "Bonjour à toi," + strcharinfo(0) + ".";
+			mes "Je suis le Grand Maitre Sorcerer.";
+			mes "Je peux te faire passer la deuxième épreuve de ton Eveil,";
+			mes "Es-tu intéressé?";
+			next;
+			switch(select("Oui, je voudrais passer le test, s'il vous plait.:Non merci, je me suis trompé de personne.:Un vieux fou m'a envoyé ici après avoir lancé un tetra Vortex sur moi Y^Y."))
+			{
+				case 1:
+					mes "[Maitre Sorcerer]";
+					mes "Tout d'abord, voyons si tu es prêt physiquement.";
+					next;
+					if ( CHARLO_Q ){
+						mes "[Maitre Sorcerer]";
+						mes "On dirait bien que ton physique est prêt.";
+						mes "Je vais donc maintenant tester ton mental.";
+						next;
+						mes "[Maitre Sorcerer]";
+							mes "Il s'agit d'un quizz. Commençons.";
+							next;
+							set min_Q, 0;
+							mes "Combien de sp vous rend Health Conversion au level 3?";
+							switch(select("30% des hp consommés:10% des hp consommés:25% des hp consommés:40% des hp consommés"))
+							{
+								case 1:			
+									set min_Q, min_Q+1;
+								case 2:	
+								case 3:
+								case 4:
+							}
+							next;
+							mes "Quel est le risque lors de l'utilisation de Soul Burn?";
+							switch(select("Le sort peu se retourner contre soi:Les résultats sont aléatoires:On peu perdre tout ses Hp:On obtient un status de malus en cas d'échec"))
+							{
+								case 1:
+									set min_Q, min_Q+1;
+								case 2:
+								case 3:
+								case 4:
+							}
+							next;
+							mes "De quoi avons nous besoin pour lancer Spider Web?";
+							switch(select("Une Blue Gemstone: Une Spider Leg:Un Spider Net:Une Cobweb"))
+							{
+								case 4:
+									set min_Q, min_Q+1;
+								case 1:
+								case 2:
+								case 3:
+							}
+							next;
+							mes "Quel est le taux de succès de Double Casting level 1?";
+							switch(select("5%:20%:40%:50%"))
+							{
+								case 3:
+									set min_Q, min_Q+1;
+								case 2:
+								case 1:
+								case 4:
+							}
+							next;
+							mes "Quel sort s'utilise en combo avec Colt Bolt?";
+							switch(select("Wall of Fog:Soul Burn:Deluge:Fire Bolt"))
+							{
+								case 3:
+									set min_Q, min_Q+1;
+								case 1:
+								case 4:
+								case 2:
+							}
+							next;
+							mes "De quel skill Mind Breaker est-il reconnu comme un équivalent?";
+							switch(select("Confusion:Tarot Card of Fate:Aucun:Provoque"))
+							{
+								case 4:
+									set min_Q, min_Q+1;
+								case 1:
+								case 2:
+								case 3:
+							}
+							next;
+							mes "Quel skill permet de bouger en castant?";
+							switch(select("Memorize:Double Casting:Free Cast:Magical Coat"))
+							{
+								case 3:
+									set min_Q, min_Q+1;
+								case 1:
+								case 2:
+								case 4:
+							}
+							next;
+							mes "Quel est la propriété de Wall of Fog?";
+							switch(select("Eau:Feu:Terre:Vent"))
+							{
+								case 3:
+									set min_Q, min_Q+1;
+								case 1:
+								case 2:
+								case 4:
+							}
+							next;
+							mes "Que requiert Flame Launcher ?";
+							switch(select("Un Red Blood:Une Red Gemmstone: L'accessoire Fire Launcher:Rien"))
+							{
+								case 1:
+									set min_Q, min_Q+1;
+								case 4:
+								case 2:
+								case 3:
+							}
+							next;
+							mes "Quel objet à le même effet que Monster Property?";
+							switch(select("Lesser Elemental Ring:Ring of Flame Lord:Aucun:Identifier"))
+							{
+								case 1:
+									set min_Q, min_Q+1;
+								case 2:
+								case 3:
+								case 4:
+							}
+							next;
+							mes "[Maitre Sorcerer]";
+							mes "Bien, voyons tes résultats maintenant...";
+							mes "*Trifouille les résultats du test";
+							next;
+							mes "[Maitre Sorcerer]";
+							if (min_Q >= 9){
+								mes "Excellent, tu as eu ^FF0000" + min_Q*10 + "%^000000 de bonnes réponses.";
+								mes "On dirait bien que ton Esprit est prêt à passer l'Eveil.";
+								mes "Tu peux passer à l'avant-dernière étape de ta quête, la plus difficile.";
+								mes "Pars donc à la recherche du Mirroir du Mal, il t'expliquera cela plus en détail.";
+								mes "Il se trouve caché quelque part aux alentours de la grande ville de Bastania.";
+								mes "Prends cet objet qui te sera très utile";
+								mes " ";
+								getitem (22009),1;
+								mes "Bon courage";
+								emotion 21;
+								set SR_Q, 1;
+								close;
+							}
+							else
+							{
+								mes "Désolé, mais tes ^FF0000" + min_Q*10 + "%^000000 de réussite ne seront pas suffisant.";
+								mes "Entraîne encore un peu ton esprit,";
+								mes "Sans quoi, il ne résistera pas à la puissance de l'Eveil.";
+								close;
+							}
+					}		
+					else
+					{
+					mes "[Maitre Sorcerer]";
+					mes "Désolé, mais tu ne peux pas venir me voir pour l'instant.";
+					mes "Tu dois avant tout tester ton Physique auprès du Maitre de l'Eveil.";
+					close;
+					}
+				case 2:
+					mes "[Maitre Sorcerer]";
+					mes "Pas de problème.";
+					mes "Vis ta vie avec Espoir,";
+					mes "Elle ne t'en paraîtra que plus belle.";
+					close;
+				case 3:
+					mes "[Maitre Sorcerer]";
+					mes "Un vieux fou tu dis?";
+					mes "Le Maître de l'Eveil est tellement plus que ça";
+					mes "Mais j'avoue qu'il a des tendances un peu cabotine...";
+					close;
+			}
+		}
+		
+		else if ( SR_Q == 1 )
+		{
+			mes "Bonjour à toi," + strcharinfo(0) + ".";
+			mes "Tu peux passer à la dernière étape.";
+			mes "Pars donc à la recherche d'Yggdrasil.";
+			mes "Il se trouve caché quelque part aux alentours de Bastania.";
+			mes "Bon courage.";
+			close;
+		}
+
+		else if ( SR_Q == 3 || class == 4067 || class == 4074)
+		{
+			mes "Bonjour à toi," + strcharinfo(0) + ".";
+			mes "Felicitations, tu es Sorcerer !";
+			mes "Que la force soit avec toi !";
+			close;
+		}	
+	}
+	else
+	{
+		mes "Hmmm je pensais avoir trouvé un nouveau sortilège...";
+		mes "Ne me serais-je pas trompé ?";
+		close;
+	}
+}

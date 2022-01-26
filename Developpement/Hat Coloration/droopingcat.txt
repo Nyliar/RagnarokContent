@@ -1,0 +1,78 @@
+aldebaran, 55, 232, 5	script	Drooping Cat	78,{
+
+	set .@npcname$,"[Drooping Cat]";
+	
+	//Black Drooping Cat 20057
+	setarray @itemBDC[0], 5058, 983, 7230;
+	setarray @countitemBDC[0], 1, 2, 200;
+	
+	//Blue Drooping Cat 20058
+	setarray @itemBLDC[0], 5058, 978, 7230;
+	setarray @countitemBLDC[0], 1, 2, 200;
+
+	//Cyan Drooping Cat 20059
+	setarray @itemCDC[0], 5058, 978, 982, 7230;
+	setarray @countitemCDC[0], 1, 2, 2, 200;
+
+	//Gold Drooping Cat 20060
+	setarray @itemGDC[0], 5058, 976, 7230;
+	setarray @countitemGDC[0], 1, 2, 2;
+	
+	//Green Drooping Cat 2061
+	setarray @itemGNDC[0], 5058, 976, 7230;
+	setarray @countitemGNDC[0], 1, 2, 2;
+	
+	//Purple  Drooping Cat 2062
+	setarray @itemPDC[0], 5058, 981, 7230;
+	setarray @countitemPDC[0], 1, 2, 2;
+	
+	//Red Drooping Cat 2063
+	setarray @itemRDC[0], 5058, 975, 7230;
+	setarray @countitemRDC[0], 1, 2, 2;
+	
+	//White Drooping Cat 2064
+	setarray @itemWDC[0], 5058, 982, 7230;
+	setarray @countitemWDC[0], 1, 2, 2;
+	
+	mes .@npcname$;
+	mes "Bonjour ^3333FF" + strcharinfo(0) + "^000000!";
+	mes "Je peux te proposer quelque hats pour customiser ton Drooping Cat.";
+	mes	"Ca t'interesse?!";
+	next;
+	mes .@npcname$;
+	mes "Voici ce que je peux te proposer:";
+	next;
+
+	switch(select("Black Drooping Cat:Blue Drooping Cat:Cyan Drooping Cat:Gold Drooping Cat:Green Drooping Cat:Purple Drooping Cat:Red Drooping Cat:^777777Rien, merci...^000000"))
+	{
+		case 1 :
+ 		callfunc "mes_getitem_colo",.@npcname$,20057,@itemBDC,@countitemBDC, 1000000;
+
+		case 2 :
+ 		callfunc "mes_getitem_colo",.@npcname$,20058,@itemBLDC,@countitemBLDC, 1000000;
+
+		case 3 :
+ 		callfunc "mes_getitem_colo",.@npcname$,20059,@itemCDC,@countitemCDC, 1000000;
+
+		case 4 :
+ 		callfunc "mes_getitem_colo",.@npcname$,20060,@itemGDC,@countitemGDC, 1000000;
+
+		case 5 :
+		callfunc "mes_getitem_colo",.@npcname$,20061,@itemGNDC,@countitemGNDC, 1000000;
+
+		case 6 :
+ 		callfunc "mes_getitem_colo",.@npcname$,20062,@itemPDC,@countitemPDC, 1000000;
+		
+		case 7 :
+		callfunc "mes_getitem_colo",.@npcname$,20063,@itemRDC,@countitemRDC, 1000000;
+
+		case 8 :
+		callfunc "mes_getitem_colo",.@npcname$,20064,@itemWDC,@countitemWDC, 1000000;
+
+		// Quitter
+		case 9 :
+		mes @npcname$;
+		mes "Très bien. A bientôt !";
+		close;
+	}
+}

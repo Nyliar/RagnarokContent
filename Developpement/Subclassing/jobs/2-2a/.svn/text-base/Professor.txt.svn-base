@@ -1,0 +1,75 @@
+//Le Livre d'Ymir http://www.bookofymir.net/
+//traduit par Myllena, corrigé par Fern
+//===== eAthena Script ======================================= 
+//= Advance Class jobchanger after kRO Normals.
+//===== By: ==================================================
+//= Nana
+//= finished, optimized and tested by Lupus
+//===== Current Version: ===================================== 
+//= 1.3
+//===== Compatible With: ===================================== 
+//= eAthena 1.0 +
+//===== Description: ========================================= 
+//= Advance Class jobchanger after kRO Normals.
+//===== Additional Comments: ================================= 
+//= v1.1 Made all into functions, additional checks, etc. [Lupus]
+//= v1.2 Made numbers into constants. [Vicious]
+//= 1.3 Now saves/restores all the quest skills [Lupus]
+//============================================================ 
+
+valkyrie,53,47,3	script	Professeur#Valkyrie	743,{
+	if (ADVJOB == 0 || Upper != 1) {
+		set .@karma_d,rand(1,10);
+		if (.@karma_d > 4) {
+			mes "[Professeur]";
+			mes "Félicitations.";
+			mes "Honneur aux Guerriers!";
+			close;
+		}
+		mes "[Professeur]";
+		mes "Cela peut prendre une vie...";
+		mes "Oui, une vie entière, pour amasser les connaissances nécessaires afin de devenir Professeur...";
+		next;
+		mes "[Professeur]";
+		mes "C'est accablant.";
+		mes "Plus vous apprenez, plus vous découvrez qu'il existe d'autres choses que vous ignorez.";
+		mes "Il n'y a pas de fin au processus d'apprentissage...";
+		close;
+	}
+	else if (ADVJOB == Job_Professor && Class == Job_Mage_High && JobLevel > 39) {
+		mes "[Professeur]";
+		mes "Rune-Midgard ne compte pas assez de Professeurs pour atteindre une ère de prospérité. Le monde a besoin de vous...";
+		next;
+		mes "[Professeur]";
+		mes "Serez-vous prêt à endosser cette responsabilité?";
+		mes "Souhaitez-vous servir Rune-Midgard en tant que Professeur?";
+		next;
+		if (select("Non.:Oui.") == 1) {
+			mes "[Professeur]";
+			mes "Revenez quand vous vous sentirez prêt.";
+			next;
+			mes "[Professeur]";
+			mes "Honneur aux Guerriers!";
+			close;
+		}
+		if (SkillPoint) {
+			mes "[Professeur]";
+			mes "Vous n'avez pas terminé votre apprentissage.";
+			close;
+		}
+		jobchange Job_Professor;
+		set ADVJOB,0;
+		mes "[Professeur]";
+		mes "Félicitations!";
+		mes "En tant que Professeur, j'espère que vous vous appliquerez à mettre en lumière les connaissances restées obscures.";
+		close;
+	}
+	mes "[Professeur]";
+	mes "Bienvenue au Walhalla, le Hall des Honneurs.";
+	next;
+	mes "[Professeur]";
+	mes "Faites comme chez vous.";
+	mes "Honneur aux Guerriers!";
+	close;
+}
+

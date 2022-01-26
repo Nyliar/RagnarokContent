@@ -1,0 +1,201 @@
+caspen,182,267,6	script	Maitre Ranger	951,{  
+
+	mes "[Maitre Ranger]";
+	if (class == 4012 || class == 11)
+	{
+		if ( RA_Q < 1)
+		{
+			mes "Bonjour à toi," + strcharinfo(0) + ".";
+			mes "Je suis le Maitre Ranger.";
+			mes "Je peux te faire passer la deuxième épreuve de ton Eveil,";
+			mes "Es-tu intéressé?";
+			next;
+			switch(select("Oui, je voudrais passer le test, s'il vous plait.:Non merci, je me suis trompé de personne.:Un vieux fou m'a envoyé ici après avoir lancé un tetra Vortex sur moi Y^Y."))
+			{
+				case 1:
+					mes "[Maitre Ranger]";
+					mes "Tout d'abord, voyons si tu es prêt physiquement.";
+					next;
+					if ( CHARLO_Q ){
+						mes "[Maitre Ranger]";
+						mes "On dirait bien que ton physique est prêt.";
+						mes "Je vais donc maintenant tester ton mental.";
+						next;
+						mes "[Maitre Ranger]";
+						
+							mes "Il s'agit d'un quizz. Commençons.";
+							next;
+							set min_Q, 0;
+							mes "Quelle est la meilleure flèche à utiliser contre un Anubis?";
+							switch(select("Fire:Shadow:Silver:Normal"))
+							{
+								case 2:				
+								case 3:
+									set min_Q, min_Q+1;
+								case 1:
+								case 4:
+							}
+							next;
+							mes "De combien de flèches est équivalent Double Straff?";
+							switch(select("2:4:5:3"))
+							{
+								case 1:
+									set min_Q, min_Q+1;
+								case 2:
+								case 3:
+								case 4:
+							}
+							next;
+							mes "Combien de fois d'affilée pouvez-vous lancer Sharp Shooting?";
+							switch(select("1 fois:2 fois:10 fois:14 fois"))
+							{
+								case 4:
+									set min_Q, min_Q+1;
+								case 1:
+								case 2:
+								case 3:
+							}
+							next;
+							mes "Comparé à Blitz Beat, combien d'assaut de moins fait Falcon Assault?";
+							switch(select("1:2:3:4"))
+							{
+								case 2:
+									set min_Q, min_Q+1;
+								case 3:
+								case 1:
+								case 4:
+							}
+							next;
+							mes "Quelle attaque n'est pas une compétence de type piège?";
+							switch(select("Talkie Box:Strip Trap:Blast Mine:Freezing Trap"))
+							{
+								case 2:
+									set min_Q, min_Q+1;
+								case 1:
+								case 3:
+								case 4:
+							}
+							next;
+							mes "Quelle connaissance est requise pour utiliser Beast Strafing?";
+							switch(select("Beast Bane:Double Straff:Spring Trap:Phantasmagoric Arrow"))
+							{
+								case 1:
+									set min_Q, min_Q+1;
+								case 3:
+								case 2:
+								case 4:
+							}
+							next;
+							mes "Quel est l'effet de Phantasmagoric Arrow?";
+							switch(select("Tire sans flèche:Tire une flèche de type ghost:Tire cinq flèche en une:envoie le faucon à l'attaque"))
+							{
+								case 1:
+									set min_Q, min_Q+1;
+								case 2:
+								case 4:
+								case 3:
+							}
+							next;
+							mes "Quel skill détecte les dangers?";
+							switch(select("Detecting:Blitz Beat:Falcon Assault:Aucun"))
+							{
+								case 1:
+									set min_Q, min_Q+1;
+								case 3:
+								case 2:
+								case 4:
+							}
+							next;
+							mes "Combien de bonus d'attaque donne Steel Crow au level 8?";
+							switch(select("ATK + 50:ATK + 49:ATK + 38:ATK + 48"))
+							{
+								case 4:
+									set min_Q, min_Q+1;
+								case 1:
+								case 2:
+								case 3:
+							}
+							next;
+							mes "Quelle variété de trunk donne le plus de point dans le test pour devenir archer?";
+							switch(select("barrel trunk:fine grained trunk:trunk:solid trunk"))
+							{
+								case 2:
+									set min_Q, min_Q+1;
+								case 3:
+								case 1:
+								case 4:
+							}
+							next;
+							mes "[Maitre Ranger]";
+							mes "Bien, voyons tes résultats maintenant...";
+							mes "*Trifouille les résultats du test";
+							next;
+							mes "[Maitre Ranger]";
+							if (min_Q >= 9){
+								mes "Excellent, tu as eu ^FF0000" + min_Q*10 + "%^000000 de bonnes réponses.";
+								mes "On dirait bien que ton Esprit est prêt à passer l'Eveil.";
+								mes "Tu peux passer à l'avant-dernière étape de ta quête, la plus difficile.";
+								mes "Pars donc à la recherche du Mirroir du Mal, il t'expliquera cela plus en détail.";
+								mes "Il se trouve caché quelque part aux alentours de la grande ville de Bastania.";
+								mes "Prends cet objet qui te sera très utile";
+								mes " ";
+								getitem (22005),1;
+								mes "Bon courage";
+								emotion 21;
+								set RA_Q, 1;
+								close;
+							}
+							else
+							{
+								mes "Désolé, mais tes ^FF0000" + min_Q*10 + "%^000000 de réussite ne seront pas suffisant.";
+								mes "Entraîne encore un peu ton esprit,";
+								mes "Sans quoi, il ne résistera pas à la puissance de l'Eveil.";
+								close;
+							}
+					}		
+					else
+					{
+					mes "[Maitre Ranger]";
+					mes "Désolé, mais tu ne peux pas venir me voir pour l'instant.";
+					mes "Tu dois avant tout tester ton Physique auprès du Maitre de l'Eveil.";
+					close;
+					}
+				case 2:
+					mes "[Maitre Ranger]";
+					mes "Pas de problème.";
+					mes "Vis ta vie avec Espoir,";
+					mes "Elle ne t'en paraîtra que plus belle.";
+					close;
+				case 3:
+					mes "[Maitre Ranger]";
+					mes "Un vieux fou tu dis?";
+					mes "Le Maître du Renouveau est tellement plus que ça";
+					mes "Mais j'avoue qu'il a des tendances un peu cabotine...";
+					close;
+			}
+		}
+		
+		else if ( RA_Q == 1 )
+		{
+			mes "Bonjour à toi," + strcharinfo(0) + ".";
+			mes "Tu peux passer à la dernière étape.";
+			mes "Pars donc à la recherche d'Yggdrasil.";
+			mes "Il se trouve caché quelque part aux alentours de Bastania.";
+			mes "Bon courage.";
+			close;
+		}
+
+		else if ( RA_Q == 3 || class == 4062 || class == 4056)
+		{
+			mes "Bonjour à toi," + strcharinfo(0) + ".";
+			mes "Felicitations, tu es Ranger !";
+			mes "Que la force soit avec toi !";
+			close;
+		}
+	}
+	else
+	{
+		mes "Le truc c'est de trouver le bon matériau pour faire un arc solide.";
+		close;
+	}
+}

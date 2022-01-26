@@ -1,0 +1,288 @@
+thalys,117,215,3	script	O'Hariam	52,{
+	set .@npcname$, "[O'Hariam]";
+	
+	mes .@npcname$;
+	mes "";
+	mes "Yoh oh, matelot!";
+	mes "Tu as devant toi le grand O'Hariam!";
+	mes "Comment ça, jamais entendu parler?";
+	mes "Je suis un ex-pirate! J'ai fait trembler Thalys sur ses fondations!";
+	mes "J'ai pillé, volé, violé même!";
+	next;
+	if (#elemental_favor_q < 6)
+	{
+		mes .@npcname$;
+		mes "";
+		mes "Dis donc, matelot, t'as déjà entendu parler des Cartes au Trésor?";
+		mes "Il paraît qu'elles te permettent de voir où se trouvent certains secrets cachés de ce monde.";
+		mes "Attention par contre. Elles sont à usage unique, par un sortilège quelconque.";
+		mes "Elles disparaissent une fois que tu les as ouvertes, comme une feuille de papier dans l'eau de mer.";
+		mes "T'as intérêt à bien retenir ce qu'elles t'indiquent, pour sûr.";
+	}
+	else
+	{
+		if (checkquest(60378) != 2)
+		{
+			mes "AHHHH! AHHHHHHHHHHHHHHHHH!";
+			mes "VA-T-EN! JE VEUX SEULEMENT OUBLIER!";
+			mes "VA-T-EN! VA-T-EN!!!!!";
+			setquest(60378);
+		}
+		else
+		{
+			if (#elemental_favor_q == 6)
+			{
+				if (#guardian_dead == 0)
+				{
+					mes "Tu...Tu as vraiment fait ça pour moi?";
+					mes "Je...Je...";
+					next;
+					mes "*Il semble qu'il y ait un problème...*";
+					mes "Je...";
+					mes "Je me souviens.";
+					mes "Je me souviens enfin de ce que ca faisait d'être un fier Aventurier.";
+					mes "Un Combattant, un Voyageur...UN PIRATE!";
+					next;
+					mes "Merci à toi mon ami. Tu viens de m'ouvrir les yeux, et je t'en suis reconnaissant.";
+					mes "Les Dieux se sont joués de moi. Il est temps pour les Pirates Sanglants de montrer que nous ne les craignions pas.";
+					mes "Lorsqu'ils nous ont maudit, les Dieux ont transformé quatre des membres de mon équipage en gardien de l'entré de leur zone de pouvoir.";
+					mes "A travers le monde, plusieurs piédestals attendent la venu d'une offrande.";
+					mes "Cette offrande est la marque que tu as atteint l'une des marches vers le Trésor.";
+					mes "Trouves les. Toutes. Et vole leur trésor!";
+					mes "Mais prends garde, ils sont bien gardés, et tu n'as que peu de temps pour les libérer...";
+					next;
+	
+					set .@num, rand(0,12);				
+					callsub L_Prepare_Piedestal;
+					mes "Le premier piedestal se trouve " + #map_indication$;
+					if (getarraysize($elemental_water_item) > 1)
+					{
+						mes "Pour l'activer, tu devras apporter et y déposer l'un des items suivant: ";
+						for (set .@i, 0; .@i<getarraysize($elemental_water_item); set .@i, .@i+1)
+							mes "Un " + getitemname($elemental_item[.@i];
+					}
+					else
+						mes "Pour l'activer, tu devras apporter et y déposer un: " + getitemname($elemental_water_item[0];
+					mes "Une fois ceci fait, libère mon matelot, je t'en prie.";
+					set #guardian_dead, 0;
+					set #info_favor, 1;
+				}
+				else if (#info_favor == 1 && #guardian_dead < 2)
+				{
+					mes "J'ai l'impression que ne sais plus ou chercher.";
+					mes "Voila ce que je t'avais dit.";
+					mes "Le premier piedestal se trouve " + #map_indication$;
+					if (getarraysize($elemental_water_item) > 1)
+					{
+						mes "Pour l'activer, tu devras apporter et y déposer l'un des items suivant: ";
+						for (set .@i, 0; .@i<getarraysize($elemental_water_item); set .@i, .@i+1)
+							mes "Un " + getitemname($elemental_water_item[.@i];
+					}
+					else
+						mes "Pour l'activer, tu devras apporter et y déposer un: " + getitemname($elemental_water_item[0];
+					mes "Une fois ceci fait, libère mon matelot, je t'en prie.";
+				}
+				else
+				{
+					mes "Tu as réussi à libérer le premier des quatres Matelots.";
+					mes "Bravo,mais ne te repose pas sur tes lauriers, la route est encore longue.";
+					mes "Nous autres avions pour habitude de nous trier, de mener en permanence des sortes de concours.";
+					mes "Les 4 matelots touchés étaient les quatre plus fort.";
+
+					set .@num, rand(0,12);				
+					callsub L_Prepare_Piedestal;
+					mes "Le second piedestal se trouve " + #map_indication$;
+					if (getarraysize($elemental_earth_item) > 1)
+					{
+						mes "Pour l'activer, tu devras apporter et y déposer l'un des items suivant: ";
+						for (set .@i, 0; .@i<getarraysize($elemental_earth_item); set .@i, .@i+1)
+							mes "Un " + getitemname($elemental_earth_item[.@i]);
+					}
+					else
+						mes "Pour l'activer, tu devras apporter et y déposer un: " + getitemname($elemental_earth_item[0]);
+					mes "Une fois ceci fait, libère mon matelot, je t'en prie.";
+					set #elemental_favor_q, 7;
+					set #guardian_dead, 0;
+					set #info_favor, 1;
+				}
+			}
+			else if (#elemental_favor_q == 7)
+			{
+				if (#info_favor == 1 && #guardian_dead < 2)
+				{
+					mes "J'ai l'impression que ne sais plus ou chercher.";
+					mes "Voila ce que je t'avais dit.";
+					mes "Le second piedestal se trouve " + #map_indication$;
+					if (getarraysize($elemental_earth_item) > 1)
+					{
+						mes "Pour l'activer, tu devras apporter et y déposer l'un des items suivant: ";
+						for (set .@i, 0; .@i<getarraysize($elemental_earth_item); set .@i, .@i+1)
+							mes "Un " + getitemname($elemental_earth_item[.@i];
+					}
+					else
+						mes "Pour l'activer, tu devras apporter et y déposer un: " + getitemname($elemental_earth_item[0];
+					mes "Une fois ceci fait, libère mon matelot, je t'en prie.";
+				}
+				else if (#guardian_dead == 2)
+				{
+					mes "Tu as réussi à libérer le second des quatres Matelots.";
+					mes "C'était un fier pirate, il adorait être debout sur le pont pendant les orages.";
+					mes "C'était sans aucun doute le plus proche de la Mer, et il pouvais repérer des récifs à 300m.";
+
+					set .@num, rand(0,12);				
+					callsub L_Prepare_Piedestal;
+					mes "Le troisième piedestal se trouve " + #map_indication$;
+					if (getarraysize($elemental_wind_item) > 1)
+					{
+						mes "Pour l'activer, tu devras apporter et y déposer l'un des items suivant: ";
+						for (set .@i, 0; .@i<getarraysize($elemental_wind_item); set .@i, .@i+1)
+							mes "Un " + getitemname($elemental_wind_item[.@i]);
+					}
+					else
+						mes "Pour l'activer, tu devras apporter et y déposer un: " + getitemname($elemental_wind_item[0]);
+					mes "Une fois ceci fait, libère mon matelot, je t'en prie.";
+					set #elemental_favor_q, 8;
+					set #guardian_dead, 0;
+					set #info_favor, 1;
+				}
+			}
+			else if (#elemental_favor_q == 8)
+			{
+				if (#info_favor == 1 && #guardian_dead < 2)
+				{
+					mes "J'ai l'impression que ne sais plus ou chercher.";
+					mes "Voila ce que je t'avais dit.";
+					mes "Le dernier piedestal se trouve " + #map_indication$;
+					if (getarraysize($elemental_wind_item) > 1)
+					{
+						mes "Pour l'activer, tu devras apporter et y déposer l'un des items suivant: ";
+						for (set .@i, 0; .@i<getarraysize($elemental_wind_item); set .@i, .@i+1)
+							mes "Un " + getitemname($elemental_wind_item[.@i];
+					}
+					else
+						mes "Pour l'activer, tu devras apporter et y déposer un: " + getitemname($elemental_wind_item[0];
+					mes "Une fois ceci fait, libère mon matelot, je t'en prie.";
+				}
+				else if (#guardian_dead == 2)
+				{
+					mes "Déjà trois matelots libérer. Il n'en reste qu'un.";
+					
+					set .@num, rand(0,12);				
+					callsub L_Prepare_Piedestal;
+					mes "Le dernier piedestal se trouve " + #map_indication$;
+					if (getarraysize($elemental_fire_item) > 1)
+					{
+						mes "Pour l'activer, tu devras apporter et y déposer l'un des items suivant: ";
+						for (set .@i, 0; .@i<getarraysize($elemental_fire_item); set .@i, .@i+1)
+							mes "Un " + getitemname($elemental_fire_item[.@i]);
+					}
+					else
+						mes "Pour l'activer, tu devras apporter et y déposer un: " + getitemname($elemental_fire_item[0]);
+					mes "Une fois ceci fait, libère mon matelot, je t'en prie.";
+					set #elemental_favor_q, 9;
+					set #guardian_dead, 0;
+					set #info_favor, 1;
+				}
+			}
+			else if (#elemental_favor_q == 9)
+			{
+				if (#info_favor == 1 && #guardian_dead < 2)
+				{
+					mes "J'ai l'impression que ne sais plus ou chercher.";
+					mes "Voila ce que je t'avais dit.";
+					mes "Le dernier piedestal se trouve " + #map_indication$;
+					if (getarraysize($elemental_fire_item) > 1)
+					{
+						mes "Pour l'activer, tu devras apporter et y déposer l'un des items suivant: ";
+						for (set .@i, 0; .@i<getarraysize($elemental_fire_item); set .@i, .@i+1)
+							mes "Un " + getitemname($elemental_fire_item[.@i];
+					}
+					else
+						mes "Pour l'activer, tu devras apporter et y déposer un: " + getitemname($elemental_fire_item[0];
+					mes "Une fois ceci fait, libère mon matelot, je t'en prie.";
+				}
+				else if (#guardian_dead == 2)
+				{
+					mes "Tu as libéré les 4 Matelots.";
+					mes "A présent, tu peux atteindre le chemin d'Yggdrasil.";
+					mes "La Pousse est née de la Terre. Elle a reçu la vie de l'Eau,";
+					mes "Elle a vécu avec l'Air, et Elle périra par le Feu.";
+					mes "Ces quatres marques te permettront d'accéder à la Pousse.";
+					for (set .@i, 0; .@i<4; set .@i, .@i+1)
+						getitem x+.@i, 1;
+					next;
+					mes "Chacune de ces Marques doit être utilisée dans l'Ordre.";
+					mes "Tu auras besoin de 3 amis, car le temps dont tu disposes pour l'insérer est trop court pour être parcouru.";
+					mes "Une fois cela fait, la Pousse t'appelera à elle. Prends garde à la suite.";
+					mes "Je te souhaites bonne chance.";
+					set #elemental_favor_q, 10;
+				}
+			}
+			else if (#elemental_favor_q == 10)
+			{
+				mes "Je ne peux plus t'aider. Tu as déjà les marques, tu dois trouver la Pousse.";
+				mes "Rien de mieux pour cela que de commencer à chercher dans les lieux qui se rapproche d'Yggdrasil, non?.";
+			}
+
+		}
+	}
+	close;
+
+L_Prepare_Piedestal:
+	switch(.@num)
+	{
+		case 1:
+			set #map_indication$, "dah";
+			break;
+		case 2:
+			set #map_indication$, "dah";
+			break;
+		case 3:
+			set #map_indication$, "dah";
+			break;
+		case 4:
+			set #map_indication$, "dah";
+			break;
+		case 5:
+			set #map_indication$, "dah";
+			break;
+		case 6:
+			set #map_indication$, "dah";
+			break;
+		case 7:
+			set #map_indication$, "dah";
+			break;
+		case 8:
+			set #map_indication$, "dah";
+			break;
+		case 9:
+			set #map_indication$, "dah";
+			break;
+		case 10:
+			set #map_indication$, "dah";
+			break;
+		case 11:
+			set #map_indication$, "dah";
+			break;
+		case 12:
+			set #map_indication$, "dah";
+			break;
+	}
+	//change npc display according to actual step
+	switch($elemental_favor_q)
+	{
+		case 5:
+			setnpcdisplay getd("piedestal"+.@num), 947;
+			break;
+		case 6:
+			setnpcdisplay getd("piedestal"+.@num), 947;
+			break;
+		case 7:
+			setnpcdisplay getd("piedestal"+.@num), 947;
+			break;
+		case 8:
+			setnpcdisplay getd("piedestal"+.@num), 947;
+			break;
+	}
+	enablenpc getd("piedestal"+.@num);
+}

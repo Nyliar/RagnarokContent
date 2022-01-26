@@ -1,0 +1,1199 @@
+//naheulbeuk
+capitale,250,229,5	script	Veteran::vet_av	588,{
+	set .@npcname$, "[Aventurier Veteran]";
+	mes .@npcname$;
+	set .@basexp, 50000;
+	set .@jobexp, 50000;
+	setarray .@itemAdv[0],1231,1,1363,1,1618,1,2111,1,2254,1,2407,1,945,200,741,30;
+	mes "";
+
+	if (LANGUAGE == 2)
+	{
+		mes "Hello, traveller!";
+		if (Q_NAH_COMPLETE == 0)
+		{
+			if (Q_NAH == 0)
+			{
+				mes "I can see in your eyes that your soul is an adventurer's one.";
+				mes "I can bet my bread on that. Am I right?";
+				switch(select("Yes","No"))
+				{
+					case 1:
+						mes "Ah...Looks like...";
+						break;
+					case 2:
+						mes "I would have bet on it!";
+						mes "Did you ever heard about the Adventurer Life?";
+						mes "It's all about what make an adventurer life. Action, Fights, Drunkness...";
+						mes "Do you know an Adventurer Life?";
+						next;
+						switch(select("You can't say better!","I don't think so"))
+						{
+							case 1:
+								if (Q_NAH == 0)
+									mes "You shouldn't lie like that...";
+								break;
+							case 2:
+								mes "Well, that's the right moment to begin!";
+								mes "What do you say 'bout that? Wanna try?";
+								switch(select("Well, let's go!","I prefer not..."))
+								{
+									case 1:
+										mes "Allright, here we go!";
+										set Q_NAH, 1;
+										mes "Keep this in mind:";
+										mes "*Take a high voice*";
+										mes "Quand j'aurais mon niveau 2,";
+										mes "J'achèterais un duvet,";
+										next;
+										mes "Right? Come back when you'll have stuff to create a goosedown.";
+										mes "100 Soft Feathers will be enough."; 
+										break;
+									case 2:
+										mes "As you wish.";
+										mes "Come back when you'll be a Man.";
+										break;
+								}
+								break;
+						}
+						break;
+				}
+			}
+			else if (Q_NAH == 1)
+			{
+				if (countitem(7063) >= 100)
+				{
+					mes "He! You've got it all! Great!";
+					mes "The song says:";
+					mes "Quand j'aurais mon niveau 2,";
+					mes "J'achèterais un duvet,";
+					next;
+					mes "Then:";
+					mes "Pour dormir dans les Donjons,";
+					mes "Sans jamais m'enrhumer!";
+					next;
+					mes "Are you ready for that?";
+					mes "Let's test your goosedown?";
+					switch(select("Here we go!","I don't want to..."))
+					{
+						case 1:
+							mes "Hiargh hiargh! Here we are, boy";
+							mes "I'll take you feather, and let you use my own goosedown.";
+							mes "It will protect you from the freeze you'll find in there.";
+							delitem 7063, 100;
+							getitem 21489, 1;
+							warp "guild_vs5", 26,63;
+							goto OnDonjonGele;
+							break;
+						case 2:
+							mes "Still not an Adventurer, hu?";
+							break;
+					}
+				}
+				else
+					mes "I need these feathers. Really.";
+			}
+			else if (Q_NAH == 2)
+			{
+				mes "Looks like you failed on the first stair.";
+				mes "You can try again, but I'll need the feathers again.";
+				if (countitem(21489) >= 1)
+					delitem 21489, 1;
+				set Q_NAH, 1;
+			}
+			else if (Q_NAH == 3)
+			{
+				if (checkquest(60371,HUNTING) == 2)
+				{
+					mes "Well done boy.";
+					mes "You can go further!";
+					set Q_NAH, 4;
+					getexp .@basexp * Q_NAH, .@jobexp * Q_NAH;
+					set XP_NAH, 0;
+					mes "Leave me a few moment to remember.";
+				}
+				else if (checkquest(60371,HUNTING) == 1)
+				{
+					mes "Hum...You haven't killed enought skeletons.";
+				}
+				else if (countitem(6403) >= 100)
+				{
+					mes "Thanks you boy!";
+					mes "Then it says:";
+					mes "J'y mettrais des flèches magiques,";
+					mes "Du genre, qui t'arraches un bras.";
+					mes "C'est un peu ça, la vie d'aventurier,";
+					mes "Et on y va, y a des Squelettes à POUTRER!";
+					delitem 6403, 100;
+					setquest 60371;
+				}
+				else
+				{
+					mes "Well done boy! You go through the first step!";
+					if (XP_NAH == 0)
+					{
+						getexp .@basexp * Q_NAH, .@jobexp * Q_NAH;
+						set XP_NAH, 1;
+					}
+					mes "Do you wanna hear the next song's sentence?";
+					mes "Here you are:";
+					mes "Quand j'aurais mon niveau 3,";
+					mes "J'achèterais un carquois.";
+					mes "You know what to do right?";
+					mes "Bring me back something to create a quiver.";
+					mes "I'll use some Comodo Leather for that.";
+					mes "100 pieces should be enough.";
+				}
+			}
+			else if (Q_NAH == 4)
+			{
+				if (checkquest(60371,HUNTING) == 2)
+				{
+					if (countitem(12622) >= 1)
+					{
+						mes "Well done, Adventurer apprentice.";
+						mes "You've passed the third step!";
+						mes "Move on!";
+						mes "Then it says...";
+						mes "C'est un peu ça, la vie d'aventurier.";
+						mes "Et on y va, y a des Orcs à Décimer!";
+						changequest 60371, 60372;
+						set Q_NAH, 5;
+					}
+					else
+					{
+						mes "Allright, I remember the following:";
+						mes "Quand j'aurais mon niveau 4,";
+						mes "J'achèterais un Cheval.";
+						mes "Je sais pas vraiment monter...";
+						mes "Tant pis ca m'est égal.";
+						mes "For this one, it looks obvious to me.";
+						mes "There's somewhere in the world a man who learn about new mounts.";
+						mes "Bring me back the thing he will give you.";
+					}
+				}
+				else
+					mes "Looks like you've don't kill enough skeletons.";
+				
+			}
+			else if (Q_NAH == 5)
+			{
+				if (checkquest(60372,HUNTING) == 2)
+				{
+					if (countitem(7099) >= 200)
+					{
+						mes "Well done, Adventurer Apprentice.";
+						mes "You can go on.";
+						mes "Next says:";
+						mes "C'est un peu ça, la vie d'Aventurier,";
+						mes "et on y va y'a des momies à cramer !";
+						changequest 60372, 60373;
+						delitem 7099, 200;
+						set Q_NAH, 6;		
+						set XP_NAH, 0;
+					}
+					else
+					{
+						mes "Well done, child. You looks like a real Adventurer!";
+						if (XP_NAH == 0)
+						{
+							getexp .@basexp * Q_NAH, .@jobexp * Q_NAH;
+							set XP_NAH, 1;
+						}
+						mes "The song then says:";
+						mes "Quand j'aurai mon niveau 5,";
+						mes "j'achèterai des parchemins,";
+						mes "pour lancer des sortilèges,";
+						mes "même si j'suis pas magicien!";
+						next;
+						mes "For this step, I'll need some magic scrolls.";
+						mes "There's some rare on, the Worn-out Magic Scroll.";
+						mes "Bring me back 200."; 
+					}
+				}	
+				else
+					mes "Looks like you don't decimate enought orcs.";
+			}
+			else if (Q_NAH == 6)
+			{
+				if (checkquest(60373,HUNTING) == 2)
+				{
+					mes "Well done, child! You're now a real Adventurer Apprentice!";
+					if (XP_NAH == 0)
+					{
+						getexp .@basexp * Q_NAH, .@jobexp * Q_NAH;
+						set XP_NAH, 1;
+					}
+					mes "The following says:";
+					mes "Quand j'aurai mon niveau 6,";
+					mes "j'achèterai une armure,";
+					mes "c'est moins facile de courir,";
+					mes "mais on évite les fractures !";
+					mes "C'est un peu ça, la vie d'aventurier,";
+					next;
+					mes "It'll be a little different this time.";
+					mes "You've got to prove me that you can resist, with you're armor on.";
+					mes "You have to know how to defend yourself too!";
+					goto OnDonjonArmure;
+				}
+				else
+					mes "Looks like you didn't burnt enought mummies.";
+			}
+			else if (Q_NAH == 7)
+			{
+				if (countitem(2729) >= 1)
+				{
+					delitem 2729, 1;
+					mes "Great! It looks like it.";
+					mes "Then it says:";
+					mes "C'est un peu ça, la vie d'Aventurier,";
+					mes "et on y va y'a des Minotaures à Tuer!";
+					changequest 60373, 60375;
+					set Q_NAH, 8;
+					set XP_NAH, 0;
+				}
+				else
+				{
+					mes "Unbelievable. You've done it.";
+					mes "That wasn't easy, thought.";
+					if (XP_NAH == 0)
+					{
+						getexp .@basexp * Q_NAH, .@jobexp * Q_NAH;
+						set XP_NAH, 1;
+					}
+					mes "Let's move on. You'll soon be an Adventurer.";
+					mes "Quand j'aurai mon niveau 7,";
+					mes "j'achèterai une anneau,";
+					mes "qui donne +2 en charisme,";
+					mes "et la puissance d'un taureau!";
+					mes "I'd like to have this one...";
+					mes "But at this moment, a Diabolus Ring should do the job.";
+				}
+			}
+			else if (Q_NAH == 8)
+			{
+				if (checkquest(60375,HUNTING) == 2)
+				{
+					mes "Well done boy. It become harder, right?";
+					mes "Let's go on. You'll soon be an Adventurer.";
+					mes "Quand j'aurai mon niveau 8,";
+					mes "j'achèterai une balliste,";
+					mes "pour assiéger les donjons,";
+					mes "des Nécromancultistes!";
+					mes "C'est un peu ça, la vie d'Aventurier,";
+					mes "et on y va y'a des Liches à Eventrer!";
+					next;
+					mes "Well that...We haven't that here.";
+					mes "But Necromancultiste are known here as Necromancer.";
+					mes "There's great, strong and huge creatures,";
+					mes "and you'll have to kill that!";
+					mes "Let's go.";
+					warp "guild_vs5", 26,63;
+					changequest 60375, 60376;
+					set Q_NAH, 9;
+					goto OnDonjonNecro;
+				}
+			}
+			else if (Q_NAH == 9)
+			{
+				if (checkquest(60376,HUNTING) == 2)
+				{
+					mes "AHAHAHAHA, so? Not so easy right?";
+					mes "Well done, althought.";
+					if (XP_NAH == 0)
+					{
+						getexp .@basexp * Q_NAH, .@jobexp * Q_NAH;
+						set XP_NAH, 1;
+					}
+					mes "Let's move on. It's almost finished.";
+					mes "Quand j'aurai mon niveau 9,";
+					mes "j'achèterai une Vorpale,";
+					mes "pour arracher au dragon,";
+					mes "ses parties génitales!";
+					next;
+					mes "I can't help you this time.";
+					mes "You have the role to hunt alone this time.";
+					mes "I think you should try with a Gopinich this time. It's good enough to start.";
+					changequest 60376, 60377;
+					set Q_NAH, 10;
+				}
+				else if (checkquest(60376) == 1)
+				{
+					mes "AHAHAH I told you it was harsh.";
+					mes "Here we go again!";
+					warp "guild_vs5", 26,63;
+					goto OnDonjonNecro;
+				}
+			}
+			else
+			{
+				if (checkquest(60377,HUNTING) == 2)
+				{
+					mes "You've finally became a real Adventurer!";
+					mes "I'm proud of you!";
+					if (XP_NAH == 0)
+					{
+						getexp .@basexp * Q_NAH, .@jobexp * Q_NAH;
+						set XP_NAH, 1;
+					}
+					mes "Here's the last secret of this song.";
+					next;
+					mes "Quand j'aurais mon niveau 10,";
+					mes "J'achèterais des pansements,";
+					mes "Pour corriger mes erreurs,";
+					mes "Des niveaux précédents.";
+					mes "C'est surtout ça, la vie d'Aventurier.";
+					mes "Je rentre chez moi, ma carrière est terminée.";
+					next;
+					mes "Yes. That's the secret: take your time.";
+					mes "The death can't be cured, not like the wounds.";
+					mes "Here's something to cure some.";
+					mes "Come back later. I'll have something more for you.";
+					getitem 21497, 5;
+					set Q_NAH_COMPLETE, 1;
+				}
+			}
+		}
+		else if (Q_NAH_COMPLETE == 1)
+		{
+			mes "You've gone through all the ordeal, patiently.";
+			mes "Righ now, you've become a recognized Adventurer.";
+			mes "Congratulation!";
+			mes "As a reward for your hardship,";
+			mes "You can have any of the ordeal object.";
+			mes "But remember! Only one!";	
+			next;
+			goto OnAskChoice;
+		}
+		else if (Q_NAH_COMPLETE == 2)
+		{
+			if (Q_NAH == 10)
+			{
+				mes "Ah! Here you are again!";
+				mes "What? You want an Adventurer Mark?";
+				mes "Why not, but it wont be cheap, know it.";
+				set Q_NAH, 11;
+				goto DispAdvBackItem;
+			}
+			else if (Q_NAH == 11)
+			{
+				mes "So? Do you have it all?";
+				for (set .@i,0; .@i<getarraysize(.@itemAdv); set .@i,.@i+2)
+				{
+					if (countitem(getelementofarray(.@itemAdv,.@i)) < getelementofarray(.@itemAdv,.@i+1))
+					{
+						mes "Sorry but your still missing some.";
+						mes "Want the list again?";
+						switch(select("Yes","No"))
+						{
+							case 1:
+								goto DispAdvBackItem;
+								break;
+							case 2:
+								mes "Allright. I'll wait.";
+								close;
+						}
+					}
+				}
+				for (set .@i,0; .@i<getarraysize(.@itemAdv); set .@i,.@i+2)
+				{
+					delitem getelementofarray(.@itemAdv,.@i), getelementofarray(.@itemAdv,.@i+1);
+				}
+				mes "You got it all!";
+				mes "Here's your mark.";
+				getitem 2576, 1;
+				mes "See you soon.";
+			}
+			else
+			{
+				mes "How did you get there?";
+			}
+			close;
+		}
+		else
+		{
+			mes "I've nothing more to learn to you.";
+			mes "You should now live by your own.";
+		}
+	}
+	else if (LANGUAGE == 1)
+	{
+		mes "Salutation, voyageur!";
+		if (Q_NAH_COMPLETE == 0)
+		{
+			if (Q_NAH == 0)
+			{
+				mes "Je vois a ton regard que tu es un aventurier dans l'âme.";
+				mes "Je parierais mon gagne pain là-dessus. Je me trompe?";
+				switch(select("Oui","Non"))
+				{
+					case 1:
+						mes "Ah...Comme quoi...";
+						break;
+					case 2:
+						mes "Je l'aurais parié!";
+						mes "As-tu déjà entendu parler de la Vie d'Aventurier?";
+						mes "Il s'agit de tout ce qui compose une vie d'aventure. Action, Combats, Ivresse...";
+						mes "Connais-tu toi-même une vie d'aventurier?";
+						next;
+						switch(select("Et comment!","Je ne crois pas non"))
+						{
+							case 1:
+								if (Q_NAH == 0)
+									mes "Tu ne devrais pas mentir comme ça...";
+								break;
+							case 2:
+								mes "C'est l'occasion de commencer!";
+								mes "Qu'en dis-tu? Tu veux essayer?";
+								switch(select("Allons y!","Je ne préfères pas..."))
+								{
+									case 1:
+										mes "C'est parti garçon!";
+										set Q_NAH, 1;
+										mes "Retiens bien ça:";
+										mes "*Prends une voix de fausset*";
+										mes "Quand j'aurais mon niveau 2,";
+										mes "J'achèterais un duvet,";
+										next;
+										mes "Ok? Reviens me voir avec ce qu'il faut pour confectionner un duvet.";
+										mes "100 Soft Feathers feront l'affaire."; 
+										break;
+									case 2:
+										mes "Comme tu veux.";
+										mes "Reviens quand tu seras devenu un Homme.";
+										break;
+								}
+								break;
+						}
+						break;
+				}
+			}
+			else if (Q_NAH == 1)
+			{
+				if (countitem(7063) >= 100)
+				{
+					mes "He! Tu as ce qu'il faut pour le duvet! Bien joué!";
+					mes "La chanson dit:";
+					mes "Quand j'aurais mon niveau 2,";
+					mes "J'achèterais un duvet,";
+					next;
+					mes "Et la suite:";
+					mes "Pour dormir dans les Donjons,";
+					mes "Sans jamais m'enrhumer!";
+					next;
+					mes "Tu te sens prêt pour ça?";
+					mes "Testons ton duvet ok?";
+					switch(select("Allons y!","Je ne préfères pas..."))
+					{
+						case 1:
+							mes "Hiargh hiargh! Allons-y, garçon!";
+							mes "Je te prends tes plumes, et je te prête mon duvet.";
+							mes "Ca te protègera un peu du gel que tu vas affronter là-bas.";
+							delitem 7063, 100;
+							getitem 21489, 1;
+							warp "guild_vs5", 26,63;
+							goto OnDonjonGele;
+							break;
+						case 2:
+							mes "Toujours pas un Aventurier hein?";
+							break;
+					}
+				}
+				else
+					mes "Il me faut les plumes. Obligé.";
+			}
+			else if (Q_NAH == 2)
+			{
+				mes "On dirait bien que tu as échoué à la première marche.";
+				mes "Tu pourras recommencer quand tu voudras, si tu me ramène à nouveau des plumes.";
+				if (countitem(21489) >= 1)
+					delitem 21489, 1;
+				set Q_NAH, 1;
+			}
+			else if (Q_NAH == 3)
+			{
+				if (checkquest(60371,HUNTING) == 2)
+				{
+					mes "Bien joué, garçon.";
+					mes "Tu dois pouvoir passer à la suite!";
+					set Q_NAH, 4;
+					getexp .@basexp * Q_NAH, .@jobexp * Q_NAH;
+					set XP_NAH, 0;
+					mes "Laisse moi deux minutes pour me rappeler des paroles.";
+				}
+				else if (checkquest(60371,HUNTING) == 1)
+				{
+					mes "Hum...You haven't killed enought skeletons.";
+				}
+				else if (countitem(6403) >= 100)
+				{
+					mes "Merci à toi gamin!";
+					mes "La suite dit:";
+					mes "J'y mettrais des flèches magiques,";
+					mes "Du genre, qui t'arraches un bras.";
+					mes "C'est un peu ça, la vie d'aventurier,";
+					mes "Et on y va, y a des Squelettes à POUTRER!";
+					delitem 6403, 100;
+					setquest 60371;
+				}
+				else
+				{
+					mes "Bien joué, gamin! Tu as passé la première étape!";
+					if (XP_NAH == 0)
+					{
+						getexp .@basexp * Q_NAH, .@jobexp * Q_NAH;
+						set XP_NAH, 1;
+					}
+					mes "Tu veux entendre la suite de la Contine?";
+					mes "La voila:";
+					mes "Quand j'aurais mon niveau 3,";
+					mes "J'achèterais un carquois.";
+					mes "Tu sais ce qu'il te reste à faire?";
+					mes "Ramène moi de quoi créer un carquois de bonne qualité.";
+					mes "J'en ferais bien un en Cuir de Comodo.";
+					mes "100 Pièces devraient suffire.";
+				}
+			}
+			else if (Q_NAH == 4)
+			{
+				if (checkquest(60371,HUNTING) == 2)
+				{
+					if (countitem(12622) >= 1)
+					{
+						mes "Bien joué, apprenti aventurier.";
+						mes "Tu as passé la troisième épreuve!";
+						mes "On continue!";
+						mes "La suite disait...";
+						mes "C'est un peu ça, la vie d'aventurier.";
+						mes "Et on y va, y a des Orcs à Décimer!";
+						changequest 60371, 60372;
+						set Q_NAH, 5;
+					}
+					else
+					{
+						mes "Ok je me rappelle de la suite. Ca fait:";
+						mes "Quand j'aurais mon niveau 4,";
+						mes "J'achèterais un Cheval.";
+						mes "Je sais pas vraiment monter...";
+						mes "Tant pis ca m'est égal.";
+						mes "Pour cette étape de la vie d'Aventurier, ca me parait évident.";
+						mes "Il y a dans le nouveau monde un homme qui étudie les montures.";
+						mes "Ramène moi un des items qu'il te vendra.";
+					}
+				}
+				else
+					mes "On dirait que tu n'as pas encore Poutrer assez de Squelettes.";
+				
+			}
+			else if (Q_NAH == 5)
+			{
+				if (checkquest(60372,HUNTING) == 2)
+				{
+					if (countitem(7099) >= 200)
+					{
+						mes "Bravo Apprenti Aventurier.";
+						mes "Tu peux passer à la suite.";
+						mes "Ca disais:";
+						mes "C'est un peu ça, la vie d'Aventurier,";
+						mes "et on y va y'a des momies à cramer !";
+						changequest 60372, 60373;
+						delitem 7099, 200;
+						set Q_NAH, 6;		
+						set XP_NAH, 0;
+					}
+					else
+					{
+						mes "Bien joué gamin! Tu deviens un vrai Aventurier!";
+						if (XP_NAH == 0)
+						{
+							getexp .@basexp * Q_NAH, .@jobexp * Q_NAH;
+							set XP_NAH, 1;
+						}
+						mes "La suite de la chanson dit:";
+						mes "Quand j'aurai mon niveau 5,";
+						mes "j'achèterai des parchemins,";
+						mes "pour lancer des sortilèges,";
+						mes "même si j'suis pas magicien!";
+						next;
+						mes "Pour cette étape, tu auras besoin de m'amener des parchemins donc.";
+						mes "Il en existe un type assez rare, les Worn-Out Magic Scroll.";
+						mes "Ramène moi en 200."; 
+					}
+				}	
+				else
+					mes "On dirait que tu n'as pas Décimer assez d'Orcs.";
+			}
+			else if (Q_NAH == 6)
+			{
+				if (checkquest(60373,HUNTING) == 2)
+				{
+					mes "Bien joué gamin! Tu es à présent un vrai Apprenti Aventurier!";
+					if (XP_NAH == 0)
+					{
+						getexp .@basexp * Q_NAH, .@jobexp * Q_NAH;
+						set XP_NAH, 1;
+					}
+					mes "La suite de la chanson dit:";
+					mes "Quand j'aurai mon niveau 6,";
+					mes "j'achèterai une armure,";
+					mes "c'est moins facile de courir,";
+					mes "mais on évite les fractures !";
+					mes "C'est un peu ça, la vie d'aventurier,";
+					next;
+					mes "Ca va être un peu différent cette fois.";
+					mes "Il va falloir me prouver que tu peux résister, grâce à ton armure.";
+					mes "Il faut savoir se défendre aussi!";
+					goto OnDonjonArmure;
+				}
+				else
+					mes "On dirait que tu n'as pas Cramer assez de Mommies.";
+			}
+			else if (Q_NAH == 7)
+			{
+				if (countitem(2729) >= 1)
+				{
+					delitem 2729, 1;
+					mes "Merci bien! Ca y ressemble déjà bien.";
+					mes "La suite disait:";
+					mes "C'est un peu ça, la vie d'Aventurier,";
+					mes "et on y va y'a des Minotaures à Tuer!";
+					changequest 60373, 60375;
+					set Q_NAH, 8;
+					set XP_NAH, 0;
+				}
+				else
+				{
+					mes "Incroyable. Tu as réussi.";
+					mes "C'était pas évident pourtant.";
+					if (XP_NAH == 0)
+					{
+						getexp .@basexp * Q_NAH, .@jobexp * Q_NAH;
+						set XP_NAH, 1;
+					}
+					mes "Continuons! Bientôt, tu seras un vrai Aventurier.";
+					mes "Quand j'aurai mon niveau 7,";
+					mes "j'achèterai une anneau,";
+					mes "qui donne +2 en charisme,";
+					mes "et la puissance d'un taureau!";
+					mes "J'aimerais bien avoir ce genre d'anneau...";
+					mes "En attendant, un Diabolus Ring fera l'affaire.";
+				}
+			}
+			else if (Q_NAH == 8)
+			{
+				if (checkquest(60375,HUNTING) == 2)
+				{
+					mes "Bien joué garçon. Ca se complique hein?";
+					mes "Continuons! Bientôt, tu toucheras la récompense.";
+					mes "Quand j'aurai mon niveau 8,";
+					mes "j'achèterai une balliste,";
+					mes "pour assiéger les donjons,";
+					mes "des Nécromancultistes!";
+					mes "C'est un peu ça, la vie d'Aventurier,";
+					mes "et on y va y'a des Liches à Eventrer!";
+					next;
+					mes "Bon ça, par ici...On a pas.";
+					mes "Par contre, les nécromancultistes on connait ça sous le nom de Necromancer.";
+					mes "C'est des grosses bestioles bien dures. Vu qu'elles sont assez rares,";
+					mes "on va s'occuper de te faire affronter ça.";
+					mes "C'est parti.";
+					warp "guild_vs5", 26,63;
+					changequest 60375, 60376;
+					set Q_NAH, 9;
+					goto OnDonjonNecro;
+				}
+			}
+			else if (Q_NAH == 9)
+			{
+				if (checkquest(60376,HUNTING) == 2)
+				{
+					mes "AHAHAHAHA, alors? Pas facile, les Nécros, hein?";
+					mes "Bien joué en tout cas.";
+					if (XP_NAH == 0)
+					{
+						getexp .@basexp * Q_NAH, .@jobexp * Q_NAH;
+						set XP_NAH, 1;
+					}
+					mes "Continuons! Bientôt, tu seras un vrai Aventurier.";
+					mes "Quand j'aurai mon niveau 9,";
+					mes "j'achèterai une Vorpale,";
+					mes "pour arracher au dragon,";
+					mes "ses parties génitales!";
+					next;
+					mes "Je ne peux pas t'aider cette fois.";
+					mes "A toi de faire l'effort d'aller chasser.";
+					mes "A mon avis, tu devrais viser un Gopinich. C'est bien pour commencer.";
+					changequest 60376, 60377;
+					set Q_NAH, 10;
+				}
+				else if (checkquest(60376) == 1)
+				{
+					mes "AHAHAH je t'avais dit que c'était costaud comme bestiole.";
+					mes "C'est reparti!";
+					warp "guild_vs5", 26,63;
+					goto OnDonjonNecro;
+				}
+			}
+			else
+			{
+				if (checkquest(60377,HUNTING) == 2)
+				{
+					mes "Tu es enfin devenu un vrai Aventurier!";
+					mes "Je suis fier de toi!";
+					if (XP_NAH == 0)
+					{
+						getexp .@basexp * Q_NAH, .@jobexp * Q_NAH;
+						set XP_NAH, 1;
+					}
+					mes "Je vais te livrer le dernier secret de la chanson.";
+					next;
+					mes "Quand j'aurais mon niveau 10,";
+					mes "J'achèterais des pansements,";
+					mes "Pour corriger mes erreurs,";
+					mes "Des niveaux précédents.";
+					mes "C'est surtout ça, la vie d'Aventurier.";
+					mes "Je rentre chez moi, ma carrière est terminée.";
+					next;
+					mes "Et oui. Le secret, c'est de toujours prendre le temps.";
+					mes "La mort ne se soigne pas, contrairement aux blessures.";
+					mes "Voila déjà de quoi t'en soigner quelques unes.";
+					mes "Reviens me voir un peu plus tard. J'ai encore quelque chose pour toi.";
+					getitem 21497, 5;
+					set Q_NAH_COMPLETE, 1;
+				}
+			}
+		}
+		else if (Q_NAH_COMPLETE == 1)
+		{
+			mes "Tu as patientiemment passer toutes les épreuves, et je t'en félicite.";
+			mes "En ce jour, tu deviens officiellement un Aventurier Confirmé.";
+			mes "Bravo!";
+			mes "En tant que récompense, tu as le droit à une récompense.";
+			mes "Chacune des épreuves portait sur un objet.";
+			mes "Tu peux avoir n'importe lequel d'entre eux.";
+			mes "Mais une seule fois!";	
+			next;
+			goto OnAskChoice;
+		}
+		else if (Q_NAH_COMPLETE == 2)
+		{
+			if (Q_NAH == 10)
+			{
+				mes "Ah! Te revoila!";
+				mes "Quoi? Tu veux une Marque d'Aventurier?";
+				mes "Pourquoi pas. Mais ce ne sera pas gratuit, tu es prévenu.";
+				set Q_NAH, 11;
+				goto DispAdvBackItem;
+			}
+			else if (Q_NAH == 11)
+			{
+				mes "Alors? Tu as tout?";
+				for (set .@i,0; .@i<getarraysize(.@itemAdv); set .@i,.@i+2)
+				{
+					if (countitem(getelementofarray(.@itemAdv,.@i)) < getelementofarray(.@itemAdv,.@i+1))
+					{
+						mes "Désolé, mais il t'en manque.";
+						mes "Tu veux entendre la liste de nouveau?";
+						switch(select("Oui","Non"))
+						{
+							case 1:
+								goto DispAdvBackItem;
+								break;
+							case 2:
+								mes "Très bien. J'attendrais.";
+								close;
+						}
+					}
+				}
+				for (set .@i,0; .@i<getarraysize(.@itemAdv); set .@i,.@i+2)
+				{
+					delitem getelementofarray(.@itemAdv,.@i), getelementofarray(.@itemAdv,.@i+1);
+				}
+				mes "Tu as tout!";
+				mes "Voilà ta marque.";
+				getitem 2576, 1;
+				mes "A bientôt.";
+			}
+			else
+			{
+				mes "Comment es-tu arrivé ici?";
+			}
+			close;
+		}
+		else
+		{
+			mes "Je n'ai plus rien à t'apprendre.";
+			mes "Vis par toi-même.";
+		}
+	}
+	close;
+
+DispAdvBackItem:
+if(LANGUAGE == 2)
+{
+	mes "You'll owe me in exchange:";
+	for (set .@i,0; .@i<getarraysize(.@itemAdv); set .@i,.@i+2)
+	{
+		mes "^5555FF"+ getelementofarray(.@itemAdv,.@i+1) +" "+ getitemname(getelementofarray(.@itemAdv,.@i)) +"^000000";
+	}
+	mes "Got it all?";
+	mes "I'll wait here.";
+}
+else if (LANGUAGE == 1)
+{
+	mes "Tu me devras en échange:";
+	for (set .@i,0; .@i<getarraysize(.@itemAdv); set .@i,.@i+2)
+	{
+		mes "^5555FF"+ getelementofarray(.@itemAdv,.@i+1) +" "+ getitemname(getelementofarray(.@itemAdv,.@i)) +"^000000";
+	}
+	mes "Tu as tout noté?";
+	mes "J'attendrais ici.";
+}
+	close;
+
+OnDonjonGele:
+	killmonsterall "guild_vs5";
+	// spawn 10 Gobelin of each gender and 1 Gobelin Leader in the 50x50 area centered on (155,188)
+	areamonster "guild_vs5",26,63,70,64,"Gobelin",1122,15,"vet_av::OnMobKill";
+	areamonster "guild_vs5",26,63,70,64,"Gobelin",1123,15,"vet_av::OnMobKill";
+	areamonster "guild_vs5",26,63,70,64,"Gobelin",1124,15,"vet_av::OnMobKill";
+	areamonster "guild_vs5",26,63,70,64,"Gobelin",1125,15,"vet_av::OnMobKill";
+	areamonster "guild_vs5",26,63,70,64,"Gobelin",1126,15,"vet_av::OnMobKill";
+	areamonster "guild_vs5",26,63,70,64,"Gobelin Leader",1299,1,"vet_av::OnMobKill";
+	addtimer 5000, strnpcinfo(3)+"::OnTimer5000";
+	dispbottom "Et on y va,";
+	dispbottom "Y a des Gobelins à Saigner!";
+	set @idpc, getcharid(3);
+	end;
+
+OnDonjonArmure:
+	killmonsterall "guild_vs5";
+	areamonster "guild_vs5",26,63,70,64,"Troll des Bois",1497,15,"vet_av::OnMobKill";
+	areamonster "guild_vs5",26,63,70,64,"Troll des Montagnes",2024,5,"vet_av::OnMobKill";
+	areamonster "guild_vs5",26,63,70,64,"Troll des Laves",1366,15,"vet_av::OnMobKill";
+	areamonster "guild_vs5",26,63,70,64,"Troll des Lacs",1278,15,"vet_av::OnMobKill";
+	warp "guild_vs5", 26,63;
+	dispbottom "Et on y va,";
+	dispbottom "Y a des Trolls à Bousiller!";
+	end;
+
+OnDonjonNecro:
+	killmonsterall "guild_vs5";
+	areamonster "guild_vs5",26,63,70,64,"Necromancultistes",1870,5,"vet_av::OnMobKill";
+	end;
+
+OnTimer5000:
+	if (Q_NAH == 1)
+	{
+		set .@id, rand(1122, 1126);
+		areamobuseskill "guild_vs5",48,51,50,.@id,"WZ_STORMGUST",5,2500,1,e_gg,0;
+		addtimer 5000, strnpcinfo(3)+"::OnTimer5000";
+	}
+	end;
+
+OnMobKill:
+	set .@mob_dead_num,mobcount("guild_vs5","vet_av::OnMobKill");
+	if (.@mob_dead_num < 1)
+	{
+		attachrid @idpc;
+		if (Q_NAH == 1)
+		{
+			mapwarp "guild_vs5", "izlude", 177, 213; 
+			delitem 21489, 1;
+			set Q_NAH, 3;		
+			set XP_NAH, 0;
+		}
+		else if (Q_NAH == 6)
+		{
+			mapwarp "guild_vs5", "izlude", 177, 213; 
+			set Q_NAH, 7;	
+			set XP_NAH, 0;
+		}
+		else if (Q_NAH == 8)
+		{
+			mapwarp "guild_vs5", "izlude", 177, 213; 
+			set Q_NAH, 9;	
+			set XP_NAH, 0;	
+		}
+	}
+	end;
+
+OnPCDieEvent:
+	if (strcharinfo(3) == "guild_vs5")
+	{
+		if (Q_NAH == 1)
+		{
+			stopnpctimer;
+			set Q_NAH, 2;
+			delitem 21489, 1;
+			mapwarp "guild_vs5","izlude",177,213; 
+			atcommand "@alive " + strcharinfo(0);	
+		}
+		else if (Q_NAH == 6)
+		{
+			mapwarp "guild_vs5", "izlude", 177, 213;  
+			atcommand "@alive " + strcharinfo(0);
+			if(LANGUAGE == 2)
+			{
+				dispbottom "You've failed to this ordeal.";
+			}
+			else if (LANGUAGE == 1)
+			{
+				dispbottom "Vous avez échouer à cette épreuve.";
+			}
+		}
+	}
+	end;
+
+OnAskChoice:
+if(LANGUAGE == 2)
+{
+	mes "What kind of item are you interested in?";
+	switch(prompt("Can I learn more about these stuffs","Choose a reward"))
+	{
+		case 1:
+			goto OnInfoAsked;
+			break;
+		case 2:
+			goto OnChooseItem;
+			break;
+		case 255:
+			mes "As you wish.";
+			mes "Your reward will wait you here.";
+			close;
+	}
+}
+else if (LANGUAGE == 1)
+{
+	mes "Par quel item es-tu intéressé?";
+	switch(prompt("Je pourrais en apprendre plus sur le stuff","Choisir une récompense"))
+	{
+		case 1:
+			goto OnInfoAsked;
+			break;
+		case 2:
+			goto OnChooseItem;
+			break;
+		case 255:
+			mes "Comme tu le sens.";
+			mes "Ta récompense t'attendras ici.";
+			close;
+	}
+}
+
+OnInfoAsked:
+	if(LANGUAGE == 2)
+	{
+		set .menu$, "";
+		setarray .@itemname$[0], "Gobelin Goosedown", "Skeleton Quiver", "Orcish Piccolo", "Burning Mummy Pendant", "Trollish Armor", "Minotorus Ring", "Necromant Ballista", "Dragon Vorpal";
+		for ( set .@i, 0; .@i<getarraysize(.@itemname$); set .@i, .@i+1 )
+		{
+				set .menu$, .menu$ + ( .@i ? ":" : "" ) + .@itemname$[.@i];
+		}
+
+		do
+		{
+			next;
+			set .@choice, prompt(.menu$);
+			switch(.@choice)
+			{
+			case 1:
+				mes "It's like a cape.";
+				mes "A cape fill with soft, warm goose feather.";
+				mes "It promise a high freeze resistance.";
+				mes "And there's a slot.";
+				break;
+			case 2:
+				mes "That's a special accessory.";
+				mes "It can give you illimited arrows.";
+				mes "But there's only a low chance to get it.";
+				break;
+			case 3:
+				mes "Orcs are huge, dumb monsters. But animals fear and respect them.";
+				mes "Unlike the other piccolo, this one allows you to go as fast as the faster orc.";	
+				break;
+			case 4:
+				mes "This is a strange pendant.";
+				mes "The red stone on it's heart seems to burn like hell.";
+				mes "It can cast automatically a high fire spell.";
+				mes "This spell is choosen randomly when equiping the pendant.";
+				break;
+			case 5:
+				mes "The armor belonging to a Troll.";
+				mes "It's really strong, and can defend you among almost anyhting.";
+				mes "And all kind of enemy.";
+				break;
+			case 6:
+				mes "A really rare ring, that can raise it's belonger capacities,";
+				mes "intellect and strengh talking.";
+				break;
+			case 7:
+				mes "A really powerful ballista, which can break down walls.";
+				mes "Necromants enchanted it to cause even more damages.";
+				break;
+			case 8:
+				mes "The Vorpale is special. It's effect change according to the one who use it.";
+				mes "But in all case, it's always really heavy and powerful.";
+				break;
+			}
+		}while(.@choice != 255);
+	}
+	else if (LANGUAGE == 1)
+	{
+		set .menu$, "";
+		setarray .@itemname$[0], "Gobelin Goosedown", "Skeleton Quiver", "Orcish Piccolo", "Burning Mummy Pendant", "Trollish Armor", "Minotorus Ring", "Necromant Ballista", "Dragon Vorpal";
+		for ( set .@i, 0; .@i<getarraysize(.@itemname$); set .@i, .@i+1 )
+		{
+				set .menu$, .menu$ + ( .@i ? ":" : "" ) + .@itemname$[.@i];
+		}
+
+		do
+		{
+			next;
+			set .@choice, prompt(.menu$);
+			switch(.@choice)
+			{
+			case 1:
+				mes "Il s'agit d'un pled que tu peux porter en tant que cape.";
+				mes "Un edredon rempli de plumes d'oies bien chaudes.";
+				mes "Il assure une résistance contre le froid élevée.";
+				mes "Et il est slotté.";
+				break;
+			case 2:
+				mes "Il s'agit d'un accessoire un peu spécial.";
+				mes "Cet objet fourni des flêches en quantité illimité.";
+				mes "Il s'agit de flêches spéciales pouvant causer un saignement continu à la cible.";
+				break;
+			case 3:
+				mes "Les Orcs sont de grosses brutes, mais les animaux les respectent, ou les craignent.";
+				mes "Contrairement aux autres flûtes, celle-ci permet d'utiliser une monture indéfiniment.";	
+				mes "Pas besoin d'en racheter auprès du Maître Monture.";
+				break;
+			case 4:
+				mes "Un pendentif étrange.";
+				mes "La pierre rouge en son centre semble contenir le feu de l'enfer.";
+				mes "Il permet de caster automatiquement un sort de feu très élevé.";
+				mes "Ce sort est choisi au hasard quand on équipe l'objet.";
+				break;
+			case 5:
+				mes "Une armure de Troll.";
+				mes "Elle est très résistante et offre une protection élevée.";
+				mes "Elle protège d'un peu tout les ennemis.";
+				break;
+			case 6:
+				mes "Un anneau très rare, qui augmente les capacités d'attaques,";
+				mes "mais aussi intellectuelle du porteur.";
+				break;
+			case 7:
+				mes "Une balliste très puissante, pouvant percer les murs.";
+				mes "Les Necromancultistes l'ont enchanté pour causer de plus grands dommages.";
+				break;
+			case 8:
+				mes "La Vorpale est spéciale. Son effet varie selon son possesseur.";
+				mes "En tout cas, elle est toujours très lourde, mais très puissante.";
+				break;
+			}
+		}while(.@choice != 255);
+	}
+	goto OnAskChoice;
+
+OnChooseItem:
+	set .menu$, "";
+	setarray .@itemname$[0], "Gobelin Goosedown", "Skeleton Quiver", "Orcish Piccolo", "Burning Mummy Pendant", "Trollish Armor", "Minotorus Ring", "Necromant Ballista", "Dragon Vorpal";
+	for ( set .@i, 0; .@i<getarraysize(.@itemname$); set .@i, .@i+1 )
+	{
+        	set .menu$, .menu$ + ( .@i ? ":" : "" ) + .@itemname$[.@i];
+	}
+
+	set .@choice, prompt(.menu$);
+	if (.@choice != 255)
+	{
+		switch(.@choice)
+		{
+		case 1:
+			getitem 21489, 1;
+			break;
+		case 2:
+			getitem 21490, 1;
+			break;
+		case 3:
+			getitem 21491, 1;
+			break;
+		case 4:
+			getitem 21492, 1;
+			break;
+		case 5:
+			getitem 21493, 1;
+			break;
+		case 6:
+			getitem 21494, 1;
+			break;
+		case 7:
+			getitem 21495, 1;
+			break;
+		case 8:
+			if(LANGUAGE == 2)
+			{
+				mes "Which form do you want?";
+			}
+			else if (LANGUAGE == 1)
+			{
+				mes "Quelle forme veux-tu?";
+			}
+			switch(select("A Spear","A Sword","A Book","A Mace","A Staff","An Axe","A Dagger","A Katar","A Fist","A Bow","A Whipe","An Instrument"))
+			{
+				case 1:
+					getitem 21478, 1;
+					break;
+				case 2:
+					getitem 21479, 1;
+					break;
+				case 3:
+					getitem 21480, 1;
+					break;
+				case 4:
+					getitem 21483, 1;
+					break;
+				case 5:
+					getitem 21481, 1;
+					break;
+				case 6:
+					getitem 21482, 1;
+					break;
+				case 7:
+					getitem 21484, 1;
+					break;
+				case 8:
+					getitem 21485, 1;
+					break;
+				case 9:
+					getitem 21496, 1;
+					break;
+				case 10:
+					getitem 21486, 1;
+					break;
+				case 11:
+					getitem 21487, 1;
+					break;
+				case 12:
+					getitem 21488, 1;
+					break;
+			}
+			break;
+		}
+	}	
+	else
+		goto OnAskChoice;
+	set Q_NAH_COMPLETE, 2;
+	if(LANGUAGE == 2)
+	{
+		mes "Here's your reward.";
+		mes "Now, go! And live an Aventurer's Life.";
+	}
+	else if (LANGUAGE == 1)
+	{
+		mes "Voici ta récompense.";
+		mes "Maintenant va. Et vis une vie d'Aventurier.";
+	}
+	close;
+}

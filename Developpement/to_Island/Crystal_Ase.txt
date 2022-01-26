@@ -1,0 +1,97 @@
+//Script de voyage vers les îles, par crystaux
+-	script	Ase_Crystal::Ase_Crystal	-1,2,2,{
+	end;
+	
+OnTouch:
+	query_sql("SELECT `activated` FROM `visited_islands` WHERE `char_id`= " + getcharid(0,strcharinfo(0)) + " AND `map`= '" + strcharinfo(3) + "'", .@activated);
+	if (.@activated == 1)
+		npctalk "Vous avez déjà activé ce Crystal d'Ase.";
+	else
+	{
+		npctalk "Une lumière diffuse semble s'échapper du Crystal.";
+		query_sql("SELECT COUNT(*) FROM `visited_islands` WHERE `char_id` = " + getcharid(0,strcharinfo(0)) + " AND `map` = '" + strcharinfo(3) + "'", @count);
+		if (@count == 1)
+		{
+			query_sql("UPDATE `visited_islands` SET `activated` = 1 WHERE `char_id` = " + getcharid(0,strcharinfo(0)) + " AND `map` = '" + strcharinfo(3) + "'");
+		}
+		else
+		{
+			query_sql("INSERT INTO `visited_islands` (`char_id`, `map`, `activated`) VALUES ('" + getcharid(0,strcharinfo(0)) + "', '" + strcharinfo(3) + "', 1)");
+		}
+
+
+		npctalk "Vous pouvez à présent revenir à ce Crystal d'Ase à partir du Grand Crystallisé de Thalys.";
+		do
+		{
+    	 		set .movex,rand(0,150);
+    			set .movey,rand(0,150);
+     			set .map$,strnpcinfo(3);
+		}
+		while(!checkcell(.map$,.movex,.movey,cell_chkpass));
+		movenpc strnpcinfo(3),.movex,.movey;
+	}
+	close;
+
+OnClock0002:
+	do
+	{
+    		set .movex,rand(0,150);
+    		set .movey,rand(0,150);
+     		set .map$,strnpcinfo(3);
+	}
+	while(!checkcell(.map$,.movex,.movey,cell_chkpass));
+	movenpc strnpcinfo(3),.movex,.movey;	
+	end;
+}
+
+thalys,108,160,4	script	Grand Crystallisé::Grand Crystallisé	924,{
+	set .@npcname$, "[Grand Crystallisé]";
+	set .crystalnb, 5;
+	
+	mes .@npcname$;
+	mes "";
+	
+	if (countitem(21063) > 0)
+	{
+		mes "Veuillez choisir votre destination:";
+
+		query_sql("SELECT `map` FROM `visited_islands` WHERE `char_id`='" + getcharid(0,strcharinfo(0)) + "' AND `activated` = 1 ", .@map$);
+   		next; 
+
+    		// On créé un menu dynamique
+   		setarray .@mapdisp$[0], "Ile de Fer", "Ile d'Astres", "Ile Rose", "Ile de l'Arene", "Ile du Crash", "Ile de la Tortue", "Ile des Faes", "Ile Mysterio", "Ile de Mornanie";
+		setarray .@mapname$[0], "scaphis", "zodiac", "1@pi", "colisland", "crash", "tortue", "revencia", "mysterio", "mornanie";
+
+ 		// On créé un menu dynamique
+		set .@count, 0;
+    		for ( set .@i, 0; .@i<getarraysize(.@map$); set .@i, .@i+1 )
+		{
+			for ( set .@j, 0; .@j<getarraysize(.@mapdisp$); set .@j, .@j+1 )
+			{
+				if (.@mapname$[.@j] == .@map$[.@i])
+				{
+        				set .@menu$, .@menu$ + ( .@i ? ":" : "" ) + .@mapdisp$[.@j];
+					set .@maparray$[.@count], .@mapname$[.@j];
+					set .@count, .@count + 1;
+				}
+			}
+		}
+
+    		// On récupère le choix de l'utilisateur
+    		set .@choice, select(.@menu$);
+		set @map$, .@maparray$[.@choice - 1];
+
+		callfunc "prepare_warp_coordinates", 3;
+
+	}
+	else
+		mes "Vous avez besoin d'une Larme de Puissance Divine pour voyager sur le Chemin des Ases.";
+	close;
+
+cancel:
+	close;
+	
+OnWarp:  
+	warp @map$,@xdest,@ydest;	getmapxy(#LastWarp$,#LastX,#LastY,0); delitem 21063,1;   close;
+
+}

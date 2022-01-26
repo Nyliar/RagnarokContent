@@ -1,0 +1,73 @@
+amatsu, 232, 130, 5	script	Drooping Medusa	100,{
+
+	set .@npcname$,"[Drooping Medusa]";
+	
+	//Black Drooping Medusa 20185
+	setarray @iteBNDM[0], 20389, 983, 7230;
+	setarray @countiteBNDM[0], 1, 2, 2;
+	
+	//Cyan Drooping Medusa 20188
+	setarray @itemCNDM[0], 20389, 978, 982, 7230;
+	setarray @countitemCNDM[0], 1, 2, 2, 2;
+
+	//Gold Drooping Medusa 20189
+	setarray @itemGNDM[0], 20389, 976, 7230;
+	setarray @countitemGNDM[0], 1, 2, 2;
+
+	//Green Drooping Medusa 20190
+	setarray @itemGNNDM[0], 20389, 979, 7230;
+	setarray @countitemGNNDM[0], 1, 2, 2;
+
+	//Purple  Drooping Medusa 20193
+	setarray @itemPUNDM[0], 20389, 981, 7230;
+	setarray @countitemPUNDM[0], 1, 2, 2;
+	
+	//blue Drooping Medusa 20194
+	setarray @itemBLNDM[0], 20389, 978, 7230;
+	setarray @countitemBLNDM[0], 1, 2, 2;
+	
+	//White  Drooping Medusa 20196
+	setarray @itemWNDM[0], 20389, 982, 7230;
+	setarray @countitemWNDM[0], 1, 2, 2;
+	
+	
+	
+	mes .@npcname$;
+	mes "Bonjour ^3333FF" + strcharinfo(0) + "^000000!";
+	mes "Je peux te proposer quelque hats pour customiser ton Drooping Medusa.";
+	mes	"Ca t'interesse?!";
+	next;
+	mes .@npcname$;
+	mes "Voici ce que je peux te proposer:";
+	next;
+
+	switch(select("Black Drooping Medusa:Blue Drooping Medusa:Cyan Drooping Medusa:Gold Drooping Medusa:Green Drooping Medusa:Purple Drooping Medusa:White Drooping Medusa:^777777Rien, merci...^000000"))
+	{
+		case 1 :
+ 		callfunc "mes_getitem_colo",.@npcname$,20390,@iteBNDM,@countiteBNDM, 1000000;
+
+		case 2 :
+ 		callfunc "mes_getitem_colo",.@npcname$,20391,@iteBLDM,@countiteBLDM, 1000000;
+
+		case 3 :
+ 		callfunc "mes_getitem_colo",.@npcname$,20392,@itemCNDM,@countitemCNDM, 1000000;
+
+		case 4 :
+ 		callfunc "mes_getitem_colo",.@npcname$,20393,@itemGNDM,@countitemGNDM, 1000000;
+
+		case 5 :
+ 		callfunc "mes_getitem_colo",.@npcname$,20394,@itemGNNDM,@countitemGNNDM, 1000000;
+
+		case 6 :
+ 		callfunc "mes_getitem_colo",.@npcname$,20395,@itemPUNDM,@countitemPUNDM, 1000000;
+
+		case 7 :
+ 		callfunc "mes_getitem_colo",.@npcname$,20396,@itemWNDM,@countitemWNDM, 1000000;
+
+		// Quitter
+		case 8 :
+		mes @npcname$;
+		mes "Très bien. A bientôt !";
+		close;
+	}
+}

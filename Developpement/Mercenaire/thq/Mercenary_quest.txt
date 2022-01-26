@@ -1,0 +1,555 @@
+//===== eAthena Script =======================================
+//= Treasure Hunter Script
+//===== Converted By =========================================
+//= Fredzilla
+//= Original
+//////////////////////////////////////////////////////////////
+//                  Treasure Hunter Quests                  //
+//                       By: Ezekial                        //
+//             for the use on nRO run by Newbe5             //
+//                    revised By Warlock                    //
+//////////////////////////////////////////////////////////////
+//===== Version ==============================================
+//= 1.4
+//===== Compatible With ======================================
+//= eAthena 1.0
+//===== Description ==========================================
+//= Start for Treasure hunter quests
+//===== Comments =============================================
+//= Event_THQS - Used to check if you have already registered
+//= #Treasure_Token - used to keep track of tokens
+//= 1.0 - Straight conversionof Aegis NPC file
+//= 1.1 Added time penalty to prevent get quests to often [Lupus]
+//= 1.2 Fixed not working penalty, added anti-cheat [Lupus]
+//= 1.3 Changed some bad RGB Codes. (bugreport:211) [Samuray22]
+//= 1.4 Fixed typos. (bugreport:2607) [Kisuka]
+//============================================================
+
+
+casp_in01,270,272,5	script	Mercenaire Leia	803,{
+	mes "[Leia]";
+	mes "Bienvenue dans le section Mission de la Guilde des Mercenaires, "+strcharinfo(0)+".";
+	next;
+	if (On_Quest == 0) goto N_NewQuest;
+	mes "[Leia]";
+	mes "En fait, " +strcharinfo(0)+ ", tu ne peux accomplir qu'une mission à la fois. Ou alors tu souhaites abandonner?";
+	mes "Abandonner une mission te coûtera ^FF0000150.000z^000000.";
+	next;
+	menu "Non! Jamais je n'abandonnerais une Missions",-,"Oui, je...Je suis pathétique. Voici mes 150.000 Zenys.",N_PayZeny;
+	mes "[Leia]";
+	mes "Bien...Sors d'ici.";
+	close;
+N_PayZeny:
+	if (zeny < 150000) goto N_ZenyFail;
+	set one_qset, 0;
+	set two_qset, 0;
+	set three_qset, 0;
+	set four_qset, 0;
+	set five_qset, 0;
+	set six_qset, 0;
+	set seven_qset, 0;
+	set eight_qset, 0;
+	set nine_qset, 0;
+	set ten_qset, 0;
+	set On_Quest, 0;
+	set Zeny,Zeny-150000;
+	//add time delay penalty. You can get another quest after 2 - 3 hours. [Lupus]
+	set #THQ_DELAY, (GetTime(7)*12*31*24+GetTime(6)*31*24+GetTime(5)*24+GetTime(3)+rand(2,3));
+	mes "[Leia]";
+	mes "C'est triste de voir quelqu'un abandonner...";
+	mes "Honte sur toi.";
+	emotion 7;
+	close;
+
+N_ZenyFail:
+	mes "[Leia]";
+	mes "Quelle pitié...Tu n'as même pas ^FF0000150.000z^000000.";
+	close;
+
+N_NewQuest:
+	if (M_QUEST == 0 || M_QUEST == 1 || M_QUEST == 2) goto N_Signup;
+	else if (M_QUEST == 3 || M_QUEST == 4)
+	{
+		//checking if time penalty is over [Lupus]
+		if (#THQ_DELAY > (GetTime(7)*12*31*24 + GetTime(6)*31*24 + GetTime(5)*24 + GetTime(3)) ) goto L_NoQuestsForYet;
+		mes "[Leia]";
+		mes "Bienvenue dans le section Mission de la Guilde!";
+		mes "Tu as pour le moment... ^FF0000"+#Treasure_Token+"^000000 Treasure Tokens!!!";
+		mes "Est-ce que tu souhaites que je t'assigne une mission?";
+		next;
+		menu "Oui, je veux bien.",-,"Désolé, pas le temps aujourd'hui.",N_NoTime;
+	
+		mes "[Leia]";
+		mes "Ok, voyons voir ce que je peux te proposer aujourd'hui.";
+		mes "Les quêtes dont le nom est de ^FF0000cette couleur^000000 signifie qu'elles sont plus dures que les autres, mais mieux payées.";
+		next;
+		set #THQ_DELAY,(GetTime(7)*12*31*24+GetTime(6)*31*24+GetTime(5)*24+GetTime(3) + 1); //you can get another quest after 1 hour [Lupus]
+		emotion 21;
+		if(@treasure_job==0) set @treasure_job,rand(1,10); //doesn't allow cheaters to pick any quest they want
+		if(@treasure_job==2) goto N_JobList2;
+		if(@treasure_job==3) goto N_JobList3;
+		if(@treasure_job==4) goto N_JobList4;
+		if(@treasure_job==5) goto N_JobList5;
+		if(@treasure_job==6) goto N_JobList6;
+		if(@treasure_job==7) goto N_JobList7;
+		if(@treasure_job==8) goto N_JobList8;
+		if(@treasure_job==9) goto N_JobList9;
+		if(@treasure_job==10) goto N_JobList10;
+		goto N_JobList1; //if(@treasure_job==1)
+	}
+N_NoTime:
+	mes "[Leia]";
+	mes "Très bien. Une autre fois peut être.";
+	emotion 20;
+	close;
+
+N_Signup:
+	mes "[Leia]";
+	mes "Comment es-tu arrivé ici? Tu n'es pas un membre de la Guilde!";
+	emotion 17;
+	warp capitale, 261, 170;
+	close;
+
+L_NoQuestsForYet:
+	mes "[Leia]";
+	mes "Désolé, mais je n'ai plus rien à te proposer.";
+	mes "Reviens dans "+ (#THQ_DELAY - (GetTime(7)*12*31*24+GetTime(6)*31*24+GetTime(5)*24+GetTime(3)) )+" heures.";
+	emotion 17;
+	close;
+
+L_QuestGiven:
+	set On_Quest,1;
+	set @treasure_job,0; //next time u get random quest
+	close;
+
+///////Job list 1///////
+N_JobList1:
+	mes "[Leia]";
+	mes "Ok. Voici donc quelques quêtes que tu peux accomplir.";
+	next;
+	menu "Lost Old Pipe",-,"De quoi tirer!",N_MasterBow,"^FF0000Cuisinons les!^000000",N_HitList,"La veuve éplorée",N_SadWidow;
+	mes "[Leia]";
+	mes "^FF0000Lost Old Pipe^000000";
+	mes "^FF0000------------^000000";
+	mes "C'est une quête assez simple, mais plutôt bien payée.";
+	mes " ";
+	mes "Une femme est venue demander à la Guilde d'aider son mari.";
+	next;
+	mes "[Leia]";
+	mes "On ne sait pas exactement où, mais il semblerait qu'il aime se promener dans les Monts Mjolnir.";
+	set one_qset,1;
+	goto L_QuestGiven;
+
+N_MasterBow:
+	mes "[Leia]";
+	mes "^FF0000De quoi tirer!^000000";
+	mes "^FF0000--------------------^000000";
+	mes "Cette quête est un peu plus compliquée, mais pas infaisable, loin de là.";
+	mes " ";
+	mes "Il faut contacter un Archer de Payon. Il vous donnera les détails une fois sur place.";
+	set one_qset,2;
+	goto L_QuestGiven;
+
+N_HitList:
+	mes "[Leia]";
+	mes "^FF0000Cuisinons les!^000000";
+	mes "^FF0000------------^000000";
+	mes "Enfin un peu d'action!";
+	mes " ";
+	mes "Un fermier qui vit à l'Est de Prontera a des problèmes avec ces récoltes. Il a demandé l'aide la Guilde.";
+	next;
+	mes "[Leia]";
+	mes "Il te donnera une liste. Débrouille toi pour t'en rappeler, tu n'en aura pas d'autre!";
+	set one_qset,3;
+	goto L_QuestGiven;
+
+N_SadWidow:
+	mes "^FF0000La veuve éplorée^000000";
+	mes "^FF0000*************^000000";
+	mes "Voici une autre quête passablement bien payée.";
+	mes " ";
+	mes "Une veuve qui vient de perdre son mari à cause de monstre. Elle attends au cimetière de Prontera.";
+	set one_qset,4;
+	goto L_QuestGiven;
+
+///////Job list 2///////
+N_JobList2:
+	mes "[Leia]";
+	mes "Voici quelques quêtes que tu peux accomplir.";
+	next;
+	menu "Quitte ou Double ou...",-,"Jur for Jeramiah",N_JurJeramiah,"^FF0000Sauvons les abeilles!^000000",N_BeeHunny,"^FF0000To be or not to be^000000",N_WanderMan;
+
+	mes "^FF0000Quitte ou Double ou...^000000";
+	mes "^FF0000------------------^000000";
+	mes "je ne sais pas grand chose à propos de celle-ci.";
+	mes " ";
+	mes "Un homme étrange est venu hier, en nous demandant de livrer cette lettre à une femme de Morroc.";
+	mes "Elle s'appelle Erika. Nous l'avons déjà eu comme cliente.";
+	getitem 1072,1; //Delivery_Message
+	mes "Ne perdez surtout pas la lettre, où elle ne paiera pas!";
+	set two_qset, 1;
+	goto L_QuestGiven;
+
+N_JurJeramiah:
+	mes "^FF0000Jur for Jeramiah^000000";
+	mes "^FF0000----------------^000000";
+	mes "Il s'agit d'une livraison tout ce qu'il y a de plus basique.";
+	mes " ";
+	mes "Jeramiah a commandé un Speciality Jur. Le problème, c'est que nous n'avons plus. Trouvez en un et amenez lui au Temple des Assasins.";
+	set two_qset,2;
+	goto L_QuestGiven;
+
+N_BeeHunny:
+	mes "^FF0000Sauvons les abeilles!^000000";
+	mes "^FF0000-----------------^000000";
+	mes "L'homme des Marches à besoin d'aide.";
+	mes " ";
+	mes "Il y a un homme étrange à ^FF00001 map sud et 1 map ouest ^000000 de Prontera, qui nous a demandé de l'aide. Je n'en sais pas plus.";
+	set two_qset,3;
+	goto L_QuestGiven;
+
+N_WanderMan:
+	mes "^FF0000To be or not to be^000000";
+	mes "^FF0000**************^000000";
+	mes "Quelqu'un a Payon a absolument besoin d'aide.";
+	mes " ";
+	mes "Une femme a requis notre aide, le plus vite possible. Elle avait la voix de quelqu'un qui va se faire tuer...";
+	set two_qset,4;
+	goto L_QuestGiven;
+
+///////Job list 3///////
+///////Job list 3///////
+N_JobList3:
+	mes "[Leia]";
+	mes "Voici quelques quêtes que tu peux accomplir.";
+	next;
+	menu "Sauvons la petite!",-,"Je veux être un ange",N_Delivery1,"^FF0000Crache le feu^000000",N_ProntCulvert,"Chasse le vent",N_CoalMine;
+	mes "^FF0000Sauvons la petite!^000000";
+	mes "^FF0000------------^000000";
+	mes "Es-tu déjà allé en Enfer?";
+	mes " ";
+	mes "Un homme à requis une audience à la sortie de Ant Hell. Tu devrais te dépêcher.";
+	set three_qset,1;
+	goto L_QuestGiven;
+
+N_Delivery1:
+	mes "^FF0000Je veux être un ange^000000";
+	mes "^FF0000----------------^000000";
+	mes "Une quête de drop tout ce qu'il y a de plus simple.";
+	mes " ";
+	mes "Tu vas devoir livrer un certain nombre d'items à un homme dénommé ^FF0000Flank, sur le pont entre Yuno et Aldebaran^000000.";
+	set three_qset,2;
+	goto L_QuestGiven;
+
+N_ProntCulvert:
+	mes "^FF0000Crache le feu^000000";
+	mes "^FF0000----------------^000000";
+	mes "Les insectes...Je hais les insectes.";
+	mes " ";
+	mes "The ^FF0000Prontera Culvert^000000 is out of control!Sign up as a volenteer to clean out some of the culvert.";
+	next;
+	mes "I know it seems like there is no stoping them but however many you kill does makes a differance. After you have signed up, inside the Culvert there will be a Knight that will give you a quest.";
+	set three_qset,3;
+	goto L_QuestGiven;
+
+N_CoalMine:
+	mes "^FF0000Chasse le vent^000000";
+	mes "^FF0000************************^000000";
+	mes "il y a toujours quelque chose de marrant...euh de dramatique quelque part en Midgard.";
+	mes " ";
+	mes "Un accident a récemment causé des troubles dans les alentours de la Coal Mine.";
+	next;
+	mes "Ton contact s'appelle Rudolfo, tu le trouvera devant les mines.";
+	set three_qset,4;
+	goto L_QuestGiven;
+
+///////Job list 4///////
+N_JobList4:
+	mes "[Leia]";
+	mes "Voici quelques quêtes que tu peux accomplir.";
+	next;
+	menu "Un nouveau Spore",-,"^FF0000Hargneux Mage^000000",N_MWizard,"De quoi coudre",N_Shoot,"^FF0000Un rêve de Vieux^000000",N_Emp;
+	mes "^FF0000Un nouveau Spore^000000";
+	mes "^FF0000-------------^000000";
+	mes "je me rappelle du temps ou le Donjon de Payon était encore un endroit paisible...";
+	mes " ";
+	mes "Contacte Flora devant le Donjon de Payon. Elle te dira quoi faire.";
+	set four_qset,1;
+	goto L_QuestGiven;
+
+N_MWizard:
+	mes "^FF0000Hargneux Mage^000000";
+	mes "^FF0000-------------^000000";
+	mes "Tu dois emmener un prototype de Baton au mage Zed.";
+	mes " ";
+	mes "Zed, le Grand Mage, se trouve généralement au centre de Yuno. Tu dois lui apporter un ^FF0000Emperium^000000";
+	set four_qset,2;
+	goto L_QuestGiven;
+
+N_Shoot:
+	mes "^FF0000De quoi coudre^000000";
+	mes "^FF0000----------^000000";
+	mes "Une petite fille nous a demandé de l'aide.";
+	mes " ";
+	mes "Son nom est Dassy, tu la trouveras à l'Est de la fontaine de Prontera.";
+	set four_qset,3;
+	goto L_QuestGiven;
+
+N_Emp:
+	mes "^FF0000Un rêve de Vieux^000000";
+	mes "^FF0000********^000000";
+	mes "Celle-ci est une quête étrange dont je sais peu de chose.";
+	mes " ";
+	mes "Czhore, une personne présente dans le Hall de la Guilde de Prontera, a demandé à ce que nous lui envoyons un de nos membres.";
+	set four_qset,4;
+	goto L_QuestGiven;
+
+///////Job list 5///////
+N_JobList5:
+	mes "[Leia]";
+	mes "Voici quelques quêtes que tu peux accomplir.";
+	next;
+	menu "Chasse à Aragog",-,"^FF0000Le Yoda de la Pyra^000000",N_PyrPRT1,"Plante Power",N_Thinkfirst,"Chasse la Mouche",N_Ghost;
+	mes "^FF0000Chasse à Aragog^000000";
+	mes "^FF0000-----------^000000";
+	mes "Facile pour certain, compliqué pour d'autre.";
+	mes " ";
+	mes "Un homme nommé Lithin nous a contacté. Tu pourras le trouver dans le Hidden Temple.";
+	set five_qset,1;
+	goto L_QuestGiven;
+
+N_PyrPRT1:
+	mes "^FF0000Le Yoda de la Pyra^000000";
+	mes "^FF0000---------^000000";
+	mes "C'est marrant, personne ne sait en quoi elle consiste, celle-ci.";
+	mes " ";
+	mes "Quelqu'un t'attends devant la Pyramide, mais c'est tout ce que je sais.";
+	set five_qset,2;
+	goto L_QuestGiven;
+
+N_Thinkfirst:
+	mes "^FF0000Plante Power^000000";
+	mes "^FF0000--------------^000000";
+	mes "On dirait que c'est une des ces quêtes pour fille.";
+	mes " ";
+	mes "On te demande de délivrer des fleurs à Dazzy, la blonde de Geffen. Qui peut bien vouloir lui livrer ça?";
+	getitem 744,1; //Bouquet
+	set five_qset,3;
+	goto L_QuestGiven;
+
+N_Ghost:
+	mes "^FF0000Chasse la Mouche^000000";
+	mes "^FF0000*************************^000000";
+	mes "Personne n'a jamais dit que Casper était sympa, hors de l'écran.";
+	mes " ";
+	mes "Un mage du troisième étage de la Tour de Geffen veut te parler.";
+	set five_qset,4;
+	goto L_QuestGiven;
+
+///////Job list 6///////
+N_JobList6:
+	mes "[Leia]";
+	mes "Voici quelques quêtes que tu peux accomplir.";
+	next;
+	menu "Un couteau d'argent",-,"Le Yoda de la Pyra, The Return",N_PyrPRT2,"^FF0000Objection!^000000",N_Delivery2,"Chassons Nounours et Nicolas",N_Gef;
+	mes "^FF0000Un couteau d'argent^000000";
+	mes "^FF0000------------------^000000";
+	mes "Comme c'est ironique...";
+	mes " ";
+	mes "Tu dois livrer un paquet à la Guilde des Voleurs.";
+	set six_qset,1;
+	goto L_QuestGiven;
+
+N_PyrPRT2:
+	mes "^FF0000Le Yoda de la Pyra, The Return^000000";
+	mes "^FF0000----------------^000000";
+	mes "Décidément, on revient souvent à la Pyramide.";
+	mes " ";
+	mes "Parle à l'homme à l'extérieur du donjon, il a un autre travail pour toi.";
+	set six_qset,2;
+	goto L_QuestGiven;
+
+N_Delivery2:
+	mes "^FF0000Objection!^000000";
+	mes "^FF0000----------------^000000";
+	mes "Well most of what we do is run packages, this is no different from other's.";
+	mes " ";
+	mes "Take this box, DO NOT OPEN IT! To a little girl in Lutie named Chirach she should be around santa.";
+	set six_qset,3;
+	goto L_QuestGiven;
+
+N_Gef:
+	mes "^FF0000Chassons Nounours et Nicolas^000000";
+	mes "^FF0000********^000000";
+	mes "Les petits enfants de Geffen font d'étranges cauchemards...";
+	mes " ";
+	mes "parle à ZuuZuu, dans la tour, pour savoir en quoi la mission consiste.";
+	set six_qset,4;
+	goto L_QuestGiven;
+
+///////Job list 7///////
+N_JobList7:
+	mes "[Leia]";
+	mes "Voici quelques quêtes que tu peux accomplir.";
+	next;
+	menu "Un pot pour écraser",-,"^FF0000Réchauffons l'athmosphère^000000",N_Delivery3,"Cafard Doré",N_GTB,"^FF0000Un vieux pirate^000000",N_EvilPirates;
+	mes "^FF0000Un pot pour écraser^000000";
+	mes "^FF0000-----------^000000";
+	mes "Je ne sais pas dire non à un Jus de Pomme frais...";
+	mes " ";
+	mes "Parle à la petite fille au Nord de la fontaine de Prontera.";
+	set seven_qset,1;
+	goto L_QuestGiven;
+
+N_Delivery3:
+	mes "^FF0000Réchauffons l'athmosphère^000000";
+	mes "^FF0000--------^000000";
+	mes "Ca non plus je ne sais pas ce que c'est.";
+	mes " ";
+	mes "Va parler à Charles, à Alberta";
+	set seven_qset,2;
+	goto L_QuestGiven;
+
+N_GTB:
+	mes "^FF0000Cafard Doré^000000";
+	mes "^FF0000****************^000000";
+	mes "Les Egouts de Prontera paraissent agiter depuis son arrivé...";
+	mes " ";
+	mes "Parle au Knight à l'intérieur de Culvert, il t'expliquera tout.";
+	set seven_qset,3;
+	goto L_QuestGiven;
+
+N_EvilPirates:
+	mes "^FF0000Un vieux pirate^000000";
+	mes "^FF0000************^000000";
+	mes "Un bateau fantôme s'est échoué près d'Izlude.";
+	mes " ";
+	mes "Une femme Assassin a une mission pour nous. Elle se trouve devant le dit navire.";
+	set seven_qset,4;
+	goto L_QuestGiven;
+
+///////Job list 8///////
+N_JobList8:
+	mes "[Leia]";
+	mes "Voici quelques quêtes que tu peux accomplir.";
+	next;
+	menu "Chasse à l'Herbe",-,"^FF0000Ténèbres, nous voilà!^000000",N_Delivery4,"My lost beads",N_LostBeeds,"Baphomet!",N_Bapho;
+	mes "^FF0000Chasse à l'Herbe^000000";
+	mes "^FF0000------------^000000";
+	mes "Celle-ci parait horrible à certain, trop simple aux autres.";
+	mes " ";
+	mes "Parle à la petite fille au nord de la fontaine de Prontera.";
+	set eight_qset,1;
+	goto L_QuestGiven;
+
+N_Delivery4:
+	mes "^FF0000Ténèbres, nous voilà!^000000";
+	mes "^FF0000----------------^000000";
+	mes "Encore une mission dont je ne sais pas grand chose...";
+	mes " ";
+	mes "Va parler à Klye, à Morroc.";
+	set eight_qset,2;
+	goto L_QuestGiven;
+
+N_Bapho:
+	mes "^FF0000Baphomet!^000000";
+	mes "^FF0000*********^000000";
+	mes "Il surveille le Hidden Temple.";
+	mes " ";
+	mes "Un homme nommé Zack t'attends dans le Temple, pour une mission concernant les Baphomets.";
+	set eight_qset,3;
+	goto L_QuestGiven;
+
+N_LostBeeds:
+	mes "^FF0000My lost Beads^000000";
+	mes "^FF0000-------------^000000";
+	mes "Super...Ca sent la quête stupide...";
+	mes " ";
+	mes "Une fille de Payon, appelé Flower, veut te parler.";
+	set eight_qset,4;
+	goto L_QuestGiven;
+
+///////Job list 9///////
+N_JobList9:
+	mes "[Leia]";
+	mes "Voici quelques quêtes que tu peux accomplir.";
+	next;
+	menu "Ouvrons la boîte",-,"L'appât du Gain",N_PayonC,"^FF0000Ecolière Fantôme^000000",N_Sohee,"Moonlight Flower",N_Moonlight;
+	mes "^FF0000Ouvrons la boîte^000000";
+	mes "^FF0000----------^000000";
+	mes "Hum...Encore un sorcier bizarre.";
+	mes " ";
+	mes "Parle au mage de l'école de magie de Geffen, l'un d'entre eux à un boulot pour toi.";
+	set nine_qset,1;
+	goto L_QuestGiven;
+
+N_Sohee:
+	mes "^FF0000Ecolière Fantôme^000000";
+	mes "^FF0000******************^000000" ;
+	mes "un dénommé James veut te parler à la Guilde des Archers de Payon.";
+	mes " ";
+	mes "Ce qu'on sait à propos de Payon, c'est qu'un feu à brûlé autrefois l'ancienne école.";
+	next;
+	mes "Ce qui est étrange, c'est que les enfants dedans ne sont pas morts par les flammes.";
+	mes "Parle à la petite écolière, quelque part dans Payon.";
+	set nine_qset,2;
+	goto L_QuestGiven;
+
+N_Moonlight:
+	mes "^FF0000Moonlight Flower^000000";
+	mes "^FF0000****************^000000" ;
+	mes "un dénommé James veut te parler à la Guilde des Archers de Payon.";
+	mes " ";
+	mes "Je n'en sais pas plus. Ca aurait à voir avec les profondeurs de Payon Cave.";
+	set nine_qset,3;
+	goto L_QuestGiven;
+
+N_PayonC:
+	mes "^FF0000L'appât du Gain^000000";
+	mes "^FF0000----------^000000" ;
+	mes "un dénommé Jack veut te parler à la Guilde des Archers de Payon.";
+	mes " ";
+	mes "Plus on descend dans ce Donjon, plus c'est bizarre...";
+	set nine_qset,4;
+	goto L_QuestGiven;
+
+///////Job list 10///////
+N_JobList10:
+	mes "[Leia]";
+	mes "Voici quelques quêtes que tu peux accomplir.";
+	next;
+	menu "Take the Apero?",-,"^FF0000Valkyrie^000000",N_Eddga,"^FF0000Atroce^000000",N_Phreeoni,"^FF0000Gloom Under Night^000000",N_Maya;
+
+	mes "^FF0000Take the Apero?^000000";
+	mes "^FF0000-------------^000000";
+	mes "Celle-ci se passe à Morroc.";
+	mes " ";
+	mes "Va voir Kreg.";
+	set ten_qset,1;
+	goto L_QuestGiven;
+
+N_Eddga:
+	mes "^FF0000Valkyrie^000000";
+	mes "^FF0000*****^000000";
+	mes " ";
+	mes "parle à l'Homme devant la Guilde cachée des Hunters, il t'expliquera.";
+	set ten_qset,2;
+	goto L_QuestGiven;
+
+N_Phreeoni:
+	mes "^FF0000Atroce^000000";
+	mes "^FF0000********^000000";
+	mes "He is big and Pink and you run and hide!";
+	mes " ";
+	mes "Parle à Caral, devant le Ant Hell. Il t'expliquera.";
+	set ten_qset,3;
+	goto L_QuestGiven;
+
+N_Maya:
+	mes "^FF0000Gloom Under Night^000000";
+	mes "^FF0000****^000000";
+	mes " ";
+	mes "Parle à Jenny, la fille à la sortie de Ant Hell. Elle t'expliquera.";
+	set ten_qset,4;
+	goto L_QuestGiven;
+}

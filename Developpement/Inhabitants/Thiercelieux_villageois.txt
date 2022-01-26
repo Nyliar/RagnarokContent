@@ -1,0 +1,258 @@
+thier_vlg,54,111,3	script	Docker#thier_dock1	709,{
+	set .@npcname$, "^0000FF[Docker]^000000";
+	
+	mes .@npcname$;
+	mes "Bonjour ^3333FF" + strcharinfo(0) + "^000000 !";
+	mes "Bienvenue au village de Thiercelieux.";
+	mes "N'est pas peur des rumeurs l'île n'est pas envahie de loups garous.";
+	mes "...";
+	next;
+	mes .@npcname$;
+	mes "Du moins je crois ...";
+	close;
+
+}
+
+thier_vlg,71,88,7	script	Docker#thier_dock2	709,{
+	set .@npcname$, "^0000FF[Docker]^000000";
+	
+	mes .@npcname$;
+	mes "*En train de marmonner*";
+	mes "Bien les loups n'ont pas attaqués ces victuailles...";
+	mes "*Viens de vous remarquer*";
+	next;
+	mes .@npcname$;
+	mes "";
+	mes "Oooh ... Bonjour !";
+	mes "Que puis-je pour toi ?";
+	switch(select("Au rien je passais juste par là.:Comment ça des loups ?"))
+		{
+			case 1 :
+				next;
+				mes .@npcname$;
+				mes "";
+				mes "Passe une bonne journée.";
+				close;
+
+			case 2 :
+				next;
+				mes .@npcname$;
+				mes "";
+				mes "Euh des loups ? Non je ne vois pas ce que vous voulez dire.";
+				mes "Je n'ai pas parlé de loups.";
+				mes "Je parlais de poux on est infesté de poux en ce moment ...";
+				mes "Par chance il n'y en a pas là.";
+				mes "Je vous laisse, bonne journée.";
+				close;
+
+		}
+}
+
+thier_vlg,127,78,1	script	Petite fille#tvgfil1	96,{
+	set .@npcname$, "^0000FF[Petite fille]^000000";
+	
+	mes .@npcname$;
+	mes "Chuuuuut !!!";
+	mes "Fait attention !";
+	switch(select("Comment ça chut ?!:L'ignorer."))
+		{
+			case 1 :
+				next;
+				mes .@npcname$;
+				mes "";
+				mes "Et bien juste là bas, il y a l'entrée du repère des loups.";
+				mes "Enfin mes parents disent que non mais moi je suis sur que si.";
+				mes "Et puis tu as vu tout ces ossements ? Méfie toi !";
+				close;
+
+			case 2 :
+				next;
+				mes .@npcname$;
+				mes "";	
+				mes "...";
+				close;
+
+		}
+}
+
+thier_in,74,230,3	script	Marchand d'arme#tvgar	410,{
+	set .@npcname$, "^0000FF[Marchand d'arme]^000000";
+	
+	mes .@npcname$;
+	mes "Bien le bonjour visiteur.";
+	mes "Bienvenue au village de Thiercelieux.";
+	mes "J'me suis installé ici quand j'ai appris pour ces soit disant loups garous.";
+	mes "Depuis tout le monde vient me demander des armes.";
+	mes "Mes ventes ont explosés.";
+	next;
+	mes .@npcname$;	mes "";
+	mes "D'ailleurs si vous voulez autre chose que cette arme en carton là.";
+	mes "N'hésitez pas à repasser.";
+	close;
+
+}
+
+thier_in,66,158,3	script	Aliro#thier_vil1	827,{
+	set .@npcname$, "^0000FF[Aliro]^000000";
+	
+	mes .@npcname$;
+	mes "";
+	mes "*Réfléchis ...*";
+	mes "Mmm ...";
+	mes "J'hésite je prend 1 ou 2 cannons ...";
+	close;
+
+}
+
+thier_in,100,93,5	script	Papi#thier_vil2	842,{
+	set .@npcname$, "^0000FF[Papi]^000000";
+	
+	mes .@npcname$;
+	mes "";
+	mes "C'est marrant mais plus je regarde cette statue,";
+	mes "et plus je me dis que ce prêtre me ressemble.";
+	mes "Bizarre non ?";
+	close;
+
+}
+
+thier_in,228,80,3	script	Fils du capitaine#tvgfc	827,{
+	set .@npcname$, "^0000FF[Fils du capitaine]^000000";
+	
+	mes .@npcname$;
+	mes "";
+	mes "Bonjour voyageur.";
+	mes "Aujourd'hui la mer semble calme.";
+	mes "Le vent n'est pas trop élevé.";
+	mes "Un temps parfait pour naviguer.";
+	close;
+
+}
+
+thier_vlg,59,125,1	script	Capitaine#tvgc	873,{
+	set .@npcname$, "^0000FF[Capitaine]^000000";
+	
+	mes .@npcname$;
+	mes "";
+	mes "*Observe la mer avec un étrange regard.*";
+	close;
+
+}
+
+thier_in,84,83,3	script	Sorcière#thier_sorcière	803,{
+	set .@npcname$, "^0000FF[Sorcière]^000000";
+	
+	mes .@npcname$;
+	mes "";
+	mes "*Touille touille touille ...*";
+	close;
+
+}
+
+thier_vlg,131,122,1	script	Petit garçon#thier_boy	706,{
+	set .@npcname$, "^0000FF[Petit garçon]^000000";
+	
+	mes .@npcname$;
+	mes "";
+	mes "Je pense me faire une cabane la haut.";
+	mes "Qu'est ce que tu en penses ?";
+	switch(select("Pourquoi faire ?:Tu fais ce que tu veux."))
+		{
+			case 1 :
+				next;
+				mes .@npcname$;
+				mes "";
+				mes "Pour y dormir la nuit et ainsi me protéger des loups garous.";
+				mes "Le papi m'a dit qu'ils ne savaient pas grimper aux arbres.";
+				mes "Je pense être en sécurité la haut.";
+
+					switch(select("Et tes parents qu'est ce qu'ils en pensent ?:N'aie pas peur c'est un mythe."))
+						{
+							case 1 :
+								next;
+								mes .@npcname$;
+								mes "";
+								mes "Je ne leur en est pas encore parlé.";
+								mes "Ils ne croient pas aux loups garous...";
+								close;
+
+							case 2 :
+								next;
+								mes .@npcname$;
+								mes "";
+								mes "Tu penses comme mes parents toi ...";
+								close;
+						}
+			case 2 :
+				next;
+				mes .@npcname$;
+				mes "";
+				mes "Tu m'aides pas vraiment ...";
+				close;
+		}
+
+}
+
+thier_vlg,44,54,5	script	Fermier#thier_fermier	701,{
+	set .@npcname$, "^0000FF[Fermier]^000000";
+	
+	mes .@npcname$;
+	mes "";
+	mes "Alalala m' bon vieu silo.";
+	mes "Ti au moins t'pas r'couvert euh d'touche bizaroïdes.";
+	mes "A c'que j't'aime ti.";
+	mes "Qu'est c'que j'peux pour ti gamin ?";
+		
+		switch(select("Euh vous avez entendu parlé de loup ?:Euh rien merci."))
+			{
+				case 1 :
+					next;
+					mes .@npcname$;
+					mes "";
+					mes "Des loups ???";
+					mes "Crénom de Dieu, s'y j'en croise un j'te l'enfourche !!!";
+					mes "J'peux t'dire qu'il va vite changer d'île avec moi.";
+					close;
+				case 2 :
+					next;
+					mes .@npcname$;
+					mes "";
+					mes "Viens pas m'embêter si c'pour m'dire ça!";
+					mes "J'pas qu'ça qu'à faire moi.";
+					close;
+
+			}
+}
+
+thier_in,228,229,7	script	Mamie#thier_fermière	761,{
+	set .@npcname$, "^0000FF[Mamie]^000000";
+	
+	mes .@npcname$;
+	mes "";
+	mes "Désolé je n'ai pas le temps de parler.";
+	mes "Je fais à manger car si papi n'a pas sa soupe";
+	mes "une fois qu'il a fini de se voir à travers cette statue,";
+	mes "il va être tout grognon et moi j'aime pas ça !";
+	mes "Honnêtement hors mis la coupe de cheveux il ne se ressemble pas tant que ça.";
+	close;
+}
+
+thier_in,165,247,7	script	Minet#thier_minet	458,{
+	set .@npcname$, "^0000FF[Minet]^000000";
+	
+	mes .@npcname$;
+	mes "";
+	mes "Frshhhhhh...";
+	close;
+}
+
+thier_in,161,241,7	script	Alexia#thier_girl	703,{
+	set .@npcname$, "^0000FF[Alexia]^000000";
+	
+	mes .@npcname$;
+	mes "";
+	mes "Fait pas attention à Minet, il est bizarre en ce moment.";
+	mes "Papi dit que c'est parce qu'il a vu quelque chose derrière la fenêtre.";
+	mes "J'espère juste qu'il ne s'agit pas d'un loup garou ...";
+	close;
+}

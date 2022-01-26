@@ -1,0 +1,94 @@
+mor_pvproom,58,54,2	script	Maître de l'éveil	856,{
+
+	set @job, eaclass();
+	set .@name$, "[^FF0000 Maître de l'éveil ^000000]";
+
+	setarray .item[0], 969, 994, 995, 996, 997, 1000;
+	setarray .countitem[0], 2, 5, 5, 5, 5, 10;
+
+
+	///////////////////////////
+	// EDIT AT YOUR OWN RISK //
+	///////////////////////////
+
+
+	mes .@name$;
+	mes "Bonjour " + strcharinfo(0) ;
+
+	if ( CHARLO_Q )
+	{
+		mes "Je suis désolé, mais je ne te suis plus d'aucune utilité.";
+		mes "À bientôt";
+		close;
+	}
+
+	mes "Que voulez-vous ?" ;
+
+	if ( select( "Je voudrais connaître l'Eveil.", "Pas grand chose en faite." ) == 2 )
+		close ;
+
+	next ;
+	mes .@name$;
+
+	if ( BaseLevel < 99 )
+	{
+		mes "L'Eveil, c'est pas pour les enfants... Va pex jusqu'au level 99 !";
+		close ;
+	}
+
+	if ( ! ( @job&EAJL_2 ) || ( @job&EAJL_THIRD ) )
+	{
+		mes "Ton métier ne te permet pas d'avoir accès à l'Eveil.";
+		mes "Je suis désolé, à bientôt.";
+		close;
+	}
+	
+	mes "Pour commancer, tu dois me ramener quelques objets.";
+	mes "Ces objets ne me serviront à rien comme tu t'en doutes,";
+	mes "Mais c'est une quête, donc je suis obligé de te faire galérer un peu.";
+	emotion 29;
+
+	next;
+
+	mes .@name$;
+
+	for ( set .@i, 0 ; .@i < getarraysize(.item) ; set .@i, .@i + 1 )
+		mes "^00FF00" + .countitem[.@i] + "^000000 - ^0000FF" + getitemname(.item[.@i]) ;
+
+	next;
+	
+	mes .@name$ ;
+	mes "Alors, as-tu mes objets ?" ;
+
+	if ( select( "Oui" , "Non" ) == 2 )
+		close ;
+	
+	next; 
+	mes .@name$;
+
+	for ( set .@i , 0 ; .@i < getarraysize( .item ) ; set .@i , .@i + 1 )
+		if ( countitem( .item[.@i] ) < .countitem[.@i] )
+		{
+			mes "Qui sème le mensonge, recolte des baffes..." ;
+			mes "Reviens quand tu auras le tout !";
+			specialeffect2 183;
+			percentheal -50,-50;
+			close;
+		}
+
+	for ( set .@i , 0 ; .@i < getarraysize( .item ) ; set .@i , .@i + 1 )
+		delitem .item[.@i], .countitem[.@i] ;
+
+	mes "Je vois que tu as tous les items, félicitations !";
+	mes "Tu peux maitenant continuer ta quête et accroître ton pouvoir !";
+	specialeffect2 EF_CONE;
+	mes "Pour cela tu dois aller voir le Maître de ta future classe, il se trouve quelque-part aux alentours de Bastania";
+	mes "Bonne chance et à bientôt !";
+
+	close2;
+
+	set CHARLO_Q, 1 ;
+
+	end ;
+
+}

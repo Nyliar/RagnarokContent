@@ -1,0 +1,71 @@
+aldebaran, 42, 185, 5	script	Blush	62,{
+
+	set .@npcname$,"[Blush]";
+
+	//Black Blush 20215
+	setarray @itemBB[0], 5800, 983, 7146;
+	setarray @countitemBB[0], 1, 2, 2;
+
+	//Blue Blush 20215
+	setarray @itemBLB[0], 5800, 978, 7146;
+	setarray @countitemBLB[0], 1, 2, 2;
+
+	//Cyan Blush 20217
+	setarray @itemCB[0], 5800, 978, 982, 7146;
+	setarray @countitemCB[0], 1, 2, 2, 2;
+
+	//Gold Blush 20218
+	setarray @itemGB[0], 5800, 976, 7146;
+	setarray @countitemGB[0], 1, 2, 2;
+
+	//Green Blush 20219
+	setarray @itemGNB[0], 5800, 976, 7230;
+	setarray @countitemGNB[0], 1, 2, 2;
+	
+	//Purple Blush 20220
+	setarray @itemPB[0], 5800, 981, 7230;
+	setarray @countitemPB[0], 1, 2, 2;
+
+	//White Blush 20222
+	setarray @itemWB[0], 5800, 982, 7230;
+	setarray @countitemWB[0], 1, 2, 2;
+	
+	mes .@npcname$;
+	mes "Bonjour ^3333FF" + strcharinfo(0) + "^000000!";
+	mes "Je peux te proposer quelque hats pour customiser ton Blush.";
+	mes	"Ca t'interesse?!";
+	next;
+	mes .@npcname$;
+	mes "Voici ce que je peux te proposer:";
+	next;
+
+	switch(select("Gold Blush:Green Blush:Cyan Blush:Purple Blush:White Blush:Black Blush:Blue Blush:^777777Rien, merci...^000000"))
+	{
+		case 1 :
+ 		callfunc "mes_getitem_colo",.@npcname$,20496,@itemGB,@countitemGB, 1000000;
+		
+		case 2 :
+ 		callfunc "mes_getitem_colo",.@npcname$,20497,@itemGNB,@countitemGNB, 1000000;
+
+		case 3 :
+		callfunc "mes_getitem_colo",.@npcname$,20495,@itemCB,@countitemCB, 1000000;
+		
+		case 4 :
+		callfunc "mes_getitem_colo",.@npcname$,20498,@itemPB,@countitemPB, 1000000;
+
+		case 5 :
+		callfunc "mes_getitem_colo",.@npcname$,20499,@itemWB,@countitemWB, 1000000;
+
+		case 6 :
+		callfunc "mes_getitem_colo",.@npcname$,20493,@itemBB,@countitemBB, 1000000;
+
+		case 7 :
+		callfunc "mes_getitem_colo",.@npcname$,20494,@itemBLB,@countitemBLB, 1000000;
+
+		// Quitter
+		case 8 :
+		mes @npcname$;
+		mes "Très bien. A bientôt !";
+		close;
+	}
+}

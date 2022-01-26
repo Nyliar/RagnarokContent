@@ -1,0 +1,100 @@
+///////Job list 9///////
+//9-1;
+geffen_in,168,124,6	script	Mage	48,{
+	if (nine_qset == 1 && countitem(12029) > 99) goto N_QuestComp;
+	if (nine_qset == 1) goto N_QuestStart;
+	mes "[Mage]";
+	mes "Hello "+strcharinfo(0)+" bienvenue à la Guilde des Mages";
+	close;
+N_QuestComp:
+	mes "[Mage]";
+	mes "Génial, on va pouvoir étudier ces étrangetés!";
+	next;
+	mes "[Mage]";
+	mes "Voici tes Tokens, tu les a bien mérités.";
+	delitem 12029,100;
+	set nine_qset,0;
+	set On_Quest,0;
+	set #Treasure_Token,#Treasure_Token+5;
+	close;
+N_QuestStart:
+	mes "[Mage]";
+	mes "Hello "+strcharinfo(0)+".";
+	mes "J'ai besoin de toi pour que tu me ramène des Box of Gloom. On ne parvient pas à comprendre comment ça marche";
+	close;
+}
+//9-2;
+pay_arche,98,74,6	script	School Girl	703,{
+	if (nine_qset == 2 && countitem(1049) > 49 && countitem(2282) > 24) goto N_QuestComp;
+	if (nine_qset == 2) goto N_QuestStart;
+	mes "[School Girl]";
+	mes "Désolé, ma maman m'interdit de parler aux inconnus.";
+	close;
+N_QuestComp:
+	mes "[School Girl]";
+	mes "Merci de ton aide.";
+	next;
+	mes "[School Girl]";
+	mes "C'est tout ce que j'ai...Ca suffira?";
+	delitem 1049,50;
+	delitem 2282,25;
+	set nine_qset,0;
+	set On_Quest,0;
+	set #Treasure_Token,#Treasure_Token+4;
+	close;
+N_QuestStart:
+	mes "[School Girl]";
+	mes "S'il vous plait, nous voulons retourner à l'école...Il faut chasser les fantômes de là-bas ><";
+	next;
+	mes "[School Girl]";
+	mes "Les enfants qui ne sont pas mort on pris possession des lieux...Et j'ai horreur des fantômes!";
+	mes " ";
+	mes "J'ai besoin de 50 Skirt of Virgin et 25 Halo pour les chasser.";
+	close;
+}
+//9-3
+payon_in02,19,33,6	script	James::thq9ja	740,{
+	if (nine_qset == 3 && countitem(1147) > 0 && countitem(2700) > 0) goto N_QuestComp;
+	if (nine_qset == 3) goto N_QuestStart;
+	if (nine_qset == 4) goto N_QuestStart2;
+	mes "[Jack]";
+	mes "Désolé, pas le temps de parler.";
+	close;
+N_QuestComp:
+	mes "[Jack]";
+	mes "Merci de ton aide! Voilà ta récompense.";
+	next;
+	mes "[Jack]";
+	mes "Que dis-tu de 8 Tokens?";
+	delitem 1147,1;
+	delitem 2700,1;
+	set nine_qset,0;
+	set On_Quest,0;
+	set #Treasure_Token,#Treasure_Token+8;
+	close;
+N_QuestStart:
+	mes "[Jack]";
+	mes "Il y a tout en bas du donjon un monstre qu'on appelle Moonlight Flower. Je veux son sceptre, ainsi que la cape qui va avec.";
+	mes " ";
+	mes "Ramène moi les deux!";
+	close;
+N_QuestStart2:
+//9-4
+	if (nine_qset == 4 && countitem(969) > 49) goto N_QuestComp2;
+	mes "[Jack]";
+	mes "Hello! Tu sais ce qu'il y a en bas? De l'or! De l'OR!";
+	mes " ";
+	mes "Ramène moi 50 lingots!";
+	close;
+N_QuestComp2:
+	mes "[Jack]";
+	mes "merci de ton aide!";
+	next;
+	mes "[Jack]";
+	mes "Voilà tes Tokens.";
+	delitem 969,50;
+	set nine_qset,0;
+	set On_Quest,0;
+	set #Treasure_Token,#Treasure_Token+5;
+	close;
+}

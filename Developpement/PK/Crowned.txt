@@ -1,0 +1,168 @@
+//fontaine
+melodya,76,79,4	script	Arym::melary	987,{
+	set .@npcname$, "[Arym]";
+	mes .@npcname$;
+	if (LANGUAGE == 2)
+	{
+		mes "We're hunting the Shas.";
+		mes "That's not simply cause we don't like them.";
+		mes "They live beyond the laws, and we decided that nobody got this right.";
+	}	
+	else if (LANGUAGE == 1)
+	{
+		mes "Nous chassons les Shas.";
+		mes "Pas seulement parce que nous ne les aimons pas.";
+		mes "Ils vivent en dehors des lois, et personne n'a ce droit.";
+	}
+	close;
+}
+
+//plan d'eau
+melodya,25,89,4	script	Flod::melflo	983,{
+	set .@npcname$, "[Flod]";
+	mes .@npcname$;
+	if (LANGUAGE == 2)
+	{
+		mes "...";
+		mes "I don't speak to those who accept the Shas.";
+	}	
+	else if (LANGUAGE == 1)
+	{
+		mes "...";
+		mes "Je ne parle pas à ceux qui accepte les Shas.";
+	}
+	close;
+}
+
+//maison1
+melodya,14,40,6	script	Olan::melola	730,{
+	set .@npcname$, "[Olan]";
+	mes .@npcname$;
+	if (LANGUAGE == 2)
+	{
+		mes "Don't take grief to those who doesn't seem sympathics here.";
+		mes "We've all lost someone because of the Shas.";
+		mes "That's why lots of us became a Crowned.";
+	}	
+	else if (LANGUAGE == 1)
+	{
+		mes "N'en veux pas à ceux qui ne te sont pas sympathique en ville.";
+		mes "Tous ici, nous avons perdu quelqu'un à cause des Shas.";
+		mes "C'est pourquoi nous sommes devenus des Couronnés.";
+	}
+	close;
+}
+
+//maison2
+melodya,20,26,6	script	Arkem::melark	727,{
+	set .@npcname$, "[Arkem]";
+	mes .@npcname$;
+	if (LANGUAGE == 2)
+	{
+		mes "My father and my mother were both Crowned.";
+		mes "I've got no choice but to become a Crowned myself.";
+		mes "Even if I've got no grief against Shas, the Crowned would never have let me go.";
+	}	
+	else if (LANGUAGE == 1)
+	{
+		mes "Mon père et ma mère était tout deux des Couronnés.";
+		mes "Je n'ai pas eu d'autre choix que de devenir un Couronné moi même.";
+		mes "Même si je n'ai rien en particulier contre les Shas, les Couronnés ne m'auraient jamais laissé partir.";
+	}
+	close;
+}
+
+//entrée
+melodya,45,13,6	script	Sanda::melsan	731,{
+	set .@npcname$, "[Sanda]";
+	mes .@npcname$;
+	if (LANGUAGE == 2)
+	{
+		mes "Who are you?";
+		mes "What are you doing here?";
+		mes "You're here in Melodya, the Crowned city.";
+		mes "If you've come here without knowing what you're doing, know that we all live to counter the Shas.";
+	}
+	else if (LANGUAGE == 1)
+	{
+		mes "Qui es-tu?";
+		mes "Que viens-tu faire ici?";
+		mes "Tu es ici en Melodya, la ville des Couronnés!";
+		mes "Si tu viens ici sans savoir ce que tu fais, saches que tous ici, nous vivons pour contrer les Shas.";
+	}
+	close;
+}
+
+//maison3
+melodya,67,31,4	script	Trih::meltri	746,{
+	set .@npcname$, "[Trih]";
+	mes .@npcname$;
+	if (LANGUAGE == 2)
+	{
+		mes "We can only hunt the 10 highest Shas.";
+		mes "For the others, we should join the Sanctuary, on the Dragon Island.";
+	}	
+	else if (LANGUAGE == 1)
+	{
+		mes "Nous ne pouvons que chasser les 10 plus grands Shas.";
+		mes "Pour les autres, nous devons nous rendre directement au Sanctuaire, sur l'Ile des Dragons.";
+	}
+	close;
+}
+
+//rue
+melodya,89,52,6	script	Rumi::melrum	623,{
+	set .@npcname$, "[Rumi]";
+	mes .@npcname$;
+	if (LANGUAGE == 2)
+	{
+		mes "Hello to you.";
+		mes "I fight here against the Shas since I am a child.";
+		mes "I've killed lots of them, but they are still so numerous...";
+	}	
+	else if (LANGUAGE == 1)
+	{
+		mes "Bonjour à toi.";
+		mes "Je me bat contre les Shas depuis que je suis enfant.";
+		mes "J'en ai tué des tas, mais ils ont toujours l'air d'être aussi nombreux...";
+	}
+	close;
+}
+
+//garde1
+melodya,57,65,4	script	Guardian::melguar1	707,{
+	set .@npcname$, "[Guarlem]";
+	mes .@npcname$;
+	if (LANGUAGE == 2)
+	{
+		mes "...";
+		mes "*No need to talk to them, they were ancient Shas, but they've been forgiven.";
+		mes "To get this forgiveness, their tongue was cut.*";
+	}	
+	else if (LANGUAGE == 1)
+	{
+		mes "...";
+		mes "*Pas la peine de leur parler, ce sont d'anciens Shas repentis et pardonné.";
+		mes "Pour gagner ce pardon, on leur a coupé la langue.*";
+	}
+	close;
+}
+
+//garde2
+melodya,42,65,6	script	Guardian::melguar2	708,{
+	set .@npcname$, "[Melguar]";
+	mes .@npcname$;
+	if (LANGUAGE == 2)
+	{
+		mes "...";
+		mes "*No need to talk to them, they were ancient Shas, but they've been forgiven.";
+		mes "To get this forgiveness, their tongue was cut.*";
+	}	
+	else if (LANGUAGE == 1)
+	{
+		mes "...";
+		mes "*Pas la peine de leur parler, ce sont d'anciens Shas repentis et pardonné.";
+		mes "Pour gagner ce pardon, on leur a coupé la langue.*";
+	}
+	close;
+}

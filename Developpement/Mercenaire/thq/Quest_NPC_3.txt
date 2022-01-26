@@ -1,0 +1,119 @@
+///////Job list 3///////
+//3-1;
+moc_fild04,208,322,6	script	Clark	65,{
+	if (three_qset == 1 && countitem(12374) > 24  && countitem(2071) > 1  && countitem(1176) > 1) goto N_QuestComp;
+	if (three_qset == 1) goto N_QuestStart;
+	mes "[Clark]";
+	mes "J'adorerais discuter, mais j'attends quelqu'un;";
+	close;
+N_QuestComp:
+	mes "[Clark]";
+	mes "Merci, merci.";
+	mes " ";
+	mes "nous allons pouvoir aller cette petite idiote. Quel idée d'aller se promener là-bas toute seule!";
+	mes "Tenez, voici vos 5 Tokens.";
+	delitem 2071,1;
+	delitem 1176,1;
+	delitem 12374,25;
+	set #Treasure_Token,#Treasure_Token+50;
+	set three_qset,0;
+	set On_Quest,0;
+	close;
+N_QuestStart:
+	mes "[Clark]";
+	mes "Bien le bonjour.";
+	mes "Vous devez être l'envoyé de la Guilde.";
+	mes " ";
+	mes "Voilà mon problème. Je ne sais plus quoi faire, des centaines de monstres ont envahi les environs de Thor Volcano,";
+	mes "et ma petite nièce au second degrès est perdu au second étage...";
+	mes "J'ai besoin que vous tuiez les Imps et les Bow et Sword Master qui traînent à cet étage.";
+	next;
+	mes "[Clark]";
+	mes "J'attends des Ice Firework (25), 1 Muscle Cutter et 1 Orlean's Gloves comme preuve que l'étage est libre.";
+	close;
+}
+//3-2;
+yuno_fild01,186,162,6	script	Flank	73,{
+	if (three_qset == 2 && countitem(7291) > 0 && countitem(7294) > 0 && countitem(2254) > 4) goto N_QuestComp;
+	if (three_qset == 2) goto N_QuestStart;
+	mes "[Flank]";
+	mes "Désolé, j'attends une livraison.";
+	close;
+N_QuestComp:
+	mes "[Flank]";
+	mes "Parfaittttt! Vous avez bien travaillé. Je peux devenir un Angeling maintenant :D";
+	next;
+	mes "[Flank]";
+	mes "Thanks";
+	mes "Prenez donc cette petite récompense.";
+	delitem 7291,1;
+	delitem 7294,1;
+	delitem 2254,5;
+	set three_qset,0;
+	set #Treasure_Token,#Treasure_Token+40;
+	set On_Quest,0;
+	close;
+N_QuestStart:
+	mes "[Flank]";
+	mes "Ah enfin! Vous avez mon paquet?";
+	mes "Comment ça quel paquet? J'ai demandé à la Guilde certains items:";
+	mes "1 Agate, 1 Turquoise et 5 Angel Wing.";
+	close;
+}
+//3-3 Goes to 7-3 using callfunc
+prt_sewb1,120,245,6	script	Sewer Managment Knight	705,{
+	if (three_qset == 3 && countitem(1737) >= 1 && countitem(12080) > 2) goto N_QuestComp;
+	if (three_qset == 3) goto N_QuestStart;
+	if (seven_qset == 3) goto N_QuestStart2;
+	mes "[Sewer Managmant]";
+	mes "On dirait que ma vie ne peux pas être plus pourrie...Bosser au milieu des insectes...";
+	close;
+N_QuestComp:
+	mes "[Sewer Managment]";
+	mes "Merci! Je peux enfin cramer quelques uns de ces insectes!";
+	mes "Voila tes 8 Tokens en récompense.";
+	delitem 1737,1;
+	delitem 12080,3;
+	set #Treasure_Token,#Treasure_Token+60;
+	set three_qset,0;
+	set On_Quest,0;
+	close;
+N_QuestStart:
+	mes "[Sewer Managmant]";
+	mes "Pour une fois, j'aimerais oublier un peu mes insectes...";
+	mes " ";
+	mes "Moi, j'aime mieux les plantes, les Dragons. Ca c'est bien!";
+	mes "Ramène moi un Ixion Wing stp. Et trois Dragon Breath!";
+	close;
+N_QuestStart2:
+	callfunc "seven_qset-3";
+	close;
+}
+//3-4
+mjolnir_02,87,357,6	script	Man#01	51,{
+	if (three_qset == 4 && countitem(5005) > 99) goto N_QuestComp;
+	if (three_qset == 4) goto N_QuestStart;
+	mes "[Rudolfo]";
+	mes "Pfff...La Mine n'est plus ce qu'elle était.";
+	close;
+N_QuestComp:
+	mes "[Rudolfo]";
+	mes "Alors? Bizarre, comme bestiole hein?";
+	mes "On a l'impression de frapper du vent. Merci du coup de pince.";
+	mes " ";
+	mes "Voila ta récompense. 5 Tokens.";
+	delitem 5005,100;
+	set three_qset,0;
+	set On_Quest,0;
+	set #Treasure_Token,#Treasure_Token+25;
+	close;
+N_QuestStart:
+	mes "[Rudolfo]";
+	mes "Bonjour. Tu dois être le membre de la Guilde, non?";
+	mes " ";
+	mes "Je suppose qu'on t'a parlé de la Coal Mine non?";
+	mes " ";
+	mes "Là-dedans, y a un tas de truc pas net. Mais ce que je trouve le plus bizarre, c'est les Myst. Je voudrais que tu en tue le plus possible.";
+	mes "Ramène moi les Gas Mask pour preuve. Au moins 100, ok?";
+	close;
+}

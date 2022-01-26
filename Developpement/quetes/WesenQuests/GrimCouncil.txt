@@ -1,0 +1,346 @@
+// [========================================================]
+// [===========      Grim Reaper - Council       ===========]
+// [========================================================]
+// [ Version 1                                              ]
+// [========================================================]
+// [ Original script by: Alayne                             ]
+// [========================================================]
+// [ Description:                                           ]
+// [--------------------------------------------------------]
+// [                                                        ]
+// [ - Grim Reaper quests serie			           ]
+// [ - Hamelin flute player quest			           ]
+// [ - Way to obtain magic and rang bonus item		    ]
+// [========================================================]
+// [ Changelog: (5 last updates)                            ]
+// [--------------------------------------------------------]
+// [                                                        ]
+// [ v0: Creation                      			    ]
+// [                                                        ]
+// [========================================================]
+// [                                                        ]
+// [========================================================]
+
+prontera,128,193,6	script	Wesen::thawes	494,{
+	set .@npcname$, "[Wesen]";
+	
+	mes .@npcname$;
+	mes "";
+	if (LANGUAGE == 2)
+	{
+		mes "Hi.";
+		if (WESENQ == 0)
+		{
+			if (REAPQ == 0)
+			{
+				mes "...*Smell*";
+				mes "There's something strange with you.";
+				mes "A bit like...You weren't really here.";
+				mes "*Smell*";
+				set REAPQ, 1;
+			}
+			else if (REAPQ == 2)
+			{
+				mes "Wow!";
+				mes "I...I don't know you.";
+				mes "And you don't know me.";
+				mes "We can be friend, he?";
+				mes "Go see the Council, ok?";
+				mes "They're in Thiercellieux!";
+				set WESENQ, 1;
+			}
+		}
+		else
+		{
+			mes "Please...Leave me alive!";
+		}
+	}
+	else if (LANGUAGE == 1)
+	{
+		mes "Salut.";
+		if (WESENQ == 0)
+		{
+			if (REAPQ == 0)
+			{
+				mes "...*Sent*";
+				mes "Il y a quelque chose d'étrange chez toi.";
+				mes "Comme si tu...n'étais pas vraiment ici.";
+				mes "*Sent*";
+				set REAPQ, 1;
+			}
+			else if (REAPQ >= 2)
+			{
+				mes "Wow!";
+				mes "Je...Je te connais pas moi.";
+				mes "Tu ne me connais pas non plus.";
+				mes "On peut être ami non?";
+				mes "Va voir le Conseil, ok?";
+				mes "Ils sont à Thiercellieux!";
+				set WESENQ, 1;
+			}
+		}
+		else
+		{
+			mes "S'il vous plait! Laissez moi vivre!";
+		}
+	}
+
+	close;
+}
+
+thier_in,71,94,6	script	Council Member#1145::thacoumem1	515,{
+	set .@npcname$, "[Council Member]";
+	
+	mes .@npcname$;
+	mes "";
+	if (LANGUAGE == 2)
+	{
+		mes "Welcome to Wesen Council.";
+		if (WESENQ == 1)
+		{
+			mes "All of those you can find here are Wesens.";
+			mes "You don't even know what's a Wesen?";
+			mes "Where do you come from? How do you get there?";
+		}
+		else if (WESENQ >= 2)
+		{
+			mes "You...You're a...A Grim Reaper?";
+			setnpcdisplay strnpcinfo(3),strnpcinfo(1),strnpcinfo(2);
+			next;
+			mes "I thought they all died long ago...";
+			mes "You're our worst nightmare...";
+			setnpcdisplay strnpcinfo(3),strnpcinfo(1),515;
+			mes "But we'll find a way to use that to our advantage...";
+			if (WESENCOUNCILCOUNT == 3 && WESENQ == 2)
+				set WESENQ, WESENQ + 1;
+			else if (WESENCOUNCILCOUNT < 3)
+				set WESENCOUNCILCOUNT, WESENCOUNCILCOUNT+1;
+		}
+	}
+	else if (LANGUAGE == 1)
+	{
+		mes "Bienvenue au Conseil Wesen.";
+		if (WESENQ == 1)
+		{
+			mes "Nous tous, tel que tu nous vois, sommes des Wesens.";
+			mes "Tu ne sais pas ce qu'est un Wesen?";
+			mes "Mais d'où sors-tu donc? Et comment es-tu arrivé là?";
+		}
+		else if (WESENQ >= 2)
+		{
+			mes "Tu...Tu es un...Un Grim Reaper?";
+			setnpcdisplay strnpcinfo(3),strnpcinfo(1),strnpcinfo(2);
+			next;
+			mes "Je les pensais tous disparus...";
+			mes "Vous êtes notre plus grand cauchemard...";
+			setnpcdisplay strnpcinfo(3),strnpcinfo(1),515;
+			mes "Mais nous saurons utiliser ce pouvoir à notre avantage...";
+			if (WESENCOUNCILCOUNT == 4 && WESENQ == 2)
+				set WESENQ, WESENQ + 1;
+			else
+				set WESENCOUNCILCOUNT, WESENCOUNCILCOUNT+1;
+		}
+	}
+
+	close;
+}
+
+thier_in,70,83,4	duplicate(thacoumem1)	Council Member#1369::thacoumem2	515
+thier_in,77,87,4	duplicate(thacoumem1)	Council Member#1904::thacoumem3	515
+thier_in,84,91,4	duplicate(thacoumem1)	Council Member#1400::thacoumem4	515
+
+thier_in,76,97,5	script	Council Member#1833::thacoumem5	514,{
+	set .@npcname$, "[Wrum]";
+	
+	mes .@npcname$;
+	mes "";
+	if (LANGUAGE == 2)
+	{
+		mes "Welcome to Wesen Council.";
+		if (WESENQ == 1)
+		{
+			mes "All of those you can find here are Wesens.";
+			mes "You don't even know what's a Wesen?";
+			mes "Where do you come from? How do you get there?";
+		}
+		else if (WESENQ >= 3)
+		{
+			mes "So you're a Reaper?";
+			setnpcdisplay strnpcinfo(3),strnpcinfo(1),strnpcinfo(2);
+			next;
+			mes "I thought they all died long ago...";
+			mes "You're like the Fear representation for some of us.";
+			mes "The weaskest are affraid to simply meet one of yours.";
+			mes "You're a bit like the Shadow under the bed.";
+			setnpcdisplay strnpcinfo(3),strnpcinfo(1),514;
+			mes "But some doesn't fear your spicies...";
+			mes "They'll hunt you, simply for being one.";
+			set WESENQ, WESENQ + 1;
+		}
+	}
+	else if (LANGUAGE == 1)
+	{
+		mes "Bienvenue au Conseil Wesen.";
+		if (WESENQ == 1)
+		{
+			mes "Nous tous, tel que tu nous vois, sommes des Wesens.";
+			mes "Tu ne sais pas ce qu'est un Wesen?";
+			mes "Mais d'où sors-tu donc? Et comment es-tu arrivé là?";
+		}
+		else if (WESENQ >= 3)
+		{
+			mes "Alors tu es un Reaper? Un Faucheur?";
+			setnpcdisplay strnpcinfo(3),strnpcinfo(1),strnpcinfo(2);
+			next;
+			mes "Je les pensais tous disparus...";
+			mes "Tu es la représentation de la peur chez la plupart d'entre nous.";
+			mes "Les plus faibles sont terrorisés par le simple fait de rencontrer l'un d'entre vous.";
+			mes "Vous êtes un peu notre CroqueMitaine.";
+			setnpcdisplay strnpcinfo(3),strnpcinfo(1),514;
+			mes "Mais tous ne vous craignent pas...";
+			mes "Certains vous attaqueront même simplement pour ça.";
+			set WESENQ, WESENQ + 1;
+		}
+	}
+
+	close;
+}
+
+thier_in,78,95,6	script	Council Chief#2031::thacouchi	481,{
+	set .@npcname$, "[Hermio]";
+	
+	mes .@npcname$;
+	mes "";
+	if (LANGUAGE == 2)
+	{
+		mes "Welcome to Wesen Council.";
+		if (WESENQ == 1)
+		{
+			mes "All of those you can find here are Wesens.";
+			mes "You don't even know what's a Wesen?";
+			mes "Where do you come from? How do you get there?";
+		}
+		else if (WESENQ >= 4)
+		{
+			mes "So you're a Reaper?";
+			setnpcdisplay strnpcinfo(3),strnpcinfo(1),strnpcinfo(2);
+			next;
+			mes "Sorry. I usually have more self control than that...";
+			setnpcdisplay strnpcinfo(3),strnpcinfo(1),481;
+			mes "Not as mine often think,";
+			mes "I know that Reaper haven't disappeared.";	
+			mes "You're simply more...discreet.";
+			mes "We also have to hide sometimes, from Frusth Wesen, violent and agressives one.";
+			next;
+			mes .@npcname$;
+			mes "This council exists to control these Wesen.";
+			mes "And for that, we need people as you.";
+			mes "Sometimes, we've got new...targets to calm down.";
+			mes "Do you want to help us?";
+			mes "You'll be rewarded. Greatly.";
+			switch(select("Let's go then!","No...Monsters and me..."))
+			{
+				case 1:
+					mes "Allright! Talk to Wesen Secretary.";
+					mes "He'll give you a mission.";
+					set WESENQ, WESENQ + 1;
+					break;
+				case 2:
+					mes "Oh...OK. I understand...";
+					break;
+			}
+		}
+	}
+	else if (LANGUAGE == 1)
+	{
+		mes "Bienvenue au Conseil Wesen.";
+		if (WESENQ == 1)
+		{
+			mes "Nous tous, tel que tu nous vois, sommes des Wesens.";
+			mes "Tu ne sais pas ce qu'est un Wesen?";
+			mes "Mais d'où sors-tu donc? Et comment es-tu arrivé là?";
+		}
+		else if (WESENQ >= 4)
+		{
+			mes "Alors tu es un Reaper? Un Faucheur?";
+			setnpcdisplay strnpcinfo(3),strnpcinfo(1),strnpcinfo(2);
+			mes "Désolé. Je me contrôle mieux d'habitude...";
+			setnpcdisplay strnpcinfo(3),strnpcinfo(1),481;
+			mes "Contrairement à ce que croit la plupart des miens,";
+			mes "Je sais que les Reapers sont loin d'avoir disparus.";	
+			mes "Vous avez simplement appris à être discret, ce que je conçois.";
+			mes "Nous même devons nous cacher des Frusth Wesen, les Wesens agressifs et violents.";
+			next;
+			mes .@npcname$;
+			mes "Le conseil a pour rôle de limiter les problèmes causés par ce genre de Wesen.";
+			mes "Pour cela, nous utilisons des gens commes vous.";
+			mes "Parfois, nous avons de nouvelles...cibles à calmer.";
+			mes "Souhaitez-vous nous aider?";
+			mes "Vous serez récompensé en conséquence.";
+			switch(select("Allons-y!","Euh non, les monstres, moi..."))
+			{
+				case 1:
+					mes "Parfait! Alors allez parler au Wesen Secretary.";
+					mes "Il vous confiera une mission.";
+					set WESENQ, WESENQ + 1;
+					break;
+				case 2:
+					mes "Bien...Je comprends...";
+					break;
+			}
+		}
+	}
+
+	close;
+}
+
+thier_vlg,103,118,4	script	Council Guardian::thiercougua	470,{
+	set .@npcname$, "[Council Guardian]";
+
+	mes .@npcname$;
+	if (LANGUAGE == 2)
+	{
+		mes "Hello to you, " + strcharinfo(0);
+		if (WESENQ == 1)
+		{
+			mes "The council isn't ready, but the members are still there.";
+			mes "Go and see, they'll waiting for you.";
+			set WESENQ, 2;
+		}
+		else if (WESENQ > 1)
+		{
+			mes "They're waiting for you.";
+		}
+		else
+		{
+			mes "Sorry, I can't let a stranger come closer.";
+			mes "I'll send you back to your last save point.";
+			next;
+			atcommand "@load";
+		}
+	}
+	else if (LANGUAGE == 1)
+	{
+		mes "Bonjour à toi, " + strcharinfo(0);
+		if (WESENQ >= 1)
+		{
+			mes "Le conseil n'est pas réuni, mais les membres sont présents.";
+			mes "Va les voir, ils t'attendent.";
+			set WESENQ, 2;
+		}
+		else if (WESENQ > 1)
+		{
+			mes "Ils t'attendent.";
+		}
+		else
+		{
+			mes "Désolé, mais je ne peux pas laisser un étranger s'approcher plus loin.";
+			mes "Je vais te renvoyer à ton point de sauvegarde.";
+			next;
+			atcommand "@load";
+		}
+	}
+	close;
+}
+
+thier_vlg,106,114,4	duplicate(thiercougua)	Warp::thiercougua1	470

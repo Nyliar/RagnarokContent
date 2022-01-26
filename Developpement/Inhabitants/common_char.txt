@@ -1,0 +1,220 @@
+
+thalys,173,140,3	script	Mary l'aubergiste	701,{
+
+	set .@npcname$, "[Mary]";
+	
+	mes .@npcname$;
+	mes "";
+	mes "Bonjour, " + strcharinfo(0);
+	mes "Je tiens l'unique auberge de tout Thalys.";
+	mes "Souhaites-tu y dormir?";
+	mes "Nous offrons le gîte aux gens de faible niveau, jusqu'au niveau 30.";
+	mes "Alors ? Intéressé ?";
+	switch(select("Oui", "Non"))
+	{
+		case 1:
+			next;
+			mes "Ok, bonne nuit!";
+			if (BaseLevel <= 30) goto dodo;
+			else
+			{
+				mes "Nous prenons un tarif dépendant de ton niveau.";
+				mes "Je vois que tu es niveau " + BaseLevel + ",";
+				set .@ratio, 2;
+				if (Class < 4001)
+					set .@ratio, 1;
+				set .@count, (BaseLevel/10 * .hprice * .@ratio) + (BaseLevel%10 * .bprice * .@ratio);
+				mes "tu me dois donc " + .@count + " Zenys. Ok ?";
+				switch(select("Oui", "Non"))
+				{
+					case 1:
+						if (Zeny >= .@count)
+						{
+							set Zeny, Zeny - .@count;
+							goto dodo;
+						}
+						else
+						{
+							mes "Désolé, mais tu n'as pas ce qu'il faut.";
+							mes "Reviens avec " + .@count + " Zenys, et je te logerais.";
+						}
+						break;
+					case 2:
+						mes "Tu ne trouveras pas moins cher, tu sais ?!";
+						break;
+				}
+			}			
+			break;
+		case 2:
+			next;
+			mes "Bien, tu connais la maison maintenant.";
+			mes "A bientôt.";
+			break;
+	}
+	close;
+
+dodo:
+	percentheal 100, 100;
+	close;
+
+OnInit:
+	set .hprice, 500;
+	set .bprice, 50;
+	end;
+
+L_Red_Price:
+	set .hprice, 250;
+	set .bprice, 25;
+	return;
+
+L_Up_Price:
+	set .hprice, 500;
+	set .bprice, 50;
+	return;
+}
+
+thalys,141,153,5	script	Father Benedictum	412,{
+	set .@npcname$, "[Father Benedictum]";
+	
+	mes .@npcname$;
+	mes "";
+	mes "Bonjour, " + strcharinfo(0);
+	mes "Je suis le prêtre de Thalys.";
+	mes "J'ai la capacité de te lancer les bénédictions Divines. Intéressé ?";
+	mes "J'offre mes bénédictions aux gens de faible niveau, jusqu'au niveau 20.";
+	mes "Pour les autres, les Dieux demandent une compensation dépendante de ton niveau.";
+	mes "Alors? Intéressé?";
+	next;
+	mes .@npcname$;
+	mes "";
+	switch(select("Oui", "Non"))
+	{
+		case 1:
+			mes "Très bien!";
+			if (BaseLevel <= 20) goto buff;
+			else
+			{
+				mes "Je vois que tu es niveau " + BaseLevel + ",";
+				set .@ratio, 2;
+				if (Class < 4001)
+					set .@ratio, 1;
+				set .@count, BaseLevel/10 * .hprice * .@ratio  + BaseLevel%10 * .bprice * .@ratio;
+				mes "tu me dois...EUH! Tu dois donc " + .@count + " Zenys à l'Eglise. Es-tu prêt ?";
+				switch(select("Oui", "Non"))
+				{
+					case 1:
+						if (Zeny >= .@count)
+						{
+							set zeny,zeny-.@count;
+							goto buff;
+						} 
+						else
+						{
+							mes "Désolé, mais tu n'as pas ce qu'il faut.";
+							mes "Reviens avec " + .@count + " Zenys, et je te bénierais.";
+						}
+						break;
+					case 2:
+						mes "Les Dieux ne sont pas rancunier. Reviens me voir.";
+						break;
+				}
+			}			
+			break;
+		case 2:
+			mes "Les Dieux ne sont pas rancunier. Reviens me voir.";
+			mes "A bientôt.";
+			break;
+	}	
+	close;
+
+buff:
+	sc_start SC_BLESSING,300000,10;
+	sc_start SC_INCREASEAGI,300000,10;
+	atcommand strcharinfo(0) + ":!effect 42";
+	atcommand strcharinfo(0) + ":!effect 37";
+	close;
+
+OnInit:
+	set .hprice, 1500;
+	set .bprice, 150;
+	end;
+
+L_Red_Price:
+	set .hprice, 750;
+	set .bprice, 75;
+	return;
+
+L_Up_Price:
+	set .hprice, 1500;
+	set .bprice, 150;
+	return;
+}
+
+//thalys,58,158,5	script	Guide de Thalys	52,{
+	set .@npcname$, "[Guide de Thalys]";
+	
+	mes .@npcname$;
+	mes "";
+	mes "Bien le bonjour, " + strcharinfo(0);
+	mes "Souhaites-tu une petite visite guidée de notre belle cité ?";
+	switch(select("Oui", "Non"))
+	{
+		case 1:
+			mes "Alors commençons.";
+			mes "Sur quoi souhaites-tu avoir des infos?";
+			switch(select("Le Port", "La Sailor Guild", "Les Marchands", "La zone marchande", "Les Events", "Les Mercenaires", "Effacer les marques"))
+			{
+				case 1:
+					mes "Le Port est l'endroit d'où vous pouvez accéder à la Mer.";
+					mes "Vous devez sortir de Thalys et vous rendre au sud est pour y accéder.";
+					break;
+				case 2:
+					mes "La Sailor Guild est le seul organisme à gérer les déplacements en Mer.";
+					mes "Vous devrez nécessairement vous y rendre pour acquérir les tickets qui vous permettront de voyager.";
+					mes "Elle se trouve sur le Port.";
+					break;
+				case 3:
+					mes "Il existe un ensemble de marchands de base en Thalys.";
+					mes "Ils vous proposeront des items pour bien démarrer votre aventure.";
+					viewpoint 1,<x>,<y>,1,0xFF0000;
+					break;
+				case 4:
+					mes "Aucune zone marchande n'est réellement prévue en Thalys.";
+					mes "Néanmoins, vous ne pourrez vendre partout.";
+					mes "Vous devrez pour cela vous positionner dans les zones hors des chemins de passage.";
+					viewpoint 1,<x>,<y>,2,0xFF0000;
+					viewpoint 1,<x>,<y>,3,0xFF0000;
+					viewpoint 1,<x>,<y>,4,0xFF0000;
+					break;
+				case 5:
+					mes "Il existe de nombreuses occupations pour vous distraire pendant votre voyage.";
+					mes "Retrouvez ainsi le Chasseur de Prime, le Poring Master ou les Jumeaux pour vous amuser.";
+					viewpoint 1,74,87,5,0xFF0000;
+					viewpoint 1,177,108,6,0xFF0000;
+					viewpoint 1,87,179,7,0xFF0000;
+					break;
+				case 6:
+					mes "La Guilde des Mercenaires vous permettra de devenir l'un d'entre eux.";
+					mes "Vous devrez remplir les conditions, mais en échange de ce passe droit,";
+					mes "vous pourrez monnayer officiellement votre aide.";
+					viewpoint 1,<x>,<y>,8,0xFF0000;
+					break;
+				case 7:
+					viewpoint 2,<x>,<y>,1,0xFF0000;
+					viewpoint 2,<x>,<y>,2,0xFF0000;
+					viewpoint 2,<x>,<y>,3,0xFF0000;
+					viewpoint 2,<x>,<y>,4,0xFF0000;
+					viewpoint 2,74,87,5,0xFF0000;
+					viewpoint 2,177,108,6,0xFF0000;
+					viewpoint 2,87,179,7,0xFF0000;
+					viewpoint 2,<x>,<y>,8,0xFF0000;
+					break;
+			}
+			break;
+		case 2:
+			mes "Pas de problème.";
+			mes "Au plaisir.";
+			break;
+	}
+	close;
+}

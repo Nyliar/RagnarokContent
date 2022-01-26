@@ -1,0 +1,100 @@
+///////Job list 6///////
+//6-1;
+moc_prydb1,47,132,6	script	Thief	48,{
+	if (six_qset == 1 && countitem(638) > 99) goto N_QuestComp;
+	if (six_qset == 1) goto N_QuestStart;
+	mes "[Thief]";
+	mes "Bienvenue à la Guilde des Voleurs!";
+	close;
+N_QuestComp:
+	mes "[Thief]";
+	mes "Merci! Je vais devenir invincible!";
+	next;
+	mes "[Thief]";
+	mes "Voilà ta récompense.";
+	delitem 638,100;
+	mes "Ah, et...je te rends ta bourse!";
+	set Zeny, Zeny+100000;
+	set six_qset,0;
+	set On_Quest,0;
+	set #Treasure_Token,#Treasure_Token+5;
+	close;
+N_QuestStart:
+	mes "[Thief]";
+	mes "Où est mon paquet? Mes items pour créer une dague vivante?";
+	mes "J'ai besoin de 100 Knife of Chastity";
+	close;
+}
+//6-2
+function	script	six_qset2	{
+	if (six_qset == 2 && countitem(1552) > 0) goto N_QuestComp2;
+	mes "[Strange Man]";
+	mes "Autre chose te demander je dois";
+	mes "Apprendre les hieroglyphes je dois";
+	mes "Une Tablette il me faudra";
+	close;
+N_QuestComp2:
+	mes "[Strange Man]";
+	mes "Un merci je te dois. Ainsi que 4 Tokens tu auras.";
+	next;
+	delitem 1552,1;
+	set #Treasure_Token,#Treasure_Token+4;
+	set On_Quest,0;
+	set six_qset,0;
+	close;
+}
+//6-3;
+xmas,144,136,6	script	Chirach	48,{
+	if (six_qset == 3 && countitem(7024) > 19) goto N_QuestComp;
+	if (six_qset == 3) goto N_QuestStart;
+	mes "[Chirach]";
+	mes "Bienvenue.";
+	close;
+N_QuestComp:
+	mes "[Chirach]";
+	mes "Merci, merci! On va pouvoir le libérer.";
+	next;
+	mes "[Chirach]";
+	mes "Voilà ta récompense, 10 Tokens!";
+	delitem 7024,20;
+	set six_qset,0;
+	set On_Quest,0;
+	set #Treasure_Token,#Treasure_Token+10;
+	close;
+N_QuestStart:
+	mes "[Chirach]";
+	mes "Bonjour! J'ai besoin de toi pour trouver une preuve.";
+	mes "On accuse mon frère de meurtre, mais je sais que c'est un monstre.";
+	mes "J'ai besoin de 20 Bloody Edges pour prouver son innoncence.";
+	close;
+}
+//6-4;
+gef_tower,52,87,6	script	Wizard#02	735,{
+	if (six_qset == 4 && countitem(944) > 49 && countitem(7120) > 49 ) goto N_QuestComp;
+	if (six_qset == 4) goto N_QuestStart;
+	mes "[Zuuzuu]";
+	mes "Bonjour, bienvenue dans le Tour.";
+	close;
+N_QuestComp:
+	mes "[Wizard]";
+	mes "Merci de ton aide!";
+	next;
+	mes "Voilà le prix du sommeil.";
+	delitem 944,50;
+	delitem 7120,50;
+	set six_qset,0;
+	set On_Quest,0;
+	set #Treasure_Token,#Treasure_Token+6;
+	next;
+	mes "[Zuuzuu]";
+	mes "Wow! Un de ces monstres t'a suivi! Tue le! Tue le!";
+	next;
+	monster "gef_tower",42,89,"Evil Nightmare",1061,1;
+	close;
+N_QuestStart:
+	mes "[Zuuzuu]";
+	mes "Bonjour. Les raisons pour lesquelles tu es là s'appellent des cauchemards.";
+	mes "Nous devons libérer nos enfants de ceux-ci. Chasse les Nightmares, et les Bloody Nightmares!";
+	mes "Et ramène moi leur empreintes! 50 de chaque.";
+	close;
+}

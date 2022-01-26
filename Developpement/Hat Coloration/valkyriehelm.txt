@@ -1,0 +1,108 @@
+amatsu, 166, 220, 5	script	Valkyrie Helm	110,{
+
+	set .@npcname$,"[Valkyrie Helm]";
+	
+	//Black Valkyrie Helm 20232
+	setarray @iteBVH[0], 5171, 983, 7230;
+	setarray @countiteBVH[0], 1, 2, 2;
+	
+	//Blue Valkyrie Helm 20233
+	setarray @iteBLVH[0], 5171, 978, 7230;
+	setarray @countiteBLVH[0], 1, 2, 2;
+
+	//Brown Valkyrie Helm 20234
+	setarray @iteBRVH[0], 5171, 978, 980, 7230;
+	setarray @countiteBRVH[0], 1, 2, 2, 2;
+
+	//Cyan Valkyrie Helm 20235
+	setarray @itemCVH[0], 5171, 978, 982, 7230;
+	setarray @countitemCVH[0], 1, 2, 2, 2;
+
+	//Gold Valkyrie Helm 20236
+	setarray @itemGVH[0], 5171, 976, 7230;
+	setarray @countitemGVH[0], 1, 2, 2;
+
+	//Green Valkyrie Helm 20237
+	setarray @itemGNVH[0], 5171, 979, 7230;
+	setarray @countitemGNVH[0], 1, 2, 2;
+
+	//Orange Valkyrie Helm 20238
+	setarray @itemOVH[0], 5171, 980, 7230;
+	setarray @countitemOVH[0], 1, 2, 2;
+	
+	//Pink  Valkyrie Helm 20239
+	setarray @itemPVH[0], 5171, 975, 982, 7230;
+	setarray @countitemPVH[0], 1, 2, 2, 2;
+
+	//Purple  Valkyrie Helm 20240
+	setarray @itemPUVH[0], 5171, 981, 7230;
+	setarray @countitemPUVH[0], 1, 2, 2;
+	
+	//Red Valkyrie Helm 20241
+	setarray @itemRVH[0], 5171, 975, 7230;
+	setarray @countitemRVH[0], 1, 2, 2;
+
+	//Silver  Valkyrie Helm 20242
+	setarray @itemSVH[0], 5171, 983, 982, 7230;
+	setarray @countitemSVH[0], 1, 2, 2, 2;
+	
+	//White  Valkyrie Helm 20243
+	setarray @itemWVH[0], 5171, 982, 7230;
+	setarray @countitemWVH[0], 1, 2, 2;
+	
+	
+	
+	mes .@npcname$;
+	mes "Bonjour ^3333FF" + strcharinfo(0) + "^000000!";
+	mes "Je peux te proposer quelque hats pour customiser ton Valkyrie Helm.";
+	mes	"Ca t'interesse?!";
+	next;
+	mes .@npcname$;
+	mes "Voici ce que je peux te proposer:";
+	next;
+
+	switch(select("Black Valkyrie Helm:Blue Valkyrie Helm:Brown Valkyrie Helm:Cyan Valkyrie Helm:Gold Valkyrie Helm:Green Valkyrie Helm:Orange Valkyrie Helm:Pink Valkyrie Helm:Purple Valkyrie Helm:Red Valkyrie Helm:Silver Valkyrie Helm:White Valkyrie Helm:^777777Rien, merci...^000000"))
+	{
+		case 1 :
+ 		callfunc "mes_getitem_colo",.@npcname$,20232,@iteBVH,@countiteBVH, 1000000;
+
+		case 2 :
+ 		callfunc "mes_getitem_colo",.@npcname$,20233,@iteBLVH,@countiteBLVH, 1000000;
+
+		case 3 :
+ 		callfunc "mes_getitem_colo",.@npcname$,20234,@iteBRVH,@countiteBRVH, 1000000;
+
+		case 4 :
+ 		callfunc "mes_getitem_colo",.@npcname$,20235,@itemCVH,@countitemCVH, 1000000;
+
+		case 5 :
+ 		callfunc "mes_getitem_colo",.@npcname$,20236,@itemGVH,@countitemGVH, 1000000;
+
+		case 6 :
+ 		callfunc "mes_getitem_colo",.@npcname$,20237,@itemGNVH,@countitemGNVH, 1000000;
+
+		case 7 :
+ 		callfunc "mes_getitem_colo",.@npcname$,20238,@itemOVH,@countitemOVH, 1000000;
+
+		case 8 :
+ 		callfunc "mes_getitem_colo",.@npcname$,20239,@itemPVH,@countitemPVH, 1000000;
+
+		case 9 :
+ 		callfunc "mes_getitem_colo",.@npcname$,20240,@itemPUVH,@countitemPUVH, 1000000;
+		
+		case 10 :
+		callfunc "mes_getitem_colo",.@npcname$,20241,@itemRVH,@countitemRVH, 1000000;
+
+		case 11 :
+		callfunc "mes_getitem_colo",.@npcname$,20242,@itemSVH,@countitemSVH, 1000000;
+
+		case 12 :
+ 		callfunc "mes_getitem_colo",.@npcname$,20243,@itemWVH,@countitemWVH, 1000000;
+
+		// Quitter
+		case 13 :
+		mes @npcname$;
+		mes "Très bien. A bientôt !";
+		close;
+	}
+}

@@ -1,0 +1,26 @@
+thalys,166,154,2	script	Ibé	47,{
+
+	set .@npcname$,"^FF3333Ibé^000000";	
+	
+	mes "[" + .@npcname$ + "]";
+	mes "Bonjour ^3333FF" + strcharinfo(0) + "^000000 !";
+	mes "Je peux t'envoyer directement dans la Salle des Ventes.";
+	mes "Là-bas, tu pourras mettre tes items aux enchères, ou voir ce qui est en vente.";
+	mes "Souhaites-tu t'y rendre?";
+	next;
+	
+	switch(select("Oui, avec plaisir:Non désolé, pas le temps"))
+	{
+		case 1:
+			mes "Très bien, alors c'est parti ^.^";
+			warp "auction_02", 43, 24;
+			close2;
+			end;
+		case 2:
+			mes "[" + .@npcname$ + "]";
+			mes "Très bien, tant pis";
+			mes "Peut-être une autre fois";
+			close2;
+			end;
+	}
+}

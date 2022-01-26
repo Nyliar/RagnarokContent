@@ -1,0 +1,76 @@
+caspen,154,98,2	script	warp::ww1	45,3,3,{
+	end;
+
+OnInit:	
+	setarray $wolvald_maps$[0], "caspen", "genasia", "bilfrost", "Hallow01", "Crystilia", "zodiac", "melodya", "mornanie",
+	"colisland", "casp_fild01", "casp_fild02", "gen_fild01", "gen_fild02", "mysterio", "revencia", "crash", "capitale", "dep_lb",
+	"rp_lb", "tvt_lb", "1@dth1", "1@pi", "thalys", "thalys_o", "thalys_s", "ins_fld", "temple_lb";
+	end;
+
+OnTouch:
+	if (.last_party_warped == getcharid(1) && .last_warped_id != getcharid(0))
+	{
+		warp .last_warp_used$, 0, 0;
+	}
+	else
+	{
+		set .@map$, $wolvald_maps$[rand(0,getarraysize($wolvald_maps$))];
+		set .last_warp_used$, .@map$;
+		set .last_party_warped, getcharid(1);	
+		set .last_warped_id, getcharid(0);
+		warp .last_warp_used$, 0, 0;
+	}
+	if (rand(0,100) < 10 && .disabled == 0)
+	{
+		disablenpc strnpcinfo(3);
+		set .disabled, 1;
+	}
+
+OnClock0000:
+	if (.disabled == 1)
+	{
+		set .disable, 0;
+		enablenpc strnpcinfo(3);
+	}
+
+	end;
+}
+
+Crystilia,166,199,0	duplicate(ww1)	warp::ww2	45,2,2
+zodiac,122,124,0	duplicate(ww1)	warp::ww3	45,2,2
+melodya,76,74,0	duplicate(ww1)	warp::ww4	45,2,2
+mornanie,114,108,0	duplicate(ww1)	warp::ww5	45,2,2
+colisland,57,109,0	duplicate(ww1)	warp::ww6	45,2,2
+casp_fild01,75,80,0	duplicate(ww1)	warp::ww7	45,2,2
+casp_fild02,73,126,0	duplicate(ww1)	warp::ww8	45,2,2
+gen_fild01,63,58,0	duplicate(ww1)	warp::ww9	45,2,2
+gen_fild02,98,30,0	duplicate(ww1)	warp::ww10	45,2,2
+mysterio,99,35,0	duplicate(ww1)	warp::ww11	45,2,2
+revencia,145,32,0	duplicate(ww1)	warp::ww12	45,2,2
+crash,120,151,0	duplicate(ww1)	warp::ww13	45,2,2
+capitale,260,162,0	duplicate(ww1)	warp::ww14	45,2,2
+dep_lb,32,153,0	duplicate(ww1)	warp::ww15	45,2,2
+rp_lb,56,63,0	duplicate(ww1)	warp::ww16	45,2,2
+tvt_lb,95,62,0	duplicate(ww1)	warp::ww17	45,2,2
+1@dth1,205,135,0	duplicate(ww1)	warp::ww19	45,2,2
+1@pi,80,75,0	duplicate(ww1)	warp::ww20	45,2,2
+thalys,233,126,0	duplicate(ww1)	warp::ww21	45,2,2
+thalys_o,83,54,0	duplicate(ww1)	warp::ww22	45,2,2
+thalys_s,373,175,0	duplicate(ww1)	warp::ww23	45,2,2
+ins_fld,85,243,0	duplicate(ww1)	warp::ww24	45,2,2
+temple_lb,133,123,0	duplicate(ww1)	warp::ww25	45,2,2
+genasia,117,64,0	duplicate(ww1)	warp::ww28	45,2,2
+bilfrost,48,70,0	duplicate(ww1)	warp::ww27	45,2,2
+Hallow01,155,54,0	duplicate(ww1)	warp::ww26	45,2,2
+
+
+caspen,145,215,0	duplicate(prtasepa)	Ase Path Guardian::apg2	618,2,2
+genasia,103,87,0	duplicate(prtasepa)	Ase Path Guardian::apg3	618,2,2
+bilfrost,100,169,0	duplicate(prtasepa)	Ase Path Guardian::apg4	618,2,2
+Hallow01,105,97,0	duplicate(prtasepa)	Ase Path Guardian::apg5	618,2,2
+Crystilia,160,206,0	duplicate(prtasepa)	Ase Path Guardian::apg6	618,2,2
+mornanie,102,107,0	duplicate(prtasepa)	Ase Path Guardian::apg7	618,2,2
+revencia,33,233,0	duplicate(prtasepa)	Ase Path Guardian::apg8	618,2,2
+capitale,216,183,0	duplicate(prtasepa)	Ase Path Guardian::apg9	618,2,2
+thalys,157,148,0	duplicate(prtasepa)	Ase Path Guardian::apg10	618,2,2
+

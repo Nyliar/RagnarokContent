@@ -1,0 +1,43 @@
+casp_in01,260,275,4	script	Le Passeur	901,{
+
+	set .@npcname$,"^FF3333Le Passeur^000000";	
+	
+	mes "[" + .@npcname$ + "]";
+	mes "Bonjour" + (Sex?" Messire":" Lady") + " " + strcharinfo(0);
+	mes "Je suis le Passeur, et je puis vous emmener";
+	mes "dans un voyage vers de nouvelles contrées.";
+	mes "Celles-ci vous seront accessibles au cours de Missions.";
+	mes "Souhaitez-vous allez voir le Maitre des Missions?";
+	next;
+	switch(select("Je veux bien y aller:Sans façon merci"))
+	{
+		case 1:
+			goto L_QUEST;
+		case 2:
+			goto L_QUIT;
+	}
+	
+L_QUIT:
+	mes "[" + .@npcname$ + "]";
+	mes "Très bien.";
+	mes "Je reste en faction ici, si vous changez d'avis.";
+	close2;end;
+	
+L_QUEST:
+	if (M_QUEST == 4)
+	{
+		mes "[" + .@npcname$ + "]";
+		mes "Très bien.";
+		mes "Je vous y envoie tout de suite";
+		warp "casp_in01",269,275;
+		close2;end;
+	}
+	else
+	{
+		mes "[" + .@npcname$ + "]";
+		mes "Désolé, mais vous ne faites pas partie de la Guilde.";
+		mes "Je ne peux donc pas vous laissez passer.";
+		mes "Revenez quand vous serez des nôtres.";
+		close2;end;
+	}
+}

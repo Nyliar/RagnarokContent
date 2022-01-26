@@ -1,0 +1,226 @@
+crash,72,210,5	script	Entrée de la Grotte	111,{
+	set .@npcname$, "[Voix depuis l'intérieur]";
+	mes "";
+
+	mes strcharinfo(0) + ": Ohé?!";
+	next;
+	if (CRASH_Q >= 1)
+	{
+		mes strcharinfo(0) + ": Vous êtes là?";
+		next;
+		mes strcharinfo(0) + ": Amaranth m'envoie vous aider...";
+		next;
+		mes "...";
+		next;
+		mes "";
+		mes .@npcname$;
+		mes "Entrez. Et prenez garde à ne pas faire entrer de monstres.";
+		mes "Entrer?";
+		switch(select("Oui","Non"))
+		{
+			case 1:
+				if (#can_enter == 1)
+					warp "crash_in", 43, 232;
+				else
+					mes "On ne vous laisse pas entrer.";
+				break;
+			case 2:
+				mes "Vous préférez rester dehors.";
+				break;
+		}
+	}
+	else
+		mes "Vous n'entendez rien de spécial, mis à part de l'écho.";
+	close;
+}
+
+capitale,175,179,5	script	Amaranth	879,{
+	set .@npcname$, "[Amaranth]";
+	mes .@npcname$;
+	mes "";
+	mes "Bonjour à toi.";
+	if (CRASH_Q == 0 || CRASH_Q == 1)
+	{
+		mes "As-tu déjà entendu parler de l'île du Crash?";
+		mes "Certains de mes amis faisaient parti du voyage qui s'est écrasé.";
+		mes "Serais-tu prêt à les aider?";
+		next;
+		switch(select("Oui","Non"))
+		{
+			case 1:
+				mes "Merci! Merci beaucoup.";
+				mes "Ils se trouvent quelque part sur l'Ile j'en suis sûre.";
+				mes "Cherche les, et dit leur que tu viens de ma part, d'accord?";	
+				set CRASH_Q, 1;	
+				set #can_enter, 1;
+				break;
+			case 2:
+				mes "Je m'inquiètes tellement...Qui m'aideras?";
+				break;
+		}
+	}
+	else if (CRASH_Q == 2)
+	{
+		mes "Tu les as trouvé! Enfin!";
+		mes "Ils ont besoin d'aide tu dis? Tu dois chasser Mimir?";
+		mes "Qui aurait cru que ce Géant vivait là-bas...";
+		mes "Pourtant, Mimir est censé être un gardien, pas un danger pour ceux qui ne cherchent pas la Source de Sagesse.";
+		mes "Il a du se passer quelque chose. Peux-tu investiguer?";
+		mes "Merci d'avance. Je pense qu'il te faudra trouver de quoi rencontrer Mimir.";
+		mes "On cherche d'ordinaire de quoi parler au Géant, des Essences de la Nature.";
+		mes "A priori, deux devraient suffire.";
+		set CRASH_Q, 3;
+	}
+	close;
+}
+
+crash_in,60,85,5	script	Invocateur de Mimir	795,{
+	set .@npcname$, "[Invocateur de Mimir]";
+	mes "";
+
+	mes .@npcname$;
+	next;
+	mes "Niark niark niark";
+	mes "Ainsi, tu as trouvé ma retraite.";
+	mes "Je me cache ici depuis des années. J'ai dressé ces monstres pour qu'ils m'obéissent.";
+	next;
+	mes .@npcname$;
+	mes "Rien ni personne ne peut me vaincre ici.";
+	mes "Et tu sais pourquoi?";
+	mes "Car je maitrise Mimir, le Gardien de la Source de Sagesse!";
+	mes "Ma magie l'a corrompu, et désormais, il souille la Source, causant la dégénération de cette île!";
+	if (countitem(7836) >= 1 && countitem(6001) >= 1)
+	{
+		mes "Et tu m'apportes justement de quoi t'écraser! AHAHAHAHAHAHAHA!";
+		delitem 6001, 1;
+		delitem 7836, 1;
+		mes "VOILA VENIR....MIMIR!";
+		monster "crash_in",42,34,"Mimir",2536,1,strnpcinfo(3)+"::OnMimirKilled"; 
+	}
+	else
+		mes "Mais ta vie ne m'intéresse pas. Va-t-en.";		
+	close;
+
+OnMimirKilled:
+	set MIMIR_KILLER, 1;
+	end;
+}
+
+crash_in,51,245,5	script	Eliant	806,{
+	set .@npcname$, "[Eliant]";
+	mes "";
+
+	mes .@npcname$;
+	mes "...Salut.";
+	mes "Amaranth t'envoie nous aider alors?";
+	mes "Humpf! Mieux vaut tard que jamais, hein?";
+	close;
+}
+
+crash_in,37,239,5	script	Onire	863,{
+	set .@npcname$, "[Onire]";
+	mes "";
+
+	mes .@npcname$;
+	mes "Nous avons subi un crash de l'Airship il y a plusieurs mois de cela.";
+	mes "Nous survivons tant bien que mal dans cette île dangereuse.";
+	mes "Tu as vu tout ces monstres dehors? Brrr!";
+	close;
+}
+
+crash_in,38,247,5	script	Corps	887,{
+	mes "Il...il ne vous répondra plus.";
+	close;
+}
+
+crash_in,184,75,5	script	Elementaire de Mer	111,{
+	set .@npcname$, "[Elementaire de Mer]";
+	mes "";
+
+	mes .@npcname$;
+	if (CRASH_Q >= 3)
+	{
+		mes "Vous recevez une Essence de Mer de la part de l'Elementaire.";
+		getitem 7836, 1;
+	}
+	else
+		mes "Ca ressemble un peu a un sigle...";
+	close;
+}
+
+crash_in,275,219,5	script	Elementaire de Flamme	111,{
+	set .@npcname$, "[Elementaire de Flamme]";
+	mes "";
+
+	mes .@npcname$;
+	if (CRASH_Q >= 3)
+	{
+		mes "Vous recevez une Essence de Flamme de la part de l'Elementaire.";
+		getitem 6001, 1;
+	}
+	else
+		mes "Ca ressemble un peu a un sigle...";
+	close;
+}
+
+crash_in,43,250,5	script	Gamaran	847,{
+	set .@npcname$, "[Gamaran]";
+	mes "";
+
+	mes .@npcname$;
+	mes "Bonjour, " + strcharinfo(0);
+	if (countitem(12400) >= 1 && CRASH_Q >= 3)
+	{
+		mes "Merci!!! Grâce à toi nous allons enfin pouvoir sortir de cet enfer!";
+		mes "Voici de quoi te remercier. C'est tout ce que nous avons pu sauver du crash.";
+		mes "Ca te sera sans doute plus utile qu'à nous.";
+		getitem 21063, 10;
+		delitem 12400, 1;
+	}
+	else
+	{
+		mes "Ainsi, la Guilde a enfin décidé d'envoyer quelqu'un nous aider?";
+		switch(select("Oui","Non"))
+		{
+			case 1:
+				mes "Tu veux me faire croire ça? Mais qui es-tu en fait?";
+				next;
+				warp "crash", 0, 0;
+				set #can_enter, 0;
+				addtimer 300000, strnpcinfo(3)+"::OnCanEnterAgain";
+				dispbottom "On vous a jeté dehors. Attendez cinq minutes avant de réessayer.";
+				break;
+			case 2:
+				mes "Je sais bien que la Guilde ne ferait jamais ça. Elle devrait reconnaître son erreur.";
+				mes "Je sais aussi qu'ils font ça à cause de leur monopole. Ils n'ont pas le droit à l'erreur justement.";
+				mes "Si tu veux nous aider, tu dois d'abord nous libérer de cette île.";
+				mes "Tu ne peux pas tous nous emmener, mais tu peux nous donner de quoi nous promener librement.";
+				mes "Ce sera déjà un grand pas.";
+				mes "Acceptes-tu de nous aider?";
+				next;
+				switch(select("Ok, que dois-je faire?", "Non, pas le temps là."))
+				{
+					case 1:
+						mes "Merci du fond du coeur!";
+						mes "Commence par donner de nos nouvelles à Amaranth.";
+						mes "Elle devrait te donner de quoi entrer dans les grottes de l'île.";
+						mes "Cette île comprend trois grottes, une par type de monstre.";
+						mes "Si tu parviens à chasser Mimir, le Géant gardien de la source de Sagesse,";
+						mes "et a nous ramener un peu de l'eau de la Source, les monstres dehors nous laisseront nous promener.";
+						mes "Il parait qu'elle a des vertus magiques, permettant de repousser l'ignorance.";
+						mes "Je compte sur toi.";
+						set CRASH_Q, 2;
+						break;
+					case 2:
+						mes "...Reviens quand tu pourras nous aider alors.";
+						mes "Nous avons vraiment besoin de ton aide.";
+						break;
+				}
+				break;
+		}
+	}
+	close;
+
+OnCanEnterAgain:
+	set #can_enter, 1;
+}

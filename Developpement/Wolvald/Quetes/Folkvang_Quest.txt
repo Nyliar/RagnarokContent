@@ -1,0 +1,72 @@
+prt_monk,188,132,4	script	Moine Sombre::mspas	705,{
+//green,17,16,4	script	Moine Sombre::mspas	705,{
+	set .@npcname$, "[Moine Sombre]";
+	mes .@npcname$;
+	mes "";
+	mes "Bonjour à toi.";
+	mes "Je vois que tu as déjà eu de nombreux choix, de nombreuses vies.";
+	mes "Sais-tu que tout ce que tu as rejeté ne meurs pas vraiment.";
+	if (FOLK_Q == 0)
+	{
+		next;
+		mes .@npcname$;
+		mes "Ces vies gâchées finissent par revivre en Fölkvang, la Plaine des Oubliés.";
+		mes "C'est un endroit...froid. La mort y règne en maître.";
+		set FOLK_Q, 1;
+	}
+	else if (FOLK_Q == 2)
+	{
+		if (countitem(7109) >= 1)
+		{
+			next;
+			mes .@npcname$;
+			mes "Bien. Tu sais donc à quoi tu t'engages.";
+			mes "Soit. Libre à toi d'aller sur la Plaine.";
+			delitem 7109, 1;
+		}
+		set FOLK_Q, 3;
+	}
+	close;
+}
+
+prt_monk,58,180,4	script	Passeur de Folkvang::pasfolk	654,{
+//green,17,13,4	script	Passeur de Folkvang::pasfolk	654,{
+	set .@npcname$, "[Moine Sombre]";
+	mes .@npcname$;
+	mes "";
+	mes "Bonjour à toi.";
+	mes "Je vois que tu as déjà eu de nombreux choix, de nombreuses vies.";
+	mes "Sais-tu que tout ce que tu as rejeté ne meurs pas vraiment.";
+	if (FOLK_Q == 1)
+	{
+		next;
+		mes .@npcname$;
+		mes "Je suis le passeur de Fôlkvang.";
+		mes "Je peux t'y emmener, mais j'ai besoin d'avoir la preuve que tu sais ce que tu risques.";
+		mes "Pour cela, tu dois donc rencontrer le Maitre des Morts.";
+		mes "Rapporte au Moine Sombre un " + getitemname(7109) + ", et je t'ouvrirais la porte de la Plaine.";
+		set FOLK_Q, 2;
+	}
+	else if (FOLK_Q == 3)
+	{
+		next;
+		mes .@npcname$;
+		mes "Pour t'envoyer en Fôlkvang, j'ai besoin de deux pièces d'Or.";
+		mes "C'est le prix à payer pour le Passeur que je suis.";
+		if (countitem(.item_id) >= 2)
+		{
+			mes "Bon voyage à toi, Fôlkvang t'attends.";
+			delitem .item_id, 2;
+			warp .mapname$, .mapx, .mapy;
+		}
+	}
+	close;
+
+OnInit:
+	set .item_id, 671;
+	set .mapname$, "br_lb";
+	set .mapx, 0;
+	set .mapy, 0;
+	end;
+
+}

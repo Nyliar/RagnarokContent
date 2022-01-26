@@ -1,0 +1,25 @@
+green,19,14,4	script	Clean Marru	876,{
+	mes "bonjour.";
+
+	//npctalk "Skill list " + .@i + ":" + getd("MULTI_SKILL_"+MULTI_SKILL_COUNT+"$");
+
+	//setd("MULTI_SKILL_"+MULTI_SKILL_COUNT+"$","403#1#1006#1#1012#1#");
+	//npctalk "lvl FS: " + getskilllv(476);
+	set MULTI_CLASS, 6;
+	set MULTI_CLASS_COUNT, 1;
+	setd("MULTI_CLASS_1",4065);
+	//npctalk "learn: " + getd("MULTI_SKILL_LEARN_1");
+	//npctalk "used: " + getd("MULTI_SKILL_LEARN_USED_1");
+	//setd("MULTI_SKILL_LEARN_1",53);
+	//setd("MULTI_SKILL_LEARN_USED_1",72);
+	setd("MULTI_XP_1",0);
+	setd("MULTI_LEVEL_1",0);
+	//getitem 713, 250;
+	//getitem 970, 250;
+	//getitem 1059, 250;
+	//getitem 929, 250;
+	//getitem 992, 250;
+	//getitem 950, 250;
+	//getitem 1044, 250;
+	close;
+}

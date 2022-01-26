@@ -1,0 +1,410 @@
+//===== eAthena Script ======================================= 
+//= Fôlkvang
+//===== By: ================================================== 
+//= Alayne
+//===== Current Version: ===================================== 
+//= 1.0
+//===== Compatible With: ===================================== 
+//============================================================ 
+
+prt_monk,95,107,4	script	folkvang::folk	-1,{
+//green,22,14,4	script	folkvang::folk	-1,{
+
+	end;
+
+OnInit:
+	set .mapname$, "br_lb";
+	killmonsterall .mapname$;
+	set .minLvlToClone, 50;
+	set .maxLvlToClone, 175;
+	set .maxCountClone, 100;
+	set .actualCountClone, 0;
+	set .limitClonePerPlayer, 0;
+	set .maxClonePerPlayer, 15;
+	set .maxMvpClone, 1;
+	setarray .nameGM$[0], "Alayne", "Lynes", "Judge";
+
+	//choose reward mode: 0-None, 1-Only basic rewards, 2-Classes rewards
+	set .rewardMode, 1;
+
+	setarray .rewardMobId[0], 608, 7005, 7024, 11703, 11704, 7071;
+	setarray .rewardMobPercent[0], 10, 100, 50, 75, 20, 90;
+	set .rewardMobCount, 2;
+
+	setarray .rewardMvpId[0], 12103,607,2423,2495,21497,21493,7776;
+	setarray .rewardMvpPercent[0], 100,85,60,45,74,15,5;
+	set .rewardMvpCount, 3;
+
+	//base minimum percentage for classe loots
+	set .lootClassFixePercent, 10;
+
+	setarray .rewardClassGltId[0], 1291,1296,1283,1290;
+	setarray .rewardClassSCId[0], 13061,13062,13067;
+	setarray .rewardClassRkId[0], 1415,1469,1181,1185;
+	setarray .rewardClassRgId[0], 1493,1435,1422,1415;
+	setarray .rewardClassAbId[0], 1659,1647,1548,1631;
+	setarray .rewardClassSuId[0], 16017,1817,1534,1526;
+	setarray .rewardClassWarId[0], 1646,1636,2000,2018;
+	setarray .rewardClassSorId[0], 1584,1563,1565,1588;
+	setarray .rewardClassMecId[0], 28101,1377,1387,1384;
+	setarray .rewardClassGenId[0], 16000,16001,16010,16003;
+	setarray .rewardClassRanId[0], 1728,18100,18110,18111;
+	setarray .rewardClassWanId[0], 1985,1975,1983,1980;
+	setarray .rewardClassMinId[0], 1919,1930,1920,1925;
+	setarray .rewardClassKagObId[0], 13049,13308,13314,13313;
+	setarray .rewardClassRebId[0], 13162,13155,13166,13111;
+
+	callsub OnPopCloneMvp;
+
+	end;
+
+OnCloneMvpDead:
+	//start respawn timer
+	initnpctimer;
+	//reward
+	callsub OnRewardLootAsked,.rewardMvpCount,1;
+	end;
+
+//arguments:
+//0 - reward loot count
+//1 - mob mode (mvp or not)
+
+OnRewardLootAsked:
+	if (.rewardMode >= 1)
+	{
+		set .@lootCount, rand(0,getarg(0));
+		set .@actualCount, 0;
+		for(set .@i,0; .@i<.@lootCount; set .@i,.@i+1)
+		{
+			if (getarg(1) == 0)
+			{
+				//normal monster
+				//basic loot
+				set .@randPercent, rand(0,100);
+				do
+				{
+					set .@lootRank, rand(0,getarraysize(.rewardMobPercent));
+					set .@lootPercent, .rewardMobPercent[.@lootRank];	
+				}
+				while( .@lootPercent < .@randPercent);
+				getitem .rewardMobId[.@lootRank], 1;
+
+				if (.rewardMode == 1)
+				{
+					//classes loot
+					set .@randPercent, rand(0,100);
+					if (.@randPercent < .lootClassFixePercent/10)
+					{
+						callsub OnGetClasseReward;
+					}
+				}
+			}
+			else
+			{
+				//mvp
+				//basic loot
+				set .@randPercent, rand(0,100);
+				do
+				{
+					set .@lootRank, rand(0,getarraysize(.rewardMvpPercent));
+					set .@lootPercent, .rewardMvpPercent[.@lootRank];	
+				}
+				while( .@lootPercent < .@randPercent);
+				getitem .rewardMvpId[.@lootRank], 1;
+
+				if (.rewardMode == 1)
+				{
+					//classes loot
+					set .@randPercent, rand(0,100);
+					if (.@randPercent < .lootClassFixePercent)
+					{
+						callsub OnGetClasseReward;
+					}
+				}
+			}
+		}
+	}
+	return;
+
+OnGetClasseReward:
+	switch(Class)
+	{
+		case 4060:
+			set .@lootRank, rand(0,getarraysize(.rewardClassRkId) - 1);
+			getitem .rewardClassRkId[.@lootRank], 1;
+			break;
+		case 4061:
+			set .@lootRank, rand(0,getarraysize(.rewardClassWarId) - 1);
+			getitem .rewardClassWarId[.@lootRank], 1;
+			break;
+		case 4062:
+			set .@lootRank, rand(0,getarraysize(.rewardClassAbId) - 1);
+			getitem .rewardClassAbId[.@lootRank], 1;
+			break;
+		case 4063:
+			set .@lootRank, rand(0,getarraysize(.rewardClassRanId) - 1);
+			getitem .rewardClassRanId[.@lootRank], 1;
+			break;
+		case 4064:
+			set .@lootRank, rand(0,getarraysize(.rewardClassGltId) - 1);
+			getitem .rewardClassGltId[.@lootRank], 1;
+			break;
+		case 4065:
+			set .@lootRank, rand(0,getarraysize(.rewardClassMecId) - 1);
+			getitem .rewardClassMecId[.@lootRank], 1;
+			break;
+
+		case 4073:
+			set .@lootRank, rand(0,getarraysize(.rewardClassRgId) - 1);
+			getitem .rewardClassRgId[.@lootRank], 1;
+			break;
+		case 4074:
+			set .@lootRank, rand(0,getarraysize(.rewardClassSorId) - 1);
+			getitem .rewardClassSorId[.@lootRank], 1;
+			break;
+		case 4075:
+			set .@lootRank, rand(0,getarraysize(.rewardClassSuId) - 1);
+			getitem .rewardClassSuId[.@lootRank], 1;
+			break;
+		case 4076:
+			set .@lootRank, rand(0,getarraysize(.rewardClassMinId) - 1);
+			getitem .rewardClassMinId[.@lootRank], 1;
+			break;
+		case 4077:
+			set .@lootRank, rand(0,getarraysize(.rewardClassWanId) - 1);
+			getitem .rewardClassWanId[.@lootRank], 1;
+			break;
+		case 4078:
+			set .@lootRank, rand(0,getarraysize(.rewardClassScId) - 1);
+			getitem .rewardClassScId[.@lootRank], 1;
+			break;
+		case 4079:
+			set .@lootRank, rand(0,getarraysize(.rewardClassGenId) - 1);
+			getitem .rewardClassGenId[.@lootRank], 1;
+			break;
+	}
+	return;
+
+OnTimer10800000:
+	//pop another MvP 3 hours later
+	stopnpctimer;
+	goto OnPopCloneMvp;
+	end;
+
+OnCloneMobDead:
+	//reward
+	callsub OnRewardLootAsked,.rewardMobCount,0;
+	set .actualCountClone, .actualCountClone - 1;
+	end;
+
+OnPopCloneMob:
+	set .current_id, getcharid(3);
+	//sleep 10s to wait for respawn
+	sleep 10000;
+	attachrid(.current_id);
+	clone .mapname$, 0, 0, strnpcinfo(3)+"::OnCloneMobDead", getcharid(0);
+	end;
+
+OnPopCloneMvp:
+	debugmes "pop mvp?";
+	for (set .@j,0; .@j<.maxMvpClone; set .@j,.@j+1)
+	{
+		set .@querySentence$, "select char_id,account_id from `char` WHERE `online`=1 ";
+
+		for (set .@i,0; .@i<getarraysize(.nameGM$); set .@i,.@i+1)
+		{
+			if (.@i == 0)
+			{
+				set .@querySentence$, .@querySentence$ + "AND ";		
+			}
+			else
+			{
+				set .@querySentence$, .@querySentence$ + "OR ";
+			}
+			set .@querySentence$, .@querySentence$ + "`name` = '" + .nameGM$[.@i] + "' ";
+		}
+		query_sql(.@querySentence$, .@idGM, .@accountIdGM);
+
+		set .countOnlineGM, getarraysize(.@idGM);
+		if (.countOnlineGM > 0)
+		{		
+			set .@selectedId, rand(0,getarraysize(.@idGM) - 1);
+			attachrid .@accountIdGM[.@selectedId];
+
+			debugmes "pop id: " + .@accountIdGM[.@selectedId];
+
+			//summon the GM clone. Max will live during 3 days
+			clone .mapname$, 0, 0, strnpcinfo(3)+"::OnCloneMvpDead", getcharid(0), 0, 0, 0, 259200000;
+		}
+	}
+	end;
+
+OnPCDieEvent:	
+	debugmes "pop clone?";
+	if (.actualCountClone + 1 < .maxCountClone 
+		&& BaseLevel >= .minLvlToClone && BaseLevel <= .maxLvlToClone 
+		&& .limitClonePerPlayer == 0 || (.limitClonePerPlayer == 1 && COUNTCLONEFOLK < .maxClonePerPlayer))
+	{
+		set COUNTCLONEFOLK, COUNTCLONEFOLK + 1;
+		if (COUNTCLONEFOLK == .maxClonePerPlayer)		
+		{
+			set cloneDelay, gettimetick(2) + 86400;
+		}
+		set .actualCountClone, .actualCountClone + 1;
+		goto OnPopCloneMob;
+	}
+	end;
+
+OnPCLoginEvent:
+	if (cloneDelay > gettimetick(2)) {
+		set COUNTCLONEFOLK, 0;
+	}
+	end;
+
+OnCleanFolk:
+	killmonster .mapname$, "folk::OnCloneMobDead";
+	set .actualCountClone, 0;
+	end;
+
+OnClock0000:
+	set .hour, rand(0,23);
+	end;
+OnClock0100:
+	if (.hour == 1)
+	{
+		goto OnCleanFolk;
+	}
+	end;
+OnClock0200:
+	if (.hour == 2)
+	{
+		goto OnCleanFolk;
+	}
+	end;
+OnClock0300:
+	if (.hour == 3)
+	{
+		goto OnCleanFolk;
+	}
+	end;
+OnClock0400:
+	if (.hour == 4)
+	{
+		goto OnCleanFolk;
+	}
+	end;
+OnClock0500:
+	if (.hour == 5)
+	{
+		goto OnCleanFolk;
+	}
+	end;
+OnClock0600:
+	if (.hour == 6)
+	{
+		goto OnCleanFolk;
+	}
+	end;
+OnClock0700:
+	if (.hour == 7)
+	{
+		goto OnCleanFolk;
+	}
+	end;
+OnClock0800:
+	if (.hour == 8)
+	{
+		goto OnCleanFolk;
+	}
+	end;
+OnClock0900:
+	if (.hour == 9)
+	{
+		goto OnCleanFolk;
+	}
+	end;
+OnClock1000:
+	if (.hour == 10)
+	{
+		goto OnCleanFolk;
+	}
+	end;
+OnClock1100:
+	if (.hour == 11)
+	{
+		goto OnCleanFolk;
+	}
+	end;
+OnClock1200:
+	if (.hour == 12)
+	{
+		goto OnCleanFolk;
+	}
+	end;
+OnClock1300:
+	if (.hour == 13)
+	{
+		goto OnCleanFolk;
+	}
+	end;
+OnClock1400:
+	if (.hour == 14)
+	{
+		goto OnCleanFolk;
+	}
+	end;
+OnClock1500:
+	if (.hour == 15)
+	{
+		goto OnCleanFolk;
+	}
+	end;
+OnClock1600:
+	if (.hour == 16)
+	{
+		goto OnCleanFolk;
+	}
+	end;
+OnClock1700:
+	if (.hour == 17)
+	{
+		goto OnCleanFolk;
+	}
+	end;
+OnClock1800:
+	if (.hour == 18)
+	{
+		goto OnCleanFolk;
+	}
+	end;
+OnClock1900:
+	if (.hour == 19)
+	{
+		goto OnCleanFolk;
+	}
+	end;
+OnClock2000:
+	if (.hour == 20)
+	{
+		goto OnCleanFolk;
+	}
+	end;
+OnClock2100:
+	if (.hour == 21)
+	{
+		goto OnCleanFolk;
+	}
+	end;
+OnClock2200:
+	if (.hour == 22)
+	{
+		goto OnCleanFolk;
+	}
+	end;
+OnClock2300:
+	if (.hour == 23)
+	{
+		goto OnCleanFolk;
+	}
+	end;
+}

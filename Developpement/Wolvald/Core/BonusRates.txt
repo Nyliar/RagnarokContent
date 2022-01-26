@@ -1,0 +1,390 @@
+caspen,168,177,2	script	wolvald_core::mainww	-1,{
+	end;
+
+OnInit:	
+	setarray $wolvald_maps$[0], "caspen", "genasia", "bilfrost", "Hallow01", "Crystillia", "zodiac", "melodya", "mornanie",
+	"colisland", "casp_fild01", "casp_fild02", "gen_field01", "gen_field02", "mysterio", "revencia", "crash", "capitale", "dep_lb",
+	"rp_lb", "tvt_lb", "br_lb", "1@dth1", "1@pi", "thalys", "thalys_o", "thalys_s", "ins_fild", "temple_lb";
+	end;
+	set .min_rate_value, 35;
+	set .max_rate_value, 155;
+	donpcevent "wvol1::OnActivateRandomVolva";
+	end;
+
+OnWhisperGlobal:
+OnClock0000:
+	if ($Volva == 0)
+	{
+		//volva hasn't been found, change rates by random	
+		callsub "BackToNormal";	
+		switch(rand(0,7))
+		{
+			case 0:
+				callsub "ChangeBaseRate";
+				break;
+			case 1:
+				callsub "ChangeJobRate";
+				break;
+			case 2:
+				callsub "ChangeLootRate";
+				break;
+			case 3:
+				callsub "ChangeBaseRate";
+				callsub "ChangeJobRate";
+				break;
+			case 4:
+				callsub "ChangeBaseRate";
+				callsub "ChangeJobRate";
+				callsub "ChangeLootRate";
+				break;
+			case 5:
+				callsub "ActivateNightmare";
+				break;
+			case 6:
+				callsub "ActivateNoCommand";
+				break;
+			case 7:
+				callsub "BackToNormal";
+				break;
+		}
+	}
+	else if ($Volva == 1)
+	{
+		callsub "BackToNormal";
+		switch($Volva_effect)
+		{
+			case 0:
+				callsub "ChangeBaseRate";
+				break;
+			case 1:
+				callsub "ChangeJobRate";
+				break;
+			case 2:
+				callsub "ChangeLootRate";
+				break;
+			case 3:
+				callsub "ChangeBaseRate";
+				callsub "ChangeJobRate";
+				break;
+			case 4:
+				callsub "ChangeBaseRate";
+				callsub "ChangeJobRate";
+				callsub "ChangeLootRate";
+				break;
+			case 5:
+				callsub "ActivateNightmare";
+				break;
+			case 6:
+				callsub "ActivateNoCommand";
+				break;
+			default:
+				//nothing
+				break;
+		}
+
+	}
+
+	end;
+
+ChangeBaseRate:
+	setmapflag "Crystilia", mf_bexp,rand($volva_effet == 0 || $volva_effet ==  3 || $volva_effect == 4 ? .max_rate_value : .min_rate_value, .max_rate_value);
+	setmapflag "zodiac", mf_bexp,rand($volva_effet == 0 || $volva_effet ==  3 || $volva_effect == 4 ? .max_rate_value : .min_rate_value, .max_rate_value);
+	setmapflag "melodya", mf_bexp,rand($volva_effet == 0 || $volva_effet ==  3 || $volva_effect == 4 ? .max_rate_value : .min_rate_value, .max_rate_value);
+	setmapflag "mornanie", mf_bexp,rand($volva_effet == 0 || $volva_effet ==  3 || $volva_effect == 4 ? .max_rate_value : .min_rate_value, .max_rate_value);
+	setmapflag "colisland", mf_bexp,rand($volva_effet == 0 || $volva_effet ==  3 || $volva_effect == 4 ? .max_rate_value : .min_rate_value, .max_rate_value);
+	setmapflag "casp_fild01", mf_bexp,rand($volva_effet == 0 || $volva_effet ==  3 || $volva_effect == 4 ? .max_rate_value : .min_rate_value, .max_rate_value);
+	setmapflag "casp_fild02", mf_bexp,rand($volva_effet == 0 || $volva_effet ==  3 || $volva_effect == 4 ? .max_rate_value : .min_rate_value, .max_rate_value);
+	setmapflag "gen_field01", mf_bexp,rand($volva_effet == 0 || $volva_effet ==  3 || $volva_effect == 4 ? .max_rate_value : .min_rate_value, .max_rate_value);
+	setmapflag "gen_field02", mf_bexp,rand($volva_effet == 0 || $volva_effet ==  3 || $volva_effect == 4 ? .max_rate_value : .min_rate_value, .max_rate_value);
+	setmapflag "mysterio", mf_bexp,rand($volva_effet == 0 || $volva_effet ==  3 || $volva_effect == 4 ? .max_rate_value : .min_rate_value, .max_rate_value);
+	setmapflag "revencia", mf_bexp,rand($volva_effet == 0 || $volva_effet ==  3 || $volva_effect == 4 ? .max_rate_value : .min_rate_value, .max_rate_value);
+	setmapflag "crash", mf_bexp,rand($volva_effet == 0 || $volva_effet ==  3 || $volva_effect == 4 ? .max_rate_value : .min_rate_value, .max_rate_value);
+	setmapflag "capitale", mf_bexp,rand($volva_effet == 0 || $volva_effet ==  3 || $volva_effect == 4 ? .max_rate_value : .min_rate_value, .max_rate_value);
+	setmapflag "dep_lb", mf_bexp,rand($volva_effet == 0 || $volva_effet ==  3 || $volva_effect == 4 ? .max_rate_value : .min_rate_value, .max_rate_value);
+	setmapflag "rp_lb", mf_bexp,rand($volva_effet == 0 || $volva_effet ==  3 || $volva_effect == 4 ? .max_rate_value : .min_rate_value, .max_rate_value);
+	setmapflag "tvt_lb", mf_bexp,rand($volva_effet == 0 || $volva_effet ==  3 || $volva_effect == 4 ? .max_rate_value : .min_rate_value, .max_rate_value);
+	setmapflag "br_lb", mf_bexp,rand($volva_effet == 0 || $volva_effet ==  3 || $volva_effect == 4 ? .max_rate_value : .min_rate_value, .max_rate_value);
+	setmapflag "1@dth1", mf_bexp,rand($volva_effet == 0 || $volva_effet ==  3 || $volva_effect == 4 ? .max_rate_value : .min_rate_value, .max_rate_value);
+	setmapflag "1@pi", mf_bexp,rand($volva_effet == 0 || $volva_effet ==  3 || $volva_effect == 4 ? .max_rate_value : .min_rate_value, .max_rate_value);
+	setmapflag "thalys", mf_bexp,rand($volva_effet == 0 || $volva_effet ==  3 || $volva_effect == 4 ? .max_rate_value : .min_rate_value, .max_rate_value);
+	setmapflag "thalys_o", mf_bexp,rand($volva_effet == 0 || $volva_effet ==  3 || $volva_effect == 4 ? .max_rate_value : .min_rate_value, .max_rate_value);
+	setmapflag "thalys_s", mf_bexp,rand($volva_effet == 0 || $volva_effet ==  3 || $volva_effect == 4 ? .max_rate_value : .min_rate_value, .max_rate_value);
+	setmapflag "ins_fild", mf_bexp,rand($volva_effet == 0 || $volva_effet ==  3 || $volva_effect == 4 ? .max_rate_value : .min_rate_value, .max_rate_value);
+	setmapflag "temple_lb", mf_bexp,rand($volva_effet == 0 || $volva_effet ==  3 || $volva_effect == 4 ? .max_rate_value : .min_rate_value, .max_rate_value);
+	setmapflag "caspen", mf_bexp,rand($volva_effet == 0 || $volva_effet ==  3 || $volva_effect == 4 ? .max_rate_value : .min_rate_value, .max_rate_value);
+	setmapflag "genasia", mf_bexp,rand($volva_effet == 0 || $volva_effet ==  3 || $volva_effect == 4 ? .max_rate_value : .min_rate_value, .max_rate_value);
+	setmapflag "bilfrost", mf_bexp,rand($volva_effet == 0 || $volva_effet ==  3 || $volva_effect == 4 ? .max_rate_value : .min_rate_value, .max_rate_value);
+	setmapflag "Hallow01", mf_bexp,rand($volva_effet == 0 || $volva_effet ==  3 || $volva_effect == 4 ? .max_rate_value : .min_rate_value, .max_rate_value);
+	return;
+
+ChangeJobRate:
+	setmapflag "Crystilia", mf_jexp,rand($volva_effet == 1 || $volva_effet ==  3 || $volva_effect == 4 ? .max_rate_value : .min_rate_value, .max_rate_value);
+	setmapflag "zodiac", mf_jexp,rand($volva_effet == 1 || $volva_effet ==  3 || $volva_effect == 4 ? .max_rate_value : .min_rate_value, .max_rate_value);
+	setmapflag "melodya", mf_jexp,rand($volva_effet == 1 || $volva_effet ==  3 || $volva_effect == 4 ? .max_rate_value : .min_rate_value, .max_rate_value);
+	setmapflag "mornanie", mf_jexp,rand($volva_effet == 1 || $volva_effet ==  3 || $volva_effect == 4 ? .max_rate_value : .min_rate_value, .max_rate_value);
+	setmapflag "colisland", mf_jexp,rand($volva_effet == 1 || $volva_effet ==  3 || $volva_effect == 4 ? .max_rate_value : .min_rate_value, .max_rate_value);
+	setmapflag "casp_fild01", mf_jexp,rand($volva_effet == 1 || $volva_effet ==  3 || $volva_effect == 4 ? .max_rate_value : .min_rate_value, .max_rate_value);
+	setmapflag "casp_fild02", mf_jexp,rand($volva_effet == 1 || $volva_effet ==  3 || $volva_effect == 4 ? .max_rate_value : .min_rate_value, .max_rate_value);
+	setmapflag "gen_field01", mf_jexp,rand($volva_effet == 1 || $volva_effet ==  3 || $volva_effect == 4 ? .max_rate_value : .min_rate_value, .max_rate_value);
+	setmapflag "gen_field02", mf_jexp,rand($volva_effet == 1 || $volva_effet ==  3 || $volva_effect == 4 ? .max_rate_value : .min_rate_value, .max_rate_value);
+	setmapflag "mysterio", mf_jexp,rand($volva_effet == 1 || $volva_effet ==  3 || $volva_effect == 4 ? .max_rate_value : .min_rate_value, .max_rate_value);
+	setmapflag "revencia", mf_jexp,rand($volva_effet == 1 || $volva_effet ==  3 || $volva_effect == 4 ? .max_rate_value : .min_rate_value, .max_rate_value);
+	setmapflag "crash", mf_jexp,rand($volva_effet == 1 || $volva_effet ==  3 || $volva_effect == 4 ? .max_rate_value : .min_rate_value, .max_rate_value);
+	setmapflag "capitale", mf_jexp,rand($volva_effet == 1 || $volva_effet ==  3 || $volva_effect == 4 ? .max_rate_value : .min_rate_value, .max_rate_value);
+	setmapflag "dep_lb", mf_jexp,rand($volva_effet == 1 || $volva_effet ==  3 || $volva_effect == 4 ? .max_rate_value : .min_rate_value, .max_rate_value);
+	setmapflag "rp_lb", mf_jexp,rand($volva_effet == 1 || $volva_effet ==  3 || $volva_effect == 4 ? .max_rate_value : .min_rate_value, .max_rate_value);
+	setmapflag "tvt_lb", mf_jexp,rand($volva_effet == 1 || $volva_effet ==  3 || $volva_effect == 4 ? .max_rate_value : .min_rate_value, .max_rate_value);
+	setmapflag "br_lb", mf_jexp,rand($volva_effet == 1 || $volva_effet ==  3 || $volva_effect == 4 ? .max_rate_value : .min_rate_value, .max_rate_value);
+	setmapflag "1@dth1", mf_jexp,rand($volva_effet == 1 || $volva_effet ==  3 || $volva_effect == 4 ? .max_rate_value : .min_rate_value, .max_rate_value);
+	setmapflag "1@pi", mf_jexp,rand($volva_effet == 1 || $volva_effet ==  3 || $volva_effect == 4 ? .max_rate_value : .min_rate_value, .max_rate_value);
+	setmapflag "thalys", mf_jexp,rand($volva_effet == 1 || $volva_effet ==  3 || $volva_effect == 4 ? .max_rate_value : .min_rate_value, .max_rate_value);
+	setmapflag "thalys_o", mf_jexp,rand($volva_effet == 1 || $volva_effet ==  3 || $volva_effect == 4 ? .max_rate_value : .min_rate_value, .max_rate_value);
+	setmapflag "thalys_s", mf_jexp,rand($volva_effet == 1 || $volva_effet ==  3 || $volva_effect == 4 ? .max_rate_value : .min_rate_value, .max_rate_value);
+	setmapflag "ins_fild", mf_jexp,rand($volva_effet == 1 || $volva_effet ==  3 || $volva_effect == 4 ? .max_rate_value : .min_rate_value, .max_rate_value);
+	setmapflag "temple_lb", mf_jexp,rand($volva_effet == 1 || $volva_effet ==  3 || $volva_effect == 4 ? .max_rate_value : .min_rate_value, .max_rate_value);
+	setmapflag "caspen", mf_jexp,rand($volva_effet == 1 || $volva_effet ==  3 || $volva_effect == 4 ? .max_rate_value : .min_rate_value, .max_rate_value);
+	setmapflag "genasia", mf_jexp,rand($volva_effet == 1 || $volva_effet ==  3 || $volva_effect == 4 ? .max_rate_value : .min_rate_value, .max_rate_value);
+	setmapflag "bilfrost", mf_jexp,rand($volva_effet == 1 || $volva_effet ==  3 || $volva_effect == 4 ? .max_rate_value : .min_rate_value, .max_rate_value);
+	setmapflag "Hallow01", mf_jexp,rand($volva_effet == 1 || $volva_effet ==  3 || $volva_effect == 4 ? .max_rate_value : .min_rate_value, .max_rate_value);
+	return;
+
+ChangeLootRate:
+		setmapflag "Crystilia", noloot;
+		setmapflag "zodiac", noloot;
+		setmapflag "melodya", noloot;
+		setmapflag "mornanie", noloot;
+		setmapflag "colisland", noloot;
+		setmapflag "casp_fild01", noloot;
+		setmapflag "casp_fild02", noloot;
+		setmapflag "gen_field01", noloot;
+		setmapflag "gen_field02", noloot;
+		setmapflag "mysterio", noloot;
+		setmapflag "revencia", noloot;
+		setmapflag "crash", noloot;
+		setmapflag "capitale", noloot;
+		setmapflag "dep_lb", noloot;
+		setmapflag "rp_lb", noloot;
+		setmapflag "tvt_lb", noloot;
+		setmapflag "br_lb", noloot;
+		setmapflag "1@dth1", noloot;
+		setmapflag "1@pi", noloot;
+		setmapflag "thalys", noloot;
+		setmapflag "thalys_o", noloot;
+		setmapflag "thalys_s", noloot;
+		setmapflag "ins_fild", noloot;
+		setmapflag "temple_lb", noloot;
+		setmapflag "caspen", noloot;
+		setmapflag "genasia", noloot;
+		setmapflag "bilfrost", noloot;
+		setmapflag "Hallow01", noloot;
+	return;
+
+ActivateNoCommand:
+		setmapflag "Crystilia", nocommand;
+		setmapflag "zodiac", nocommand;
+		setmapflag "melodya", nocommand;
+		setmapflag "mornanie", nocommand;
+		setmapflag "colisland", nocommand;
+		setmapflag "casp_fild01", nocommand;
+		setmapflag "casp_fild02", nocommand;
+		setmapflag "gen_field01", nocommand;
+		setmapflag "gen_field02", nocommand;
+		setmapflag "mysterio", nocommand;
+		setmapflag "revencia", nocommand;
+		setmapflag "crash", nocommand;
+		setmapflag "capitale", nocommand;
+		setmapflag "dep_lb", nocommand;
+		setmapflag "rp_lb", nocommand;
+		setmapflag "tvt_lb", nocommand;
+		setmapflag "br_lb", nocommand;
+		setmapflag "1@dth1", nocommand;
+		setmapflag "1@pi", nocommand;
+		setmapflag "thalys", nocommand;
+		setmapflag "thalys_o", nocommand;
+		setmapflag "thalys_s", nocommand;
+		setmapflag "ins_fild", nocommand;
+		setmapflag "temple_lb", nocommand;
+		setmapflag "caspen", nocommand;
+		setmapflag "genasia", nocommand;
+		setmapflag "bilfrost", nocommand;
+		setmapflag "Hallow01", nocommand;
+	return;
+
+ActivateNightmare:
+		setmapflag "Crystilia", mf_nightmaredrop,random,all;
+		setmapflag "zodiac", mf_nightmaredrop,random,all;
+		setmapflag "melodya", mf_nightmaredrop,random,all;
+		setmapflag "mornanie", mf_nightmaredrop,random,all;
+		setmapflag "colisland", mf_nightmaredrop,random,all;
+		setmapflag "casp_fild01", mf_nightmaredrop,random,all;
+		setmapflag "casp_fild02", mf_nightmaredrop,random,all;
+		setmapflag "gen_field01", mf_nightmaredrop,random,all;
+		setmapflag "gen_field02", mf_nightmaredrop,random,all;
+		setmapflag "mysterio", mf_nightmaredrop,random,all;
+		setmapflag "revencia", mf_nightmaredrop,random,all;
+		setmapflag "crash", mf_nightmaredrop,random,all;
+		setmapflag "capitale", mf_nightmaredrop,random,all;
+		setmapflag "dep_lb", mf_nightmaredrop,random,all;
+		setmapflag "rp_lb", mf_nightmaredrop,random,all;
+		setmapflag "tvt_lb", mf_nightmaredrop,random,all;
+		setmapflag "br_lb", mf_nightmaredrop,random,all;
+		setmapflag "1@dth1", mf_nightmaredrop,random,all;
+		setmapflag "1@pi", mf_nightmaredrop,random,all;
+		setmapflag "thalys", mf_nightmaredrop,random,all;
+		setmapflag "thalys_o", mf_nightmaredrop,random,all;
+		setmapflag "thalys_s", mf_nightmaredrop,random,all;
+		setmapflag "ins_fild", mf_nightmaredrop,random,all;
+		setmapflag "temple_lb", mf_nightmaredrop,random,all;
+		setmapflag "caspen", mf_nightmaredrop,random,all;
+		setmapflag "genasia", mf_nightmaredrop,random,all;
+		setmapflag "bilfrost", mf_nightmaredrop,random,all;
+		setmapflag "Hallow01", mf_nightmaredrop,random,all;
+	return;
+
+BackToNormal:
+	//mf_bexp
+	removemapflag "Crystilia", mf_bexp;
+	removemapflag "zodiac", mf_bexp;
+	removemapflag "melodya", mf_bexp;
+	removemapflag "mornanie", mf_bexp;
+	removemapflag "colisland", mf_bexp;
+	removemapflag "casp_fild01", mf_bexp;
+	removemapflag "casp_fild02", mf_bexp;
+	removemapflag "gen_field01", mf_bexp;
+	removemapflag "gen_field02", mf_bexp;
+	removemapflag "mysterio", mf_bexp;
+	removemapflag "revencia", mf_bexp;
+	removemapflag "crash", mf_bexp;
+	removemapflag "capitale", mf_bexp;
+	removemapflag "dep_lb", mf_bexp;
+	removemapflag "rp_lb", mf_bexp;
+	removemapflag "tvt_lb", mf_bexp;
+	removemapflag "br_lb", mf_bexp;
+	removemapflag "1@dth1", mf_bexp;
+	removemapflag "1@pi", mf_bexp;
+	removemapflag "thalys", mf_bexp;
+	removemapflag "thalys_o", mf_bexp;
+	removemapflag "thalys_s", mf_bexp;
+	removemapflag "ins_fild", mf_bexp;
+	removemapflag "temple_lb", mf_bexp;
+	removemapflag "caspen", mf_bexp;
+	removemapflag "genasia", mf_bexp;
+	removemapflag "bilfrost", mf_bexp;
+	removemapflag "Hallow01", mf_bexp;
+	//mf_jexp
+	removemapflag "Crystilia", mf_jexp;
+	removemapflag "zodiac", mf_jexp;
+	removemapflag "melodya", mf_jexp;
+	removemapflag "mornanie", mf_jexp;
+	removemapflag "colisland", mf_jexp;
+	removemapflag "casp_fild01", mf_jexp;
+	removemapflag "casp_fild02", mf_jexp;
+	removemapflag "gen_field01", mf_jexp;
+	removemapflag "gen_field02", mf_jexp;
+	removemapflag "mysterio", mf_jexp;
+	removemapflag "revencia", mf_jexp;
+	removemapflag "crash", mf_jexp;
+	removemapflag "capitale", mf_jexp;
+	removemapflag "dep_lb", mf_jexp;
+	removemapflag "rp_lb", mf_jexp;
+	removemapflag "tvt_lb", mf_jexp;
+	removemapflag "br_lb", mf_jexp;
+	removemapflag "1@dth1", mf_jexp;
+	removemapflag "1@pi", mf_jexp;
+	removemapflag "thalys", mf_jexp;
+	removemapflag "thalys_o", mf_jexp;
+	removemapflag "thalys_s", mf_jexp;
+	removemapflag "ins_fild", mf_jexp;
+	removemapflag "temple_lb", mf_jexp;
+	removemapflag "caspen", mf_jexp;
+	removemapflag "genasia", mf_jexp;
+	removemapflag "bilfrost", mf_jexp;
+	removemapflag "Hallow01", mf_jexp;
+	//lexp
+	removemapflag "Crystilia", noloot;
+	removemapflag "zodiac", noloot;
+	removemapflag "melodya", noloot;
+	removemapflag "mornanie", noloot;
+	removemapflag "colisland", noloot;
+	removemapflag "casp_fild01", noloot;
+	removemapflag "casp_fild02", noloot;
+	removemapflag "gen_field01", noloot;
+	removemapflag "gen_field02", noloot;
+	removemapflag "mysterio", noloot;
+	removemapflag "revencia", noloot;
+	removemapflag "crash", noloot;
+	removemapflag "capitale", noloot;
+	removemapflag "dep_lb", noloot;
+	removemapflag "rp_lb", noloot;
+	removemapflag "tvt_lb", noloot;
+	removemapflag "br_lb", noloot;
+	removemapflag "1@dth1", noloot;
+	removemapflag "1@pi", noloot;
+	removemapflag "thalys", noloot;
+	removemapflag "thalys_o", noloot;
+	removemapflag "thalys_s", noloot;
+	removemapflag "ins_fild", noloot;
+	removemapflag "temple_lb", noloot;
+	removemapflag "caspen", noloot;
+	removemapflag "genasia", noloot;
+	removemapflag "bilfrost", noloot;
+	removemapflag "Hallow01", noloot;
+	//pvpn
+	removemapflag "Crystilia", mf_nightmaredrop;
+	removemapflag "zodiac", mf_nightmaredrop;
+	removemapflag "melodya", mf_nightmaredrop;
+	removemapflag "mornanie", mf_nightmaredrop;
+	removemapflag "colisland", mf_nightmaredrop;
+	removemapflag "casp_fild01", mf_nightmaredrop;
+	removemapflag "casp_fild02", mf_nightmaredrop;
+	removemapflag "gen_field01", mf_nightmaredrop;
+	removemapflag "gen_field02", mf_nightmaredrop;
+	removemapflag "mysterio", mf_nightmaredrop;
+	removemapflag "revencia", mf_nightmaredrop;
+	removemapflag "crash", mf_nightmaredrop;
+	removemapflag "capitale", mf_nightmaredrop;
+	removemapflag "dep_lb", mf_nightmaredrop;
+	removemapflag "rp_lb", mf_nightmaredrop;
+	removemapflag "tvt_lb", mf_nightmaredrop;
+	removemapflag "br_lb", mf_nightmaredrop;
+	removemapflag "1@dth1", mf_nightmaredrop;
+	removemapflag "1@pi", mf_nightmaredrop;
+	removemapflag "thalys", mf_nightmaredrop;
+	removemapflag "thalys_o", mf_nightmaredrop;
+	removemapflag "thalys_s", mf_nightmaredrop;
+	removemapflag "ins_fild", mf_nightmaredrop;
+	removemapflag "temple_lb", mf_nightmaredrop;
+	removemapflag "caspen", mf_nightmaredrop;
+	removemapflag "genasia", mf_nightmaredrop;
+	removemapflag "bilfrost", mf_nightmaredrop;
+	removemapflag "Hallow01", mf_nightmaredrop;
+	//nocom
+	removemapflag "Crystilia", nocommand;
+	removemapflag "zodiac", nocommand;
+	removemapflag "melodya", nocommand;
+	removemapflag "mornanie", nocommand;
+	removemapflag "colisland", nocommand;
+	removemapflag "casp_fild01", nocommand;
+	removemapflag "casp_fild02", nocommand;
+	removemapflag "gen_field01", nocommand;
+	removemapflag "gen_field02", nocommand;
+	removemapflag "mysterio", nocommand;
+	removemapflag "revencia", nocommand;
+	removemapflag "crash", nocommand;
+	removemapflag "capitale", nocommand;
+	removemapflag "dep_lb", nocommand;
+	removemapflag "rp_lb", nocommand;
+	removemapflag "tvt_lb", nocommand;
+	removemapflag "br_lb", nocommand;
+	removemapflag "1@dth1", nocommand;
+	removemapflag "1@pi", nocommand;
+	removemapflag "thalys", nocommand;
+	removemapflag "thalys_o", nocommand;
+	removemapflag "thalys_s", nocommand;
+	removemapflag "ins_fild", nocommand;
+	removemapflag "temple_lb", nocommand;
+	removemapflag "caspen", nocommand;
+	removemapflag "genasia", nocommand;
+	removemapflag "bilfrost", nocommand;
+	removemapflag "Hallow01", nocommand;
+}

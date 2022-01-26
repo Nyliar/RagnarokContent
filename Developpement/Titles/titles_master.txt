@@ -1,0 +1,566 @@
+//
+// [========================================================]
+// [===========         Titles Project           ===========]
+// [========================================================]
+// [ Title Obtention and master Version 1   	           ]
+// [========================================================]
+// [ Original script by: Alayne                             ]
+// [========================================================]
+// [ Description:                                           ]
+// [--------------------------------------------------------]
+// [                                                        ]
+// [========================================================]
+// [ Changelog: (5 last updates)                            ]
+// [--------------------------------------------------------]
+// [                                                        ]
+// [ v0: Creation                      			    ]
+// [                                                        ]
+// [========================================================]
+// [                                                        ]
+// [========================================================]
+
+capitale,232,229,4	script	Title Master::alatitmas	616,{
+	set .@npcname$, "[Grandok]";
+
+	mes .@npcname$;
+	mes "";
+
+if (LANGUAGE == 2)
+{
+	mes "Hello to you, " + strcharinfo(0);
+	if (TITLE_ON == 0)
+	{
+		mes "I'm the Title Master.";
+		mes "Do you know what title is?";
+		mes "A Title is a mark that you've mastered something.";
+		mes "It's a kind of proof, if you prefer, that you've mastered something hard.";
+		mes "You can earn a lot of titles, some easily, and some harder.";
+		set TITLE_ON, 1;
+		doevent "alatitmod::OnInitTitles";
+	}
+	else
+	{
+		mes "Do you wanna change your title?";
+		switch(select("Yes please","No thanks", "Unactivate my title please"))
+		{
+			case 1:
+				mes "Sure. First, try which one you want.";
+				goto OnDisplayTitle;
+				break;
+			case 2:
+				mes "Then I can do nothing for you.";
+				break;
+			case 3:
+				mes "Allright.";
+				set TITLE_ON, 0;
+				break;
+		}
+	}
+	close;
+}
+else if (LANGUAGE == 1)
+{
+	mes "Bonjour à toi, " + strcharinfo(0);
+	if (TITLE_ON == 0)
+	{
+		mes "Je suis le Title Master.";
+		mes "Sais-tu ce qu'un un Title?";
+		mes "Un titre est la preuve que tu as accompli quelque chose.";
+		mes "Tu peux obtenir de nombreux titres. Certains facilement, d'autres plus durement.";
+		set TITLE_ON, 1;
+		doevent "alatitmod::OnInitTitles";
+	}
+	else
+	{
+		mes "Tu veux activer un titre?";
+		switch(select("Oui svp","Non merci", "Désactivez mon titre svp"))
+		{
+			case 1:
+				mes "Bien sûr. Commence par choisir celui que tu veux.";
+				goto OnDisplayTitle;
+				break;
+			case 2:
+				mes "Dans ce cas je ne peux rien pour toi.";
+				break;
+			case 3:
+				mes "Très bien.";
+				set TITLE_ON, 0;
+				break;
+		}
+	}
+	close;
+}
+
+OnConfigureCustom:
+if (LANGUAGE == 2)
+{
+	mes "Oh. You've earned the right to use a custom Title.";
+	mes "Do you want to configure it now?";
+	if (select("Yes","No") == 1)
+	{
+		if (getarg(0) == 5 && FREE_1$ != "")
+		{
+			mes "What do you want to use as first custom Title?";
+			input .@custom$;
+			mes "Are you sure? " + .@custom$;
+			if (select("Yes","No") == 1)
+			{
+				set FREE_1$, .@custom$;
+			}	
+		}
+		if (getarg(0) == 15 && FREE_2$ != "")
+		{
+			mes "What do you want to use as first custom Title?";
+			input .@custom$;
+			mes "Are you sure? " + .@custom$;
+			if (select("Yes","No") == 1)
+			{
+				set FREE_2$, .@custom$;
+			}	
+		}
+		if (getarg(0) == 25 && FREE_3$ != "")
+		{
+			mes "What do you want to use as first custom Title?";
+			input .@custom$;
+			mes "Are you sure? " + .@custom$;
+			if (select("Yes","No") == 1)
+			{
+				set FREE_3$, .@custom$;
+			}	
+		}
+	}
+}
+else if (LANGUAGE == 1)
+{
+	mes "Oh. Tu as obtenu un Titre Libre.";
+	mes "Veux-tu le configurer?";
+	if (select("Oui","Non") == 1)
+	{
+		if (getarg(0) == 5 && FREE_1$ != "")
+		{
+			mes "Que veux-tu choisir?";
+			input .@custom$;
+			mes "Tu es sûr de ça? " + .@custom$;
+			if (select("Oui","Non") == 1)
+			{
+				set FREE_1$, .@custom$;
+			}	
+		}
+		if (getarg(0) == 15 && FREE_2$ != "")
+		{
+			mes "Que veux-tu choisir?";
+			input .@custom$;
+			mes "Tu es sûr de ça? " + .@custom$;
+			if (select("Oui","Non") == 1)
+			{
+				set FREE_2$, .@custom$;
+			}	
+		}
+		if (getarg(0) == 25 && FREE_3$ != "")
+		{
+			mes "Que veux-tu choisir?";
+			input .@custom$;
+			mes "Tu es sûr de ça? " + .@custom$;
+			if (select("Oui","Non") == 1)
+			{
+				set FREE_3$, .@custom$;
+			}	
+		}
+	}
+}
+	return;
+
+OnDisplayTitle:
+	next;
+
+	explode(.@titles$,TITLES$,"#");
+	set .@countTitles, getarraysize(.@titles$);
+	if (.@countTitles == 5 || .@countTitles == 15 || .@countTitles == 25)
+	{
+		callsub "OnConfigureCustom", .@countTitles;
+	}
+
+	for (set .@i,0; .@i<getarraysize(.@titles$) - 6; set .@i,.@i+2)
+	{
+		if (.@titles$[.@i+1] == "1")
+		{	
+			set .@menu$, .@menu$ + ( .@i ? ":" : "" ) + $titles$[.@titles$[.@i]];
+			if (getarraysize(.@possibleTitles) == 0)
+				setarray .@possibleTitles[0], atoi(.@titles$[.@i]);
+			else 
+				set .@possibleTitles[getarraysize(.@possibleTitles)], atoi(.@titles$[.@i]);
+		}
+	}
+
+	if (FREE_1$ != "")
+	{	
+		set .@menu$, .@menu$ + ( .@i ? ":" : "" ) + FREE_1$;
+		set .@possibleTitles[getarraysize(.@possibleTitles)], $titles$[getarraysize(.@titles$) - 5];
+	}
+	if (FREE_2$ != "")
+	{	
+		set .@menu$, .@menu$ + ( .@i ? ":" : "" ) + FREE_2$;
+		set .@possibleTitles[getarraysize(.@possibleTitles)], $titles$[getarraysize(.@titles$) - 3];
+	}
+	if (FREE_3$ != "")
+	{	
+		set .@menu$, .@menu$ + ( .@i ? ":" : "" ) + FREE_3$;
+		set .@possibleTitles[getarraysize(.@possibleTitles)], $titles$[getarraysize(.@titles$) - 1];
+	}
+	set .@choice, select(.@menu$) - 2;
+	mes .@npcname$;
+	mes "";
+
+	if (.@choice == (getarraysize(.@titles$) - 5))
+		set .@choose$, FREE_1$;
+	else if (.@choice == (getarraysize(.@titles$) - 15))
+		set .@choose$, FREE_2$;
+	else if (.@choice == (getarraysize(.@titles$) - 25))
+		set .@choose$, FREE_3$;
+	else
+		set .@choose$, $titles$[.@possibleTitles[.@choice]]; 
+
+
+if (LANGUAGE == 1)
+{
+	mes "Tu as donc choisir le titre " + .@choose$ + ", c'est ça?";
+	if(select("Oui","Non") == 1)
+	{
+		mes "Très bien.";
+		set CHOOSEN_TITLE$, .@choose$;
+		atcommand "@fakename "+ CHOOSEN_TITLE$ + strcharinfo(0);
+	}
+	else
+	{
+		mes "Parfait.";
+		goto OnDisplayTitle;
+	}
+}
+else if (LANGUAGE == 2)
+{
+	mes "So you've choosen the Title " + .@choose$ + ", right?";
+	if(select("Yes","No") == 1)
+	{
+		mes "Allright then.";
+		set CHOOSEN_TITLE$, .@choose$;
+		atcommand "@fakename "+ CHOOSEN_TITLE$ + strcharinfo(0);
+	}
+	else
+	{
+		mes "Allright.";
+		goto OnDisplayTitle;
+	}
+}
+	close;
+}
+
+-	script	Title::alatitmod	-1,{
+	end;
+
+OnInit:
+//0 is normal
+//1 is PvP
+set .titleMode, 0;
+set $killing,0; //PK Mode after last title (1 = On / 0 = Off)
+setarray .mapaspvp$[0],"guild_vs3"; //Your PvP Maps
+setarray $titles$[0],"[The Undying]","[The Immortal]","[The Killer]","[Shinigami]","[God of Death]","[Hat Master]",
+"[Suprem Hat Maker]","[Secret Hat Maker]","[Prima Enigma]","[Fae Helper]","[Lady Fae's Savior]","[Jormungand Seeker]",
+"[Veteran Adventurer]","[Fehu Helper]","[Yggdrasil Climber]","[Hidden Piece Fighter]","[Mimir Hunter]","[Emperium Breaker]",
+"[Sex Undecided]","[Shenron Caller]","[Poring Finder]","[Poring Seeker]","[Survivor Helper]","[Pirate Killer]",
+"[Treasure Hunter]","[Captain Hunter]","[Mob Finder]","[About to Explode]","[Steel Soul]","[Double Master]","[Triple Master]","[True Master]","[Head Master]",
+"[Mercenary]","[Walking Dead]","[Hassanshin]","[Shadow Hunter]","[Tournament Winner]","[Head Hunter]","[MvP Hunter]",
+"[Arena Champion]","[Almost Poring]","[Astral Hero]","[Garden Liberator]";
+setarray .ammount[0],0,5,10,15,20,30,40,50;
+	end;
+
+OnInitTitles:
+	for (set .@i,0;.@i<getarraysize($titles$); set .@i,.@i+1)
+	{
+		if (.@i == 0)
+		{
+			set TITLES$, .@i + "#0";
+		}
+		else
+		{
+			set TITLES$, TITLES$ + "#" + .@i + "#0";
+		}
+	}
+	end;
+
+OnWhisperGlobal:
+	bonus bStr, 100;
+	end;
+
+OnPCKillEvent:
+	if (.titleMode == 1)
+	{
+		getmapxy(@mapa$,@x,@y,0);
+    		for(set @c,0; @c < getarraysize(.@mapaspvp$); set @c,@c+1)
+		{
+    			if(@mapa$ == .@mapaspvp$[@c] && killedrid != getcharid(0))
+    			{
+    				set killer,killer+1;
+      				for(set @d,0; @d < getarraysize(.ammount); set @d,@d+1)
+				{
+					if(killer == .ammount[@d])
+					{
+						set title,@d;
+						if(title != getarraysize($titles$)) dispbottom "You unlocked the title: "+$titles$[title];
+						if(title == getarraysize($titles$) && $killing == 1) dispbottom "You unlocked the last title: "+$titles$[title]+" and you are now in PK mode";
+					}
+				}
+   		 	}
+		}
+	}
+	else
+	{
+		if (KILLCOUNT < 150)
+		{
+			if (KILLEDCOUNT == 0)
+			{
+				set KILLCOUNT, KILLCOUNT + 1;
+				if (UNDEADCOUNT < 100)
+					set UNDEADCOUNT, UNDEADCOUNT + 1;
+			}
+			else
+			{
+				set KILLEDCOUNT, 0;
+				if (UNDEADCOUNT < 100)
+					set UNDEADCOUNT, UNDEADCOUNT + 1;
+			}	
+			if (UNDEADCOUNT == 50)
+			{
+				callfunc "AddTitle", "[The Undying]";
+			}
+			else if (UNDEADCOUNT == 100)
+			{
+				callfunc "AddTitle", "[The Immortal]";
+			}
+		}
+		else if (KILLCOUNT == 50)
+		{
+			callfunc "AddTitle", "[The Killer]";
+		}
+		else if (KILLCOUNT == 100)
+		{
+			callfunc "AddTitle", "[Shinigami]";
+		}
+		else if (KILLCOUNT == 150)
+		{
+			callfunc "AddTitle", "[God of Death]";
+		}
+	}
+
+	end;
+
+OnPCLoginEvent:
+	if ($count_hat_make == 50)
+	{
+		callfunc "AddTitle", "[Hat Master]";
+	}
+	else if ($count_hat_make == 100)
+	{
+		callfunc "AddTitle", "[Suprem Hat Maker]";
+	}
+	
+	if (quest_last == 2)
+	{
+		callfunc "AddTitle", "[Secret Hat Maker]";
+	}
+
+	if (questenigma == 10)
+	{
+		callfunc "AddTitle", "[Prima Enigma]";
+	}
+
+	if (XP_Q == 12)
+	{
+		callfunc "AddTitle", "[Fae Helper]";
+	}
+
+	if (#complete >= 1)
+	{
+		callfunc "AddTitle", "[Lady Fae's Savior]";
+	}
+
+	if (#quetemysterio == 5)
+	{
+		callfunc "AddTitle", "[Jormungand Seeker]";
+	}
+
+	if (Q_NAH == 11)
+	{
+		callfunc "AddTitle", "[Veteran Adventurer]";
+	}
+
+	if (checkquest(60368, HUNTING) == 2)
+	{
+		callfunc "AddTitle", "[Fehu Helper]";
+	}
+
+	if ($favor_elem_quest == 3)
+	{
+		callfunc "AddTitle", "[Yggdrasil Climber]";
+	}
+
+	if (HIDDEN_PIECE == 1)
+	{
+		callfunc "AddTitle", "[Hidden Piece Fighter]";
+	}
+
+	if (MIMIR_KILLER == 1)
+	{
+		callfunc "AddTitle", "[Mimir Hunter]";
+	}
+
+	if (EMP_BREAKER == 1)
+	{
+		callfunc "AddTitle", "[Emperium Breaker]";
+	}
+
+	if (CHANGEDSEX >= 1)
+	{
+		callfunc "AddTitle", "[Sex Undecided]";
+	}
+
+	if (SHENRON_USER == 1)
+	{
+		callfunc "AddTitle", "[Shenron Caller]";
+	}
+
+	if (PORING_FINDER == 1)
+	{
+		callfunc "AddTitle", "[Poring Finder]";
+	}
+
+	if (PORING_SEEKER == 1)
+	{
+		callfunc "AddTitle", "[Poring Seeker]";
+	}
+
+	if (SURVIVOR == 1)
+	{
+		callfunc "AddTitle", "[Survivor Helper]";
+	}
+
+	if (PIRATE_KILLER == 1)
+	{
+		callfunc "AddTitle", "[Pirate Killer]";
+	}
+
+	if (TREASURE_MAP == 1)
+	{
+		callfunc "AddTitle", "[Treasure Map Owner]";
+	}
+
+	if (CAPTAIN_KILLER == 1)
+	{
+		callfunc "AddTitle", "[Captain Hunter]";
+	}
+
+	if (EGO_ID != 0)
+	{
+		callfunc "AddTitle", "[Steel Soul]";
+	}
+
+	if (MULTI_CLASS_COUNT == 1)
+	{
+		callfunc "AddTitle", "[Double Master]";
+	}
+	else if (MULTI_CLASS_COUNT == 2)
+	{
+		callfunc "AddTitle", "[Triple Master]";
+	}
+	else if (MULTI_CLASS_COUNT == 3)
+	{
+		callfunc "AddTitle", "[True Master]";
+	}
+	else if (MULTI_CLASS_COUNT >= 4)
+	{
+		callfunc "AddTitle", "[Head Master]";
+	}
+
+	if (DISGUISE_FINDER == 1)
+	{
+		callfunc "AddTitle", "[Mob Finde]";
+	}
+
+	if (CLUCKER == 1)
+	{
+		callfunc "AddTitle", "[About to Explode]";
+	}
+
+	if (TITLE_ON == 1 && CHOOSEN_TITLE$ != "")
+	{
+		atcommand "@fakename "+ CHOOSEN_TITLE$ + strcharinfo(0);
+	}
+	end;
+
+CheckTitleCount:
+	explode(.@titles$,TITLE$,"#");
+	if (getarraysize(.@titles$) == 5)
+	{
+		callfunc "AddTitle", "[Free_1]";
+	}
+	else if (getarraysize(.@titles$) == 15)
+	{
+		callfunc "AddTitle", "[Free_2]";
+	}
+	else if (getarraysize(.@titles$) == 25)
+	{
+		callfunc "AddTitle", "[Free_3]";
+	}
+	dispbottom "You've earned a special customizable title, go see the Title Master to initialize it.";
+	end;
+
+OnPCDieEvent:
+	if (.titleMode == 1)
+	{
+    		getmapxy(@mapa$,@x,@y,0);
+    		for(set @c,0; @c < getarraysize(.@mapaspvp$); set @c,@c+1)
+    		if(@mapa$ == .@mapaspvp$[@c])
+    		{
+    			if(KILLEDCOUNT > 0) set KILLEDCOUNT,KILLEDCOUNT - 1;
+    		}
+	}
+	else
+	{
+		if (DIECOUNT < 50)
+		{
+			set DIECOUNT, DIECOUNT + 1;	
+		}
+		else
+		{
+			callfunc "AddTitle", "[Walking Dead]";
+		}
+	}
+	end;
+}
+
+
+function	script	AddTitle	{
+	set .@title$, getarg(0);
+	explode(.@titles$,TITLE$,"#");
+	for (set .@i,0; .@i<getarraysize($titles$); set .@i,.@i+1)
+	{
+		if ($titles$[.@i] == .@title$)
+			set .@idTitle, .@i;
+	}
+
+	explode(.@titles$, TITLES$, "#");
+	if (atoi(.@titles$[.@idTitle * 2 + 1]) == 0)
+		set .@titles$[.@idTitle * 2 + 1], "1";
+
+	for (set .@i,0; .@i<getarraysize(.@titles$); set .@i,.@i+2)
+	{
+		if (.@i == 0)
+		{
+			set TITLES$, .@titles$[.@i] + "#" + .@titles$[.@i+1];
+		}
+		else
+		{
+			set TITLES$, TITLES$ + "#" + .@titles$[.@i] + "#" + .@titles$[.@i+1];
+		}
+	}
+	return;
+}

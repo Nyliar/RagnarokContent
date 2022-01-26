@@ -1,0 +1,323 @@
+//mysterio
+mysterio,54,82,7	script	Archéologue#arch2	702,{
+	set .@npcname$, "^0000FF[Archéologue]^000000";
+	mes .@npcname$;
+	mes "";
+	
+	if(LANGUAGE == 2)
+	{
+		if (#quetemysterio == 1)
+		{
+			mes "Hun!";
+			mes "So you're also a Prima? Welcome on Mysterio.";
+			mes "I'm the only other person in world which raise over the Prima.";
+			mes "I was sent here to break the Mysterio's secret.";
+			mes "And I found it!";
+			next;
+			mes "The problem is that secret is to huge for anybody else.";
+			mes "If you wanna found it, you'll have to search.";
+			mes "I'll give you 5 minutes. This delay done, I'll considered you're too weak.";
+			mes "And then...You'll have to fight for your life.";
+			addtimer 300000, strnpcinfo(3)+"::OnTimeElapse";
+			set #quetemysterio, 2;
+			set #correct, 0;
+		}
+		else if (#quetemysterio == 4)
+		{
+			mes "Looks like you passed the first step.";
+			mes "I can now tell you where to go for next step.";
+			mes "Jormungand speak by my mouth. You'll have to find his Shadow.";
+			mes "He's right on top of the Yggdrasil.";
+			mes "Climb the Rainbow. If you don't understand, I can do nothing for you.";
+		}
+		else if (#quetemysterio == 5)
+		{
+			mes "Looks like you find the Jormungand's Lair.";
+			mes "Allright. You can now enter. You're ready to fight against him.";
+			mes "Good luck.";
+			enablenpc "mysjorlair";
+		}
+		else if (#quetemysterio == 2)
+		{
+			mes "You don't even understand how it works?";
+			mes "You can't succeed then...";
+			set #lastactivate, 0;
+			set #correct, 0;
+		}
+		else if (#quetemysterio == 3)
+			set #quetemysterio, 2;
+		else
+			mes "* ~ Thinking ~ *";
+	}
+	else if (LANGUAGE == 1)
+	{
+		if (#quetemysterio == 1)
+		{
+			mes "Hun!";
+			mes "Tu es donc toi aussi un Prima? Bienvenue sur Mysterio.";
+			mes "Je suis la seule autre personne au monde à avoir dépasser Prima.";
+			mes "On m'a envoyé ici pour percer le secret de Mysterio.";
+			mes "Et j'ai trouvé!";
+			next;
+			mes "Le problème, c'est que ce secret est trop gros pour qui que ce soit d'autre.";
+			mes "Si tu veux en profiter, va falloir chercher.";
+			mes "Je te donne 5 minutes. Passé ce délai, je te considèrerais trop faible.";
+			mes "A partir de là...A toi de te protéger contre les forces qui se déchaîneront.";
+			addtimer 300000, strnpcinfo(3)+"::OnTimeElapse";
+			set #quetemysterio, 2;
+			set #correct, 0;
+		}
+		else if (#quetemysterio == 4)
+		{
+			mes "On dirait que tu as passé la première étape.";
+			mes "Je peux donc te dire où tu dois te rendre pour la suite.";
+			mes "Jormungand parle à travers moi. Tu peux donc aller trouver son Ombre.";
+			mes "Il se trouve tout en haut de l'Yggdrasil.";
+			mes "Pour le voir, monte en haut de l'Arc en Ciel. Si tu ne comprends pas, je ne peux pas t'aider.";
+		}
+		else if (#quetemysterio == 5)
+		{
+			mes "On dirait bien que tu as découvert l'antre de Jormungand, le Serpent Monde.";
+			mes "Soit. Je te laisse entrer si tu le souhaites. Tu es prêt à l'affronter.";
+			mes "Bonne chance.";
+			enablenpc "mysjorlair";
+		}
+		else if (#quetemysterio == 2)
+		{
+			mes "Tu ne comprends pas comment ca marche?";
+			mes "Tu n'y arriveras jamais...";
+			set #lastactivate, 0;
+			set #correct, 0;
+		}
+		else if (#quetemysterio == 3)
+			set #quetemysterio, 2;
+		else
+			mes "* ~ Pensive ~ *";
+	}
+	close;
+
+OnTimeElapse:
+	if (#correct < 10)
+	{
+		if(LANGUAGE == 2)
+		{
+				dispbottom .@npcname + ": You failed...Bad luck!";
+		}
+		else if (LANGUAGE == 1)
+		{
+				dispbottom .@npcname + ": tu as échoué. Tant pis pour toi.";
+		}
+		//areamonster ;
+		setmapflag "mysterio", "mf_noteleport";
+		setmapflag "mysterio", "mf_nowarp";
+	}
+	close;
+}
+
+
+mysterio,83,86,5	script	Weird Statue#1::etrsta1	111,{
+	if (#quetemysterio >= 1)
+	{	
+		if (#lastactivate == (atoi(strnpcinfo(2)) - 1))
+		{
+			set #correct, #correct+1;
+			set #lastactivate, atoi(strnpcinfo(2));
+		}
+		else 
+		{
+			set #correct, 0;
+			set #lastactivate, 0;
+		}
+		if(LANGUAGE == 2)
+		{		
+			mes "Me: " + atoi(strnpcinfo(2));
+			mes "You: " + #correct;
+		}
+		else if (LANGUAGE == 1)
+		{
+			mes "Moi: " + atoi(strnpcinfo(2));
+			mes "Toi: " + #correct;
+		}
+
+		if (#correct == 10)
+		{
+			next;
+			if(LANGUAGE == 2)
+			{
+				mes "Congratulation. You've successfully fill the ordeal to access to the World Snake Lair.";
+				set #quetemysterio, 3;
+				mes "To enter in it, you'll now have to prove your valor.";
+				mes "You'll have to fight and win against the Jormungand monsters.";
+				mes "Get prepared.";
+			}
+			else if (LANGUAGE == 1)
+			{
+				mes "Félicitation. Vous avez accompli avec brio l'épreuve pour accéder à l'Antre du Serpent Monde.";
+				set #quetemysterio, 3;
+				mes "Mais pour entrer, vous devrez encore prouver votre valeur.";
+				mes "Vous devrez vous battre et vaincre les monstres de Jormungand.";
+				mes "Préparez-vous.";
+			}
+			killmonsterall "npc2";
+			warp "npc2", 0, 0;
+			setmapflag "npc2", "mf_noteleport";
+			setmapflag "npc2", "mf_nowarp";
+			areamonster "npc2",30,69,69,29,"Jormungand Henchman",1372,20,"etrsta1::OnSbireDead";
+		}
+	}
+	else
+	{
+		if(LANGUAGE == 2)
+		{
+			mes "It a rock statue.";	
+			mes "It looks weird, but you can't find anything suspicious.";
+		}
+		else if (LANGUAGE == 1)
+		{
+			mes "C'est une statue de pierre.";	
+			mes "Elle a l'air étrange, mais vous ne trouvez rien de particulier.";
+		}
+	}
+	close;
+
+OnSbireDead:
+	set .@mob_dead_num,mobcount("npc2", "etrsta1::OnSbireDead");
+	if (.@mob_dead_num < 1)
+	{
+		atcommand "!cleanmap";
+		if(LANGUAGE == 2)
+		{
+			dispbottom "[Lair Guardian]: Congratulation. You can continue your accession to the Lair.";
+			dispbottom "[Lair Guardian]: You'll now have to find me.";
+		}
+		else if (LANGUAGE == 1)
+		{
+			dispbottom "[Lair Guardian]: Félicitation, vous pouvez continuer votre ascension vers l'Antre.";
+			dispbottom "[Lair Guardian]: Vous devrez maintenant me trouver.";
+		}
+
+		set #quetemysterio, 4;
+		mapwarp "npc2", "mysterio", 0, 0;
+	}
+	else
+	{
+		if(LANGUAGE == 2)
+		{
+			dispbottom "[Lair Guardian]: There's still " + .@mob_dead_num + "!";
+		}
+		else if (LANGUAGE == 1)
+		{
+			dispbottom "[Lair Guardian]: Il en reste " + .@mob_dead_num + "!";
+		}
+	}
+	end;
+
+}
+
+mysterio,53,85,5	script	Archeologist#arch1::mysarc	111,{
+	set .@npcname$, "[Archeologist]";
+
+	mes .@npcname$;
+	if(LANGUAGE == 2)
+	{
+		mes "Hello to you.";
+		mes "I've come here to learn about the mysterious statue you can find all around the island.";
+		mes "But I haven't find the smallest clue...";
+		mes "I supposed I'm not smart enought after all...";
+	}
+	else if (LANGUAGE == 1)
+	{
+		mes "Bonjour à toi.";
+		mes "Je suis venu ici pour en apprendre sur les mystérieuses statues de cette île.";
+		mes "Mais je n'ai pas trouvé la plus petite preuve...";
+		mes "Je suppose que je ne suis pas assez intelligent finalement...";
+	}
+
+	if (#quetemysterio == 0)
+		set #quetemysterio, 1;
+	close;
+}
+
+mysterio,65,68,0	duplicate(etrsta1)	Weird Statue#2::etrsta2	111
+mysterio,72,48,0	duplicate(etrsta1)	Weird Statue#3::etrsta3	111
+mysterio,50,58,0	duplicate(etrsta1)	Weird Statue#4::etrsta4	111
+mysterio,82,72,0	duplicate(etrsta1)	Weird Statue#5::etrsta5	111
+mysterio,69,85,0	duplicate(etrsta1)	Weird Statue#6::etrsta6	111
+mysterio,46,76,0	duplicate(etrsta1)	Weird Statue#7::etrsta7	111
+mysterio,67,44,0	duplicate(etrsta1)	Weird Statue#8::etrsta8	111
+mysterio,85,55,0	duplicate(etrsta1)	Weird Statue#9::etrsta9	111
+mysterio,68,66,0	duplicate(etrsta1)	Weird Statue#10::etrsta10	111
+
+1@mist,190,259,5	script	Jormungand's Shadow::odj	2629,{
+	set .@npcname$, "[Jormungand]";
+	mes "";
+	mes .@npcname$;
+	if (#quetemysterio == 4)
+	{
+		if(LANGUAGE == 2)
+		{
+			mes "...I'm Jormungand, the World Snake.";
+			mes "I'm the start and the end, surrounding the world in my ankles.";
+			mes "I can see in your heart, and read in your soul.";
+			mes "You want to know the World. I can bring you answers.";
+			mes "But more than everything, I want to kill you. From all the Wrath my Godly Father gave me.";
+			mes "If you want the truth, find me. If you wanna die, find me.";
+			mes "If you want strength, find me. If you want power, find yourself.";	
+		}
+		else if (LANGUAGE == 1)
+		{
+			mes "...Je suis Jormungand, le Serpent Monde.";
+			mes "Je suis le début et la fin, entourant le monde de mes anneaux.";
+			mes "Je peux voir dans ton coeur, et lire ton âme.";
+			mes "Tu veux connaître le monde? Je peux t'apporter des réponses.";
+			mes "Mais plus que tout, je veux te tuer. De toute la haine que m'a donné mon divin géniteur.";
+			mes "Tu veux la vérité? Trouve moi. Tu veux mourir? Trouve moi.";
+			mes "Tu veux la force? Trouve moi. Tu veux le pouvoir? Trouve toi toi-même.";	
+		}
+		next;
+		monster "npc2",69,30,"Lair Guardian",2655,1,"odj::OnOmbreDie";
+		warp "npc2", 0, 0;
+	}
+	else
+	{
+		if(LANGUAGE == 2)
+		{
+			mes "Leave! NOW!";
+		}
+		else if (LANGUAGE == 1)
+		{
+			mes "Va-t-en. MAINTENANT!";
+		}
+	}
+	close;
+
+OnOmbreDie:
+	if(LANGUAGE == 2)
+	{
+		mapannounce "npc2", "Great. You're ready for the next step. Come and find me.",0;
+		mapannounce "npc2", "I'll wait you.",0;
+	}
+	else if (LANGUAGE == 1)
+	{
+		mapannounce "npc2", "Parfait, tu es prêt pour la prochaine étape. Viens à moi.",0;
+		mapannounce "npc2", "Je t'attendrais.",0;
+	}
+	set #quetemysterio, 5;
+	mapwarp "npc2", "mysterio", 0, 0;
+}
+
+mysterio,84,54,5	script	Jormungand Lair::mysjorlair	45,2,2,{
+	end;
+
+OnTouch:
+	if (#quetemysterio == 5)
+	{
+		warp "casp_step",34,165;	
+		disablenpc "mysjorlair";
+	}
+	end;
+
+OnInit:
+	disablenpc "mysjorlair";
+	end;
+}

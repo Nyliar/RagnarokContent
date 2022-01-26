@@ -1,0 +1,559 @@
+//event communautaire
+-	script	Event Board::ev_c_b_	-1,{
+	
+	switch(select("Voir les évènements", ( getgmlevel() < 80 )?"":"^FF0000Ajouter un évènement^000000" ))
+	{
+		case 1:
+			mes "["+ strnpcinfo(1) +"]";
+
+			if (.tmp_ev_b_n_$[0] == "" 
+			|| (.tmp_ev_b_da_e_$[0] != ("" + gettime(5) + "/" + gettime(6))
+			|| (.tmp_ev_b_da_e_$[0] == ("" + gettime(5) + "/" + gettime(6) && .tmp_ev_b_t_e != ("" + gettime(3) + ":" + gettime(2)))
+			{
+				mes "Il n'y a aucun event communautaire en cours actuellement.";
+				mes "Revenez voir de temps en temps.";
+			}
+			else
+			{
+				mes "Il y a actuellement un event communotaire en cours.";
+				mes "";
+			
+				mes "Nom de l'évènement: " + .tmp_ev_b_n_$[0] + ",";
+				mes "";
+				mes "Le: " + .tmp_ev_b_da_$[0] + " à " + .tmp_ev_b_t_$[0] + ",";
+				mes "";
+				mes "Jusqu'au: " + .tmp_ev_b_da_e_$[0] + " à " + .tmp_ev_b_t_e_$[0] + ",";
+				mes "";
+				mes "Description: " + .tmp_ev_b_d_$[0] + ",";
+				mes "";
+				mes "Restriction éventuelle: " + .tmp_ev_b_re_$[0];
+				mes "";
+				mes "Nombre de participations demandées: " + .tmp_ev_b_tc_$[0] + ",";
+				mes "";
+				mes "Nombre de participations actuel: " + .tmp_ev_b_c_$[0] + ".";
+				mes "";
+				mes "Nombre de participations restantes: " + .tmp_ev_b_rest_$[0] + ".";
+				mes "";
+				mes "Récompense pour la communauté: " + .tmp_ev_b_rew_$[0] + ".";
+				next;
+			}
+			break;
+		case 2:
+			if ( getgmlevel() < 99 && getgmlevel() > 60) end;
+			while (1) 
+			{
+				if (getarraysize(.tmp_ev_b_n_$)<5)
+				{
+					mes "["+ strnpcinfo(1) +"]";
+					mes "Que souhaitez vous faire?";
+					switch(select("Ajouter un évènement","Editer un évènement","Supprimer un évènement"))
+					{
+						case 1:
+							callsub L_Input_Name, getarraysize(.tmp_ev_b_n_$);
+							next;
+							callsub L_Input_Desc, getarraysize(.tmp_ev_b_d_$);
+							next;
+							callsub L_Input_Date_Begin, getarraysize(.tmp_ev_b_da_$);
+							next;
+							callsub L_Input_Date_End, getarraysize(.tmp_ev_b_da_$);
+							next;
+							callsub L_Input_Hour_Begin, getarraysize(.tmp_ev_b_t_$);
+							next;
+							callsub L_Input_Hour_End, getarraysize(.tmp_ev_b_t_$);
+							next;
+							callsub L_Input_Res, getarraysize(.tmp_ev_b_re_$);
+							next;
+							callsub L_Input_Total, getarraysize(.tmp_ev_b_tc_$);
+							next;
+							callsub L_Input_Count, getarraysize(.tmp_ev_b_c_$);
+							next;
+							callsub L_Input_Rest, getarraysize(.tmp_ev_b_rest_$);
+							next;
+							callsub L_Input_Reward, getarraysize(.tmp_ev_b_rew_$);
+							next;
+							mes "["+ strnpcinfo(1) +"]";
+							mes "L'évènement à bien été enregistré";
+							callsub L_Prepare_Event;
+							break;
+						case 2:
+							mes "["+ strnpcinfo(1) +"]";
+							mes "Modification de l'event " + .tmp_ev_b_n_$[0];
+							set .@val, 0;
+							next;
+							callsub L_Update_Even;
+							break;
+						case 3:
+							mes "["+ strnpcinfo(1) +"]";
+							mes "Suppression de l'event " + .tmp_ev_b_n_$[0];
+
+							deletearray .tmp_ev_b_n_$[0],1;
+							deletearray .tmp_ev_b_d_$[0],1;
+							deletearray .tmp_ev_b_da_$[0],1;
+							deletearray .tmp_ev_b_da_e_$[0],1;
+							deletearray .tmp_ev_b_t_$[0],1;
+							deletearray .tmp_ev_b_t_e_$[0],1;
+							deletearray .tmp_ev_b_re_$[0],1;
+							deletearray .tmp_ev_b_tc_$[0],1;
+							deletearray .tmp_ev_b_c_$[0],1;
+							deletearray .tmp_ev_b_rest_$[0],1;
+							deletearray .tmp_ev_b_rew_$[0],1;
+
+							mes "L'évènement a bien été supprimé.";
+							break;
+					}
+				}
+				else
+				{
+					mes "["+ strnpcinfo(1) +"]";
+					mes "La board ne peut recevoir qu'un seul évènement communautaire.";
+					mes "Veuillez effacer les anciens messages avant de tenter d'en ajouter un nouveau.";
+				}
+				break;
+			}
+	}
+	close;
+	
+L_Input_Name:
+	mes "["+ strnpcinfo(1) +"]";
+	set @tmp$,"";
+	mes "Veuillez entrer le nom de votre event (60 caractères max):";
+	input @tmp$;
+	if ( getstrlen(.@tmp$) > 60 ) {
+		mes "Le nom de l'Event ne peux contenir plus de 60 caractères";
+		next;
+	}
+	else if ( compare ( .@tmp$, ":" ) || compare ( .@tmp$, "^" ) ) {
+		mes "Le nom de l'Event ne doit pas contenir les caractères suivants";
+		mes "-> : <- deux points";
+		mes "-> ^ <- accent circonflex";
+		next;
+	}
+	mes "Nom de l'Event: " + @tmp$ + ". Confirmer?";
+	switch(select("Oui:Non"))
+	{
+		case 1:
+			set .tmp_ev_b_n_$[getarg(0)], @tmp$;
+			break;
+		case 2:
+			break;
+	}
+	return;
+	
+L_Input_Desc:
+	mes "["+ strnpcinfo(1) +"]";
+	mes "Veuillez entrer une description courte de votre event (250 caractères max):";
+	set .@tmp1$, "";
+	set .@tmp2$, "";
+	set .@tmp3$, "";
+	set .@tmp4$, "";
+	set .@tmp5$, "";
+	set .@tmp, 0;
+	do {
+			set .@tmp, .@tmp +1 ;
+			input getd(".@tmp"+ .@tmp +"$");
+	} while ( getstrlen( getd(".@tmp"+ .@tmp +"$") ) > 50 && .@tmp < 5 );
+	mes "Description de l'Event: " + .@tmp1$ + .@tmp2$ + .@tmp3$ + .@tmp4$ + .@tmp5$;
+	mes "Confirmer?";
+	switch(prompt("Oui:Non"))
+	{
+		case 1:
+			set .tmp_ev_b_d_$[getarg(0)], .@tmp1$ + .@tmp2$ + .@tmp3$ + .@tmp4$ + .@tmp5$;
+			break;
+		case 2:
+			break;
+		case 255:
+			close;
+	}
+	return;
+
+L_Input_Date_Begin:
+	mes "["+ strnpcinfo(1) +"]";
+	mes "Veuillez entrer une date pour votre event:";
+	set .@tmp$, "";
+	set .@tmp1, 0;
+	set .@tmp2, 0;
+	mes "Jour:";
+	input .@tmp1, 0, 31;
+	mes "Mois:";
+	input .@tmp2, 0, 12;
+	if (getstrlen(.@tmp1) == 1)
+		set .@tmp$, "0"+.@tmp1+"/";
+	else
+		set .@tmp$, ""+.@tmp1+"/";
+	if (getstrlen(.@tmp2) == 1)
+		set .@tmp$, .@tmp$+"0"+.@tmp2;
+	else
+		set .@tmp$, .@tmp$+""+.@tmp2;
+	mes "Date de l'évènement: " + .@tmp$; 
+	mes "Confirmer?";
+	switch(prompt("Oui:Non"))
+	{
+		case 1:
+			set .tmp_ev_b_da_$[getarg(0)], .@tmp$;
+			break;
+		case 2:
+			break;
+		case 255:
+			deletearray .tmp_ev_b_d_$[getarg(0)], 1;
+			close;
+	}
+	return;
+
+L_Input_Date_End:
+	mes "["+ strnpcinfo(1) +"]";
+	mes "Veuillez entrer une date pour votre event:";
+	set .@tmp$, "";
+	set .@tmp1, 0;
+	set .@tmp2, 0;
+	mes "Jour:";
+	input .@tmp1, 0, 31;
+	mes "Mois:";
+	input .@tmp2, 0, 12;
+	if (getstrlen(.@tmp1) == 1)
+		set .@tmp$, "0"+.@tmp1+"/";
+	else
+		set .@tmp$, ""+.@tmp1+"/";
+	if (getstrlen(.@tmp2) == 1)
+		set .@tmp$, .@tmp$+"0"+.@tmp2;
+	else
+		set .@tmp$, .@tmp$+""+.@tmp2;
+	mes "Date de l'évènement: " + .@tmp$; 
+	mes "Confirmer?";
+	switch(prompt("Oui:Non"))
+	{
+		case 1:
+			if (.@tmp$ < .tmp_ev_b_da_$[0])
+			{
+				mes "La date de fin ne peux pas être inférieure à celle de début.";
+				goto L_Input_Date_End;
+			}
+			set .tmp_ev_b_da_e_$[getarg(0)], .@tmp$;
+			break;
+		case 2:
+			break;
+		case 255:
+			deletearray .tmp_ev_b_d_$[getarg(0)], 1;
+			close;
+	}
+	return;
+
+
+L_Input_Hour_Begin:
+	mes "["+ strnpcinfo(1) +"]";
+	mes "Veuillez entrer un horaire pour votre event:";
+	set .@tmp$, "";
+	set .@tmp1, 0;
+	set .@tmp2, 0;
+	mes "Heure:";
+	input .@tmp1, 0, 23;
+	mes "Minutes:";
+	input .@tmp2, 0, 59;
+	if (getstrlen(.@tmp1) == 1)
+		set .@tmp1$, "0"+.@tmp1+":";
+	else
+		set .@tmp1$, ""+.@tmp1+":";
+	if (getstrlen(.@tmp2) == 1)
+		set .@tmp2$, "0"+.@tmp2;
+	else
+		set .@tmp2$, ""+.@tmp2;
+
+	set .@tmp$, .@tmp1$+.@tmp2$;
+	mes "Heure de l'évènement: " + .@tmp$; 
+	mes "Confirmer?";
+	switch(prompt("Oui:Non"))
+	{
+		case 1:
+			set .tmp_ev_b_t_$[getarg(0)], .@tmp$;
+			break;
+		case 2:
+			break;
+		case 255:
+			deletearray .tmp_ev_b_d_$[getarg(0)], 1;
+			deletearray .tmp_ev_b_da_$[getarg(0)], 1;
+			close;
+	}
+	return;
+
+L_Input_Hour_End:
+	mes "["+ strnpcinfo(1) +"]";
+	mes "Veuillez entrer un horaire pour votre event:";
+	set .@tmp$, "";
+	set .@tmp1, 0;
+	set .@tmp2, 0;
+	mes "Heure:";
+	input .@tmp1, 0, 23;
+	mes "Minutes:";
+	input .@tmp2, 0, 59;
+	if (getstrlen(.@tmp1) == 1)
+		set .@tmp1$, "0"+.@tmp1+":";
+	else
+		set .@tmp1$, ""+.@tmp1+":";
+	if (getstrlen(.@tmp2) == 1)
+		set .@tmp2$, "0"+.@tmp2;
+	else
+		set .@tmp2$, ""+.@tmp2;
+
+	set .@tmp$, .@tmp1$+.@tmp2$;
+	mes "Heure de l'évènement: " + .@tmp$; 
+	mes "Confirmer?";
+	switch(prompt("Oui:Non"))
+	{
+		case 1:
+			set .tmp_ev_b_t_e_$[getarg(0)], .@tmp$;
+			break;
+		case 2:
+			break;
+		case 255:
+			deletearray .tmp_ev_b_d_$[getarg(0)], 1;
+			deletearray .tmp_ev_b_da_e_$[getarg(0)], 1;
+			close;
+	}
+	return;
+
+L_Input_Res:
+	mes "["+ strnpcinfo(1) +"]";
+	set $activated_commu_maze, 0;
+	set $activated_commu_raid, 0;
+	set $activated_commu_rescape, 0;
+	set $activated_commu_twin, 0;
+	set $activated_commu_almost, 0;
+	set $activated_commu_hided, 0;
+	set $activated_commu_lg, 0;
+	mes "Veuillez choisir une restriction pour votre event:";
+	switch(select("Tout les events","Event Pirates","Event non Pirates","Disguise Twin","Raid Pirate","Pirate Maze","Almost Poring","Hided Monster","Loup Garou","Rescapé"))
+	{
+		case 1:
+			set $activated_commu_maze, 1;
+			set $activated_commu_raid, 1;
+			set $activated_commu_rescape, 1;
+			set $activated_commu_twin, 1;
+			set $activated_commu_almost, 1;
+			set $activated_commu_hided, 1;
+			set $activated_commu_lg, 1;
+			set .tmp_ev_b_re_$[0], "Tous les events";
+			break;
+		case 2:
+			set $activated_commu_maze, 1;
+			set $activated_commu_raid, 1;
+			set .tmp_ev_b_re_$[0], "Events Pirates";
+			break;
+		case 3:
+			set $activated_commu_rescape, 1;
+			set $activated_commu_twin, 1;
+			set $activated_commu_almost, 1;
+			set $activated_commu_hided, 1;
+			set $activated_commu_lg, 1;
+			set .tmp_ev_b_re_$[0], "Event Non Pirates";
+			break;
+		case 4:
+			set $activated_commu_twin, 1;
+			set .tmp_ev_b_re_$[0], "Disguise Twins";
+			break;
+		case 5:
+			set $activated_commu_raid, 1;
+			set .tmp_ev_b_re_$[0], "Raid Pirates";
+			break;
+		case 6:
+			set $activated_commu_maze, 1;
+			set .tmp_ev_b_re_$[0], "Pirate Maze";
+			break;
+		case 7:
+			set $activated_commu_almost, 1;
+			set .tmp_ev_b_re_$[0], "Almost Poring";
+			break;
+		case 8:
+			set $activated_commu_hided, 1;
+			set .tmp_ev_b_re_$[0], "Hided Monster";
+			break;
+		case 9:
+			set $activated_commu_lg, 1;
+			set .tmp_ev_b_re_$[0], "Loup Garou de Thiercellieux";
+			break;
+		case 10:
+			set $activated_commu_rescape, 1;
+			set .tmp_ev_b_re_$[0], "Event Rescapé";
+			break;
+	}	
+	return;
+
+L_Input_Total:
+	mes "["+ strnpcinfo(1) +"]";
+	mes "Veuillez entrer un nombre de participation totale pour votre event (max 999):";
+	set .@tmp$, "";
+	set .@tmp1, 0;
+	input .@tmp1, 0, 23;
+	if (getstrlen(.@tmp1) == 1)
+		set .@tmp$, "0"+"0"+.@tmp1+":";
+	else if (getstrlen(.@tmp1) == 2)
+		set .@tmp$, "0"+.@tmp1+":";
+	else
+		set .@tmp$, ""+.@tmp1+":";
+	mes "Nombres de participations: " + .@tmp$; 
+	mes "Confirmer?";
+	switch(prompt("Oui:Non"))
+	{
+		case 1:
+			set .tmp_ev_b_tc_$[getarg(0)], .@tmp$;
+			break;
+		case 2:
+			break;
+		case 255:
+			deletearray .tmp_ev_b_d_$[getarg(0)], 1;
+			deletearray .tmp_ev_b_da_$[getarg(0)], 1;
+			close;
+	}
+	return;
+
+L_Input_Reward:
+	mes "["+ strnpcinfo(1) +"]";
+	set $activated_commu_maze, 0;
+	set $activated_commu_raid, 0;
+	set $activated_commu_rescape, 0;
+	set $activated_commu_twin, 0;
+	set $activated_commu_almost, 0;
+	set $activated_commu_hided, 0;
+	set $activated_commu_lg, 0;
+	mes "Veuillez choisir une récompense pour votre event:";
+	switch(select("Warp gratuit","Déblocage par Scar gratuit","Déblocage secret à moitié prix","Heal/Boost gratuit"))
+	{
+		case 1:
+			set .tmp_ev_b_rew_$[0], "Warp";
+			break;
+		case 2:
+			set .tmp_ev_b_rew_$[0], "Scar";
+			break;
+		case 3:
+			set .tmp_ev_b_rew_$[0], "Soudoyable";
+			break;
+		case 4:
+			set .tmp_ev_b_rew_$[0], "H/B";
+			break;
+	}	
+	return;
+
+
+L_Update_Even:
+	while (1)
+	{
+		mes "Que souhaitez-vous modifier?";
+		switch(select("Le nom", "La description", "La date de début", "L'heure de début", "La date de fin", "L'heure de fin", "Les restrictions", "Le nombre de participations", "Les récompenses"))
+		{
+			case 1:
+				callsub L_Input_Name, .@val;
+				break;
+			case 2:
+				callsub L_Input_Desc, .@val;
+				break;
+			case 3:
+				callsub L_Input_Date_Begin, .@val;
+				break;
+			case 4:
+				callsub L_Input_Hour_Begin, .@val;
+				break;
+			case 5:
+				callsub L_Input_Date_End, .@val;
+				break;
+			case 6:
+				callsub L_Input_Hour_End, .@val;
+				break;
+			case 7:	
+				callsub L_Input_Res, .@val;
+				break;
+			case 8:	
+				callsub L_Input_Total, .@val;
+				break;
+			case :	
+				callsub L_Input_Reward, .@val;
+				break;
+		}
+		mes "L'évènement a bien été modifié.";
+		callsub L_Prepare_Event;
+	}
+	close;
+
+L_Prepare_Event:
+	explode .@startHour$, .tmp_ev_b_t_$, ":";
+	explode .@startHourEnd$, .tmp_ev_b_t_$, ":";
+	set .@startHour$, .@startHour$[0]+.@startHour$[1];
+	set .@endHour$, .@startHourEnd$[0]+.@startHourEnd$[1];
+	//update file in PHP
+	end;
+
+L_Begin_Event:
+	if (.event1 == 1)
+		set $activated_commu_maze, 1;
+	else
+		set $activated_commu_maze, 0;
+	if (.event2 == 1)
+		set $activated_commu_twin, 1;
+	else
+		set $activated_commu_twin, 0;
+	if (.event3 == 1)
+		set $activated_commu_raid, 1;
+	else
+		set $activated_commu_raid, 0;
+	if (.event4 == 1)
+		set $activated_commu_hided, 1;
+	else
+		set $activated_commu_hided, 0;
+	if (.event5 == 1)
+		set $activated_commu_almost, 1;
+	else
+		set $activated_commu_almost, 0;
+	if (.event6 == 1)
+		set $activated_commu_rescape, 1;
+	else
+		set $activated_commu_rescape, 0;
+	if (.event7 == 1)
+		set $activated_commu_lg, 1;
+	else
+		set $activated_commu_lg, 0;
+	return;
+
+L_End_Event:
+	//restore original price
+	doevent "Mary l'aubergiste::L_Up_Price";
+	doevent "Father Benedictum::L_Up_Price";
+	doevent "Kafra ROi::L_Up_Price";
+	doevent "Scar Jumeau::L_Up_Price";
+	doevent "Warper Soudoyable::L_Up_Price";
+
+	if (.tmp_ev_b_rest_$[0] == 0)
+	{
+		//apply new one
+		if (.tmp_ev_b_rew_$[0] == "Warp")
+			doevent "Kafra ROi::L_Red_Price";
+		else if (.tmp_ev_b_rew_$[0] == "Scar")
+		{
+			doevent "Scar::L_Red_Price";
+			doevent "Scar Jumeau::L_Red_Price";
+		}
+		else if (.tmp_ev_b_rew_$[0] == "Soudoyable")
+			doevent "Warper Soudoyable::L_Red_Price";
+		else if (.tmp_ev_b_rew_$[0] == "H/B")
+		{
+			doevent "Mary l'aubergiste::L_Red_Price";
+			doevent "Father Benedictum::L_Red_Price";
+		}	
+	}
+	return;
+
+L_Update_Count:
+	set .tmp_ev_b_c_$[0], .tmp_ev_b_c_$[0]+1;
+	set .tmp_ev_b_rest_$[0], .tmp_ev_b_tc_$[0] - .tmp_ev_b_c_$[0];
+	return;
+
+OnClockxxxx:
+	//check if today's the day the event should start
+	set .@todayDate$, gettime(5) + "/" + gettime(6);
+	if (.@todaydate$ == .tmp_ev_b_da_$[0])
+		goto L_BeginEvent;
+
+OnClockxxxx:
+	//check if today's the day the event should start
+	set .@todayDate$, gettime(5) + "/" + gettime(6);
+	if (.@todayDate$ == .tmp_ev_b_da-e_$[0])
+		goto L_End_Event;	
+}
+
+thalys,126,159,5	duplicate(ev_c_b_)	Communautarity Board#ceb	111

@@ -1,0 +1,28 @@
+alberta,222,26,5	script	Marin Dewatien#md_alb	809,{
+	mes "[Marin]";	
+	mes "Bonjour à toi, " + strcharinfo(0);
+	mes "As-tu déjà entendu parler de Dewata?";
+	mes "Il s'agit d'une île volcanique, perdu au milieu de l'océan.";
+	mes "Elle est soumise aux attaques du volcan Krakatoa, mais il fait bon y vivre.";
+	mes "Généralement, du moins.";
+	mes "Je peux t'y emmener pour 100.000 Zenys.";
+	mes "Ca te dit?";
+	switch(select("Oui","Non"))
+	{
+		case 1:
+			mes "Ok! Dewata nous voila!";
+			if (Zeny >= 100000)
+			{
+				set Zeny, Zeny - 100000;
+				warp "dewata",230,84; 
+			}
+			else
+				mes "Désolé, tu n'as pas assez d'argent.";
+			break;
+		case 2:
+			mes "Comme tu le sens.";
+			break;
+	}	
+	close;
+}
+

@@ -1,0 +1,73 @@
+alberta, 80, 125, 5	script	Evil Wing	51,{
+
+	set .@npcname$,"[Evil Wing]";
+	
+	//White Evil Wing 20778
+	setarray @itemBEW[0], 2255, 983, 7230;
+	setarray @countitemBEW[0], 1, 2, 2;
+	
+	//Blue Evil Wing 2072
+	setarray @itemBLEW[0], 2255, 978, 7230;
+	setarray @countitemBLEW[0], 1, 2, 2;
+
+	//Cyan Evil Wing 2073
+	setarray @itemCEW[0], 2255, 978, 982, 7230;
+	setarray @countitemCEW[0], 1, 2, 2, 2;
+
+	//Gold Evil Wing 2074
+	setarray @itemGEW[0], 2255, 976, 7230;
+	setarray @countitemGEW[0], 1, 2, 2;
+	
+	//Green Evil Wing 2075
+	setarray @itemGNEW[0], 2255, 979, 7230;
+	setarray @countitemGNEW[0], 1, 2, 2;
+	
+	//Purple  Evil Wing 2076
+	setarray @itemPEW[0], 2255, 981, 7230;
+	setarray @countitemPEW[0], 1, 2, 2;
+	
+	//Red Evil Wing 2077
+	setarray @itemREW[0], 2255, 975, 7230;
+	setarray @countitemREW[0], 1, 2, 2;
+	
+	
+	
+	mes .@npcname$;
+	mes "Bonjour ^3333FF" + strcharinfo(0) + "^000000!";
+	mes "Je peux te proposer quelque hats pour customiser ton Evil Wing.";
+	mes	"Ca t'interesse?!";
+	next;
+	mes .@npcname$;
+	mes "Voici ce que je peux te proposer:";
+	next;
+
+	switch(select("White Evil Wing:Blue Evil Wing:Cyan Evil Wing:Gold Evil Wing:Green Evil Wing:Purple Evil Wing:Red Evil Wing:^777777Rien, merci...^000000"))
+	{
+		case 1 :
+ 		callfunc "mes_getitem_colo",.@npcname$,20078,@itemBEW,@countitemBEW, 1000000;
+
+		case 2 :
+ 		callfunc "mes_getitem_colo",.@npcname$,20072,@itemBLEW,@countitemBLEW, 1000000;
+
+		case 3 :
+ 		callfunc "mes_getitem_colo",.@npcname$,20073,@itemCEW,@countitemCEW, 1000000;
+
+		case 4 :
+ 		callfunc "mes_getitem_colo",.@npcname$,20074,@itemGEW,@countitemGEW, 1000000;
+
+		case 5 :
+		callfunc "mes_getitem_colo",.@npcname$,20075,@itemGNEW,@countitemGNEW, 1000000;
+
+		case 6 :
+ 		callfunc "mes_getitem_colo",.@npcname$,20076,@itemPEW,@countitemPEW, 1000000;
+		
+		case 7 :
+		callfunc "mes_getitem_colo",.@npcname$,20077,@itemREW,@countitemREW, 1000000;
+
+		// Quitter
+		case 8 :
+		mes @npcname$;
+		mes "Très bien. A bientôt !";
+		close;
+	}
+}

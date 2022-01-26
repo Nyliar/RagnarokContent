@@ -1,0 +1,1005 @@
+//===== eAthena Script ======================================================================
+//= HeadHunter~
+//===== Original By =========================================================================
+//= Honor
+//===== Current Version: ====================================================================
+//= 1.0
+//===== Compatible With: ====================================================================
+//= Any eAthena
+//===== Description: ========================================================================
+//= This is just a mini game such as FFA, 3vs3 and CTF but it has a custom exp, and-
+//= ranking system.
+//===== Updates: ============================================================================
+//= 1.0 HeadHunter.
+//======= MapFlags ====================================================================================
+2@cata	mapflag	noteleport
+2@cata	mapflag	nosave	SavePoint
+2@cata	mapflag	nobranch
+2@cata	mapflag	nopenalty
+2@cata	mapflag	nomemo
+2@cata	mapflag	nowarp
+2@cata	mapflag	nowarpto
+2@cata	mapflag	noicewall
+2@cata	mapflag	noreturn
+2@cata	mapflag	pvp_noparty
+2@cata	mapflag	pvp_noguild
+2@cata	mapflag	restricted	5
+2@cata	mapflag	loadevent
+prt_are01	mapflag	loadevent
+
+force_1-1	mapflag	noteleport
+force_1-1	mapflag	nosave	SavePoint
+force_1-1	mapflag	nobranch
+force_1-1	mapflag	nopenalty
+force_1-1	mapflag	nomemo
+force_1-1	mapflag	nowarp
+force_1-1	mapflag	nowarpto
+force_1-1	mapflag	pvp	off
+force_1-1	mapflag	noskill
+//===== Spawn Points ========================================================================
+//= 2@cata,x,y;
+//= 2@cata,61,35;
+//= 2@cata,97,35;
+//= 2@cata,93,46;
+//= 2@cata,66,46;
+//= 2@cata,66,85;
+//= 2@cata,93,85;
+//= 2@cata,110,66;
+//= 2@cata,49,66;
+//= 2@cata,57,35;
+//= 2@cata,100,35;
+//=============================================================================================
+ayothaya,166,171,4	script	Head Hunter#H1-1::Head Hunter	843,{
+set .HHunter$,"[ ^ff0000•^000000 Head Hunter ^0000ff•^000000 ]";
+
+	if(getgmlevel() >= 99) {
+
+		GM_MENU:
+				menu "-Normal Menu",normalcharmenu,
+				"-^777777Reset Variables^000000",L_RVARS,
+				"-^777777Set Max Players ["+$AOP+"]^000000",L_AOP,
+				"-^777777Set Max Score ["+$SCR+"]^000000",L_SCR,
+				"-^777777Set Autowin Score ["+$ASCR+"]^000000",L_ASCR,
+				"-^777777Set Rbs win per Match ["+$HH_rbs+"]^000000",L_RBS,
+				"-^777777Set Match ["+$@match+"]^000000",L_SETM;
+				
+		L_AOP:
+			input @AOP;
+				if(@AOP > 14) { message strcharinfo(0),"~The max amount of players is 15."; goto L_AOP; end; }
+			set $AOP,@AOP;
+			message strcharinfo(0),"~Max amount of players able to register per match ("+$AOP+").";
+			close;
+
+		L_SCR:
+			input @SCR;
+				if(@SCR > 24) { message strcharinfo(0),"~The max Score able to set is 25."; goto L_SCR; end; }
+			set $SCR,@SCR;
+			message strcharinfo(0),"~Max amount of score per match is now ("+$SCR+").";
+			close;
+
+		L_ASCR:
+			input @ASCR;
+				if(@ASCR > 9) { message strcharinfo(0),"~The max autowin score is 10."; goto L_ASCR; end; }
+			set $ASCR,@ASCR;
+			message strcharinfo(0),"~Max amount of Autowin score per match is now ("+$ASCR+").";
+			close;
+
+		L_RBS:
+			input @HH_RBS;
+				if(@HH_RBS > 9) { message strcharinfo(0),"~The max amount of RBs Win per Match is 10."; goto L_RBS; end; }
+			set $HH_RBS,@HH_RBS;
+			message strcharinfo(0),"~Amount of Rbs Win per Match ("+$HH_RBS+").";
+			close;
+		L_SETM:
+			input @SETM;
+				if(@SETM > 1) { message strcharinfo(0),"~The max amount of players is 1."; goto L_SETM; end; }
+			set $@match,@SETM;
+			message strcharinfo(0),"~SETM("+$@match+").";
+			close;
+		L_RVARS:
+			stopnpctimer "HH_CHECKWINNER1";
+			stopnpctimer "HH_HILL_TIME";
+			stopnpctimer "HEADHUNTERS_TIMR1";
+			mapwarp "2@cata","turbo_room",80,107;
+			
+			// Reset Variables
+			set $@HHwinner,0;
+			set $@HH_player1,0;
+			set $@HH_player2,0;
+			set $@HH_player3,0;
+			set $@HH_player4,0;
+			set $@HH_player5,0;
+			set $@HH_player6,0;
+			set $@HH_player7,0;
+			set $@HH_player8,0;
+			set $@match,0;
+			set $@HH_active_hill,0;
+			set $@HH_temphill,0;
+			set $@HH_score1,0;
+			set $@HH_score2,0;
+			set $@HH_score3,0;
+			set $@HH_score4,0;
+			set $@HH_score5,0;
+			set $@HH_score6,0;
+			set $@HH_score7,0;
+			set $@HH_score8,0;
+			close;
+	}
+
+normalcharmenu:
+	set HH_loses,(HH_matches-HH_Matchwin);
+	mes .HHunter$;
+	mes "Welcome, how can I help you?";
+	mes "Matchs Won: ^00ff00"+HH_Matchwin+"^000000.";
+	mes "Matchs Lost: ^ff0000"+HH_loses+"^000000.";
+	mes "Matchs Played: ^777777"+HH_matches+"^000000.";
+	mes "Head Hunters EXP: ^0000ff"+HH_exp+"^000000.";
+	menu "~Play Head Hunter",LplayHH,"~Ranks",L_ranks,"~Register my hhTag",L_RegisterTag,"~Information",L_info;
+LplayHH:
+	next;
+	mes .HHunter$;
+	mes "Are you sure you want to participate?";
+	menu "~Let's do it!",L_yes,"~Uhh. No thanks",LCancel;
+	close;
+
+L_yes:
+	if (BaseLevel < 200 || Class==Job_Novice || Class==Job_Baby || Class==Job_Novice_High || @MiniGame_R == 1) { 
+		goto L_Level;
+	} else {
+			if(getmapusers("force_1-1") == $AOP || getmapusers("force_1-1") > $AOP) {
+					next;
+				mes .HHunter$;
+				mes "Im sorry but all arenas are full, please try again later.";
+				close; 
+			} else { warp "force_1-1",100,100; end; }
+	}
+L_ranks:
+	next;
+	mes .HHunter$;
+	mes "Coming soon...";
+	close;
+
+L_anythingelse:
+	next;
+	mes .HHunter$;
+	mes "Is there anything else you would like to know about?";
+	goto L_infomenu;
+
+	L_info:
+		next;
+		mes .HHunter$;
+		mes "Pick whatever you would like to know about..";
+
+	L_infomenu:
+			menu "- Head Hunters Game",L_game,
+			"- The Hill",L_hill,
+			"- Respawn",L_respawn,
+			"- Game Traps",L_traps,
+			"- Score System",L_score,
+			"- ...",-;
+			close;
+
+L_game:
+	next;
+	mes .HHunter$;
+	mes "You gotta Collect Skulls, you have to kill, you get the amount of skulls the player has in its invetory plus";
+	mes "(that is its own Skull) you collect, you take them to the current Hill you can see in your map northeast of the screen (Can check the image in forum)";
+	mes "Guides and Help ^0000ff>^000000 Item/Skill/Dungeon Guides ^0000ff>^000000 Head Hunter • How to play";
+	goto L_anythingelse;
+
+L_hill:
+	next;
+	mes .HHunter$;
+	mes "Changes every 30 Seconds, it randomly changes its position, it is announced when it had changed.";
+	mes "There's a red dot/cross flashing in your northeast map of your screen & it doens't changes well always";
+	mes "So its better if you just learn the hill numbers (Can check the image in forum)";
+	mes "Guides and Help ^0000ff>^000000 Item/Skill/Dungeon Guides ^0000ff>^000000 Head Hunter • How to play";
+	goto L_anythingelse;
+
+L_respawn:
+	next;
+	mes .HHunter$;
+	mes "You gotta wait 4 seconds to re-spawn. Respawn Points (Can check the image in forum)";
+	mes "Guides and Help ^0000ff>^000000 Item/Skill/Dungeon Guides ^0000ff>^000000 Head Hunter • How to play";
+	goto L_anythingelse;
+
+L_traps:
+	next;
+	mes .HHunter$;
+	mes "These are traps are going to give you a random effect.";
+	mes "Such as: Stun, Silence, Curse, Stone, Sleep, Quamarine, Divest Shield, Confusion, Blind, Bleed, Freeze";
+	mes "Poison and Ankle Snare (Can check the image in forum)";
+	mes "Guides and Help ^0000ff>^000000 Item/Skill/Dungeon Guides ^0000ff>^000000 Head Hunter • How to play";
+	goto L_anythingelse;
+L_score:
+	next;
+	mes .HHunter$;
+	mes "You gotta score "+$SCR+" to win a match and if you score "+$ASCR+" in a row, you'll automaticly win";
+	mes "HeadHunters Game (Can check the image in forum)";
+	mes "Guides and Help ^0000ff>^000000 Item/Skill/Dungeon Guides ^0000ff>^000000 Head Hunter • How to play";
+	goto L_anythingelse;
+
+L_RegisterTag:
+	next;
+	mes .HHunter$;
+	mes "Please Input your HeadHunter Tag";
+	mes "Note: Can't be longer than 4 Characters";
+iTag:
+	input @hhtag$;
+	if(getstrlen(@hhtag$) > 4) { goto iTag; }
+	next;
+	mes .HHunter$;
+	mes "Is this alright?";
+	mes "^0000ff "+@hhtag$+" ^000000";
+	menu "~Yes",-,"~Repeat",Lrepeat,"~No thanks",LCancel;
+	set hhtag$,@hhtag$;
+	message strcharinfo(0),"Your Head Hunter Tag is now [ "+hhtag$+" ].";
+	close;
+Lrepeat:
+	next;
+	mes .HHunter$;
+	mes "Please Input your HeadHunter Tag";
+	goto iTag;
+
+L_Level:
+	mes .HHunter$;
+	mes "Sorry, you need to be at least level 200, or you're registered in another MiniGame. No Novices allowed either.";
+	close;
+LCancel:
+	close;
+}
+
+force_1-1,100,105,4	script	Head Hunter Match	842,{
+set .HHunter$,"[ ^ff0000•^000000 Head Hunter ^0000ff•^000000 ]";
+
+	mes .HHunter$;
+	mes "We're going to warp you when Match is ready to start.";
+	menu "- Information",L_info,"- Cancel",-;
+	close;
+
+L_anythingelse:
+	next;
+	mes .HHunter$;
+	mes "Is there anything else you would like to know about?";
+	goto L_infomenu;
+
+	L_info:
+		next;
+		mes .HHunter$;
+		mes "Pick whatever you would like to know about..";
+
+	L_infomenu:
+			menu "- Head Hunters Game",L_game,
+			"- The Hill",L_hill,
+			"- Respawn",L_respawn,
+			"- Game Traps",L_traps,
+			"- Score System",L_score,
+			"- ...",-;
+			close;
+
+L_game:
+	next;
+	mes .HHunter$;
+	mes "You gotta Collect Skulls, you have to kill, you get the amount of skulls the player has in its invetory plus";
+	mes "(that is its own Skull) you collect, you take them to the current Hill you can see in your map northeast of the screen (Can check the image in forum)";
+	mes "Guides and Help ^0000ff>^000000 Item/Skill/Dungeon Guides ^0000ff>^000000 Head Hunter • How to play";
+	goto L_anythingelse;
+
+L_hill:
+	next;
+	mes .HHunter$;
+	mes "Changes every 30 Seconds, it randomly changes its position, it is announced when it had changed.";
+	mes "There's a red dot/cross flashing in your northeast map of your screen & it doens't changes well always";
+	mes "So its better if you just learn the hill numbers (Can check the image in forum)";
+	mes "Guides and Help ^0000ff>^000000 Item/Skill/Dungeon Guides ^0000ff>^000000 Head Hunter • How to play";
+	goto L_anythingelse;
+
+L_respawn:
+	next;
+	mes .HHunter$;
+	mes "You gotta wait 4 seconds to re-spawn. Respawn Points (Can check the image in forum)";
+	mes "Guides and Help ^0000ff>^000000 Item/Skill/Dungeon Guides ^0000ff>^000000 Head Hunter • How to play";
+	goto L_anythingelse;
+
+L_traps:
+	next;
+	mes .HHunter$;
+	mes "These are traps are going to give you a random effect.";
+	mes "Such as: Stun, Silence, Curse, Stone, Sleep, Quamarine, Divest Shield, Confusion, Blind, Bleed, Freeze";
+	mes "Poison and Ankle Snare (Can check the image in forum)";
+	mes "Guides and Help ^0000ff>^000000 Item/Skill/Dungeon Guides ^0000ff>^000000 Head Hunter • How to play";
+	goto L_anythingelse;
+L_score:
+	next;
+	mes .HHunter$;
+	mes "You gotta score "+$SCR+" to win a match and if you score "+$ASCR+" in a row, you'll automaticly win";
+	mes "HeadHunters Game (Can check the image in forum)";
+	mes "Guides and Help ^0000ff>^000000 Item/Skill/Dungeon Guides ^0000ff>^000000 Head Hunter • How to play";
+	goto L_anythingelse;
+
+} //End of Force
+
+turbo_room,106,107,4	duplicate(Head Hunter)	Head Hunter#H1-2	843
+prontera,147,150,5	duplicate(Head Hunter)	Head Hunter#H1-3	843
+pay_arche,42,125,5	duplicate(Head Hunter)	Head Hunter#H1-4	843
+
+force_1-1,100,100,1	script	HH_TIME1	-1,0,0,{
+end;
+
+OnInit:
+	disablenpc "EnterHH";
+	end;
+
+//11 seconds
+OnTimer11001:
+	if($@match==0 && getmapusers("force_1-1") == $AOP) {
+		stopnpctimer;
+		enablenpc "EnterHH"; 
+		mapannounce "force_1-1","The portal will remain open for 10 seconds, hurry up!!",1;
+		sleep2 10000;
+		mapannounce "force_1-1","Time's Up, portal closed.",1;
+		sleep2 2000;
+		mapwarp "force_1-1","prontera",156,173;
+		disablenpc "EnterHH";
+	}
+OnTouch:
+		initnpctimer;
+	if(getmapusers("force_1-1") > $AOP) { warp "prontera",176,153; }
+}
+
+force_1-1,73,100,0	script	EnterHH	45,1,1,{
+
+	if($@HH_player1 == 0){ set $@HHwinner,0; set $@HH_player1,0; set $@HH_player2,0; set $@HH_player3,0; set $@HH_player4,0; set $@HH_player5,0; set $@HH_player6,0; set $@HH_player7,0; set $@HH_player8,0;
+	set $@match,0; set $@HH_active_hill,0; set $@HH_temphill,0; set $@HH_score1,0; set $@HH_score2,0; set $@HH_score3,0; set $@HH_score4,0; set $@HH_score5,0; set $@HH_score6,0; set $@HH_score7,0; set $@HH_score8,0;
+			set $@HH_player1,getcharid(0); donpcevent "HH_GameStart::OnStart1"; }
+
+	else if($@HH_player2 == 0){ set $@HH_player2,getcharid(0); }
+	else if($@HH_player3 == 0){ set $@HH_player3,getcharid(0); }
+	else if($@HH_player4 == 0){ set $@HH_player4,getcharid(0); }
+	else if($@HH_player5 == 0){ set $@HH_player5,getcharid(0); }
+	else if($@HH_player6 == 0){ set $@HH_player6,getcharid(0); }
+	else if($@HH_player7 == 0){ set $@HH_player7,getcharid(0); }
+	else if($@HH_player8 == 0){ set $@HH_player8,getcharid(0); }
+
+	switch(rand(9)) { // SPAWNS
+		case 0: set @hhx,61; set @hhy,35; goto HH_WarpChar; end;
+		case 1: set @hhx,97; set @hhy,35; goto HH_WarpChar; end;
+		case 2: set @hhx,93; set @hhy,46; goto HH_WarpChar; end;
+		case 3: set @hhx,66; set @hhy,46; goto HH_WarpChar; end;
+		case 4: set @hhx,66; set @hhy,85; goto HH_WarpChar; end;
+		case 5: set @hhx,93; set @hhy,85; goto HH_WarpChar; end;
+		case 6: set @hhx,110; set @hhy,66; goto HH_WarpChar; end;
+		case 7: set @hhx,49; set @hhy,66; goto HH_WarpChar; end;
+		case 8: set @hhx,57; set @hhy,35; goto HH_WarpChar; end;
+		case 9: set @hhx,100; set @hhy,35; goto HH_WarpChar; end;
+	}
+end;
+
+HH_WarpChar:
+	set HH_matches,HH_matches+1;
+	warpchar "2@cata",@hhx,@hhy,getcharid(0);
+	if($@match==0) { set $@match,1; }
+	if($@match == 0) { mapwarp "2@cata","turbo_room",80,107; }
+	end;
+}
+
+2@cata,1,1,1	script	HH_GameStart	-1,{
+end;
+
+OnStart1:
+	set $@HH_active_hill,1;
+	initnpctimer "HEADHUNTERS_TIMR1";
+	initnpctimer "HH_CHECKWINNER1";
+	initnpctimer "HH_HILL_TIME";
+	end;
+
+OnPCLoadMapEvent:	//will run on 3vs3 and CTF as well
+	sc_end SC_ALL;
+	alive;
+	end;
+
+OnPCLoginEvent:
+	set @loginflameskull,countitem(3303);
+	delitem 3303,@loginflameskull;
+	end;
+
+OnPCLogoutEvent:
+	if($@HH_player1 == getcharid(0)) { set $@HH_player1,0; }
+	if($@HH_player2 == getcharid(0)) { set $@HH_player2,0; }
+	if($@HH_player3 == getcharid(0)) { set $@HH_player3,0; }
+	if($@HH_player4 == getcharid(0)) { set $@HH_player4,0; }
+	if($@HH_player5 == getcharid(0)) { set $@HH_player5,0; }
+	if($@HH_player6 == getcharid(0)) { set $@HH_player6,0; }
+	if($@HH_player7 == getcharid(0)) { set $@HH_player7,0; }
+	if($@HH_player8 == getcharid(0)) { set $@HH_player8,0; }
+	end;
+
+OnPCDieEvent:	
+	getmapxy(.@mapname$, .@mapx, .@mapy, 0);
+	if(.@mapname$=="2@cata"){
+		set $@HeadSkull,3303;
+		set @flamingskullq,countitem($@HeadSkull);
+		makeitem $@HeadSkull,(@flamingskullq+1),.@mapname$,.@mapx,.@mapy;
+		delitem $@HeadSkull,@flamingskullq;
+	switch(rand(9)) { // SPAWNS
+		case 0: set @hhx,61; set @hhy,35; goto HH_OnCharDie; end;
+		case 1: set @hhx,97; set @hhy,35; goto HH_OnCharDie; end;
+		case 2: set @hhx,93; set @hhy,46; goto HH_OnCharDie; end;
+		case 3: set @hhx,66; set @hhy,46; goto HH_OnCharDie; end;
+		case 4: set @hhx,66; set @hhy,85; goto HH_OnCharDie; end;
+		case 5: set @hhx,93; set @hhy,85; goto HH_OnCharDie; end;
+		case 6: set @hhx,110; set @hhy,66; goto HH_OnCharDie; end;
+		case 7: set @hhx,49; set @hhy,66; goto HH_OnCharDie; end;
+		case 8: set @hhx,57; set @hhy,35; goto HH_OnCharDie; end;
+		case 9: set @hhx,100; set @hhy,35; goto HH_OnCharDie; end;
+	}
+HH_OnCharDie:
+	sleep2 1000;
+	message strcharinfo(0),"Wait 4 Seconds to respawn...";
+	sleep2 1000;
+	message strcharinfo(0),"Wait 3 Seconds to respawn...";
+	sleep2 1000;
+	message strcharinfo(0),"Wait 2 Seconds to respawn...";
+	sleep2 1000;
+	message strcharinfo(0),"Wait 1 Seconds to respawn...";
+	sleep2 1000;
+	if($@match==0) { end; }
+	warpchar "2@cata",@hhx,@hhy,getcharid(0);
+	alive;
+	sc_end SC_ALL;
+	end;
+}
+end;
+}
+
+2@cata,1,1,1	script	HEADHUNTERS_TIMR1	-1,{
+end;
+
+//3 minutes
+OnTimer180000:
+	mapannounce "2@cata", "Everyone, you have one minute to finish this fight!!", 1;
+	mapannounce "force_1-1", "Everyone, you have one minute to finish this fight!!", 1;
+	end;
+
+//4.75 minutes
+OnTimer285000:
+	mapannounce "2@cata", "Attention! The round is over in 15 seconds!!", 1;
+	mapannounce "force_1-1", "Attention! The round is over in 15 seconds!!", 1;
+	end;
+
+//5 minutes - Time's up (no winner)
+OnTimer300000:
+if($@HH_score1 > $@HH_score2 && $@HH_score1 > $@HH_score3 && $@HH_score1 > $@HH_score4 && $@HH_score1 > $@HH_score5 && $@HH_score1 > $@HH_score6 && $@HH_score1 > $@HH_score7 && $@HH_score1 > $@HH_score8) 
+{ set $@HHwinner,$@HH_player1; donpcevent "HH_WINNER::OnWinner"; end; }
+
+if($@HH_score2 > $@HH_score1 && $@HH_score2 > $@HH_score3 && $@HH_score2 > $@HH_score4 && $@HH_score2 > $@HH_score5 && $@HH_score2 > $@HH_score6 && $@HH_score2 > $@HH_score7 && $@HH_score2 > $@HH_score8) 
+{ set $@HHwinner,$@HH_player2; donpcevent "HH_WINNER::OnWinner"; end; }
+
+if($@HH_score3 > $@HH_score1 && $@HH_score3 > $@HH_score2 && $@HH_score3 > $@HH_score4 && $@HH_score3 > $@HH_score5 && $@HH_score3 > $@HH_score6 && $@HH_score3 > $@HH_score7 && $@HH_score3 > $@HH_score8) 
+{ set $@HHwinner,$@HH_player3; donpcevent "HH_WINNER::OnWinner"; end; }
+
+if($@HH_score4 > $@HH_score1 && $@HH_score4 > $@HH_score2 && $@HH_score4 > $@HH_score3 && $@HH_score4 > $@HH_score5 && $@HH_score4 > $@HH_score6 && $@HH_score4 > $@HH_score7 && $@HH_score4 > $@HH_score8) 
+{ set $@HHwinner,$@HH_player4; donpcevent "HH_WINNER::OnWinner"; end; }
+
+if($@HH_score5 > $@HH_score1 && $@HH_score5 > $@HH_score2 && $@HH_score5 > $@HH_score3 && $@HH_score5 > $@HH_score4 && $@HH_score5 > $@HH_score6 && $@HH_score5 > $@HH_score7 && $@HH_score5 > $@HH_score8) 
+{ set $@HHwinner,$@HH_player5; donpcevent "HH_WINNER::OnWinner"; end; }
+
+if($@HH_score6 > $@HH_score1 && $@HH_score6 > $@HH_score2 && $@HH_score6 > $@HH_score3 && $@HH_score6 > $@HH_score4 && $@HH_score6 > $@HH_score5 && $@HH_score6 > $@HH_score7 && $@HH_score6 > $@HH_score8) 
+{ set $@HHwinner,$@HH_player6; donpcevent "HH_WINNER::OnWinner"; end; }
+
+if($@HH_score7 > $@HH_score1 && $@HH_score7 > $@HH_score2 && $@HH_score7 > $@HH_score3 && $@HH_score7 > $@HH_score4 && $@HH_score7 > $@HH_score5 && $@HH_score7 > $@HH_score6 && $@HH_score7 > $@HH_score8) 
+{ set $@HHwinner,$@HH_player7; donpcevent "HH_WINNER::OnWinner"; end; }
+
+if($@HH_score8 > $@HH_score1 && $@HH_score8 > $@HH_score2 && $@HH_score8 > $@HH_score3 && $@HH_score8 > $@HH_score4 && $@HH_score8 > $@HH_score5 && $@HH_score8 > $@HH_score6 && $@HH_score8 > $@HH_score7) 
+{ set $@HHwinner,$@HH_player8; donpcevent "HH_WINNER::OnWinner"; end; }
+
+	mapannounce "2@cata", "There is a TIE in Head Hunters, no winner :( !!", 1;
+	mapannounce "force_1-1", "There is a TIE in Head Hunters, no winner :( !!", 1;
+	end;
+
+//5 minutes with 5 seconds
+OnTimer303000:
+	stopnpctimer;
+	stopnpctimer "HH_CHECKWINNER1";
+	sleep 5000;
+	mapannounce "turbo_room", "The Head Hunter's fight just ended without a winner!! :(",bc_blue;
+	sleep 2000;
+	donpcevent "HH_WINNER::OnWinner";
+	end;
+
+}
+
+2@cata,1,1,1	script	HH_CHECKWINNER1	-1,{
+end;
+
+//3 seconds
+OnTimer3001:
+	if($@HHwinner != 0) { donpcevent "HH_WINNER::OnWinner"; end; }
+	if($@HH_score1 >= $SCR) { set $@HHwinner,$@HH_player1; donpcevent "HH_WINNER::OnWinner"; end; }
+	else if ($@HH_score2 >= $SCR) { set $@HHwinner,$@HH_player2; donpcevent "HH_WINNER::OnWinner"; end; }
+	else if ($@HH_score3 >= $SCR) { set $@HHwinner,$@HH_player3; donpcevent "HH_WINNER::OnWinner"; end; }
+	else if ($@HH_score4 >= $SCR) { set $@HHwinner,$@HH_player4; donpcevent "HH_WINNER::OnWinner"; end; }
+	else if ($@HH_score5 >= $SCR) { set $@HHwinner,$@HH_player5; donpcevent "HH_WINNER::OnWinner"; end; }
+	else if ($@HH_score6 >= $SCR) { set $@HHwinner,$@HH_player6; donpcevent "HH_WINNER::OnWinner"; end; }
+	else if ($@HH_score7 >= $SCR) { set $@HHwinner,$@HH_player7; donpcevent "HH_WINNER::OnWinner"; end; }
+	else if ($@HH_score8 >= $SCR) { set $@HHwinner,$@HH_player8; donpcevent "HH_WINNER::OnWinner"; end; }
+		
+		initnpctimer;
+}
+
+2@cata,1,1,1	script	HH_WINNER	-1,{
+end;
+
+OnWinner:
+	stopnpctimer "HH_CHECKWINNER1";
+	stopnpctimer "HH_HILL_TIME";
+	stopnpctimer "HEADHUNTERS_TIMR1";
+	warpchar "lhz_cube",10,74,$@HHwinner;
+	sleep2 1501;
+	mapwarp "2@cata","turbo_room",80,107;
+	
+	// Reset Variables
+	set $@HHwinner,0;
+	set $@HH_player1,0;
+	set $@HH_player2,0;
+	set $@HH_player3,0;
+	set $@HH_player4,0;
+	set $@HH_player5,0;
+	set $@HH_player6,0;
+	set $@HH_player7,0;
+	set $@HH_player8,0;
+	set $@match,0;
+	set $@HH_active_hill,0;
+	set $@HH_temphill,0;
+	set $@HH_score1,0;
+	set $@HH_score2,0;
+	set $@HH_score3,0;
+	set $@HH_score4,0;
+	set $@HH_score5,0;
+	set $@HH_score6,0;
+	set $@HH_score7,0;
+	set $@HH_score8,0;
+	end;
+}
+
+
+
+2@cata,111,39,1	script	Trap#T1-1::Trap	1904,1,1,{
+end;
+OnInit:
+	initnpctimer;
+	end;
+
+OnTimer30001:
+		specialeffect 145;		
+		initnpctimer;
+end;
+
+OnTouch:
+	switch(rand(14)) { //20 Seconds tranps
+		case 0: sc_start SC_POISON,30000,0; message strcharinfo(0),"aww I don't feel good x.X !!"; goto L_emo;
+		case 1: sc_start SC_SILENCE,15000,0; message strcharinfo(0),"Silent i kill you !!"; goto L_emo;
+		case 2: sc_start SC_CONFUSION,10000,0; message strcharinfo(0),"Where am I going ?_? !!"; goto L_emo;
+		case 3: sc_start SC_SLEEP,10000,0; message strcharinfo(0),"ZzZzzzZZzzZZZ !!"; goto L_emo;
+		case 4: sc_start SC_FREEZE,10000,0; message strcharinfo(0),"O.O !!"; goto L_emo;
+		case 5: sc_start SC_STONE,10000,0; message strcharinfo(0),"Oh Potpot<3 !!"; goto L_emo;
+		case 6: sc_start SC_BLIND,30000,0; message strcharinfo(0),"Waittt I cann't see !!"; goto L_emo;
+		case 7: sc_start SC_BLEEDING,20000,0; message strcharinfo(0),"aaaarrrghhhh !!"; goto L_emo;
+		case 8: sc_start SC_STUN,8000,0; message strcharinfo(0),"Woot !!"; goto L_emo;
+		case 9: sc_start SC_STRIPSHIELD,20000,0; message strcharinfo(0),"Oh Nooes~!! byebyeShield :( !!"; goto L_emo;
+		case 10: sc_start SC_QUAGMIRE,20000,0; message strcharinfo(0),"Oh Nooes~!! Your speed had been reduced !!"; goto L_emo;
+		case 11: sc_start SC_ANKLE,10000,0; message strcharinfo(0),"Oh Nooes~!! You got trapped !!"; goto L_emo;
+		case 12: sc_start SC_CURSE,15000,0; message strcharinfo(0),"wahhh x.X !!"; goto L_emo;
+		case 13: sc_start SC_BLESSING,30000,10; sc_start SC_INCREASEAGI,30000,10; goto L_no1;
+	}
+L_emo:
+	emotion 23;	//omg
+	end;
+
+L_no1:
+	message strcharinfo(0),"You avoid the trap successfully !!";
+	emotion 21;	//e_no1
+	end;
+}
+
+2@cata,113,118,1	duplicate(Trap)	Trap#T1-2	1904,1,1
+2@cata,48,90,1	duplicate(Trap)	Trap#T1-3	1904,1,1
+2@cata,78,113,1	duplicate(Trap)	Trap#T1-4	1904,1,1
+2@cata,113,94,1	duplicate(Trap)	Trap#T1-5	1904,1,1
+2@cata,84,60,1	duplicate(Trap)	Trap#T1-6	1904,1,1
+
+function	script	HH_Hill_Function	{
+
+	if($@HH_player1 == getcharid(0)) { set $@HH_score1,$@HH_score1+.@hhp;
+		mapannounce $@headhmap$,"~ "+hhtag$+" - "+strcharinfo(0)+" scored [ "+.@hhp+" ] Head Hunter Point(s). || "+$@HH_score1+".",bc_yellow; }
+	if($@HH_player2 == getcharid(0)) { set $@HH_score2,$@HH_score2+.@hhp;
+		mapannounce $@headhmap$,"~ "+hhtag$+" - "+strcharinfo(0)+" scored [ "+.@hhp+" ] Head Hunter Point(s). || "+$@HH_score2+".",bc_yellow; }
+	if($@HH_player3 == getcharid(0)) { set $@HH_score3,$@HH_score3+.@hhp;
+		mapannounce $@headhmap$,"~ "+hhtag$+" - "+strcharinfo(0)+" scored [ "+.@hhp+" ] Head Hunter Point(s). || "+$@HH_score3+".",bc_yellow; }
+	if($@HH_player4 == getcharid(0)) { set $@HH_score4,$@HH_score4+.@hhp;
+		mapannounce $@headhmap$,"~ "+hhtag$+" - "+strcharinfo(0)+" scored [ "+.@hhp+" ] Head Hunter Point(s). || "+$@HH_score4+".",bc_yellow; }
+	if($@HH_player5 == getcharid(0)) { set $@HH_score5,$@HH_score5+.@hhp;
+		mapannounce $@headhmap$,"~ "+hhtag$+" - "+strcharinfo(0)+" scored [ "+.@hhp+" ] Head Hunter Point(s). || "+$@HH_score5+".",bc_yellow; }
+	if($@HH_player6 == getcharid(0)) { set $@HH_score6,$@HH_score6+.@hhp;
+		mapannounce $@headhmap$,"~ "+hhtag$+" - "+strcharinfo(0)+" scored [ "+.@hhp+" ] Head Hunter Point(s). || "+$@HH_score6+".",bc_yellow; }
+	if($@HH_player7 == getcharid(0)) { set $@HH_score7,$@HH_score7+.@hhp;
+		mapannounce $@headhmap$,"~ "+hhtag$+" - "+strcharinfo(0)+" scored [ "+.@hhp+" ] Head Hunter Point(s). || "+$@HH_score7+".",bc_yellow; }
+	if($@HH_player8 == getcharid(0)) { set $@HH_score8,$@HH_score8+.@hhp;
+		mapannounce $@headhmap$,"~ "+hhtag$+" - "+strcharinfo(0)+" scored [ "+.@hhp+" ] Head Hunter Point(s). || "+$@HH_score8+".",bc_yellow; }
+	return;
+}
+function	script	HH_AutoWin	{
+	if($@HH_player1 == getcharid(0)) { set $@HHwinner,$@HH_player1; }
+	else if($@HH_player2 == getcharid(0)) { set $@HHwinner,$@HH_player2; }
+	else if($@HH_player3 == getcharid(0)) { set $@HHwinner,$@HH_player3; }
+	else if($@HH_player4 == getcharid(0)) { set $@HHwinner,$@HH_player4; }
+	else if($@HH_player5 == getcharid(0)) { set $@HHwinner,$@HH_player5; }
+	else if($@HH_player6 == getcharid(0)) { set $@HHwinner,$@HH_player6; }
+	else if($@HH_player7 == getcharid(0)) { set $@HHwinner,$@HH_player7; }
+	else if($@HH_player8 == getcharid(0)) { set $@HHwinner,$@HH_player8; }
+	return;
+}
+
+2@cata,1,1,1	script	HH_HILL_TIME	-1,{
+end;
+
+//30 seconds
+OnTimer30001:
+L_HillHere:
+	set $@HH_temphill,rand(1,8);
+		if($@HH_active_hill != $@HH_temphill) 
+		{	
+			set $@HH_active_hill,$@HH_temphill;
+			mapannounce "2@cata","Hill Moved ~ [ • "+$@HH_active_hill+" • ].",bc_blue;
+		} else { goto L_HillHere; }
+		initnpctimer;
+			end;
+}
+
+//====== Hill 1  =============================================================================
+2@cata,79,66,1	script	Hill_1	-1,3,3,{
+end;
+
+OnTouch:
+set $@HeadSkull,3303;
+set $@headhmap$,"2@cata";
+	if($@HH_active_hill == 1) {
+		if(countitem($@HeadSkull) < 1) { end; }
+		set .@hhp,.@hhp+countitem($@HeadSkull);
+	if($@HH_player1 == getcharid(0)) { set $@HH_score1,$@HH_score1+.@hhp;
+		mapannounce $@headhmap$,"~ "+hhtag$+" - "+strcharinfo(0)+" scored [ "+.@hhp+" ] Head Hunter Point(s). || "+$@HH_score1+".",bc_yellow; }
+	if($@HH_player2 == getcharid(0)) { set $@HH_score2,$@HH_score2+.@hhp;
+		mapannounce $@headhmap$,"~ "+hhtag$+" - "+strcharinfo(0)+" scored [ "+.@hhp+" ] Head Hunter Point(s). || "+$@HH_score2+".",bc_yellow; }
+	if($@HH_player3 == getcharid(0)) { set $@HH_score3,$@HH_score3+.@hhp;
+		mapannounce $@headhmap$,"~ "+hhtag$+" - "+strcharinfo(0)+" scored [ "+.@hhp+" ] Head Hunter Point(s). || "+$@HH_score3+".",bc_yellow; }
+	if($@HH_player4 == getcharid(0)) { set $@HH_score4,$@HH_score4+.@hhp;
+		mapannounce $@headhmap$,"~ "+hhtag$+" - "+strcharinfo(0)+" scored [ "+.@hhp+" ] Head Hunter Point(s). || "+$@HH_score4+".",bc_yellow; }
+	if($@HH_player5 == getcharid(0)) { set $@HH_score5,$@HH_score5+.@hhp;
+		mapannounce $@headhmap$,"~ "+hhtag$+" - "+strcharinfo(0)+" scored [ "+.@hhp+" ] Head Hunter Point(s). || "+$@HH_score5+".",bc_yellow; }
+	if($@HH_player6 == getcharid(0)) { set $@HH_score6,$@HH_score6+.@hhp;
+		mapannounce $@headhmap$,"~ "+hhtag$+" - "+strcharinfo(0)+" scored [ "+.@hhp+" ] Head Hunter Point(s). || "+$@HH_score6+".",bc_yellow; }
+	if($@HH_player7 == getcharid(0)) { set $@HH_score7,$@HH_score7+.@hhp;
+		mapannounce $@headhmap$,"~ "+hhtag$+" - "+strcharinfo(0)+" scored [ "+.@hhp+" ] Head Hunter Point(s). || "+$@HH_score7+".",bc_yellow; }
+	if($@HH_player8 == getcharid(0)) { set $@HH_score8,$@HH_score8+.@hhp;
+		mapannounce $@headhmap$,"~ "+hhtag$+" - "+strcharinfo(0)+" scored [ "+.@hhp+" ] Head Hunter Point(s). || "+$@HH_score8+".",bc_yellow; }
+		if(countitem($@HeadSkull) >= $ASCR) { callfunc "HH_AutoWin"; } //when scoring 10FS in a row Automatic Winner
+		delitem $@HeadSkull,countitem($@HeadSkull);
+		end;
+	}
+	end;
+}
+//====== Hill 2  =============================================================================
+2@cata,36,109,1	script	Hill_2	-1,3,3,{
+end;
+
+OnTouch:
+set $@HeadSkull,3303;
+set $@headhmap$,"2@cata";
+	if($@HH_active_hill == 2) {
+		if(countitem($@HeadSkull) < 1) { end; }
+		set .@hhp,.@hhp+countitem($@HeadSkull);
+	if($@HH_player1 == getcharid(0)) { set $@HH_score1,$@HH_score1+.@hhp;
+		mapannounce $@headhmap$,"~ "+hhtag$+" - "+strcharinfo(0)+" scored [ "+.@hhp+" ] Head Hunter Point(s). || "+$@HH_score1+".",bc_yellow; }
+	if($@HH_player2 == getcharid(0)) { set $@HH_score2,$@HH_score2+.@hhp;
+		mapannounce $@headhmap$,"~ "+hhtag$+" - "+strcharinfo(0)+" scored [ "+.@hhp+" ] Head Hunter Point(s). || "+$@HH_score2+".",bc_yellow; }
+	if($@HH_player3 == getcharid(0)) { set $@HH_score3,$@HH_score3+.@hhp;
+		mapannounce $@headhmap$,"~ "+hhtag$+" - "+strcharinfo(0)+" scored [ "+.@hhp+" ] Head Hunter Point(s). || "+$@HH_score3+".",bc_yellow; }
+	if($@HH_player4 == getcharid(0)) { set $@HH_score4,$@HH_score4+.@hhp;
+		mapannounce $@headhmap$,"~ "+hhtag$+" - "+strcharinfo(0)+" scored [ "+.@hhp+" ] Head Hunter Point(s). || "+$@HH_score4+".",bc_yellow; }
+	if($@HH_player5 == getcharid(0)) { set $@HH_score5,$@HH_score5+.@hhp;
+		mapannounce $@headhmap$,"~ "+hhtag$+" - "+strcharinfo(0)+" scored [ "+.@hhp+" ] Head Hunter Point(s). || "+$@HH_score5+".",bc_yellow; }
+	if($@HH_player6 == getcharid(0)) { set $@HH_score6,$@HH_score6+.@hhp;
+		mapannounce $@headhmap$,"~ "+hhtag$+" - "+strcharinfo(0)+" scored [ "+.@hhp+" ] Head Hunter Point(s). || "+$@HH_score6+".",bc_yellow; }
+	if($@HH_player7 == getcharid(0)) { set $@HH_score7,$@HH_score7+.@hhp;
+		mapannounce $@headhmap$,"~ "+hhtag$+" - "+strcharinfo(0)+" scored [ "+.@hhp+" ] Head Hunter Point(s). || "+$@HH_score7+".",bc_yellow; }
+	if($@HH_player8 == getcharid(0)) { set $@HH_score8,$@HH_score8+.@hhp;
+		mapannounce $@headhmap$,"~ "+hhtag$+" - "+strcharinfo(0)+" scored [ "+.@hhp+" ] Head Hunter Point(s). || "+$@HH_score8+".",bc_yellow; }
+		if(countitem($@HeadSkull) >= $ASCR) { callfunc "HH_AutoWin"; } //when scoring 10FS in a row Automatic Winner
+		delitem $@HeadSkull,countitem($@HeadSkull);
+		end;
+	}
+	end;
+}
+//====== Hill 3  =============================================================================
+2@cata,123,109,1	script	Hill_3	-1,3,3,{
+end;
+
+OnTouch:
+set $@HeadSkull,3303;
+set $@headhmap$,"2@cata";
+	if($@HH_active_hill == 3) {
+		if(countitem($@HeadSkull) < 1) { end; }
+		set .@hhp,.@hhp+countitem($@HeadSkull);
+	if($@HH_player1 == getcharid(0)) { set $@HH_score1,$@HH_score1+.@hhp;
+		mapannounce $@headhmap$,"~ "+hhtag$+" - "+strcharinfo(0)+" scored [ "+.@hhp+" ] Head Hunter Point(s). || "+$@HH_score1+".",bc_yellow; }
+	if($@HH_player2 == getcharid(0)) { set $@HH_score2,$@HH_score2+.@hhp;
+		mapannounce $@headhmap$,"~ "+hhtag$+" - "+strcharinfo(0)+" scored [ "+.@hhp+" ] Head Hunter Point(s). || "+$@HH_score2+".",bc_yellow; }
+	if($@HH_player3 == getcharid(0)) { set $@HH_score3,$@HH_score3+.@hhp;
+		mapannounce $@headhmap$,"~ "+hhtag$+" - "+strcharinfo(0)+" scored [ "+.@hhp+" ] Head Hunter Point(s). || "+$@HH_score3+".",bc_yellow; }
+	if($@HH_player4 == getcharid(0)) { set $@HH_score4,$@HH_score4+.@hhp;
+		mapannounce $@headhmap$,"~ "+hhtag$+" - "+strcharinfo(0)+" scored [ "+.@hhp+" ] Head Hunter Point(s). || "+$@HH_score4+".",bc_yellow; }
+	if($@HH_player5 == getcharid(0)) { set $@HH_score5,$@HH_score5+.@hhp;
+		mapannounce $@headhmap$,"~ "+hhtag$+" - "+strcharinfo(0)+" scored [ "+.@hhp+" ] Head Hunter Point(s). || "+$@HH_score5+".",bc_yellow; }
+	if($@HH_player6 == getcharid(0)) { set $@HH_score6,$@HH_score6+.@hhp;
+		mapannounce $@headhmap$,"~ "+hhtag$+" - "+strcharinfo(0)+" scored [ "+.@hhp+" ] Head Hunter Point(s). || "+$@HH_score6+".",bc_yellow; }
+	if($@HH_player7 == getcharid(0)) { set $@HH_score7,$@HH_score7+.@hhp;
+		mapannounce $@headhmap$,"~ "+hhtag$+" - "+strcharinfo(0)+" scored [ "+.@hhp+" ] Head Hunter Point(s). || "+$@HH_score7+".",bc_yellow; }
+	if($@HH_player8 == getcharid(0)) { set $@HH_score8,$@HH_score8+.@hhp;
+		mapannounce $@headhmap$,"~ "+hhtag$+" - "+strcharinfo(0)+" scored [ "+.@hhp+" ] Head Hunter Point(s). || "+$@HH_score8+".",bc_yellow; }
+		if(countitem($@HeadSkull) >= $ASCR) { callfunc "HH_AutoWin"; } //when scoring 10FS in a row Automatic Winner
+		delitem $@HeadSkull,countitem($@HeadSkull);
+		end;
+	}
+	end;
+}
+//====== Hill 4  =============================================================================
+2@cata,36,22,1	script	Hill_4	-1,3,3,{
+end;
+
+OnTouch:
+set $@HeadSkull,3303;
+set $@headhmap$,"2@cata";
+	if($@HH_active_hill == 4) {
+		if(countitem($@HeadSkull) < 1) { end; }
+		set .@hhp,.@hhp+countitem($@HeadSkull);
+	if($@HH_player1 == getcharid(0)) { set $@HH_score1,$@HH_score1+.@hhp;
+		mapannounce $@headhmap$,"~ "+hhtag$+" - "+strcharinfo(0)+" scored [ "+.@hhp+" ] Head Hunter Point(s). || "+$@HH_score1+".",bc_yellow; }
+	if($@HH_player2 == getcharid(0)) { set $@HH_score2,$@HH_score2+.@hhp;
+		mapannounce $@headhmap$,"~ "+hhtag$+" - "+strcharinfo(0)+" scored [ "+.@hhp+" ] Head Hunter Point(s). || "+$@HH_score2+".",bc_yellow; }
+	if($@HH_player3 == getcharid(0)) { set $@HH_score3,$@HH_score3+.@hhp;
+		mapannounce $@headhmap$,"~ "+hhtag$+" - "+strcharinfo(0)+" scored [ "+.@hhp+" ] Head Hunter Point(s). || "+$@HH_score3+".",bc_yellow; }
+	if($@HH_player4 == getcharid(0)) { set $@HH_score4,$@HH_score4+.@hhp;
+		mapannounce $@headhmap$,"~ "+hhtag$+" - "+strcharinfo(0)+" scored [ "+.@hhp+" ] Head Hunter Point(s). || "+$@HH_score4+".",bc_yellow; }
+	if($@HH_player5 == getcharid(0)) { set $@HH_score5,$@HH_score5+.@hhp;
+		mapannounce $@headhmap$,"~ "+hhtag$+" - "+strcharinfo(0)+" scored [ "+.@hhp+" ] Head Hunter Point(s). || "+$@HH_score5+".",bc_yellow; }
+	if($@HH_player6 == getcharid(0)) { set $@HH_score6,$@HH_score6+.@hhp;
+		mapannounce $@headhmap$,"~ "+hhtag$+" - "+strcharinfo(0)+" scored [ "+.@hhp+" ] Head Hunter Point(s). || "+$@HH_score6+".",bc_yellow; }
+	if($@HH_player7 == getcharid(0)) { set $@HH_score7,$@HH_score7+.@hhp;
+		mapannounce $@headhmap$,"~ "+hhtag$+" - "+strcharinfo(0)+" scored [ "+.@hhp+" ] Head Hunter Point(s). || "+$@HH_score7+".",bc_yellow; }
+	if($@HH_player8 == getcharid(0)) { set $@HH_score8,$@HH_score8+.@hhp;
+		mapannounce $@headhmap$,"~ "+hhtag$+" - "+strcharinfo(0)+" scored [ "+.@hhp+" ] Head Hunter Point(s). || "+$@HH_score8+".",bc_yellow; }
+		if(countitem($@HeadSkull) >= $ASCR) { callfunc "HH_AutoWin"; } //when scoring 10FS in a row Automatic Winner
+		delitem $@HeadSkull,countitem($@HeadSkull);
+		end;
+	}
+	end;
+}
+//====== Hill 5  =============================================================================
+2@cata,123,22,1	script	Hill_5	-1,3,3,{
+end;
+
+OnTouch:
+set $@HeadSkull,3303;
+set $@headhmap$,"2@cata";
+	if($@HH_active_hill == 5) {
+		if(countitem($@HeadSkull) < 1) { end; }
+		set .@hhp,.@hhp+countitem($@HeadSkull);
+	if($@HH_player1 == getcharid(0)) { set $@HH_score1,$@HH_score1+.@hhp;
+		mapannounce $@headhmap$,"~ "+hhtag$+" - "+strcharinfo(0)+" scored [ "+.@hhp+" ] Head Hunter Point(s). || "+$@HH_score1+".",bc_yellow; }
+	if($@HH_player2 == getcharid(0)) { set $@HH_score2,$@HH_score2+.@hhp;
+		mapannounce $@headhmap$,"~ "+hhtag$+" - "+strcharinfo(0)+" scored [ "+.@hhp+" ] Head Hunter Point(s). || "+$@HH_score2+".",bc_yellow; }
+	if($@HH_player3 == getcharid(0)) { set $@HH_score3,$@HH_score3+.@hhp;
+		mapannounce $@headhmap$,"~ "+hhtag$+" - "+strcharinfo(0)+" scored [ "+.@hhp+" ] Head Hunter Point(s). || "+$@HH_score3+".",bc_yellow; }
+	if($@HH_player4 == getcharid(0)) { set $@HH_score4,$@HH_score4+.@hhp;
+		mapannounce $@headhmap$,"~ "+hhtag$+" - "+strcharinfo(0)+" scored [ "+.@hhp+" ] Head Hunter Point(s). || "+$@HH_score4+".",bc_yellow; }
+	if($@HH_player5 == getcharid(0)) { set $@HH_score5,$@HH_score5+.@hhp;
+		mapannounce $@headhmap$,"~ "+hhtag$+" - "+strcharinfo(0)+" scored [ "+.@hhp+" ] Head Hunter Point(s). || "+$@HH_score5+".",bc_yellow; }
+	if($@HH_player6 == getcharid(0)) { set $@HH_score6,$@HH_score6+.@hhp;
+		mapannounce $@headhmap$,"~ "+hhtag$+" - "+strcharinfo(0)+" scored [ "+.@hhp+" ] Head Hunter Point(s). || "+$@HH_score6+".",bc_yellow; }
+	if($@HH_player7 == getcharid(0)) { set $@HH_score7,$@HH_score7+.@hhp;
+		mapannounce $@headhmap$,"~ "+hhtag$+" - "+strcharinfo(0)+" scored [ "+.@hhp+" ] Head Hunter Point(s). || "+$@HH_score7+".",bc_yellow; }
+	if($@HH_player8 == getcharid(0)) { set $@HH_score8,$@HH_score8+.@hhp;
+		mapannounce $@headhmap$,"~ "+hhtag$+" - "+strcharinfo(0)+" scored [ "+.@hhp+" ] Head Hunter Point(s). || "+$@HH_score8+".",bc_yellow; }
+		if(countitem($@HeadSkull) >= $ASCR) { callfunc "HH_AutoWin"; } //when scoring 10FS in a row Automatic Winner
+		delitem $@HeadSkull,countitem($@HeadSkull);
+		end;
+	}
+	end;
+}
+//====== Hill 6  =============================================================================
+2@cata,79,35,1	script	Hill_6	-1,3,3,{
+end;
+
+OnTouch:
+set $@HeadSkull,3303;
+set $@headhmap$,"2@cata";
+	if($@HH_active_hill == 6) {
+		if(countitem($@HeadSkull) < 1) { end; }
+		set .@hhp,.@hhp+countitem($@HeadSkull);
+	if($@HH_player1 == getcharid(0)) { set $@HH_score1,$@HH_score1+.@hhp;
+		mapannounce $@headhmap$,"~ "+hhtag$+" - "+strcharinfo(0)+" scored [ "+.@hhp+" ] Head Hunter Point(s). || "+$@HH_score1+".",bc_yellow; }
+	if($@HH_player2 == getcharid(0)) { set $@HH_score2,$@HH_score2+.@hhp;
+		mapannounce $@headhmap$,"~ "+hhtag$+" - "+strcharinfo(0)+" scored [ "+.@hhp+" ] Head Hunter Point(s). || "+$@HH_score2+".",bc_yellow; }
+	if($@HH_player3 == getcharid(0)) { set $@HH_score3,$@HH_score3+.@hhp;
+		mapannounce $@headhmap$,"~ "+hhtag$+" - "+strcharinfo(0)+" scored [ "+.@hhp+" ] Head Hunter Point(s). || "+$@HH_score3+".",bc_yellow; }
+	if($@HH_player4 == getcharid(0)) { set $@HH_score4,$@HH_score4+.@hhp;
+		mapannounce $@headhmap$,"~ "+hhtag$+" - "+strcharinfo(0)+" scored [ "+.@hhp+" ] Head Hunter Point(s). || "+$@HH_score4+".",bc_yellow; }
+	if($@HH_player5 == getcharid(0)) { set $@HH_score5,$@HH_score5+.@hhp;
+		mapannounce $@headhmap$,"~ "+hhtag$+" - "+strcharinfo(0)+" scored [ "+.@hhp+" ] Head Hunter Point(s). || "+$@HH_score5+".",bc_yellow; }
+	if($@HH_player6 == getcharid(0)) { set $@HH_score6,$@HH_score6+.@hhp;
+		mapannounce $@headhmap$,"~ "+hhtag$+" - "+strcharinfo(0)+" scored [ "+.@hhp+" ] Head Hunter Point(s). || "+$@HH_score6+".",bc_yellow; }
+	if($@HH_player7 == getcharid(0)) { set $@HH_score7,$@HH_score7+.@hhp;
+		mapannounce $@headhmap$,"~ "+hhtag$+" - "+strcharinfo(0)+" scored [ "+.@hhp+" ] Head Hunter Point(s). || "+$@HH_score7+".",bc_yellow; }
+	if($@HH_player8 == getcharid(0)) { set $@HH_score8,$@HH_score8+.@hhp;
+		mapannounce $@headhmap$,"~ "+hhtag$+" - "+strcharinfo(0)+" scored [ "+.@hhp+" ] Head Hunter Point(s). || "+$@HH_score8+".",bc_yellow; }
+		if(countitem($@HeadSkull) >= $ASCR) { callfunc "HH_AutoWin"; } //when scoring 10FS in a row Automatic Winner
+		delitem $@HeadSkull,countitem($@HeadSkull);
+		end;
+	}
+	end;
+}
+//====== Hill 7  =============================================================================
+2@cata,80,98,1	script	Hill_7	-1,3,3,{
+end;
+
+OnTouch:
+set $@HeadSkull,3303;
+set $@headhmap$,"2@cata";
+	if($@HH_active_hill == 7) {
+		if(countitem($@HeadSkull) < 1) { end; }
+		set .@hhp,.@hhp+countitem($@HeadSkull);
+	if($@HH_player1 == getcharid(0)) { set $@HH_score1,$@HH_score1+.@hhp;
+		mapannounce $@headhmap$,"~ "+hhtag$+" - "+strcharinfo(0)+" scored [ "+.@hhp+" ] Head Hunter Point(s). || "+$@HH_score1+".",bc_yellow; }
+	if($@HH_player2 == getcharid(0)) { set $@HH_score2,$@HH_score2+.@hhp;
+		mapannounce $@headhmap$,"~ "+hhtag$+" - "+strcharinfo(0)+" scored [ "+.@hhp+" ] Head Hunter Point(s). || "+$@HH_score2+".",bc_yellow; }
+	if($@HH_player3 == getcharid(0)) { set $@HH_score3,$@HH_score3+.@hhp;
+		mapannounce $@headhmap$,"~ "+hhtag$+" - "+strcharinfo(0)+" scored [ "+.@hhp+" ] Head Hunter Point(s). || "+$@HH_score3+".",bc_yellow; }
+	if($@HH_player4 == getcharid(0)) { set $@HH_score4,$@HH_score4+.@hhp;
+		mapannounce $@headhmap$,"~ "+hhtag$+" - "+strcharinfo(0)+" scored [ "+.@hhp+" ] Head Hunter Point(s). || "+$@HH_score4+".",bc_yellow; }
+	if($@HH_player5 == getcharid(0)) { set $@HH_score5,$@HH_score5+.@hhp;
+		mapannounce $@headhmap$,"~ "+hhtag$+" - "+strcharinfo(0)+" scored [ "+.@hhp+" ] Head Hunter Point(s). || "+$@HH_score5+".",bc_yellow; }
+	if($@HH_player6 == getcharid(0)) { set $@HH_score6,$@HH_score6+.@hhp;
+		mapannounce $@headhmap$,"~ "+hhtag$+" - "+strcharinfo(0)+" scored [ "+.@hhp+" ] Head Hunter Point(s). || "+$@HH_score6+".",bc_yellow; }
+	if($@HH_player7 == getcharid(0)) { set $@HH_score7,$@HH_score7+.@hhp;
+		mapannounce $@headhmap$,"~ "+hhtag$+" - "+strcharinfo(0)+" scored [ "+.@hhp+" ] Head Hunter Point(s). || "+$@HH_score7+".",bc_yellow; }
+	if($@HH_player8 == getcharid(0)) { set $@HH_score8,$@HH_score8+.@hhp;
+		mapannounce $@headhmap$,"~ "+hhtag$+" - "+strcharinfo(0)+" scored [ "+.@hhp+" ] Head Hunter Point(s). || "+$@HH_score8+".",bc_yellow; }
+		if(countitem($@HeadSkull) >= $ASCR) { callfunc "HH_AutoWin"; } //when scoring 10FS in a row Automatic Winner
+		delitem $@HeadSkull,countitem($@HeadSkull);
+		end;
+	}
+	end;
+}
+//====== Hill 8  =============================================================================
+2@cata,80,140,1	script	Hill_8	-1,3,3,{
+end;
+
+OnTouch:
+set $@HeadSkull,3303;
+set $@headhmap$,"2@cata";
+	if($@HH_active_hill == 8) {
+		if(countitem($@HeadSkull) < 1) { end; }
+		set .@hhp,.@hhp+countitem($@HeadSkull);
+	if($@HH_player1 == getcharid(0)) { set $@HH_score1,$@HH_score1+.@hhp;
+		mapannounce $@headhmap$,"~ "+hhtag$+" - "+strcharinfo(0)+" scored [ "+.@hhp+" ] Head Hunter Point(s). || "+$@HH_score1+".",bc_yellow; }
+	if($@HH_player2 == getcharid(0)) { set $@HH_score2,$@HH_score2+.@hhp;
+		mapannounce $@headhmap$,"~ "+hhtag$+" - "+strcharinfo(0)+" scored [ "+.@hhp+" ] Head Hunter Point(s). || "+$@HH_score2+".",bc_yellow; }
+	if($@HH_player3 == getcharid(0)) { set $@HH_score3,$@HH_score3+.@hhp;
+		mapannounce $@headhmap$,"~ "+hhtag$+" - "+strcharinfo(0)+" scored [ "+.@hhp+" ] Head Hunter Point(s). || "+$@HH_score3+".",bc_yellow; }
+	if($@HH_player4 == getcharid(0)) { set $@HH_score4,$@HH_score4+.@hhp;
+		mapannounce $@headhmap$,"~ "+hhtag$+" - "+strcharinfo(0)+" scored [ "+.@hhp+" ] Head Hunter Point(s). || "+$@HH_score4+".",bc_yellow; }
+	if($@HH_player5 == getcharid(0)) { set $@HH_score5,$@HH_score5+.@hhp;
+		mapannounce $@headhmap$,"~ "+hhtag$+" - "+strcharinfo(0)+" scored [ "+.@hhp+" ] Head Hunter Point(s). || "+$@HH_score5+".",bc_yellow; }
+	if($@HH_player6 == getcharid(0)) { set $@HH_score6,$@HH_score6+.@hhp;
+		mapannounce $@headhmap$,"~ "+hhtag$+" - "+strcharinfo(0)+" scored [ "+.@hhp+" ] Head Hunter Point(s). || "+$@HH_score6+".",bc_yellow; }
+	if($@HH_player7 == getcharid(0)) { set $@HH_score7,$@HH_score7+.@hhp;
+		mapannounce $@headhmap$,"~ "+hhtag$+" - "+strcharinfo(0)+" scored [ "+.@hhp+" ] Head Hunter Point(s). || "+$@HH_score7+".",bc_yellow; }
+	if($@HH_player8 == getcharid(0)) { set $@HH_score8,$@HH_score8+.@hhp;
+		mapannounce $@headhmap$,"~ "+hhtag$+" - "+strcharinfo(0)+" scored [ "+.@hhp+" ] Head Hunter Point(s). || "+$@HH_score8+".",bc_yellow; }
+		if(countitem($@HeadSkull) >= $ASCR) { callfunc "HH_AutoWin"; } //when scoring 10FS in a row Automatic Winner
+		delitem $@HeadSkull,countitem($@HeadSkull);
+		end;
+	}
+	end;
+}
+//====== ViewPoints Hills  =====================================================================
+2@cata,79,65,1	script	ViewPoint_Hill#V1-1::ViewPoint_Hill	-1,15,15,{
+end;
+
+OnTouch:
+OnTimer3001:
+	if($@HH_active_hill == 0) { 
+		viewpoint 2,79,66,1,0xFF0000; viewpoint 2,36,109,2,0xFF0000; viewpoint 2,123,109,3,0xFF0000; viewpoint 2,36,22,4,0xFF0000; viewpoint 2,123,22,5,0xFF0000; viewpoint 2,79,35,6,0xFF0000; viewpoint 2,80,98,7,0xFF0000; viewpoint 2,80,140,8,0xFF0000;
+		end; }
+
+	if($@HH_active_hill == 1) { 
+		viewpoint 2,79,66,1,0xFF0000; viewpoint 2,36,109,2,0xFF0000; viewpoint 2,123,109,3,0xFF0000; viewpoint 2,36,22,4,0xFF0000; viewpoint 2,123,22,5,0xFF0000; viewpoint 2,79,35,6,0xFF0000; viewpoint 2,80,98,7,0xFF0000; viewpoint 2,80,140,8,0xFF0000;
+		viewpoint 1,79,66,1,0xFF0000; end; }
+	if($@HH_active_hill == 2) { 
+		viewpoint 2,79,66,1,0xFF0000; viewpoint 2,36,109,2,0xFF0000; viewpoint 2,123,109,3,0xFF0000; viewpoint 2,36,22,4,0xFF0000; viewpoint 2,123,22,5,0xFF0000; viewpoint 2,79,35,6,0xFF0000; viewpoint 2,80,98,7,0xFF0000; viewpoint 2,80,140,8,0xFF0000;
+		viewpoint 1,36,109,2,0xFF0000; end; }
+	if($@HH_active_hill == 3) { 
+		viewpoint 2,79,66,1,0xFF0000; viewpoint 2,36,109,2,0xFF0000; viewpoint 2,123,109,3,0xFF0000; viewpoint 2,36,22,4,0xFF0000; viewpoint 2,123,22,5,0xFF0000; viewpoint 2,79,35,6,0xFF0000; viewpoint 2,80,98,7,0xFF0000; viewpoint 2,80,140,8,0xFF0000;
+		viewpoint 1,123,109,3,0xFF0000; end; }
+	if($@HH_active_hill == 4) { 
+		viewpoint 2,79,66,1,0xFF0000; viewpoint 2,36,109,2,0xFF0000; viewpoint 2,123,109,3,0xFF0000; viewpoint 2,36,22,4,0xFF0000; viewpoint 2,123,22,5,0xFF0000; viewpoint 2,79,35,6,0xFF0000; viewpoint 2,80,98,7,0xFF0000; viewpoint 2,80,140,8,0xFF0000;
+		viewpoint 1,36,22,4,0xFF0000; end; }
+	if($@HH_active_hill == 5) { 
+		viewpoint 2,79,66,1,0xFF0000; viewpoint 2,36,109,2,0xFF0000; viewpoint 2,123,109,3,0xFF0000; viewpoint 2,36,22,4,0xFF0000; viewpoint 2,123,22,5,0xFF0000; viewpoint 2,79,35,6,0xFF0000; viewpoint 2,80,98,7,0xFF0000; viewpoint 2,80,140,8,0xFF0000;
+		viewpoint 1,123,22,5,0xFF0000; end; }
+	if($@HH_active_hill == 6) { 
+		viewpoint 2,79,66,1,0xFF0000; viewpoint 2,36,109,2,0xFF0000; viewpoint 2,123,109,3,0xFF0000; viewpoint 2,36,22,4,0xFF0000; viewpoint 2,123,22,5,0xFF0000; viewpoint 2,79,35,6,0xFF0000; viewpoint 2,80,98,7,0xFF0000; viewpoint 2,80,140,8,0xFF0000;
+		viewpoint 1,79,35,6,0xFF0000; end; }
+	if($@HH_active_hill == 7) { 
+		viewpoint 2,79,66,1,0xFF0000; viewpoint 2,36,109,2,0xFF0000; viewpoint 2,123,109,3,0xFF0000; viewpoint 2,36,22,4,0xFF0000; viewpoint 2,123,22,5,0xFF0000; viewpoint 2,79,35,6,0xFF0000; viewpoint 2,80,98,7,0xFF0000; viewpoint 2,80,140,8,0xFF0000;
+		viewpoint 1,80,98,7,0xFF0000; end; }
+	if($@HH_active_hill == 8) { 
+		viewpoint 2,79,66,1,0xFF0000; viewpoint 2,36,109,2,0xFF0000; viewpoint 2,123,109,3,0xFF0000; viewpoint 2,36,22,4,0xFF0000; viewpoint 2,123,22,5,0xFF0000; viewpoint 2,79,35,6,0xFF0000; viewpoint 2,80,98,7,0xFF0000; viewpoint 2,80,140,8,0xFF0000;
+		viewpoint 1,80,140,8,0xFF0000; end; }
+	initnpctimer;
+	end;
+}
+
+2@cata,80,97,1	duplicate(ViewPoint_Hill)	ViewPoint_Hill#V1-2	-1,17,17
+2@cata,80,134,1	duplicate(ViewPoint_Hill)	ViewPoint_Hill#V1-3	-1,17,17
+2@cata,123,107,1	duplicate(ViewPoint_Hill)	ViewPoint_Hill#V1-4	-1,17,17
+2@cata,34,109,1	duplicate(ViewPoint_Hill)	ViewPoint_Hill#V1-5	-1,17,17
+2@cata,109,67,1	duplicate(ViewPoint_Hill)	ViewPoint_Hill#V1-6	-1,17,17
+2@cata,49,66,1	duplicate(ViewPoint_Hill)	ViewPoint_Hill#V1-7	-1,17,17
+2@cata,37,22,1	duplicate(ViewPoint_Hill)	ViewPoint_Hill#V1-8	-1,17,17
+2@cata,80,37,1	duplicate(ViewPoint_Hill)	ViewPoint_Hill#V1-9	-1,17,17
+2@cata,122,23,1	duplicate(ViewPoint_Hill)	ViewPoint_Hill#V1-10	-1,17,17
+
+// PRIZE
+lhz_cube,10,74,3	script	HeadHunterPrize	818,2,2,{
+OnTouch:
+	sc_end SC_ALL;
+	
+	if(strcharinfo(0)!=""){
+		mapannounce "turbo_room", "And the winner of this Head Hunter match is: "+strcharinfo(0)+" !!", 1;
+		mapannounce "force_1-1", "And the winner of this Head Hunter match is: "+strcharinfo(0)+" !!", 1;
+	}
+
+	set @howmuchHH,countitem(3303);
+	delitem 3303,@howmuchHH;
+	mes "[Winner Prize]";
+	mes "Congratulations, you're the winner! Here's your prize ~ ";
+	next;
+	getitem 22555,$HH_rbs;
+	set HH_Matchwin,HH_Matchwin+1;
+	set @HH_randexp,rand(99,320);
+	set HH_exp,(HH_exp+@HH_randexp);
+	dispbottom "You got "+@HH_randexp+" Head Hunter's EXP, keep playing and you'll raise your Rank!!";
+	dispbottom "Head Hunters total EXP: "+HH_exp+".";
+	percentheal 100,100;
+	warp "turbo_room",80,107;
+	end;
+
+}
+
+// PRIZE
+turbo_room,80,107,1	script	HeadHunterPrize	-1,1,1,{
+OnTouch:
+	sc_end SC_ALL;
+	set @howmuchHH,countitem(3303);
+	delitem 3303,@howmuchHH;
+	end;
+
+}
+
+2@cata,98,100,4	script	Repairman#01	86,{
+	/*Your RepairMan Script*/ end;
+}
+2@cata,61,31,4	script	Repairman#02	86,{
+	/*Your RepairMan Script*/ end;
+}

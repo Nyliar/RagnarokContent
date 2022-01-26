@@ -1,0 +1,100 @@
+prontera,284,156, 5	script	Amistr Hat	48,{
+
+	set .@npcname$,"[Amistr Hat]";
+	
+	//Black Amistr Hat 20294
+	setarray .iteBAH[0], 20293, 983, 7230;
+	setarray @countiteBAH[0], 1, 2, 2;
+	
+	//Blue Amistr Hat 20295
+	setarray .iteBLAH[0], 20293, 978, 7230;
+	setarray @countiteBLAH[0], 1, 2, 2;
+
+	//Brown Amistr Hat 20296
+	setarray .iteBRAH[0], 20293, 978, 980, 7230;
+	setarray @countiteBRAH[0], 1, 2, 2, 2;
+
+	//Cyan Amistr Hat 20296
+	setarray @iteCAH[0], 20293, 978, 982, 7230;
+	setarray @countitemCAH[0], 1, 2, 2, 2;
+
+	//Gold Amistr Hat 20297
+	setarray @iteGAH[0], 20293, 976, 7230;
+	setarray @countitemGAH[0], 1, 2, 2;
+
+	//Green Amistr Hat 20298
+	setarray @iteGNAH[0], 20293, 979, 7230;
+	setarray @countitemGNAH[0], 1, 2, 2;
+
+	//Orange Amistr Hat 20299
+	setarray @iteOAH[0], 20293, 980, 7230;
+	setarray @countitemOAH[0], 1, 2, 2;
+	
+	//Pink  Amistr Hat 20300
+	setarray @itePAH[0], 20293, 975, 982, 7230;
+	setarray @countitemPAH[0], 1, 2, 2, 2;
+
+	//Purple  Amistr Hat 20301
+	setarray @itePUAH[0], 20293, 981, 7230;
+	setarray @countitemPUAH[0], 1, 2, 2;
+	
+	//Red Amistr Hat 20302
+	setarray @iteRAH[0], 20293, 975, 7230;
+	setarray @countitemRAH[0], 1, 2, 2;
+
+	//Silver  Amistr Hat 20304
+	setarray @iteSAH[0], 20293, 983, 982, 7230;
+	setarray @countitemSAH[0], 1, 2, 2, 2;	
+	
+	
+	mes .@npcname$;
+	mes "Bonjour ^3333FF" + strcharinfo(0) + "^000000!";
+	mes "Je peux te proposer quelque hats pour customiser ton Amistr Hat.";
+	mes	"Ca t'interesse?!";
+	next;
+	mes .@npcname$;
+	mes "Voici ce que je peux te proposer:";
+	next;
+
+	switch(select("Black Amistr Hat:Blue Amistr Hat:Brown Amistr Hat:Cyan Amistr Hat:Gold Amistr Hat:Green Amistr Hat:Orange Amistr Hat:Pink Amistr Hat:Purple Amistr Hat:Red Amistr Hat:Silver Amistr Hat:^777777Rien, merci...^000000"))
+	{
+		case 1 :
+ 		callfunc "mes_getitem_colo",.@npcname$,20294,.iteBAH,@countiteBAH, 1000000;
+
+		case 2 :
+ 		callfunc "mes_getitem_colo",.@npcname$,20295,.iteBLAH,@countiteBLAH, 1000000;
+
+		case 3 :
+ 		callfunc "mes_getitem_colo",.@npcname$,20296,.iteBRAH,@countiteBRAH, 1000000;
+
+		case 4 :
+ 		callfunc "mes_getitem_colo",.@npcname$,20297,@iteCAH,@countitemCAH, 1000000;
+
+		case 5 :
+ 		callfunc "mes_getitem_colo",.@npcname$,20298,@iteGAH,@countitemGAH, 1000000;
+
+		case 6 :
+ 		callfunc "mes_getitem_colo",.@npcname$,20299,@iteGNAH,@countitemGNAH, 1000000;
+
+		case 7 :
+ 		callfunc "mes_getitem_colo",.@npcname$,20300,@iteOAH,@countitemOAH, 1000000;
+
+		case 8 :
+ 		callfunc "mes_getitem_colo",.@npcname$,20301,@itePAH,@countitemPAH, 1000000;
+
+		case 9 :
+ 		callfunc "mes_getitem_colo",.@npcname$,20302,@itePUAH,@countitemPUAH, 1000000;
+		
+		case 10 :
+		callfunc "mes_getitem_colo",.@npcname$,20303,@iteRAH,@countitemRAH, 1000000;
+
+		case 11 :
+		callfunc "mes_getitem_colo",.@npcname$,20304,@iteSAH,@countiteSAH, 1000000;
+
+		// Quitter
+		case 12 :
+		mes @npcname$;
+		mes "Très bien. A bientôt !";
+		close;
+	}
+}

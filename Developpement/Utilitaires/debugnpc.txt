@@ -1,0 +1,137 @@
+-	script	debugnpc	-1,{
+	end;
+
+OnWhisperGlobal:
+	if (@whispervar0$ == "unloadnpc")
+	{
+		if (@whispervar1$ == "hiddenpiece")
+		{
+			atcommand "@unloadnpcfile npc/custom/Alayne/Pierre/quetes/Hidden Piece/pillar.txt";
+			atcommand "@unloadnpcfile npc/custom/Alayne/Pierre/quetes/Hidden Piece/capital_pillar.txt";
+			atcommand "@unloadnpcfile npc/custom/Alayne/Pierre/quetes/Hidden Piece/hidden_piece.txt";
+
+			atcommand "@loadnpc npc/custom/Alayne/Pierre/quetes/Hidden Piece/pillar.txt";
+			atcommand "@loadnpc npc/custom/Alayne/Pierre/quetes/Hidden Piece/capital_pillar.txt";
+			atcommand "@loadnpc npc/custom/Alayne/Pierre/quetes/Hidden Piece/hidden_piece.txt";
+		}
+		if (@whispervar1$ == "elementalfuror")
+		{
+			atcommand "@unloadnpcfile npc/custom/Alayne/Pierre/quetes/Elemental Quest/Elemental_Guardians.txt";
+			atcommand "@unloadnpcfile npc/custom/Alayne/Pierre/quetes/Elemental Quest/Elemental_Furor.txt";
+			atcommand "@unloadnpcfile npc/custom/Alayne/Pierre/quetes/Elemental Quest/MainQuestItems.txt";
+			atcommand "@unloadnpcfile npc/custom/Alayne/Pierre/quetes/Elemental Quest/Marque_elementaire.txt";
+			atcommand "@unloadnpcfile npc/custom/Alayne/Pierre/quetes/Elemental Quest/Ohariam.txt";
+			atcommand "@unloadnpcfile npc/custom/Alayne/Pierre/quetes/Elemental Quest/Piedestal.txt";
+			atcommand "@unloadnpcfile npc/custom/Alayne/Pierre/quetes/Elemental Quest/Pousse_Yggdrasil.txt";
+
+			atcommand "@loadnpc npc/custom/Alayne/Pierre/quetes/Elemental Quest/Elemental_Guardians.txt";
+			atcommand "@loadnpc npc/custom/Alayne/Pierre/quetes/Elemental Quest/Elemental_Furor.txt";
+			atcommand "@loadnpc npc/custom/Alayne/Pierre/quetes/Elemental Quest/MainQuestItems.txt";
+			atcommand "@loadnpc npc/custom/Alayne/Pierre/quetes/Elemental Quest/Marque_elementaire.txt";
+			atcommand "@loadnpc npc/custom/Alayne/Pierre/quetes/Elemental Quest/Ohariam.txt";
+			atcommand "@loadnpc npc/custom/Alayne/Pierre/quetes/Elemental Quest/Piedestal.txt";
+			atcommand "@loadnpc npc/custom/Alayne/Pierre/quetes/Elemental Quest/Pousse_Yggdrasil.txt";
+		}
+		else if (@whispervar1$ == "hatmaker")
+		{
+			atcommand "@unloadnpcfile npc/custom/Alayne/Pierre/quetes/hat_maker.txt";
+			atcommand "@unloadnpcfile npc/custom/Alayne/Pierre/quetes/hat_maker2.txt";
+			atcommand "@unloadnpcfile npc/custom/Alayne/Pierre/quetes/hat_maker3.txt";
+			atcommand "@unloadnpcfile npc/custom/Alayne/Pierre/quetes/main_HM.txt";
+
+			atcommand "@loadnpc npc/custom/Alayne/Pierre/quetes/hat_maker.txt";
+			atcommand "@loadnpc npc/custom/Alayne/Pierre/quetes/hat_maker2.txt";
+			atcommand "@loadnpc npc/custom/Alayne/Pierre/quetes/hat_maker3.txt";
+			atcommand "@loadnpc npc/custom/Alayne/Pierre/quetes/main_HM.txt";
+		}
+		else if (@whispervar1$ == "greedisland")
+		{
+			atcommand "@unloadnpcfile npc/custom/Alayne/Pierre/Greed Island/Book.txt";
+			atcommand "@unloadnpcfile npc/custom/Alayne/Pierre/Greed Island/GreedIsland.txt";
+			atcommand "@unloadnpcfile npc/custom/Alayne/Pierre/Greed Island/Ring.txt";		
+			//atcommand "@unloadnpcfile npc/custom/Alayne/Pierre/Greed Island/Sorts/SpellFunctions.txt";	
+			//atcommand "@unloadnpcfile npc/custom/Alayne/Pierre/Greed Island/Sorts/Sort.txt";	
+			//atcommand "@unloadnpcfile npc/custom/Alayne/Pierre/Greed Island/Quests/quests_npc.txt";
+			//atcommand "@unloadnpcfile npc/custom/Alayne/Pierre/Greed Island/NpcGain/npcGain.txt";
+			//atcommand "@unloadnpcfile npc/custom/Alayne/Pierre/Greed Island/NpcGain/npcGains2.txt";
+			//atcommand "@unloadnpcfile npc/custom/Alayne/Pierre/Greed Island/NPC/EntryOut.txt";
+			//atcommand "@unloadnpcfile npc/custom/Alayne/Pierre/Greed Island/NPC/maingifunctions.txt";
+			//atcommand "@unloadnpcfile npc/custom/Alayne/Pierre/Greed Island/NPC/Merchants.txt";
+
+			atcommand "@loadnpc npc/custom/Alayne/Pierre/Greed Island/Book.txt";
+			atcommand "@loadnpc npc/custom/Alayne/Pierre/Greed Island/GreedIsland.txt";
+			atcommand "@loadnpc npc/custom/Alayne/Pierre/Greed Island/Ring.txt";		
+			//atcommand "@loadnpc npc/custom/Alayne/Pierre/Greed Island/Sorts/SpellFunctions.txt";	
+			//atcommand "@loadnpc npc/custom/Alayne/Pierre/Greed Island/Sorts/Sort.txt";	
+			//atcommand "@loadnpc npc/custom/Alayne/Pierre/Greed Island/Quests/quests_npc.txt";
+			//atcommand "@loadnpc npc/custom/Alayne/Pierre/Greed Island/NpcGain/npcGain.txt";
+			//atcommand "@loadnpc npc/custom/Alayne/Pierre/Greed Island/NpcGain/npcGains2.txt";
+			//atcommand "@loadnpc npc/custom/Alayne/Pierre/Greed Island/NPC/EntryOut.txt";
+			//atcommand "@loadnpc npc/custom/Alayne/Pierre/Greed Island/NPC/maingifunctions.txt";
+			//atcommand "@loadnpc npc/custom/Alayne/Pierre/Greed Island/NPC/Merchants.txt";
+		}
+		else if (@whispervar1$ == "exchange")
+		{
+			atcommand "@unloadnpcfile npc/custom/Alayne/Pierre/exchange/briseroche.txt";
+			atcommand "@unloadnpcfile npc/custom/Alayne/Pierre/exchange/le_Collectionneur.txt";
+			atcommand "@unloadnpcfile npc/custom/Alayne/Pierre/exchange/MVPExchange.txt";
+			atcommand "@unloadnpcfile npc/custom/Alayne/Pierre/exchange/Vote4Points.txt";
+			atcommand "@unloadnpcfile npc/other/card_trader.txt";
+
+			atcommand "@loadnpc npc/custom/Alayne/Pierre/exchange/briseroche.txt";
+			atcommand "@loadnpc npc/custom/Alayne/Pierre/exchange/le_Collectionneur.txt";
+			atcommand "@loadnpc npc/custom/Alayne/Pierre/exchange/MVPExchange.txt";
+			atcommand "@loadnpc npc/custom/Alayne/Pierre/exchange/Vote4Points.txt";
+			atcommand "@loadnpc npc/other/card_trader.txt";
+		}
+		else if (@whispervar1$ == "ladyfae")
+		{
+			atcommand "@unloadnpcfile npc/custom/Alayne/Pierre/quetes/quete_lady_fae.txt";
+			atcommand "@loadnpc npc/custom/Alayne/Pierre/quetes/quete_lady_fae.txt";
+		}
+		else if (@whispervar1$ == "raidpirate")
+		{
+			atcommand "@unloadnpcfile npc/custom/Alayne/Pierre/event/raid_pirate.txt";
+			atcommand "@loadnpc npc/custom/Alayne/Pierre/event/raid_pirate.txt";
+		}
+		else if (@whispervar1$ == "piratemaze")
+		{
+			atcommand "@unloadnpcfile npc/custom/Alayne/Pierre/event/piratemaze.txt";
+			atcommand "@loadnpc npc/custom/Alayne/Pierre/event/piratemaze.txt";
+		}
+		else if (@whispervar1$ == "mysterio")
+		{
+			atcommand "@unloadnpcfile npc/custom/Alayne/Pierre/quetes/quete_mysterio.txt";
+			atcommand "@unloadnpcfile npc/custom/Alayne/Pierre/Inhabitants/mysterio.txt";
+
+			atcommand "@loadnpc npc/custom/Alayne/Pierre/quetes/quete_mysterio.txt";
+			atcommand "@loadnpc npc/custom/Alayne/Pierre/Inhabitants/mysterio.txt";
+		}
+		else if (@whispervar1$ == "valhalla")
+		{
+			atcommand "@unloadnpcfile npc/custom/Alayne/Pierre/Instances/Valhalla_Garden.txt";
+			atcommand "@loadnpc npc/custom/Alayne/Pierre/Instances/Valhalla_Garden.txt";
+		}
+		else if (@whispervar1$ == "temple")
+		{
+			atcommand "@unloadnpcfile npc/custom/Alayne/Pierre/Instances/Through_the_Zodiac.txt";
+			atcommand "@loadnpc npc/custom/Alayne/Pierre/Instances/Through_the_Zodiac.txt";
+		}
+		else if (@whispervar1$ == "arena")
+		{
+			atcommand "@unloadnpcfile npc/custom/Alayne/Pierre/Instances/Arene_Entrainement.txt";
+			atcommand "@loadnpc npc/custom/Alayne/Pierre/Instances/Arene_Entrainement.txt";
+		}
+		else if (@whispervar1$ == "poring")
+		{
+			atcommand "@unloadnpcfile npc/custom/Alayne/Pierre/Instances/Like_a_poring.txt";
+			atcommand "@loadnpc npc/custom/Alayne/Pierre/Instances/Like_a_poring.txt";
+		}
+		else if (@whispervar1$ == "crash")
+		{
+			atcommand "@unloadnpcfile npc/custom/Alayne/Pierre/Inhabitants/Ile_crash.txt";
+			atcommand "@loadnpc npc/custom/Alayne/Pierre/Inhabitants/Ile_crash.txt";
+		}
+	}
+	end;
+}

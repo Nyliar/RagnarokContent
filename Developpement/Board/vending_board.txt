@@ -1,0 +1,138 @@
+thalys,133,193,4	script	Vending Board North East	837,{
+	
+	set .@npcname$, "[Vending Board North East]";
+	set .north_x, 0;
+	set .north_y, 0;
+	
+	mes "Cette pancarte marque la limite Nord Est de la zone de Vending autorisée.";
+	mes "Souhaitez-vous signaler une infraction?";
+	switch(select("Oui:Non"))
+	{
+		case 1:
+			mes "Veuillez entrer le nom de la personne en infraction.";
+			input .@pcname$;
+			next;
+			if (checkvending(.@pcname$))
+			{
+				set .@infraction, 0;
+				getmapxy(.@mapname$, .@x, .@y, 0, .@pcname$);
+				if (.@mapname$ == "thalys")
+				{
+					if (.@x > .north_x || .@y > .north_y)
+						set .@infraction, 1;
+				}
+				if (.@infraction == 1)
+				{
+					mes "Cette personne est bien en infraction.";
+					mes "Elle a par conséquent été déconnectée.";
+					mes "Son compteur d'infraction va être augmenté.";
+					mes "Si celui-ci dépasse 3, un jail de 12h sera appliqué.";
+					attachrid(getcharid(3,.@pcname$);
+					set CPT_INFRA, CPT_INFRA+1;
+					if (CPT_INFRA < 3)
+					{
+						atcommand "!kick " + .@pcname$;
+					}
+					else
+					{
+						atcommand "!jail " + strcharinfo(0) + " 720";
+						set CPT_INFRA, 0;
+					}
+				}
+			}
+			else
+			{
+				mes "Cette personne n'est pas en infraction.";
+				mes "Une tentative de kick malveillante est répréhensible.";
+				mes "Votre compteur d'infraction est augmenté.";
+				set CPT_INFRA, CPT_INFRA+1;
+				if (CPT_INFRA < 3)
+				{
+					mes "Vous allez donc être jail 10 minutes * votre compteur.";
+					atcommand "!jail " + strcharinfo(0) + " " + 10*CPT_INFRA;
+				}
+				else
+				{
+					mes "Votre compteur d'infraction est au maximum.";
+					mes "Vous allez être jail 24h.";
+					atcommand "!jail " + strcharinfo(0) + " 1440";
+					set CPT_INFRA, 0;
+				}
+			}
+			break;
+		case 2:
+			mes "Revenez en cas d'infraction.";
+			break;
+	}
+	close;
+}
+
+thalys,133,193,4	script	Vending Board South West	837,{
+
+	set .@npcname$, "[Vending Board South West]";
+	set .south_x, 0;
+	set .south_y, 0;
+	
+	mes "Cette pancarte marque la limite Sud Ouest de la zone de Vending autorisée.";
+	mes "Souhaitez-vous signaler une infraction?";
+	switch(select("Oui:Non"))
+	{
+		case 1:
+			mes "Veuillez entrer le nom de la personne en infraction.";
+			input .@pcname$;
+			next;
+			//check if character is connected and in vending state
+			if (checkvending(.@pcname$))
+			{
+				set .@infraction, 0;
+				getmapxy(.@mapname$, .@x, .@y, 0, .@pcname$);
+				if (.@mapname$ == "thalys")
+				{
+					if (.@x < .south_x || .@y < .south_y)
+						set .@infraction, 1;
+				}
+				if (.@infraction == 1)
+				{
+					mes "Cette personne est bien en infraction.";
+					mes "Elle a par conséquent été déconnectée.";
+					mes "Son compteur d'infraction va être augmenté.";
+					mes "Si celui-ci dépasse 3, un jail de 12h sera appliqué.";
+					attachrid(getcharid(3,.@pcname$);
+					set CPT_INFRA, CPT_INFRA+1;
+					if (CPT_INFRA < 3)
+					{
+						atcommand "!kick " + .@pcname$;
+					}
+					else
+					{
+						atcommand "!jail " + strcharinfo(0) + " 720";
+						set CPT_INFRA, 0;
+					}
+				}
+			}
+			else
+			{
+				mes "Cette personne n'est pas en infraction.";
+				mes "Une tentative de kick malveillante est répréhensible.";
+				mes "Votre compteur d'infraction est augmenté.";
+				set CPT_INFRA, CPT_INFRA + 1;
+				if (CPT_INFRA < 3)
+				{
+					mes "Vous allez donc être jail 10 minutes * votre compteur.";
+					atcommand "!jail " + strcharinfo(0) + " " + 10*CPT_INFRA;
+				}
+				else
+				{
+					mes "Votre compteur d'infraction est au maximum.";
+					mes "Vous allez être jail 24h.";
+					atcommand "!jail " + strcharinfo(0) + " 1440";
+					set CPT_INFRA, 0;
+				}
+			}
+			break;
+		case 2:
+			mes "Revenez en cas d'infraction.";
+			break;
+	}
+	close;
+}

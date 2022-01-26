@@ -1,0 +1,824 @@
+capitale,146,136,5	script	Inconsolable Childs::prtinch	96,{
+	set .@npcname$, "[Enfant Inconsolable]";
+	setarray .@sentences$, "Depuis ce temps tous les enfants sages",
+				"Ont écouté mille fois cette chanson du passé",
+				"Par delà le fort ils se sont épousés",
+				"Laissant derrière eux les souliers de Lady Fae...";
+	
+	mes .@npcname$;
+	mes "";
+	mes "Sob! Sob sob!";
+
+	if(LANGUAGE == 2)
+	{
+		if (checkquest(60358) == 1)
+		{
+			mes "Snif...";
+			mes "Do you know the end?";
+			mes "You know it right?!";
+			switch(select("Yes", "No"))
+			{
+				case 1:
+					mes "Can you sing it to me?";
+					next;
+					set .@correct, 0;
+					for (set .@i, 0; .@i < getarraysize (.@sentences$); set .@i, .@i+1)
+					{
+						input .@sentence$;
+						if (.@sentence$ == .@sentences$[.@i])
+						{
+							set .@correct, .@correct + 1;
+							mes "" + .@sentence$;
+						}
+						else
+						{
+							mes "Hum? No...Something wrong.";
+							break;
+						}
+					}
+					if (.@correct == 4)
+					{
+						next;
+						mes "Wonderful.";
+						mes "I like Lady Fae's song.";
+						mes "I can sing it entirely now.";
+						mes "Thanks a lot.";
+						completequest 60358;
+						erasequest 60355;
+						erasequest 60356;
+						erasequest 60357;
+					}
+					break;
+				case 2:
+					break;
+			}
+		}
+		else if (checkquest(60355) == 1)
+		{
+			mes "Snif...";
+			mes "You...You know Lady Fae's song?";
+			switch(select("Yes", "No"))
+			{
+				case 1:
+					mes "Can you please bring me back a proof that Lady Fae exist?";
+					mes "Sn...Snif! Please!";
+					mes "Sob, sob!";
+					break;
+				case 2:
+					mes "Then listen carefully. You should need it one day.";
+					mes "Nobody escape from Lady Fae.";
+					playBGM "150";
+					break;
+			}
+		}
+		else
+			mes "*He is inconsolable*";
+	}
+	else if (LANGUAGE == 1)
+	{
+		if (checkquest(60358) == 1)
+		{
+			mes "Snif...";
+			mes "Tu connais la fin?";
+			mes "Tu la connais, pas vrai?!";
+			switch(select("Oui", "Non"))
+			{
+				case 1:
+					mes "Tu peux me la chanter?";
+					next;
+					set .@correct, 0;
+					for (set .@i, 0; .@i < getarraysize (.@sentences$); set .@i, .@i+1)
+					{
+						input .@sentence$;
+						if (.@sentence$ == .@sentences$[.@i])
+						{
+							set .@correct, .@correct + 1;
+							mes "" + .@sentence$;
+						}
+						else
+						{
+							mes "Hum? Non...Quelque chose cloche.";
+							break;
+						}
+					}
+					if (.@correct == 4)
+					{
+						next;
+						mes "Magnifique.";
+						mes "J'adore la chanson de Lady Fae.";
+						mes "Et je peux la chanter en entier maitenant.";
+						mes "Merci infiniment.";
+						completequest 60358;
+						erasequest 60355;
+						erasequest 60356;
+						erasequest 60357;
+					}
+					break;
+				case 2:
+					break;
+			}
+		}
+		else if (checkquest(60355) == 1)
+		{
+			mes "Snif...";
+			mes "Tu...Tu connais la chanson de Lady Fae?";
+			switch(select("Oui", "Non"))
+			{
+				case 1:
+					mes "Tu peux me rapporter une preuve de l'existence de Lady Fae? S'il te plait?";
+					mes "Sn...Snif! S'il te plaiiiittt!";
+					mes "Sob, sob!";
+					break;
+				case 2:
+					mes "Alors écoute la bien. Tu pourrais en avoir besoin un jour.";
+					mes "Personne n'échappe à Lady Fae.";
+					playBGM "150";
+					break;
+			}
+		}
+		else
+			mes "*Il est inconsolable*";
+	}
+	close;
+}
+
+capitale,144,138,3	script	Child Mother::prticm	91,{
+	set .@npcname$, "[Elene]";
+	
+	mes .@npcname$;
+	mes "";
+	if(LANGUAGE == 2)
+	{
+		mes "Childs always have pain to go to bed.";
+		mes "And that's even worth if you doesn't sing the Lady Fae's song.";
+		mes "Do you know it?";
+		if (checkquest(60358) == 2  && #complete == 0)
+		{
+			next;
+			mes "I can feel that you know Her secret.";
+			mes "Don't spoil the childs dream, please.";
+			set BaseExp,BaseExp+1500000;
+			set Zeny, Zeny+2000000;
+			mes "You know, some says that the Shoes never really disappear...";
+			mes "They wait in Her house that somebody come to take them.";
+			mes "But they're kept by a monster even worst than the Cursed Fae...";
+			set #complete, 1;
+		}
+		else if (checkquest(60355) == 1)
+		{
+			mes "It appears that Lady Fae come to meet those who discovered the Blow and the Storm.";
+			mes "Some says this sources are somewhere around there.";
+			mes "I wonder if it's true...";
+		}
+		else if (checkquest(60356) == 1)
+		{
+			mes "You know have to find Lady Fae.";
+			mes "Some says her house was in the last Fae Empire capital.";
+			mes "I wonder if it's still there.";
+			mes "Fae islands entrance is hidden in the old city, Revencia.";
+			mes "It's a kind of old Law Mansion, under the bridge.";
+		}
+	}
+	else if (LANGUAGE == 1)
+	{
+		mes "Les enfants ont toujours du mal à aller au lit.";
+		mes "Et c'est encore pire si je ne leur chante pas la chanson de Lady Fae.";
+		mes "Tu la connais?";
+		if (checkquest(60358) == 2  && #complete == 0)
+		{
+			next;
+			mes "Je peux sentir que tu connais son secret.";
+			mes "Ne brise pas les rêves des enfants, je t'en prie.";
+			set BaseExp,BaseExp+1500000;
+			set Zeny, Zeny+2000000;
+			mes "Tu sais, certains disent que ses chaussures ne disparaissent pas vraiment...";
+			mes "Elles attendent dans la maison que quelqu'un vienne les chercher.";
+			mes "Mais elles seraient gardées par un monstre pire que la Fae Maudite...";
+			set #complete, 1;
+		}
+		else if (checkquest(60355) == 1)
+		{
+			mes "It appears that Lady Fae come to meet those who discovered the Blow and the Storm.";
+			mes "Some says this sources are somewhere around there.";
+			mes "I wonder if it's true...";
+		}
+		else if (checkquest(60356) == 1)
+		{
+			mes "You know have to find Lady Fae.";
+			mes "Some says her house was in the last Fae Empire capital.";
+			mes "I wonder if it's still there.";
+			mes "Fae islands entrance is hidden in the old city, Revencia.";
+			mes "It's a kind of old Law Mansion, under the bridge.";
+		}
+	}
+	close;
+}
+
+capitale,144,133,1	script	Child Father::prticf	65,{
+	set .@npcname$, "[Raimo]";
+	
+	mes .@npcname$;
+	mes "";
+	if(LANGUAGE == 2)
+	{
+		mes "Childs always have pain to go to bed.";
+		mes "And that's even worth if you doesn't sing the Lady Fae's song.";
+		mes "Do you know it?";
+		if (checkquest(60358) == 2  && #complete == 0)
+		{
+			next;
+			mes "I can feel that you know Her secret.";
+			mes "Don't spoil the childs dream, please.";
+			set BaseExp,BaseExp+1500000;
+			set Zeny, Zeny+2000000;
+			mes "You know, some says that the Shoes never really disappear...";
+			mes "They wait in Her house that somebody come to take them.";
+			mes "But they're kept by a monster even worst than the Cursed Fae...";
+			set #complete, 1;
+		}
+		else if (checkquest(60355) == 1)
+		{
+			mes "It appears that Lady Fae come to meet those who discovered the Blow and the Storm.";
+			mes "Some says this sources are somewhere around there.";
+			mes "I wonder if it's true...";
+		}
+		else if (L_FAE_Q >= 2 && L_FAE_Q <= 4)
+		{
+			mes "You find the Slivers?";
+			mes "The following of the song speak about Subjucated Gawker.";
+			mes "I thinks I've met some somewhere...";
+			mes "Where was that? Prontera? Geffen? Yuno maybe...";
+		}
+	}
+	else if (LANGUAGE == 1)
+	{
+		mes "Les enfants ont toujours du mal à aller au lit.";
+		mes "Et c'est encore pire si on ne leur chante pas la chanson de Lady Fae.";
+		mes "Tu la connais?";
+		if (checkquest(60358) == 2  && #complete == 0)
+		{
+			next;
+			mes "Je peux sentir que tu connais son secret.";
+			mes "Ne brise pas les rêves des enfants, je t'en prie.";
+			set BaseExp,BaseExp+1500000;
+			set Zeny, Zeny+2000000;
+			mes "Tu sais, certains disent que ses chaussures ne disparaissent pas vraiment...";
+			mes "Elles attendent dans la maison que quelqu'un vienne les chercher.";
+			mes "Mais elles seraient gardées par un monstre pire que la Fae Maudite...";
+			set #complete, 1;
+		}
+		else if (checkquest(60355) == 1)
+		{
+			mes "Il parait que Lady Fae vient à la rencontre de ceux qui ont traversé le Vent et la Tempête.";
+			mes "Certains disent que ces sources se trouvent aux alentours.";
+			mes "Je me demande si c'est vrai...";
+		}
+		else if (L_FAE_Q >= 2 && L_FAE_Q <= 4)
+		{
+			mes "Tu as trouvé les marques?";
+			mes "La suite de la chanson parle de Badeaux Envoutés.";
+			mes "Je crois même en avoir déjà rencontré quelque part...";
+			mes "Ou était-ce? Prontera? Geffen? Yuno peut-être...";
+		}
+	}
+	close;
+}
+
+capitale,182,158,5	script	Wind Blow::prtwb	111,{
+	set .@npcname$, "[Wind Blow]";
+	
+	mes .@npcname$;
+	mes "";
+	if (checkquest(60355) == 2)
+	{
+		if(LANGUAGE == 2)
+		{
+			mes "*The wind blow with strength here.*";
+		}
+		else if (LANGUAGE == 1)
+		{
+
+				mes "*Le vent souffle fort ici.*";
+		}
+	}
+	else if (checkquest(60355) == 1)
+	{
+		mes "Soufflent les vents...";
+		set L_FAE_Q, 1;
+	}
+	close;
+}
+
+capitale,164,79,5	script	Storm Blow::prtsb	111,{
+	set .@npcname$, "[Storm Blow]";
+	
+	mes .@npcname$;
+	mes "";
+	if (checkquest(60355) == 2)
+	{
+		if(LANGUAGE == 2)
+		{
+				mes "*You can hear the Storm.*";
+		}
+		else if (LANGUAGE == 1)
+		{
+				mes "*Vous entendez l'Orage.*";
+		}
+	}
+	else if (checkquest(60355) == 1 && L_FAE_Q == 1 && #count_orage < 2)
+	{
+		set #count_orage, #count_orage+1;
+		if (#count_orage == 2)
+		{
+			mes "Tonne l'orage...";
+			set L_FAE_Q, 2;
+			erasequest 60355;
+			setquest 60356;
+		}
+	}
+	else
+		mes "Tonne l'Orage...";
+	close;
+}
+
+capitale,125,111,5	script	Storm Blow#2::prtsb2	111,{
+	set .@npcname$, "[Storm Blow]";
+	
+	mes .@npcname$;
+	mes "";
+	if (checkquest(60355) == 2)
+	{
+		if(LANGUAGE == 2)
+		{
+				mes "*You can hear the Storm.*";
+		}
+		else if (LANGUAGE == 1)
+		{
+				mes "*Vous entendez l'Orage.*";
+		}
+	}
+	else if (checkquest(60355) == 1 && L_FAE_Q == 1 && #count_orage < 2)
+	{
+		set #count_orage, #count_orage+1;
+		if (#count_orage == 2)
+		{
+			mes "Tonne l'orage...";
+			set L_FAE_Q, 2;
+			erasequest 60355;
+			setquest 60356;
+		}
+	}
+	else
+		mes "Tonne l'Orage...";
+	close;
+}
+
+prontera,110,246,5	script	Subjugated Gawker::prtsg	86,2,2,{
+	set .@npcname$, "[Subjucated Gawker]";
+	
+	mes .@npcname$;
+	mes "";
+	if(LANGUAGE == 2)
+	{
+		mes "*He doesn't answer.*";
+	}
+	else if (LANGUAGE == 1)
+	{
+		mes "*Il ne répond pas.*";
+	}
+	close;
+	
+OnTouch:
+	if (L_FAE_Q == 2)
+	{
+		dispbottom "Soufflent les vents, tonne l'orage";
+		dispbottom "Pleurent les enfants";
+		dispbottom "Dans leur lit sans bouger";
+		dispbottom "Nul ne sait jamais les consoler";
+		dispbottom "Sans raconter l'histoire de Lady Fae";
+		set L_FAE_Q, 3;
+	}
+	end;
+}
+
+capitale,206,166,5	script	Singing Gawker::gefsg	89,2,2,{
+	set .@npcname$, "[Singing Gawker]";
+	
+	mes .@npcname$;
+	mes "";
+	if(LANGUAGE == 2)
+	{
+		mes "*He doesn't answer.*";
+	}
+	else if (LANGUAGE == 1)
+	{
+		mes "*Il ne répond pas.*";
+	}
+	close;
+	
+OnTouch:
+	if (L_FAE_Q == 3)
+	{
+		dispbottom "Soufflent les vents, tonne l'orage";
+		dispbottom "Jusqu'à l'horizon les badauds envoutés";
+		dispbottom "Nul ne sait les ignorer chanter";
+		dispbottom "Les vertus magiques des souliers de Lady Fae";
+		set L_FAE_Q, 4;
+	}
+	end;
+}
+
+yuno,167,162,5	script	Huming Gawker::yuhg	83,2,2,{
+	set .@npcname$, "[Huming Gawker]";
+	
+	mes .@npcname$;
+	mes "";
+	if(LANGUAGE == 2)
+	{
+		mes "*He doesn't answer.*";
+	}
+	else if (LANGUAGE == 1)
+	{
+		mes "*Il ne répond pas.*";
+	}
+	close;
+	
+OnTouch:
+	if (L_FAE_Q == 4)
+	{
+		dispbottom "Soufflent les vents, tonne l'orage";
+		dispbottom "Lorsqu'on l'aperçoit on ne peut l'oublier mais";
+		dispbottom "Nul ne sait jamais la rattraper";
+		dispbottom "En suivant les traces des souliers de Lady Fae";
+		enablenpc "revlf";
+	}
+	end;
+}
+
+revencia,164,52,5	script	Lady Fae::revlf	2513,2,2,{
+	set .@npcname$, "[Lady Fae]";
+	
+	mes .@npcname$;
+	mes "";
+	if(LANGUAGE == 2)
+	{
+		mes "*She doesn't answer.*";
+	}
+	else if (LANGUAGE == 1)
+	{
+		mes "*Elle ne répond pas.*";
+	}
+	setquest 60355;
+	close;
+	
+OnTouch:
+	if (checkquest(60356) == 1)
+	{
+		addtimer 10000, strnpcinfo(3)+"::OnShowOff";
+		if(LANGUAGE == 2)
+		{
+			dispbottom "*Lady Fae smile tenderly at you*";
+		}
+		else if (LANGUAGE == 1)
+		{
+			dispbottom "*Lady Fae vous sourit tendrement*";
+		}
+	}
+	end;
+
+OnShowOff:
+	disablenpc "revlf";
+	if(LANGUAGE == 2)
+	{
+		dispbottom "A soft voice raise in the air.";
+	}
+	else if (LANGUAGE == 1)
+	{
+		dispbottom "Une voix douce s'élève dans les airs.";
+	}
+
+	dispbottom "";
+	dispbottom "Soufflent les vents, tonne l'orage";
+	dispbottom "En haut de la colline elle a sa maisonnée";
+	dispbottom "Nul ne sait espérer l'approcher";
+	dispbottom "Sans porter les souliers de Lady Fae";
+	sleep2 45000;
+	set L_FAE_Q, 5;
+	goto OnShowOn;
+	end;
+
+OnShowOn:
+	enablenpc "revlf";
+	end;
+}
+
+zha_in,112,11,5	script	Lady Fae#2::zhalf2	2513,2,2,{
+	set .@npcname$, "[Lady Fae]";	
+	if (checkquest(60358) == 1)
+	{
+		if(LANGUAGE == 2)
+		{
+				mes "Finally, you've come.";
+				mes "I've waiting so much time...";
+				mes "You only have to free me from my curse now.";
+		}
+		else if (LANGUAGE == 1)
+		{
+				mes "Finalement, te voilà.";
+				mes "J'ai attendu si longtemps...";
+				mes "Tu n'as plus qu'à me libérer maintenant.";
+		}
+		dispbottom "Soufflent les vents, tonne l'orage";
+		dispbottom "En voyant sa promise il s'est agenouillé";
+		dispbottom "Puis demandant sa main déposa un baiser";
+		dispbottom "Sur les souliers enchantés de Lady Fae";
+		disablenpc "zhalf2";
+		dispbottom "Depuis ce temps tous les enfants sages";
+		dispbottom "Ont écouté mille fois cette chanson du passé";
+		dispbottom "Par delà le fort ils se sont épousés";
+		dispbottom "Laissant derrière eux les souliers de Lady Fae...";
+
+		monster "zha_in",112,9,"Lady Fae",2513,1,"zhalf2::OnGuardianDie";
+	}
+	close;
+	
+OnGuardianDie:
+	delitem 21096,1;
+	if(LANGUAGE == 2)
+	{
+		mes "Thank you, child. Thank you so much.";
+		mes "I can finally rest.";
+		mes "Go, travel around the world, and sing.";
+		mes "Sing the happy ending of Lady Fae.";
+	}
+	else if (LANGUAGE == 1)
+	{
+		mes "Merci, enfant. Merci infiniment.";
+		mes "Je peux enfin me reposer.";
+		mes "Va. Voyage à travers le monde et chante.";
+		mes "Chante la fin heureuse de Lady Fae.";
+	}
+	close;
+}
+
+zhakastia,119,41,5	script	House Entrance::em	-1,2,2,{
+	end;
+	
+OnTouch:
+	if(LANGUAGE == 2)
+	{
+		if (checkquest(60356) == 1 || checkquest(60357) == 1 || checkquest(60358) == 1)
+		{
+			if (isequipped(21096))
+			{
+				mes "You got the Lady Fae Shoes";
+				mes "You're ready to met her. Do you wanna try your chance?";
+				switch(select("Yes", "No"))
+				{
+					case 1:
+						dispbottom "Soufflent les vents, tonne l'orage";
+						dispbottom "Il n'a que faire des légendes oubliées";
+						dispbottom "En poussant la porte il espère trouver";
+						dispbottom "Ces yeux qui le hantent ce sont ceux de Lady Fae";
+						sleep2 2500;
+						warp "zha_in", 61, 6;
+						enablenpc "zhalf2";
+						changequest 60357, 60358;
+						break;
+					case 2:
+						mes "You let the door handle.";
+						mes "A voice raise from the inside, calling you,";
+						mes "but you pass throught.";
+						dispbottom "Soufflent les vents, tonne l'orage";
+						dispbottom "Celle qui tient le fort reste une fille à marier";
+						dispbottom "Elle attend le jour où l'un deux va passer";
+						dispbottom "La porte de la demeure de Lady Fae";
+						break;
+				}
+				close;
+			}
+			else
+			{
+				warp "prontera", 0, 0;
+				dispbottom "You can go nearest without Lady Fae's Shoes.";
+				dispbottom "Therefor, nobody knows where they are,";
+				dispbottom "but rumour talks about a chest on Fae Island.";
+				changequest 60356, 60357;
+			}
+		}
+		else if (checkquest(60358) == 2 || #complete >= 1)
+		{
+			warp "zha_in", 61, 6;
+			disablenpc "zhalf2";
+			if (mobcount("zha_in","All") == 0)
+				monster "zha_in",112,9,"Shoes Guardian",2544,1, strnpcinfo(3)+"::OnGuardianDead";
+		}
+	}
+	else if (LANGUAGE == 1)
+	{
+		if (checkquest(60356) == 1 || checkquest(60357) == 1 || checkquest(60358) == 1)
+		{
+			if (isequipped(21096))
+			{
+				mes "Vous avez les Souliers de Lady Fae.";
+				mes "Vous êtes prêt à la rencontrer. Voulez-vous tenter votre chance?";
+				switch(select("Oui", "Non"))
+				{
+					case 1:
+						dispbottom "Soufflent les vents, tonne l'orage";
+						dispbottom "Il n'a que faire des légendes oubliées";
+						dispbottom "En poussant la porte il espère trouver";
+						dispbottom "Ces yeux qui le hantent ce sont ceux de Lady Fae";
+						sleep2 2500;
+						warp "zha_in", 61, 6;
+						enablenpc "zhalf2";
+						changequest 60357, 60358;
+						break;
+					case 2:
+						mes "Vous lâcher la poignée de la porte.";
+						mes "Une voix vous appelle de l'intérieur,";
+						mes "mais vous passez votre chemin.";
+						dispbottom "Soufflent les vents, tonne l'orage";
+						dispbottom "Celle qui tient le fort reste une fille à marier";
+						dispbottom "Elle attend le jour où l'un deux va passer";
+						dispbottom "La porte de la demeure de Lady Fae";
+						break;
+				}
+				close;
+			}
+			else
+			{
+				warp "prontera", 0, 0;
+				dispbottom "Vous ne pouvez pas vous approcher plus sans les Souliers de Lady Fae.";
+				dispbottom "Cependant, personne ne sait où il se trouve,";
+				dispbottom "mais une rumeur laisse entendre qu'elles sont sur l'Ile aux Faes.";
+				changequest 60356, 60357;
+			}
+		}
+		else if (checkquest(60358) == 2 || #complete >= 1)
+		{
+			warp "zha_in", 61, 6;
+			disablenpc "zhalf2";
+			if (mobcount("zha_in","All") == 0)
+				monster "zha_in",112,9,"Shoes Guardian",2544,1, strnpcinfo(3)+"::OnGuardianDead";
+		}
+	}
+	end;
+	
+OnGuardianDead:
+	if(LANGUAGE == 2)
+	{
+		dispbottom "The Guardian drop Lady Fae's Shoes.";
+		dispbottom "They're finally all yours.";
+	}
+	else if (LANGUAGE == 1)
+	{
+		dispbottom "Le gardien laisse tomber les Souliers de Lady Fae.";
+		dispbottom "Il sont enfin à vous.";
+	}
+	if (#complete < 2)
+	{
+		getitem 21096,1;
+		set #complete, 2;
+	}
+	end;
+}
+
+zhakastia,52,108,5	script	Way Through::zhawt	111,2,2,{
+	end;
+	
+OnTouch:
+	if (checkquest(60357) == 1)
+	{
+		dispbottom "Soufflent les vents, tonne l'orage";
+		dispbottom "Elle prend de sa main la vie des étrangers";
+		dispbottom "Nul ne sait fouler la route aux souliers";
+		dispbottom "Sans trouver la mort aux portes de Lady Fae";
+		sleep2 2500;
+		if (!isequipped(21096))
+			atcommand "!nuke " + strcharinfo(0);
+	}
+	end;
+}
+
+casp_auct01,49,69,5	script	Underground Entrance::esf	111,{
+	if(LANGUAGE == 2)
+	{
+		if (checkquest(60356) == 1 || checkquest(60357) == 1 || checkquest(60358) == 2 || countitem(21096) == 1)
+		{
+			mes "Do you want to leave for Fae Undergrounds?";
+			switch(select("Yes", "No"))
+			{
+				case 1:
+					warp "casp_cave",76,47;
+					if (checkquest(60356) == 1 && #killedFae == 0)
+					{
+						disablenpc "cave-zhakastia";
+						disablenpc "cave-auction";
+						monster "casp_cave",41,57,"Lady Fae's Shadow",2514,1,strnpcinfo(3)+"::OnLadyFaeDied";
+					}
+					break;
+				case 2:
+					mes "You passed.";
+					break;
+			}
+		}
+	}
+	else if (LANGUAGE == 1)
+	{
+		if (checkquest(60356) == 1 || checkquest(60357) == 1 || checkquest(60358) == 2 || countitem(21096) == 1)
+		{
+			mes "Voulez-vous entrer dans les Souterrains aux Faes?";
+			switch(select("Oui", "Non"))
+			{
+				case 1:
+					warp "casp_cave",76,47;
+					if (checkquest(60356) == 1 && #killedFae == 0)
+					{
+						disablenpc "cave-zhakastia";
+						disablenpc "cave-auction";
+						monster "casp_cave",41,57,"Lady Fae's Shadow",2514,1,strnpcinfo(3)+"::OnLadyFaeDied";
+					}
+					break;
+				case 2:
+					mes "Vous entrez.";
+					break;
+			}
+		}
+	}
+	dispbottom "L'un d'eux s'est épris de la belle aux souliers";
+	dispbottom "Il traverse les champs de fêlons statufiés";
+	close;
+
+OnLadyFaeDied:
+	enablenpc "cave-zhakastia";
+	enablenpc "cave-auction";
+	if(LANGUAGE == 2)
+	{
+		dispbottom "You find Lady Fae's Shoes on her Ghost.";
+	}
+	else if (LANGUAGE == 1)
+	{
+		dispbottom "Vous trouvez les Souliers de Lady Fae sur son fantôme.";
+	}
+	getitem 21096,1;
+	set #killedFae, 1;
+	end;
+
+OnNPCKillEvent:
+	if (#complete >= 1)
+	{
+		if (rand(0,250) <= 5)
+		{
+			if (killedrid == 2507)
+			{
+				getitem 7231, 1;
+			}
+			else if (killedrid == 2508)
+			{
+				getitem 7232, 1;
+			}
+			else if (killedrid == 2509)
+			{
+				getitem 7233, 1;
+			}
+		}
+	}
+	end;
+}
+
+casp_chc,102,123,5	script	Faes Underground Outdoor::sdsf	111,{
+	if(LANGUAGE == 2)
+	{
+		if (checkquest(60356) == 1 || checkquest(60357) == 1 || checkquest(60358) == 2)
+		{
+			mes "Do you want to leave the Fae Undergrounds?";
+			switch(select("Yes", "No"))
+			{
+				case 1:
+					warp "casp_cave",10,78;
+					break;
+				case 2:
+					mes "You choose to stay a bit more.";
+					break;
+			}
+		}
+	}
+	else if (LANGUAGE == 1)
+	{
+		if (checkquest(60356) == 1 || checkquest(60357) == 1 || checkquest(60358) == 2)
+		{
+			mes "Voulez-vous quitter le Souterrain aux Faes?";
+			switch(select("Oui", "Non"))
+			{
+				case 1:
+					warp "casp_cave",10,78;
+					break;
+				case 2:
+					mes "Vous choisissez de rester encore un peu.";
+					break;
+			}
+		}
+	}
+	close;
+}

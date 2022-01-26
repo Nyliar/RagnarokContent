@@ -1,0 +1,72 @@
+dicastes01, 171,195, 5	script	Evil Wing Ears	412,{
+
+	set .@npcname$,"[Evil Wing Ears]";
+	
+	//Blue Evil Wing Ears 20295
+	setarray @iteBLEWE[0], 5044, 978, 7230;
+	setarray @countiteBLEWE[0], 1, 2, 2;
+
+	//Cyan Evil Wing Ears 20296
+	setarray @itemCEWE[0], 5044, 978, 982, 7230;
+	setarray @countitemCEWE[0], 1, 2, 2, 2;
+
+	//Gold Evil Wing Ears 20298
+	setarray @itemGEWE[0], 5044, 976, 7230;
+	setarray @countitemGEWE[0], 1, 2, 2;
+
+	//Green Evil Wing Ears 20298
+	setarray @itemGNEWE[0], 5044, 979, 7230;
+	setarray @countitemGNEWE[0], 1, 2, 2;
+
+	//Purple  Evil Wing Ears 20301
+	setarray @itemPUEWE[0], 5044, 981, 7230;
+	setarray @countitemPUEWE[0], 1, 2, 2;
+	
+	//Red Evil Wing Ears 20302
+	setarray @itemREWE[0], 5044, 975, 7230;
+	setarray @countitemREWE[0], 1, 2, 2;
+
+	//White  Evil Wing Ears 20304
+	setarray @itemWEWE[0], 5044, 982, 7230;
+	setarray @countitemWEWE[0], 1, 2, 2;	
+	
+	
+	mes .@npcname$;
+	mes "Bonjour ^3333FF" + strcharinfo(0) + "^000000!";
+	mes "Je peux te proposer quelque hats pour customiser ton Evil Wing Ears.";
+	mes	"Ca t'interesse?!";
+	next;
+	mes .@npcname$;
+	mes "Voici ce que je peux te proposer:";
+	next;
+
+	switch(select("Blue Evil Wing Ears:Cyan Evil Wing Ears:Gold Evil Wing Ears:Green Evil Wing Ears:Purple Evil Wing Ears:Red Evil Wing Ears:White Evil Wing Ears:^777777Rien, merci...^000000"))
+	{
+		case 1 :
+ 		callfunc "mes_getitem_colo",.@npcname$,20500,@iteBLEWE,@countiteBLEWE, 1000000;
+
+		case 2 :
+ 		callfunc "mes_getitem_colo",.@npcname$,20501,@itemCEWE,@countitemCEWE, 1000000;
+
+		case 3 :
+ 		callfunc "mes_getitem_colo",.@npcname$,20502,@itemGEWE,@countitemGEWE, 1000000;
+
+		case 4 :
+ 		callfunc "mes_getitem_colo",.@npcname$,20503,@itemGNEWE,@countitemGNEWE, 1000000;
+
+		case 5 :
+ 		callfunc "mes_getitem_colo",.@npcname$,20504,@itemPUEWE,@countitemPUEWE, 1000000;
+		
+		case 6 :
+		callfunc "mes_getitem_colo",.@npcname$,20505,@itemREWE,@countitemREWE, 1000000;
+
+		case 7 :
+		callfunc "mes_getitem_colo",.@npcname$,20506,@itemWEWE,@countitemWEWE, 1000000;
+
+		// Quitter
+		case 8 :
+		mes @npcname$;
+		mes "Très bien. A bientôt !";
+		close;
+	}
+}

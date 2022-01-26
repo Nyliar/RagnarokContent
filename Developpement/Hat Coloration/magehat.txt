@@ -1,0 +1,73 @@
+hugel, 153, 203, 5	script	Mage Hat	411,{
+
+	set .@npcname$,"[Mage Hat]";
+	
+	//Black Mage Hat 20133
+	setarray @itemBMH[0], 5027, 983, 7230;
+	setarray @countitemBMH[0], 1, 2, 2;
+	
+	//Blue Mage Hat 20134
+	setarray @itemBLMH[0], 5027, 978, 7230;
+	setarray @countitemBLMH[0], 1, 2, 2;
+
+	//Cyan Mage Hat 20135
+	setarray @itemCMH[0], 5027, 978, 982, 7230;
+	setarray @countitemCMH[0], 1, 2, 2, 2;
+
+	//Gold Mage Hat 20136
+	setarray .itMHMH[0], 5027, 976, 7230;
+	setarray .countitMHMH[0], 1, 2, 2;
+	
+	//Purple  Mage Hat 20137
+	setarray @itemPMH[0], 5027, 981, 7230;
+	setarray @countitemPMH[0], 1, 2, 2;
+	
+	//Red Mage Hat 20138
+	setarray @itemRMH[0], 5027, 975, 7230;
+	setarray @countitemRMH[0], 1, 2, 2;
+	
+	//White Mage Hat 20139
+	setarray @itemWMH[0], 5027, 982, 7230;
+	setarray @countitemWMH[0], 1, 2, 2;
+	
+	
+	
+	mes .@npcname$;
+	mes "Bonjour ^3333FF" + strcharinfo(0) + "^000000!";
+	mes "Je peux te proposer quelque hats pour customiser ton Mage Hat.";
+	mes	"Ca t'interesse?!";
+	next;
+	mes .@npcname$;
+	mes "Voici ce que je peux te proposer:";
+	next;
+
+	switch(select("Black Mage Hat:Blue Mage Hat:Cyan Mage Hat:Gold Mage Hat:Purple Mage Hat:Red Mage Hat:White Mage Hat:^777777Rien, merci...^000000"))
+	{
+		case 1 :
+ 		callfunc "mes_getitem_colo",.@npcname$,20133,@itemBMH,@countitemBMH, 1000000;
+
+		case 2 :
+ 		callfunc "mes_getitem_colo",.@npcname$,20134,@itemBLMH,@countitemBLMH, 1000000;
+
+		case 3 :
+ 		callfunc "mes_getitem_colo",.@npcname$,20135,@itemCMH,@countitemCMH, 1000000;
+		
+		case 4 :
+ 		callfunc "mes_getitem_colo",.@npcname$,20136,.itMHMH,.countitMHMH, 1000000;
+
+		case 5 :
+ 		callfunc "mes_getitem_colo",.@npcname$,20137,@itemPMH,@countitemPMH, 1000000;
+		
+		case 6 :
+		callfunc "mes_getitem_colo",.@npcname$,20138,@itemRMH,@countitemRMH, 1000000;
+		
+		case 7 :
+		callfunc "mes_getitem_colo",.@npcname$,20139,@itemWMH,@countitemWMH, 1000000;
+
+		// Quitter
+		case 8 :
+		mes @npcname$;
+		mes "Très bien. A bientôt !";
+		close;
+	}
+}

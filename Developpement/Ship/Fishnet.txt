@@ -1,0 +1,75 @@
+comodo,265,124,6	script	Fishnet	49,{
+	set .@npcname$, "[Le Fishnet]";
+	setarray .listet[0],1059,7215, 2301;
+	setarray .listetcount[0], 250, 100, 50;
+	
+	mes .@npcname$;
+	mes "";
+	mes "Bonjour à toi, " + strcharinfo(0);
+	if (SHIP_Q == 1)
+	{
+		if (EBEN_Q == 2)
+		{
+			if (CALF_Q == 0)
+			{
+				mes "J'ai bien reçu la cage venant de l'Ebéniste. Attraper un monstre c'est bien,";
+				mes "mais si je ne peux pas l'enfermer une fois capturer...";
+				mes "En revanche, il me faut de la matière pour créer le filet.";
+				mes "Ramènes moi ça:";
+				mes "Je te le ferais gratis, j'en dois une au Dompteur.";
+				set CALF_Q, 1;
+				set COUNT1, .listeccount[0];
+				set COUNT2, .listeccount[1];
+				mes "Ramène moi donc ça:";
+				callfunc "display_list",.listec,.listeccount;
+			}
+			else
+			{
+				mes "Tu as tout ce que je t'ai demandé?";
+				switch(select("Oui, voilà!","Euh, presque. En voilà déjà une partie.","Non, désolé, tu peux me rappeler la liste?"))
+				{
+					case 1:
+						set @check, callfunc ("check_list",.listec,.listeccount);
+						if (@check == 1)
+						{
+							mes "On dirait bien que tu as tout. Parfait!";
+							mes "Je m'y met tout de suite.";
+							callfunc "clear_list",.listec,.listeccount;
+							mes "Voilà, tu as ton Filet. Je fais suivre ça et la cage au Poseur d'enduit.";
+							mes "Il représente la dernière partie avant l'Enchanteresse.";
+							set CALF_Q, 2;
+						}
+						else
+						{
+							mes "Il t'en manques! Je peux créer un filet si tu veux, mais il restera des trous.";
+							mes "Tu tiens vraiment à ce qu'il se sauve?";
+						}
+						break;
+					case 2:
+						mes "Voyons ça.";
+						callfunc "update_list",.listec,.listeccount;
+						mes "Ok. Il te manque donc:";
+						callfunc "display_list",.listec,.listeccount;
+						break;
+					case 3:
+						mes "J'ai besoin de:";
+						callfunc "display_list",.listec,.listeccount;
+						break;
+				}
+			}
+		}
+		else
+		{
+			mes "Je ne peux rien pour toi pour l'instant.";
+			mes "Mon boulot consiste à créer un filet ou enfermer un monstre sauvage.";
+			mes "On appelle ça un Fishnet.";
+			mes "Mais sans cage, pas moyen de tenir ce que j'aurais attraper...";
+		}
+	}
+	else
+	{
+		mes "Mon boulot consiste à créer un filet ou enfermer un monstre sauvage.";
+		mes "On appelle ça un Fishnet.";
+	}
+	close;
+}

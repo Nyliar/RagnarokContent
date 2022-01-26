@@ -1,0 +1,79 @@
+izlude, 85,100, 5	script	Sakkat	50,{
+
+	set .@npcname$,"[Sakkat]";
+
+	//Black Sakkat 20215
+	setarray @itemBS[0], 5267, 983, 7230;
+	setarray @countitemBS[0], 1, 2, 2;
+
+	//Blue Sakkat 20216
+	setarray @itemBLS[0], 5267, 978, 7230;
+	setarray @countitemBLS[0], 1, 2, 2;
+
+	//Cyan Sakkat 20217
+	setarray @itemCS[0], 5267, 978, 982, 7230;
+	setarray @countitemCS[0], 1, 2, 2, 2;
+
+	//Gold Sakkat 20218
+	setarray @itemGS[0], 5267, 979, 7230;
+	setarray @countitemGS[0], 1, 2, 2;
+
+	//Green Sakkat 20219
+	setarray @itemGNS[0], 5267, 976, 7230;
+	setarray @countitemGNS[0], 1, 2, 2;
+	
+	//Purple Sakkat 20220
+	setarray @itemPS[0], 5267, 981, 7230;
+	setarray @countitemPS[0], 1, 2, 2;
+	
+	//Red Sakkat 20221
+	setarray @itemRS[0], 5267, 975, 7230;
+	setarray @countitemRS[0], 1, 2, 2;
+
+	//White Sakkat 20222
+	setarray @itemWS[0], 5267, 982, 7230;
+	setarray @countitemWS[0], 1, 2, 2;
+	
+	mes .@npcname$;
+	mes "Bonjour ^3333FF" + strcharinfo(0) + "^000000!";
+	mes "Je peux te proposer quelque hats pour customiser ton Sakkat.";
+	mes	"Ca t'interesse?!";
+	next;
+	mes .@npcname$;
+	mes "Voici ce que je peux te proposer:";
+	next;
+
+	switch(select("Gold Sakkat:Green Sakkat:Blue Sakkat:Cyan Sakkat:Purple Sakkat:Red Sakkat:White Sakkat:Black Sakkat:^777777Rien, merci...^000000"))
+	{
+		case 1 :
+ 		callfunc "mes_getitem_colo",.@npcname$,20218,@itemGS,@countitemGS, 1000000;
+		
+		case 2 :
+ 		callfunc "mes_getitem_colo",.@npcname$,20219,@itemGNS,@countitemGNS, 1000000;
+
+		case 3 :
+		callfunc "mes_getitem_colo",.@npcname$,20216,@itemBLS,@countitemBLS, 1000000;
+
+		case 4 :
+		callfunc "mes_getitem_colo",.@npcname$,20217,@itemCS,@countitemCS, 1000000;
+		
+		case 5 :
+		callfunc "mes_getitem_colo",.@npcname$,20220,@itemPS,@countitemPS, 1000000;
+		
+		case 6 :
+		callfunc "mes_getitem_colo",.@npcname$,20221,@itemRS,@countitemRS, 1000000;
+
+		case 7 :
+		callfunc "mes_getitem_colo",.@npcname$,20222,@itemWS,@countitemWS, 1000000;
+
+		case 8 :
+		callfunc "mes_getitem_colo",.@npcname$,20215,@itemBS,@countitemBS, 1000000;
+
+
+		// Quitter
+		case 9 :
+		mes @npcname$;
+		mes "Très bien. A bientôt !";
+		close;
+	}
+}

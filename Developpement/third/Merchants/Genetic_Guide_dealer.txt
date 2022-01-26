@@ -1,0 +1,102 @@
+//Guide book dealer
+prt_in,37,113,4	script	Gardien du Jardin	704,{ 
+	set .@npcname$, "[Gardien du Jardin]";
+	mes .@npcname$;
+	mes "Hello there, " + strcharinfo(0);
+	mes "I'm the Royal Garden Keeper.";
+	mes "It is very special cause some plants only grows there.";
+	mes "You want a secret? That happens cause I know how to do make them grow.";
+	mes "I can teach you. For some items.";
+	mes "You just have to follow the information from my guides.";
+	mes "Interested? They cost 25.000 Zenys each.";
+	switch(select("Yes", "No"))
+	{
+		case 1:
+			next;
+			if (Zeny >= 25000)
+			{
+				mes "Here's what I can offer.";
+				switch(prompt("How To Grow Plant Genes","Manual How To Make High Quality Potion","Apple Bomb Guidebook","Pineapple Bomb Guidebook","Coconut Bomb Guidebook","Melon Bomb Guidebook","Banana Bomb Guidebook","Mix Cook Book","Increase Stamina Study","Increase Vital CB"))
+				{
+					case 1:
+						getitem 6284, 1;
+						break;
+					case 2:
+						getitem 6285, 1;
+						break;
+					case 3:
+						getitem 6279, 1;
+						break;
+					case 4:
+						getitem 6280, 1;
+						break;
+					case 5:
+						getitem 6281, 1;
+						break;
+					case 6:
+						getitem 6282, 1;
+						break;
+					case 7:
+						getitem 6283, 1;
+						break;
+					case 8:
+						getitem 11022, 1;
+						break;
+					case 9:
+						getitem 11023, 1;
+						break;
+					case 10:
+						getitem 11024, 1;
+						break;
+					case 255:
+						mes "As you wish.";
+						close;
+				}
+				set Zeny, Zeny - 25000;
+			}
+			else
+				mes "Sorry, but you don't have what I need.";
+			break;
+		case 2:
+			mes "As you wish.";
+			mes "I also have some items you may need.";
+			mes "Interested? It cost 1000 Zeny a piece.";
+			switch(prompt("Throwing Bottle","Melange Pot","Cooking Skewer","Cool Gravy","Fine Noodles","Comodo Tropical Fruit"))
+			{
+				case 1:
+					set .@item, 6297;
+					break;
+				case 2:
+					set .@item, 6248;
+					break;
+				case 3:
+					set .@item, 6250;
+					break;
+				case 4:
+					set .@item, 6262;
+					break;
+				case 5:
+					set .@item, 6261;
+					break;
+				case 6:
+					set .@item, 6258;
+					break;
+				case 255:
+					mes "As you wish.";
+					close;
+			}
+			mes "How many do you want?";
+			input .@count;
+			mes "Allright, let's see if you have what I need.";
+			if (Zeny >= 1000*.@count)
+			{
+				mes "Allright. Here's for you.";
+				getitem .@item, .@count;
+				set Zeny, Zeny - 1000*.@count;
+			}
+			else
+				mes "You don't have enough, sorry.";
+			break;
+	}
+	close;
+}

@@ -1,0 +1,89 @@
+prt_in,32,101,1	script	Amulet Dealer	530,{
+	set .npcname$, "[Amulet Dealer]";
+	mes .npcname$;
+	mes "Hi there,";
+	mes "Just like you, I spent my young time hunting with basic skills.";
+	mes "BUT! Long ago, I've learned how to use special elemental amulets.";
+	switch(select("Interesting. Can you show me?","I'm looking for Explosive Kunai","Well no thanks."))
+	{
+		case 1:
+			next;
+			mes .npcname$;
+			mes "I use the mecanism of the ^FF00002 Amulets^000000 to create elemental one.";
+			mes "But it won't be free, ^FF00001 000 zeny^000000 will be enough.";
+			mes "Still ready?";
+			switch(select("I've got all.","Sure, just leave me some time."))
+			{
+				case 1:
+					next;
+					mes .npcname$;
+					mes "How many do you want? Max is 1000.";
+					next;
+					while(input(.@Nombre_Amulet, 1, 1000))
+					{
+						mes .npcname$;
+						mes "Stop laugthing at me. Enter a number between 1 and 1000.";
+						next;
+					}
+					if (countitem(609)>=2*.@Nombre_Amulet&& Zeny >= 1000*.@Nombre_Amulet)
+					{
+						mes .npcname$;
+						mes "Ok. Which one do you want?";
+						switch(select("Fire one","Water one","Wind one","Earth on"))
+						{
+							case 1:
+								set .@item,6512;
+								break;
+							case 2:
+								set .@item,6513;
+								break;
+							case 3:
+								set .@item,6514;
+								break;
+							case 4:
+								set .@item,6515;
+								break;
+						}
+						mes "Sure! Here's what you want";
+						delitem 609, 2*.@Nombre_Amulet;
+						set Zeny, Zeny-1000*.@Nombre_Amulet;
+						getitem .@item, 1*.@Nombre_Amulet;
+						break;
+					}else
+					{
+						mes .npcname$;
+						mes "You don't have enough!";
+						close;
+					}
+				
+				case 2:
+					next;
+					mes .npcname$;
+					mes "Come back when you want.";
+					break;
+			}
+			break;
+		case 2:
+			next;
+			mes .npcname$;
+			mes "Kunai he?";
+			mes "Sure. How many? It cost 500 Zeny a piece.";
+			input .@count;
+			if (Zeny > .@count*500)
+			{
+				getitem 13294, .@count;
+				set Zeny, Zeny-.@count*500;
+			}
+			else
+			{
+				mes "Sorry but you miss some money for that amount.";
+			}
+			break;
+		case 3:
+			next;
+			mes .npcname$;
+			mes "As you wish.";
+			break;
+	}
+	close;
+}

@@ -1,0 +1,97 @@
+thier_in,212,88,6	script	Wesen Treasure::thierwestre	2288,{
+	mes "[Wesen Treasure]";
+	
+	if (LANGUAGE == 2)
+	{
+		mes "This is Wesen Treasure.";
+		mes "You can access to it only by ascomplishing council missions.";
+		if (WESENQ > 5)
+		{
+			mes "Actually, you've got " + WESENREWARDQ + " points.";
+			mes "Here's what the Treasure contains:";
+			switch(select("Minotorus Ring (25 Pt)","Flute d'envoûtement (25 Pt)","Orcish Piccolo (25 Pt)"))
+			{
+				case 1:
+					if (WESENREWARDQ >= 25)
+					{
+						mes "A Minotorus Ring. Are you sure?";
+						if (select("Yes","No") == 1)
+						{
+							getitem 21494, 1;
+							set WESENREWARDQ, WESENREWARDQ - 25;
+						}
+					}
+					break;
+				case 2:
+					if (WESENREWARDQ >= 25)
+					{
+						mes "A Flûte d'Envoûtement. Are you sure?";
+						if (select("Yes","No") == 1)
+						{
+							getitem 21464, 1;
+							set WESENREWARDQ, WESENREWARDQ - 25;
+						}
+					}
+					break;
+				case 3:
+					if (WESENREWARDQ >= 25)
+					{
+						mes "A Orcish Piccolo. Are you sure?";
+						if (select("Yes","No") == 1)
+						{
+							getitem 21491, 1;
+							set WESENREWARDQ, WESENREWARDQ - 25;
+						}
+					}
+					break;
+			}
+		}
+	}
+	else if (LANGUAGE == 1)
+	{
+		mes "C'est le trésor des Wesens.";
+		mes "Vous n'y avez accès qu'en échange de points de récompense des missions du conseil.";
+		if (WESENQ > 5)
+		{
+			mes "Actuellement, vous avez " + WESENREWARDQ + " points.";
+			mes "Voici ce que vous pouvez obtenir:";
+			switch(select("Minotorus Ring (25 Pt)","Flute d'envoûtement (25 Pt)","Orcish Piccolo (25 Pt)"))
+			{
+				case 1:
+					if (WESENREWARDQ >= 25)
+					{
+						mes "Un Minotorus Ring. Tu es sûr?";
+						if (select("Oui","Non") == 1)
+						{
+							getitem 21494, 1;
+							set WESENREWARDQ, WESENREWARDQ - 25;
+						}
+					}
+					break;
+				case 2:
+					if (WESENREWARDQ >= 25)
+					{
+						mes "Une Flûte d'Envoûtement. Tu es sûr?";
+						if (select("Oui","Non") == 1)
+						{
+							getitem 21464, 1;
+							set WESENREWARDQ, WESENREWARDQ - 25;
+						}
+					}
+					break;
+				case 3:
+					if (WESENREWARDQ >= 25)
+					{
+						mes "Un Orcish Piccolo. Tu es sûr?";
+						if (select("Oui","Non") == 1)
+						{
+							getitem 21491, 1;
+							set WESENREWARDQ, WESENREWARDQ - 25;
+						}
+					}
+					break;
+			}
+		}
+	}
+	close;
+}

@@ -1,0 +1,72 @@
+//Le Livre d'Ymir http://www.bookofymir.net/
+//traduit par Myllena, corrigé par Fern
+//===== eAthena Script ======================================= 
+//= Advance Class jobchanger after kRO Normals.
+//===== By: ==================================================
+//= Nana
+//= finished, optimized and tested by Lupus
+//===== Current Version: ===================================== 
+//= 1.3
+//===== Compatible With: ===================================== 
+//= eAthena 1.0 +
+//===== Description: ========================================= 
+//= Advance Class jobchanger after kRO Normals.
+//===== Additional Comments: ================================= 
+//= v1.1 Made all into functions, additional checks, etc. [Lupus]
+//= v1.2 Made numbers into constants. [Vicious]
+//= 1.3 Now saves/restores all the quest skills [Lupus]
+//============================================================ 
+
+valkyrie,44,50,5	script	Maître Forgeron#Valkyrie	731,{
+	if (ADVJOB == 0 || Upper != 1) {
+		set .@karma_d,rand(1,10);
+		if (.@karma_d > 4) {
+			mes "[Maître Forgeron]";
+			mes "Félicitations.";
+			mes "Honneur aux Guerriers!";
+			close;
+		}
+		mes "[Maître Forgeron]";
+		mes "Ah...";
+		mes "La panacée de l'art de la forge. C'est le travail des Maîtres Forgerons.";
+		next;
+		mes "[Maître Forgeron]";
+		mes "Lorsque vous êtes passionné par la forge, votre but est de découvrir de nouveaux moyens de forger et d'en faire profiter vos amis...";
+		close;
+	}
+	else if (ADVJOB == Job_WhiteSmith && Class == Job_Merchant_High && JobLevel > 39) {
+		mes "[Maître Forgeron]";
+		mes "Le temps est venu!";
+		mes "Notre monde a besoin d'aventuriers courageux et appliqués à la tâche tels que vous...";
+		next;
+		mes "[Maître Forgeron]";
+		mes "Souhaitez-vous devenir Maître Forgeron?";
+		next;
+		if (select("Non.:Oui.") == 1) {
+			mes "[Maître Forgeron]";
+			mes "Revenez quand vous vous sentirez prêt.";
+			next;
+			mes "[Maître Forgeron]";
+			mes "Honneur aux Guerriers!";
+			close;
+		}
+		if (SkillPoint) {
+			mes "[Maître Forgeron]";
+			mes "Vous n'avez pas terminé votre apprentissage.";
+			close;
+		}
+		jobchange Job_Whitesmith;
+		set ADVJOB,0;
+		mes "[Maître Forgeron]";
+		mes "Félicitations!";
+		mes "En tant que Maître Forgeron, j'espère que vous aiderez à forger un futur meilleur pour Rune-Midgard.";
+		close;
+	}
+	mes "[Maître Forgeron]";
+	mes "Bienvenue au Walhalla, le Hall des Honneurs.";
+	next;
+	mes "[Maître Forgeron]";
+	mes "Faites comme chez vous.";
+	mes "Honneur aux Guerriers!";
+	close;
+}

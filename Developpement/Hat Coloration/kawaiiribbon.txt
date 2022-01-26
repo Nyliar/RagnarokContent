@@ -1,0 +1,71 @@
+amatsu, 100, 219, 5	script	Kawaii Ribbon	881,{
+
+	set .@npcname$,"[Kawaii Ribbon]";
+	
+	//Black Kawaii Ribbon 20111
+	setarray @itemBKR[0], 5140, 983, 7230;
+	setarray @countitemBKR[0], 1, 2, 2;
+	
+	//Blue Kawaii Ribbon 20112
+	setarray @itemBLKR[0], 5140, 978, 7230;
+	setarray @countitemBLKR[0], 1, 2, 2;
+
+	//Cyan Kawaii Ribbon 20113
+	setarray @itemCKR[0], 5140, 978, 982, 7230;
+	setarray @countitemCKR[0], 1, 2, 2, 2;
+
+	//Gold Kawaii Ribbon 20114
+	setarray @itemGKR[0], 5140, 976, 7230;
+	setarray @countitemGKR[0], 1, 2, 2;
+	
+	//Green Kawaii Ribbon 20115
+	setarray @itemGNKR[0], 5140, 979, 7230;
+	setarray @countitemGNKR[0], 1, 2, 2;
+	
+	//Purple  Kawaii Ribbon 20116
+	setarray @itemPKR[0], 5140, 981, 7230;
+	setarray @countitemPKR[0], 1, 2, 2;
+	
+	//White Kawaii Ribbon 20117
+	setarray @itemWKR[0], 5140, 982, 7230;
+	setarray @countitemWKR[0], 1, 2, 2;
+	
+	mes .@npcname$;
+	mes "Bonjour ^3333FF" + strcharinfo(0) + "^000000!";
+	mes "Je peux te proposer quelque hats pour customiser ton Kawaii Ribbon.";
+	mes	"Ca t'interesse?!";
+	next;
+	mes .@npcname$;
+	mes "Voici ce que je peux te proposer:";
+	next;
+
+	switch(select("Black Kawaii Ribbon:Blue Kawaii Ribbon:Cyan Kawaii Ribbon:Gold Kawaii Ribbon:Green Kawaii Ribbon:Purple Kawaii Ribbon:White Kawaii Ribbon:^777777Rien, merci...^000000"))
+	{
+		case 1 :
+ 		callfunc "mes_getitem_colo",.@npcname$,20111,@itemBKR,@countitemBKR, 1000000;
+
+		case 2 :
+ 		callfunc "mes_getitem_colo",.@npcname$,20112,@itemBLKR,@countitemBLKR, 1000000;
+
+		case 3 :
+ 		callfunc "mes_getitem_colo",.@npcname$,20113,@itemCKR,@countitemCKR, 1000000;
+
+		case 4 :
+ 		callfunc "mes_getitem_colo",.@npcname$,20114,@itemGKR,@countitemGKR, 1000000;
+
+		case 5 :
+		callfunc "mes_getitem_colo",.@npcname$,20115,@itemGNKR,@countitemGNKR, 1000000;
+
+		case 6 :
+ 		callfunc "mes_getitem_colo",.@npcname$,20116,@itemPKR,@countitemPKR, 1000000;
+
+		case 7 :
+		callfunc "mes_getitem_colo",.@npcname$,20117,@itemWKR,@countitemWKR, 1000000;
+
+		// Quitter
+		case 8 :
+		mes @npcname$;
+		mes "Très bien. A bientôt !";
+		close;
+	}
+}

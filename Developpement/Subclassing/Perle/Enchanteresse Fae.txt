@@ -1,0 +1,108 @@
+revencia,290,142,5	script	Vieille Fae	439,{
+	set .@npcname$, "[Erimen]";
+	
+	mes .@npcname$;
+	mes "";
+	mes "Je suis le plus vieux Fae restant sur l'Ile des Faes.";
+	mes "J'ai vécu avant, pendant et après la dernière Bataille Divine.";
+	mes "Et pour rien au monde, je ne voudrais connaître cela à nouveau.";
+	mes "Il existait autrefois une ville, Revencia, capitale des Faes. Les jeunes crois que revencia est la capitale,";
+	mes "mais ils se trompent. Seulement, Revencia fut la cible des Hordes de Loki, et le mal y est tellement imprégné";
+	mes "qu'on ne peut plus y vivre...";
+	mes "Ne t'y aventure qu'en cas extrême.";
+	if (QUEST_SUB >= 1 && countitem(6027) >= 1 && countitem(12400) >= 1)
+	{
+		next;
+		mes "Tu as réussi! Avec ça, mon pouvoir sellé sera libéré!";
+		mes "Je n'en aurais assez que pour une Perle. Et elle sera vide.";
+		mes "J'aurais également besoin d'une Sobbing Starlight.";
+		mes "Elles sont nécessaire à la création d'une Perle vierge,";
+		mes "prête à recevoir un nouveau pouvoir spirituel.";
+		mes "Tu peux les récupérer sur les Duneyrr ou les Ancient Tree.";
+		mes "Tu dois aussi savoir que mon pouvoir n'est plus ce qu'il était.";
+		mes "Je n'ai que 33% de chance de réussir. Tu tentes ta chance?";
+		next;
+		switch(select("Allez-y","Merci, mais non merci"))
+		{
+			case 1:
+				if (countitem(12400) >= 1 && countitem(7178) >= 1)	
+				{
+					set counttrypearl, counttrypearl + 1;
+					if (counttrypearl == 5)
+					{	
+						mes "Cet essai va faire disparaitre ton crystal de ténèbre.";
+						delitem 6027, 1;
+						set counttrypearl, 0;	
+					}
+					delitem 12400,1;
+					delitem 7178,1;
+					next;
+					if (rand(0,100) < 33)
+					{
+						getitem 21097, 1;
+					}
+					else
+					{
+						mes "Désolé, enfants de mes ennemis...J'ai échoué.";
+						mes "La Source de Sagesse a rejeter mes prières.";
+					}
+				}
+				else
+					mes "Désolé, mais tu manques de certains objets.";
+				break;
+			case 2:
+				mes "Très bien. Reviens si tu changes d'avis.";
+				break;
+		}
+	}
+	else if (countitem(12400) >= 1)
+	{
+		next;
+		mes "...Que...Que...?";	
+		mes "Que vois-je? De l'eau de la Source Divine?";
+		mes "Impossible! La Source s'est tarie depuis des années!";
+		next;
+		mes strcharinfo(0);
+		mes "Vous connaissez cette Source, vieille Fae?";
+		next;
+		mes .@npcname$;
+		mes "La Source de Sagesse était autrefois gardée par les Faes.";
+		mes "Elle s'est tarie quand Hel nous a toutes maudites.";
+		mes "Les Dieux estimèrent que nous n'étions plus à même de la protéger.";
+		mes "Connais-tu son réel pouvoir?";
+		switch(select("Oui, bien sûr","Non...Je ne crois pas"))
+		{
+			case 1:
+				next;
+				if (SUBCLASSING >= 1)
+				{
+					mes .@npcname$;
+					mes "...Tu...Tu as été initié?";
+					mes "Seules les Faes devraient pouvoir...";
+					mes "Bien, je te crois.";
+					mes "Je peux donc t'aider.";
+					mes "Les Perles de Savoir ont toutes été perdues, mais je sais les créer.";
+					mes "Pour cela, j'ai besoin d'eau de la Source.";
+					mes "Mais pas seulement.";
+					next;
+					mes "Seulement, je ne peux t'aider tant que Hel est présente.";
+					mes "Son pouvoir maléfique altére mes prières.";
+					mes "Repousse la, et reviens me voir.";
+					mes "Je pourrais te créer des Perles de Savoir si j'ai de quoi contrer son aura.";
+					mes "Ramène-moi un de ses Crystal of Feardom.";
+					set QUEST_SUB, 1;
+				}
+				else
+				{
+					mes "Tu ne devrais pas me mentir.";
+					mes "Les Faes sont détentrices du Savoir et de l'Oeil de Jugement.";
+					mes "Je le saurais toujours.";
+				}
+				break;
+			case 2:
+				mes "Je ne peux rien de plus pour toi alors.";
+				break;
+		}
+	}
+	close;
+}

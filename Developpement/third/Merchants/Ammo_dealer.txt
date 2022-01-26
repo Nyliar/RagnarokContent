@@ -1,0 +1,407 @@
+//Mechanic item dealer
+prt_in,43,113,4	script	Great Armourer	705,{ 
+	set .npcname$, "[Great Armourer]";
+	mes .npcname$;
+
+	mes "Hello there.";
+	mes "I'm a proud fighting veteran, and I kept the use to keep some Ammo with me.";
+	mes "I can sell you some, and things needed to use it, in exchange of some other items.";
+	mes "For these last one, I'll also ask you for a money participation.";
+	switch(select("Allright, show me your ammo","Weapons? Interesting", "No thanks"))
+	{
+		case 1:
+			next;
+			mes "Allright. Here's what I have:";
+			switch(prompt("Volcan Bullet", "Liquid Condensed Bullet", "Magic Gear Fuel", "Cannon Ball", "Holy Cannon Ball", "Iron Cannon Ball", "Dark Cannon Ball", "Soul Cannon Ball"))
+			{
+				case 1:
+					mes "Good. It cost 1000 Zenys.";
+					mes "how many do you want?";
+					input .@count;
+					if (Zeny >= 1000 * .@count)
+					{
+						mes "Perfect, here's for you.";
+						set Zeny, Zeny - 1000 * .@count;
+						getitem 6145, .@count;
+						mes "See you soon.";
+					}
+					else	
+					{
+						mes "Sorry, but you don't have enough money...";
+					}
+					break;
+				case 2:
+					mes "Good. It cost 1000 Zenys.";
+					mes "How many do you want?";
+					input .@count;
+					if (Zeny >= 1000 * .@count)
+					{
+						mes "Perfect, here's for you.";
+						set Zeny, Zeny - 1000 * .@count;
+						getitem 6147, .@count;
+						mes "See you soon.";
+					}
+					else	
+					{
+						mes "Sorry, but you don't have enough money...";
+					}
+					break;
+				case 3:
+					mes "Good. It cost 1000 Zenys.";
+					mes "How many do you want?";
+					input .@count;
+					if (Zeny >= 1000 * .@count)
+					{
+						mes "Perfect, here's for you.";
+						set Zeny, Zeny - 1000 * .@count;
+						getitem 6146, .@count;
+						mes "See you soon.";
+					}
+					else	
+					{
+						mes "Sorry, but you don't have enough money...";
+					}
+					break;
+				case 4:
+					mes "Good. It cost 1000 Zenys.";
+					mes "How many do you want?";
+					input .@count;
+					if (Zeny >= 1000 * .@count)
+					{
+						mes "Perfect, here's for you.";
+						set Zeny, Zeny - 1000 * .@count;
+						getitem 18000, .@count;
+						mes "See you soon.";
+					}
+					else	
+					{
+						mes "Sorry, but you don't have enough money...";
+					}
+					break;
+				case 5:
+					mes "Good. It cost 1500 Zenys.";
+					mes "How many do you want?";
+					input .@count;
+					if (Zeny >= 1000 * .@count)
+					{
+						mes "Perfect, here's for you.";
+						set Zeny, Zeny - 1000 * .@count;
+						getitem 18001, .@count;
+						mes "See you soon.";
+					}
+					else	
+					{
+						mes "Sorry, but you don't have enough money...";
+					}
+					break;
+				case 6:
+					mes "Good. It cost 1000 Zenys.";
+					mes "How many do you want?";
+					input .@count;
+					if (Zeny >= 1000 * .@count)
+					{
+						mes "Perfect, here's for you.";
+						set Zeny, Zeny - 1000 * .@count;
+						getitem 18004, .@count;
+						mes "See you soon.";
+					}
+					else	
+					{
+						mes "Sorry, but you don't have enough money...";
+					}
+					break;
+				case 7:
+					mes "Good. It cost 1500 Zenys.";
+					mes "How many do you want?";
+					input .@count;
+					if (Zeny >= 1000 * .@count)
+					{
+						mes "Perfect, here's for you.";
+						set Zeny, Zeny - 1000 * .@count;
+						getitem 18002, .@count;
+						mes "See you soon.";
+					}
+					else	
+					{
+						mes "Sorry, but you don't have enough money...";
+					}
+					break;
+				case 8:
+					mes "Good. It cost 2000 Zenys.";
+					mes "How many do you want?";
+					input .@count;
+					if (Zeny >= 1000 * .@count)
+					{
+						mes "Perfect, here's for you.";
+						set Zeny, Zeny - 1000 * .@count;
+						getitem 18003, .@count;
+						mes "See you soon.";
+					}
+					else	
+					{
+						mes "Sorry, but you don't have enough money...";
+					}
+					break;
+				case 255:
+					mes "As you wish.";
+					break;
+			}
+			break;
+		case 2:
+			next;
+			mes "Weapons then? Here's what I have.";
+			mes "Each one will cost you 250.000 Zenys, 25 Steels and 2 Oridecon Hammer.";
+			switch(select("Flame Thrower","Accelerator","Hovering Booster","Suicidal Device","Shape Shifter", "Magnetic Field Generator", "Barrier Builder", "Repair Kit", "Camouflage Generator", "Cooling Device", "High Quality Cooler", "Special Cooler", "Pile Bunker"))
+			{
+				case 1:
+					mes "For a Flame Thrower, I need 50 Flame Hearts and 50 Oil Bottles.";
+					mes "Allright? Let's see if you have all I need.";
+					if (Zeny >= 250000 && countitem(994) >= 50 && countitem(6216) >= 50 && countitem(999) >= 25 && countitem(615) >= 2)
+					{
+						mes "Perfect, here's for you.";
+						delitem 994, 50;
+						delitem 6216, 50;
+						delitem 615, 2;
+						delitem 6216, 50;
+						set Zeny, Zeny - 250000;
+						getitem 2139, 1;
+						mes "See you soon.";
+					}
+					else	
+					{
+						mes "Sorry, but you don't have enough money...";
+					}
+					break;
+				case 2:
+					mes "For an Accelerator, I need 150 Authoritative Badges.";
+					mes "Allright? Let's see if you have all I need..";
+					if (Zeny >= 250000 && countitem(662) >= 150 && countitem(999) >= 25 && countitem(615) >= 2)
+					{
+						mes "Perfect, here's for you.";
+						delitem 662, 150;
+						delitem 615, 2;
+						delitem 999, 25;
+						set Zeny, Zeny - 250000;
+						getitem 2800, 1;
+						mes "See you soon.";
+					}
+					else	
+					{
+						mes "Sorry, but you don't have enough money...";
+					}
+					break;
+				case 3:
+					mes "For a Hovering Booster, I need 5 Four Leaf Clover and 25 Fan of Wind.";
+					mes "Allright? Let's see if you have all I need..";
+					if (Zeny >= 250000 && countitem(706) >= 5 && countitem(12358) >= 25 && countitem(999) >= 25 && countitem(615) >= 2)
+					{
+						mes "Perfect, here's for you.";
+						delitem 12358, 25;
+						delitem 706, 5;
+						delitem 615, 2;
+						delitem 999, 25;
+						set Zeny, Zeny - 250000;
+						getitem 2801, 1;
+						mes "See you soon.";
+					}
+					else	
+					{
+						mes "Sorry, but you don't have enough money...";
+					}
+					break;
+				case 4:
+					mes "For a Suicidal Device, I need 50 Explosive Powder and 100 Burning Heart.";
+					mes "Allright? Let's see if you have all I need..";
+					if (Zeny >= 250000 && countitem(6213) >= 50 && countitem(7097) >= 100 && countitem(999) >= 25 && countitem(615) >= 2)
+					{
+						mes "Perfect, here's for you.";
+						delitem 994, 50;
+						delitem 6216, 50;
+						delitem 615, 2;
+						delitem 999, 25;
+						set Zeny, Zeny - 250000;
+						getitem 2802, 1;
+						mes "See you soon.";
+					}
+					else	
+					{
+						mes "Sorry, but you don't have enough money...";
+					}
+					break;
+				case 5:
+					mes "For a Shape Shifter, I need 25 Flame Hearts, 25 Mystic Frozen, 25 Great Nature and 25 Rough Wind.";
+					mes "Allright? Let's see if you have all I need..";
+					if (Zeny >= 250000 && countitem(994) >= 25 && countitem(995) >= 25 && countitem(996) >= 25 && countitem(997) >= 25 && countitem(999) >= 25 && countitem(615) >= 2)
+					{
+						mes "Perfect, here's for you.";
+						delitem 994, 25;
+						delitem 995, 25;
+						delitem 996, 25;
+						delitem 997, 25;
+						delitem 615, 2;
+						delitem 999, 25;
+						set Zeny, Zeny - 250000;
+						getitem 2803, 1;
+						mes "See you soon.";
+					}
+					else	
+					{
+						mes "Sorry, but you don't have enough money...";
+					}
+					break;
+				case 6:
+					mes "For a Magnetic Field Generator, I need 50 Iron, 50 Coals and 1 Electric Wire.";
+					mes "Allright? Let's see if you have all I need..";
+					if (Zeny >= 250000 && countitem(998) >= 50 && countitem(1003) >= 50 && countitem(1971) >= 1 && countitem(999) >= 25 && countitem(615) >= 2)
+					{
+						mes "Perfect, here's for you.";
+						delitem 998, 50;
+						delitem 1003, 50;
+						delitem 1971, 1;
+						delitem 615, 2;
+						delitem 999, 25;
+						set Zeny, Zeny - 250000;
+						getitem 2085, 1;
+						mes "See you soon.";
+					}
+					else	
+					{
+						mes "Sorry, but you don't have enough money...";
+					}
+					break;
+				case 7:
+					mes "For a Barrier Builder, I need 100 Mud Lump and 50 Oil Bottles.";
+					mes "Allright? Let's see if you have all I need..";
+					if (Zeny >= 250000 && countitem(7004) >= 100 && countitem(6216) >= 50 && countitem(999) >= 25 && countitem(615) >= 2)
+					{
+						mes "Perfect, here's for you.";
+						delitem 7004, 100;
+						delitem 6216, 50;
+						delitem 615, 2;
+						delitem 999, 25;
+						set Zeny, Zeny - 250000;
+						getitem 2806, 1;
+						mes "See you soon.";
+					}
+					else	
+					{
+						mes "Sorry, but you don't have enough money...";
+					}
+					break;
+				case 8:
+					mes "For a Repair Kit, I need 50 Cogwheels and 100 Hammer of Blacksmith.";
+					mes "Allright? Let's see if you have all I need..";
+					if (Zeny >= 250000 && countitem(7093) >= 50 && countitem(1005) >= 100 && countitem(999) >= 25 && countitem(615) >= 2)
+					{
+						mes "Perfect, here's for you.";
+						delitem 7093, 50;
+						delitem 1005, 100;
+						delitem 615, 2;
+						delitem 999, 25;
+						set Zeny, Zeny - 250000;
+						getitem 2807, 1;
+						mes "See you soon.";
+					}
+					else	
+					{
+						mes "Sorry, but you don't have enough money...";
+					}
+					break;
+				case 9:
+					mes "For a Camouflage Generator, I need 50 Comodo Leather and  25 Rainbow Ruby.";
+					mes "Allright? Let's see if you have all I need..";
+					if (Zeny >= 250000 && countitem(6403) >= 50 && countitem(12387) >= 25 && countitem(999) >= 25 && countitem(615) >= 2)
+					{
+						mes "Perfect, here's for you.";
+						delitem 6403, 50;
+						delitem 12387, 25;
+						delitem 615, 2;
+						delitem 999, 25;
+						set Zeny, Zeny - 250000;
+						getitem 2808, 1;
+						mes "See you soon.";
+					}
+					else	
+					{
+						mes "Sorry, but you don't have enough money...";
+					}
+					break;
+				case 10:
+					mes "For a Cooling Device, I need 50 Glacial Heart and  25 Frozen Roses.";
+					mes "Allright? Let's see if you have all I need..";
+					if (Zeny >= 250000 && countitem(7561) >= 50 && countitem(749) >= 25 && countitem(999) >= 25 && countitem(615) >= 2)
+					{
+						mes "Perfect, here's for you.";
+						delitem 7561, 50;
+						delitem 749, 25;
+						delitem 615, 2;
+						delitem 999, 25;
+						set Zeny, Zeny - 250000;
+						getitem 2804, 1;
+						mes "See you soon.";
+					}
+					else	
+					{
+						mes "Sorry, but you don't have enough money...";
+					}
+					break;
+				case 11:
+					mes "For a High Quality Cooler, I need 75 Mystic Frozen and  1 Cooling Device, that I gave you back.";
+					mes "Allright? Let's see if you have all I need..";
+					if (Zeny >= 250000 && countitem(995) >= 75 && countitem(2804) >= 1 && countitem(999) >= 25 && countitem(615) >= 2)
+					{
+						mes "Perfect, here's for you.";
+						delitem 995, 75;
+						delitem 615, 2;
+						delitem 999, 25;
+						set Zeny, Zeny - 250000;
+						getitem 2809, 1;
+						mes "See you soon.";
+					}
+					else	
+					{
+						mes "Sorry, but you don't have enough money...";
+					}
+					break;
+				case 12:
+					mes "For a Special Cooler, I need 100 Cold Ice and  1 High Quality Cooler, that I gave you back.";
+					mes "Allright? Let's see if you have all I need..";
+					if (Zeny >= 250000 && countitem(6253) >= 100 && countitem(2809) >= 1 && countitem(999) >= 25 && countitem(615) >= 2)
+					{
+						mes "Perfect, here's for you.";
+						delitem 6253, 100;
+						delitem 615, 2;
+						delitem 999, 25;
+						set Zeny, Zeny - 250000;
+						getitem 2810, 1;
+						mes "See you soon.";
+					}
+					else	
+					{
+						mes "Sorry, but you don't have enough money...";
+					}
+					break;
+				case 13:
+					mes "For a Pile Bunker, I need 50 Gold.";
+					mes "Allright? Let's see if you have all I need..";
+					if (Zeny >= 250000 && countitem(969) >= 50)
+					{
+						mes "Perfect, here's for you.";
+						delitem 969, 50;
+						set Zeny, Zeny - 250000;
+						getitem 1549, 1;
+						mes "See you soon.";
+					}
+					else	
+					{
+						mes "Sorry, but you don't have enough money...";
+					}
+					break;
+			}
+			break;
+		case 3:
+			mes "As you wish.";
+			break;
+	}
+	close;
+}

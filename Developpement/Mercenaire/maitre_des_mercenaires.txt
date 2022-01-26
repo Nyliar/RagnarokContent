@@ -1,0 +1,377 @@
+casp_in01,97,190,6	script	Varys le Noir	810,{
+
+	set .@npcname$,"^FF3333Varys le Noir^000000";	
+	set .@reward[0],
+		710;
+	
+	mes "[" + .@npcname$ + "]";
+	if(LANGUAGE == 2)
+	{
+		mes "Hello ^3333FF" + strcharinfo(0) + "^000000 !";
+		mes "I am Varys, but I'm also called Varys le Noir.";
+		mes "I'm the Mercenary Chief.";
+		mes "Even if somes were much skilled than I was. What can I do for you?";
+		switch(select("I wanna become a Mercenary:I'm here for the reward:I...I loose my mark:Nothing, just walking by"))
+		{
+			case 1:
+				next;
+				goto L_QUEST;
+			case 2:
+				next;
+				goto L_REWARD;
+			case 3:
+				next;
+				goto L_MARQUE;
+			case 4:
+				next;
+				goto L_QUIT;
+		}
+	}
+	else if (LANGUAGE == 1)
+	{
+		mes "Bonjour ^3333FF" + strcharinfo(0) + "^000000 !";
+		mes "Je suis Varys, mais on m'a surnommé Varys le Noir.";
+		mes "Je joue le rôle de Maitre des Mercenaires Marins.";
+		mes "Bien d'autres étaient plus qualifiés que moi, mais que veux-tu?";
+		switch(select("Je veux devenir un Mercenaire Marin:Je viens toucher ma récompense:Je...J'ai perdu ma Marque:Rien, je passais simplement"))
+		{
+			case 1:
+				next;
+				goto L_QUEST;
+			case 2:
+				next;
+				goto L_REWARD;
+			case 3:
+				next;
+				goto L_MARQUE;
+			case 4:
+				next;
+				goto L_QUIT;
+		}
+	}
+	
+L_QUIT:
+	mes "[" + .@npcname$ + "]";
+	if(LANGUAGE == 2)
+	{	
+		mes "Don't make me loose my time!";
+		mes "Go away! Now!";
+	}
+	else if (LANGUAGE == 1)
+	{
+		mes "Ne me fais pas perdre mon temps!";
+		mes "Va voir ailleurs si j'y suis.";
+	}
+	close;
+
+L_MARQUE:
+	if(LANGUAGE == 2)
+	{
+		if (M_QUEST == 4)
+		{
+			if ( countitem(5100)==0 )
+			{
+				mes "[" + .@npcname$ + "]";
+				mes "You should took better care to your stuff...";
+				mes "I can give you one back, but it'll cost 500k Zeny.";
+				switch(select("Ok, here's my name:No, doesn't matter"))
+				{
+					case 1:
+						if (Zeny < 500000)
+						{
+							mes "You don't event have enough money, child!";
+							close;	
+						}
+						else
+						{
+							mes "Allright. Here's your mark";
+							getitem 5100, 1;
+							set Zeny, Zeny - 500000;
+							mes "See you later.";
+							close;
+						}
+					case 2:
+						mes "As you wish, but don't forget:";
+						mes "No mark mean no Contract.";
+						mes "Amber will kill you if you even dare.";
+						close;
+				}
+			}
+			else
+			{
+				mes "[" + .@npcname$ + "]";
+				mes "You got it on you, stupid!";
+				mes "I don't have time for that.";
+				close;
+			}
+		}
+		else
+		{
+			mes "[" + .@npcname$ + "]";
+			mes "You're not even a Mercenary, child!";
+			mes "Come back when you'll be one.";
+			close;
+		}
+	}
+	else if (LANGUAGE == 1)
+	{
+		if (M_QUEST == 4)
+		{
+			if ( countitem(5100)==0 )
+			{
+				mes "[" + .@npcname$ + "]";
+				mes "Tu devrais faire attention à tes affaires...";
+				mes "Je peux t'en redonner un, mais ça te coûtera 500k Zeny.";
+				switch(select("Ok, voilà mon argent:Non, tant pis"))
+				{
+					case 1:
+						if (Zeny < 500000)
+						{
+							mes "T'as pas de quoi, gamin!";
+							close;	
+						}
+						else
+						{
+							mes "Bien. En revoilà une alors";
+							getitem 5100, 1;
+							set Zeny, Zeny - 500000;
+							mes "A plus tard.";
+							close;
+						}
+					case 2:
+						mes "Comme tu veux, mais n'oublie pas,";
+						mes "Sans ta Marque, tu ne peux plus signer de Contrat.";
+						mes "Amber te truciderais sans hésiter.";
+						close;
+				}
+			}
+			else
+			{
+				mes "[" + .@npcname$ + "]";
+				mes "Tu l'as sur toi, bougre d'âne!";
+				mes "J'ai pas le temps pour ça.";
+				close;
+			}
+		}
+		else
+		{
+			mes "[" + .@npcname$ + "]";
+			mes "T'es même pas un Mercenaire Marin p'tit gars!";
+			mes "Reviens quand t'en sera un.";
+			close;
+		}
+	}
+	
+	
+L_QUEST:
+	if(LANGUAGE == 2)
+	{
+		if (M_QUEST == 0)
+		{
+			mes "[" + .@npcname$ + "]";
+			mes "So, you wanna be part of our Guild?";
+			mes "But we're souless beings, living only for money.";
+			mes "We're treasures hunter.";
+			mes "Still interested?";
+			next;
+			switch(select("Yes:No"))
+			{
+				case 1:
+					mes "Then look for Jack.";
+					mes "He's a brave one. He'll help you.";
+					mes "Ahr!";
+					set M_QUEST, 1;
+					close;
+				case 2:
+					mes "You're right.";
+					mes "There'll be more for us! Arh Arh!";
+					close;
+			}
+		}
+		else if (M_QUEST == 3)
+		{
+			mes "[" + .@npcname$ + "]";
+			mes "Looks like you found Jack.";
+			mes "He's strange, but nice, hu?";
+			mes "And he's a pretty good Treasure Hunter.";
+			mes "Well. Looks like it ok for him.";
+			mes "Then you're one of us!";
+			mes "Welcome home, Mercenary.";
+			getitem 5100, 1;
+			set M_QUEST,4;
+			close;
+		}
+		else if (M_QUEST == 4)
+		{
+			mes "[" + .@npcname$ + "]";
+			mes "You're already one of us!";
+			close;
+		}
+		else
+		{
+			mes "[" + .@npcname$ + "]";
+			mes "You should perseverate, boy!";
+			mes "Show your courage.";
+			mes "Come back with Jack's validation.";
+			close;
+		}
+	}
+	else if (LANGUAGE == 1)
+	{
+		if (M_QUEST == 0)
+		{
+			mes "[" + .@npcname$ + "]";
+			mes "Ainsi, tu veux faire partie de la Guilde?";
+			mes "Nous sommes des êtres sans âme, ne vivant que";
+			mes "pour l'argent. Des Chasseurs de Trésors.";
+			mes "Ca te dit toujours?";
+			next;
+			switch(select("Oui:Non"))
+			{
+				case 1:
+					mes "Alors cherche Jack.";
+					mes "C'est un brave type, il t'aidera sûrement.";
+					mes "Ahr!";
+					set M_QUEST, 1;
+					close;
+				case 2:
+					mes "Tu as bien raison.";
+					mes "Ca en fera plus pour nous Arh Arh!";
+					close;
+			}
+		}
+		else if (M_QUEST == 3)
+		{
+			mes "[" + .@npcname$ + "]";
+			mes "On dirait bien que tu as vu Jack.";
+			mes "Bizarre, mais sympa comme gars.";
+			mes "Et un très bon Chasseur de Trésors.";
+			mes "Bref, on dirait bien que c'est ok pour lui.";
+			mes "Te voilà donc un de nos membres!";
+			mes "Bienvenue, Mercenaire.";
+			getitem 5100, 1;
+			set M_QUEST,4;
+			close;
+		}
+		else if (M_QUEST == 4)
+		{
+			mes "[" + .@npcname$ + "]";
+			mes "Tu es déjà des nôtres toi!";
+			close;
+		}
+		else
+		{
+			mes "[" + .@npcname$ + "]";
+			mes "Faut pas s'arrêter en cours de route mon gars!";
+			mes "Un peu de courage.";
+			mes "Reviens me voir avec l'aval de Jack.";
+			close;
+		}
+	}
+
+L_REWARD:
+	if(LANGUAGE == 2)
+	{
+		if (M_QUEST == 4)
+		{
+			mes "[" + .@npcname$ + "]";
+			mes "Your reward? Ahr!";
+			mes "Let's see what reward you deserve.";
+			next;
+			for ( set @i , 0 ; @i < getarraysize ( .contractType$ ) ; set @i , @i + 1 )
+			{
+				if (countitem(.idItem$[@i]) >= 2)
+				{
+					set @rank, @i;
+					goto L_OK;
+				}
+			}
+			goto L_FAIL;
+		}
+		else
+		{
+			mes "[" + .@npcname$ + "]";
+			mes "Your reward? Ahr!";
+			mes "You're not even a Mercenary, boy!";
+			mes "Come back when you'll be one.";
+			close;
+		}
+	}
+	else if (LANGUAGE == 1)
+	{
+		if (M_QUEST == 4)
+		{
+			mes "[" + .@npcname$ + "]";
+			mes "Ta récompense? Ahr!";
+			mes "Voyons donc ce que tu as fait qui mérite récompense.";
+			next;
+			for ( set @i , 0 ; @i < getarraysize ( .contractType$ ) ; set @i , @i + 1 )
+			{
+				if (countitem(.idItem$[@i]) >= 2)
+				{
+					set @rank, @i;
+					goto L_OK;
+				}
+			}
+			goto L_FAIL;
+		}
+		else
+		{
+			mes "[" + .@npcname$ + "]";
+			mes "Ta récompense? Ahr!";
+			mes "T'es même pas un Mercenaire p'tit gars!";
+			mes "Reviens quand t'en sera un.";
+			close;
+		}
+	}
+	
+L_OK:	
+	if(LANGUAGE == 2)
+	{
+		mes "[" + .@npcname$ + "]";
+		mes "Arh! Looks like you're who you say you are.";
+		mes "Allright. Here's your reward!";
+		getitem .@reward, .@rewardcount;
+		mes "And, there! A little bonus!";
+		mes "Don't say it to Amber or Sleip!";
+		set Zeny, Zeny+250000;
+		mes "Go, Child. Come back when you'll want more!";
+		close;
+	}
+	else if (LANGUAGE == 1)
+	{
+		mes "[" + .@npcname$ + "]";
+		mes "Arh! On dirait bien que tu es ce que tu dis être.";
+		mes "Très bien, tu peux avoir ta récompense alors!";
+		getitem .@reward, .@rewardcount;
+		mes "Allez tiens, un petit bonus!";
+		mes "Ne le dis pas à Amber ou à Sleip!";
+		set Zeny, Zeny+250000;
+		mes "Va, petiot! Reviens quand tu en voudras plus!";
+		close;
+	}
+
+L_FAIL:
+	if(LANGUAGE == 2)
+	{
+		mes "[" + .@npcname$ + "]";
+		mes "Do you think I'm an idiot?";
+		mes "Do even dare to laught at Varys le Noir!";
+		percentheal -99,-99;
+		sc_start SC_STONE, 60000, 0;
+		mes "Now, go away!";
+		warp "capitale", 221, 170;
+		close;	
+	}
+	else if (LANGUAGE == 1)
+	{
+		mes "[" + .@npcname$ + "]";
+		mes "Tu me prends pour un idiot?";
+		mes "On ne se moque pas impunément de Varys le Noir!";
+		percentheal -99,-99;
+		sc_start SC_STONE, 60000, 0;
+		mes "Maintenant, du vent!";
+		warp "capitale", 221, 170;
+		close;	
+	}
+}

@@ -1,0 +1,202 @@
+caspen,84,214,8	script	Grand Arch Bishop	915,{  
+
+	mes "[Grand Arch Bishop]";
+	if (class == 4009 || class == 8)
+	{
+		if ( AB_Q < 1)
+		{
+			mes "Bonjour à toi," + strcharinfo(0) + ".";
+			mes "Je suis le Grand Arch Bishop.";
+			mes "Je peux te faire passer la deuxième épreuve de ton Eveil,";
+			mes "Es-tu intéressé?";
+			next;
+			switch(select("Oui, je voudrais passer le test, s'il vous plait.:Non merci, je me suis trompé de personne.:Un vieux fou m'a envoyé ici après avoir lancé un tetra Vortex sur moi Y^Y."))
+			{
+				case 1:
+					mes "[Grand Arch Bishop]";
+					mes "Tout d'abord, voyons si tu es prêt physiquement.";
+					next;
+					if ( CHARLO_Q ){
+						mes "[Grand Arch Bishop]";
+						mes "On dirait bien que ton physique est prêt.";
+						mes "Je vais donc maintenant tester ton mental.";
+						next;
+						mes "[Grand Arch Bishop]";
+							mes "Il s'agit d'un quizz. Commençons.";
+							next;
+							set min_Q, 0;
+							mes "Quel est le pourcentage de chance de lex divina?";
+							switch(select("100 - (TargetVIT + TargetLUK/8) + INT/15 %:100 - (TargetMDEF + TargetLUK/8) + INT/15 %:100 - (TargetINT + TargetLUK/8) + INT/15 %:100 - (TargetDEX + TargetVIT/8) + INT/15 %"))
+							{
+								case 2:
+								case 4:				
+								case 1:
+									set min_Q, min_Q+1;
+								case 3:
+							}
+							next;
+							mes "De quoi avez vous besoin pour lancer Aspersio?";
+							switch(select("1 Holy Water:1 Blue gemstonne:1 holy water et 1 blue gemstonne:Rien du tout"))
+							{
+								case 1:
+									set min_Q, min_Q+1;
+								case 2:
+								case 3:
+								case 4:
+							}
+							next;
+							mes "Sur quels ennemis ne peut pas être casté Lex Aeterna?";
+							switch(select("Aucun:Stone cursed:Freeze:Freeze ou Stone Cursed"))
+							{
+								case 4:
+									set min_Q, min_Q+1;
+								case 1:
+								case 2:
+								case 3:
+							}
+							next;
+							mes "Quels dommages causera Turn Undead en cas d'échec?";
+							switch(select("JobLV + INT + 10*SkillLV:SkillLV + INT + 10*SkillLV:BaseLV + INT + 10*SkillLV:SkillLV + INT + 20*SkillLV"))
+							{
+								case 3:
+									set min_Q, min_Q+1;
+								case 2:
+								case 1:
+								case 4:
+							}
+							next;
+							mes "De quoi avez vous besoin pour lancer Magnus Exorcismus?";
+							switch(select("1 red gemstonne:1 holy water:1 yello gemstonne:1 blue gemstonne"))
+							{
+								case 4:
+									set min_Q, min_Q+1;
+								case 1:
+								case 3:
+								case 2:
+							}
+							next;
+							mes "Quel est le bonus de Mana Recharge level 4?";
+							switch(select("SP cost - 5%:SP cost - 10%:SP cost - 16%:SP cost - 20%"))
+							{
+								case 3:
+									set min_Q, min_Q+1;
+								case 1:
+								case 2:
+								case 4:
+							}
+							next;
+							mes "Quelle arme améliore votre Heal?";
+							switch(select("Aucun:Holy Cross:Book of Mother Earth:Staff of Recovery"))
+							{
+								case 4:
+									set min_Q, min_Q+1;
+								case 2:
+								case 3:
+								case 1:
+							}
+							next;
+							mes "Combien de temps dure Assumptio au level 3?";
+							switch(select("10s:30s:60s:120s"))
+							{
+								case 3:
+									set min_Q, min_Q+1;
+								case 1:
+								case 2:
+								case 4:
+							}
+							next;
+							mes "Quel skill augmente l'efficacité de votre skill Heal?";
+							switch(select("Meditatio:Increase Spiritual Power:Basilica:Suffragium"))
+							{
+								case 1:
+									set min_Q, min_Q+1;
+								case 4:
+								case 2:
+								case 3:
+							}
+							next;
+							mes "Que faut-il pour lancer Basilica?";
+							switch(select("1 red gemstonne:1 yellow gemstonne:1 blue gemstonne:1 de chaque, plus une holy water"))
+							{
+								case 4:
+									set min_Q, min_Q+1;
+								case 2:
+								case 3:
+								case 1:
+							}
+							next;
+							mes "[Grand Arch Bishop]";
+							mes "Bien, voyons tes résultats maintenant...";
+							mes "*Trifouille les résultats du test";
+							next;
+							mes "[Grand Arch Bishop]";
+							if (min_Q >= 9){
+								mes "Excellent, tu as eu ^FF0000" + min_Q*10 + "%^000000 de bonnes réponses.";
+								mes "On dirait bien que ton Esprit est prêt à passer l'Eveil.";
+								mes "Tu peux passer à l'avant-dernière étape de ta quête, la plus difficile.";
+								mes "Pars donc à la recherche du Mirroir du Mal, il t'expliquera cela plus en détail.";
+								mes "Il se trouve caché quelque part aux alentours de la grande ville de Bastania.";
+								mes "Prends cet objet qui te sera très utile";
+								mes " ";
+								getitem (22000),1;
+								mes "Bon courage.";
+								emotion 21;
+								set AB_Q, 1;
+								close;
+							}
+							else
+							{
+								mes "Désolé, mais tes ^FF0000" + min_Q*10 + "%^000000 de réussite ne seront pas suffisant.";
+								mes "Entraîne encore un peu ton esprit,";
+								mes "Sans quoi, il ne résistera pas à la puissance de l'Eveil.";
+								close;
+							}
+					}		
+					else
+					{
+					mes "[Grand Arch Bishop]";
+					mes "Désolé, mais tu ne peux pas venir me voir pour l'instant.";
+					mes "Tu dois avant tout tester ton Physique auprès du Maitre de l'Eveil.";
+					close;
+					}
+				case 2:
+					mes "[Grand Arch Bishop]";
+					mes "Pas de problème.";
+					mes "Vis ta vie avec Espoir,";
+					mes "Elle ne t'en paraîtra que plus belle.";
+					close;
+				case 3:
+					mes "[Grand Arch Bishop]";
+					mes "Un vieux fou tu dis?";
+					mes "Le Maître du Renouveau est tellement plus que ça";
+					mes "Mais j'avoue qu'il a des tendances un peu cabotine...";
+					close;
+			}
+		}
+			
+		else if ( AB_Q == 1 )
+		{
+			mes "Bonjour à toi," + strcharinfo(0) + ".";
+			mes "Tu peux passer à la dernière étape.";
+			mes "Pars donc à la recherche d'Yggdrasil.";
+			mes "Il se trouve caché quelque part aux alentours de Bastania.";
+			mes "Bon courage.";
+			close;
+		}
+
+		else if ( AB_Q == 3 || class == 4057 || class == 4063)
+		{
+			mes "Bonjour à toi," + strcharinfo(0) + ".";
+			mes "Felicitations, tu es Arch Bishop !";
+			mes "Que la force soit avec toi !";
+			close;
+		}
+	}
+	else
+	{
+		mes "Ta foie n'est pas assez forte, mon enfant.";
+		mes "Je ne peux rien pour toi.";
+		mes "A bientôt";
+		close;
+	}
+}

@@ -1,0 +1,325 @@
+//===== eAthena Script =======================================
+//=  Annonceur
+//===== By ===================================================
+//=  Dark sephiroth
+//===== Current Version ======================================
+//= Ver. 1.1
+//===== Compatible With ======================================
+//= SQL et TXT
+//===== Description ==========================================
+//= 
+//===== Additional Comments ==================================
+//= 
+//============================================================
+prontera,144,174,4	script	Annonceur	790,{
+
+//==== Configuration ====
+
+set .@nomA$, "[^6600CCAnnonceur^000000]"; //Nom du NPC
+set .@prixA,10000; //Prix de l'annonce
+set .@prixB,5000;
+set .@prixC,2500;
+set .@temporisation,15; //  Temps entre chaque annonce, en minutes
+
+setarray .@color$[0],
+	"0x8282FF", //Bleu
+	"0xFF0000", //Rouge
+	"0xFF9900", //Orange
+	"0x00FF00"; //Vert
+
+setarray .filtre$[0],
+	"http", 
+	"www",
+	".fr",
+	".net",
+	".com",
+	".org",
+	"xooit",
+	"serveur",
+	"forum",
+	"noob",
+	"n00b",
+	"no0b",
+	"n0ob",
+	"nuub",
+	"naab",
+	"low",
+	"hight",
+	"rate",
+	"staff",
+	"GM",
+	"event",
+	"guard",
+	"admin",
+	"connard",
+	"connar",
+	"c0nnar",
+	"c0nnard",
+	"conard",
+	"conar",
+	"c0nar",
+	"c0nard",
+	"c0n",
+	"enculé",
+	"enculer",
+	"enculé",
+	"batard",
+	"batar",
+	"fdp",
+	"pute",
+	"salop",
+	"sal0p",
+	"cul",
+	"merde",
+	"suce",
+	"cheat";
+
+
+//==== NPC ====
+
+	if ( gettimetick(2) - (.@temporisation * 60 ) < #Last_Announce )
+	{
+		mes .@nomA$;
+		mes "Tu dois attendre " + .@temporisation + " minutes entre chaques annonces";
+		mes "Repasse plus tard.";
+		close;
+	}
+	
+	mes .@nomA$;
+	mes "Bien le bonjour " + strcharinfo(0) + ".";
+	mes "Je suis l'annonceur.";
+	mes "Que puis-je pour toi ?";
+	next;
+
+		switch( select ( "Passer une annonce:Je cherche de l'aide:Je cherche quelqu'un de précis:C'est quoi un annonceur?:Rien") )
+		{
+
+
+		case 1:
+
+			mes .@nomA$;
+			mes "Allons-y !";
+			mes "N'oublie pas qu'une annonce coûte " + .@prixA + " Zenys.";
+			mes "Veux tu continuer ?";
+			next;
+
+			if ( select ( "Oui:Non") -1 ) break ;
+
+			if(zeny < .@prixA)
+			{
+
+				mes .@nomA$;
+				mes "Je suis désolé tu n'as pas l'argent nécessaire pour passer une annonce.";
+				close;
+
+			}
+
+		
+			do
+			{
+				set @annonce$,"";
+				mes .@nomA$;
+				mes "Tape l'annonce que tu veux faire apparaître dans le cadre ci-dessous.";
+				input @annonce$;
+				next;
+				for ( set @i , 0 ; @i < getarraysize ( .filtre$ ) ; set @i , @i + 1 )
+ 					if( compare( @annonce$, .filtre$[ @i ] ) )
+ 					{
+						mes .@nomA$;
+						mes "Tu utilises des mots interdits !";
+ 						close;
+					}
+				mes .@nomA$;
+				mes "Voici ton annonce :";
+				mes @annonce$;
+				mes "Cela te convient-t-il?";
+				next;
+
+			} while ( select ("Oui:Non, je veux recommencer") - 1 );
+
+
+
+			mes .@nomA$;
+			mes "Choisis la couleur de ton annonce:";
+			next;
+			set @color , select ( "Bleu:Rouge:Orange:Vert" ) - 1 ;
+
+			mes .@nomA$;
+			set Zeny, zeny - .@prixA;
+			announce strcharinfo(0) + ": " + @annonce$ , bc_all , .@color$[ @color ], bc_all ;
+
+			set #Last_Announce , gettimetick (2) ;
+			mes "Voilà ton annonce est passée.";
+			close;
+		
+		case 2:
+			mes "Cela va te coûter " + .@prixC + " Zeny. On est d'accord?";
+			switch(select("Oui","Non"))
+			{
+				case 1:
+					mes "Allons-y alors.";
+					announce strcharinfo(0) + ", " + jobname(Class) + ", cherche actuellement de l'aide. Si vous êtes prêt à l'aider, contacter le!", bc_all;
+								set Zeny, zeny - .@prixC;
+					break;
+				case 2:
+					mes "Ok, reviens si tu changes d'avis.";
+					break;
+			}
+			close;
+		
+		case 3:
+			mes "Cela va te coûter " + .@prixB + " Zeny. On est d'accord?";
+			switch(select("Oui","Non"))
+			{
+				case 1:
+					if (Zeny >= .@prixB)
+					{
+						mes "Allons-y alors.";
+						goto GetJob;
+					}
+					else
+						mes "Tu n'as pas assez, désolé.";
+					break;
+				case 2:
+					mes "Ok, reviens si tu changes d'avis.";
+					break;
+			}
+			close;
+
+		case 4:
+			mes .@nomA$;
+			mes "Le principe est simple,";
+			mes "Contre une somme de " + .@prixA + " Zenys, je peux passer une annonce pour toi qui sera visible par tout le serveur !";
+			mes "Bien sûr, les insultes, et les publicités pour d'autres serveurs sont strictement interdites.";
+			mes "Tu as le droit a une annonce toutes les " + .@temporisation + " minutes.";
+			close;
+			
+		case 5:
+		}
+		
+		mes .@nomA$;
+		mes "D'accord, repasse si tu as besoin de mes services.";
+		close;
+	
+GetLvl:
+	next;
+	mes "Quel level minimum?";
+	input .@lvlmin$;
+	set .@lvlmin, atoi(.@lvlmin$);
+	mes "Le niveau " + .@lvlmin + ", on est d'accord?";
+	switch(prompt("Oui","Non"))
+	{
+		case 1:
+			if (.@lvlmin < 1 && .@lvlmin > 99)
+			{
+				mes "Désolé, mais ça ne va pas. Donne moi un niveau entre 1 et 99.";
+				goto GetLvl;
+			}
+			mes "Ok, continuons.";
+			goto GetLvlMax;
+			break;
+		case 2:
+			mes "Ok, on recommence.";
+			goto GetLvl;
+			break;	
+		case 255:
+			mes "Ok, tant pis.";
+			close;
+	}
+
+GetLvlMax:
+	next;
+	mes "Quel level maximum?";
+	input .@lvlmax$;
+	set .@lvlmax, atoi(.@lvlmax$);
+	mes "Le niveau " + .@lvlmax+ ", on est d'accord?";
+	switch(prompt("Oui","Non"))
+	{
+		case 1:
+			if (.@lvlmax < 1 && .@lvlmax > 99)
+			{
+				mes "Désolé, mais ça ne va pas. Donne moi un niveau entre 1 et 99.";
+				goto GetLvlMax;
+			}
+			if (.@lvlmax < .@lvlmin)
+			{
+				mes "Désolé, mais ça ne va pas. Donne moi un level max supérieur au level min.";
+				mes "Pour rappel, tu as choisi " + .@lvlmin + " pour level minimum.";
+				goto GetLvlMax;
+			}
+			mes "Ok, continuons.";
+			goto LaunchAnnounce;
+			break;
+		case 2:
+			mes "Ok, on recommence.";
+			goto GetLvlMax;
+			break;	
+		case 255:
+			mes "Ok, tant pis.";
+			close;
+	}
+
+GetJob:
+	mes "Quelle aide recherches-tu?";
+	setarray .@class1$[0], "Knight", "Crusader", "Monk", "Priest", "Assassin", "Rogue", "Hunter", "Bard", "Dancer", "Sage", "Wizard", "Blacksmith", "Alchemist";
+	setarray .@class2$[0], "Lord Knight", "Paladin", "Champion", "High Priest", "Assassin Cross", "Stalker", "Sniper", "Clown", "Gipsy", "Professor", "High Wizard", "Whitesmith", "Creator";
+	mes "Quel niveau, pour commencer?";
+	switch (prompt("Classes 2","Classes 2 Trans"))
+	{
+		case 1:
+			set .@jobs, 1;
+			break;
+		case 2:
+			set .@jobs, 2;
+			break;
+		case 255:
+			mes "Comme tu veux.";
+			close;
+	}
+	next;
+	mes "Quelle classe précisément?";
+	// On créé un menu dynamique
+    	for ( set .@i, 0; .@i<getarraysize(getd(".@class" + .@jobs + "$")); set .@i, .@i+1 )
+	{
+	      	set .@menu$, .@menu$ + ( .@i ? ":" : "" ) + getelementofarray(getd(".@class" + .@jobs + "$"),.@i);
+	}
+    	// On récupère le choix de l'utilisateur
+    	set .@choice, prompt(.@menu$) - 1;
+	if (.@choice != 255)
+		set .@jobasked$, getelementofarray(getd(".@class" + .@jobs + "$"),.@choice);
+	mes "Un " + .@jobasked$ + ", tu es sûr?";
+	switch(prompt("Oui","Non"))
+	{
+		case 1:
+			goto GetLvl;
+		case 2:
+			mes "On recommence.";
+			goto GetJob;
+		case 255:
+			mes "Ok tant pis.";
+			close;
+	}
+
+LaunchAnnounce:
+	mes "Bien reprenons.";
+	mes "Tu as choisi ces infos:";
+	mes "Classe: " + .@jobasked$;
+	mes "Level Min: " + .@lvlmin;
+	mes "Level Max:" + .@lvlmax;
+	switch(select("Ok","Non"))
+	{
+		case 1:
+			announce strcharinfo(0) + " recherche un " + .@jobasked$ + " dont le niveau est compris entre " + .@lvlmin + " et " + .@lvlmax, 0;
+						set Zeny, zeny - .@prixB;
+			break;
+		case 2:
+			mes "Ok. On recommence?";
+			if (select("Oui","Non") == 1)
+				goto GetJob;
+			else
+				mes "Ok tant pis.";
+			break;
+	}
+	close;
+
+}

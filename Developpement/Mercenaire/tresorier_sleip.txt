@@ -1,0 +1,147 @@
+casp_in01,184,190,4	script	Sleip	828,{	
+	mes "[" + .@npcname$ + "]";
+	if (LANGUAGE == 1)
+	{
+		mes "Bonjour ^3333FF" + strcharinfo(0) + "^000000 !";
+		mes "Je suis le trésorier de la Guilde des Mercenaires.";
+		mes "On m'appelle Sleip.";
+		mes "Qu'est ce que je peux faire pour toi?";
+		next;
+		switch(select("Je viens toucher mon dû:Je cherche du travail:Rien, je passais simplement"))
+		{
+			case 1:
+				goto L_REWARD;
+			case 2:
+				goto L_JOB;
+			case 3:
+				goto L_QUIT;
+		}
+	}
+	else if (LANGUAGE == 2)
+	{
+		mes "Hello ^3333FF" + strcharinfo(0) + "^000000 !";
+		mes "I'm the Mercenary Guild's treasure keeper.";
+		mes "My name's Sleip.";
+		mes "What can I do for you?";
+		next;
+		switch(select("I'm here to claim a reward:I'm looking for a job:Nothing, simply walking"))
+		{
+			case 1:
+				goto L_REWARD;
+			case 2:
+				goto L_JOB;
+			case 3:
+				goto L_QUIT;
+		}
+	}
+	
+OnInit:
+	set .@npcname$,"^FF3333Sleip^000000";	
+	setarray .contractType$[0],
+		"drop",
+		"pvp",
+		"mercenariat",
+		"assassinat",
+		"donjon";
+	setarray .idItem[0],
+		21000,
+		21003,
+		21001,
+		21002,
+		21004;
+	
+L_QUIT:
+	if (LANGUAGE == 1)
+	{
+		mes "[" + .@npcname$ + "]";
+		mes "Très bien.";
+		mes "A bientôt alors";
+	}
+	else if (LANGUAGE == 2)
+	{
+		mes "[" + .@npcname$ + "]";
+		mes "Allright.";
+		mes "See you soon then";
+	}
+	close;
+	
+L_JOB:
+	mes "[" + .@npcname$ + "]";
+	if (LANGUAGE == 1)
+	{
+		mes "Désolé, je n'ai rien à te proposer pour le moment...";
+		mes "Pour toucher ta récompense une fois un travail choisi,";
+		mes "tu devras trouver Le Maitre des Mercenaires.";
+		mes "Cherche bien, ça peut valoir le coup.";
+	}
+	else if (LANGUAGE == 2)
+	{
+		mes "Sorry, that's not my job...";
+		mes "To get a new kind of job, you can still go see Varys, the Mercenary Chief,";
+		mes "And keep looking. There's often something to do.";
+	}
+	close;
+
+L_REWARD:
+	mes "[" + .@npcname$ + "]";
+	if (LANGUAGE == 2)
+	{
+		mes "Allright.";
+		mes "First of all, I must check if you and your Master both agreed that the job is done.";
+	}
+	else if (LANGUAGE == 1)
+	{
+		mes "Bien.";
+		mes "Avant toute chose, j'ai besoin de vérifier que toi et ton Maître";
+		mes "êtes d'accord sur le fait que le travail est terminé";
+	}
+	next;
+	for ( set @i , 0 ; @i < getarraysize ( .contractType$ ) ; set @i , @i + 1 )
+	{
+		if (countitem(.idItem[@i]) >= 2)
+		{
+			set @rank, @i;
+			goto L_OK;
+		}
+	}
+	goto L_FAIL;
+	
+L_OK:	
+	mes "[" + .@npcname$ + "]";
+	if (LANGUAGE == 1)
+	{
+		mes "Parfait,";
+		mes "Je vois que tu as les deux faces d'une même pièce.";
+		mes "Tu peux toucher ta récompense.";
+
+	}
+	else if (LANGUAGE == 2)
+	{
+		mes "Perfect,";
+		mes "I can see that you've both agreed.";
+		mes "Here's your reward.";
+	}
+	set Zeny, Zeny+500000;
+	delitem .idItem[@rank], 2;
+	set CONTRACT_Q, 0;
+	set CONTRACT_DELAY, gettimetick(0);
+	close;
+
+L_FAIL:
+	if (LANGUAGE == 1)
+	{
+		mes "[" + .@npcname$ + "]";
+		mes "Désolé, jeune Ombre,";
+		mes "Mais nulle part je ne vois de confirmation de ton Maître.";
+		mes "Récupère son exemplaire du Contrat,";
+		mes "et reviens me voir.";
+	}
+	else if (LANGUAGE == 2)
+	{
+		mes "[" + .@npcname$ + "]";
+		mes "Sorry, young Shadow,";
+		mes "but I can't find your Master confirmation.";
+		mes "Get his Contract side, and then, come back to me.";
+	}
+	close;	
+}

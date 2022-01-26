@@ -1,0 +1,73 @@
+comodo, 26, 286, 5	script	Deviruchi Hat	51,{
+
+	set .@npcname$,"[Deviruchi Hat]";
+	
+	//Blue Deviruchi Hat 20050
+	setarray @itemBLCT[0], 5038, 978, 7230;
+	setarray .countitemBLCT[0], 1, 2, 2;
+
+	//Cyan Deviruchi Hat 20051
+	setarray @itemCCT[0], 5038, 978, 982, 7230;
+	setarray .countitemCCT[0], 1, 2, 2, 2;
+
+	//Gold Deviruchi Hat 20052
+	setarray @itemGCT[0], 5038, 976, 7230;
+	setarray .countitemGCT[0], 1, 2, 2;
+	
+	//Green Deviruchi Hat 20053
+	setarray @itemGNCT[0], 5038, 979, 7230;
+	setarray @countitemGNCT[0], 1, 2, 2;
+	
+	//Purple  Deviruchi Hat 2054
+	setarray @itemPCT[0], 5038, 981, 7230;
+	setarray @countitemPCT[0], 1, 2, 2;
+	
+	//Red Deviruchi Hat 2055
+	setarray @itemRCT[0], 5038, 975, 7230;
+	setarray @countitemRCT[0], 1, 2, 2;
+	
+	//White Deviruchi Hat 2056
+	setarray @itemWCT[0], 5038, 982, 7230;
+	setarray @countitemWCT[0], 1, 2, 2;
+	
+	
+	
+	mes .@npcname$;
+	mes "Bonjour ^3333FF" + strcharinfo(0) + "^000000!";
+	mes "Je peux te proposer quelque hats pour customiser ton Deviruchi Hat.";
+	mes	"Ca t'interesse?!";
+	next;
+	mes .@npcname$;
+	mes "Voici ce que je peux te proposer:";
+	next;
+
+	switch(select("Blue Deviruchi Hat:Cyan Deviruchi Hat:Gold Deviruchi Hat:Green Deviruchi Hat:Purple Deviruchi Hat:Red Deviruchi Hat:White Deviruchi Hat:^777777Rien, merci...^000000"))
+	{
+		case 1 :
+ 		callfunc "mes_getitem_colo",.@npcname$,2050,@itemBLCT,@countitemBLCT, 1000000;
+
+		case 2 :
+ 		callfunc "mes_getitem_colo",.@npcname$,2051,@itemCDH,@countitemCDH, 1000000;
+
+		case 3 :
+ 		callfunc "mes_getitem_colo",.@npcname$,2052,@itemGDH,@countitemGDH, 1000000;
+
+		case 4 :
+ 		callfunc "mes_getitem_colo",.@npcname$,2053,@itemGNDH,@countitemGNDH, 1000000;
+
+		case 5 :
+		callfunc "mes_getitem_colo",.@npcname$,2054,@itemPDH,@countitemPDH, 1000000;
+
+		case 6 :
+ 		callfunc "mes_getitem_colo",.@npcname$,2055,@itemRDH,@countitemRDH, 1000000;
+		
+		case 7 :
+		callfunc "mes_getitem_colo",.@npcname$,2056,@itemWDH,@countitemWDH, 1000000;
+
+		// Quitter
+		case 8 :
+		mes @npcname$;
+		mes "Très bien. A bientôt !";
+		close;
+	}
+}

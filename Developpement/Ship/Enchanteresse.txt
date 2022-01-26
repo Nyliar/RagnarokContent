@@ -1,0 +1,180 @@
+prontera,204,181,6	script	Enchanteresse	103,{
+
+	set .@npcname$, "[Enchanteresse]";
+	setarray .listet[0],1573,2532, 1006;
+	setarray .listetcount[0], 5, 1, 50;
+	
+	mes .@npcname$;
+	mes "";
+	mes "Bonjour à toi, " + strcharinfo(0);
+	set TISS_Q, 2;
+	if (SHIP_Q == 1)
+	{
+		if (TISS_Q == 0)
+		{
+			mes "Tu dis?";
+			mes "Tu viens de la part du Dompteur, prêt de la capitale?";
+			mes "Ce vieux loup de mer! Il navigue toujours?";
+			mes "J'adorais travailler avec lui.";
+			mes "*Glousse*";
+			mes "je veux bien t'aider, pour lui rendre service.";
+			mes "Malheureusement pour le moment je ne peux pas...";
+			mes "Désolé.";	
+			set TISS_Q, 1;
+		}
+		else if (TISS_Q >= 2)
+		{
+			if (POSE_Q == 2)
+			{	
+				mes "Tu as tout ce que je t'ai demandé?";
+				switch(select("Oui, voilà!","Euh, presque. En voilà déjà une partie.","Non, désolé, tu peux me rappeler la liste?"))
+				{
+					case 1:
+						set @check, callfunc ("check_list",.listet,.listetcount);
+						if (@check == 1)
+						{
+							mes "On dirait bien que tu as tout. Parfait!";
+							mes "C'est parti.";
+							callfunc "clear_list",.listeet,.listetcount;
+							next;
+							mes "Voilà, tu as ta voile. Je l'envoie directement au Careneur, je rajouterais une lettre!";
+							mes "*Glousse*";
+							set TISS_Q, 3;
+						}
+						else
+							mes "Il t'en manques! Je ne peux rien faire sans cette liste!";
+						break;
+					case 2:
+						mes "Voyons ça.";
+						callfunc "update_list",.listet,.listetcount;
+						mes "Ok il te manque donc encore:";
+						callfunc "display_list",.listet,.listetcount;
+						break;
+					case 3:
+						mes "Je connais ça, je ne me souviens jamais de rien non plus.";
+						mes "J'ai besoin de:";
+						callfunc "display_list",.listet,.listetcount;
+						mes "J'attendrais près d'ici.";
+						break;
+			}				
+			else
+			{
+				mes "Je ne peux travailler sans Enduit. Les monstres sauvages sont durs à Enchanter.";
+			}											
+		}
+	}
+	else
+	{
+		mes "J'adore travailler et enchanter les monstres.";
+		mes "Il faut apprendre à les comprendre, à les aimer.";
+		mes "L'empathie est nécessaire pour mon travail!";
+	}
+	close;
+	
+	
+OnInit:
+	end;
+}
+
+prt_in,72,173,6	script	Markus	887,{
+	set .@npcname$, "[Markus]";
+	setarray .listet[0],1573,2532, 1006;
+	setarray .listetcount[0], 5, 1, 50;
+	
+	mes .@npcname$;
+	mes "";
+	mes "Teuh! Teuh!";
+	
+	if (TISS_Q == 1)
+	{
+		mes "Tu es là pour aider maman?";
+		mes "Elle tisse des trames magiques à longueur de journée,";
+		mes "pour m'acheter des médicaments.";
+		mes "Mais ils sont si chers...Elle ne pourra jamais...";
+		mes "....";
+		mes "Je vais mourir?";
+		next;
+		//flavoured Liquor
+		if (countitem(6095) >= 1)
+		{
+			switch(select("Bois ça, cul sec! Et sans poser de question!","Je ne sais pas, désolé..."))
+			{
+				case 1:
+					delitem 6095,1;
+					next;
+					mes .@npcname$;
+					mes "";
+					mes "Teuh! Teuh!";
+					mes "REUH! REUH! REUH!";
+					mes "*Ca s'aggrave*";
+					mes "REUH...";
+					mes "Wow! Ca va mieux!";
+					mes "Je suis guérie!";
+					next;
+					movenpc "Enchanteresse", 102,105;	
+					set .@npcname$, "[Enchanteresse]";
+					mes .@npcname$;
+					mes "";
+					mes "Tu as sauvé mon fils?";
+					mes "Je peux t'aider maintenant que je n'ai plus à m'inquiéter!";
+					mes "Ramène moi ça, et je te ferais une voile";
+					set COUNT1, .listetcount[0];
+					set COUNT2, .listetcount[1];
+					set COUNT3, .listetcount[2];
+					callfunc "display_list",.listet,.listetcount;
+					mes "Reviens me voir rapidement.";
+					set TISS_Q, 2;
+					movenpc "Tisserande", 51,105;	
+					break;
+				case 2:
+					next;
+					mes .@npcname$;
+					mes "";
+					mes "Teuh! Teuh!";
+					mes "Je veux pas mourir...";
+					break;
+			}
+		}
+		else if (countitem(704) >= 1)
+		{
+			delitem 704,1;
+			mes "Vous donnez une feuille d'Aloe à Markus.";
+			mes "REUH! REUH! REUH!";
+			mes "Sa toux s'aggrave!";
+		}
+		else if (countitem(7252) >= 1)
+		{
+			delitem 7252,1;
+			mes "Vous donnez un remède à base d'herbe à Markus.";
+			mes "teuh! teuh!";
+			mes "Ca ne change rien...";
+		}
+		else if (countitem(970) >= 1)
+		{
+			delitem 970,1;
+			mes "Vous donnez un Alcohol à Markus.";
+			mes "*Sanglotte*";
+			mes "Sa dépression le reprend de plus belle.";
+			mes "C'est inefficace...";
+		}
+		else if (countitem(7765) >= 1)
+		{
+			delitem 7765,1;
+			setnpcdisplay "Markus", 878;
+			sleep 5000;
+			mes "il s'est levé!";
+			sleep 1000;
+			npcwalkto 45,99;
+			setnpcdisplay "Markus", 887;
+			mes "Il est retombé. Sa n'a rien changé...";
+			sleep 5000;
+			movenpc "Markus", 43,105;
+		}
+	}
+	else
+	{
+		mes "*On dirait qu'une toux maligne l'affaibli*";
+		mes "*Il ne tiendra pas longtemps...*";
+	}
+	close;
+}

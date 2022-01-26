@@ -1,0 +1,112 @@
+//===== eAthena Script =======================================
+//= Guildhouse Savecat
+//===== By: ==================================================
+//= Masao
+//===== Current Version: =====================================
+//= 1.0
+//===== Compatible With: =====================================
+//= eAthena SVN
+//===== Description: =========================================
+//= Saves your Position inside the Guildhouse.
+//===== Additional Comments: =================================
+//= 1.0 First version
+//============================================================ 
+
+rent_in,14,25,4	script	Guildhouse Savecat::savecat	876,{
+
+	atcommand strcharinfo(0)+":@save";
+	dispbottom "Votre point de sauvegarde a été changé^.^";
+	close;
+}
+
+rent_in,0,0,0	script	guild_check#1	-1,{
+
+OnPCLoadMapEvent:
+	getmapxy .@m$,.@x,.@y,0;
+	if(.@m$ == "rent_in")
+	{
+		if(getcharid(2) != $FlagID1)
+		{
+			warp "capitale",155,185;
+			Save "capitale",155,185;
+		}
+	}
+}
+rent_in2,0,0,0	script	guild_check#2	-1,{
+
+OnPCLoadMapEvent:
+	getmapxy .@m$,.@x,.@y,0;
+	if(.@m$ == "rent_in2")
+	{
+		if(getcharid(2) != $FlagID2)
+		{
+			warp "capitale",155,185;
+			Save "capitale",155,185;
+		}
+	}
+}
+rent_in3,0,0,0	script	guild_check#3	-1,{
+
+OnPCLoadMapEvent:
+	getmapxy .@m$,.@x,.@y,0;
+	if(.@m$ == "rent_in3")
+	{
+		if(getcharid(2) != $FlagID3)
+		{
+			warp "capitale",155,185;
+			Save "capitale",155,185;
+		}
+	}
+}
+rent_in4,0,0,0	script	guild_check#4	-1,{
+
+OnPCLoadMapEvent:
+	getmapxy .@m$,.@x,.@y,0;
+	if(.@m$ == "rent_in4")
+	{
+		if(getcharid(2) != $FlagID4)
+		{
+			warp "capitale",155,185;
+			Save "capitale",155,185;
+		}
+	}
+}
+rent_in5,0,0,0	script	guild_check#5	-1,{
+
+OnPCLoadMapEvent:
+	getmapxy .@m$,.@x,.@y,0;
+	if(.@m$ == "rent_in5")
+	{
+		if(getcharid(2) != $FlagID5)
+		{
+			warp "capitale",155,185;
+			Save "capitale",155,185;
+		}
+	}
+}
+rent_in6,0,0,0	script	guild_check#6	-1,{
+
+OnPCLoadMapEvent:
+	getmapxy .@m$,.@x,.@y,0;
+	if(.@m$ == "rent_in6")
+	{
+		if(getcharid(2) != $FlagID6)
+		{
+			warp "capitale",155,185;
+			Save "capitale",155,185;
+		}
+	}
+}
+
+rent_in2,14,25,4	duplicate(savecat)	Guildhouse Savecat#2	876
+rent_in3,14,25,4	duplicate(savecat)	Guildhouse Savecat#3	876
+rent_in4,14,25,4	duplicate(savecat)	Guildhouse Savecat#4	876
+rent_in5,14,25,4	duplicate(savecat)	Guildhouse Savecat#5	876
+rent_in6,14,25,4	duplicate(savecat)	Guildhouse Savecat#6	876
+
+rent_in	mapflag	loadevent
+rent_in2	mapflag	loadevent
+rent_in3	mapflag	loadevent
+rent_in4	mapflag	loadevent
+rent_in5	mapflag	loadevent
+rent_in6	mapflag	loadevent

@@ -1,0 +1,280 @@
+Hallow01,80,72,4	script	Hassanshin::hascasp	945,{
+	set .@npc$, "[^FF0000Hassanshin^000000]";
+
+	mes .@npc$; 
+	mes "...";
+	if(LANGUAGE == 2)
+	{
+		mes "Who are you?";
+		input @check$;
+		if ( @check$ == .check$[1] )
+		{
+			if ( CROW_Q == 3)
+			{
+				mes .@npc$; 
+				mes "Looks like you're the same as me, a Sha.";
+				next;
+				mes "Why are you there?";
+				switch(select("I need an Hassanshin Benediction:I need to go to the Sanctuary:Nothing, just walking by..."))
+				{
+					case 1: 
+						mes "A Benediction. So you're on a hunt.";
+						mes "Allright. How many?";
+						mes "Remember a Benediction is dedicated to only one person.";
+						mes "On the other hand, you'll stay a target for all until you leave the Sha's Path.";
+						switch(select("Only one:I need five:Ten. Ten people must die.:Sorry, I'm mistaken."))
+						{
+							case 1:
+								set @count, 1;
+								goto L_ADMISSION;
+							case 2:
+								set @count, 5;
+								goto L_ADMISSION;
+							case 3:
+								set @count, 10;
+								goto L_ADMISSION;
+							case 4:
+								mes "Never make a Brother loosing time.";
+								mes "Even protected by the Rules,";
+								mes "nothing faster than becoming a Target.";
+								close;
+						}
+						close;
+					case 2:
+						next;
+						mes .@npc$; 
+						mes "The Sanctuary you say?";
+						mes "Never forget that the path is secret.";
+						mes "No Crowned should know where it is.";
+						//warp "br_lb", 74, 52;
+						close;
+					case 3:
+						next;
+						mes .@npc$; 
+						mes "Never make a Brother loosing time.";
+						mes "Even protected by the Rules,";
+						mes "nothing faster than becoming a Target.";
+						close;
+				}
+			}
+			else
+			{
+				next;
+				mes .@npc$;  
+				mes "A Benediction? But you're not event a Sha!";
+				mes "How do you discovered this place?";
+				percentheal -99,-99;
+				mes "Leave, and never come back!";
+				close;		
+			}
+		}
+		else
+		{
+			next;
+			mes .@npc$; 
+			mes "That's not what I wanna know.";
+			mes "I wanna know who you are on the inside.";
+			mes "Us, the Shas, are only living for ourselves.";
+			mes "We're living in a darkness world.";
+			mes "And you want to be part of it?";
+			next;
+			switch(select("I've already gone on the other side.:^777777I...I don't know...^000000"))
+			{
+				case 1:
+					mes .@npc$; 
+					set CROW_Q, 1;
+					mes "Then I'm gonna need proof for that.";
+					mes "Look for two others Shas.";
+					mes "Once this done, come back to me.";
+					close;
+				case 2:
+					goto L_QUIT;
+			}
+		}
+	}
+	else if (LANGUAGE == 1)
+	{
+		mes "Qui es-tu?";
+		input @check$;
+		if ( @check$ == .check$[0] )
+		{
+			if ( CROW_Q == 3)
+			{
+				mes .@npc$; 
+				mes "il semblerait que, comme moi, tu sois un Sha.";
+				next;
+				mes "Pourquoi es-tu là alors?";
+				switch(select("J'ai besoin de la Bénédiction de l'Hassanshin:Je dois pouvoir aller vite au Sanctuaire:Rien, je passais dans le coin..."))
+				{
+					case 1: 
+						mes "La Bénédiction...Ainsi donc, quelqu'un doit mourir.";
+						mes "Très bien. Combien?";
+						mes "Rappelle toi qu'une Bénédiction ne permet de tuer qu'une seule personne.";
+						mes "En revanche, tu resteras une cible pour tous tant que tu ne quitteras pas la Voie du Sha.";
+						switch(select("Un seul suffire:Il m'en faudrait cinq:Dix...Dix personnes doivent mourir.:Aucune, je me suis trompé."))
+						{
+							case 1:
+								set @count, 1;
+								goto L_ADMISSION;
+							case 2:
+								set @count, 5;
+								goto L_ADMISSION;
+							case 3:
+								set @count, 10;
+								goto L_ADMISSION;
+							case 4:
+								mes "Ne fais jamais perdre de temps à un Frère.";
+								mes "Même protégés par les Règles,";
+								mes "on peut vite devenir une cible.";
+								close;
+						}
+						close;
+					case 2:
+						next;
+						mes .@npc$; 
+						mes "Le Sanctuaire tu dis?";
+						mes "N'oublie pas que le passage est à garde secret.";
+						mes "Un Porteur ne doit jamais savoir comment y parvenir.";
+						warp "br_lb", 74, 52;
+						close;
+					case 3:
+						next;
+						mes .@npc$; 
+						mes "Ne fais jamais perdre de temps à un Frère.";
+						mes "Même protégés par les Règles,";
+						mes "on peut vite devenir une cible.";
+						close;
+				}
+			}
+			else
+			{
+				next;
+				mes .@npc$;  
+				mes "Une Benediction tu dis? Tu n'es même pas un Sha!";
+				mes "Comment as-tu pu découvrir cet endroit?";
+				percentheal -99,-99;
+				mes "Pars, et ne reviens pas!";
+				close;		
+			}
+		}
+		else
+		{
+			next;
+			mes .@npc$; 
+			mes "Ce n'est pas ce que je voulais savoir.";
+			mes "Je veux savoir qui tu es, à l'intérieur.";
+			mes "Nous autres, Shas, nous vivons pour nous même.";
+			mes "Envers et contre tous, nous évoluons dans un monde de ténèbre.";
+			mes "Souhaites-tu en faire partie?";
+			next;
+			switch(select("Je suis déjà passé de l'Autre Côté.:^777777Je...Je ne sais pas...^000000"))
+			{
+				case 1:
+					mes .@npc$; 
+					set CROW_Q, 1;
+					mes "Je vais avoir besoin de preuve pour cela.";
+					mes "Cherche deux autres Shas.";
+					mes "Une fois que tu auras fait ça, reviens me voir.";
+					close;
+				case 2:
+					goto L_QUIT;
+			}
+		}
+	}
+	close;
+
+L_QUIT:
+	mes .@npc$; 
+	if(LANGUAGE == 2)
+	{
+		mes "Retreat is also a form of wisdom.";
+		mes "We call it Fear.";
+		mes "Go, before I change my mind.";
+	}
+	else if (LANGUAGE == 1)
+	{
+		mes "La retraite est une forme de sagesse.";
+		mes "Nous appelons ça la peur.";
+		mes "Pars, avant que je ne décide de ne pas te laisser partir";
+	}
+	close;
+	
+L_ADMISSION:
+	if ( Zeny < (@count*5000000) )
+	{
+		if(LANGUAGE == 2)
+		{
+			mes "Sorry Brother, you know the Rules.";
+			mes "I need 5 millions per Benediction.";
+			mes "Come back when you'll have it.";	
+			close;
+		}
+		else if (LANGUAGE == 1)
+		{
+			mes "Désolé, mon Frère, mais tu connais les règles.";
+			mes "Il te faut 5 Millions par Bénédiction";
+			mes "Reviens quand tu les auras.";	
+			close;
+		}
+	}
+	else
+	{
+		if(LANGUAGE == 2)
+		{
+			mes "Here are your Benedictions.";
+			getitem 21065,@count;
+			set Zeny, Zeny - (@count*5000000);
+			set @nb, query_sql("select karma from `char` WHERE `char_id`="+getcharid(0), @karma);
+			set @count, (@karma + (@count*-1));
+			query_sql "UPDATE `char` SET `karma`=" + @count + " WHERE `char_id`="+getcharid(0);
+			mes "May all be used.";
+			mes "Be careful. Crowned are awaken.";
+		}
+		else if (LANGUAGE == 1)
+		{
+			mes "Voilà tes Bénédictions.";
+			getitem 21065,@count;
+			set Zeny, Zeny - (@count*5000000);
+			set @nb, query_sql("select karma from `char` WHERE `char_id`="+getcharid(0), @karma);
+			set @count, (@karma + (@count*-1));
+			query_sql "UPDATE `char` SET `karma`=" + @count + " WHERE `char_id`="+getcharid(0);
+			mes "Puisse-t-elle toutes servir";
+			mes "Sois prudent, les Astres veillent.";
+		}
+		close;
+	}
+	close;
+
+OnInit:
+	setarray .check$[0], "Un Sha", "A Sha";
+	close;
+	
+OnPCKillEvent:
+	if (SHA_ON == 1)
+	{
+		atcommand "@killer";
+	}
+	end;
+
+OnPCDieEvent:
+	if (SHA_ON == 1)
+	{
+		atcommand "@killer";
+	}
+	end;
+
+OnPCLoginEvent:
+	if (SHA_ON == 1)
+	{
+		atcommand "@killable";
+		atcommand "@size 1"; 
+	}
+	end;
+}
+
+function	script	OnShaActivated	{
+	atcommand "@killable";
+	atcommand "@killer";
+	atcommand "@size 1"; 
+	set SHA_ON, 1;
+}

@@ -1,0 +1,245 @@
+melodya,50,44,5	script	Spade Ace::spaace	493,{
+	if(LANGUAGE == 2)
+	{
+		set .@npc$, "[^FF0000Spades Ace^000000]";
+	}
+	else if (LANGUAGE == 1)
+	{
+		set .@npc$, "[^FF0000As de Pique^000000]";
+	}
+
+	mes .@npc$; 
+	if(LANGUAGE == 2)
+	{
+		mes "Hello to you" + strcharinfo(0) + ".";
+		mes "Who are you?";
+		input @check$;
+		if ( @check$ == .check$[1] )
+		{
+			if (ACE_Q == 3)
+			{
+				mes "It look like you exactly know what you want hu?";
+				mes "Then you know what to expect.";
+				next;
+				mes "The Aces exists to fight against Darkness.";
+				mes "We're leaving to fight against the Figure.";
+				switch(select("I'm hunting a Sha:I wanna know who are the Sha:Nothing, just walking..."))
+				{
+					case 1: 
+						mes "Allright. Choose in this list:";
+						goto L_CHECK;		
+						goto L_WARP;
+						close;
+					case 2:
+						mes "Allright. Here's the list:";
+						goto  L_CHECK;		
+						mes "1."+@name$[0]+"("+@karma[0]+")";
+						mes "2."+@name$[1]+"("+@karma[1]+")";
+						mes "3."+@name$[2]+"("+@karma[2]+")";
+						mes "4."+@name$[3]+"("+@karma[3]+")";
+						mes "5."+@name$[4]+"("+@karma[4]+")";
+						mes "6."+@name$[5]+"("+@karma[5]+")";
+						mes "7."+@name$[6]+"("+@karma[6]+")";
+						mes "8."+@name$[7]+"("+@karma[7]+")";
+						mes "9."+@name$[8]+"("+@karma[8]+")";
+						mes "10."+@name$[9]+"("+@karma[9]+")";
+						close;
+					case 3:
+						mes "I can understand.";
+						mes "Come back when you'll be ready to fight on our sides.";
+						close;
+				}
+			}
+			else
+			{
+				mes .@npc$; 
+				mes "Sorry friend, but you're not an Ace.";
+				mes "I can't make an innocent risk his life.";
+				mes "Learn who we are, and come back if you're ok with that.";
+				close;		
+			}
+		}
+		else
+		{
+			mes "That's not what I wanna know.";
+			mes "I wanna know who you are, in the inside.";
+			mes "Us, the Aces, only live for fighting and protecting.";
+			mes "Beyond all and everything..";
+			mes "Do you want to be part of us?";
+			switch(select("I've always been ready:^777777I...I don't know...^000000"))
+			{
+				case 1:
+					mes .@npc$; 
+					mes "Then I'll need proof.";
+					mes "Find two others Aces, somewhere in the World.";
+					mes "Once this done, come back to me.";
+					set ACE_Q,1;
+					close;
+				case 2:
+					goto L_QUIT;
+			}
+		}
+	}
+	else if (LANGUAGE == 1)
+	{
+		mes "Bonjour à toi" + strcharinfo(0) + ".";
+		mes "Qui es-tu?";
+		input @check$;
+		if ( @check$ == .check$[0] )
+		{
+			if (ACE_Q == 3)
+			{
+				mes "il semblerait que tu saches exactement ce que tu veux.";
+				mes "Ainsi donc, tu sais à quoi t'attendre.";
+				next;
+				mes "Les As sont là pour repousser les Ténèbres.";
+				mes "Nous vivons pour combattre les Couronnés.";
+				switch(select("Je chasse une Couronnés:Je veux savoir qui sont les plus grands Couronnés:Rien, je passais dans le coin..."))
+				{
+					case 1: 
+						mes "Très bien. Choisi dans la liste:";
+						goto L_CHECK;		
+						goto L_WARP;
+						close;
+					case 2:
+						mes "Très bien. Voici la liste:";
+						goto  L_CHECK;		
+						mes "1."+@name$[0]+"("+@karma[0]+")";
+						mes "2."+@name$[1]+"("+@karma[1]+")";
+						mes "3."+@name$[2]+"("+@karma[2]+")";
+						mes "4."+@name$[3]+"("+@karma[3]+")";
+						mes "5."+@name$[4]+"("+@karma[4]+")";
+						mes "6."+@name$[5]+"("+@karma[5]+")";
+						mes "7."+@name$[6]+"("+@karma[6]+")";
+						mes "8."+@name$[7]+"("+@karma[7]+")";
+						mes "9."+@name$[8]+"("+@karma[8]+")";
+						mes "10."+@name$[9]+"("+@karma[9]+")";
+						close;
+					case 3:
+						mes "Je peux comprendre.";
+						mes "Reviens si tu souhaites nous aider à vaincre.";
+						close;
+				}
+			}
+			else
+			{
+				mes .@npc$; 
+				mes "Désolé, ami, mais tu n'es pas un As.";
+				mes "Je ne peux laisser risquer sa vie à un innocent.";
+				mes "Renseigne toi et reviens plus tard.";
+				close;		
+			}
+		}
+		else
+		{
+			mes "Ce n'est pas ce que je voulais savoir.";
+			mes "Je veux savoir qui tu es, à l'intérieur.";
+			mes "Nous autres, As, ne vivons que pour protéger les autres.";
+			mes "Envers et contre tous, nous chassons pour protéger..";
+			mes "Souhaites-tu en faire partie?";
+			switch(select("J'ai déjà baigné dans la Lumière.:^777777Je...Je ne sais pas...^000000"))
+			{
+				case 1:
+					mes .@npc$; 
+					mes "Je vais avoir besoin de preuve pour cela.";
+					mes "Cherche deux autres As.";
+					mes "Une fois que tu auras fait ça, reviens me voir.";
+					set ACE_Q,1;
+					close;
+				case 2:
+					goto L_QUIT;
+			}
+		}
+	}
+	close;
+
+L_QUIT:
+	mes .@npc$; 
+	if(LANGUAGE == 2)
+	{
+		mes "Retreat is also a wisdom form.";
+		mes "I can't let you risk your life.";
+		mes "Understand who we are and come back to me.";
+	}
+	else if (LANGUAGE == 1)
+	{
+		mes "La retraite est une forme de sagesse.";
+		mes "Je ne peux laisser risquer sa vie à un innocent.";
+		mes "Renseigne toi et reviens plus tard.";
+	}
+	close;
+	
+L_CHECK:
+	set @nb, query_sql("select name,karma from `char` ORDER BY karma ASC LIMIT 10", @name$, @karma);
+	
+L_WARP:
+	if(LANGUAGE == 2)
+	{
+		mes "Who's your target?";
+	}
+	else if (LANGUAGE == 1)
+	{
+		mes "Quelle est ta cible?";
+	}
+	switch(select(@name$[0],@name$[1],@name$[2],@name$[3],@name$[4],@name$[5],@name$[6],@name$[7],@name$[8],"S After C","^777777Je...J'ai changé d'avis...^000000"))
+	{
+		case 1:
+			set $cible$, @name$[0];
+			goto L_HUNT;
+		case 2:
+			set $cible$, @name$[1];
+			goto L_HUNT;
+		case 3:
+			set $cible$, @name$[2];
+			goto L_HUNT;
+		case 4:
+			set $cible$, @name$[3];
+			goto L_HUNT;
+		case 5:
+			set $cible$, @name$[4];
+			goto L_HUNT;
+		case 6:
+			set $cible$, @name$[5];
+			goto L_HUNT;
+		case 7:
+			set @cible$, @name$[6];
+			goto L_HUNT;
+		case 8:
+			set $cible$, @name$[7];
+			goto L_HUNT;
+		case 9:
+			set $cible$, @name$[8];
+			goto L_HUNT;
+		case 10:
+			set $cible$, @name$[9];
+			goto L_HUNT;
+		case 11:
+			goto L_QUIT;
+	}
+	close;
+
+L_HUNT:
+	mes .@npc$;
+	if(LANGUAGE == 2)
+	{
+		mes "Allright. May the Gods be with you.";
+		mes "I'll send you to your target's area.";
+		mes "Good luck to you.";
+	}
+	else if (LANGUAGE == 1)
+	{
+		mes "Très bien. Puisse les Dieux te porter chance.";
+		mes "Je vais te téléporter dans la zone de ta cible.";
+		mes "Bon courage";
+	}
+	set .@initialId, getcharid(3);
+	attachrid(getcharid(3,$cible$));
+	getmapxy(.@map$, .@x, .@y, 0);
+	attachrid(.@initialId);
+	warp .@map$, .@x, .@y;
+	close;
+
+OnInit:
+	setarray .check$[0],"Un Couronné","A Crowned";
+	end;
+}

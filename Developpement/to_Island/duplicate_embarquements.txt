@@ -1,0 +1,27 @@
+scaphis,63,67,0	duplicate(Ponton de Débarquement)	Ponton de Débarquement#Ile de Fer::pIle de Fer	-1,2,2
+//pay_fild05,186,276,0	duplicate(Ponton de Débarquement)	Ponton de Débarquement::pIle du Temple	-1,2,2
+zodiac,111,36,0	duplicate(Ponton de Débarquement)	Ponton de Débarquement#Ile d'Astres::pIle d'Astres	-1,2,2
+1@pi,114,45,0	duplicate(Ponton de Débarquement)	Ponton de Débarquement#Ile Rose::pIle Rose	-1,2,2
+//bra_fild01,163,73,0	duplicate(Ponton de Débarquement)	Ponton de Débarquement#Ile d'Ase::pIle d'Ase	-1,2,2
+colisland,115,41,0	duplicate(Ponton de Débarquement)	Ponton de Débarquement#Ile de l'Arene::pIle de l'Arene	-1,2,2
+tortue,81,96,0	duplicate(Ponton de Débarquement)	Ponton de Débarquement#Ile de la Tortue::pIle de la Tortue	-1,2,2
+fiesta,152,82,0	duplicate(Ponton de Débarquement)	Ponton de Débarquement#Ile Fiesta::pIle Fiesta	-1,2,2
+crash,196,244,0	duplicate(Ponton de Débarquement)	Ponton de Débarquement#Ile du Crash::pIle du Crash	-1,2,2
+revencia,269,15,0	duplicate(Ponton de Débarquement)	Ponton de Débarquement#Ile du Crash::pIle des Faes	-1,2,2
+mysterio,111,36,0	duplicate(Ponton de Débarquement)	Ponton de Débarquement#Ile Mysterio::pIle Mystério	-1,2,2
+Mornanie,107,62,0	duplicate(Ponton de Débarquement)	Ponton de Débarquement#Mornanie::pMornanie	-1,2,2
+caspen,245,52,0	duplicate(Ponton de Débarquement)	Ponton de Débarquement#Caspen::pCaspen	-1,2,2
+
+
+scaphis,61,69,0	duplicate(Agent de Retour)	Retour Thalys::arIle de Fer	709
+//pay_fild05,186,276,0	duplicate(Agent de Retour)	Retour Thalys::Ile du Temple	709
+zodiac,111,36,0	duplicate(Agent de Retour)	Retour Thalys::Ile d'Astres	709
+1@pi,102,45,0	duplicate(Agent de Retour)	Retour Thalys::Ile Rose	709
+//bra_fild01,163,73,0	duplicate(Agent de Retour)	Retour Thalys::Ile d'Ase	709
+colisland,90,41,0	duplicate(Agent de Retour)	Retour Thalys::Ile de l'Arene	709
+tortue,166,24,0	duplicate(Agent de Retour)	Retour Thalys::Tortue	709
+fiesta,134,84,0	duplicate(Agent de Retour)	Retour Thalys::Fiesta	709
+crash,200,244,0	duplicate(Agent de Retour)	Retour Thalys::Crash	709
+revencia,270,6,0	duplicate(Agent de Retour)	Retour Thalys::Revencia	709
+mysterio,112,42,0	duplicate(Agent de Retour)	Retour Thalys::Mysterio	709
+Mornanie,94,68,0	duplicate(Agent de Retour)	Retour Thalys::Mornanie	709

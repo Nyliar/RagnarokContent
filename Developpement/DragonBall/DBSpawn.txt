@@ -1,0 +1,136 @@
+//
+// [========================================================]
+// [===========       Dragon Ball Project        ===========]
+// [========================================================]
+// [ Version 1                                              ]
+// [========================================================]
+// [ Original script by: Alayne                             ]
+// [========================================================]
+// [ Description:                                           ]
+// [--------------------------------------------------------]
+// [ - Spawn of all Dragon Balls                            ]
+// [ Random spawn maps & monsters choice                    ]
+// [ Automatic check of spawned DB                          ]
+// [ Event attached to DB monsters                          ]
+// [========================================================]
+// [ Changelog: (5 last updates)                            ]
+// [--------------------------------------------------------]
+// [                                                        ]
+// [ v0: Creation                      			    ]
+// [                                                        ]
+// [========================================================]
+// [                                                        ]
+// [========================================================]
+
+anthell02	mapflag	loadevent
+gefenia03	mapflag	loadevent
+odin_tem03	mapflag	loadevent
+ein_fild04	mapflag	loadevent
+ra_fild08	mapflag	loadevent
+ice_dun01	mapflag	loadevent
+thor_v02	mapflag	loadevent
+ve_fild03	mapflag	loadevent
+mosk_dun02	mapflag	loadevent
+c_tower3	mapflag	loadevent
+gef_fild07	mapflag	loadevent
+gl_chyard	mapflag	loadevent
+gl_sew04	mapflag	loadevent
+in_sphinx4	mapflag	loadevent
+iz_dun03	mapflag	loadevent
+mjo_dun03	mapflag	loadevent
+moc_fild03	mapflag	loadevent
+moc_pryd06	mapflag	loadevent
+orcsdun01	mapflag	loadevent
+pay_dun03	mapflag	loadevent
+prt_fild07	mapflag	loadevent
+prt_maze03	mapflag	loadevent
+xmas_dun01	mapflag	loadevent
+cmd_fild02	mapflag	loadevent
+tur_dun04	mapflag	loadevent
+ein_dun01	mapflag	loadevent
+lhz_dun01	mapflag	loadevent
+abyss_01	mapflag	loadevent
+tha_t10	mapflag	loadevent
+kh_dun01	mapflag	loadevent
+ra_san05	mapflag	loadevent
+man_fild03	mapflag	loadevent
+spl_fild03	mapflag	loadevent
+nyd_dun01	mapflag	loadevent
+bra_dun02	mapflag	loadevent
+dic_dun02	mapflag	loadevent
+bif_fild02	mapflag	loadevent
+green	mapflag	loadevent
+
+-	script	Dragon Ball::aladbpro	-1,{
+	end;
+
+OnInit:
+	setarray .@dbMaps$[0],"anthell02","gefenia03","odin_tem03","ein_fild04","ra_fild08","ice_dun01","thor_v02",
+	"ve_fild03","mosk_dun02","c_tower3","gef_fild07","gl_chyard","gl_sew04","in_sphinx4","iz_dun03","mjo_dun03",
+	"moc_fild03","moc_pryd06","orcsdun01","pay_dun03","prt_fild07","prt_maze03","xmas_dun01","cmd_fild02","tur_dun04",
+	"ein_dun01","lhz_dun01","abyss_01","tha_t10","kh_dun01","ra_san05","man_fild03","spl_fild03",
+	"nyd_dun01","bra_dun02","dic_dun02","bif_fild02","green";
+	setarray .@dbMonstersId[0],1176,1371,1754,1378,1680,1776,1838,
+	1836,1881,1193,1008,1198,1206,1154,1045,1151,
+	1013,1297,1153,1020,1052,1101,1246,1317,1314,
+	1616,1627,1721,1701,1275,1773,1989,1994,
+	2013,1084,2085,2132;
+	goto OnInitDB;
+
+OnWhisperGlobal:
+	goto OnInitDB;
+	end;
+
+OnInitDB:
+	set $shenronAppeared, 0;
+	goto OnSpawnMonsters;
+	end;
+
+OnSpawnMonsters:
+	for (set .@j,0; .@j<7; set .@j,.@j+1)
+	{
+		set .@rank, rand(0,getarraysize(.@dbMonstersId)-1);
+		set .@idMonster, .@dbMonstersId[.@rank];
+		set .@map$, .@dbMaps$[.@rank];
+	
+		monster .@map$,0,0,strmobinfo(1,.@idMonster),.@idMonster,1,"aladbpro::OnDbMonsterKilled";
+	}
+	end;
+
+OnClock0000:
+	if ($shenronAppeared == 1)
+	{
+		set $shenronAppeared, 0;	
+	}
+	end;
+
+OnPCLoadMapEvent:
+	if (strcharinfo(3) == "anthell02"|| strcharinfo(3) == "gefenia03"|| strcharinfo(3) == "odin_tem03"|| strcharinfo(3) == "ein_fild04"|| strcharinfo(3) == "ra_fild08"|| strcharinfo(3) == "ice_dun01"|| strcharinfo(3) == "thor_v02"|| strcharinfo(3) == 
+	"ve_fild03"|| strcharinfo(3) == "mosk_dun02"|| strcharinfo(3) == "c_tower3"|| strcharinfo(3) == "gef_fild07"|| strcharinfo(3) == "gl_chyard"|| strcharinfo(3) == "gl_sew04"|| strcharinfo(3) == "in_sphinx4"|| strcharinfo(3) == "iz_dun03"|| strcharinfo(3) == "mjo_dun03"|| strcharinfo(3) == 
+	"moc_fild03"|| strcharinfo(3) == "moc_pryd06"|| strcharinfo(3) == "orcsdun01"|| strcharinfo(3) == "pay_dun03"|| strcharinfo(3) == "prt_fild07"|| strcharinfo(3) == "prt_maze03"|| strcharinfo(3) == "xmas_dun01"|| strcharinfo(3) == "cmd_fild02"|| strcharinfo(3) == "tur_dun04"|| strcharinfo(3) == 
+	"ein_dun01"|| strcharinfo(3) == "lhz_dun01"|| strcharinfo(3) == "abyss_01"|| strcharinfo(3) == "tha_t10"|| strcharinfo(3) == "kh_dun01"|| strcharinfo(3) == "ra_san05"|| strcharinfo(3) == "man_fild03"|| strcharinfo(3) == "spl_fild03"|| strcharinfo(3) == 
+	"nyd_dun01"|| strcharinfo(3) == "bra_dun02"|| strcharinfo(3) == "dic_dun02"|| strcharinfo(3) == "bif_fild02" || strcharinfo(3) == "green")
+	{
+		if (LANGUAGE == 2)
+		{
+			dispbottom "I feel a strange power in this place. Just like if a dragon spirit was wandering around here...";
+		}
+		else if (LANGUAGE == 1)
+		{
+			dispbottom "Je sens un pouvoir étrange ici. Comme si un esprit de dragon errait aux alentours...";
+		}
+	}
+	end;
+
+OnDbMonsterKilled:
+	if ($shenronAppeared == 0)
+	{
+		getitem rand(21662,21668), 1;
+		set .@rank, rand(0,getarraysize(.@dbMonstersId)-1);
+		set .@idMonster, .@dbMonstersId[.@rank];
+		set .@map$, .@dbMaps$[.@rank];
+	
+		monster .@map$,0,0,strmobinfo(1,.@idMonster),.@idMonster,1,"aladbpro::OnDbMonsterKilled";
+	}
+	end;
+}

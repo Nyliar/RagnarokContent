@@ -1,0 +1,216 @@
+caspen,153,226,8	script	Seigneur Warlock	735,{ 
+
+	mes "[Seigneur Warlock]";
+	if (class == 4010 || class == 9)
+	{
+		if ( WAR_Q < 1)
+		{
+			mes "Bonjour à toi," + strcharinfo(0) + ".";
+			mes "Je suis la Seigneur Warlock.";
+			mes "Je peux te faire passer la deuxième épreuve de ton Eveil,";
+			mes "Es-tu intéressé?";
+			next;
+			switch(select("Oui, je voudrais passer le test, s'il vous plait.:Non merci, je me suis trompé de personne.:Un vieux fou m'a envoyé ici après avoir lancé un tetra Vortex sur moi Y^Y."))
+			{
+				case 1:
+					mes "[Seigneur Warlock]";
+					mes "Tout d'abord, voyons si tu es prêt physiquement.";
+					next;
+					if ( CHARLO_Q ){
+						mes "[Seigneur Warlock]";
+						mes "On dirait bien que ton physique est prêt.";
+						mes "Je vais donc maintenant tester ton mental.";
+						next;
+						mes "[Seigneur Warlock]";
+							mes "Il s'agit d'un quizz. Commençons.";
+							next;
+							set min_Q, 0;
+							mes "De quoi avez-vous besoin pour lancer Ganbantein?";
+							switch(select("Une gemme jaune et une bleue:Une gemme jaune et une rouge:Une gemme jaune:Deux gemmes bleues"))
+							{
+								case 2:				
+								case 1:
+									set min_Q, min_Q+1;
+								case 3:
+								case 4:
+							}
+							next;
+							mes "Quel est l'effet de Gravitation Field?";
+							switch(select("Reduction d'aspd:Augmentation des dommages:Reduction de la vitesse de déplacement:Réduction de la MDEF"))
+							{
+								case 1:
+									set min_Q, min_Q+1;
+								case 2:
+								case 3:
+								case 4:
+							}
+							next;
+							mes "Quelle est la taille de la zone d'effet de Napalm Vulcan?";
+							switch(select("2x2:8x8:5x5:3x3"))
+							{
+								case 4:
+									set min_Q, min_Q+1;
+								case 1:
+								case 2:
+								case 3:
+							}
+							next;
+							mes "Quel est le bonus de Amplify Magic Power au level 10?";
+							switch(select("10% de la Matk:20% de la Matk:50% de la Matk:100% de la Matk"))
+							{
+								case 3:
+									set min_Q, min_Q+1;
+								case 1:
+								case 2:
+								case 4:
+							}
+							next;
+							mes "Dans combien de direction lance-t-on les attaques de SighTrasher?";
+							switch(select("2:4:8:16"))
+							{
+								case 3:
+									set min_Q, min_Q+1;
+								case 2:
+								case 4:
+								case 1:
+							}
+							next;
+							mes "Combien de météores lance Meteor Storm level 9?";
+							switch(select("8:7:6:5"))
+							{
+								case 3:
+									set min_Q, min_Q+1;
+								case 2:
+								case 1:
+								case 4:
+							}
+							next;
+							mes "Sur quelle map Ice Wall ne peut-il pas être utilisé?";
+							switch(select("Map Woe:Map Pvp:Map normale:Map gvg"))
+							{
+								case 4:
+									set min_Q, min_Q+1;
+								case 2:
+								case 1:
+								case 3:
+							}
+							next;
+							mes "Quel est l'élément de Quagmire?";
+							switch(select("Fire:Poison:Earth:Ice"))
+							{
+								case 3:
+									set min_Q, min_Q+1;
+								case 1:
+								case 2:
+								case 4:
+							}
+							next;
+							mes "Combien de sp coute Sight Blaster?";
+							switch(select("40:10:60:120"))
+							{
+								case 1:
+									set min_Q, min_Q+1;
+								case 4:
+								case 2:
+								case 3:
+							}
+							next;
+							mes "Quel objet à le même effet que Monster Property?";
+							switch(select("Lesser Elemental Ring:Ring of Flame Lord:Aucun:Identifier"))
+							{
+								case 1:
+									set min_Q, min_Q+1;
+								case 3:
+								case 2:
+								case 4:
+							}
+							next;
+							mes "[Seigneur Warlock]";
+							mes "Bien, voyons tes résultats maintenant...";
+							mes "*Trifouille les résultats du test";
+							next;
+							mes "[Seigneur Warlock]";
+							if (min_Q >= 9){
+								mes "Excellent, tu as eu ^FF0000" + min_Q*10 + "%^000000 de bonnes réponses.";
+								mes "On dirait bien que ton Esprit est prêt à passer l'Eveil.";
+								mes "Tu peux passer à l'avant-dernière étape de ta quête, la plus difficile.";
+								mes "Pars donc à la recherche du Mirroir du Mal, il t'expliquera cela plus en détail.";
+								mes "Il se trouve caché quelque part aux alentours de la grande ville de Bastania.";
+								mes "Prends cet objet qui te sera très utile";
+								mes " ";
+								getitem (22012),1;
+								mes "Bon courage";
+								emotion 21;
+								set WAR_Q, 1;
+								close;
+							}
+							else
+							{
+								mes "Désolé, mais tes ^FF0000" + min_Q*10 + "%^000000 de réussite ne seront pas suffisant.";
+								mes "Entraîne encore un peu ton esprit,";
+								mes "Sans quoi, il ne résistera pas à la puissance de l'Eveil.";
+								close;
+							}
+					}		
+					else
+					{
+					mes "[Seigneur Warlock]";
+					mes "Désolé, mais tu ne peux pas venir me voir pour l'instant.";
+					mes "Tu dois avant tout tester ton Physique auprès du Maitre de l'Eveil.";
+					close;
+					}
+				case 2:
+					mes "[Seigneur Warlock]";
+					mes "Pas de problème.";
+					mes "Vis ta vie avec Espoir,";
+					mes "Elle ne t'en paraîtra que plus belle.";
+					close;
+				case 3:
+					mes "[Seigneur Warlock]";
+					mes "Un vieux fou tu dis?";
+					mes "Le Maître du Renouveau est tellement plus que ça";
+					mes "Mais j'avoue qu'il a des tendances un peu cabotine...";
+					close;
+			}
+		}
+		
+		else if ( WAR_Q == 1 )
+		{
+			mes "Bonjour à toi," + strcharinfo(0) + ".";
+			mes "Tu peux passer à la dernière étape.";
+			mes "Pars donc à la recherche d'Yggdrasil.";
+			mes "Il se trouve caché quelque part aux alentours de Bastania.";
+			mes "Bon courage.";
+			close;
+		}
+
+		else if ( WAR_Q == 3 || class == 4061 || class == 4055)
+		{
+			mes "Bonjour à toi," + strcharinfo(0) + ".";
+			mes "Felicitations, tu es Warlock !";
+			mes "Que la force soit avec toi !";
+			close;
+		}
+	}
+	else
+	{
+		mes "PAR LA TOUTE PUISSANCE DE LA TEMPÊTE";
+		npctalk "Storm Gust !!";
+		specialeffect2 89;
+		next;	
+		mes "[Seigneur Warlock]";
+		mes "QUE LES ECLAIRS S'ACHARNENT SUR TOI !";
+		npctalk "Lord of Vermillon !!";
+		specialeffect2 90;
+		next;
+		mes "[Seigneur Warlock]";
+		mes "TU N'ES PAS L'ELU !";
+		npctalk "Crimson Rock !!";
+		specialeffect2 727;
+		close2;
+		npctalk "MEURS !";		
+		specialeffect2 183;
+		percentheal -99,-99;
+		close;
+	}
+}

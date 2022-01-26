@@ -1,0 +1,246 @@
+crash_in,45,61,4	script	Crash Pillar::crashpillar	406,5,5,{
+	end;
+
+OnInit:
+	disablenpc "crashpillar";
+	setarray .@mobIds[0],2636,2637,2638,2639,2640,2581,2582,2583,2596,2599,2558,2536;
+	setarray .mobIdsCount[0],0,0,0,0,0,0,0,0,0,0,0,0;
+	setarray .@mobIdsMaxCount[0],15,5,15,15,15,15,15,15,15,15,15,15;
+	end;
+
+OnTouch:
+	if ($crash_lynes == 1)
+	{
+		set $crash_spawn_stopped, 1;
+		donpcevent "alalynque::OnPillarStopped";
+		set .charid_stopping, getcharid(3);
+		startnpctimer;
+	}
+	end;
+
+OnTimer10000:
+	attachrid(.charid_stopping);
+	if (strcharinfo(3) != strnpcinfo(4))
+	{
+		set $crash_spawn_stopped, 0;
+	}
+	setnpctimer 0;
+	end;
+
+OnNpcDisabled:
+	stopnpctimer;
+	setarray .mobIdsCount[0],0,0,0,0,0,0,0,0,0,0,0,0;
+	//atcommand "@loadnpc npc/custom/Alayne/Pierre/mobs/Dungeons/crash.txt";
+	end;
+
+OnNpcEnabled:
+	enablenpc "crashpillar";
+	//atcommand "@unloadnpcfile npc/custom/Alayne/Pierre/mobs/dungeons/crash.txt";
+	killmonsterall "crash_in";
+	set $crash_lynes, 1;
+	set $crash_spawn_stopped, 0;
+	startnpctimer;
+	end;
+
+//spawn a monster each 15s
+OnTimer15000:
+	if ($crash_spawn_stopped == 0)
+	{
+		set .@map$, "crash_in";
+		set .@id, rand(0,getarraysize(.@mobIds)-1);
+		set .@idMonster, .@mobIds[.@id];
+		if (.mobIdsCount[.@id] < .@mobIdsMaxCount[.@id])
+		{ 
+			monster .@map$,0,0,strmobinfo(1,.@idMonster),.@idMonster,1;
+			set .mobIdsCount[.@i],.mobIdsCount[.@i]+1;
+		}
+	}
+	setnpctimer 0;
+	end;
+}
+
+zhakastia,99,54,4	script	Pillar::faepillar	406,5,5,{
+	end;
+
+OnInit:
+	disablenpc "faepillar";
+	setarray .@mobIds[0],2528,2529,2531,2544,2507,2508,2509,2547,2550,2551,2578,2566,2569,2576,2598,2627;
+	setarray .mobIdsCount[0],0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0;
+	setarray .@mobIdsMaxCount[0],10,10,15,1,25,25,25,25,25,15,30,15,10,25,30,25;
+	end;
+
+OnTouch:
+	if ($fae_lynes == 1)
+	{
+		set $fae_spawn_stopped, 1;
+		donpcevent "alalynque::OnPillarStopped";
+		set .charid_stopping, getcharid(3);
+		startnpctimer;
+	}
+	end;
+
+OnTimer10000:
+	attachrid(.charid_stopping);
+	if (strcharinfo(3) != strnpcinfo(4))
+	{
+		set $crash_spawn_stopped, 0;
+	}
+	setnpctimer 0;
+	end;
+
+OnNpcDisabled:
+	stopnpctimer;
+	setarray .mobIdsCount[0],0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0;
+	//atcommand "@loadnpc npc/custom/Alayne/Pierre/mobs/Dungeons/Faes_dungeons.txt";
+	end;
+
+OnNpcEnabled:
+	enablenpc "faepillar";
+	//atcommand "@unloadnpcfile npc/custom/Alayne/Pierre/mobs/dungeons/Faes_dungeons.txt";
+	killmonsterall "zhakastia";
+	killmonsterall "casp_cave";
+	killmonsterall "casp_revencia";
+	set $fae_lynes, 1;
+	set $fae_spawn_stopped, 0;
+	startnpctimer;
+	end;
+
+//spawn a monster each 15s
+OnTimer15000:
+	if ($fae_spawn_stopped == 0)
+	{
+		set .@map$, "zhakastia";
+		set .@id, rand(0,getarraysize(.@mobIds)-1);
+		set .@idMonster, .@mobIds[.@id];
+		if (.mobIdsCount[.@id] < .@mobIdsMaxCount[.@id])
+		{ 
+			monster .@map$,0,0,strmobinfo(1,.@idMonster),.@idMonster,1;
+			set .mobIdsCount[.@i],.mobIdsCount[.@i]+1;
+		}
+	}
+	setnpctimer 0;
+	end;
+}
+
+casp_fild01,175,223,4	script	Pillar::caspenpillar	406,5,5,{
+	end;
+
+OnInit:
+	disablenpc "caspenpillar";
+	setarray .@mobIds[0],2588,2646,2553,2406,2618,2631,2615,2532,2662;
+	setarray .mobIdsCount[0],0,0,0,0,0,0,0,0,0;
+	setarray .@mobIdsMaxCount[0],10,10,10,10,30,25,15,15,1;
+	end;
+
+OnTouch:
+	if ($caspen_lynes == 1)
+	{
+		set $tutankhammen_spawn_stopped, 1;
+		donpcevent "alalynque::OnPillarStopped";
+		set .charid_stopping, getcharid(3);
+		startnpctimer;
+	}
+	end;
+
+OnTimer10000:
+	attachrid(.charid_stopping);
+	if (strcharinfo(3) != strnpcinfo(4))
+	{
+		set $crash_spawn_stopped, 0;
+	}
+	setnpctimer 0;
+	end;
+
+OnNpcDisabled:
+	stopnpctimer;
+	setarray .mobIdsCount[0],0,0,0,0,0,0,0,0,0;
+	//atcommand "@loadnpc npc/custom/Alayne/Pierre/mobs/villes/caspen.txt";
+	end;
+
+OnNpcEnabled:
+	enablenpc "caspenpillar";
+	//atcommand "@unloadnpcfile npc/custom/Alayne/Pierre/mobs/villes/caspen.txt";
+	killmonsterall "casp_fild01";
+	set $tutankhammen_lynes, 1;
+	set $tutankhammen_spawn_stopped, 0;
+	startnpctimer;
+	end;
+
+//spawn a monster each 15s
+OnTimer15000:
+	if ($caspen_spawn_stopped == 0)
+	{
+		set .@map$, "casp_fild01";
+		set .@id, rand(0,getarraysize(.@mobIds)-1);
+		set .@idMonster, .@mobIds[.@id];
+		if (.mobIdsCount[.@id] < .@mobIdsMaxCount[.@id])
+		{ 
+			monster .@map$,0,0,strmobinfo(1,.@idMonster),.@idMonster,1;
+			set .mobIdsCount[.@i],.mobIdsCount[.@i]+1;
+		}
+	}
+	setnpctimer 0;
+	end;
+}
+
+casp_dun02,127,141,4	script	Pillar::jorpillar	406,5,5,{
+	end;
+
+OnInit:
+	disablenpc "jorpillar";
+	setarray .@mobIds[0],2656,2665,2666,2650,2600,2570,2563,2655,2629;
+	setarray .mobIdsCount[0],0,0,0,0,0,0,0,0,0;
+	setarray .@mobIdsMaxCount[0],60,150,50,15,100,25,10,1,1;
+	end;
+
+OnTouch:
+	if ($jormungand_lynes == 1)
+	{
+		set $jormungand_spawn_stopped, 1;
+		donpcevent "alalynque::OnPillarStopped";
+		set .charid_stopping, getcharid(3);
+		startnpctimer;
+	}
+	end;
+
+OnTimer10000:
+	attachrid(.charid_stopping);
+	if (strcharinfo(3) != strnpcinfo(4))
+	{
+		set $crash_spawn_stopped, 0;
+	}
+	setnpctimer 0;
+	end;
+
+OnNpcDisabled:
+	stopnpctimer;
+	//atcommand "@loadnpc npc/custom/Alayne/Pierre/mobs/dungeons/jormungand_dungeon.txt";
+	setarray .mobIdsCount[0],0,0,0,0,0,0,0,0,0;
+	end;
+
+OnNpcEnabled:
+	enablenpc "jorpillar";
+	//atcommand "@unloadnpcfile npc/custom/Alayne/Pierre/mobs/dungeons/jormungand_dungeon.txt";
+	killmonsterall "casp_dun01";
+	killmonsterall "casp_dun02";
+	set $jormungand_lynes, 1;
+	set $jormungand_spawn_stopped, 0;
+	startnpctimer;
+	end;
+
+//spawn a monster each 15s
+OnTimer15000:
+	if ($caspen_spawn_stopped == 0)
+	{
+		set .@map$, "casp_dun02";
+		set .@id, rand(0,getarraysize(.@mobIds)-1);
+		set .@idMonster, .@mobIds[.@id];
+		if (.mobIdsCount[.@id] < .@mobIdsMaxCount[.@id])
+		{ 
+			monster .@map$,0,0,strmobinfo(1,.@idMonster),.@idMonster,1;
+			set .mobIdsCount[.@i],.mobIdsCount[.@i]+1;
+		}
+	}
+	setnpctimer 0;
+	end;
+}

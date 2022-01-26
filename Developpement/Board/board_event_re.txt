@@ -1,0 +1,14 @@
+thalys,150,144, 5	script	Evenement Guilde Marine::evg	837,{
+
+	mes "Voyageurs, voyageuses,";
+	mes " ";
+	mes "Nous, dirigeants de la Guilde Marine, avons décidé de monter un évènement exceptionnel.";
+	mes "Afin de déterminer qui est le plus fort de notre monde en phase de déclin,";
+	mes "une compétition unique aura lieu à partir de ce jour.";
+	mes "Les inscrits (contacter Alayne pour cela) devront combattre les uns contre les autres,";
+	mes "sous la forme d'un tournoi vers le sommet.";
+	mes "Une récompense unique sera la clé de la victoire.";
+	mes "Cordialement,";
+	mes "La Guilde Marine.";
+	close;
+}

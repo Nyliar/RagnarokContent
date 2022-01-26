@@ -1,0 +1,73 @@
+brasilis, 249, 152, 5	script	Bongun Hat	102,{
+
+	set .@npcname$,"[Bongun Hat]";
+	
+	//Black Bongun Hat 20028
+	setarray @itemBBH[0], 5046, 983, 7230;
+	setarray @countitemBBH[0], 1, 2, 2;
+
+	//Cyan Bongun Hat 20029
+	setarray @itemCBH[0], 5046, 978, 982, 7230;
+	setarray @countitemCBH[0], 1, 2, 2, 2;
+
+	//Gold Bongun Hat 20030
+	setarray @itemGBH[0], 5046, 976, 7230;
+	setarray @countitemGBH[0], 1, 2, 2;
+	
+	//Green Bongun Hat 20031
+	setarray @itemGNBH[0], 5046, 979, 7230;
+	setarray @countitemGNBH[0], 1, 2, 2;
+	
+	//Purple  Bongun Hat 20032
+	setarray @itemPBH[0], 5046, 981, 7230;
+	setarray @countitemPBH[0], 1, 2, 2;
+	
+	//Red Bongun Hat 20033
+	setarray @itemRBH[0], 5046, 975, 7230;
+	setarray @countitemRBH[0], 1, 2, 2;
+	
+	//White  Bongun Hat 2034
+	setarray @itemWBH[0], 5046, 982, 7230;
+	setarray @countitemWBH[0], 1, 2, 2;
+	
+	
+	
+	mes .@npcname$;
+	mes "Bonjour ^3333FF" + strcharinfo(0) + "^000000!";
+	mes "Je peux te proposer quelque hats pour customiser ton Bongun Hat.";
+	mes "Ca t'interesse?!";
+	next;
+	mes .@npcname$;
+	mes "Voici ce que je peux te proposer:";
+	next;
+
+	switch(select("Black Bongun Hat:Cyan Bongun Hat:Gold Bongun Hat:Green Bongun Hat:Purple Bongun Hat:Red Bongun Hat:White Bongun Hat:^777777Rien, merci...^000000"))
+	{
+		case 1 :
+ 		callfunc "mes_getitem_colo",.@npcname$,20028,@itemBBH,@countitemBBH, 1000000;
+
+		case 2 :
+ 		callfunc "mes_getitem_colo",.@npcname$,20029,@itemCBH,@countitemCBH, 1000000;
+
+		case 3 :
+ 		callfunc "mes_getitem_colo",.@npcname$,20030,@itemGBH,@countitemGBH, 1000000;
+
+		case 4 :
+		callfunc "mes_getitem_colo",.@npcname$,20031,@itemGNBH,@countitemGNBH, 1000000;
+
+		case 5 :
+ 		callfunc "mes_getitem_colo",.@npcname$,20032,@itemPBH,@countitemPBH, 1000000;
+		
+		case 6 :
+		callfunc "mes_getitem_colo",.@npcname$,20033,@itemRBH,@countitemRBH, 1000000;
+
+		case 7 :
+ 		callfunc "mes_getitem_colo",.@npcname$,20034,@itemWBH,@countitemWBH, 1000000;
+
+		// Quitter
+		case 8 :
+		mes @npcname$;
+		mes "Très bien. A bientôt !";
+		close;
+	}
+}

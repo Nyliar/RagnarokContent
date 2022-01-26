@@ -1,0 +1,102 @@
+///////Job list 7///////
+//7-1 goes to 8-1 using callfunc;
+prontera,123,208,6	script	Little Girl::thqligi	717,{
+	if (seven_qset == 1 && countitem(10010) > 199) goto N_QuestComp;
+	if (seven_qset == 1) goto N_QuestStart;
+	if (eight_qset == 1) goto N_QuestStart2;
+	mes "[Girl]";
+	mes "Bonjour " +strcharinfo(0)+".";
+	close;
+N_QuestComp:
+	mes "[Girl]";
+	mes "Merci beaucoup!";
+	next;
+	mes "[Girl]";
+	mes "Prenez cette récompense.";
+	delitem 531,5;
+	set seven_qset,0;
+	set On_Quest,0;
+	set #Treasure_Token,#Treasure_Token+7;
+	close;
+N_QuestStart:
+	mes "[Girl]";
+	mes "Bonjour. Pourriez vous m'amener des pots? Pour écraser des herbes? Comme des Battered Pots, par exemple?";
+	mes "J'en veux 200, si possible.";
+	close;
+N_QuestStart2:
+	callfunc "eight_qset1";
+}
+//7-2;
+alberta,101,84,6	script	Charles	48,{
+	if (seven_qset == 2 && countitem(1019) > 199 && countitem(7035) > 14) goto N_QuestComp;
+	if (seven_qset == 2) goto N_QuestStart;
+	mes "[Charles]";
+	mes "Hello "+strcharinfo(0)+" bienvenue à Alberta.";
+	close;
+N_QuestComp:
+	mes "[Charles]";
+	mes "AHAHAHA Merci! Merci mon ami.";
+	next;
+	mes "[Charles]";
+	mes "Voilà ta récompense, 10 Tokens.";
+	delitem 1019,200;
+	delitem 7035, 15;
+	set seven_qset,0;
+	npctalk "Je vais pouvoir mettre le feu maintenant BOUAHAHAHAH!";
+	set On_Quest,0;
+	set #Treasure_Token,#Treasure_Token+10;
+	close;
+N_QuestStart:
+	mes "[Charles]";
+	mes "Bon. Je...je suis malade.";
+	mes "J'ai froid, amène moi de quoi me faire un peu ok?";
+	mes "Du bois...Et des Allumettes. 200, et 15. C'est possible?";
+	close;
+}
+//7-3
+function	script	seven_qset-3	{
+	if (seven_qset == 3 && countitem(1524) > 0 && countitem(2246) > 0) goto N_QuestComp2;
+	mes "[Sewer Managment]";
+	mes "Nous avons reçu des rapports concernant un Enorme Cafard Doré en bas, tout au fond des égouts.";
+	mes " ";
+	mes "J'ai besoin de sa masse dorée. Et de l'espèce de chapeau qu'il lâche.";
+	close;
+N_QuestComp2:
+	mes "[Sewer Managment]";
+	mes "Merci de ton aide";
+	next;
+	mes "[Sewer Managment]";
+	mes "Voilà 5 Token.";
+	delitem 1524,1;
+	delitem 2246,1;
+	set seven_qset,0;
+	set On_Quest,0;
+	set #Treasure_Token,#Treasure_Token+5;
+	close;
+}
+//7-4;
+alb2trea,94,102,6	script	Scarlet	725,{
+	if (seven_qset == 4 && countitem(1127) > 0 && countitem(5019) > 0) goto N_QuestComp;
+	if (seven_qset == 4) goto N_QuestStart;
+	mes "[Scarlet]";
+	mes "Va voir ailleur, j'suis occupée.";
+	close;
+N_QuestComp:
+	mes "[Scarlet]";
+	mes "Bravo, bon travail.";
+	next;
+	mes "[Scarlet]";
+	mes "Voici ce que vous méritez!";
+	delitem 1127,1;
+	delitem 5019,1;
+	set seven_qset,0;
+	set On_Quest,0;
+	set #Treasure_Token,#Treasure_Token+6;
+	close;
+N_QuestStart:
+	mes "[Scarlet]";
+	mes "Bonjour. Nous avons reçu récemment un rapport concernant un Vieux Capitaine Fantôme. Tuez le!";
+	mes " ";
+	mes "Je veux son sabre et son chapeau pour preuve.";
+	close;
+}

@@ -1,0 +1,72 @@
+aldebaran, 189,234, 5	script	Koneko Hat	96,{
+
+	set .@npcname$,"[Koneko Hat]";
+	
+	//Black Koneko Hat 20232
+	setarray @iteBKH[0], 5372, 983, 7230;
+	setarray @countiteBKH[0], 1, 2, 2;
+	
+	//Blue Koneko Hat 20233
+	setarray @iteBLKH[0], 5372, 978, 7230;
+	setarray @countiteBLKH[0], 1, 2, 2;
+
+	//Cyan Koneko Hat 20235
+	setarray @itemCKH[0], 5372, 978, 982, 7230;
+	setarray @countitemCKH[0], 1, 2, 2, 2;
+
+	//Gold Koneko Hat 20236
+	setarray @itemGKH[0], 5372, 976, 7230;
+	setarray @countitemGKH[0], 1, 2, 2;
+
+	//Green Koneko Hat 20237
+	setarray @itemGNKH[0], 5372, 979, 7230;
+	setarray @countitemGNKH[0], 1, 2, 2;
+
+	//Purple  Koneko Hat 20240
+	setarray @itemPUKH[0], 5372, 981, 7230;
+	setarray @countitemPUKH[0], 1, 2, 2;
+	
+	//Red Koneko Hat 20241
+	setarray @itemRKH[0], 5372, 975, 7230;
+	setarray @countitemRKH[0], 1, 2, 2;	
+	
+	
+	mes .@npcname$;
+	mes "Bonjour ^3333FF" + strcharinfo(0) + "^000000!";
+	mes "Je peux te proposer quelque hats pour customiser ton Koneko Hat.";
+	mes	"Ca t'interesse?!";
+	next;
+	mes .@npcname$;
+	mes "Voici ce que je peux te proposer:";
+	next;
+
+	switch(select("Black Koneko Hat:Blue Koneko Hat:Cyan Koneko Hat:Gold Koneko Hat:Green Koneko Hat:Purple Koneko Hat:Red Koneko Hat:^777777Rien, merci...^000000"))
+	{
+		case 1 :
+ 		callfunc "mes_getitem_colo",.@npcname$,20321,@iteBKH,@countiteBKH, 1000000;
+
+		case 2 :
+ 		callfunc "mes_getitem_colo",.@npcname$,20322,@iteBLKH,@countiteBLKH, 1000000;
+
+		case 3 :
+ 		callfunc "mes_getitem_colo",.@npcname$,20323,@itemCKH,@countitemCKH, 1000000;
+
+		case 4 :
+ 		callfunc "mes_getitem_colo",.@npcname$,20324,@itemGKH,@countitemGKH, 1000000;
+
+		case 5 :
+ 		callfunc "mes_getitem_colo",.@npcname$,20325,@itemGNKH,@countitemGNKH, 1000000;
+
+		case 6 :
+ 		callfunc "mes_getitem_colo",.@npcname$,20326,@itemPUKH,@countitemPUKH, 1000000;
+		
+		case 7 :
+		callfunc "mes_getitem_colo",.@npcname$,20327,@itemRKH,@countitemRKH, 1000000;
+
+		// Quitter
+		case 8 :
+		mes @npcname$;
+		mes "Très bien. A bientôt !";
+		close;
+	}
+}

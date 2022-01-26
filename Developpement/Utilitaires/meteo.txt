@@ -1,0 +1,846 @@
+//Le Livre d'Ymir http://www.bookofymir.net
+//Distribué avec l'autorisation de No Healing
+//Dokebi Online http://www.dokebi-online.com/
+//===== eAthena Script =======================================
+//= Contrôleur météo
+//===== By: ==================================================
+//= No Healing
+//===== Current Version: =====================================
+//= 1.2
+//===== Compatible With: =====================================
+//= eAthena 
+//===== Description: =========================================
+//
+//= Permet de contrôler les effets météos sur l'ensemble du 
+//= serveur manuellement, ou bien de programmer des effets à
+//= l'avance.
+//
+//===== Additional Comments: ================================= 
+//
+// Complètement libre d'utilisation pour tout serveur gratuit.
+// Les donnations SONT une forme de paiement.
+//
+// Les effets météo aléatoires sont désactivés si il y a déjà
+// un event météo en cours. 
+//
+// Parties à configurer (optionnel): 
+//
+// Météo programmée.
+// Pour chaque event programmé, changer le premier label OnDay
+// pour correspondre à la date de début, et le second label 
+// OnDay pour correspondre à la date de fin. Le format est:
+// OnDay<mois><jour>. Par ex: OnDay0215 correspond au 15 
+// février.
+// La variable $weather correspond à l'ID du mapflag à appliquer.
+//
+// Maps custom.
+// Si vous avez des maps custom, vous pouvez les rajouter sous
+// la ligne "// maps custom" à deux endroits dans ce script (un
+// pour pouvoir set les mapflags et un autre pour les remove.
+// Ne rajoutez que les maps d'extérieur, ou il pleuvera à 
+// l'intérieur de vos maisons custom :/
+// Si vous avez des maps custom d'endroits désertiques, vous
+// pouvez les rajouter sous la ligne "// En-dessous de cette 
+// ligne, les effets leaves" etc pour éviter que certains 
+// effets comme "rain" ou "sakura" ne soient appliqués sur ces
+// maps.
+//
+// Eventuellement si des personnes sont intéressées, je pourrais
+// faire une version où les effets météo aléatoires seraient 
+// appliqués par map au lieu de l'être pour le serveur entier
+// (donc il pourrait pleuvoir sur une map et pas une autre par
+// example, mais cela augmenterait périodiquement la charge
+// pour le serveur. Dans cette version, les effets aléatoires
+// sont appliqués à toutes les maps d'extérieur du serveur en 
+// même temps: quand il se met à pleuvoir: il pleut sur tout 
+// Midgard.
+//
+// Si vous avez des messages d'erreur du type "map not found",
+// cela signifie que votre grf et/ou version d'eA n'est pas à 
+// jour. Si vous ne voulez pas faire cette mise à jour, 
+// supprimez les maps en question dans ce script, à deux 
+// reprises encore une fois.
+//
+//============================================================
+//
+// Mapflags:
+// 
+// mf_snow	16
+// mf_fog	17
+// mf_sakura	18
+// mf_leaves	19
+// mf_rain	20
+// mf_clouds	23
+// mf_clouds2	24
+// mf_fireworks	25
+
+thalys,206,94,1	script	#weatherThingy	800,{
+if (getgmlevel()==99) goto L_admin;
+mes "[Poule]";
+mes "Clock!";
+close;
+
+////////////////////////////////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////// Météo programmée /////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////////////////////////
+
+
+////////////////////////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////// Fleurs de cerisier au printemps /////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////////////////////////
+
+OnDay0325:
+set $weather,18;
+set $weatherOn,2;
+goto Oninit;
+
+OnDay0410:
+goto L_reset;
+
+////////////////////////////////////////////////////////////////////////////////////////////////////
+//////////////////////////////////// Feuilles mortes en automne ////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////////////////////////
+
+OnDay1025:
+set $weather,19;
+set $weatherOn,2;
+goto Oninit;
+
+OnDay1110:
+goto L_reset;
+
+////////////////////////////////////////////////////////////////////////////////////////////////////
+/////////////////////////////////////////// Neige à Noël ///////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////////////////////////
+
+OnDay1201:
+set $weather,16;
+set $weatherOn,2;
+goto Oninit;
+
+OnDay0105:
+goto L_reset;
+
+////////////////////////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////////////////////////
+
+L_admin:
+mes "[Météo]";
+mes "Que voulez-vous faire?";
+next;
+menu "Set un mapflag (écraser les mapflags présents)",L_set,"Reset les mapflags",L_reset2,"Annuler",-;
+close;
+
+L_set:
+menu "Neige",L_16,"Brouillard",L_17,"Fleurs de cerisier",L_18,"Feuilles mortes",L_19,"Pluie",L_20,"Nuages",L_23,"Nuages 2",L_24,"Feux d'artifice",L_25;
+close;
+
+OnClock2359:
+OnClock0259:
+OnClock0559:
+OnClock0859:
+OnClock1159:
+OnClock1459:
+OnClock1759:
+OnClock2059:
+if ($weatherOn == 2) end;
+if ($weatherOn == 1) goto L_reset;
+if (rand(1,10) == 1) goto L_randomWeather;
+end;
+
+L_randomWeather:
+if (rand(1,8) == 1) goto L_randomWeather2;
+set $weather,20;
+set $weatherOn,1;
+goto Oninit;
+
+L_randomWeather2:
+set $weather,23;
+set $weatherOn,1;
+goto Oninit;
+
+weatherarray:
+set $weatherList[$weatherCount],$weather;
+set $weatherCount,$weatherCount+1;
+return;
+
+L_16:
+if ($weather>0) callsub weatherarray;
+set $weather,16;
+close2;
+set $weatherOn,2;
+goto Oninit;
+
+L_17:
+if ($weather>0) callsub weatherarray;
+set $weather,17;
+close2;
+set $weatherOn,2;
+goto Oninit;
+
+L_18:
+if ($weather>0) callsub weatherarray;
+set $weather,18;
+close2;
+set $weatherOn,2;
+goto Oninit;
+
+L_19:
+if ($weather>0) callsub weatherarray;
+set $weather,19;
+close2;
+set $weatherOn,2;
+goto Oninit;
+
+L_20:
+if ($weather>0) callsub weatherarray;
+set $weather,20;
+close2;
+set $weatherOn,2;
+goto Oninit;
+
+L_23:
+if ($weather>0) callsub weatherarray;
+set $weather,23;
+close2;
+set $weatherOn,2;
+goto Oninit;
+
+L_24:
+if ($weather>0) callsub weatherarray;
+set $weather,24;
+close2;
+set $weatherOn,2;
+goto Oninit;
+
+L_25:
+if ($weather>0) callsub weatherarray;
+set $weather,25;
+close2;
+set $weatherOn,2;
+goto Oninit;
+
+Oninit:
+if ($weather==0) set $weather,-1;
+if ($weather==-1) end;
+initBis:
+setmapflag "alb2trea",$weather;
+setmapflag "alberta",$weather;
+setmapflag "aldebaran",$weather;
+setmapflag "gef_fild00",$weather;
+setmapflag "gef_fild01",$weather;
+setmapflag "gef_fild02",$weather;
+setmapflag "gef_fild03",$weather;
+setmapflag "gef_fild04",$weather;
+setmapflag "gef_fild05",$weather;
+setmapflag "gef_fild06",$weather;
+setmapflag "gef_fild07",$weather;
+setmapflag "gef_fild08",$weather;
+setmapflag "gef_fild09",$weather;
+setmapflag "gef_fild10",$weather;
+setmapflag "gef_fild11",$weather;
+setmapflag "gef_fild12",$weather;
+setmapflag "gef_fild13",$weather;
+setmapflag "gef_fild14",$weather;
+setmapflag "geffen",$weather;
+setmapflag "glast_01",$weather;
+setmapflag "izlude",$weather;
+setmapflag "mjolnir_01",$weather;
+setmapflag "mjolnir_02",$weather;
+setmapflag "mjolnir_03",$weather;
+setmapflag "mjolnir_04",$weather;
+setmapflag "mjolnir_05",$weather;
+setmapflag "mjolnir_06",$weather;
+setmapflag "mjolnir_07",$weather;
+setmapflag "mjolnir_08",$weather;
+setmapflag "mjolnir_09",$weather;
+setmapflag "mjolnir_10",$weather;
+setmapflag "mjolnir_11",$weather;
+setmapflag "mjolnir_12",$weather;
+setmapflag "new_1-1",$weather;
+setmapflag "new_1-3",$weather;
+setmapflag "new_2-1",$weather;
+setmapflag "new_2-3",$weather;
+setmapflag "new_3-1",$weather;
+setmapflag "new_3-3",$weather;
+setmapflag "new_4-1",$weather;
+setmapflag "new_4-3",$weather;
+setmapflag "new_5-1",$weather;
+setmapflag "new_5-3",$weather;
+setmapflag "pay_arche",$weather;
+setmapflag "pay_fild01",$weather;
+setmapflag "pay_fild02",$weather;
+setmapflag "pay_fild03",$weather;
+setmapflag "pay_fild04",$weather;
+setmapflag "pay_fild05",$weather;
+setmapflag "pay_fild06",$weather;
+setmapflag "pay_fild07",$weather;
+setmapflag "pay_fild08",$weather;
+setmapflag "pay_fild09",$weather;
+setmapflag "pay_fild10",$weather;
+setmapflag "pay_fild11",$weather;
+setmapflag "payon",$weather;
+setmapflag "prontera",$weather;
+setmapflag "prt_fild00",$weather;
+setmapflag "prt_fild01",$weather;
+setmapflag "prt_fild02",$weather;
+setmapflag "prt_fild03",$weather;
+setmapflag "prt_fild04",$weather;
+setmapflag "prt_fild05",$weather;
+setmapflag "prt_fild06",$weather;
+setmapflag "prt_fild07",$weather;
+setmapflag "prt_fild08",$weather;
+setmapflag "prt_fild09",$weather;
+setmapflag "prt_fild10",$weather;
+setmapflag "prt_fild11",$weather;
+setmapflag "prt_maze01",$weather;
+setmapflag "prt_maze02",$weather;
+setmapflag "prt_maze03",$weather;
+setmapflag "prt_monk",$weather;
+setmapflag "pvp_n_1-1",$weather;
+setmapflag "pvp_n_2-1",$weather;
+setmapflag "pvp_n_3-1",$weather;
+setmapflag "pvp_n_4-1",$weather;
+setmapflag "pvp_n_5-1",$weather;
+setmapflag "pvp_n_6-1",$weather;
+setmapflag "pvp_n_7-1",$weather;
+setmapflag "pvp_n_8-1",$weather;
+setmapflag "pvp_y_1-1",$weather;
+setmapflag "pvp_y_1-2",$weather;
+setmapflag "pvp_y_1-3",$weather;
+setmapflag "pvp_y_1-4",$weather;
+setmapflag "pvp_y_1-5",$weather;
+setmapflag "pvp_y_2-1",$weather;
+setmapflag "pvp_y_2-2",$weather;
+setmapflag "pvp_y_2-3",$weather;
+setmapflag "pvp_y_2-4",$weather;
+setmapflag "pvp_y_2-5",$weather;
+setmapflag "pvp_y_3-1",$weather;
+setmapflag "pvp_y_3-2",$weather;
+setmapflag "pvp_y_3-3",$weather;
+setmapflag "pvp_y_3-4",$weather;
+setmapflag "pvp_y_3-5",$weather;
+setmapflag "pvp_y_4-1",$weather;
+setmapflag "pvp_y_4-2",$weather;
+setmapflag "pvp_y_4-3",$weather;
+setmapflag "pvp_y_4-4",$weather;
+setmapflag "pvp_y_4-5",$weather;
+setmapflag "pvp_y_5-1",$weather;
+setmapflag "pvp_y_5-2",$weather;
+setmapflag "pvp_y_5-3",$weather;
+setmapflag "pvp_y_5-4",$weather;
+setmapflag "pvp_y_5-5",$weather;
+setmapflag "pvp_y_6-1",$weather;
+setmapflag "pvp_y_6-2",$weather;
+setmapflag "pvp_y_6-3",$weather;
+setmapflag "pvp_y_6-4",$weather;
+setmapflag "pvp_y_6-5",$weather;
+setmapflag "pvp_y_7-1",$weather;
+setmapflag "pvp_y_7-2",$weather;
+setmapflag "pvp_y_7-3",$weather;
+setmapflag "pvp_y_7-4",$weather;
+setmapflag "pvp_y_7-5",$weather;
+setmapflag "pvp_y_8-1",$weather;
+setmapflag "pvp_y_8-2",$weather;
+setmapflag "pvp_y_8-3",$weather;
+setmapflag "pvp_y_8-4",$weather;
+setmapflag "pvp_y_8-5",$weather;
+setmapflag "pay_gld",$weather;
+setmapflag "yuno_fild01",$weather;
+setmapflag "yuno_fild02",$weather;
+setmapflag "yuno_fild03",$weather;
+setmapflag "yuno_fild04",$weather;
+setmapflag "ama_fild01",$weather;
+setmapflag "amatsu",$weather;
+setmapflag "gon_fild01",$weather;
+setmapflag "gonryun",$weather;
+setmapflag "umbala",$weather;
+setmapflag "um_fild01",$weather;
+setmapflag "um_fild02",$weather;
+setmapflag "um_fild03",$weather;
+setmapflag "um_fild04",$weather;
+setmapflag "niflheim",$weather;
+setmapflag "nif_fild01",$weather;
+setmapflag "nif_fild02",$weather;
+setmapflag "yggdrasil01",$weather;
+setmapflag "gefenia01",$weather;
+setmapflag "gefenia02",$weather;
+setmapflag "gefenia03",$weather;
+setmapflag "gefenia04",$weather;
+setmapflag "new_zone01",$weather;
+setmapflag "new_zone03",$weather;
+setmapflag "ayo_fild01",$weather;
+setmapflag "ayo_fild02",$weather;
+setmapflag "yuno_fild05",$weather;
+setmapflag "yuno_fild07",$weather;
+setmapflag "yuno_fild08",$weather;
+setmapflag "yuno_fild09",$weather;
+setmapflag "yuno_fild11",$weather;
+setmapflag "yuno_fild12",$weather;
+setmapflag "einbech",$weather;
+setmapflag "einbroch",$weather;
+setmapflag "ein_fild06",$weather;
+setmapflag "ein_fild07",$weather;
+setmapflag "ein_fild08",$weather;
+setmapflag "ein_fild09",$weather;
+setmapflag "ein_fild10",$weather;
+setmapflag "que_sign02",$weather;
+setmapflag "ein_fild03",$weather;
+setmapflag "ein_fild04",$weather;
+setmapflag "lhz_fild02",$weather;
+setmapflag "lhz_fild03",$weather;
+setmapflag "lhz_fild01",$weather;
+setmapflag "lighthalzen",$weather;
+setmapflag "hu_fild07",$weather;
+setmapflag "hu_fild05",$weather;
+setmapflag "hu_fild04",$weather;
+setmapflag "hu_fild01",$weather;
+setmapflag "yuno_fild06",$weather;
+setmapflag "hugel",$weather;
+setmapflag "p_track01",$weather;
+setmapflag "p_track02",$weather;
+setmapflag "odin_tem01",$weather;
+setmapflag "odin_tem02",$weather;
+setmapflag "odin_tem03",$weather;
+setmapflag "hu_fild02",$weather;
+setmapflag "hu_fild03",$weather;
+setmapflag "hu_fild06",$weather;
+setmapflag "ein_fild01",$weather;
+setmapflag "ein_fild02",$weather;
+setmapflag "ein_fild05",$weather;
+setmapflag "yuno_fild10",$weather;
+setmapflag "moscovia",$weather;
+setmapflag "mosk_fild01",$weather;
+setmapflag "mosk_fild02",$weather;
+setmapflag "sch_gld",$weather;
+setmapflag "moc_fild20",$weather;
+setmapflag "moc_fild21",$weather;
+setmapflag "moc_fild22",$weather;
+setmapflag "aru_gld",$weather;
+setmapflag "mid_camp",$weather;
+setmapflag "man_fild01",$weather;
+setmapflag "man_fild03",$weather;
+setmapflag "moc_fild22b",$weather;
+setmapflag "que_dan01",$weather;
+
+// maps custom
+setmapflag "Puissance_4",$weather;
+setmapflag "dot_ctf1",$weather;
+setmapflag "boy_ctf1",$weather;
+setmapflag "fortress",$weather;
+setmapflag "fort_fild01",$weather;
+setmapflag "fort_fild02",$weather;
+setmapflag "azria",$weather;
+setmapflag "dreamworld",$weather;
+setmapflag "askydun",$weather;
+setmapflag "lu_fild01",$weather;
+setmapflag "az_fild01",$weather;
+setmapflag "az_fild02",$weather;
+setmapflag "az_fild03",$weather;
+setmapflag "az_fild04",$weather;
+setmapflag "az_fild05",$weather;
+
+if ($weather==18||$weather==19||$weather==20) end;
+
+// En-dessous de cette ligne, les effets leaves, sakura, et rain ne sont pas appliqués (maps désertiques)
+setmapflag "bat_a01",$weather;
+setmapflag "bat_a02",$weather;
+setmapflag "bat_b01",$weather;
+setmapflag "bat_b02",$weather;
+setmapflag "que_qsch01",$weather;
+setmapflag "que_qsch02",$weather;
+setmapflag "que_qsch03",$weather;
+setmapflag "que_qsch04",$weather;
+setmapflag "que_qsch05",$weather;
+setmapflag "que_qaru01",$weather;
+setmapflag "que_qaru02",$weather;
+setmapflag "que_qaru03",$weather;
+setmapflag "que_qaru04",$weather;
+setmapflag "que_qaru05",$weather;
+setmapflag "moc_fild01",$weather;
+setmapflag "moc_fild02",$weather;
+setmapflag "moc_fild03",$weather;
+setmapflag "moc_fild04",$weather;
+setmapflag "moc_fild05",$weather;
+setmapflag "moc_fild06",$weather;
+setmapflag "moc_fild07",$weather;
+setmapflag "moc_fild08",$weather;
+setmapflag "moc_fild09",$weather;
+setmapflag "moc_fild10",$weather;
+setmapflag "moc_fild11",$weather;
+setmapflag "moc_fild12",$weather;
+setmapflag "moc_fild13",$weather;
+setmapflag "moc_fild14",$weather;
+setmapflag "moc_fild15",$weather;
+setmapflag "moc_fild16",$weather;
+setmapflag "moc_fild17",$weather;
+setmapflag "moc_fild18",$weather;
+setmapflag "moc_fild19",$weather;
+setmapflag "moc_ruins",$weather;
+setmapflag "morocc",$weather;
+setmapflag "xmas",$weather;
+setmapflag "xmas_fild01",$weather;
+setmapflag "cmd_fild01",$weather;
+setmapflag "cmd_fild02",$weather;
+setmapflag "cmd_fild03",$weather;
+setmapflag "cmd_fild04",$weather;
+setmapflag "cmd_fild05",$weather;
+setmapflag "cmd_fild06",$weather;
+setmapflag "cmd_fild07",$weather;
+setmapflag "cmd_fild08",$weather;
+setmapflag "cmd_fild09",$weather;
+setmapflag "comodo",$weather;
+setmapflag "alde_gld",$weather;
+setmapflag "prt_gld",$weather;
+setmapflag "yuno",$weather;
+setmapflag "lou_fild01",$weather;
+setmapflag "louyang",$weather;
+setmapflag "jawaii",$weather;
+setmapflag "ayothaya",$weather;
+setmapflag "rachel",$weather;
+setmapflag "ra_fild01",$weather;
+setmapflag "ra_fild02",$weather;
+setmapflag "ra_fild03",$weather;
+setmapflag "ra_fild04",$weather;
+setmapflag "ra_fild05",$weather;
+setmapflag "ra_fild06",$weather;
+setmapflag "ra_fild07",$weather;
+setmapflag "ra_fild08",$weather;
+setmapflag "ra_fild09",$weather;
+setmapflag "ra_fild10",$weather;
+setmapflag "ra_fild11",$weather;
+setmapflag "ra_fild12",$weather;
+setmapflag "ra_fild13",$weather;
+setmapflag "veins",$weather;
+setmapflag "ve_fild01",$weather;
+setmapflag "ve_fild02",$weather;
+setmapflag "ve_fild03",$weather;
+setmapflag "ve_fild04",$weather;
+setmapflag "ve_fild05",$weather;
+setmapflag "ve_fild06",$weather;
+setmapflag "ve_fild07",$weather;
+setmapflag "spl_fild02",$weather;
+setmapflag "spl_fild03",$weather;
+end;
+
+L_reset2:
+if ($weatherCount==0) set .tempweather,1;
+close2;
+L_reset:
+removemapflag "alb2trea",$weather;
+removemapflag "alberta",$weather;
+removemapflag "aldebaran",$weather;
+removemapflag "gef_fild00",$weather;
+removemapflag "gef_fild01",$weather;
+removemapflag "gef_fild02",$weather;
+removemapflag "gef_fild03",$weather;
+removemapflag "gef_fild04",$weather;
+removemapflag "gef_fild05",$weather;
+removemapflag "gef_fild06",$weather;
+removemapflag "gef_fild07",$weather;
+removemapflag "gef_fild08",$weather;
+removemapflag "gef_fild09",$weather;
+removemapflag "gef_fild10",$weather;
+removemapflag "gef_fild11",$weather;
+removemapflag "gef_fild12",$weather;
+removemapflag "gef_fild13",$weather;
+removemapflag "gef_fild14",$weather;
+removemapflag "geffen",$weather;
+removemapflag "glast_01",$weather;
+removemapflag "izlude",$weather;
+removemapflag "mjolnir_01",$weather;
+removemapflag "mjolnir_02",$weather;
+removemapflag "mjolnir_03",$weather;
+removemapflag "mjolnir_04",$weather;
+removemapflag "mjolnir_05",$weather;
+removemapflag "mjolnir_06",$weather;
+removemapflag "mjolnir_07",$weather;
+removemapflag "mjolnir_08",$weather;
+removemapflag "mjolnir_09",$weather;
+removemapflag "mjolnir_10",$weather;
+removemapflag "mjolnir_11",$weather;
+removemapflag "mjolnir_12",$weather;
+removemapflag "new_1-1",$weather;
+removemapflag "new_1-3",$weather;
+removemapflag "new_2-1",$weather;
+removemapflag "new_2-3",$weather;
+removemapflag "new_3-1",$weather;
+removemapflag "new_3-3",$weather;
+removemapflag "new_4-1",$weather;
+removemapflag "new_4-3",$weather;
+removemapflag "new_5-1",$weather;
+removemapflag "new_5-3",$weather;
+removemapflag "pay_arche",$weather;
+removemapflag "pay_fild01",$weather;
+removemapflag "pay_fild02",$weather;
+removemapflag "pay_fild03",$weather;
+removemapflag "pay_fild04",$weather;
+removemapflag "pay_fild05",$weather;
+removemapflag "pay_fild06",$weather;
+removemapflag "pay_fild07",$weather;
+removemapflag "pay_fild08",$weather;
+removemapflag "pay_fild09",$weather;
+removemapflag "pay_fild10",$weather;
+removemapflag "pay_fild11",$weather;
+removemapflag "payon",$weather;
+removemapflag "prontera",$weather;
+removemapflag "prt_fild00",$weather;
+removemapflag "prt_fild01",$weather;
+removemapflag "prt_fild02",$weather;
+removemapflag "prt_fild03",$weather;
+removemapflag "prt_fild04",$weather;
+removemapflag "prt_fild05",$weather;
+removemapflag "prt_fild06",$weather;
+removemapflag "prt_fild07",$weather;
+removemapflag "prt_fild08",$weather;
+removemapflag "prt_fild09",$weather;
+removemapflag "prt_fild10",$weather;
+removemapflag "prt_fild11",$weather;
+removemapflag "prt_maze01",$weather;
+removemapflag "prt_maze02",$weather;
+removemapflag "prt_maze03",$weather;
+removemapflag "prt_monk",$weather;
+removemapflag "pvp_n_1-1",$weather;
+removemapflag "pvp_n_2-1",$weather;
+removemapflag "pvp_n_3-1",$weather;
+removemapflag "pvp_n_4-1",$weather;
+removemapflag "pvp_n_5-1",$weather;
+removemapflag "pvp_n_6-1",$weather;
+removemapflag "pvp_n_7-1",$weather;
+removemapflag "pvp_n_8-1",$weather;
+removemapflag "pvp_y_1-1",$weather;
+removemapflag "pvp_y_1-2",$weather;
+removemapflag "pvp_y_1-3",$weather;
+removemapflag "pvp_y_1-4",$weather;
+removemapflag "pvp_y_1-5",$weather;
+removemapflag "pvp_y_2-1",$weather;
+removemapflag "pvp_y_2-2",$weather;
+removemapflag "pvp_y_2-3",$weather;
+removemapflag "pvp_y_2-4",$weather;
+removemapflag "pvp_y_2-5",$weather;
+removemapflag "pvp_y_3-1",$weather;
+removemapflag "pvp_y_3-2",$weather;
+removemapflag "pvp_y_3-3",$weather;
+removemapflag "pvp_y_3-4",$weather;
+removemapflag "pvp_y_3-5",$weather;
+removemapflag "pvp_y_4-1",$weather;
+removemapflag "pvp_y_4-2",$weather;
+removemapflag "pvp_y_4-3",$weather;
+removemapflag "pvp_y_4-4",$weather;
+removemapflag "pvp_y_4-5",$weather;
+removemapflag "pvp_y_5-1",$weather;
+removemapflag "pvp_y_5-2",$weather;
+removemapflag "pvp_y_5-3",$weather;
+removemapflag "pvp_y_5-4",$weather;
+removemapflag "pvp_y_5-5",$weather;
+removemapflag "pvp_y_6-1",$weather;
+removemapflag "pvp_y_6-2",$weather;
+removemapflag "pvp_y_6-3",$weather;
+removemapflag "pvp_y_6-4",$weather;
+removemapflag "pvp_y_6-5",$weather;
+removemapflag "pvp_y_7-1",$weather;
+removemapflag "pvp_y_7-2",$weather;
+removemapflag "pvp_y_7-3",$weather;
+removemapflag "pvp_y_7-4",$weather;
+removemapflag "pvp_y_7-5",$weather;
+removemapflag "pvp_y_8-1",$weather;
+removemapflag "pvp_y_8-2",$weather;
+removemapflag "pvp_y_8-3",$weather;
+removemapflag "pvp_y_8-4",$weather;
+removemapflag "pvp_y_8-5",$weather;
+removemapflag "pay_gld",$weather;
+removemapflag "yuno_fild01",$weather;
+removemapflag "yuno_fild02",$weather;
+removemapflag "yuno_fild03",$weather;
+removemapflag "yuno_fild04",$weather;
+removemapflag "ama_fild01",$weather;
+removemapflag "amatsu",$weather;
+removemapflag "gon_fild01",$weather;
+removemapflag "gonryun",$weather;
+removemapflag "umbala",$weather;
+removemapflag "um_fild01",$weather;
+removemapflag "um_fild02",$weather;
+removemapflag "um_fild03",$weather;
+removemapflag "um_fild04",$weather;
+removemapflag "niflheim",$weather;
+removemapflag "nif_fild01",$weather;
+removemapflag "nif_fild02",$weather;
+removemapflag "yggdrasil01",$weather;
+removemapflag "gefenia01",$weather;
+removemapflag "gefenia02",$weather;
+removemapflag "gefenia03",$weather;
+removemapflag "gefenia04",$weather;
+removemapflag "new_zone01",$weather;
+removemapflag "new_zone03",$weather;
+removemapflag "ayo_fild01",$weather;
+removemapflag "ayo_fild02",$weather;
+removemapflag "yuno_fild05",$weather;
+removemapflag "yuno_fild07",$weather;
+removemapflag "yuno_fild08",$weather;
+removemapflag "yuno_fild09",$weather;
+removemapflag "yuno_fild11",$weather;
+removemapflag "yuno_fild12",$weather;
+removemapflag "einbech",$weather;
+removemapflag "einbroch",$weather;
+removemapflag "ein_fild06",$weather;
+removemapflag "ein_fild07",$weather;
+removemapflag "ein_fild08",$weather;
+removemapflag "ein_fild09",$weather;
+removemapflag "ein_fild10",$weather;
+removemapflag "que_sign02",$weather;
+removemapflag "ein_fild03",$weather;
+removemapflag "ein_fild04",$weather;
+removemapflag "lhz_fild02",$weather;
+removemapflag "lhz_fild03",$weather;
+removemapflag "lhz_fild01",$weather;
+removemapflag "lighthalzen",$weather;
+removemapflag "hu_fild07",$weather;
+removemapflag "hu_fild05",$weather;
+removemapflag "hu_fild04",$weather;
+removemapflag "hu_fild01",$weather;
+removemapflag "yuno_fild06",$weather;
+removemapflag "hugel",$weather;
+removemapflag "p_track01",$weather;
+removemapflag "p_track02",$weather;
+removemapflag "odin_tem01",$weather;
+removemapflag "odin_tem02",$weather;
+removemapflag "odin_tem03",$weather;
+removemapflag "hu_fild02",$weather;
+removemapflag "hu_fild03",$weather;
+removemapflag "hu_fild06",$weather;
+removemapflag "ein_fild01",$weather;
+removemapflag "ein_fild02",$weather;
+removemapflag "ein_fild05",$weather;
+removemapflag "yuno_fild10",$weather;
+removemapflag "moscovia",$weather;
+removemapflag "mosk_fild01",$weather;
+removemapflag "mosk_fild02",$weather;
+removemapflag "sch_gld",$weather;
+removemapflag "moc_fild20",$weather;
+removemapflag "moc_fild21",$weather;
+removemapflag "moc_fild22",$weather;
+removemapflag "aru_gld",$weather;
+removemapflag "mid_camp",$weather;
+removemapflag "man_fild01",$weather;
+removemapflag "man_fild03",$weather;
+removemapflag "moc_fild22b",$weather;
+removemapflag "que_dan01",$weather;
+
+// maps custom
+removemapflag "Puissance_4",$weather;
+removemapflag "dot_ctf1",$weather;
+removemapflag "boy_ctf1",$weather;
+removemapflag "fortress",$weather;
+removemapflag "fort_fild01",$weather;
+removemapflag "fort_fild02",$weather;
+removemapflag "azria",$weather;
+removemapflag "dreamworld",$weather;
+removemapflag "askydun",$weather;
+removemapflag "lu_fild01",$weather;
+removemapflag "az_fild01",$weather;
+removemapflag "az_fild02",$weather;
+removemapflag "az_fild03",$weather;
+removemapflag "az_fild04",$weather;
+removemapflag "az_fild05",$weather;
+
+if ($weather==18||$weather==19||$weather==20) goto L_footer;
+
+// En-dessous de cette ligne, les effets leaves, sakura, et rain ne sont pas appliqués (maps désertiques)
+removemapflag "bat_a01",$weather;
+removemapflag "bat_a02",$weather;
+removemapflag "bat_b01",$weather;
+removemapflag "bat_b02",$weather;
+removemapflag "que_qsch01",$weather;
+removemapflag "que_qsch02",$weather;
+removemapflag "que_qsch03",$weather;
+removemapflag "que_qsch04",$weather;
+removemapflag "que_qsch05",$weather;
+removemapflag "que_qaru01",$weather;
+removemapflag "que_qaru02",$weather;
+removemapflag "que_qaru03",$weather;
+removemapflag "que_qaru04",$weather;
+removemapflag "que_qaru05",$weather;
+removemapflag "moc_fild01",$weather;
+removemapflag "moc_fild02",$weather;
+removemapflag "moc_fild03",$weather;
+removemapflag "moc_fild04",$weather;
+removemapflag "moc_fild05",$weather;
+removemapflag "moc_fild06",$weather;
+removemapflag "moc_fild07",$weather;
+removemapflag "moc_fild08",$weather;
+removemapflag "moc_fild09",$weather;
+removemapflag "moc_fild10",$weather;
+removemapflag "moc_fild11",$weather;
+removemapflag "moc_fild12",$weather;
+removemapflag "moc_fild13",$weather;
+removemapflag "moc_fild14",$weather;
+removemapflag "moc_fild15",$weather;
+removemapflag "moc_fild16",$weather;
+removemapflag "moc_fild17",$weather;
+removemapflag "moc_fild18",$weather;
+removemapflag "moc_fild19",$weather;
+removemapflag "moc_ruins",$weather;
+removemapflag "morocc",$weather;
+removemapflag "xmas",$weather;
+removemapflag "xmas_fild01",$weather;
+removemapflag "cmd_fild01",$weather;
+removemapflag "cmd_fild02",$weather;
+removemapflag "cmd_fild03",$weather;
+removemapflag "cmd_fild04",$weather;
+removemapflag "cmd_fild05",$weather;
+removemapflag "cmd_fild06",$weather;
+removemapflag "cmd_fild07",$weather;
+removemapflag "cmd_fild08",$weather;
+removemapflag "cmd_fild09",$weather;
+removemapflag "comodo",$weather;
+removemapflag "alde_gld",$weather;
+removemapflag "prt_gld",$weather;
+removemapflag "yuno",$weather;
+removemapflag "lou_fild01",$weather;
+removemapflag "louyang",$weather;
+removemapflag "jawaii",$weather;
+removemapflag "ayothaya",$weather;
+removemapflag "rachel",$weather;
+removemapflag "ra_fild01",$weather;
+removemapflag "ra_fild02",$weather;
+removemapflag "ra_fild03",$weather;
+removemapflag "ra_fild04",$weather;
+removemapflag "ra_fild05",$weather;
+removemapflag "ra_fild06",$weather;
+removemapflag "ra_fild07",$weather;
+removemapflag "ra_fild08",$weather;
+removemapflag "ra_fild09",$weather;
+removemapflag "ra_fild10",$weather;
+removemapflag "ra_fild11",$weather;
+removemapflag "ra_fild12",$weather;
+removemapflag "ra_fild13",$weather;
+removemapflag "veins",$weather;
+removemapflag "ve_fild01",$weather;
+removemapflag "ve_fild02",$weather;
+removemapflag "ve_fild03",$weather;
+removemapflag "ve_fild04",$weather;
+removemapflag "ve_fild05",$weather;
+removemapflag "ve_fild06",$weather;
+removemapflag "ve_fild07",$weather;
+removemapflag "spl_fild02",$weather;
+removemapflag "spl_fild03",$weather;
+
+L_footer:
+set $weather,$weatherList[$weatherCount];
+if ($weatherCount==0 && .tempweather==1) goto L_resetLast;
+if ($weatherCount==0) goto L_lastFix;
+set $weather,$weatherList[$weatherCount];
+set $weatherCount,$weatherCount-1;
+goto L_reset;
+
+L_lastFix:
+set .tempweather,1;
+goto L_reset;
+
+L_resetLast:
+set .tempweather,0;
+set $weather,-1;
+set $weatherOn,0;
+end;
+}

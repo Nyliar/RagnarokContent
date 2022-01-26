@@ -1,0 +1,3 @@
+tha_in1,46,44,4	script	Piedestal::piedestal1	747,{
+	set .@npcname$, "[Pousse d'Yggdrasil]";
+}

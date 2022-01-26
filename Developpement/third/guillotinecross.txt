@@ -1,0 +1,203 @@
+caspen,97,108,6	script	Maitre Guillotine Cross	939,{  
+
+	mes "[Maitre Guillotine Cross]";
+	if (class == 4013 || class == 12)
+	{
+		if ( GLT_Q < 1)
+		{
+			mes "Bonjour à toi," + strcharinfo(0) + ".";
+			mes "Je suis le Maitre Guillotine Cross.";
+			mes "Je peux te faire passer la deuxième épreuve de ton Eveil,";
+			mes "Es-tu intéressé?";
+			next;
+			switch(select("Oui, je voudrais passer le test, s'il vous plait.:Non merci, je me suis trompé de personne.:Un vieux fou m'a envoyé ici après avoir lancé un tetra Vortex sur moi Y^Y."))
+			{
+				case 1:
+					mes "[Maitre Guillotine Cross]";
+					mes "Tout d'abord, voyons si tu es prêt physiquement.";
+					next;
+					if ( CHARLO_Q ){
+						mes "[Maitre Guillotine Cross]";
+						mes "On dirait bien que ton physique est prêt.";
+						mes "Je vais donc maintenant tester ton mental.";
+						next;
+						mes "[Maitre Guillotine Cross]";				
+							mes "Il s'agit d'un quizz. Commençons.";
+							next;
+							set min_Q, 0;
+							mes "Quel est le bonus donné par Advanced Katar Research?";
+							switch(select("10%+2*LV%:20%+2*LV%:20%+3*LV%:10%+4*LV%"))
+							{
+								case 2:
+								case 4:				
+								case 1:
+									set min_Q, min_Q+1;
+								case 3:
+							}
+							next;
+							mes "Comment peut on se protéger de Enchant Deadly Poison?";
+							switch(select("On en peut pas, l'élément de l'arme ne change pas:Avec une argyope card:Avec un anti-poison:Avec une card anti demi-humain"))
+							{
+								case 1:
+									set min_Q, min_Q+1;
+								case 2:
+								case 3:
+								case 4:
+							}
+							next;
+							mes "Sur quoi se base le calcul des dommages de Soul Breaker?";
+							switch(select("L'INT du lanceur:la DEX du lanceur:la MDEF de la cible:l'AGI de la cible"))
+							{
+								case 4:
+									set min_Q, min_Q+1;
+								case 1:
+								case 2:
+								case 3:
+							}
+							next;
+							mes "Quels sont les status infligés par Meteor Assault?";
+							switch(select("Stun, Blind, Burn:Stun, Freeze, Burn:Stun, Blind ou Bleeding:Freeze, Burn"))
+							{
+								case 3:
+									set min_Q, min_Q+1;
+								case 2:
+								case 1:
+								case 4:
+							}
+							next;
+							mes "Quelle chaussures permettent d'utiliser Cloaking?";
+							switch(select("Aucune:Shoes + shinobi card:Shadow Walk:Sandals + assaulter card"))
+							{
+								case 3:
+									set min_Q, min_Q+1;
+								case 1:
+								case 4:
+								case 2:
+							}
+							next;
+							mes "Que nécessite Venom Splasher pour être lancé?";
+							switch(select("une blue gemstonne:une yellow gemstonne:une red gemstonne:un red blood"))
+							{
+								case 3:
+									set min_Q, min_Q+1;
+								case 1:
+								case 2:
+								case 4:
+							}
+							next;
+							mes "Combien de temps dure poison react level 9?";
+							switch(select("50s:55s:60s:65s"))
+							{
+								case 3:
+									set min_Q, min_Q+1;
+								case 2:
+								case 4:
+								case 1:
+							}
+							next;
+							mes "Quelle est la taille de la zone d'effect de Grimtooth?";
+							switch(select("6x6:5x5:3x3:4x4"))
+							{
+								case 3:
+									set min_Q, min_Q+1;
+								case 1:
+								case 2:
+								case 4:
+							}
+							next;
+							mes "Quel type d'arme est Mail Breaker?";
+							switch(select("une Dague:Une Epee:Un Katar:Une Lance"))
+							{
+								case 1:
+									set min_Q, min_Q+1;
+								case 4:
+								case 2:
+								case 3:
+							}
+							next;
+							mes "Quelle card permet d'utiliser hiding?";
+							switch(select("Smokie card:Shinobi card:Assaulter card:Poring card"))
+							{
+								case 1:
+									set min_Q, min_Q+1;
+								case 2:
+								case 3:
+								case 4:
+							}
+							next;
+							mes "[Maitre Guillotine Cross]";
+							mes "Bien, voyons tes résultats maintenant...";
+							mes "*Trifouille les résultats du test";
+							next;
+							mes "[Maitre Guillotine Cross]";
+							if (min_Q >= 9)
+							{
+								mes "Excellent, tu as eu ^FF0000" + min_Q*10 + "%^000000 de bonnes réponses.";
+								mes "On dirait bien que ton Esprit est prêt à passer l'Eveil.";
+								mes "Tu peux passer à l'avant-dernière étape de ta quête, la plus difficile.";
+								mes "Pars donc à la recherche du Mirroir du Mal, il t'expliquera cela plus en détail.";
+								mes "Il se trouve caché quelque part aux alentours de la grande ville de Bastania.";
+								mes "Prends cet objet qui te sera très utile";
+								mes " ";
+								getitem (22002),1;
+								mes "Bon courage.";
+								emotion 21;
+								set GLT_Q, 1;
+								close;
+							}
+							else
+							{
+								mes "Désolé, mais tes ^FF0000" + min_Q*10 + "%^000000 de réussite ne seront pas suffisant.";
+								mes "Entraîne encore un peu ton esprit,";
+								mes "Sans quoi, il ne résistera pas à la puissance de l'Eveil.";
+								close;
+							}
+					}		
+					else
+					{
+					mes "[Maitre Guillotine Cross]";
+					mes "Désolé, mais tu ne peux pas venir me voir pour l'instant.";
+					mes "Tu dois avant tout tester ton Physique auprès du Maitre de l'Eveil.";
+					close;
+					}
+				case 2:
+					mes "[Maitre Guillotine Cross]";
+					mes "Pas de problème.";
+					mes "Vis ta vie avec Espoir,";
+					mes "Elle ne t'en paraîtra que plus belle.";
+					close;
+				case 3:
+					mes "[Maitre Guillotine Cross]";
+					mes "Un vieux fou tu dis?";
+					mes "Le Maître du Renouveau est tellement plus que ça";
+					mes "Mais j'avoue qu'il a des tendances un peu cabotine...";
+					close;
+			}
+		}
+		else if ( GLT_Q == 1 )
+		{
+			mes "Bonjour à toi," + strcharinfo(0) + ".";
+			mes "Tu peux passer à la dernière étape.";
+			mes "Pars donc à la recherche d'Yggdrasil.";
+			mes "Il se trouve caché quelque part aux alentours de Bastania.";
+			mes "Bon courage.";
+			close;
+		}
+
+		else if ( GLT_Q == 3 || class == 4065 || class == 4059)
+		{
+			mes "Bonjour à toi," + strcharinfo(0) + ".";
+			mes "Felicitations, tu es Guillotine Cross !";
+			mes "Que la force soit avec toi !";
+			close;
+		}
+	}
+	else
+	{
+		mes "...";
+		mes "Hein, quoi ? Que fais-tu ici ?";
+		mes "Va-t'en avant que je ne t'égorge !";
+		close;
+	}
+}
+

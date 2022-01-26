@@ -1,0 +1,206 @@
+caspen,176,149,8	script	Chercheur Genetic	881,{  
+
+	mes "[Chercheur Genetic]";
+	if (class == 4019 || class == 18){
+		if ( GE_Q < 1)
+		{
+			mes "Bonjour à toi," + strcharinfo(0) + ".";
+			mes "Je suis le Chercheur Genetic.";
+			mes "Je peux te faire passer la deuxième épreuve de ton Eveil,";
+			mes "Es-tu intéressé?";
+			next;
+			switch(select("Oui, je voudrais passer le test, s'il vous plait.:Non merci, je me suis trompé de personne.:Un vieux fou m'a envoyé ici après avoir lancé un tetra Vortex sur moi Y^Y."))
+			{
+				case 1:
+					mes "[Chercheur Genetic]";
+					mes "Tout d'abord, voyons si tu es prêt physiquement.";
+					next;
+					if ( CHARLO_Q ){
+						mes "[Chercheur Genetic]";
+						mes "On dirait bien que ton physique est prêt.";
+						mes "Je vais donc maintenant tester ton mental.";
+						next;
+						mes "[Chercheur Genetic]";
+							mes "Il s'agit d'un quizz. Commençons.";
+							next;
+							set min_Q, 0;
+							mes "De quoi avez-vous besoin pour utiliser Full Chemical Protection?";
+							switch(select("1 Glistening Coat:1 Condensed White Potion:1 Condensed Red Potion:1 COndensed Blue Potion"))
+							{
+								case 2:
+								case 4:				
+								case 1:
+									set min_Q, min_Q+1;
+								case 3:
+							}
+							next;
+							mes "Combien de hit fait Acid Demonstration lvl 9?";
+							switch(select("9 hit:10 hit:11 hit:15 hit"))
+							{
+								case 1:
+									set min_Q, min_Q+1;
+								case 2:
+								case 3:
+								case 4:
+							}
+							next;
+							mes "De quoi avez-vous besoin pour utiliser Plant Cultivation?";
+							switch(select("Bottle Grenade:Rien:Mushroom Spore et Stem:Mushroom Spore ou Stem"))
+							{
+								case 4:
+									set min_Q, min_Q+1;
+								case 1:
+								case 2:
+								case 3:
+							}
+							next;
+							mes "Quelle est la meilleure arme pour utiliser Acid Demonstration?";
+							switch(select("Axe + Hydra Card:Axe + Skeleton Worker:Bazerald:Hurricane Furry"))
+							{
+								case 3:
+									set min_Q, min_Q+1;
+								case 2:
+								case 1:
+								case 4:
+							}
+							next;
+							mes "Quels peuvent être les effets de Acid Terror?";
+							switch(select("Bleeding ou Break Weapon:Burning ou Break Armor:Burning ou Break Weapon:Bleeding ou Break Armor"))
+							{
+								case 4:
+									set min_Q, min_Q+1;
+								case 1:
+								case 3:
+								case 2:
+							}
+							next;
+							mes "Qui drop Hurricane Furry, la meilleur des haches?";
+							switch(select("Orc Hero:Zenorc:Gloom Under Night:Osiris"))
+							{
+								case 3:
+									set min_Q, min_Q+1;
+								case 1:
+								case 2:
+								case 4:
+							}
+							next;
+							mes "Combien de fois ne pouvez vous pas caster Bio Canibalize à la suite?";
+							switch(select("1 fois:2 fois:5 fois:10 fois"))
+							{
+								case 4:
+									set min_Q, min_Q+1;
+								case 2:
+								case 3:
+								case 1:
+							}
+							next;
+							mes "Combien de temps dure Chemical Protection Armor level 4?";
+							switch(select("380s:400s:480s:500s"))
+							{
+								case 3:
+									set min_Q, min_Q+1;
+								case 1:
+								case 2:
+								case 4:
+							}
+							next;
+							mes "Quels sont les noms des  types d'Homonculus?";
+							switch(select("Filir, Lif, Vanilmirth et Amistr:Sheep, Lif, Vanilmirth et Amistr:Bird, Lif, Vanilmirth et Amistr:Mutant Jelly, Sheep, Bird et Dryad"))
+							{
+								case 1:
+									set min_Q, min_Q+1;
+								case 4:
+								case 2:
+								case 3:
+							}
+							next;
+							mes "De quoi avez vous besoin pour utiliser Twilight Alchemy?";
+							switch(select("Etre Soul Linké:Rien de spécial:150 Medecine Bowl:100 Medecine Bowl"))
+							{
+								case 1:
+									set min_Q, min_Q+1;
+								case 2:
+								case 3:
+								case 4:
+							}
+							next;
+							mes "[Chercheur Genetic]";
+							mes "Bien, voyons tes résultats maintenant...";
+							mes "*Trifouille les résultats du test";
+							next;
+							mes "[Chercheur Genetic]";
+							if (min_Q >= 9){
+								mes "Excellent, tu as eu ^FF0000" + min_Q*10 + "%^000000 de bonnes réponses.";
+								mes "On dirait bien que ton Esprit est prêt à passer l'Eveil.";
+								mes "Tu peux passer à l'avant-dernière étape de ta quête, la plus difficile.";
+								mes "Pars donc à la recherche du Mirroir du Mal, il t'expliquera cela plus en détail.";
+								mes "Il se trouve caché quelque part aux alentours de la grande ville de Bastania.";
+								mes "Prends cet objet qui te sera très utile";
+								mes " ";
+								getitem (22001),1;
+								mes "Bon courage.";
+								emotion 21;
+								set GE_Q, 1;
+								close;
+							}
+							else
+							{
+								mes "Désolé, mais tes ^FF0000" + min_Q*10 + "%^000000 de réussite ne seront pas suffisant.";
+								mes "Entraîne encore un peu ton esprit,";
+								mes "Sans quoi, il ne résistera pas à la puissance de l'Eveil.";
+								close;
+							}
+					}		
+					else
+					{
+					mes "[Chercheur Genetic]";
+					mes "Désolé, mais tu ne peux pas venir me voir pour l'instant.";
+					mes "Tu dois avant tout tester ton Physique auprès du Maitre de l'Eveil.";
+					close;
+					}
+				case 2:
+					mes "[Chercheur Genetic]";
+					mes "Pas de problème.";
+					mes "Vis ta vie avec Espoir,";
+					mes "Elle ne t'en paraîtra que plus belle.";
+					close;
+				case 3:
+					mes "[Chercheur Genetic]";
+					mes "Un vieux fou tu dis?";
+					mes "Le Maître du Renouveau est tellement plus que ça";
+					mes "Mais j'avoue qu'il a des tendances un peu cabotine...";
+					close;
+			}
+		}
+		
+		else if ( GE_Q == 1 )
+		{
+			mes "Bonjour à toi," + strcharinfo(0) + ".";
+			mes "Tu peux passer à la dernière étape.";
+			mes "Pars donc à la recherche d'Yggdrasil.";
+			mes "Il se trouve caché quelque part aux alentours de Bastania.";
+			mes "Bon courage.";
+			close;
+		}
+
+		else if ( GE_Q == 3 || class == 4071 || class == 4078)
+		{
+			mes "Bonjour à toi," + strcharinfo(0) + ".";
+			mes "Felicitations, tu es Genetic !";
+			mes "Que la force soit avec toi !";
+			close;
+		}
+	}
+	else
+	{
+		mes "Nouvelles formules, nouvelles formules...";
+		next;
+		specialeffect 305;
+		mes "[Chercheur Genetic]";
+		mes "Haha ! Je suis un génie !";
+		next;
+		mes "[Chercheur Genetic]";
+		mes "Hmmm... on ne me dérange pas je suis très occupé, Oust !";
+		close;
+	}
+}

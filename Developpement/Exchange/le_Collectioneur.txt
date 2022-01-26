@@ -1,0 +1,219 @@
+capitale,263,182,5	script	Le Collectionneur	80,{
+
+set .@npc$, "[^FF0000Le Collectionneur^000000]";
+
+mes .@npc$; 
+mes "Bonjour "+ strcharinfo(0) + ".";
+mes "Je suis un mania de la collection. J'ai tout sorte d'items, en plusieurs exemplaires.";
+mes "En ce moment je me passionne pour les Cartes. En aurais-tu pour moi?";
+mes "Je précise que je ne fais pas de tri. Je prends ce que je trouve.";
+mes "Donc tu ferais bien de faire le tri avant de choisir de faire un échange avec moi, d'accord?";
+next;
+set .@count, 0;
+for (set .@i, 21066; .@i<21095; set .@i, .@i+1)
+{
+	set .@count, .@count + countitem(.@i);
+}
+switch(select("Des Cartes? En voila 10:J'en ai 25!:Que dirais-tu de 50?:Compte les! Il y en a 100:^777777Rien, merci...^000000"))
+{
+	case 1:
+		goto carte_10;
+	case 2:
+		goto carte_25;
+	case 3:
+		goto carte_50;
+	case 4:
+		goto carte_100;
+	case 5:
+		goto L_QUIT;
+}
+
+
+carte_10:
+	if(.@count < 10 ) goto no_item;
+	mes .@npc$; 
+	mes "10 cartes tu dis...Voyons ce que j'ai à t'échanger :";
+	next;
+	switch(select("10M de zenis:20 Bullions:1 chance d'obtenir une Poring Coin:10 Old Card Album:1 Jewelry Box:^777777Rien, merci...^000000"))
+	{
+		case 1:
+			set Zeny, Zeny + 10000000;
+			callfunc "find_count_map", 10;
+			goto L_QUIT;
+		case 2:
+			mes "Quel type de bullion?";
+			switch(select("Silver","Gold","Platinum"))
+			{
+				case 1:
+					set .@item, 7228;
+					break;
+				case 2:
+					set .@item, 7229;
+					break;
+				case 3:
+					set .@item, 7230;
+					break;
+			}
+			callfunc "mes_getlot",.@npcname$,.@item,20,10;
+		case 3:	
+			mes .@npc$; 
+			mes "Sache que tu as une chance sur 20 d'avoir cette Poring Coin.";
+			mes "es-tu sûr de toi?";
+			switch(select("oui:non"))
+			{
+				case 1:
+					set @win, rand(20);
+					if(@win==1) 	
+						callfunc "mes_getitem",.@npcname$,7539,1,10;
+					else
+						mes "...Désolé...Essaye une prochaine fois.";
+						next;
+						goto L_QUIT;
+				case 2:
+					goto carte_10;
+			}
+		case 4:
+			callfunc "mes_getlot",.@npcname$,616,10,10;
+		case 5:
+			callfunc "mes_getlot",.@npcname$,12106,1,10;
+		case 6:
+			goto L_QUIT;
+	}
+
+
+carte_25:
+	if(.@count < 25 ) goto no_item;
+	mes .@npc$; 
+	mes "25 cartes tu dis...intéressant. Qu'ai-je à te proposer?";
+	switch(select("30M de zenis:2 Battle Manual 100%:1 chance d'obtenir un Poring Coin:8 Old Card Album:1 Old Red Box:^777777Rien, merci...^000000"))
+	{
+		case 1:
+			set Zeny, Zeny + 30000000;
+			callfunc "find_count_map", 25;
+			goto L_QUIT;
+		case 2:
+			callfunc "mes_getlot",.@npcname$,14533,2,25;
+		case 3:	
+			mes .@npc$; 
+			mes "Sache que tu as une chance sur 10 d'avoir cette Poring Coin.";
+			mes "es-tu sûr de toi?";
+			switch(select("oui:non"))
+			{
+				case 1:
+					set @win, rand(10);
+					if(@win==1) 	
+						callfunc "mes_getitem",.@npcname$,7539,1,25;
+					else
+						mes "...Désolé...Essaye une prochaine fois.";
+						next;
+						goto L_QUIT;
+				case 2:
+					goto carte_25;
+			}
+		case 4:
+			callfunc "mes_getlot",.@npcname$,616,8,25;
+		case 5:
+			callfunc "mes_getlot",.@npcname$,12189,1,25;
+		case 6:
+			goto L_QUIT;
+	}
+	next;
+
+
+carte_50:
+	if(.@count < 50 ) goto no_item;
+	mes .@npc$; 
+	mes "50 cartes? Wow...Voyons ce que j'ai à t'échanger :";
+	switch(select("70M de zenis:2 Battle Manual 300%:15 Old Card Album:1 BubbleGum:7 Full Chemical Protection:^777777Rien, merci...^000000"))
+	{
+		case 1:
+			set Zeny, Zeny + 70000000;
+			callfunc "find_count_map", 50;
+			goto L_QUIT;
+		case 2:
+			callfunc "mes_getlot",.@npcname$,14545,2,50;
+		case 3:	
+			callfunc "mes_getlot",.@npcname$,616,15,50;
+		case 4:
+			callfunc "mes_getlot",.@npcname$,12210,1,50;
+		case 5:
+			callfunc "mes_getlot",.@npcname$,14520,7,50;
+		case 6:
+			goto L_QUIT;
+	}
+	next;
+
+carte_100:
+	if(.@count < 100 ) goto no_item;
+	mes .@npc$; 
+	mes "100 cartes???? *s'évanouit*...";
+	switch(select("150M de zenis:5 Battle Manual 300%:15 Full Chemical Parchemin:1 Poring Coin:3 BubbleGum:^777777Rien, merci...^000000"))
+	{
+		case 1:
+			set Zeny, Zeny + 1500000;
+			callfunc "find_count_map", 100;
+			goto L_QUIT;
+		case 2:
+			callfunc "mes_getlot",.@npcname$,14545,5,100;
+		case 3:	
+			callfunc "mes_getlot",.@npcname$,14520,15,100;
+		case 4:
+			set @win, rand(50);
+			if(@win==1) 	
+				callfunc "mes_getitem",.@npcname$,7539,1,100;
+			close;
+		case 5:
+			callfunc "mes_getlot",.@npcname$,12210,3,100;
+		case 6:
+			goto L_QUIT;
+	}
+	next;
+
+
+no_item:
+	mes .@npc$;
+	mes "Je suis désolé mais on ne me l'a fait pas,";
+	mes "tu n'as pas ce que tu dis avoir!";
+	mes "Je ne te donnerais rien!";
+	mes "Mais reviens si tu as ce que je veux,";
+	mes "et on pourra s'arranger";
+	close;
+
+L_quit:
+	mes .@npc$; 
+	mes "Reviens me voir bientôt !";
+	close;
+}
+
+function	script	find_count_map	{
+	set .@counterase, getarg(0);
+	for (set .@i, 21066; .@i<21095; set .@i, .@i+1)
+	{
+		if (countitem(.@i) < .@counterase)
+		{
+			set .@counterase, .@counterase - countitem(.@i);
+			delitem .@i, countitem(.@i);
+		}
+		else
+		{
+			delitem .@i, .@counterase;
+			set .@counterase, 0;
+			break;
+		}
+	}
+	return;
+}
+
+function	script	mes_getlot	{
+	set .@npcname$, getarg(0);
+	mes .@npcname$;
+	mes "Très bien, je prends d'abord mon dû.";
+	callfunc "find_count_map", getarg(3);
+	mes "Et maintenant, voici ton bien!";
+	getitem getarg(1),getarg(2);
+	next;
+	mes .@npcname$;
+	mes "Merci bien et a bientôt ^^!";
+	emotion e_no1;
+	close;
+}

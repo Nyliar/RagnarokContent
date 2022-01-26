@@ -1,0 +1,42 @@
+thalys,166,146,2	script	Jukebox	741,{
+	set .@npcname$, "[Jukebox]";
+	set .@cost, 1000;
+	
+	mes .@npcname$;
+	mes "";
+	mes "Sali salut!";
+	mes "Je peux te jouer un morceau pour la modique somme de " + .@cost + " Zenys.";;
+	switch(select("Oui","Non"))
+	{
+		case 1:
+			mes "Andiamo!";
+			if (Zeny >= .@cost)
+			{
+			// On créé un menu dynamique
+    			for ( set .@i, 0; .@i<148; set .@i, .@i+1 )
+			{
+        			set .@menu$, .@menu$ + ( .@i ? ":" : "" ) + .@i + ".mp3";
+			}
+			set .@menu$, .@menu$ + ( .@i ? ":" : "" ) + "Les Souliers de Lady Fae.mp3";
+
+			// On récupère le choix de l'utilisateur
+ 			set .@choice, select(.@menu$) - 1;
+			if (.@choice <= 147)
+				set .@choice$, "" + .@choice;
+			else
+				set .@choice$, "150";
+
+			playBGM .@choice$;
+			set Zeny, Zeny - .@cost;
+			}
+			else
+			{
+				mes "Désolé, mais tu n'as pas d'argent pour.";
+			}
+			break;
+		case 2:
+			mes "Tant pis pour toi!";
+			break;
+	}
+	close;
+}

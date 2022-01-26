@@ -1,0 +1,71 @@
+geffen, 44, 57, 5	script	Magician Hat	64,{
+
+	set .@npcname$,"[Magician Hat]";
+
+	//Blue Magician Hat 20148
+	setarray @itemBMH[0], 5045, 978, 7230;
+	setarray @countitemBMH[0], 1, 2, 2;
+
+	//Cyan Magician Hat 20149
+	setarray @itemCMH[0], 5045, 978, 982, 7230;
+	setarray @countitemCMH[0], 1, 2, 2, 2;
+
+	//Gold Magician Hat 20150
+	setarray @itemGMH[0], 5045, 976, 7230;
+	setarray @countitemGMH[0], 1, 2, 2;
+
+	//Green Magician Hat 20151
+	setarray @itemGNMH[0], 5045, 976, 7230;
+	setarray @countitemGNMH[0], 1, 2, 2;
+	
+	//Purple Magician Hat 20152
+	setarray @itemPMH[0], 5045, 981, 7230;
+	setarray @countitemPMH[0], 1, 2, 2;
+	
+	//Red Magician Hat 20153
+	setarray @itemRMH[0], 5045, 975, 7230;
+	setarray @countitemRMH[0], 1, 2, 2;
+
+	//White Magician Hat 20154
+	setarray @itemRMH[0], 5045, 982, 7230;
+	setarray @countitemRMH[0], 1, 2, 2;
+	
+	mes .@npcname$;
+	mes "Bonjour ^3333FF" + strcharinfo(0) + "^000000!";
+	mes "Je peux te proposer quelque hats pour customiser ton Magician Hat.";
+	mes	"Ca t'interesse?!";
+	next;
+	mes .@npcname$;
+	mes "Voici ce que je peux te proposer:";
+	next;
+
+	switch(select("Gold Magician Hat:Green Magician Hat:Blue Magician Hat:Cyan Magician Hat:Purple Magician Hat:Red Magician Hat:White Magician Hat:^777777Rien, merci...^000000"))
+	{
+		case 1 :
+ 		callfunc "mes_getitem_colo",.@npcname$,20148,@itemGMH,@countitemGMH, 1000000;
+		
+		case 2 :
+ 		callfunc "mes_getitem_colo",.@npcname$,20149,@itemGNMH,@countitemGNMH, 1000000;
+
+		case 3 :
+		callfunc "mes_getitem_colo",.@npcname$,20150,@itemBMH,@countitemBMH, 1000000;
+
+		case 4 :
+		callfunc "mes_getitem_colo",.@npcname$,20151,@itemCMH,@countitemCMH, 1000000;
+		
+		case 5 :
+		callfunc "mes_getitem_colo",.@npcname$,20152,@itemPMH,@countitemPMH, 1000000;
+		
+		case 6 :
+		callfunc "mes_getitem_colo",.@npcname$,20153,@itemRMH,@countitemRMH, 1000000;
+
+		case 7 :
+		callfunc "mes_getitem_colo",.@npcname$,20154,@itemWMH,@countitemWMH, 1000000;
+
+		// Quitter
+		case 8 :
+		mes @npcname$;
+		mes "Très bien. A bientôt !";
+		close;
+	}
+}

@@ -1,0 +1,396 @@
+//
+thalys_s,14,25,4	script	ship_journey::ship_journey	-1,{
+
+	setarray .@fire_kingdom$[0]
+		,"colisland"
+		,"glc_ter"
+		,"fiesta"
+	;
+
+	setarray .@ice_kingdom$[0]
+		,"zodiac"
+		,"fir_ter"
+		,"tortue"
+		,"revencia"
+	;
+
+	setarray .@wind_kingdom$[0]
+		,"1@pi"
+		,"wnd_ter"
+		,"scaphis"
+	;
+
+	setarray .@map_list$[0]
+		,"1@pi"
+		,"wnd_ter"
+		,"scaphis"
+		,"zodiac"
+		,"fir_ter"
+		,"tortue"
+		,"colisland"
+		,"glc_ter"
+		,"fiesta"
+		,"revencia"
+	;
+	setarray $mapm$[0], "mer1", "mer2", "mer3", "mer4", "mer5";
+	setarray $statem[0], 0, 0, 0, 0, 0;
+	setarray $map$[0], "abord1", "abord2", "abord3", "abord4", "abord5";
+	setarray $state[0], 0, 0, 0, 0, 0;
+
+	set .taxe, 10000;
+	callsub OnInit;
+	end;
+
+OnNavette:
+	set #chance, 0;
+	set .mono, 0;
+	set .taxe, 10000;
+	goto onInitJourney;
+
+OnBiplace:
+	set #chance, 15;
+	set .mono, 0;
+	set .taxe, 25000;
+	goto onInitJourney;
+
+OnMonoplace:
+	set #chance, 30;
+	set .mono, 1;
+	goto onInitJourney;
+	
+onInitJourney:
+	set $idattach, getcharid(3);
+	addtimer 500, strnpcinfo(3)+"::On500mil";
+	if (.mono == 0)
+		callsub OnAddTaxe;
+	end;
+	
+On500mil:
+	//warp on first free map
+	if ($statem[0] == 0 || $statem[1] == 0 || $statem[2] == 0 || $statem[3] == 0 || $statem[4] == 0 )
+	{
+		for (set .@i, 0; .@i < getarraysize($mapm$); set .@i, .@i+1)
+		{
+			if ($statem[.@i] == 0)
+			{
+				set @nummap, .@i;
+				set .@mapm$, $mapm$[.@i];
+				set $statem[.@i], 1;
+				break;
+
+			}
+		}
+		
+		if (.@mapm$ == "")
+		{
+			mes "Désolé, nous n'avons plus de monstres libres. Revenez un peu plus tard.";
+		}
+		else
+		{
+			//disguise according to ticket
+			switch(#chance)
+			{
+				case 30:
+					disguise 1045;
+					break;
+				case 0:
+					disguise 2022;
+					delitem 21062,1; 
+					break;
+				case 15:
+				default: 
+					disguise 2068;
+					delitem 21061,1; 
+					break;
+			}
+			dispbottom "Vous entrez en mer.";
+			dispbottom "Cherchez la sortie, mais prenez garde aux pirates et aux tourbillons.";
+			killmonsterall .@warpm$;
+			warp .@mapm$, 0, 0;
+			set @warpm$, .@mapm$;
+			addtimer 15000, strnpcinfo(3)+"::OnCalcAtk";
+			if (#chance == 0)
+			{
+				addtimer 35000, strnpcinfo(3)+"::OnNavetteMove";
+			}
+			else if (#chance == 15)
+			{
+				addtimer 25000, strnpcinfo(3)+"::OnBiplaceMove";
+			}
+			else if (#chance == 30)
+			{
+				addtimer 15000, strnpcinfo(3)+"::OnMonoMove";	
+			}
+
+			//disable all tourbillons
+			for (set .@i, 1; .@i <= 5; set .@i, .@i+1)
+			{
+				set .@tourbillonname$, "tourbillon"+((@nummap*5) + .@i);
+				disablenpc .@tourbillonname$;
+			}
+
+			//enable n tourbillons aleatoirement
+			for (set .@i, 1; .@i <= rand(2,5); set .@i, .@i+1)
+			{
+				set .@tourbillonname$, "tourbillon"+((@nummap*5) + .@i);
+				do
+				{
+					if (@nummap == 0 || @nummap == 1 || @nummap == 2)
+					{ 
+    						set .movex,rand(80,160);
+    						set .movey,rand(80,310);
+					}
+					else if (@nummap == 3 || @nummap == 4)
+					{ 
+    						set .movex,rand(80,310);
+    						set .movey,rand(80,160);
+					}
+				}
+				while(!checkcell(@warpm$,.movex,.movey,cell_chkpass));
+				movenpc .@tourbillonname$,.movex,.movey;	
+				enablenpc .@tourbillonname$;
+			}
+
+			//enable out warping
+			set .@warpname$, "warpmer" + (@nummap+1);
+			disablenpc .@warpname$;
+		}
+	}
+	else
+	{
+		mes "Désolé, nous n'avons plus de monstres libres. Revenez sous peu.";
+	}
+	close;
+
+OnCalcAtk:
+	deltimer strnpcinfo(3)+"::OnCalcAtk";
+	// start percent attack #chance
+	set .@attack, rand(0, 50);
+	if (.mono == 1)
+		set .calc, #chance-UPGRADE_S;
+	else
+		set .calc, #chance;
+
+	if ((.@attack < .calc) && ($state[0] == 0 || $state[1] == 0 || $state[2] == 0 || $state[3] == 0 || $state[4] == 0 ))
+	{
+		for (set .@i, 0; .@i < getarraysize($map$); set .@i, .@i+1)
+		{
+			if ($state[.@i] == 0)
+			{
+				set @mapab$, $map$[.@i];
+				set $state[.@i], 1;
+				break;
+			}
+		}
+		
+		if (@mapab$ == "")
+		{
+			addtimer 15000, strnpcinfo(3)+"::OnCalcAtk";
+		}
+		else
+		{
+			undisguise;
+			killmonsterall @mapab$;
+			dispbottom "Vous venez d'être harponné par une bande de pirates!";
+			dispbottom "Défendez-vous, où ils voleront votre Mono...";
+			dispbottom "Vous devez trouver la clé de la grue pour libérer votre monstre. C'est le Capitaine qui l'a.";
+			areamonster @mapab$,61,85,122,103,"Pirate",2512,50,"ship_journey::OnMatelotDead";
+			areamonster @mapab$,61,85,122,103,"Capitaine Pirate",2501,1,"ship_journey::OnCaptainDead";
+			warp @mapab$, 133,94;
+
+			callsub OnResetStateM;
+
+			deltimer strnpcinfo(3)+"::OnCalcAtk";
+			if (#chance == 30)
+				deltimer strnpcinfo(3)+"::OnMonoMove";
+			else if (#chance == 0)
+				deltimer strnpcinfo(3)+"::OnNavetteMove";
+			else if (#chance == 15)
+				deltimer strnpcinfo(3)+"::OnBiplaceMove";
+		}
+	}
+	else
+	{
+		addtimer 15000, strnpcinfo(3)+"::OnCalcAtk";
+	}
+	end;	
+
+OnEnableWarp:
+	dispbottom "Vous arrivez à proximité de votre destination.";
+	dispbottom "Un warp vient d'apparaitre.";
+	set .@warpname$, "warpmer" + (@nummap+1);
+	do
+	{
+		if (@nummap == 0 || @nummap == 1 || @nummap == 2)
+		{ 
+    			set .movex,rand(80,160);
+    			set .movey,rand(80,310);
+		}
+		else if (@nummap == 3 || @nummap == 4)
+		{ 
+    			set .movex,rand(80,310);
+    			set .movey,rand(80,160);
+		}
+	}
+	while(!checkcell(@warpm$,.movex,.movey,cell_chkpass));
+	dispbottom "Il se trouve en x: " + .movex + ", y:" + .movey;
+	movenpc .@warpname$,.movex,.movey;	
+	enablenpc .@warpname$;
+	end;
+
+OnNavetteMove:
+	deltimer strnpcinfo(3)+"::OnNavetteMove";
+	callsub OnEnableWarp;
+	return;	
+
+OnBiplaceMove:
+	deltimer strnpcinfo(3)+"::OnBiplaceMove";
+	callsub OnEnableWarp;
+	return;
+
+OnMonoMove:
+	deltimer strnpcinfo(3)+"::OnMonoMove";
+	callsub OnEnableWarp;
+	return;
+	
+OnCaptainDead:
+	killmonsterall @mapab$;
+	dispbottom "Vous obtenez la Cle du Pirate.";
+	dispbottom "Vous pouvez libérer votre navire!";
+	getitem 21064,1;
+	if(rand(0,100)<5)
+	{
+		dispbottom "Vous trouvez également une Larme de Puissance Divine sur le cadavre du Capitaine. Quelle #chance.";
+		getitem 21063,1;
+	}
+	if(rand(0,100)<5)
+	{
+		dispbottom "Incroyable! Il détenait également une Rune Magique d'Ensorcellement.";
+		getitem 21065, 1;
+	}
+	close;
+
+OnMatelotDead:
+	if (rand(0,100)<2)
+	{
+		dispbottom "Vous trouvez une Carte sur la cadavre du Pirate. Quelle chance!";
+		getitem rand(21066, 21095), 1;
+	}
+	close;
+	
+OnPCDieEvent:
+	if (strcharinfo(3) == @mapab$)
+	{
+		dispbottom "Les pirates vous ont volé votre Mono.";
+		dispbottom "Vous échouez lamentablement sur la plage de Thalys.";
+		callsub OnResetStateM;
+		callsub OnResetState;	
+		warp "thalys_s",151,87;
+		if (SHIP == 1)
+		{
+			set SHIP, 0;
+			set UPGRADE_S, 0;
+		}
+		deltimer strnpcinfo(3)+"::OnCalcAtk";
+		if (#chance == 30)
+			deltimer strnpcinfo(3)+"::OnMonoMove";
+		else if (#chance == 0)
+			deltimer strnpcinfo(3)+"::OnNavetteMove";
+		else if (#chance == 15)
+			deltimer strnpcinfo(3)+"::OnBiplaceMove";
+	}
+	end;
+
+OnPCLogoutEvent:
+	if (strcharinfo(3) == @mapab$ || strcharinfo(3) == .@mapm$)
+	{
+		undisguise;
+		warp "thalys", 149,147;
+		callsub OnResetStateM;
+		callsub OnResetState;	
+		deltimer strnpcinfo(3)+"::OnCalcAtk";
+		if (#chance == 30)
+			deltimer strnpcinfo(3)+"::OnMonoMove";
+		else if (#chance == 0)
+			deltimer strnpcinfo(3)+"::OnNavetteMove";
+		else if (#chance == 15)
+			deltimer strnpcinfo(3)+"::OnBiplaceMove";	
+	}
+	end;
+	
+OnResetState:
+	attachrid($idattach);
+	for (set .@i, 0; .@i<getarraysize($map$); set .@i, .@i+1)
+	{
+		if (strcharinfo(3) == ("abord" + (.@i+1)))
+		{
+			set $state[.@i], 0;
+		}
+	}
+	deltimer strnpcinfo(3)+"::OnCalcAtk";
+	return;
+
+OnResetStateM:
+	attachrid($idattach);
+	for (set .@i, 0; .@i<getarraysize($map$); set .@i, .@i+1)
+	{
+		if (@warpm$ == ("mer" + (.@i+1)))
+		{
+			set $statem[.@i], 0;
+		}
+	}
+	deltimer strnpcinfo(3)+"::OnCalcAtk";
+	return;
+
+OnInit:
+	// On construit une string à partir de la liste pour faire un "quick search"
+	// On active la mapflag loadevent sur ces maps.
+	for ( set .@i,0 ; .@i<getarraysize(.@map_list$); set .@i, .@i+1 ) {
+		set .TER_RESERVEDMAP$, .TER_RESERVEDMAP$ + .@map_list$[.@i] + "|";
+	}
+
+	for ( set .@i,0; .@i<.@red; set .@i, .@i+1 ) {
+		set .FIRE_RESERVEDMAP$, .FIRE_RESERVEDMAP$ + .@fire_kingdom$[.@i] + "|";
+	}
+
+	for ( set .@i,0; .@i<.@red; set .@i, .@i+1 ) {
+		set .ICE_RESERVEDMAP$, .ICE_RESERVEDMAP$ + .@ice_kingdom$[.@i] + "|";
+	}
+
+	for ( set .@i,0; .@i<.@red; set .@i, .@i+1 ) {
+		set .WIND_RESERVEDMAP$, .WIND_RESERVEDMAP$ + .@wind_kingdom$[.@i] + "|";
+	}
+
+	set .GUILD_RESERVEDMAP$, "|" + .GUILD_RESERVEDMAP$;
+	
+	set .FIRE_RESERVEDMAP$, "|" + .FIRE_RESERVEDMAP$;
+	set .ICE_RESERVEDMAP$, "|" + .ICE_RESERVEDMAP$;
+	set .WIND_RESERVEDMAP$, "|" + .WIND_RESERVEDMAP$;
+	end;
+
+OnAddTaxe:
+	if ( compare( .TER_RESERVEDMAP$, "|" + strcharinfo(3) + "|" ) ) 
+	{
+		if ( compare( .ICE_RESERVEDMAP$, "|" + strcharinfo(3) + "|" ) )
+		{
+			if ( ($_ICE_GUILD_WINNER && (getcharid(2) != $_ICE_GUILD_WINNER)) ) 
+			{
+				set ICE_CHEST, ICE_CHEST+.taxe;
+			}
+		}
+		if ( compare( .FIRE_RESERVEDMAP$, "|" + strcharinfo(3) + "|" ) )
+		{
+			if ( ($_FIRE_GUILD_WINNER && (getcharid(2) != $_FIRE_GUILD_WINNER)) ) 
+			{
+				set FIRE_CHEST, FIRE_CHEST+.taxe;
+			}
+		}
+		if ( compare( .WIND_RESERVEDMAP$, "|" + strcharinfo(3) + "|" ) )
+		{
+			if ( ($_WIND_GUILD_WINNER && (getcharid(2) != $_WIND_GUILD_WINNER)) ) 
+			{
+				set WIND_CHEST, WIND_CHEST+.taxe;
+			}
+		}
+	}
+}

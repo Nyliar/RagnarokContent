@@ -1,0 +1,325 @@
+//Vanaheim
+pirate_city,187,163,4	script	Vane de la Fertilité::vdf	452,{
+	set .@npcname$, "[Aliro]";
+	mes .@npcname$;
+	mes "";
+	mes "Les saisons sont là pour permettre à la nature de se renouveller.";
+	mes "Tout comme les hommes ont besoin de repos, la nature également.";
+	close;
+}
+
+pirate_city,191,178,4	script	Vane de la Sagesse::vds	705,{
+	set .@npcname$, "[Mimir]";
+	mes .@npcname$;
+	mes "";
+	mes "Je suis Mimir, la Vane de la Sagesse.";
+	mes "As-tu déjà entendu parler de la Source de Sagesse?";
+	mes "Elle coule quelque part en ce monde.";
+	mes "L'eau qui en sors à la possibilité d'aiguiser les capacités de compréhension";
+	mes "de celui qui la boit.";
+	if (SUBCLASSING >= 1)
+	{
+		next;
+		mes "Je vois que tu as déjà acquis les bases de la Seconde Connaissance.";
+		mes "Il s'agit d'une force à double tranchant.";
+		mes "Mais elle peut se révéler extrêmement agréable et utile.";
+		mes "Je suis en mesure de t'aider à avancer dans ta recherche.";	
+		mes "Mais pour cela, j'aurais besoin d'une Perle Vierge,";
+		mes "ainsi que de l'Essence que tu cherches à acquérir.";
+		next;
+		mes "A partir de là, je saurais créer une Perle de Savoir.";
+		mes "Es-tu intéressé?";
+		switch(select("Oui","Non"))
+		{
+			case 1:
+				if (countitem(21097) >= 1)
+				{
+					callfunc "subclassing", SUBCLASSING;
+				}
+				else
+				{
+					mes "Tu n'as pas de Perle. Je ne peux rien faire sans.";
+				}
+				break;
+			case 2:
+				mes "Le Savoir nécessite l'envie d'Apprendre.";
+				mes "Ca ne sert à rien si tu te forces à le faire.";
+				break;
+		}
+	}
+	close;
+}
+
+pirate_city,202,173,4	script	Vane de la Précognition::vdp	443,{
+	set .@npcname$, "[Rakaham]";
+	mes .@npcname$;
+	mes "";
+	mes "Je peux voir que tu reviendras ici souvent.";
+	if (SUBCLASSING >= 1)
+	{
+		mes "Il semble que tu sois destiné à devenir quelqu'un de grand...";
+		mes "Mais ton avenir reste trouble. Tu ne sais pas encore comment te comporter.";
+	}
+	close;
+}
+
+pirate_city,172,143,4	script	Vane de la Fécondité::vdfec	700,{
+	set .@npcname$, "[Io]";
+	mes .@npcname$;
+	mes "";
+	if (Sex)
+	{
+		mes "Je te souhaite bonheur et longue vie, mon ami.";
+		mes "Qu'elle soit remplie d'enfants et de femmes!";
+	}
+	else
+	{
+		mes "Je vois dans ton coeur que tu auras une vie bien remplie.";
+		mes "Tu auras beaucoup d'enfants, pour peu que tu t'y consacres!";
+	}
+	close;
+}
+
+pirate_city,220,152,4	script	Vane de la Vie::vdv	739,{
+	set .@npcname$, "[Beltram]";
+	mes .@npcname$;
+	mes "";
+	mes "Les Tourbillons sont causés par l'ouverture du Bifrost.";
+	mes "Il en apparait un nombre aléatoire, et leur position l'est tout autant.";
+	close;
+}
+
+pirate_city,195,161,4	script	Vane de la Mer::vdm	982,{
+	set .@npcname$, "[Baldr]";
+	mes .@npcname$;
+	mes "";
+	mes "Les habitants de Midgard arrivent parfois ici.";
+	mes "Les voyages en mer, sur mon territoire, sont parfois";
+	mes "interrompu de manière abrupte par l'apparition de Tourbillon.";
+	mes "C'est le seul moyen d'arriver sur cette île.";
+	mes "Il s'agit en fait de points de puissance causés par l'utilisation du Bifrost.";
+	mes "Tu trouveras ici certaines...connaissances, si tu es prêt à les entendre.";
+	close;
+}
+
+pirate_city,212,177,4	script	Rescapé du Tourbillon::rdt	828,{
+	set .@npcname$, "[Rakaham]";
+	mes .@npcname$;
+	mes "";
+	mes "Le Capitaine est devenu fou.";
+	mes "Il trouve vraiment que la vie est belle ici?";
+	mes "Si j'avais su, je n'aurais pas insulté Freya!";
+	mes "Les Vanes ne veulent plus me renvoyer maintenant...";	
+	close;
+}
+
+pirate_city,210,57,4	script	Homme échoué::he	457,{
+	mes "Il ne vous répondra plus...";
+	close;
+}
+
+pirate_city,222,167,4	script	Capitaine Désoeuvré::cd	969,{
+	set .@npcname$, "[Arahm le Bleu]";
+	mes .@npcname$;
+	mes "";
+	mes "Ca fait plusieurs centaines années que mon navire a échoué ici.";
+	mes "A l'époque, le Kraken était la terreur des mers.";
+	mes "Les Pirates Sanglants n'existaient même pas à l'époque.";
+	mes "Tous mes hommes ont péris dans le Tourbillon, où sont partis";
+	mes "dès qu'ils en ont eu l'occasion.";
+	mes "Mais moi, on m'a permis d'avoir ce que je désirais le plus:";
+	mes "La vie éternelle. Je ne vieillis pas, et je deviendrais un Dieu!";
+	close;
+}
+
+pirate_city,205,143,4	script	Vane::v	954,{
+	set .@npcname$, "[Filar]";
+	mes .@npcname$;
+	mes "";
+	mes "Bienvenue en Vanaheim, voyageur.";
+	mes "Les Tourbillons permettent parfois d'arriver jusqu'ici.";
+	mes "Mais c'est très rare. Tu as eu beaucoup de chance!";
+	close;
+}
+
+pirate_city,166,154,4	script	Vane Mineure::vm	962,{
+	set .@npcname$, "[Vanri]";
+	mes .@npcname$;
+	mes "";
+	mes "Bonjour à toi, " + strcharinfo(0);
+	mes "Je ne suis pas quelqu'un d'important ici.";
+	mes "Autrefois, j'étais un marin.";
+	mes "Baldr m'a pris sous son aile quand j'ai échoué ici.";
+	mes "Je lui dois beaucoup.";
+	close;
+}
+
+function	script	subclassing	{
+	mes "Quel Perle de Savoir souhaitez-vous acquérir?";
+	switch(getarg(0))
+	{
+		case 4008:
+			setarray .@pearlID[0], 21099, 21102, 21105, 21108, 21112, 21115, 21130, 21133;
+			setarray .@pearlName$[0], "Aura Blade", "Parrying", "Concentration", "Tension Relax", "Head Crush", "Join Beat", "Bowling Bash", "Auto Counter";
+			setarray .@essenceID[0], 21465;
+			setarray .@essenceCount[0], 10, 12, 6, 4, 6, 6, 3, 3, 2, 2, 4, 2;
+			setarray .@xpUpgradeCount[0], 588548, 588548, 588548, 0, 588548, 588548, 1678177, 588548;
+			break;
+		case 4009:
+			setarray .@pearlID[0], 21136, 21139, 21142, 21145, 21148, 21151, 21154, 21157, 21163, 21166, 21169;
+			setarray .@pearlName$[0], "Assumptio", "Basilica", "Meditatio", "Mana Recharge", "Increase Spiritual Power", "Safety Wall", "Resurrection", "Imposito Manus", "Suffragium", "Kyrie Eleison", "Magnificat";
+			setarray .@essenceID[0], 21467;
+			setarray .@essenceCount[0], 8, 12, 6, 14, 6, 6, 4, 2, 16, 10, 4;
+			setarray .@xpUpgradeCount[0], 588548, 1678177, 588548, 1678177, 588548, 588548, 1678177, 588548, 588548, 1678177, 588548;
+			break;
+		case 4010:
+			setarray .@pearlID[0], 21172, 21175, 21176, 21178, 21177, 21181, 21182, 21191, 21194, 21197, 21200, 21203, 21206;
+			setarray .@pearlName$[0], "Soul Drain", "Magic Crasher", "Amplify Magic Power", "Napalm Vulcan", "Ganbantein", "Gravitation Field", "Fire Pillar", "SightTrasher", "Meteor Storm", "Jupitel Thunder", "Lord of Vermillion", "Water Ball", "Ice Wall", "Storm Gust", "Quagmire";
+			setarray .@essenceID[0], 21470;
+			setarray .@essenceCount[0], 6, 8, 14, 8, 12, 14, 8, 6, 8, 6, 8, 14, 4, 8, 6;
+			setarray .@xpUpgradeCount[0], 588548, 0, 0, 588548, 0, 0, 1678177, 588548, 1678177, 1678177, 588548, 1678177, 588548, 1678177, 588548;
+			break;
+		case 4011:
+			setarray .@pearlID[0], 21209, 21212, 21215, 21218, 21221, 21224, 21227, 21230;
+			setarray .@pearlName$[0], "Melt Down", "Hilt Binding", "Weaponry Research", "Repair Weapon", "Hammer Fall", "Adrenaline Rush", "Weapon Perfection", "Maximize Power";
+			setarray .@essenceID[0], 21471;
+			setarray .@essenceCount[0], 16, 2, 6, 3, 6, 8, 8, 8;
+			setarray .@xpUpgradeCount[0], 1678177, 588548, 588548, 1678177, 588548, 1678177, 588548, 1678177;
+			break;
+		case 4012:
+			setarray .@pearlID[0], 21233, 21236, 21239, 21242, 21245, 21248, 21251, 21254, 21257;
+			setarray .@pearlName$[0], "True Sight", "Falcon Assault", "Sharp Shooting", "Wind Walk", "Ankle Snare", "Shockwave Trap", "Freezing Trap", "Claymore Trap", "Falconry Mastery";
+			setarray .@essenceID[0], 21473;
+			setarray .@essenceCount[0], 14, 10, 8, 10, 8, 10, 8, 4, 6;
+			setarray .@xpUpgradeCount[0], 1678177, 1678177, 588548, 588548, 588548, 1678177, 588548, 588548, 588548;
+			break;
+		case 4013:
+			setarray .@pearlID[0], 21263, 21266, 21269, 21272, 21275, 21278, 21281;
+			setarray .@pearlName$[0], "Soul Breaker", "Meteor Assault", "Cloaking", "Enchant Poison", "Poison React", "Venom Dust", "Venom Splasher";
+			setarray .@essenceID[0], 21476;
+			setarray .@essenceCount[0],16, 18, 8, 4, 4, 6, 6;
+			setarray .@xpUpgradeCount[0], 1678177, 588548, 588548, 588548, 588548, 588548, 588548;
+			break;
+		case 4015:
+			setarray .@pearlID[0], 21284, 21287, 21290, 21293, 21296, 21299, 21302, 21305, 21308, 21311;
+			setarray .@pearlName$[0], "Pressure", "Sacrifice", "Gospel", "Shield Chain", "Divine Protection", "Demon Bane", "Heal", "Auto Guard", "Shield Charge", "Reflect Shield";
+			setarray .@essenceID[0], 21466;
+			setarray .@essenceCount[0], 8, 16, 10, 12, 4, 4, 6, 8, 4, 4, 8, 6, 6, 8, 4, 6;
+			setarray .@xpUpgradeCount[0], 588548, 1678177, 588548, 1678177, 588548, 588548, 588548, 588548, 588548, 1678177;
+			break;
+		case 4016:
+			setarray .@pearlID[0], 21315, 21318, 21321, 21324, 21327, 21330, 21333, 21336, 21339, 21342;
+			setarray .@pearlName$[0], "Palm Push Strike", "Tiger Knuckle Fist", "Chain Crush Combo", "Dangerous Soul Collect", "Call Spirit", "Investigate",  "Dodge", "Finger Offensive", "Steel Body", "Critical Explosion";
+			setarray .@essenceID[0], 21468;
+			setarray .@essenceCount[0], 12, 12, 14, 10, 6, 4, 6, 4, 6, 8, 6;
+			setarray .@xpUpgradeCount[0], 1678177, 588548, 1678177, 588548, 588548, 588548, 1678177, 1678177, 588548, 588548;
+			break;
+		case 4017:
+			setarray .@pearlID[0], 21345, 21348, 21349, 21352, 21355, 21358, 21359, 21360, 21363, 21366, 21369, 21372, 21375;
+			setarray .@pearlName$[0], "Health Conversion", "Soul Change", "Soul Burn", "Mind Breaker", "Memorize", "Wall of Fog", "Spider Web", "Earth Spike", "Heaven's Drive", "Magic Rod", "Spell Breaker", "Auto Spell", "Dispell";
+			setarray .@essenceID[0], 21469;
+			setarray .@essenceCount[0], 8, 6, 8, 10, 14, 8, 6, 10, 4, 6, 18, 14, 10, 16;
+			setarray .@xpUpgradeCount[0], 588548, 588548, 1678177, 588548, 1678177, 588548, 588548, 588548, 1678177, 1678177, 588548, 1678177;
+			break;
+		case 4018:
+			setarray .@pearlID[0], 21378, 21381, 21384, 21387, 21390, 21393, 21396, 21399, 21402;
+			setarray .@pearlName$[0], "Chase Walk", "Reject Sword", "Full Strip", "Vulture's Eye", "Double Straffing", "Back Stab", "Tunnel Drive", "Raid", "Initimidate";
+			setarray .@essenceID[0], 21477;
+			setarray .@essenceCount[0], 12, 14, 22, 4, 6, 8, 6, 10, 4;
+			setarray .@xpUpgradeCount[0], 1678177, 1678177, 1678177, 588548, 588548, 588548, 588548, 1678177, 588548;
+			break;
+		case 4019:
+			setarray .@pearlID[0], 21405, 21048, 21411, 21414, 21417, 21420, 21423, 21424, 21425;
+			setarray .@pearlName$[0], "Slim Potion Pitcher", "Full Chemical Protection", "Pharmacy", "Demonstration", "Acid Terror", "Potion Pitcher", "Call Homonculus", "Rest", "Resurrect Homunculus";
+			setarray .@essenceID[0], 21472;
+			setarray .@essenceCount[0], 8, 10, 18, 6, 4, 4, 6, 18, 10, 8;
+			setarray .@xpUpgradeCount[0], 588548, 1678177, 588548, 588548, 588548, 588548, 0, 0, 1678177;
+			break;
+		case 4020:
+			setarray .@pearlID[0], 21428, 21431, 21343, 21437, 21440, 21443;
+			setarray .@pearlName$[0], "Arrow Vulcan", "Marionette Control", "Longing for Freedom", "Tarot Card of Fate", "Musical Strike", "Frost Joker";
+			setarray .@essenceID[0], 21474;
+			setarray .@essenceCount[0], 16, 12, 14, 18, 8, 8;
+			setarray .@xpUpgradeCount[0], 1678177, 588548, 588548, 1678177, 588548, 1678177;
+			break;
+		case 4021:
+			setarray .@pearlID[0], 21446, 21449, 21452, 21455, 21458, 21461;
+			setarray .@pearlName$[0], "Arrow Vulcan", "Marionette Control", "Longing for Freedom", "Tarot Card of Fate", "Throw Arrow", "Scream";
+			setarray .@essenceID[0], 21475;
+			setarray .@essenceCount[0], 16, 12, 14, 18, 8, 8;
+			setarray .@xpUpgradeCount[0], 1678177, 588548, 588548, 1678177, 588548, 1678177;
+			break;
+	}
+
+ 	// On créé un menu dynamique
+	for ( set .@j, 0; .@j<getarraysize(.@pearlName$); set .@j, .@j+1 )
+	{
+        	set .@menu$, .@menu$ + ( .@j ? ":" : "" ) + .@pearlName$[.@j];
+	}
+
+    	// On récupère le choix de l'utilisateur
+    	set .@choice, prompt(.@menu$) - 1;
+
+	if (.@choice == 255)
+	{
+		mes "Comme tu l'entends, mortel.";
+	}
+	else
+	{
+		//on vérifie qu'il a le nombre d'essences correspondante
+		if (countitem(.@essenceID[0]) >= .@essenceCount[.@choice])
+		{
+			next;
+			mes "L'Essence de Savoir a été choisie. Il s'agit de " + .@pearlName$[.@choice];	
+			mes "Il y a un taux de réussite dégressif par étape de 10%.";
+			mes "Cela signifie que la première étape a 90% de chance de réussir,";
+			mes "La seconde, 80%, la troisième 70% et la dernière 60%.";
+			mes "Dans tous les cas, les éléments de création seront perdus.";
+			next;
+			switch(select("Confirmer","Annuler"))
+			{
+				case 1:
+					//effacer la Perle Vierge
+					delitem 21097, 1;
+					//effacer les Essences de Savoir
+					delitem .@essenceID[0], .@essenceCount[.@choice];
+					//début de la séquence de création
+					mes "Initialisation de la Formule de Création...";
+					if (rand(0,100) >= 10)
+					{
+						next;
+						mes "Ouverture de la Perle Vierge...";
+						if (rand(0,100) >= 20)
+						{
+							next;
+							mes "Extraction de l'Essence de Savoir...";
+							if (rand(0,100) >= 30)
+							{
+								next;
+								mes "Insertion de l'Essence de Savoir...";
+								if (rand(0,100) >= 40)
+								{
+									mes "Fermeture de la Perle.";
+									next;
+									mes "Création de la Perle réussie.";
+									mes "Vous obtenez une Perle de Savoir de " + .@pearlName$[.@choice] + " niveau 1";
+									getitem (.@pearlID[.@choice]), 1;
+									break;
+								}
+							}
+						}
+					}
+					mes "La création de la Perle a échoué, désolé...";
+					break;
+				case 2:
+					mes "Création de la Perle annulée.";
+					break;
+			}
+		}
+		else
+		{
+			mes "Vous n'avez pas le nombre d'Essences correspondantes, voyageur.";
+		}
+	}
+	close;
+}

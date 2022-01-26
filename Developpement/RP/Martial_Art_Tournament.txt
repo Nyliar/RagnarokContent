@@ -1,0 +1,426 @@
+//===== eAthena Script ===================================================================
+//= Martial Art Event - PVP tournament
+//===== By: ==============================================================================
+//= ~AnnieRuru~
+//===== Current Version: =================================================================
+//= 1.1
+//===== Compatible With: =================================================================
+//= eAthena 14829 Trunk TXT/SQL
+//===== Description: =====================================================================
+//= PVP tournament event
+//===== Topic ============================================================================
+//= http://www.eathena.ws/board/index.php?showtopic=272624
+//===== Additional Comments: =============================================================
+//= damn it I used about 6 or maybe 8 hours to write this one
+//========================================================================================
+
+prontera,155,181,5	script	Martial Arts#ev	100,{
+	if ( getvariableofnpc( .state, "martial_art" ) == 0 ) {
+		mes "No event now";
+		showevent 0,0;
+		close;
+	}
+	else if ( getvariableofnpc( .state, "martial_art" ) == 2 ) {
+		mes "Entry closed";
+		showevent 0,0;
+		close;
+	}
+	else if ( zeny < 100000 ) { // zeny requirement. I follow official PW server, but of course you can change into event coins
+		mes "You need 100,000 zeny to participate in this event";
+		showevent 1,2;
+		close;
+	}
+	set zeny, zeny - 100000;
+	set @martial_art_qualify, 0;
+	warp "guild_vs2", 0,0;
+	end;
+OnPCLoadMapEvent:
+	if ( strcharinfo(3) != "prontera" || getvariableofnpc( .state, "martial_art" ) != 1 ) end;
+	showevent 1,2; // its rare that I put exclamation mark for an event script
+	end;
+}
+prontera	mapflag	loadevent
+
+-	script	martial_art	-1,{
+	end;
+
+OnInit:
+	set .@price, 501;
+	set .exp, 5000;
+	set .@priceZeny, 10000; 
+
+//	=============================== Rewards ===============================================
+Onround1pass: // passing round 1
+	getitem .@price, 1;
+	getexp .@exp,.@exp;
+	set Zeny, Zeny + .@priceZeny;
+	end;
+Onround2pass: // passing round 2
+	getitem .@price, 5;
+	getexp .@exp*3,.@exp*3;
+	set Zeny, Zeny + .@priceZeny*3;
+	end;
+On3rdprize: // 3rd prize
+	message strcharinfo(0), "Congratulations on winning 3rd prize in the Martial Arts Tournament";
+	getitem .@price, 25;
+	getexp .@exp*10,.@exp*10;
+	set Zeny, Zeny + .@priceZeny*10;
+	set GIENTER, 1;
+	end;
+On2ndprize: // 2nd prize
+	message strcharinfo(0), "Congratulations on winning 2nd prize in the Martial Arts Tournament";
+	getitem .@price, 50;
+	getexp .@exp*25,.@exp*25;
+	set Zeny, Zeny + .@priceZeny*25;
+	set GIENTER, 1;
+	end;
+On1stprize: // WINNER
+	announce "Congratulations on "+ strcharinfo(0) +" for winning the Martial Arts Tournament", 0;
+	getitem .@price, 100;
+	getexp .@exp*100,.@exp*100;
+	set Zeny, Zeny + .@priceZeny*100;
+	set GIENTER, 1;
+	end;
+//	========================================================================================
+
+OnInit:
+	set .interval, 300000; // 300000 mili-seconds = 5 minutes
+	set .dig, 10; // 10 seconds to dig a chest
+
+	setarray .round1_1, 18,70 , 33,85;
+	setarray .round1_2, 20,20 , 31,31;
+	setarray .round1_3, 92,18 ,107,33;
+	setarray .round1_4,168,20 ,179,31;
+	setarray .round2_1, 94,72 ,105,83;
+	setarray .round2_2,168,70 ,181,85;
+	disablenpc "Referee#0_m_ev";
+	disablenpc "Referee#1_m_ev";
+	disablenpc "Referee#2_m_ev";
+	disablenpc "Referee#3_m_ev";
+	disablenpc "Referee#4_m_ev";
+	disablenpc "Referee#5_m_ev";
+	disablenpc "Referee#6_m_ev";
+	end;
+OnWhisperGlobal:
+	if ( getgmlevel() < 99 ) end;
+	else if ( compare( @whispervar0$, "on" ) == 0 ) end;
+	else if ( .state ) {
+		dispbottom "The event is running";
+		end;
+	}
+	else
+		goto OnStartTournament;
+
+OnStartTournament:
+	// 5 minute registration
+	announce "Martial Arts event Registrating is opened.", 0;
+	announce "You have 5 minutes from now.", 0;
+	set .state, 1;
+	sleep .interval;
+
+	// for 1 minute treasure chest spawn
+	announce "Martial Arts registration is now close", 0;
+	set .state, 2;
+	set .@i, 1;
+	while ( .@i <= 50 ) {
+		while ( checkcell( "guild_vs2", set( .@x, rand(0,150) ), set( .@y, rand(0,150) ), cell_chknopass ) );
+		movenpc "Entrance Ticket#"+ .@i +"_ma", .@x, .@y;
+		set .@i, .@i +1 ;
+		if ( .@i % 6 == 0 ) set .@t, .@t +1 ;
+	}
+	sleep .interval / 5;
+
+	// disable Qualification chest, and continue waiting for 4 minutes
+	for ( set .@i, 1; .@i <= 50; set .@i, .@i +1 )
+		donpcevent "Entrance Ticket#"+ .@i +"_ma::Onreset";
+	sleep .interval / 5 * 4;
+
+	// for 1 minute entrance referee shows up
+	enablenpc "Referee#0_m_ev";
+	sleep .interval / 5;
+
+	// the rest 4 minutes before showing chest
+	disablenpc "Referee#0_m_ev";
+	sleep .interval / 5 * 4;
+
+	// showing up Qualification chest for 1 minute
+	set .@t, 1;
+	set .@i, 1;
+	while ( .@i <= 24 ) {
+		while ( checkcell( "force_3-2", set( .@x, rand( getd(".round1_"+ .@t +"[0]") , getd(".round1_"+ .@t +"[2]") ) ), set( .@y, rand( getd(".round1_"+ .@t +"[1]") , getd(".round1_"+ .@t +"[3]") ) ), cell_chknopass ) );
+		movenpc "Qualification#"+ .@i +"_ma", .@x, .@y;
+		if ( .@i % 6 == 0 ) set .@t, .@t +1 ;
+		set .@i, .@i +1 ;
+	}
+	sleep .interval / 5;
+
+	// disable Qualification chest, and continue fighting for 4 minutes
+	for ( set .@i, 1; .@i <= 24; set .@i, .@i +1 )
+		donpcevent "Qualification#"+ .@i +"_ma::Onreset";
+	sleep .interval / 5 * 4;
+
+	// referee shows up for 1st round, for 1 minute
+	enablenpc "Referee#1_m_ev";
+	enablenpc "Referee#2_m_ev";
+	enablenpc "Referee#3_m_ev";
+	enablenpc "Referee#4_m_ev";
+	sleep .interval / 5 ;
+
+	// the rest 4 minutes before showing chest
+	disablenpc "Referee#1_m_ev";
+	disablenpc "Referee#2_m_ev";
+	disablenpc "Referee#3_m_ev";
+	disablenpc "Referee#4_m_ev";
+	sleep .interval / 5 * 4;
+
+	// showing up Qualification chest for 1 minute
+	set .@t, 1;
+	set .@i, 1;
+	while ( .@i <= 12 ) {
+		while ( checkcell( "force_3-2", set( .@x, rand( getd(".round2_"+ .@t +"[0]") , getd(".round2_"+ .@t +"[2]") ) ), set( .@y, rand( getd(".round2_"+ .@t +"[1]") , getd(".round2_"+ .@t +"[3]") ) ), cell_chknopass ) );
+		movenpc "Qualification#"+ .@i +"_ma", .@x, .@y;
+		if ( .@i % 6 == 0 ) set .@t, .@t +1 ;
+		set .@i, .@i +1 ;
+	}
+	sleep .interval / 5;
+
+	// disable Qualification chest, and continue fighting for 4 minutes
+	for ( set .@i, 1; .@i <= 12; set .@i, .@i +1 )
+		donpcevent "Qualification#"+ .@i +"_ma::Onreset";
+	sleep .interval / 5 * 4;
+
+	// referee shows up for semi-final round, for 1 minute
+	enablenpc "Referee#5_m_ev";
+	enablenpc "Referee#6_m_ev";
+	sleep .interval / 5;
+
+	// the rest 5 minutes before showing REWARDS
+	disablenpc "Referee#5_m_ev";
+	disablenpc "Referee#6_m_ev";
+	sleep .interval;
+
+	// WINNER
+	movenpc "1st Prize#-1_m_ev", 175,148;
+	movenpc "2nd Prize#-2_1m_ev",170,151;
+	movenpc "2nd Prize#-2_2m_ev",180,144;
+	movenpc "3rd Prize#-3_1m_ev",170,145;
+	movenpc "3rd Prize#-3_2m_ev",175,142;
+	movenpc "3rd Prize#-3_3m_ev",180,151;
+	movenpc "3rd Prize#-3_4m_ev",175,154;
+	sleep .interval;
+
+	// reset
+	donpcevent "1st Prize#-1_m_ev::Onreset";
+	donpcevent "2nd Prize#-2_1m_ev::Onreset";
+	donpcevent "2nd Prize#-2_2m_ev::Onreset";
+	donpcevent "2nd Prize#-3_1m_ev::Onreset";
+	donpcevent "2nd Prize#-3_2m_ev::Onreset";
+	donpcevent "2nd Prize#-3_3m_ev::Onreset";
+	donpcevent "2nd Prize#-3_4m_ev::Onreset";
+	mapwarp "force_3-2", "prontera", 155,181;
+	set .state, 0;
+	end;
+OnPCLogoutEvent:
+	if ( @martial_art_chest_id ) {
+		set getvariableofnpc( getd(".deny"+ @martial_art_chest_id ), "martial_art_chest" ), 0;
+		set @martial_art_chest_id, 0;
+	}
+	end;
+}
+
+-	script	Referee#m_ev	-1,{
+	set .@id, atoi( strnpcinfo(2) );
+	if ( @martial_art_qualify == 0 ) {
+		if ( .delay[.@id] +5 < gettimetick(2) ) {
+			if ( .@id )
+				npctalk strcharinfo(0) +" is not qualify to advance for the next round.";
+			else
+				npctalk strcharinfo(0) +" is not qualify for entering the arena.";
+			set .delay[.@id], gettimetick(2);
+		}
+		end;
+	}
+	else if ( .@id == 0 ) {
+		set .@r, rand(1,4);
+		while ( checkcell( "force_3-2", set( .@x, rand( getvariableofnpc( getd(".round1_"+ .@r +"[0]"), "martial_art" ) , getvariableofnpc( getd(".round1_"+ .@r +"[2]"), "martial_art" ) ) ), set( .@y, rand( getvariableofnpc( getd(".round1_"+ .@r +"[1]"), "martial_art" ) , getvariableofnpc( getd(".round1_"+ .@r +"[3]"), "martial_art" ) ) ), cell_chknopass ) );
+		warp "force_3-2", .@x, .@y;
+	}
+	else if ( .@id <= 4 ) {
+		if ( .@id <= 2 ) {
+			while ( checkcell( "force_3-2", set( .@x, rand( getvariableofnpc( .round2_1[0], "martial_art" ) , getvariableofnpc( .round2_1[2], "martial_art" ) ) ), set( .@y, rand( getvariableofnpc( .round2_1[1], "martial_art" ) , getvariableofnpc( .round2_1[3], "martial_art" ) ) ), cell_chknopass ) );
+			warp "force_3-2", .@x, .@y;
+		}
+		else {
+			while ( checkcell( "force_3-2", set( .@x, rand( getvariableofnpc( .round2_2[0], "martial_art" ) , getvariableofnpc( .round2_2[2], "martial_art" ) ) ), set( .@y, rand( getvariableofnpc( .round2_2[1], "martial_art" ) , getvariableofnpc( .round2_2[3], "martial_art" ) ) ), cell_chknopass ) );
+			warp "force_3-2", .@x, .@y;
+		}
+		doevent "martial_art::Onround1pass";
+	}
+	else {
+		while ( checkcell( "force_3-2", set( .@x, rand(164,185) ), set( .@y, rand(122,182) ), cell_chknopass ) );
+		warp "force_3-2", .@x, .@y;
+		doevent "martial_art::Onround2pass";
+	}
+	set @martial_art_qualify, 0;
+	end;
+}
+guild_vs2,49,49,5	duplicate(Referee#m_ev)	Referee#0_m_ev	100
+force_3-2,25,78,5	duplicate(Referee#m_ev)	Referee#1_m_ev	100
+force_3-2,26,26,5	duplicate(Referee#m_ev)	Referee#2_m_ev	100
+force_3-2,100,25,5	duplicate(Referee#m_ev)	Referee#3_m_ev	100
+force_3-2,174,26,5	duplicate(Referee#m_ev)	Referee#4_m_ev	100
+force_3-2,99,78,5	duplicate(Referee#m_ev)	Referee#5_m_ev	100
+force_3-2,174,78,5	duplicate(Referee#m_ev)	Referee#6_m_ev	100
+
+-	script	martial_art_chest	-1,{
+	set .@id, atoi( strnpcinfo(2) );
+	if ( @martial_art_qualify )
+		end;
+	getmapxy .@map$, .@x, .@y, 0;
+	getmapxy .@map$, .@x1, .@y1, 1;
+	if ( distance( .@x, .@y, .@x1, .@y1 ) > 3 ) { // distance check
+		message strcharinfo(0), "[Treasure Chest] You can't dig a treasure chest with that distance.";
+		end; 
+	}
+	else if ( checkoption(0x4046) ) { // no hiding/tunnel drive, no cloaking, no chasewalk, no GM hide
+		message strcharinfo(0), "[Treasure Chest] You can't dig a treasure chest while cloaking or hiding.";
+		end;
+	}
+	else if ( getd(".deny"+ .@id ) ) { // somebody else is digging
+		message strcharinfo(0), "[Treasure Chest] Somebody else is digging this treasure chest.";
+		end;
+	}
+	setd ".deny"+ .@id, getcharid(3);
+	set @martial_art_chest_id, .@id;
+	doevent "martial_art::OnPCLogoutEvent";
+	progressbar "", getvariableofnpc( .dig, "martial_art" ); // time to capture
+	if ( .@id > 0 ) {
+		if ( strnpcinfo(1) == "Entrance Ticket" )
+			message strcharinfo(0), "[Qualification] You are now qualified for entering the arena.";
+		else
+			message strcharinfo(0), "[Qualification] You are now qualified to advance to the next round.";
+		set @martial_art_qualify, 1;
+	}
+	else {
+		warp "Save", 0,0;
+		if ( .@id == -1 )
+			doevent "martial_art::On1stprize";
+		else if ( .@id == -2 )
+			doevent "martial_art::On2ndprize";
+		else
+			doevent "martial_art::On3rdprize";
+	}
+	movenpc strnpcinfo(0), 0,0;
+	end;
+Onreset:
+	set .@id, atoi( strnpcinfo(2) );
+	setd ".deny"+ .@id, 1;
+	hideonnpc strnpcinfo(0);
+	sleep getvariableofnpc( .dig, "martial_art" ) *1000 + 500; // there's a failed npc_checknear test error
+	hideoffnpc strnpcinfo(0);
+	movenpc strnpcinfo(0), 0, 0;
+	setd ".deny"+ .@id, 0;
+	end;
+}
+guild_vs2,0,0,0	duplicate(martial_art_chest)	Entrance Ticket#1_ma	1324
+guild_vs2,0,0,0	duplicate(martial_art_chest)	Entrance Ticket#2_ma	1324
+guild_vs2,0,0,0	duplicate(martial_art_chest)	Entrance Ticket#3_ma	1324
+guild_vs2,0,0,0	duplicate(martial_art_chest)	Entrance Ticket#4_ma	1324
+guild_vs2,0,0,0	duplicate(martial_art_chest)	Entrance Ticket#5_ma	1324
+guild_vs2,0,0,0	duplicate(martial_art_chest)	Entrance Ticket#6_ma	1324
+guild_vs2,0,0,0	duplicate(martial_art_chest)	Entrance Ticket#7_ma	1324
+guild_vs2,0,0,0	duplicate(martial_art_chest)	Entrance Ticket#8_ma	1324
+guild_vs2,0,0,0	duplicate(martial_art_chest)	Entrance Ticket#9_ma	1324
+guild_vs2,0,0,0	duplicate(martial_art_chest)	Entrance Ticket#10_ma	1324
+guild_vs2,0,0,0	duplicate(martial_art_chest)	Entrance Ticket#11_ma	1324
+guild_vs2,0,0,0	duplicate(martial_art_chest)	Entrance Ticket#12_ma	1324
+guild_vs2,0,0,0	duplicate(martial_art_chest)	Entrance Ticket#13_ma	1324
+guild_vs2,0,0,0	duplicate(martial_art_chest)	Entrance Ticket#14_ma	1324
+guild_vs2,0,0,0	duplicate(martial_art_chest)	Entrance Ticket#15_ma	1324
+guild_vs2,0,0,0	duplicate(martial_art_chest)	Entrance Ticket#16_ma	1324
+guild_vs2,0,0,0	duplicate(martial_art_chest)	Entrance Ticket#17_ma	1324
+guild_vs2,0,0,0	duplicate(martial_art_chest)	Entrance Ticket#18_ma	1324
+guild_vs2,0,0,0	duplicate(martial_art_chest)	Entrance Ticket#19_ma	1324
+guild_vs2,0,0,0	duplicate(martial_art_chest)	Entrance Ticket#20_ma	1324
+guild_vs2,0,0,0	duplicate(martial_art_chest)	Entrance Ticket#21_ma	1324
+guild_vs2,0,0,0	duplicate(martial_art_chest)	Entrance Ticket#22_ma	1324
+guild_vs2,0,0,0	duplicate(martial_art_chest)	Entrance Ticket#23_ma	1324
+guild_vs2,0,0,0	duplicate(martial_art_chest)	Entrance Ticket#24_ma	1324
+guild_vs2,0,0,0	duplicate(martial_art_chest)	Entrance Ticket#25_ma	1324
+guild_vs2,0,0,0	duplicate(martial_art_chest)	Entrance Ticket#26_ma	1324
+guild_vs2,0,0,0	duplicate(martial_art_chest)	Entrance Ticket#27_ma	1324
+guild_vs2,0,0,0	duplicate(martial_art_chest)	Entrance Ticket#28_ma	1324
+guild_vs2,0,0,0	duplicate(martial_art_chest)	Entrance Ticket#29_ma	1324
+guild_vs2,0,0,0	duplicate(martial_art_chest)	Entrance Ticket#30_ma	1324
+guild_vs2,0,0,0	duplicate(martial_art_chest)	Entrance Ticket#31_ma	1324
+guild_vs2,0,0,0	duplicate(martial_art_chest)	Entrance Ticket#32_ma	1324
+guild_vs2,0,0,0	duplicate(martial_art_chest)	Entrance Ticket#33_ma	1324
+guild_vs2,0,0,0	duplicate(martial_art_chest)	Entrance Ticket#34_ma	1324
+guild_vs2,0,0,0	duplicate(martial_art_chest)	Entrance Ticket#35_ma	1324
+guild_vs2,0,0,0	duplicate(martial_art_chest)	Entrance Ticket#36_ma	1324
+guild_vs2,0,0,0	duplicate(martial_art_chest)	Entrance Ticket#37_ma	1324
+guild_vs2,0,0,0	duplicate(martial_art_chest)	Entrance Ticket#38_ma	1324
+guild_vs2,0,0,0	duplicate(martial_art_chest)	Entrance Ticket#39_ma	1324
+guild_vs2,0,0,0	duplicate(martial_art_chest)	Entrance Ticket#40_ma	1324
+guild_vs2,0,0,0	duplicate(martial_art_chest)	Entrance Ticket#41_ma	1324
+guild_vs2,0,0,0	duplicate(martial_art_chest)	Entrance Ticket#42_ma	1324
+guild_vs2,0,0,0	duplicate(martial_art_chest)	Entrance Ticket#43_ma	1324
+guild_vs2,0,0,0	duplicate(martial_art_chest)	Entrance Ticket#44_ma	1324
+guild_vs2,0,0,0	duplicate(martial_art_chest)	Entrance Ticket#45_ma	1324
+guild_vs2,0,0,0	duplicate(martial_art_chest)	Entrance Ticket#46_ma	1324
+guild_vs2,0,0,0	duplicate(martial_art_chest)	Entrance Ticket#47_ma	1324
+guild_vs2,0,0,0	duplicate(martial_art_chest)	Entrance Ticket#48_ma	1324
+guild_vs2,0,0,0	duplicate(martial_art_chest)	Entrance Ticket#49_ma	1324
+guild_vs2,0,0,0	duplicate(martial_art_chest)	Entrance Ticket#50_ma	1324
+
+force_3-2,0,0,0	duplicate(martial_art_chest)	Qualification#1_ma	1324
+force_3-2,0,0,0	duplicate(martial_art_chest)	Qualification#2_ma	1324
+force_3-2,0,0,0	duplicate(martial_art_chest)	Qualification#3_ma	1324
+force_3-2,0,0,0	duplicate(martial_art_chest)	Qualification#4_ma	1324
+force_3-2,0,0,0	duplicate(martial_art_chest)	Qualification#5_ma	1324
+force_3-2,0,0,0	duplicate(martial_art_chest)	Qualification#6_ma	1324
+force_3-2,0,0,0	duplicate(martial_art_chest)	Qualification#7_ma	1324
+force_3-2,0,0,0	duplicate(martial_art_chest)	Qualification#8_ma	1324
+force_3-2,0,0,0	duplicate(martial_art_chest)	Qualification#9_ma	1324
+force_3-2,0,0,0	duplicate(martial_art_chest)	Qualification#10_ma	1324
+force_3-2,0,0,0	duplicate(martial_art_chest)	Qualification#11_ma	1324
+force_3-2,0,0,0	duplicate(martial_art_chest)	Qualification#12_ma	1324
+force_3-2,0,0,0	duplicate(martial_art_chest)	Qualification#13_ma	1324
+force_3-2,0,0,0	duplicate(martial_art_chest)	Qualification#14_ma	1324
+force_3-2,0,0,0	duplicate(martial_art_chest)	Qualification#15_ma	1324
+force_3-2,0,0,0	duplicate(martial_art_chest)	Qualification#16_ma	1324
+force_3-2,0,0,0	duplicate(martial_art_chest)	Qualification#17_ma	1324
+force_3-2,0,0,0	duplicate(martial_art_chest)	Qualification#18_ma	1324
+force_3-2,0,0,0	duplicate(martial_art_chest)	Qualification#19_ma	1324
+force_3-2,0,0,0	duplicate(martial_art_chest)	Qualification#20_ma	1324
+force_3-2,0,0,0	duplicate(martial_art_chest)	Qualification#21_ma	1324
+force_3-2,0,0,0	duplicate(martial_art_chest)	Qualification#22_ma	1324
+force_3-2,0,0,0	duplicate(martial_art_chest)	Qualification#23_ma	1324
+force_3-2,0,0,0	duplicate(martial_art_chest)	Qualification#24_ma	1324
+
+force_3-2,0,0,0	duplicate(martial_art_chest)	1st Prize#-1_m_ev	1324
+force_3-2,0,0,0	duplicate(martial_art_chest)	2nd Prize#-2_1m_ev	1324
+force_3-2,0,0,0	duplicate(martial_art_chest)	2nd Prize#-2_2m_ev	1324
+force_3-2,0,0,0	duplicate(martial_art_chest)	3rd Prize#-3_1m_ev	1324
+force_3-2,0,0,0	duplicate(martial_art_chest)	3rd Prize#-3_2m_ev	1324
+force_3-2,0,0,0	duplicate(martial_art_chest)	3rd Prize#-3_3m_ev	1324
+force_3-2,0,0,0	duplicate(martial_art_chest)	3rd Prize#-3_4m_ev	1324
+
+
+guild_vs2	mapflag	nowarp
+guild_vs2	mapflag	nowarpto
+guild_vs2	mapflag	noteleport
+guild_vs2	mapflag	nosave	SavePoint
+guild_vs2	mapflag	nomemo
+guild_vs2	mapflag	nobranch
+
+force_3-2	mapflag	nowarp
+force_3-2	mapflag	nowarpto
+force_3-2	mapflag	noteleport
+force_3-2	mapflag	nosave	SavePoint
+force_3-2	mapflag	nomemo
+force_3-2	mapflag	nopenalty
+force_3-2	mapflag	nobranch
+force_3-2	mapflag	pvp
+force_3-2	mapflag	pvp_noguild
+force_3-2	mapflag	pvp_nocalcrank

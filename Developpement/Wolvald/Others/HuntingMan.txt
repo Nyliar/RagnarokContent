@@ -1,0 +1,131 @@
+prt_monk,125,111,5	script	Hunting Man Ladder::caphml	-1,{
+
+	set .@npcname$, "[Hunting Man]";
+	mes .@npcname$;
+	mes "";
+	mes "Salutation, voyageur.";
+	mes "Je suis le gérant de la Chasse à l'Homme sur ce continent.";
+	mes "Quelque chose me dit que tu veux prendre part à ça.";
+	mes "Il y a des trucs sympas à gagner, tu sais.";
+	mes "Les trois premiers gagneront une récompense à la fin du mois.";
+	switch(select("Voir le ladder","Comment jouer","Que gagne-t-on?","Je viens chercher ma récompense"))
+	{
+		case 1:
+			goto OnDisplayLadder;
+			break;
+		case 2:
+			goto OnExplainRules;
+			break;
+		case 3:
+			goto OnExplainRewards;
+			break;
+		case 4:
+			goto onSelectRewards;
+			break;
+	}
+	close;
+
+OnInit:
+	setarray .RewardManHunting[0],0;
+	setarray .countRewardManHunting[0],0;
+	end;
+
+OnExplainRules:
+	next;
+	mes .@npcname$;
+	mes "";
+	mes "Rien de plus simple.";
+	mes "Il suffit de tuer...";
+	mes "Tue tout ceux que tu vois.";
+	mes "Si ton rank est plus haut que le leur, tu marques un point.";
+	mes "Mais si leur rank est plus haut que le tien, vos places s'échangeront.";
+	mes "Mieux vaut donc cibler des adversaires à ta mesure.";
+	mes "Ou collectionner les petites victoires.";
+	mes "Mais pour progresser, rien de mieux que de tuer les premiers.";
+	mes "Attention: la reward doit absolument être récupéré le premier jour du mois suivant.";
+	mes "Passé ce délai, les compteurs sont réinitialisés.";
+	close;
+
+OnExplainRewards:
+	next;
+	mes .@npcname$;
+	mes "";
+	mes "Les vainqueurs du Man Hunting ont chacun le droit à une récompense selon leurs points.";
+	for(set .@i,0; .@i<getarraysize(.@RewardManHunting) - 1; set .@i,.@i+1)
+	{
+		mes "De " + (.@i * 10) + " à " + ((.@i+1)*10) + ": " + .countRewardManHunting[.@i] + " " + getitemname(.RewardManHunting[.@i]);
+	}
+	mes "Au dela de " + (getarraysize(.@RewardManHunting) * 10) + ": " + .countRewardManHunting[getarraysize(.@RewardManHunting) - 1] + " " + getitemname(.RewardManHunting[getarraysize(.@RewardManHunting) - 1])
+	close;
+
+OnSelectRewards:
+	set .@manhuntquerySentence$, "select char_id from `global_reg_value` DESC LIMIT 3 WHERE `str`='WOLVALD_MAN_HUNT' AND `value`>=1";
+	query_sql(.@manhuntquerySentence$, .@idRankArray);
+	set .@isIn, 0;
+	for (set .@i,0; .@i<getarraysize(.@valueRankArray) && .@isIn == 0; set .@i,.@i+1)
+	{
+		if (getcharid(0) == .@valueRankArray[.@i])
+		{
+			set .@isIn, 1;
+		}
+	}
+	if (.@isIn == 1)
+	{
+		goto OnGetReward;
+	}
+	else
+	{
+		mes "Tu ne fais pas partie du top 3 des joueurs.";
+		mes "Eux seuls ont le droit à une récompense.";
+	}
+	close;
+
+OnPCLoginEvent;
+	if (gettime(5) == 2)
+	{
+		//premier jour du mois, reset les variables à la connexion
+		set WOLVALD_MAN_HUNT, 0;
+		set KEEP_ID_MAN_HUNT, 1;
+	}
+	end;
+
+OnGetReward:
+	mes "Choisi ta récompense.";
+	for(set .@i,0; .@i<getarraysize(.@RewardManHunting) - 1; set .@i,.@i+1)
+	{
+		if (WOLVALD_MAN_HUNT >= ((.@i+1)*10))
+		{
+			set .@menu$, .@menu$ + getitemname(.RewardManHunting[.@i]);
+		}
+	}
+	
+	// On récupère le choix de l'utilisateur
+    	set .@choice, prompt(.@menu$) - 1;
+
+	if (.@choice != 255)
+	{
+		getitem .RewardManHunting[.@choice], .countRewardManHunting[.@choice];
+	}
+
+	close;
+	
+OnDisplayLadder:
+	next;
+	mes .@npcname$;
+	mes "";
+	set .@manhuntquerySentence$, "select value,char_id from `global_reg_value` DESC LIMIT 20 WHERE `str`='WOLVALD_MAN_HUNT' AND `value`>=1";
+	set .@manhuntquerySentenceName$, "select name from `char` WHERE `char_id`=";
+
+	query_sql(.@manhuntquerySentence$, .@valueRankArray, .@idRankArray);
+	set .@count, 1;
+	for (set .@i,0; .@i<getarraysize(.@valueRankArray); set .@i,.@i+1)
+	{
+		query_sql(.@manhuntquerySentenceName+.@idRankArray[.@i],.@name$);
+		if (getarraysize(.@name$) == 1)
+		{
+			mes "" + .@count + ": " + .@name$[0] + " - " + .@valueRankArray + " points";
+			set .@count, .@count + 1;
+		}
+	}
+	close;
+}

@@ -1,0 +1,622 @@
+//===== eAthena Script ======================================= 
+//= Player Marriage
+//===== By: ================================================== 
+//= L0ne_W0lf
+//===== Current Version: ===================================== 
+//= 1.2
+//===== Compatible With: ===================================== 
+//= eAthena SVN
+//===== Description: ========================================= 
+//= [Aegis Conversion]
+//= Official Marriage script.
+//= Added isloggedin() check, even though Aegis doesn't do it.
+//= Currently does not support same-sex marriages.
+//= Old script located in: npc/custom/marriage.txt
+//= - Variable in use: wedding_sign (max 1)
+//= - Variable in use: $Wedding (max 1) 
+//= - Variab;e in use: $wed_groom$ $wed_bride$
+//===== Additional Comments: ================================= 
+//= 1.0 First version. [L0ne_W0lf]
+//= 1.1 Fixed a missing ")" [L0ne_W0lf]
+//= 1.2 Corrected duration of Wedding status. [L0ne_W0lf]
+//============================================================
+
+thalys,97,100,4	script	Agent Matrimonial#w	71,{
+	cutin "wedding_marry01",2;
+	if (Upper == 2) {
+		mes "[Marry Happy]";
+		mes "Hello~";
+		mes "Mon nom est Marry Happy,";
+		mes "et je suis ici pour vous fournir";
+		mes "toutes les infos possibles à propos du marriage.";
+		mes "Alors? Avez-vous des questions?";
+		next;
+		if (select("Je veux me marrier.:Pas besoin de votre aide!") == 1) {
+			mes "[Marry Happy]";
+			mes "Oh, je suis désolé mais";
+			mes "les personnes adoptées ne peuvent pas se marrier.";
+			mes "Pour l'instant, pourquoi ne pas vous contenter";
+			mes "du simple plaisir de la jeunesse?";
+			goto L_End;
+		}
+		mes "[Marry Happy]";
+		mes "Oh, bien sûr que tu n'as pas besoin.";
+		mes "Les petits enfants ne peuvent pas se marrier.";
+		mes "Il y a trop de lois contre ça.";
+		goto L_End;
+	}
+	mes "[Marry Happy]";
+	mes "Le Marriage, c'est l'union magique de deux âmes";
+	mes "qui ont choisi de vivre ensemble à jamais.";
+	mes "de partager leurs joies et leurs vies.";
+	mes "Est-ce qu'il y a quelqu'un comme ça dans votre vie?";
+	next;
+	switch(select("Se renseigner à propos du marriage:Se renseigner sur la Procédure:Se Marrier:Nous sommes l'invicible armée des Célibataires!")) {
+	case 1:
+		mes "[Marry Happy]";
+		mes "Le sage et bienveillant Roi Tristam III";
+		mes "avait l'habitude de mener lui même les cérémonies de marriage,";
+		mes "mais il n'en est plus capable à cause de ces devoirs royaux.";
+		next;
+		mes "[Marry Happy]";
+		mes "Bishop Vomars, le prêtre de l'amour, est maintenant celui qui officie";
+		mes "pour les cérémonies de marriage.";
+		mes "C'est vraiment une perle dans le Royaume de Rune Midgard.";
+		next;
+		mes "[Marry Happy]";
+		mes "Quand vous vous marriez avec quelqu'un,";
+		mes "c'est pour le reste de votre vie, donc pensez y bien avant de vous engager.";
+		next;
+		mes "[Marry Happy]";
+		mes "Si vous êtes assez chanceaux pour trouver quelqu'un qui compte vraiment pour vous,";
+		mes "et qui veuillent passer le reste de sa vie avec vous,";
+		mes "vous pourriez avoir envie de poser la fameuse question.";
+		break;
+
+	case 2:
+		mes "[Marry Happy]";
+		mes "La première partie de la procédure consiste à remplir un formulaire.";
+		mes "Une fois que la Fiancée et le Fiancé on remplit chacun le leur, ils forment un couple.";
+		next;
+		mes "[Marry Happy]";
+		mes "Après avoir créer avoir créer une équipe de deux,";
+		mes "le couple peut aller parler au Bishop Vomars. Le Fiancée";
+		mes "doit parler la première et donner le nom exact de sa Fiancée au Prêtre.";
+		mes "Sans quoi, la cérémonie s'arrête.";
+		next;
+		mes "[Marry Happy]";
+		mes "Puis, la Fiancée peut parler au Prêtre et donner le nom de son Fiancé.";
+		mes "Si ces deux noms sont correctement donnés au Prêtre, les époux seront capables";
+		mes "d'échanger leurs anneaux.";
+		next;
+		mes "[Marry Happy]";
+		mes "Une fois les anneaux échangés, le couple est a jamais lié par le marriage.";
+		mes "Bien sûr, avant d'en arriver là, il y a des chance que vous changiez d'avis alors...";
+		next;
+		mes "[Marry Happy]";
+		mes "Si trop de couples souhaitent se marrier en même temps";
+		mes "Veuillez s'il vous plait former une ligne en face du Prêtre";
+		mes "et parler chacun votre tour au Prêtre.";
+		next;
+		mes "[Marry Happy]";
+		mes "Enfin, soyez sûr de bien donner au Prêtre le nom de votre partenaire,";
+		mes "et ce sans perdre de temps. Si vous êtes trop long, la cérémonie sera interrompue,";
+		mes "et vous devrez recommencer.";
+		next;
+		mes "[Marry Happy]";
+		mes "Les Mariées doivent se rappeler qu'elles n'ont que 3 minutes";
+		mes "pour finir de parler avec le Prêtre après que leur Fiancé ait terminé de parler.";
+		next;
+		if (select("Merci, ca m'aide beaucoup!:La façon la plus simple de donner le nom de mon Fiancé?") == 1) {
+			mes "[Marry Happy]";
+			mes "Et bien je suis là pour ça!";
+			mes "Si vous avez d'autres questions, n'hésitez pas.";
+			goto L_End;
+		}
+		mes "[Marry Happy]";
+		mes "Le moyen le plus simple est de préparer le nom de la personne,";
+		mes "puis de la coller directement dans la zone d'entrée.";
+		next;
+		mes "[Marry Happy]";
+		mes "Parfait, alors maintenant, essayons.";
+		mes "Donnez moi le nom de votre partenaire en utilisant ce procédé.";
+		next;
+		input .@partner$;
+		mes "[Marry Happy]";
+		mes "Bien, donc revenez une fois que vous aurez décidé de vous marrier,";
+		mes "et que vous aurez rempli les formulaires.";
+		mes "Au plaisir!";
+		break;
+
+	case 3:
+		cutin "wedding_marry02",2;
+			mes "[Marry Happy]";
+			mes "Alors, vous voulez vous marrier?";
+			mes "En tant que Fiancé, vous devrez vous munir de:";
+			mes "^3377FF1 Tuxedo^000000 et payer ^3377FF1,300,000 zeny^000000.";
+			mes "La Fiancée doit se munir de sa robe de mariée et payer une taxe de";
+			mes "1,200,000 zeny.";
+		}
+		next;
+		mes "[Marry Happy]";
+		mes "Chacun des Fiancés doient aussi avoir un ^3377FF1 Diamond Ring^000000 pour échanger";
+		mes "vous devrez avoir préparez tout ces items avant de remplir le formulaire.";
+		next;
+		mes "[Marry Happy]";
+		mes "Chacun des Fiancés doit remplir son exemplaire du Contrat de Marriage";
+		mes "avant que la cérémonie puisse commencer.";
+		mes "Souhaitez-vous démarrer une cérémonie de marriage?";
+		next;
+		if (select("Oui:Non") == 1) {
+			if (getpartnerid()) {
+				cutin "wedding_marry02",2;
+				mes "[Marry Happy]";
+				mes "Désolé mais vous ne pouvez vous marrier avec deux personnes!";
+				mes "Je ne peux pas vous autoriser à trahir votre épouse comme ça,";
+				mes "et du plus, la polygamie est interdite en Midgard.";
+				break;
+			}
+			else if (wedding_sign == 1) {
+				mes "[Marry Happy]";
+				mes "Vous n'avez pas déjà rempli le Contrat?";
+				mes "Veuillez vous assurer que votre partenaire ai également terminé,";
+				mes "puis allez parler au Prêtre Vomars.";
+				break;
+			}
+			else if (BaseLevel < 45) {
+				mes "[Marry Happy]";
+				mes "Désolé, mais vous devez être suffisamment fort pour protéger";
+				mes "votre aimé(e) avant de considérer le fait de vous marrier.";
+				mes "Revenez une fois que vous serez plus fort, d'accord?";
+				goto L_End;
+			}
+			else if (countitem(2613) < 1) {
+				mes "[Marry Happy]";
+				mes "Vous n'auriez pas oublié le Diamond Ring?";
+				mes "Celui que vous devez échanger pendant la cérémonie, vous voyez?";
+				mes "Préparez vous bien, puis revenez me voir, d'accord?";
+				goto L_End;
+			}
+			else
+			{
+				mes "Pour quel rôle souhaitez-vous vous engager?";
+				switch(select("Le Marié","La Mariée"))
+				{
+					case 1:
+						set #groom, 1;
+						if (zeny < 1300000) {
+							mes "[Marry Happy]";
+							mes "Désolé, mais vous n'avez pas";
+							mes "les 1,300,000 zeny que le Fiancé doit payer";
+							mes "Auriez vous égarer votre argent?";
+							goto L_End;
+						}
+						else if (countitem(7170) < 1) {
+							mes "[Marry Happy]";
+							mes "Où est votre costume? Vous en avez absolument besoin pour le marriage!";
+							mes "Trouvez en un, ramenez le et nous pourrons avancer, d'accord?";
+							goto L_End;
+						}
+						break;
+					case 2:
+						set #groom, 0;
+						if (zeny < 1200000) {
+							mes "[Marry Happy]";
+							mes "Désolé, mais vous n'avez pas";
+							mes "les 1,200,000 zeny que la Fiancée doit payer";
+							mes "Auriez vous égarer votre argent?";
+							goto L_End;
+						}
+						else if (countitem(7170) < 1) {
+							mes "[Marry Happy]";
+							mes "Où est votre robe? Vous en avez absolument besoin pour le marriage!";
+							mes "Trouvez en un, ramenez le et nous pourrons avancer, d'accord?";
+							goto L_End;
+						}
+						break;
+				}
+			}
+			mes "[Marry Happy]";
+			mes "Bien, il semble que tout soit prêt.";
+			mes "Bien que je ne sois pas sûre de qui est votre Fiancé(e),";
+			mes "laissez moi être la première à vous féliciter!";
+			next;
+			mes "[Marry Happy]";
+			mes "Maintenant, commençons à remplir le Contrat.";
+			mes "Veuillez écrire votre nom ici.";
+			next;
+			while(1) {
+				input .@name$;
+				if (.@name$ != strcharinfo(0)) {
+					mes "[Marry Happy]";
+					mes "Vous devez absolument donner votre nom exact, d'accord?";
+					next;
+				}
+				else 
+					break;
+			}
+			mes "[Marry Happy]";
+			mes "Parfaiiit! On dirait bien que vous avez fini.";
+			mes "Rappelez vous que vous devrez donner le nom exact";
+			mes "de votre partenaire au Prêtre, d'accord?";
+			next;
+			mes "[Marry Happy]";
+			mes "Une fois que votre partenaire aura terminé sa part du Contrat,";
+			mes "veuillez parler au Prêtre pour commencer la cérémonie, d'accord?";
+			Emotion e_lv;
+			next;
+			mes "[Marry Happy]";
+			if (#groom) {
+				mes "Puisque vous êtes le Marié, vous devrez parler au Prêtre Vomars le premier.";
+				mes "Puis se sera au tour de votre Fiancée.";
+				set zeny,zeny-1300000;
+				delitem 7170,1; //Tuxedo
+			}
+			else {
+				mes "Puisque vous êtes la Mariée, vous devrez parler au Prêtre Vomars en seconde.";
+				mes "Vous devrez donc attendre que votre futur époux ai parlé en premier.";
+				set zeny,zeny-1200000;
+				delitem 2338,1; //Wedding_Dress
+			}
+			delitem 2613,1; //Diamond_Ring
+			set wedding_sign,1;
+			goto L_End;
+		}
+		mes "[Marry Happy]";
+		mes "Non...?";
+		mes "Bien, quand vous serez prêt pour le marriage, revenez me voir, d'accord?";
+		break;
+
+	case 4:
+		cutin "wedding_marry02",2;
+		donpcevent "Single Army#Prontera::OnEnable";
+		donpcevent "Single Army#Geffen::OnEnable";
+		donpcevent "Single Army#Morocc::OnEnable";
+		donpcevent "Single Army#Payon::OnEnable";
+		donpcevent "Single Army#Amatsu::OnEnable";
+		donpcevent "Single Army#Gonryun::OnEnable";
+		Emotion e_omg;
+		mes "[Single Army]";
+		mes "^CC9933Vous devez améliorer vous même vos équipements pour devenir meilleur!^000000";
+		emotion e_rock,0,"Single Army#Prontera";
+		next;
+		mes "[Single Army]";
+		mes "^330099C'est une perte de temps de former des équipes pour les Donjons!^000000";
+		emotion e_rock,0,"Single Army#Geffen";
+		next;
+		mes "[Single Army]";
+		mes "^666666Non de Dieu! Je me suis entraîné dur depuis ma naissance pour mon changement de classe!^000000";
+		emotion e_rock,0,"Single Army#Morocc";
+		next;
+		mes "[Single Army]";
+		mes "^666600J'AI CHOISI de passer Noël seul, en jouant au Solitaire!^000000";
+		emotion e_rock,0,"Single Army#Payon";
+		next;
+		mes "[Single Army]";
+		mes "^CC9966Les Femmes pourront briser mon esprit, mais elles n'auront pas...MA LIBERTE^000000";
+		emotion e_rock,0,"Single Army#Amatsu";
+		next;
+		mes "[Single Army]";
+		mes "^669900...Nous sommes libres! Nous sommes...L'Armée des Célibataires!^000000";
+		emotion e_rock,0,"Single Army#Gonryun";
+		close2;
+		cutin "wedding_marry01",255;
+		Emotion e_swt;
+		donpcevent "Single Army#Prontera::OnInit";
+		donpcevent "Single Army#Geffen::OnInit";
+		donpcevent "Single Army#Morocc::OnInit";
+		donpcevent "Single Army#Payon::OnInit";
+		donpcevent "Single Army#Amatsu::OnInit";
+		donpcevent "Single Army#Gonryun::OnInit";
+		end;
+	}
+	close2;
+	cutin "wedding_marry01",255;
+	end;
+
+L_End:
+	close2;
+	cutin "",255;
+	end;
+}
+
+thalys,97,102,0	script	Single Army#Prontera	105,{
+	mes "[Single Army]";
+	mes "^CC9933Vous devez améliorer vous même vos équipements pour devenir meilleur!^000000";
+	close;
+
+OnInit:
+	hideonnpc "Single Army#Prontera";
+	end;
+
+OnEnable:
+	hideoffnpc "Single Army#Prontera";
+	emotion e_go;
+	end;
+}
+
+thalys,98,102,0	script	Single Army#Geffen	705,{
+	mes "[Single Army]";
+	mes "^330099C'est une perte de temps de former des équipes pour les Donjons!^000000";
+	close;
+
+OnInit:
+	hideonnpc "Single Army#Geffen";
+	end;
+
+OnEnable:
+	hideoffnpc "Single Army#Geffen";
+	emotion e_go;
+	end;
+}
+
+thalys,99,102,0	script	Single Army#Morocc	707,{
+	mes "[Single Army]";
+	mes "^666666Non de Dieu! Je me suis entraîné dur depuis ma naissance pour mon changement de classe!^000000";
+	close;
+
+OnInit:
+	hideonnpc "Single Army#Morocc";
+	end;
+
+OnEnable:
+	hideoffnpc "Single Army#Morocc";
+	emotion e_go;
+	end;
+}
+
+thalys,100,102,0	script	Single Army#Payon	708,{
+	mes "[Single Army]";
+	mes "^666600J'AI CHOISI de passer Noël seul, en jouant au Solitaire!^000000";
+	close;
+
+OnInit:
+	hideonnpc "Single Army#Payon";
+	end;
+
+OnEnable:
+	hideoffnpc "Single Army#Payon";
+	emotion e_go;
+	end;
+}
+
+thalys,101,102,0	script	Single Army#Amatsu	767,{
+	mes "[Single Army]";
+	mes "^CC9966Les Femmes pourront briser mon esprit, mais elles n'auront pas...MA LIBERTE^000000";
+	close;
+
+OnInit:
+	hideonnpc "Single Army#Amatsu";
+	end;
+
+OnEnable:
+	hideoffnpc "Single Army#Amatsu";
+	emotion e_go;
+	end;
+}
+
+thalys,102,102,0	script	Single Army#Gonryun	780,{
+	mes "[Single Army]";
+	mes "^669900...Nous sommes libres! Nous sommes...L'Armée des Célibataires!^000000";
+	close;
+
+OnInit:
+	hideonnpc "Single Army#Gonryun";
+	end;
+
+OnEnable:
+	hideoffnpc "Single Army#Gonryun";
+	emotion e_go;
+	end;
+}
+
+thalys,100,128,4	script	Bishop#w	60,{
+	cutin "wedding_bomars01",2;
+	if (Upper == 2) {
+		mes "[Vomars]";
+		mes "Bienvenue, mon Enfant.";
+		mes "Tu es perdu? Hmmm.";
+		mes "Sais-tu où son ton papa et ta maman?";
+		close2;
+		cutin "wedding_bomars01",255;
+		end;
+	}
+
+	if (!getpartnerid()) {
+		if (!$wedding) {
+			if (wedding_sign == 1) {
+				getpartymember(getcharid(1));
+				set .@partymembercount,$@partymembercount;
+				if (.@partymembercount == 2) {
+					if (#groom) {
+						set $wedding,1;
+						initnpctimer;
+						mes "[Vomars]";
+						mes "Jeunes amoureux, rappelez vous bien de ce moment pour le reste de vos vies.";
+						mes "Puisse votre futur être béni des Dieux et passer dans la joie.";
+						mes "Puisse l'amour que vous partagez grandir et fleurir.";
+						next;
+						mapannounce "prt_church","Que le Fiancé, " + strcharinfo(0) + " s'avance...",bc_map;
+						mes "[Vomars]";
+						mes "Jusqu'à la fin des temps et du monde, jurez vous de";
+						mes "protéger et rester au côté de votre épouse?";
+						mes "Avant toute chose, puis-je savoir le nom de l'heureuse élue?";
+						next;
+						input $wed_bride$;
+						mes "[Vomars]";
+						mes strcharinfo(0) + "...";
+						mes "Jurez de chérir, d'aimer et de protéger votre promise,";
+						mes $wed_bride$ + "?";
+						next;
+						select("Je le veux.");
+						set $wed_groom$,strcharinfo(0);
+						mes "[Vomars]";
+						mes "Il est maintenant temps pour votre promise de prononcer ses voeux.";
+						mes "Si elle veut bien s'avancer...";
+						close2;
+						mapannounce "prt_church","Le Fiancé, " + strcharinfo(0) + ", a prononcer ses voeux concernant sa promise, " + $wed_bride$ + "...",bc_map;
+						cutin "",255;
+						end;
+					}
+					mes "[Vomars]";
+					mes "Désolé, mais le Fiancé doit lancer la procédure.";
+					mes "Je sais que c'est un peu vieux jeu, mais ca permet de mener la cérémonie de façon plus simple.";
+					goto L_End;
+				}
+				mes "[Vomars]";
+				mes "Avant de pouvoir vous marrier, vous devez former une équipe";
+				mes "avec votre partenaire. Revenez ensuite me voir.";
+				goto L_End;
+			}
+			mes "[Vomars]";
+			mes "Vous devez d'abord remplir le formulaire auprès de Happy Marry.";
+			mes "Happy Marry vous dira ce dont vous avez besoin pour préparer le marriage.";
+			goto L_End;
+		}
+		else if ($wedding == 1) {
+			if (wedding_sign == 1) {
+				getpartymember(getcharid(1));
+				set .@partymembercount,$@partymembercount;
+				if (.@partymembercount == 2) {
+					if (#groom == 0) {
+						if (strcharinfo(0) == $wed_bride$) {
+							mes "[Vomars]";
+							mes "Jeunes amoureux, rappelez vous bien de ce moment pour le reste de vos vies.";
+							mes "Puisse votre futur être béni des Dieux et passer dans la joie.";
+							mes "Puisse l'amour que vous partagez grandir et fleurir.";
+							next;
+							mapannounce "prt_church","Ecoutons ce que la Fiancée, "+$wed_bride$+", a à dire...",bc_map;
+							mes "[Vomars]";
+							mes $wed_bride$+"...";
+							mes "Jurez vous de rester fidèle à " + $wed_groom$+",";
+							mes "De rester à ses côtés, dans la joie et l'adversité?";
+							next;
+							if (select("^FF0000Euh...Non.^000000:Je le veux.") == 1) {
+								cutin "wedding_bomars03",2;
+								mapannounce "prt_church","Couple suivant s'il vous plait...",bc_map;
+								mes "[Vomars]";
+								mes $wed_groom$;
+								mes "N'est ce pas votre promise?";
+								mes "Je...Je suis désolé pour cette incompréhension...";
+								set $wedding,0;
+								close2;
+								stopnpctimer;
+								cutin "",255;
+								end;
+							}
+							mes "[Vomars]";
+							mes "Jurez vous d'aimez et de chérir votre promis, " +$wed_groom$+"?";
+							next;
+							if (select("Oui, je le veux:^FF0000Non.^000000") == 1) {
+								if (isloggedin(getcharid(3,$wed_groom$))) {
+									if (marriage($wed_groom$)) {
+										//Call Wedding effect
+										wedding;
+										//Give ring to Bride, and change to wedding sprite.
+										sc_start SC_Wedding,3600000,1;
+										getitem 2635,1; //Bride_Ring
+										//Give ring to Groom, and change to wedding sprite.
+										attachrid(getcharid(3,$wed_groom$));
+										sc_start SC_Wedding,3600000,1;
+										getitem 2634,1; //Bridegroom_Ring
+										detachrid;
+										//Switch Script progression back to Bride
+										attachrid(getcharid(3,$wed_bride$));
+										cutin "wedding_bomars02",2;
+										mapannounce "prt_church","Je vous déclare maintenant, vous "+$wed_groom$+" et "+$wed_bride$+", unis par les liens sacrés du marriage.",bc_map;
+										mes "[Vomars]";
+										mes "Par le pouvoir qui m'est conféré, je vous déclare dès à présent"
+										mes "unis par les liens sacrés du marriage.";
+										next;
+										mes "[Vomars]";
+										mes "Aujourd'hui et à jamais...";
+										mes "Puissiez vous vivres heureux.";
+										set $wed_groom$,"";
+										set $wed_bride$,"";
+										set $wedding,0;
+										close2;
+										stopnpctimer;
+										cutin "",255;
+										detachrid;
+										end;
+									}
+								}
+								cutin "wedding_bomars03",2;
+								mes "[Vomars]";
+								mes "Désolé, mais...Il semble que le Fiancé soit parti avant la fin de la cérémonie...";
+								goto L_End;
+							}
+							else {
+								cutin "wedding_bomars03",2;
+								mapannounce "prt_church","Hélas! "+$wed_bride$+" a rejeté la demande en marriage de "+$wed_groom$,bc_map;
+								mes "[Vomars]";
+								mes "On dirait bien que vous avez changé d'avis...";
+								mes "Bien que je me sente désolé pour le Fiancé, faites ce que votre coeur vous commande.";
+								mes "Et maintenant...COURREZ!";
+							}
+							set $wed_groom$,"";
+							set $wed_bride$,"";
+							set $wedding,0;
+							close2;
+							stopnpctimer;
+							cutin "",255;
+							end;
+						}
+						callsub S_Busy;
+					}
+					callsub S_Busy;
+				}
+				callsub S_Busy;
+			}
+			if (strcharinfo(0) == $wed_bride$) {
+				mes "[Vomars]";
+				mes "Hm? On dirait bien que Happy Marry n'a pas encore reçu votre Contrat de marriage.";
+				mes "Je ne peux rien faire sans...";
+				goto L_End;
+			}
+			callsub S_Busy;
+		}
+		callsub S_Busy;
+	}
+	mes "[Vomars]";
+	mes "Je vous souhaites tout mes voeux de bonheurs, mes enfants!";
+
+L_End:
+	close2;
+	cutin  "",255;
+	end;
+
+S_Busy:
+	if ($wed_groom$ != "" && $wed_bride$ != "") {
+		mes "[Vomars]";
+		mes "Le marriage de" + $wed_bride$ +" et " + $wed_groom$;
+		mes "est sur le point de commencer.";
+		mes "Veuillez faire silence.";
+		goto L_End;
+	}
+	mes "[Vomars]";
+	mes "Je suis actuellement en plein milieu d'une cérémonie. Veuillez attendre votre tour... ^FFFFFF ^000000";
+	goto L_End;
+
+OnInit:
+	set $wedding,0;
+	end;
+
+OnStop:
+	stopnpctimer;
+	end;
+
+OnReset:
+	set $wed_groom$,"";
+	set $wed_bride$,"";
+	set $wedding,0;
+	end;
+
+OnTimer180000:
+	mapannounce "prt_church","Désolé, mais vous avez répondu trop doucement... Couple suivant, veuillez avancer s'il vous plait.",bc_map;
+	set $wed_groom$,"";
+	set $wed_bride$,"";
+	set $wedding,0;
+	stopnpctimer;
+	end;
+}

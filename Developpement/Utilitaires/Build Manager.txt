@@ -1,0 +1,285 @@
+prontera,166,200,5	script	Build Manager::prtbuildman	757,{
+	mes "Select Your Services";
+	next;
+	switch( select( ( .BMMode & 1 )?"^FF0000Save & Switch Builds^000000":"",
+					( .BMMode & 2 )?"^0000FFSave & Switch Stuffs^000000":"",
+					( .BMMode & 4 )?"^0000FFSave & Switch Skills^000000":"",	
+					( .BMMode & 8 )?"^0000FFReset Status^000000":"",	
+					( .BMMode & 16 )?"^0000FFReset Skills^000000":"")){
+		Case 1:
+			for( set .@i,1; .@i <= .MaxSlotsBuild; set .@i,.@i + 1 )
+				set .@Menu$,.@Menu$ + (( getd( "SlotBuild_"+.@i+"$" ) == "" )?"^FF0000Empty Slot^000000":getd( "SlotBuild_"+.@i+"$" ) )+":";
+			set .@Slot,select( .@Menu$ );
+			do{
+				next;
+				mes "Build : ^FF0000"+(( getd( "SlotBuild_"+.@Slot+"$" ) == "" )?"Slot "+.@Slot:getd( "SlotBuild_"+.@Slot+"$" ) )+"^000000";
+				mes "STR - ^0000FF"+getd( "STR_"+.@Slot )+"^000000      INT - ^0000FF"+getd( "INT_"+.@Slot )+"^000000";
+				mes "AGI - ^0000FF"+getd( "AGI_"+.@Slot )+"^000000      DEX - ^0000FF"+getd( "DEX_"+.@Slot )+"^000000";
+				mes "VIT - ^0000FF"+getd( "VIT_"+.@Slot )+"^000000      LUK - ^0000FF"+getd( "LUK_"+.@Slot )+"^000000";
+				mes " ";
+				mes "Remaining Points : ^0000FF"+getd( "STATS_"+.@Slot )+"^000000";
+				set .@Option,select(( getd( "SlotBuild_"+.@Slot+"$" ) == "" )?"":"^0000FFSwitch",
+									( getd( "SlotBuild_"+.@Slot+"$" ) == "" )?"Save":"",
+									( getd( "SlotBuild_"+.@Slot+"$" ) == "" )?"":"^FF0000Clear" );
+				callfunc "ManageBuildStats",.@Slot,.@Option;
+			}while( .@Option != 1 );
+			break;
+		Case 2:
+			for( set .@i,1; .@i <= .MaxSlotsStuff; set .@i,.@i + 1 )
+				set .@Menu$,.@Menu$ + (( getd( "SlotStuff_"+.@i+"$" ) == "" )?"^FF0000Empty Slot^000000":getd( "SlotStuff_"+.@i+"$" ) )+":";
+			set .@Slot,select( .@Menu$ );
+			do{
+				next;
+				mes "Build : ^FF0000"+(( getd( "SlotStuff_"+.@Slot+"$" ) == "" )?"Slot "+.@Slot:getd( "SlotStuff_"+.@Slot+"$" ) )+"^000000";
+
+				set .@tophead$, "Empty";
+				if (getd( "TopHead_"+.@Slot ) != 1)
+					{set .@tophead$, "^0000FF" + getitemname (getd( "TopHead_"+.@Slot )) + "^000000";}
+				mes "Top Head - " + .@tophead$;    
+
+				set .@middlehead$, "Empty";
+				if (getd( "MiddleHead_"+.@Slot ) != 1)
+					{set .@middlehead$, "^0000FF"+getitemname (getd( "MiddleHead_"+.@Slot )) +"^000000";}
+
+				mes "Middle Head - " + .@middlehead$;   
+
+				set .@lowerhead$, "Empty";
+				if (getd( "LowerHead_"+.@Slot ) != 1)
+					{set .@lowerhead$, "^0000FF" + getitemname (getd( "LowerHead_"+.@Slot )) + "^000000";}
+				mes "Lower Head - " + .@lowerhead$;   
+
+				set .@armor$, "Empty";
+				if (getd( "Armor_"+.@Slot ) != 1)
+					{set .@armor$, "^0000FF" + getitemname (getd( "Armor_"+.@Slot )) + "^000000";}
+				mes "Armor - " + .@armor$;   
+
+				set .@lefthand$, "Empty";
+				if (getd( "LeftHand_"+.@Slot ) != 1)
+					{set .@lefthand$, "^0000FF" + getitemname (getd( "LeftHand_"+.@Slot )) + "^000000";}
+				mes "Left Hand - " + .@lefthand$;   
+
+				set .@righthand$, "Empty";
+				if (getd( "RightHand_"+.@Slot ) != 1)
+					{set .@righthand$, "^0000FF" + getitemname (getd( "RightHand_"+.@Slot )) + "^000000";}
+				mes "Right Hand - " + .@righthand$;   
+
+				set .@garment$, "Empty";
+				if (getd( "Garment_"+.@Slot ) != 1)
+					{set .@garment$, "^0000FF" + getitemname (getd( "Garment_"+.@Slot )) + "^000000";}
+				mes "Garment - " + .@garment$;   
+
+				set .@shoes$, "Empty";
+				if (getd( "Shoes_"+.@Slot ) != 1)
+					{set .@shoes$, "^0000FF" + getitemname (getd( "Shoes_"+.@Slot )) + "^000000";}
+				mes "Footgear - " + .@shoes$;   
+
+				set .@leftaccess$, "Empty";
+				if (getd( "LeftAccess_"+.@Slot ) != 1)
+					{set .@leftaccess$, "^0000FF" + getitemname (getd( "LeftAccess_"+.@Slot )) + "^000000";}
+				mes "Left Accessory - " + .@leftaccess$;   
+
+				set .@rightaccess$, "Empty";
+				if (getd( "RightAccess_"+.@Slot ) != 1)
+					{set .@rightaccess$, "^0000FF" + getitemname (getd( "RightAccess_"+.@Slot )) + "^000000";}
+				mes "Right Accessory - " + .@rightaccess$; 
+
+				mes " ";
+				set .@Option,select(( getd( "SlotStuff_"+.@Slot+"$" ) == "" )?"":"^0000FFSwitch",
+									( getd( "SlotStuff_"+.@Slot+"$" ) == "" )?"Save":"",
+									( getd( "SlotStuff_"+.@Slot+"$" ) == "" )?"":"^FF0000Clear" );
+				callfunc "ManageBuildStuff",.@Slot,.@Option;
+			}while( .@Option != 1 );
+			break;
+		Case 3:
+			for( set .@i,1; .@i <= .MaxSlotsSkills; set .@i,.@i + 1 )
+				set .@Menu$,.@Menu$ + (( getd( "SlotSkills_"+.@i+"$" ) == "" )?"^FF0000Empty Slot^000000":getd( "SlotSkills_"+.@i+"$" ) )+":";
+			set .@Slot,select( .@Menu$ );
+			do{
+				next;
+				mes "Skills : ^FF0000"+(( getd( "SlotSkills_"+.@Slot+"$" ) == "" )?"Slot "+.@Slot:getd( "SlotSkills_"+.@Slot+"$" ) )+"^000000";
+				set .@Option,select(( getd( "SlotSkills_"+.@Slot+"$" ) == "" )?"":"^0000FFSwitch",
+							( getd( "SlotSkills_"+.@Slot+"$" ) == "" )?"Save":"",
+							( getd( "SlotSkills_"+.@Slot+"$" ) == "" )?"":"^FF0000Clear" );
+				callfunc "ManageBuildSkills",.@Slot,.@Option;
+			}while( .@Option != 1 );
+			break;
+			break;
+		Case 4:
+			ResetStatus;
+			mes "Status has been Reseted.";
+			break;
+		Case 5:
+			ResetSkill;
+			mes "Skills has been Reseted.";
+			break;
+	}
+	close;
+
+OnInit:
+	// Mode of NPC
+	// 1 = Save & Switch 
+	// 2 = Save & Switch Stuff
+	// 4 = Reset Status
+	// 8 = Reset Skills
+	// 15 = All of Above [ 1+2+4 = 7 ]
+	set .BMMode,3;
+	// How Many Slots available to Save Status Builds.
+	set .MaxSlotsStuff,3;
+	set .MaxSlotsBuild,3;
+	set .MaxSlotsSkills,3;
+	// Enable Stats Slot Rename + Max Name Length ( 0 = Disable )
+	setarray $Length,4,26; // Min. ~ Max. Words.
+	end;
+}
+
+function	script	ManageBuildStats	{
+	switch( getarg(1) ){
+		Case 1:	//	Switch Build
+			message strcharinfo(0),"Build has been switched.";
+				ResetStatus;
+				set StatusPoint,getd( "STATS_"+getarg(0) );
+				statusup2 bStr,getd( "STR_"+getarg(0) ) - 1;
+				statusup2 bAgi,getd( "AGI_"+getarg(0) ) - 1;
+				statusup2 bVit,getd( "VIT_"+getarg(0) ) - 1;
+				statusup2 bInt,getd( "INT_"+getarg(0) ) - 1;
+				statusup2 bDex,getd( "DEX_"+getarg(0) ) - 1;
+				statusup2 bLuk,getd( "LUK_"+getarg(0) ) - 1;
+			break;
+		Case 2:	//	Save Build
+				setd( "STR_"+getarg(0) ),readparam(bStr);
+				setd( "AGI_"+getarg(0) ),readparam(bAgi);
+				setd( "VIT_"+getarg(0) ),readparam(bVIT);
+				setd( "INT_"+getarg(0) ),readparam(bInt);
+				setd( "DEX_"+getarg(0) ),readparam(bDex);
+				setd( "LUK_"+getarg(0) ),readparam(bLuk);
+				setd( "STATS_"+getarg(0) ),StatusPoint;
+			if( $Length[0] < $Length[1] && $Length[0] ){
+				mes "Input a ^FF0000Name^000000 for this Slot.";
+				mes "Name Length : "+$Length[0]+" ~ "+$Length[1]+" Chars";
+				do{
+					input getd( "SlotBuild_"+getarg(0)+"$" );
+				}while( getstrlen( getd( "SlotBuild_"+getarg(0)+"$" ) ) < $Length[0] || getstrlen( getd( "SlotBuild_"+getarg(0)+"$" ) ) > $Length[1] );
+			}else{
+				setd( "SlotBuild_"+getarg(0)+"$" ),"Build "+getarg(0);
+			}
+			message strcharinfo(0),"Build has been saved.";
+			break;
+		Case 3:	//	Remove Build
+			message strcharinfo(0),"Build has been cleared.";
+				setd( "STR_"+getarg(0) ),0;
+				setd( "AGI_"+getarg(0) ),0;
+				setd( "VIT_"+getarg(0) ),0;
+				setd( "INT_"+getarg(0) ),0;
+				setd( "DEX_"+getarg(0) ),0;
+				setd( "LUK_"+getarg(0) ),0;
+				setd( "STATS_"+getarg(0) ),0;
+				setd( "SlotBuild_"+getarg(0)+"$" ),"";
+			break;
+	}
+	return;
+}	
+
+function	script	ManageBuildStuff	{
+	switch( getarg(1) ){
+		Case 1:	//	Switch Build
+			message strcharinfo(0),"Build has been switched.";
+				if (getd( "TopHead_"+getarg(0) ) != -1 && getd( "TopHead_"+getarg(0) ) != getequipid(1))
+					equip getd( "TopHead_"+getarg(0) );
+				if (getd( "MiddleHead_"+getarg(0) ) != -1 && getd( "MiddleHead_"+getarg(0) ) != getequipid(9))
+					equip getd( "MiddleHead_"+getarg(0) );
+				if (getd( "LowerHead_"+getarg(0) ) != -1 && getd( "LowerHead_"+getarg(0) ) != getequipid(10))
+					equip getd( "LowerHead_"+getarg(0) );
+				if (getd( "Armor_"+getarg(0) ) != -1 && getd( "Armor_"+getarg(0) ) != getequipid(2))
+					equip getd( "Armor_"+getarg(0) );
+				if (getd( "LeftHand_"+getarg(0) ) != -1 && getd( "LeftHand_"+getarg(0) ) != getequipid(3))
+					equip getd( "LeftHand_"+getarg(0) );
+				if (getd( "RightHand_"+getarg(0) ) != -1 && getd( "RightHand_"+getarg(0) ) != getequipid(4))
+					equip getd( "RightHand_"+getarg(0) );
+				if (getd( "Garment_"+getarg(0) ) != -1 && getd( "Garment_"+getarg(0) ) != getequipid(5))
+					equip getd( "Garment_"+getarg(0) );
+				if (getd( "Shoes_"+getarg(0) ) != -1 && getd( "Shoes_"+getarg(0) ) != getequipid(6))
+					equip getd( "Shoes_"+getarg(0) );
+				if (getd( "LeftAccess_"+getarg(0) ) != -1 && getd( "LeftAccess_"+getarg(0) ) != getequipid(7))
+					equip getd( "LeftAccess_"+getarg(0) );
+				if (getd( "RightAccess_"+getarg(0) ) != -1 && getd( "RightAccess_"+getarg(0) ) != getequipid(8))
+					equip getd( "RightAccess_"+getarg(0) );
+			break;
+		Case 2:	//	Save Build
+				setd( "TopHead_"+getarg(0) ),getequipid(1);
+				setd( "MiddleHead_"+getarg(0) ),getequipid(9);
+				setd( "LowerHead_"+getarg(0) ),getequipid(10);
+				setd( "Armor_"+getarg(0) ),getequipid(2);
+				setd( "LeftHand_"+getarg(0) ),getequipid(3);
+				setd( "RightHand_"+getarg(0) ),getequipid(4);
+				setd( "Garment_"+getarg(0) ),getequipid(5);
+				setd( "Shoes_"+getarg(0) ),getequipid(6);
+				setd( "LeftAccess_"+getarg(0) ),getequipid(7);
+				setd( "RightAccess_"+getarg(0) ),getequipid(8);
+			if( $Length[0] < $Length[1] && $Length[0] ){
+				mes "Input a ^FF0000Name^000000 for this Slot.";
+				mes "Name Length : "+$Length[0]+" ~ "+$Length[1]+" Chars";
+				do{
+					input getd( "SlotStuff_"+getarg(0)+"$" );
+				}while( getstrlen( getd( "SlotStuff_"+getarg(0)+"$" ) ) < $Length[0] || getstrlen( getd( "SlotStuff_"+getarg(0)+"$" ) ) > $Length[1] );
+			}else{
+				setd( "SlotStuff_"+getarg(0)+"$" ),"Build "+getarg(0);
+			}
+			message strcharinfo(0),"Build has been saved.";
+			break;
+		Case 3:	//	Remove Build
+			message strcharinfo(0),"Build has been cleared.";
+				setd( "TopHead_"+getarg(0) ),0;
+				setd( "MiddleHead_"+getarg(0) ),0;
+				setd( "LowerHead_"+getarg(0) ),0;
+				setd( "Armor_"+getarg(0) ),0;
+				setd( "LeftHand_"+getarg(0) ),0;
+				setd( "RightHand_"+getarg(0) ),0;
+				setd( "Garment_"+getarg(0) ),0;
+				setd( "Shoes_"+getarg(0) ),0;
+				setd( "LeftAccess_"+getarg(0) ),0;
+				setd( "RightAccess_"+getarg(0) ),0;
+				setd( "SlotStuff_"+getarg(0)+"$" ),"";
+			break;
+	}
+	return;
+}	
+
+function	script	ManageBuildSkills	{
+	switch( getarg(1) ){
+		Case 1:	//	Switch Build
+			message strcharinfo(0),"Build has been switched.";
+				resetskill;
+				for(set .@i,0; .@i<getd( "SkillsCount_"+getarg(0) ); set .@i,.@i+1)
+				{
+					skill getelementofarray(getd( "SkillsID_"+getarg(0) ),.@i),getelementofarray(getd( "SkillsLvl_"+getarg(0) ),.@i),getelementofarray(getd( "SkillsFlag_"+getarg(0) ),.@i);
+				}
+			break;
+		Case 2:	//	Save Build
+				getskilllist;
+				setd( "SkillsCount_"+getarg(0) ),@skilllist_count;
+				copyarray getd( "SkillsID_"+getarg(0) ),@skilllist_id,@skilllist_count;
+				copyarray getd( "SkillsLvl_"+getarg(0) ),@skilllist_lv,@skilllist_count;
+				copyarray getd( "SkillsFlag_"+getarg(0) ),@skilllist_flag,@skilllist_count;
+				//setd( "SkillsPointsRemaining_"+getarg(0) ),@skilllist_count;
+			if( $Length[0] < $Length[1] && $Length[0] ){
+				mes "Input a ^FF0000Name^000000 for this Slot.";
+				mes "Name Length : "+$Length[0]+" ~ "+$Length[1]+" Chars";
+				do{
+					input getd( "SlotSkills_"+getarg(0)+"$" );
+				}while( getstrlen( getd( "SlotSkills_"+getarg(0)+"$" ) ) < $Length[0] || getstrlen( getd( "SlotSkills_"+getarg(0)+"$" ) ) > $Length[1] );
+			}else{
+				setd( "SlotSkills_"+getarg(0)+"$" ),"Build "+getarg(0);
+			}
+			message strcharinfo(0),"Build has been saved.";
+			break;
+		Case 3:	//	Remove Build
+			message strcharinfo(0),"Build has been cleared.";
+				cleararray getelementofarray(getd( "SkillsID_"+getarg(0) ),0),0,getd( "SkillsCount_"+getarg(0) );
+				cleararray getelementofarray(getd( "SkillsLvl_"+getarg(0) ),0),0,getd( "SkillsCount_"+getarg(0) );
+				cleararray getelementofarray(getd( "SkillsFlag_"+getarg(0) ),0),0,getd( "SkillsCount_"+getarg(0) );
+				setd( "SkillsCount_"+getarg(0) ), 0;
+				setd( "SlotSkills_"+getarg(0)+"$" ),"";
+			break;
+	}
+	return;
+}	

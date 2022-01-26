@@ -1,0 +1,80 @@
+alberta, 40, 216, 5	script	Sorin Doll	102,{
+
+	set .@npcname$,"[Sorin Doll]";
+	
+	//Black Sorin Doll 20285
+	setarray @itemBSD[0], 5342, 983, 7230;
+	setarray @countitemBSD[0], 1, 2, 2;
+
+	//Blue Sorin Doll 20285
+	setarray @itemBLSD[0], 5342, 978, 7230;
+	setarray @countitemBLSD[0], 1, 2, 2;
+
+	//Cyan Sorin Doll 20287
+	setarray @itemCSD[0], 5342, 978, 982, 7230;
+	setarray @countitemCSD[0], 1, 2, 2, 2;
+
+	//Gold Sorin Doll 20286
+	setarray @itemGSD[0], 5342, 976, 7230;
+	setarray @countitemGSD[0], 1, 2, 2;
+
+	//Green Sorin Doll 20288
+	setarray @itemGNSD[0], 5342, 979, 7230;
+	setarray @countitemGNSD[0], 1, 2, 2;
+	
+	//Purple  Sorin Doll 20289
+	setarray @itemPSD[0], 5342, 981, 7230;
+	setarray @countitemPSD[0], 1, 2, 2;
+
+	//Red  Sorin Doll 20289
+	setarray @itemRSD[0], 5342, 975, 7230;
+	setarray @countitemRSD[0], 1, 2, 2;
+	
+	//White Sorin Doll 20291
+	setarray @itemWSD[0], 5342, 982, 7230;
+	setarray @countitemWSD[0], 1, 2, 2;
+	
+	
+	
+	mes .@npcname$;
+	mes "Bonjour ^3333FF" + strcharinfo(0) + "^000000!";
+	mes "Je peux te proposer quelque hats pour customiser ton Sorin Doll.";
+	mes	"Ca t'interesse?!";
+	next;
+	mes .@npcname$;
+	mes "Voici ce que je peux te proposer:";
+	next;
+
+	switch(select("Black Sorin Doll:Green Sorin Doll:Cyan Sorin Doll:Gold Sorin Doll:Purple Sorin Doll:Blue Sorin Doll:White Sorin Doll:Red Sorin Doll:^777777Rien, merci...^000000"))
+	{
+		case 1 :
+ 		callfunc "mes_getitem_colo",.@npcname$,20353,@itemBSD,@countitemBSD, 1000000;
+
+		case 2 :
+ 		callfunc "mes_getitem_colo",.@npcname$,20357,@itemGNSD,@countitemGNSD, 1000000;
+
+		case 3 :
+ 		callfunc "mes_getitem_colo",.@npcname$,20355,@itemCSD,@countitemCSD, 1000000;
+		
+		case 4 :
+ 		callfunc "mes_getitem_colo",.@npcname$,20356,@itemGSD,@countitemGSD, 1000000;
+
+		case 5 :
+ 		callfunc "mes_getitem_colo",.@npcname$,20358,@itemPSD,@countitemPSD, 1000000;
+		
+		case 6 :
+		callfunc "mes_getitem_colo",.@npcname$,20354,@itemBLSD,@countitemBLSD, 1000000;
+		
+		case 7 :
+		callfunc "mes_getitem_colo",.@npcname$,20361,@itemWSD,@countitemWSD, 1000000;
+
+		case 8 :
+		callfunc "mes_getitem_colo",.@npcname$,20359,@itemRSD,@countitemRSD, 1000000;
+
+		// Quitter
+		case 9 :
+		mes @npcname$;
+		mes "Très bien. A bientôt !";
+		close;
+	}
+}

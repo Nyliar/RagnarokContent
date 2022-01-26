@@ -1,0 +1,35 @@
+mysterio,73,42,1	script	Romancier	832,{
+	set .@npcname$, "^0000FF[Romancier]^000000";
+	mes .@npcname$;
+	mes "";
+	mes "Bonjour voyageur.";
+	mes "Je suppose que tu es là pour le mystère qui réside sur cette île.";
+	mes "Je suis là pour écire mon roman moi, qui porte bien évidemment sur cette île et ces statues.";
+	next;
+	mes .@npcname$;
+	mes "";
+	mes "Je l'ai bientôt terminé au passage donc vous pourrez bientôt l'acheter à la bibliothèque de Yuno.";
+	mes "Je suis l'écrivain Peter Wright il vous suffira de demander mon dernier livre.";
+	mes "De toute manière je ne m'en fais pas il s'agire surement d'un Best Seller !!!";
+
+	close;
+}
+
+mysterio,100,49,5	script	Archéologue#arch1	702,{
+	set .@npcname$, "^0000FF[Archéologue]^000000";
+	mes .@npcname$;
+	mes "";
+	mes "Bienvenue sur l'île Mysterio.";
+	mes "Tu dois te douter que si cette île porte ce nom ce n'est pas pour rien.";
+	mes "Enfaite tout proviens de ces statues qui sont partout sur cette île.";
+	mes "Personne ne sait d'où elles viennent qui les a faite ...";
+	next;
+	mes .@npcname$;
+	mes "";
+	mes "Nous ne savons strictement rien.";
+	mes "Nous n'avons retrouver aucune trace de civilisation ou d'outil qui aurait était utilisé pour les construires ou de cadavres. RIEN !";
+	mes "Si tu veux tu peux toi aussi essayé de résoudre le mystère de cette île mais si tu trouves quelque chose tiens nous au courant s'il te plait.";
+	mes "Bonne chance et bonne journée.";
+
+	close;
+}

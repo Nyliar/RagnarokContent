@@ -1,0 +1,83 @@
+//===== eAthena Script =======================================
+//= Item Fusion
+//===== By: ==================================================
+//= Euphy
+//===== Current Version: =====================================
+//= 1.0
+//===== Description: =========================================
+//= Slots a given item within another.
+//============================================================
+
+prontera,163,167,4	script	Fusion Master	808,{
+	mes "[Fusion Master]";
+	mes "After ten long years of searching,";
+	mes "I've finally come across a way to";
+	mes "make equipment stronger than";
+	mes "anyone would've thought...";
+	next;
+	switch(select("Keep listening...:Fuse items:^777777Cancel^000000")) {
+		case 1:
+			mes "[Fusion Master]";
+			mes "The process is called ^0055FFFusion^000000.";
+			mes "With it, I can combine two pieces";
+			mes "of equipment, doubling its";
+			mes "strength. Of course, there is a";
+			mes "chance I might fail... ^FF0000and";
+			mes "your equipment will break.^000000";
+			next;
+		case 2:
+			mes "[Fusion Master]";
+			if (Zeny < .Price) {
+				mes "It costs "+.Price+"z to fuse items. Come back later."; close; }
+			mes "What would you like to fuse?";
+			if (.Price) mes "Each attempt will cost "+.Price+"z.";
+			next;
+			set .@menu$,"";
+			for(set .@i,0; .@i<getarraysize(.Items); set .@i,.@i+3)
+				set .@menu$, .@menu$+((countitem(.Items[.@i+1])?"^0055FF":"^FF0000"))+getitemname(.Items[.@i+1])+"^000000 & "+((countitem(.Items[.@i+2])?"^0055FF":"^FF0000"))+getitemname(.Items[.@i+2])+":";
+			set .@i, (select(.@menu$)-1)*3;
+			mes "[Fusion Master]";
+			mes "^0055FF"+getitemname(.Items[.@i+2])+"^000000 ~~> ^0055FF"+getitemname(.Items[.@i+1])+"^000000";
+			mes " ";
+			if (!countitem(.Items[.@i+1]) || !countitem(.Items[.@i+2])) {
+				mes "You don't have the required materials."; close; }
+			if (.Ticket && .Items[.@i] < 100)
+				if (countitem(.Ticket)) {
+					mes "^FF00001 "+getitemname(.Ticket)+" will be consumed.^000000";
+					set .@NoFail,1; }
+			if (!.@NoFail && .Items[.@i] < 100) {
+				if (.DispChance) mes "^FF0000There is a "+(100-.Items[.@i])+"% chance of failure.^000000";
+				else mes "^FF0000The process may fail.^000000"; }
+			mes "Do you wish to proceed?";
+			next;
+			if(select("Continue:^777777Cancel^000000")==2) close;
+			mes "[Fusion Master]";
+			delitem .Items[.@i+1],1;
+			delitem .Items[.@i+2],1;
+			if (.@NoFail) delitem .Ticket,1;
+			if (.Price) set Zeny, Zeny-.Price;
+			if(rand(1,100) > .Items[.@i] && !.@NoFail) {
+				specialeffect2 155;
+				mes "Oh, no...";
+				close; }
+			mes "Success!";
+			mes "Here's your new item!";
+			getitem2 .Items[.@i+1],1,1,0,0,0,0,0,.Items[.@i+2];
+			if (.Announce) announce strcharinfo(0)+" has successfully fused "+getitemname(.Items[.@i+1])+" with "+getitemname(.Items[.@i+2])+"!",0;
+			specialeffect2 91;
+		case 3:
+			close;
+	}
+OnInit:
+// --------------------- Config ---------------------
+// Format: <% success>,<Item A>,<Item B>{,...};
+// Item B will be slotted inside of Item A; maximum 42 fusion items.
+
+	setarray .Items[0],50,1202,1228,75,5025,2254,10,1102,1141;
+	set .Price,0;		// Zeny cost per fusion attempt, if any
+	set .Ticket,7227;	// Item ID consumed for 100% success rate (0 to disable)
+	set .Announce,1;	// Announce successful fusion? (1:yes / 0:no)
+	set .DispChance,1;	// Show the success rate? (1:yes / 0:no)
+	end;
+// --------------------------------------------------
+}

@@ -1,0 +1,73 @@
+payon, 195, 179, 5	script	Munak Hat	881,{
+
+	set .@npcname$,"[Munak Hat]";
+	
+	//Black Munak Hat 20178
+	setarray @itemBMH[0], 5167, 983, 7230;
+	setarray @countitemBMH[0], 1, 2, 2;
+
+	//Blue Munak Hat 20179
+	setarray @itemCMH[0], 5167, 978, 7230;
+	setarray @countitemCMH[0], 1, 2, 2;
+	
+	//Cyan Munak Hat 20180
+	setarray @itemCMH[0], 5167, 978, 982, 7230;
+	setarray @countitemCMH[0], 1, 2, 2, 2;
+
+	//Gold Munak Hat 20181
+	setarray @itemGMH[0], 5167, 976, 7230;
+	setarray @countitemGMH[0], 1, 2, 2;
+
+	//Green Munak Hat 20182
+	setarray @itemGNAD[0], 5167, 979, 7230;
+	setarray @countitemGNAD[0], 1, 2, 2;
+	
+	//Purple  Munak Hat 20183
+	setarray @itemPMH[0], 5167, 981, 7230;
+	setarray @countitemPMH[0], 1, 2, 2;
+	
+	//White Munak Hat 20184
+	setarray @itemWMH[0], 5167, 975, 7230;
+	setarray @countitemWMH[0], 1, 2, 2; 
+	
+	
+	
+	mes .@npcname$;
+	mes "Bonjour ^3333FF" + strcharinfo(0) + "^000000!";
+	mes "Je peux te proposer quelque hats pour customiser ton Munak Hat.";
+	mes	"Ca t'interesse?!";
+	next;
+	mes .@npcname$;
+	mes "Voici ce que je peux te proposer:";
+	next;
+
+	switch(select("Black Munak Hat:Blue Munak Hat:Cyan Munak Hat:Gold Munak Hat:Purple Munak Hat:White Munak Hat:Green Munak Hat:^777777Rien, merci...^000000"))
+	{
+		case 1 :
+ 		callfunc "mes_getitem_colo",.@npcname$,20178,@itemBMH,@countitemBMH, 1000000;
+
+		case 2 :
+ 		callfunc "mes_getitem_colo",.@npcname$,20179,@itemBLMH,@countitemBLMH, 1000000;
+
+		case 3 :
+ 		callfunc "mes_getitem_colo",.@npcname$,20180,@itemCMH,@countitemCMH, 1000000;
+
+		case 4 :
+ 		callfunc "mes_getitem_colo",.@npcname$,20181,@itemGMH,@countitemGMH, 1000000;
+		
+		case 5 :
+		callfunc "mes_getitem_colo",.@npcname$,20182,@itemPMH,@countitemPMH, 1000000;
+
+		case 6 :
+		callfunc "mes_getitem_colo",.@npcname$,20183,@itemWMH,@countitemWMH,1000000;
+
+		case 7 :
+		callfunc "mes_getitem_colo",.@npcname$,20184,@itemGNMH,@countitemGNMH,1000000;
+
+		// Quitter
+		case 8 :
+		mes @npcname$;
+		mes "Très bien. A bientôt !";
+		close;
+	}
+}

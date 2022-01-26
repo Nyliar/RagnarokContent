@@ -1,0 +1,101 @@
+geffen, 62, 45, 5	script	Feather Beret	64,{
+
+	set .@npcname$,"[Feather Beret]";
+	
+	//Black Feather Beret 20272
+	setarray @itemBFB[0], 5170, 983, 7230;
+	setarray @countitemBFB[0], 1, 2, 2;
+	
+	//Brown Feather Beret 20273
+	setarray @itemBRFB[0], 5170, 978, 980, 7230;
+	setarray @countitemBRFB[0], 1, 2, 2, 2;
+
+	//Gold Feather Beret 20274
+	setarray @itemGFB[0], 5170, 978, 982, 7230;
+	setarray @countitemGFB[0], 1, 2, 2, 2;
+
+	//Green Feather Beret 20275
+	setarray @itemGNFB[0], 5170, 976, 7230;
+	setarray @countitemGNFB[0], 1, 2, 2;
+	
+	//Light Blue Feather Beret 20276
+	setarray @itemLBFB[0], 5170, 978, 982, 7230;
+	setarray @countitemLBFB[0], 1, 2, 2, 2;
+	
+	//Orange  Feather Beret 20277
+	setarray @itemOFB[0], 5170, 980, 7230;
+	setarray @countitemOFB[0], 1, 2, 2;
+	
+	//Pink Feather Beret 20278
+	setarray @itemPKFB[0], 5170, 975, 982, 7230;
+	setarray @countitemPKFB[0], 1, 2, 2, 2;
+	
+	//Purple Feather Beret 20279
+	setarray @itemPFB[0], 5170, 982, 7230;
+	setarray @countitemPFB[0], 1, 2, 2;
+	
+	//Red Feather Beret 20280
+	setarray @itemRFB[0], 5170, 975, 7230;
+	setarray @countitemRFB[0], 1, 2, 2;
+	
+	//Silver Feather Beret 20281
+	setarray @itemSFB[0], 5170, 982, 983, 7230;
+	setarray @countitemSFB[0], 1, 2, 2, 2;
+	
+	//White Feather Beret 20282
+	setarray @itemWFB[0], 5170, 982, 7230;
+	setarray @countitemWFB[0], 1, 2, 2;
+	
+	
+	
+	mes .@npcname$;
+	mes "Bonjour ^3333FF" + strcharinfo(0) + "^000000!";
+	mes "Je peux te proposer quelque hats pour customiser ton Feather Beret.";
+	mes	"Ca t'interesse?!";
+	next;
+	mes .@npcname$;
+	mes "Voici ce que je peux te proposer:";
+	next;
+
+	switch(select("Black Feather Beret:Brown Feather Beret:Gold Feather Beret:Green Feather Beret:Light Blue Feather Beret:Orange Feather Beret:Pink Feather Beret:Purple Feather Beret:Red Feather Beret:Silver Feather Beret:White Feather Beret:^777777Rien, merci...^000000"))
+	{
+		case 1 :
+ 		callfunc "mes_getitem_colo",.@npcname$,20272,@itemBFB,@countitemBFB, 1000000;
+
+		case 2 :
+ 		callfunc "mes_getitem_colo",.@npcname$,20273,@itemBRFBCT,@countitemBRFB, 1000000;
+
+		case 3 :
+ 		callfunc "mes_getitem_colo",.@npcname$,20274,@itemGFB,@countitemGFB, 1000000;
+		
+		case 4 :
+ 		callfunc "mes_getitem_colo",.@npcname$,20275,@itemGNFB,@countitemGNFB, 1000000;
+
+		case 5 :
+		callfunc "mes_getitem_colo",.@npcname$,20276,@itemLBFB,@countitemLBFB, 1000000;
+
+		case 6 :
+ 		callfunc "mes_getitem_colo",.@npcname$,20277,@itemOFB,@countitemOFB, 1000000;
+		
+		case 7 :
+		callfunc "mes_getitem_colo",.@npcname$,20278,@itemPKFB,@countitemPKFB, 1000000;
+		
+		case 8:
+		callfunc "mes_getitem_colo",.@npcname$,20279,@itemPFB,@countitemPFB, 1000000;
+		
+		case 9:
+		callfunc "mes_getitem_colo",.@npcname$,20280,@itemRFB,@countitemRFB, 1000000;
+		
+		case 10:
+		callfunc "mes_getitem_colo",.@npcname$,20281,@itemSFB,@countitemSFB, 1000000;
+		
+		case 11:
+		callfunc "mes_getitem_colo",.@npcname$,20282,@itemWFB,@countitemWFB, 1000000;
+
+		// Quitter
+		case 12 :
+		mes @npcname$;
+		mes "Très bien. A bientôt !";
+		close;
+	}
+}

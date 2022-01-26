@@ -1,0 +1,69 @@
+//Le Livre d'Ymir http://www.bookofymir.net/
+//traduit par Myllena, corrigé par Fern
+//===== eAthena Script ======================================= 
+//= Advance Class jobchanger after kRO Normals.
+//===== By: ==================================================
+//= Nana
+//= finished, optimized and tested by Lupus
+//===== Current Version: ===================================== 
+//= 1.3
+//===== Compatible With: ===================================== 
+//= eAthena 1.0 +
+//===== Description: ========================================= 
+//= Advance Class jobchanger after kRO Normals.
+//===== Additional Comments: ================================= 
+//= v1.1 Made all into functions, additional checks, etc. [Lupus]
+//= v1.2 Made numbers into constants. [Vicious]
+//= 1.3 Now saves/restores all the quest skills [Lupus]
+//============================================================ 
+
+valkyrie,44,55,5	script	Tireuse d'Élite::Tireur d'Élite#Valkyrie	727,{
+	if (ADVJOB == 0 || Upper != 1) {
+		set .@karma_d,rand(1,10);
+		if (.@karma_d > 4) {
+			mes "[Tireuse d'Élite]";
+			mes "Félicitations.";
+			mes "Honneur aux Guerriers!";
+			close;
+		}
+		mes "[Tireuse d'Élite]";
+		mes "Une flèche.";
+		mes "Un mort.";
+		mes "Ce n'est pas si difficile, une fois que vous aurez développé votre vision.";
+		close;
+	}
+	else if (ADVJOB == Job_Sniper && Class == Job_Archer_High && JobLevel > 39) {
+		mes "[Tireuse d'Élite]";
+		mes "Le monde a besoin d'un valeureux Tireur d'Élite tel que vous. Êtes-vous prêt à endosser cette responsabilité?";
+		next;
+		mes "[Tireuse d'Élite]";
+		mes "Souhaitez-vous devenir Tireur d'Élite?";
+		next;
+		if (select("Non.:Oui.") == 1) {
+			mes "[Tireuse d'Élite]";
+			mes "Revenez quand vous vous sentirez prêt.";
+			next;
+			mes "[Tireuse d'Élite]";
+			mes "Honneur aux Guerriers!";
+			close;
+		}
+		if (SkillPoint) {
+			mes "[Tireuse d'Élite]";
+			mes "Vous n'avez pas terminé votre apprentissage.";
+			close;
+		}
+		jobchange Job_Sniper;
+		set ADVJOB,0;
+		mes "[Tireuse d'Élite]";
+		mes "Félicitations!";
+		mes "En tant que Tireur d'Élite, j'espère que les avatars du malin ne seront jamais en sécurité s'ils se trouvent à portée de tir!";
+		close;
+	}
+	mes "[Tireuse d'Élite]";
+	mes "Bienvenue au Walhalla, le Hall des Honneurs.";
+	next;
+	mes "[Tireuse d'Élite]";
+	mes "Faites comme chez vous.";
+	mes "Honneur aux Guerriers!";
+	close;
+}

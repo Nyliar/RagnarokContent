@@ -1,0 +1,109 @@
+thalys_s,356,101,5	script	Pêcheur#2	809,{
+	set .@npcname$, "[Pêcheur]";
+	
+	mes .@npcname$;
+	mes "";
+	mes "Sali salut!";
+	mes "Paraît qu'on peut chopper du poisson dans ce port.";
+	mes "Pourtant, j'ai rien pris depuis un moment...";
+	mes "Peut-être que mon camarade pêcheur pourra m'aider...";
+	close;
+}
+
+thalys_s,371,116,5	script	Docker	52,{
+	set .@npcname$, "[Docker]";
+	
+	mes .@npcname$;
+	mes "";
+	mes "Désolé, mais là, j'ai du travail!";
+	mes "On a une cargaison qui part sous peu pour l'île Fiesta.";
+	mes "Et une autre prévue cet après-midi en provenance de La Tortue.";
+	close;
+}
+
+thalys_s,335,117,5	script	Sailor Guild	837,{
+	set .@npcname$, "[Sailor Guild]";
+	
+	mes .@npcname$;
+	mes "";
+	mes "Entrée de la Sailor Guild";
+	mes "Achetez-y tout ce qui a un rapport avec la Mer.";
+	close;
+}
+
+thalys_s,244,219,5	script	Garde Porte Sud#2::tgps2	852,{
+	set .@npcname$, "[Garde de la Porte Sud]";
+	
+	mes .@npcname$;
+	mes "";
+	mes "Bonjour, voyageur.";
+	mes "Vous vous trouvez à la Porte Sud de Thalys, la Capitale Neutre.";
+	mes "En la franchissant, vous arriverez au centre de la Ville.";
+	close;
+}
+
+thalys_s,251,219,3	script	Garde Porte Sud#s2	852,{
+	set .@npcname$, "[Garde de la Porte Sud]";
+	
+	mes .@npcname$;
+	mes "";
+	mes "Bonjour, voyageur.";
+	mes "Vous vous trouvez à la Porte Sud de Thalys, la Capitale Neutre.";
+	mes "En la franchissant, vous arriverez au centre de la Ville.";
+	close;
+}
+
+thalys_s,102,160,7	script	Garde Porte Ouest#2	868,{
+	set .@npcname$, "[Garde de la Porte Ouest]";
+	
+	mes .@npcname$;
+	mes "";
+	mes "Bonjour, voyageur.";
+	mes "Vous vous trouvez à la Porte Ouest de Thalys, la Capitale Neutre.";
+	mes "En la franchissant, vous arriverez aux zones agraires de la ville.";
+	close;
+}
+
+thalys_s,102,154,5	script	Garde Porte Ouest#s2	868,{
+	set .@npcname$, "[Garde de la Porte Ouest]";
+	
+	mes .@npcname$;
+	mes "";
+	mes "Bonjour, voyageur.";
+	mes "Vous vous trouvez à la Porte Ouest de Thalys, la Capitale Neutre.";
+	mes "En la franchissant, vous arriverez aux zones agraires de la ville.";
+	close;
+}
+
+thalys_s,248,197,5	script	Panneau de Direction	835,{
+	set .@npcname$, "[Panneau de Direction]";
+	
+	mes .@npcname$;
+	mes "";
+	mes "Au nord: Thalys";
+	mes "A l'est: le Port / Sailor Guild";
+	mes "A l'ouest: Zone Agraire";
+	close;
+}
+
+thalys_s,134,96,5	script	Nettoyeur	883,{
+	set .@npcname$, "[Nettoyeur]";
+	
+	mes .@npcname$;
+	mes "";
+	mes "Je passe mon temps à nettoyer les lendemains de fêtes sur la plage.";
+	mes "C'est plutôt épuisant comme travail...";
+	close;
+}
+
+thalys_s,223,187,5	script	Omadu	454,{
+	set .@npcname$, "[Omadu]";
+	
+	mes .@npcname$;
+	mes "";
+	mes "Je viens des Iles des Mers du Sud.";
+	mes "Il paraît qu'il y a des tonnes de missions et chasses par ici.";
+	mes "J'aimerais bien en accomplir quelques unes.";
+	mes "Et me trouver un nouveau chapeau aussi.";
+	close;
+}

@@ -1,0 +1,129 @@
+thalys_o,62,199,5	script	Lorn	98,{
+	set .@npcname$, "[Lorn]";
+	
+	mes .@npcname$;
+	mes "";
+	mes "Essaye pas de me piquer mon arbre.";
+	mes "Je suis sûr qu'un jour, un Fruit Divin poussera dessus.";
+	mes "Tu ferais mieux d'aller chercher un arbre à toi.";
+	mes "Je te laisserais pas le mien!";
+	close;
+}
+
+thalys_o,68,225,5	script	Embarquement Ballon	448,{
+	set .@npcname$, "[Embarquement Ballon]";
+	
+	mes .@npcname$;
+	mes "";
+	mes "Bonjour.";
+	mes "Désolé, mais le Ballon ne peux pas décoller pour l'instant.";
+	mes "Une annonce sera passé sur le tableau d'affichage de Thalys quand vous pourrez l'utiliser.";
+	mes "A bientôt.";
+	close;
+}
+
+thalys_o,86,152,5	script	Fermier	119,{
+	set .@npcname$, "[Fermier]";
+	
+	mes .@npcname$;
+	mes "";
+	mes "Crevindieu, les Dieux, les Guerres, tout ça c'est de la foutaise!";
+	mes "Sans moi et mes récoltes, personne boufferait en Thalys!";
+	mes "La Capitale Neutre protège les gens comme moi.";
+	mes "Sans elle, pas moyen de travailler!";
+	close;
+}
+
+thalys_o,66,60,5	script	Yorek	407,{
+	set .@npcname$, "[Yorek]";
+	
+	mes .@npcname$;
+	mes "";
+	mes "Je cherche des Fae.";
+	mes "Il paraît qu'elles ont des pouvoirs magiques.";
+	mes "Il paraît aussi qu'une île leur appartient.";
+	mes "Elles auraient chasser les Hommes grâce à leurs pouvoirs.";
+	mes "...";
+	mes "J'aimerais bien en voir.";
+	close;
+}
+
+thalys_o,61,102,7	script	Malene	90,{
+	set .@npcname$, "[Malene]";
+	
+	mes .@npcname$;
+	mes "";
+	mes "Je ne supportais plus les Batailles.";
+	mes "Je n'aspirais qu'à vivre en paix.";
+	mes "C'est pour ça que je me suis réfugiée à Thalys.";
+	mes "Les coffres, les Territoires, très peu pour moi.";
+	mes "Je préfère vivre tranquille.";
+	close;
+}
+
+thalys_o,66,145,5	script	Imalid	712,{
+	set .@npcname$, "[Imalid]";
+	
+	mes .@npcname$;
+	mes "";
+	mes "Les Pirates font de plus en plus d'excursions sur nos terres.";
+	mes "Heureusement, les Gardes Côtes et les Chasseurs de Primes veillents.";
+	mes "Nous pouvons dormir tranquille.";
+	close;
+}
+
+thalys_o,108,221,5	script	Kruln	429,{
+	set .@npcname$, "[Kruln]";
+	
+	mes .@npcname$;
+	mes "";
+	mes "Je faisais autrefois partie des Pirates Sanglants.";
+	mes "J'ai beaucoup voyagé, et vu beaucoup de contrées.";
+	mes "Notamment une île peuplée uniquement de bestioles roses, et une avec une tour immense, très sombre.";
+	mes "Je suis sûr qu'il y en a encore beaucoup.";
+	close;
+}
+
+thalys_o,120,210,3	script	Garde Porte Sud#2::tgpo2	708,{
+	set .@npcname$, "[Garde de la Porte Sud]";
+	
+	mes .@npcname$;
+	mes "";
+	mes "Bonjour, voyageur.";
+	mes "Vous vous trouvez à la Porte Sud de Thalys, la Capitale Neutre.";
+	mes "En la franchissant, vous arriverez au centre de la Ville.";
+	close;
+}
+
+thalys_o,120,203,2	script	Garde Porte Sud#o2	708,{
+	set .@npcname$, "[Garde de la Porte Sud]";
+	
+	mes .@npcname$;
+	mes "";
+	mes "Bonjour, voyageur.";
+	mes "Vous vous trouvez à la Porte Sud de Thalys, la Capitale Neutre.";
+	mes "En la franchissant, vous arriverez au centre de la Ville.";
+	close;
+}
+
+thalys_o,93,61,1	script	Garde Porte Est	459,{
+	set .@npcname$, "[Garde de la Porte Est]";
+	
+	mes .@npcname$;
+	mes "";
+	mes "Bonjour, voyageur.";
+	mes "Vous vous trouvez à la Porte Est de la zone agraire de Thalys, la Capitale Neutre.";
+	mes "En la franchissant, vous arriverez sur la plage, près du port de la ville.";
+	close;
+}
+
+thalys_o,93,56,3	script	Garde Porte Est#o2	459,{
+	set .@npcname$, "[Garde de la Porte Est]";
+	
+	mes .@npcname$;
+	mes "";
+	mes "Bonjour, voyageur.";
+	mes "Vous vous trouvez à la Porte Est de la zone agraire de Thalys, la Capitale Neutre.";
+	mes "En la franchissant, vous arriverez sur la plage, près du port de la ville.";
+	close;
+}

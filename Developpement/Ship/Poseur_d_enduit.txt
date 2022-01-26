@@ -1,0 +1,316 @@
+yuno,46,186,6	script	Poseur d'enduit	824,{
+	set .@npcname$, "[Le Poseur d'enduit]";
+	
+	setarray .listep[0],6121,6122,5444;
+	setarray .listepcount[0], 1, 1, 1;
+	
+	mes .@npcname$;
+	mes "";
+	mes "Bonjour à toi, " + strcharinfo(0);
+
+	if (SHIP_Q == 1)
+	{
+		if (CALF_Q == 2)
+		{
+			if (POSE_Q == 0)
+			{
+				mes "Euh....Vois-tu...je me sens un peu bête là.";
+				mes "Je suis prêt à bosser mais...";
+				mes "J'arrive pas à remettre la main sur mes outils...";
+				mes "Sans doute ces garnements qui me les ont cachés...";
+				mes "Aide moi à les trouver, et je m'y remet.";
+				mes "Ils m'ont caché ";
+				set COUNT1, .listepcount[0];
+				set COUNT2, .listepcount[1];
+				set COUNT3, .listepcount[2];
+				callfunc "display_list",.listep,.listepcount;
+				mes "Je vais cherche de mon côté.";
+				set POSE_Q, 1;
+			}
+			else 
+			{
+				mes "Tu les as trouvé?";
+				if (countitem(6121) >= 1 && countitem(6122) >= 1 && countitem(5444) >= 1)
+				{
+					delitem 6121,1;
+					delitem 6122,1;
+					delitem 5444,1;
+					mes "Yepee! Je peux re-travailler!";
+					mes "Attends que j'attrape ces sales gamins!";
+					mes "Tu peux aller voir le Dompteur, je m'occupe de ton enduit.";
+					set POSE_Q, 2;
+				}
+				else
+				{
+					mes "Désolé, mais tu n'as pas tout.";
+					mes "J'ai absolument besoin de tout mes outils...";
+				}
+			}
+		}
+		else
+		{
+			mes "J'attends encore ta coque...";
+			mes "Je ne peux rien faire sans elle.";
+		}
+	}
+	else
+	{
+		mes "Mon rôle à moi, c'est simplement de poser une couche d'enduit.";
+		mes "L'enduit que j'utilise est apaisant pour les monstres, il diffuse une odeur qui les calme.";
+		mes "Tu peux me voir comme une sorte de peintre.";
+		mes "Sans moi, l'Enchanteresse ne peut pas faire son travail.";
+	}
+	close;
+}
+
+yuno,66,187,6	script	Gamin#g1	96,{
+	set .@npcname$, "[Gamin]";
+	
+	mes .@npcname$;
+	mes "";
+	mes "Oy! Salut le vieux.";
+	if (POSE_Q == 1)
+	{
+		mes "Un outil du peintre?";
+		mes "Non...Non je sais pas...";
+		mes "Peut être contre un peu d'argent...";
+		mes "Disons...25000 Zeny?";
+		switch(select("Tiens, sale gosse", "Va te faire voir"))
+		{
+			case 1:
+				if (Zeny >= 25000)
+				{
+					set Zeny, Zeny-25000;
+					mes "Je vais te dire ce que je sais...";
+					mes "....";
+					mes "Rien. AHAHAHA";
+				}
+				else
+					mes "Pas moyen, tu m'arnaqueras pas!";
+				break;
+			case 2:
+				mes "Tant pis pour toi.";
+				break;
+		}
+	}
+	close;
+}
+
+yuno,67,163,6	script	Gamin#g2	62,{
+	set .@npcname$, "[Gamin]";
+	
+		mes .@npcname$;
+	mes "";
+	mes "Oy! Salut le vieux.";
+	if (POSE_Q == 1)
+	{
+		mes "Un outil du peintre?";
+		mes "Non...Non je sais pas...";
+		mes "Peut être contre un peu d'argent...";
+		mes "Disons...10000 Zeny?";
+		switch(select("Tiens, sale gosse", "Va te faire voir"))
+		{
+			case 1:
+				if (Zeny >= 10000)
+				{
+					set Zeny, Zeny-10000;
+					mes "Je vais te dire ce que je sais...";
+					mes "....";
+					mes "Tu devrais chercher dans les trous des rats...";
+				}
+				else
+					mes "Pas moyen, tu m'arnaqueras pas!";
+				break;
+			case 2:
+				mes "Tant pis pour toi.";
+				break;
+		}
+	}
+	close;
+}
+
+yuno,61,204,6	script	Gamin#g3	706,{
+	set .@npcname$, "[Gamin]";
+	
+		mes .@npcname$;
+	mes "";
+	mes "Oy! Salut le vieux.";
+	if (POSE_Q == 1)
+	{
+		mes "Un outil du peintre?";
+		mes "Non...Non je sais pas...";
+		mes "Peut être contre un peu d'argent...";
+		mes "Disons...30000 Zeny?";
+		switch(select("Tiens, sale gosse", "Va te faire voir"))
+		{
+			case 1:
+				if (Zeny >= 30000)
+				{
+					set Zeny, Zeny-30000;
+					mes "Je vais te dire ce que je sais...";
+					mes "....";
+					mes "Je suis sûr qu'un de ses outils traine dans sa propre boite.";
+				}
+				else
+					mes "Pas moyen, tu m'arnaqueras pas!";
+				break;
+			case 2:
+				mes "Tant pis pour toi.";
+				break;
+		}
+	}
+	close;
+}
+
+yuno,35,193,6	script	Gamin#g4	716,{
+	set .@npcname$, "[Gamin]";
+	
+		mes .@npcname$;
+	mes "";
+	mes "Oy! Salut le vieux.";
+	if (POSE_Q == 1)
+	{
+		mes "Un outil du peintre?";
+		mes "Non...Non je sais pas...";
+		mes "Peut être contre un peu d'argent...";
+		mes "Disons...25000 Zeny?";
+		switch(select("Tiens, sale gosse", "Va te faire voir"))
+		{
+			case 1:
+				if (Zeny >= 25000)
+				{
+					set Zeny, Zeny-25000;
+					mes "Je vais te dire ce que je sais...";
+					mes "....";
+					mes "Bah j'en sais rien en fait...";
+				}
+				else
+					mes "Pas moyen, tu m'arnaqueras pas!";
+				break;
+			case 2:
+				mes "Tant pis pour toi.";
+				break;
+		}
+	}
+	close;
+}
+
+yuno,69,143,6	script	Gamin#g5	812,{
+	set .@npcname$, "[Gamin]";
+	
+	mes .@npcname$;
+	mes "";
+	mes "Oy! Salut le vieux.";
+	if (POSE_Q == 1)
+	{
+		mes "Un outil du peintre?";
+		mes "Non...Non je sais pas...";
+		mes "Peut être contre un peu d'argent...";
+		mes "Disons...15000 Zeny?";
+		switch(select("Tiens, sale gosse", "Va te faire voir"))
+		{
+			case 1:
+				if (Zeny >= 15000)
+				{
+					set Zeny, Zeny-15000;
+					mes "Je vais te dire ce que je sais...";
+					mes "....";
+					mes "je sais que je suis pas un pro du ménage...";
+				}
+				else
+					mes "Pas moyen, tu m'arnaqueras pas!";
+				break;
+			case 2:
+				mes "Tant pis pour toi.";
+				break;
+		}
+	}
+	close;
+}
+
+yuno,91,163,6	script	Gamin#g6	877,{
+	set .@npcname$, "[Gamin]";
+	
+		mes .@npcname$;
+	mes "";
+	mes "Oy! Salut le vieux.";
+	if (POSE_Q == 1)
+	{
+		mes "Un outil du peintre?";
+		mes "Non...Non je sais pas...";
+		mes "Peut être contre un peu d'argent...";
+		mes "Disons...40000 Zeny?";
+		switch(select("Tiens, sale gosse", "Va te faire voir"))
+		{
+			case 1:
+				if (Zeny >= 40000)
+				{
+					set Zeny, Zeny-40000;
+					mes "Je vais te dire ce que je sais...";
+					mes "....";
+					mes "Rien. AHAHAHA";
+				}
+				else
+					mes "Pas moyen, tu m'arnaqueras pas!";
+				break;
+			case 2:
+				mes "Tant pis pour toi.";
+				break;
+		}
+	}
+	close;
+}
+
+yuno,51,191,6	script	Boite à outil	111,{
+	if (POSE_Q == 1)
+	{
+		mes "Vous trouvez un outil du Poseur d'enduit.";
+		getitem 6121, 1;
+	}
+	else
+	{
+		mes "Une boite à outils tout ce qu'il y a d'ordinaire.";
+	}
+	close;
+}
+
+yuno,33,185,6	script	tas de poussière#c1	111,{
+	if (POSE_Q == 1)
+	{
+		mes "Vous trouvez un outil du Poseur d'enduit.";
+		getitem 6122, 1;
+	}
+	else
+	{
+		mes "Il n'y a rien à part de la poussière.";
+	}
+	close;
+}
+
+yuno,68,176,6	script	cachette#c2	111,{
+	mes "Il n'y a rien à part de la poussière.";
+	close;
+}
+
+yuno,75,201,6	script	coin d'ombre#c3	111,{
+	mes "Vous vous êtes fait griffer par un chat errant.";
+	close;
+}
+
+yuno,63,125,6	script	tonneau#c4	111,{
+	if (POSE_Q == 1)
+	{
+		mes "Vous trouvez un outil du Poseur d'enduit.";
+		getitem 5444, 1;
+	}
+	else
+	{
+		mes "Il n'y a rien ici.";
+	}
+	close;
+}
+
+yuno,49,173,6	script	trou à rat#c5	111,{
+	mes "Un rat vient de bondir devant vous...";
+	close;
+}

@@ -1,0 +1,35 @@
+//Merchant guide GLT Poison Kit 7931
+prt_in,33,113,4	script	Poison Master	735,{ 
+	set .npcname$, "[Poison Master]";
+	mes .npcname$;
+
+	mes "Hi.";
+	mes "I'm the best in making people die without they even notice.";
+	mes "To do that, I'm always looking for new poisons.";
+	mes "But for that, I need Poison Kit.";
+	mes "I can sell you some for some items.";
+	mes "I'll also ask for a money participation of 5.000 Zenys.";
+	mes "Interested?";
+	switch(select("Ok","No thanks"))
+	{
+		case 1:
+			next;
+			mes "How many do you want?";
+			input .@count;
+			if (Zeny >= 5000*.@count)
+			{
+				mes "Perfect, you got all I need.";
+				set Zeny, Zeny - 5000*.@count;
+				getitem 7931, .@count;
+				mes "See you soon.";
+			}
+			else
+				mes "You don't have what I need.";
+			break;					
+		case 2:
+			mes "As you wish.";
+			mes "You'll come back, sooner or later.";
+			break;
+	}
+	close;
+}

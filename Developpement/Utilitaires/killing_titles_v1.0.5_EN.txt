@@ -1,0 +1,46 @@
+//http://code.google.com/p/ctscripts/
+-	script	OnDieG5	-1,{
+OnInit:
+set $killing,0; //PK Mode after last title (1 = On / 0 = Off)
+setarray .mapaspvp$[0],"guild_vs3"; //Your PvP Maps
+setarray $titles$[0],"","{Killer}","{Destroyer}","{OMG}","{Professional}","{TDanger of PvP}","{PK}";
+setarray .ammount[0],0,5,10,15,20,30,40,50;
+OnPCKillEvent:
+	getmapxy(@mapa$,@x,@y,0);
+    for(set @c,0; @c < getarraysize(.@mapaspvp$); set @c,@c+1)
+	{
+    if(@mapa$ == .@mapaspvp$[@c] && killedrid != getcharid(0))
+    {
+    	set killer,killer+1;
+        for(set @d,0; @d < getarraysize(.ammount); set @d,@d+1)
+		{
+			if(killer == .ammount[@d])
+			{
+				set title,@d;
+				if(title != getarraysize($titles$)) dispbottom "You unlocked the title: "+$titles$[title];
+				if(title == getarraysize($titles$) && $killing == 1) dispbottom "You unlocked the last title: "+$titles$[title]+" and now you are in PK mode";
+			}
+		}
+    }
+	}
+end;
+OnPCDieEvent:
+	getmapxy(@mapa$,@x,@y,0);
+    for(set @c,0; @c < getarraysize(.@mapaspvp$); set @c,@c+1)
+    if(@mapa$ == .@mapaspvp$[@c])
+    {
+    	if(killer > 0) set killer,killer -1;
+    }
+    end;
+}
+
+-	script	TitleG5	-1,{
+OnPCLoginEvent:
+atcommand "@fakename "+$titles$[title]+strcharinfo(0);
+if(title == getarraysize($titles$) && killing == 1)
+{
+atcommand "@killable";
+atcommand "@killer";
+}
+end;
+}

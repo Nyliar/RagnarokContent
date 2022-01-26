@@ -1,0 +1,681 @@
+//===== eAthena Script ======================================= 
+//= Banker Script 
+//===== By: ================================================== 
+//= Syrus22 (1.0)
+//===== Current Version: ===================================== 
+//= 1.0
+//===== Compatible With: ===================================== 
+//= Any eAthena version with Account variables.
+//===== Description: ========================================= 
+//= An account wide Banker to store Zeny
+//===== Additional Comments: ================================= 
+//= Syrus22 - There's an optional transaction fee at the top of
+//= the script. To use it simply change the first set command
+//= to set the cost variable to whatever you want the fee to be.
+//============================================================ 
+prontera,164,173,5	script	Banque	405,{
+	set .@cost,500;
+	set .@npc$,"[Banker]";
+	mes .@npc$;	
+
+	if (LANGUAGE == 2)
+	{
+		mes "Hello, traveller. Welcome to my bank! What can I do for you?";
+		set .@currentdate$, gettimestr("%d",11);
+		set .@count, atoi(.@currentdate$) - atoi(#lastvisit$);
+		if (.@count > 0)
+		{
+			set @interet,#bankstorage*#contract/100;
+			set #bankstorage,#bankstorage+(.@count*@interet);
+			set #lastvisit$,.@currentdate$;
+		}
+		else
+		{
+			set .@count, 30 - atoi(#lastvisit$) + atoi(.@currentdate$);
+			set @interet,#bankstorage*(#contract/100);
+			set #bankstorage,#bankstorage+(.@count*@interet);
+			set #lastvisit$,.@currentdate$;
+		}
+
+		next;
+		menu "I'd like to make a deposit",Ldeposit,"I need to withdraw some money",Lwithdrawl,"How many gold do I have in my balance?",Lbalance,"I'd like to open a new account.",LCompte,"Nothing, thanks",Lcancel;
+	}
+	else if (LANGUAGE == 1)
+	{
+		mes "Bonjour voyageur. Bienvenue dans ma banque! Que puis-je faire pour toi?";
+		set .@currentdate$, gettimestr("%d",11);
+		set .@count, atoi(.@currentdate$) - atoi(#lastvisit$);
+		if (.@count > 0)
+		{
+			set @interet,#bankstorage*#contract/100;
+			set #bankstorage,#bankstorage+(.@count*@interet);
+			set #lastvisit$,.@currentdate$;
+		}
+		else
+		{
+			set .@count, 30 - atoi(#lastvisit$) + atoi(.@currentdate$);
+			set @interet,#bankstorage*(#contract/100);
+			set #bankstorage,#bankstorage+(.@count*@interet);
+			set #lastvisit$,.@currentdate$;
+		}
+
+		next;
+		menu "Je voudrais effectuer un dépôt",Ldeposit,"J'ai besoin de retirer de l'argent",Lwithdrawl,"De combien je dispose sur mon compte?",Lbalance,"J'aimerais ouvrir un compte.",LCompte,"Rien merci",Lcancel;
+	}
+	
+Ldeposit:
+	mes .@npc$;
+	if (LANGUAGE == 2)
+	{
+		if (#contract == 0)
+		{	
+			mes "I see that this is your first deposit.";
+			mes "To be able to make a deposit, you need to open an account.";
+			mes "According to the account type, your money will make more or less interest.";
+			mes "There's three different kind of account:";
+			next;
+			mes .@npc$;
+			mes "The ^FF0000Gold Account^000000, which make you earn 1% more per day.";
+			mes "The ^FF0000Platinium Account^000000, which make you earn 3% more per day.";
+			mes "The ^FF0000Diamond Account^000000, which make you earn 7% more per day.";
+			mes "Of course, the price of these account depends on which one you choose.";
+			mes "Here's the amount you need:";
+			next;
+			mes .@npc$;
+			mes "A Gold account cost ^FF0000 2.500 Zeny^000000";
+			mes "A Platinum account cost ^FF0000 250.000 Zeny^000000";
+			mes "A Diamond account cost ^FF0000 2.500.000 Zeny^000000";
+			mes "You can change your account type at any time.";
+			mes "But the first amount used to open the account will be lost, no matter what.";
+			next;
+			mes "So? What do you choose?";
+			switch(select("The Gold Account","The Platinium Account","The Diamond Account","Actually, none of them..."))
+			{
+				case 1:
+					mes "Allright, you owe me 2.500 Zeny.";
+					if (Zeny < 2500)
+					{
+						mes "Are you kinding me? You don't event have enough money to open a Gold account";
+						mes "Come back to me when you'll have more gold!";
+					}
+					else
+					{
+						mes "Perrrfect!";
+						mes "you're now the joyful owner of a Gold account!";
+						mes "Welcome in our bank, dear customer.";
+						set Zeny, Zeny-2500;
+						set #contract, 1;
+					}
+					break;
+				case 2:
+					mes "Allright, you owe me 250.000 Zeny.";
+					if (Zeny < 250000)
+					{
+						mes "Are you kinding me? You don't event have enough money to open a Platinium account";
+						mes "Come back to me when you'll have more gold!";
+					}
+					else
+					{
+						mes "Perrrfect!";
+						mes "you're now the joyful owner of a Platinium account!";
+						mes "Welcome in our bank, dear customer.";
+						set Zeny, Zeny-250000;
+						set #contract, 3;
+					}
+					break;
+				case 3:	
+					mes "Allright, you owe me 2.500.000 Zeny.";
+					if (Zeny < 2500000)
+					{
+						mes "Are you kinding me? You don't event have enough money to open a Diamond account";
+						mes "Come back to me when you'll have more gold!";
+					}
+					else
+					{
+						mes "Perrrfect!";
+						mes "you're now the joyful owner of a Diamond account!";
+						mes "Welcome in our bank, dear customer.";
+						set Zeny, Zeny-2500000;
+						set #contract, 7;
+					}
+					break;
+				case 4:
+					mes "Well...We don't have anything in common then. Bye.";
+					break;
+			}
+			next;
+			menu "I'd like to make a deposit",Ldeposit,"I need to withdraw some money",Lwithdrawl,"How many gold do I have in my balance?",Lbalance,"I'd like to open a new account.",LCompte,"Nothing, thanks",Lcancel;
+		}
+		else
+		{
+			mes .@npc$;
+			mes "Sure...Sure! How many gold do you want to deposit?";
+			next;
+			if (.@cost > 0) goto Ldepocost;
+			goto Ldepocont;
+		}
+	}
+	else if (LANGUAGE == 1)
+	{
+		if (#contract == 0)
+		{	
+			mes "Je vois qu'il s'agit d'un premier dépôt.";
+			mes "Pour cela, tu as besoin d'un compte chez nous.";
+			mes "Selon le type de compte, il y a des intérêts plus ou moins différents.";
+			mes "Nous avons trois type de comptes:";
+			next;
+			mes .@npc$;
+			mes "Le ^FF0000Gold Account^000000, avec un revenu de 1% par jour.";
+			mes "Le ^FF0000Platinium Account^000000, avec un revenu de 3% par jour";
+			mes "Le ^FF0000Diamond Account^000000, avec un revenu de 7% par jour.";
+			mes "Bien sûr, le pris d'ouverture dépends du compte.";
+			mes "Voici ce dont tu as besoin:";
+			next;
+			mes .@npc$;
+			mes "Un Gold account coûte ^FF0000 2.500 Zeny^000000";
+			mes "Un Platinum account coûte ^FF0000 250.000 Zeny^000000";
+			mes "Un Diamond account coûte ^FF0000 2.500.000 Zeny^000000";
+			mes "Mais tu peux changer à n'importe quel moment.";
+			mes "Seulement, ce que tu as payé pour ouvrir un compte sera obligatoirement 'perdu'.";
+			next;
+			mes "Alors? Que choisis-tu?";
+			switch(select("Le Gold Account","Le Platinium Account","Le Diamond Account","Bah en fait...Aucun..."))
+			{
+				case 1:
+					mes "Très bien tu me dois donc 2.500 Zeny.";
+					if (Zeny < 2500)
+					{
+						mes "Tu plaisantes? Tu n'as même pas de quoi ouvrir ce genre de compte!";
+						mes "Reviens quand tu auras ce qu'il faut!";
+					}
+					else
+					{
+						mes "Paarrrfait!";
+						mes "Tu es donc désormais l'heureux propriétaire d'un Gold account!";
+						mes "Bienvenue dans notre banque.";
+						set Zeny, Zeny-2500;
+						set #contract, 1;
+					}
+					break;
+				case 2:
+					mes "Très bien tu me dois donc 250.000 Zeny.";
+					if (Zeny < 250000)
+					{
+						mes "Tu plaisantes? Tu n'as même pas de quoi ouvrir ce genre de compte!";
+						mes "Reviens quand tu auras ce qu'il faut!";
+					}
+					else
+					{
+						mes "Paarrrfait!";
+						mes "Tu es donc désormais l'heureux propriétaire d'un Platinum account!";
+						mes "Bienvenue dans notre banque.";
+						set Zeny, Zeny-250000;
+						set #contract, 3;
+					}
+					break;
+				case 3:	
+					mes "Très bien tu me dois donc 2.500.000 Zeny.";
+					if (Zeny < 2500000)
+					{
+						mes "Tu plaisantes? Tu n'as même pas de quoi ouvrir ce genre de compte!";
+						mes "Reviens quand tu auras ce qu'il faut!";
+					}
+					else
+					{
+						mes "Paarrrfait!";
+						mes "Tu es donc désormais l'heureux propriétaire d'un Diamond account!";
+						mes "Bienvenue dans notre banque.";
+						set Zeny, Zeny-2500000;
+						set #contract, 7;
+					}
+					break;
+				case 4:
+					mes "Très bien...Nous n'avons plus rien à nous dire alors.";
+					break;
+			}
+			next;
+			menu "Je voudrais effectuer un dépôt",Ldeposit,"J'ai besoin de retirer de l'argent",Lwithdrawl,"De combien je dispose sur mon compte?",Lbalance,"J'aimerais ouvrir un compte.",LCompte,"Rien merci",Lcancel;
+		}
+		else
+		{
+			mes .@npc$;
+			mes "Bien sûr bien sûr. De combien?";
+			next;
+			if (.@cost > 0) goto Ldepocost;
+			goto Ldepocont;
+		}
+	}
+
+Ldepocost:
+	mes .@npc$;
+	if(LANGUAGE == 2)
+	{
+		mes "And don't forget my tip. There's " + .@cost + "z for me! ";
+	}
+	else if (LANGUAGE == 1)
+	{
+		mes "Et n'oublie pas mon pourboire. Il y a " + .@cost + "z pour moi! ";
+	}
+	next;
+	goto Ldepocont;
+
+LCompte:
+	if(LANGUAGE == 2)
+	{
+		mes "Change your account? Of course!";
+		mes "I'll remember the different kind of account.";
+		mes "There's three different:";
+		next;
+		mes .@npc$;
+		mes "The ^FF0000Gold Account^000000, which make you earn 1% more per day.";
+		mes "The ^FF0000Platinium Account^000000, which make you earn 3% more per day.";
+		mes "The ^FF0000Diamond Account^000000, which make you earn 7% more per day.";
+		mes "Of course, the price of these account depends on which one you choose.";
+		mes "Here's the amount you need:";
+		next;
+		mes .@npc$;
+		mes "A Gold account cost ^FF0000 2.500 Zeny^000000";
+		mes "A Platinum account cost ^FF0000 250.000 Zeny^000000";
+		mes "A Diamond account cost ^FF0000 2.500.000 Zeny^000000";
+		mes "You can change your account type at any time.";
+		mes "But the first amount used to open the account will be lost, no matter what.";
+		next;
+		mes "So? What do you choose?";
+		switch(select("The Gold Account","The Platinium Account","The Diamond Account","Actually, none of them..."))
+		{
+			case 1:
+				mes "Allright, you owe me 2.500 Zeny.";
+				if (Zeny < 2500)
+				{
+					mes "Are you kinding me? You don't event have enough money to open a Gold account";
+					mes "Come back to me when you'll have more gold!";
+				}
+				else
+				{
+					mes "Perrrfect!";
+					mes "you're now the joyful owner of a Gold account!";
+					mes "Welcome in our bank, dear customer.";
+					set Zeny, Zeny-2500;
+					set #contract, 1;
+				}
+				break;
+			case 2:
+				mes "Allright, you owe me 250.000 Zeny.";
+				if (Zeny < 250000)
+				{
+					mes "Are you kinding me? You don't event have enough money to open a Platinium account";
+					mes "Come back to me when you'll have more gold!";
+				}
+				else
+				{
+					mes "Perrrfect!";
+					mes "you're now the joyful owner of a Platinium account!";
+					mes "Welcome in our bank, dear customer.";
+					set Zeny, Zeny-250000;
+					set #contract, 3;
+				}
+				break;
+			case 3:	
+				mes "Allright, you owe me 2.500.000 Zeny.";
+				if (Zeny < 2500000)
+				{
+					mes "Are you kinding me? You don't event have enough money to open a Diamond account";
+					mes "Come back to me when you'll have more gold!";
+				}
+				else
+				{
+					mes "Perrrfect!";
+					mes "you're now the joyful owner of a Diamond account!";
+					mes "Welcome in our bank, dear customer.";
+					set Zeny, Zeny-2500000;
+					set #contract, 7;
+				}
+				break;
+			case 4:
+				mes "Well...We don't have anything in common then. Bye.";
+				break;
+		}
+		next;
+		menu "I'd like to make a deposit",Ldeposit,"I need to withdraw some money",Lwithdrawl,"How many gold do I have in my balance?",Lbalance,"I'd like to open a new account.",LCompte,"Nothing, thanks",Lcancel;
+	}
+	else if (LANGUAGE == 1)
+	{
+		mes "Changer de compte? Bien sûr!";
+		mes "Pour rappel, voici les différents types de compte.";
+		mes "Selon le type, il y a des intérêts plus ou moins différents.";
+		mes "Nous avons trois type de comptes:";
+		next;
+		mes .@npc$;
+		mes "Le ^FF0000Gold Account^000000, avec un revenu de 1% par jour.";
+		mes "Le ^FF0000Platinium Account^000000, avec un revenu de 3% par jour";
+		mes "Le ^FF0000Diamond Account^000000, avec un revenu de 7% par jour.";
+		mes "Bien sûr, le pris d'ouverture dépends du compte.";
+		mes "Voici ce dont tu as besoin:";
+		next;
+		mes .@npc$;
+		mes "Un Gold account coûte ^FF0000 2.500 Zeny^000000";
+		mes "Un Platinum account coûte ^FF0000 250.000 Zeny^000000";
+		mes "Un Diamond account coûte ^FF0000 2.500.000 Zeny^000000";
+		mes "Mais tu peux changer à n'importe quel moment.";
+		mes "Seulement, ce que tu as payé pour ouvrir un compte sera obligatoirement 'perdu'.";
+		next;
+		mes "Alors? Que choisis-tu?";
+		switch(select("Le Gold Account","Le Platinium Account","Le Diamond Account","Bah en fait...Aucun..."))
+		{
+			case 1:
+				mes "Très bien tu me dois donc 2.500 Zeny.";
+				if (Zeny < 2500)
+				{
+					mes "Tu plaisantes? Tu n'as même pas de quoi ouvrir ce genre de compte!";
+					mes "Reviens quand tu auras ce qu'il faut!";
+				}
+				else
+				{
+					mes "Paarrrfait!";
+					mes "Tu es donc désormais l'heureux propriétaire d'un Gold account!";
+					mes "Bienvenue dans notre banque.";
+					set Zeny, Zeny-2500;
+					set #contract, 1;
+				}
+				break;
+			case 2:
+				mes "Très bien tu me dois donc 250.000 Zeny.";
+				if (Zeny < 250000)
+				{
+					mes "Tu plaisantes? Tu n'as même pas de quoi ouvrir ce genre de compte!";
+					mes "Reviens quand tu auras ce qu'il faut!";
+				}
+				else
+				{
+					mes "Paarrrfait!";
+					mes "Tu es donc désormais l'heureux propriétaire d'un Platinum account!";
+					mes "Bienvenue dans notre banque.";
+					set Zeny, Zeny-250000;
+					set #contract, 3;
+				}
+				break;
+			case 3:	
+				mes "Très bien tu me dois donc 2.500.000 Zeny.";
+				if (Zeny < 2500000)
+				{
+					mes "Tu plaisantes? Tu n'as même pas de quoi ouvrir ce genre de compte!";
+					mes "Reviens quand tu auras ce qu'il faut!";
+				}
+				else
+				{
+					mes "Paarrrfait!";
+					mes "Tu es donc désormais l'heureux propriétaire d'un Diamond account!";
+					mes "Bienvenue dans notre banque.";
+					set Zeny, Zeny-2500000;
+					set #contract, 7;
+				}
+				break;
+			case 4:
+				mes "Très bien...Nous n'avons plus rien à nous dire alors.";
+				break;
+		}
+		next;
+		menu "Je voudrais effectuer un dépôt",Ldeposit,"J'ai besoin de retirer de l'argent",Lwithdrawl,"De combien je dispose sur mon compte?",Lbalance,"J'aimerais ouvrir un compte.",LCompte,"Rien merci",Lcancel;
+	}
+		
+Ldepocont:
+
+if (LANGUAGE == 2)
+{
+	switch(select("All","Partial deposit"))
+	{
+		case 1:
+			set .@deposit, Zeny - .@cost;
+			break;
+		case 2:
+			input .@deposit;
+			break;
+	}
+}
+else if (LANGUAGE == 1)
+{
+	switch(select("Tout","dépôt partiel"))
+	{
+		case 1:
+			set .@deposit, Zeny - .@cost;
+			break;
+		case 2:
+			input .@deposit;
+			break;
+	}
+}
+
+	if (.@deposit < 1) goto Lwrongamount;
+	if (.@deposit > Zeny) goto Lneedzeny;
+	if (.@deposit > (Zeny - .@cost)) goto Lneedzeny2;
+	set Zeny, Zeny - .@deposit;
+	set Zeny, Zeny - .@cost;
+	set #bankstorage,#bankstorage + .@deposit;
+	mes .@npc$;
+	if(LANGUAGE == 2)
+	{
+		mes "Thanks a lot! Your money is in good hands!";
+		mes "Do not forget that the Bank is here for you.";
+	}
+	else if (LANGUAGE == 1)
+	{
+		mes "Merci beaucoup! Ton argent est en de bonnes mains!";
+		mes "Et n'oublie que la banque est là pour toi.";
+	}
+	close;
+
+Lwithdrawl:
+	mes .@npc$;
+	if(LANGUAGE == 2)
+	{
+		mes "Make a withdrawl? Of course! How many?";
+	}
+	else if (LANGUAGE == 1)
+	{
+		mes "Faire un retrait? Mais bien sûr! De combien?";
+	}
+	next;
+	if (.@cost > 0) goto Lwithcost;
+	goto Lwithcont;
+
+Lwithcost:
+	mes .@npc$;
+	if(LANGUAGE == 2)
+	{
+		mes "And don't forget my tip. There's " + .@cost + "z for me!";
+	}
+	else if (LANGUAGE == 1)
+	{
+		mes "Et n'oublie pas le pourboire. Il y a " + .@cost + "z pour moi!";
+	}
+	next;
+	goto Lwithcont;
+
+Lwithcont:
+
+if (LANGUAGE == 2)
+{
+	switch(select("As much as possible","Partial withdraw"))
+	{
+		case 1:
+			if (#bankstorage > 1000000000)
+				set .@withdrawl, 1000000000;
+			else
+				set .@withdrawl, #bankstorage;
+			break;
+		case 2:
+			input .@withdrawl;
+			break;
+	}
+}
+else if (LANGUAGE == 1)
+{
+	switch(select("Autant que possible","retrait partiel"))
+	{
+		case 1:
+			if (#bankstorage > 1000000000)
+				set .@withdrawl, 1000000000;
+			else
+			break;
+		case 2:
+			input .@withdrawl;
+			break;
+	}
+}
+
+	if (.@withdrawl < 1) goto Lrealamount;
+	if (.@withdrawl > #bankstorage) goto Lneedzeny3;
+	if ((.@cost > Zeny) && ((Zeny + .@withdrawl) > .@cost)) goto Lcostask; 
+	if (.@cost > Zeny) goto Lneedzeny2;
+	goto Lwithcont2;
+
+Lcostask:
+	mes .@npc$;
+	if(LANGUAGE == 2)
+	{
+		mes "You don't have enought money to pay me? May I take my tip on your withdrawl?";
+		next;
+		menu "...Do as you wish.",Lwithtake,"No way! I keep my money",Lcancel;
+	}
+	else if (LANGUAGE == 1)
+	{
+		mes "Tu n'as pas assez d'argent pour mon pourboire. Dois-je le prélever directement sur ton opération?";
+		next;
+		menu "...Fais comme tu le sens.",Lwithtake,"Pas moyen! Je garde mon argent!",Lcancel;
+	}
+
+Lwithtake:
+	mes .@npc$;
+	if(LANGUAGE == 2)
+	{
+		mes "Perfect";
+	}
+	else if (LANGUAGE == 1)
+	{
+		mes "Parfait";
+	}
+	set .@withdrawl, .@withdrawl - .@cost;
+	set #bankstorage,#bankstorage - .@cost;
+	set .@cost,0;
+	next;
+	goto Lwithcont2;
+
+Lwithcont2:
+	set Zeny,Zeny - .@cost;
+	set Zeny,Zeny + .@withdrawl;
+	set #bankstorage,#bankstorage - .@withdrawl;
+	mes .@npc$;
+	if(LANGUAGE == 2)
+	{
+		mes "Here's your money. Come back quickly!";
+	}
+	else if (LANGUAGE == 1)
+	{
+		mes "Voilà ton argent. Reviens bientôt!";
+	}
+	close;
+
+Lbalance:
+	mes .@npc$;
+	if(LANGUAGE == 2)
+	{
+		mes "Hmmm...Let me check.";
+		next;
+		mes "*Rummage*";
+		next;
+		mes .@npc$;
+		mes "As far as I see here, you have " + #bankstorage + " Zenis.";
+	}
+	else if (LANGUAGE == 1)
+	{
+		mes "Hmmm...Laisse moi vérifier.";
+		next;
+		mes "*Farfouille*";
+		next;
+		mes .@npc$;
+		mes "Ah voilà! Tu as donc " + #bankstorage + " Zenys.";
+	}
+	close;
+
+Lwrongamount:
+	mes .@npc$;
+	if(LANGUAGE == 2)
+	{
+		mes "I thinks there's a problem. I can't do that, sorry.";
+	}
+	else if (LANGUAGE == 1)
+	{
+		mes "Je pense qu'il y a un problème. Je ne peux pas faire ça désolé.";
+	}
+	close;
+	
+Lrealamount:
+	mes .@npc$;
+	if(LANGUAGE == 2)
+	{
+		mes "Don't try to stole the bank! You don't have that amount of money!";
+	}
+	else if (LANGUAGE == 1)
+	{
+		mes "N'essaye pas de voler la banque! Tu n'as pas tout cet argent!";
+	}
+	close;
+
+Lneedzeny:
+	mes .@npc$;
+	if(LANGUAGE == 2)
+	{
+		mes "Stop laugthing at me! You don't have this money.";
+	}
+	else if (LANGUAGE == 1)
+	{
+		mes "Arrête de te moquer de moi. Tu n'as pas cet argent.";
+	}
+	close;
+
+Lneedzeny2:
+	mes .@npc$;
+	if(LANGUAGE == 2)
+	{
+		mes "You don't have enougth to pay my tip.";
+	}
+	else if (LANGUAGE == 1)
+	{
+		mes "Tu n'as pas assez pour payer mon pourboire.";
+	}
+	close;
+
+Lneedzeny3:
+	mes .@npc$;
+	if(LANGUAGE == 2)
+	{
+		mes "You don't any zeny at our bank.";
+	}
+	else if (LANGUAGE == 1)
+	{
+		mes "Vous n'avez pas d'argent chez nous.";
+	}
+	close;
+
+Lcancel:
+	mes .@npc$;
+	if(LANGUAGE == 2)
+	{
+		mes "Perfect...Come back quickly!";
+	}
+	else if (LANGUAGE == 1)
+	{
+		mes "Parfait...Reviens vite!";
+	}
+	close;
+
+OnUpdateBank:
+	if (#contract == 0)
+	{
+		//nthing
+	}
+	else
+		set #bankstorage, #bankstorage + (#bankstorage * #contract / 100);
+	set #wait_update_bank, 0;
+	close;
+}

@@ -1,0 +1,1074 @@
+capitale,231,149,4	script	Weapon Master::capweamas	574,{
+//green,22,19,4	script	Weapon Master::capweamas	574,{
+	if (LANGUAGE == 2)
+	{
+		set .@npcname$, "[Weapon Master]";
+		
+		mes .@npcname$;
+		mes "Hello to you, " + strcharinfo(0);
+		mes "Let me introduce me. I'm a the Weapon Master.";
+		mes "I've learn to use every possible kind of weapon.";
+		mes "And I've discovered something. If you spend enough time with a weapon,";
+		mes "this one became an Ego Sword.";
+		mes "An Ego Sword is like an Alter Ego of you.";
+		{
+			next;
+			mes .@npcname$;
+			if (Q_EGO == 0)
+			{
+				mes "As long as you win fighting, she keeps growing and became more and more powerful.";
+				mes "But when you loose, there's a strong flame return.";
+				mes "Loosing one time will cost you 50 more fights to gain new xp.";
+				mes "Do you understand?";
+				switch(select("Yes","Not a single word"))
+				{
+					case 1:
+						next;
+						mes .@npcname$;
+						mes "Right! Now, you're ready to start growing your own Ego Sword.";
+						mes "It's quite simple. But I need some material to create it for you:";
+						for (set .@i,0; .@i<getarraysize(.matId); set .@i,.@i+1)
+						{
+							mes " - " + .matIdCount[.@i] + " " + getitemname(.matId[.@i]); 
+						}
+						mes "I'll wait here for you.";
+						set Q_EGO, 1;
+						break;
+					case 2:
+						mes "I understand. Come back when you'll be ready.";
+						break;
+				}
+			}
+			else if (Q_EGO == 1)
+			{
+				mes "So? Do you got it all?";
+				set .nok, 0;
+				for (set .@i,0; .@i<getarraysize(.matId); set .@i,.@i+1)
+				{
+					if (countitem(.matId[.@i]) < .matIdCount[.@i])
+					{
+						set .@nok, 1;
+					}
+				}
+				if (.@nok == 1)
+				{
+					mes "Sorry but you miss some more items.";
+					mes "Remember. I need:";
+					for (set .@i,0; .@i<getarraysize(.matId); set .@i,.@i+1)
+					{
+						mes " - " + .matIdCount[.@i] + " " + getitemname(.matId[.@i]); 
+					}
+					mes "I'll wait here for you.";
+				}
+				else
+				{
+					mes "Perfect!";
+					mes "Allright. From now, if you accept it, the item you use as a weapon right now will become your Ego Sword.";
+					set Q_EGO, 2;
+					mes "So. Do you wanna use this weapon as Ego?";
+					switch(select("Yes, I want it","No thanks"))
+					{
+						case 1:
+							goto OnChooseEgo;
+							break;
+						case 2:
+							mes "Choose it wisely. You can only have one Ego Sword in your entire life.";
+							break;
+					}
+				}
+			}
+			else if (Q_EGO == 2)
+			{
+				mes "So. Do you wanna use your equipped weapon as Ego?";
+				switch(select("Yes, I want it","No thanks"))
+				{
+					case 1:
+						goto OnChooseEgo;
+						break;
+					case 2:
+						mes "Choose it wisely. You can only have one Ego Sword in your entire life.";
+						break;
+				}
+			}
+			else if (EGO_ID != 0)
+			{
+				mes "You still need " + (.ego_xp[EGO_XP_RANK]/10 - EGO_XP) + " monsters dead on " + .ego_xp[EGO_XP_RANK]/10 + " to raise.";
+			}
+		}
+	}
+	else if (LANGUAGE == 1)
+	{
+		set .@npcname$, "[Weapon Master]";
+		
+		mes .@npcname$;
+		mes "Bonjour à toi, " + strcharinfo(0);
+		mes "Laisse moi me présenter. Je suis le Weapon Master.";
+		mes "J'ai appris toutes les façons possibles d'utiliser une arme.";
+		mes "Et j'ai découvert quelque chose de plus. Si tu passes suffisamment de temps avec une arme,";
+		mes "celle-ci devient une Ego Sword.";
+		mes "Une Ego Sword c'est un peu un alter ego de soi.";
+		{
+			next;
+			mes .@npcname$;
+			if (Q_EGO == 0)
+			{
+				mes "Aussi longtemps que tu continues de vaincre, elle gagne en puissance.";
+				mes "Mais si tu perds une seule fois, il y a un important retour de flamme.";
+				mes "Perdre une fois signifie que tu devras vaincre 50 fois pour recommencer à évoluer.";
+				mes "Tu comprends?";
+				switch(select("Oui","Pas du tout..."))
+				{
+					case 1:
+						next;
+						mes .@npcname$;
+						mes "Bien! Maintenant, tu es capable de trouver ta propre Ego Sword.";
+						mes "C'est assez simple, mais j'ai besoin de matériaux pour te créer ça:";
+						for (set .@i,0; .@i<getarraysize(.matId); set .@i,.@i+1)
+						{
+							mes " - " + .matIdCount[.@i] + " " + getitemname(.matId[.@i]); 
+						}
+						mes "J'attendrais ici.";
+						set Q_EGO, 1;
+						break;
+					case 2:
+						mes "Je comprends. Reviens quand tu seras prêt.";
+						break;
+				}
+			}
+			else if (Q_EGO == 1)
+			{
+				mes "Alors? Tu as tout?";
+				set .nok, 0;
+				for (set .@i,0; .@i<getarraysize(.matId); set .@i,.@i+1)
+				{
+					if (countitem(.matId[.@i]) < .matIdCount[.@i])
+					{
+						set .@nok, 1;
+					}
+				}
+				if (.@nok == 1)
+				{
+					mes "Désolé, mais tu manques encore d'items.";
+					mes "Pour rappelle, voilà ce dont j'ai besoin:";
+					for (set .@i,0; .@i<getarraysize(.matId); set .@i,.@i+1)
+					{
+						mes " - " + .matIdCount[.@i] + " " + getitemname(.matId[.@i]); 
+					}
+					mes "Je t'attends ici.";
+				}
+				else
+				{
+					mes "Parfait!";
+					mes "Bien. A partir de maintenant, si tu acceptes, l'arme que tu utilises en ce moment deviendra ton Ego Sword.";
+					set Q_EGO, 2;
+					mes "Alors? Tu veux l'utiliser en tant que tel?";
+					switch(select("Oui, je veux celle-ci","Non merci"))
+					{
+						case 1:
+							goto OnChooseEgo;
+							break;
+						case 2:
+							mes "Choisit la sagement. On ne peut avoir qu'une seule Ego Sword durant toute une vie.";
+							break;
+					}
+				}
+			}
+			else if (Q_EGO == 2)
+			{
+				mes "Alors? Tu veux l'utiliser en tant que tel?";
+				switch(select("Oui, je veux celle-ci","Non merci"))
+				{
+					case 1:
+						goto OnChooseEgo;
+						break;
+					case 2:
+						mes "Choisit la sagement. On ne peut avoir qu'une seule Ego Sword durant toute une vie.";
+						break;
+				}
+			}
+			else if (EGO_ID != 0)
+			{
+				mes "Tu as encore besoin de " + (.ego_xp[EGO_XP_RANK]/10 - EGO_XP) + " monstres tués sur " + .ego_xp[EGO_XP_RANK]/10 + " pour évoluer.";
+			}
+		}
+	}
+	close;
+
+OnResetStats:
+	statusup2 bStr, EGO_BONUS_STR;
+	statusup2 bAgi, EGO_BONUS_AGI;
+	statusup2 bVit, EGO_BONUS_VIT;
+	statusup2 bInt, EGO_BONUS_INT;
+	statusup2 bDex, EGO_BONUS_DEX;
+	statusup2 bLuk, EGO_BONUS_LUK;
+	end;
+
+OnInit:
+	setarray .ego_xp[0],420,660,1080,1800,2640,3840,4560,5040,5460,6000,6600,7200,7320,7620,8040,8820,9600,10080,10560,11040,12610,13390,14300,15340,16900,
+18460,19500,20800,22100,23400,24700,26000,27300,28600,30160,31200,33800,35750,37700,39000,44100,46200,47600,50400,52500,53200,56000,58800,62300,65800,68600,
+71400,74200,77000,79800,82600,86100,88200,91000,93800,103500,105000,109500,115500,120000,126000,132000,136500,142500,165000,192000,210000,232500,244500,255000,
+270000,282000,292500,300000,345000,416000,480000,560000,640000,768000,880000,960000,1088000,1200000,1440000,1700000,2040000,2550000,3060000,3570000,4080000,
+4760000,5610000,6800000,7070000,7400000,7770000,8150000,8550000,9100000,9610000,10150000,10570000,11180000,12000000,12200000,12930000,13150000,14030000,14420000,
+15420000,15670000,16870000,17140000,18720000,19020000,20590000,20930000,22690000,23310000,25290000,26020000,27860000,28535000,30990000,31680000,33560000,
+34942000,36372000,38350000,39890000,41545000,43330000,45400000,48100000,50410000,53370000,56250000,59230000,62590000,66120000,70200000,75330000,81100000,
+95000000,95285001,95570856,95857570,96145142,96433581,96722886,97013058,97304097,97596010,97888798,98182468,98477013,98772449,99068767,99365976,99664076,
+99963074,100262963,100563750,100865445,101168046,101471554,101775968,102081298,102387542,102694708,103002790,103311802,103621737,103932603,104244399,104557135,
+104870809,105185422,105500982,105817489,106134942,106453351,106772714,107093032,107414313,107736557,108059771,108383949,108709106,109035233,109362339,109690425,
+110019497,110349556,110680602,111012644,111345680,111679719,112014761,112350806,112687862,113025929,113365008,113705105,114046221,114388365,114731535,115075733,
+115420965,115767233,116114536,116462882,116812271,117162711,117514202,117866745,118220346,118575007,118930735,119287530,119645393,120004330,120364343,120725439,
+121087618,121450881,121815235,122180680,122547224,122914868,123283611,123653461,124024426,124396499,124769688,125143999,125519434,125895992,126273682,126652503,
+127032464,127413564,127795811,128179198,128563740,128949437,129336291,129724299,130113471,130503815,130895330,131288016,131681882,132076928,132473161,132870582,
+133269198,133669010,134070017,134472228,134875643,135280277,135686115,136093173,136501450,136910963,137321695,137733663,138146867,138561307,138976998,139393925,
+139812104,140231535,140652233,141074199,141497417,141921919,142347688,142774726,143203047,143632652,144063556,144495745,144929234,145364022,145800111,146237515,
+146676235,147116271,147557623,148000291,148444291,148889623,149336287,149784299,150233660,150684368,151136424,151589828,152044596,152500728,152958241,153417117,
+153877374,154339011,154802028,155266441,155732250,156199456,156668057,157138071,157609481,158082319,158556570,159032249,159509356,159987891,160467855,160949262,
+161432115,161916411,162402168,162889385,163378063,163868201,164359816,164852890,165347458,165843501,166341037,166840066,167340587,167842617,168346155,168851202,
+169357757,169865836,170375441,170886569,171399239,171913433,172429183,172946475,173465323,173985727,174507688,175031206,175556297,176082976,176611228,177141069,
+177672498,178205517,178740140,179276368,179814200,180353654,180894712,181437407,181981724,182527677,183075266,183624493,184175373,184727905,185282091,185837946,
+186395469,186954662,187515523,188078070,188642302,189208234,189775868,190345203,190916239,191488992,192063462,192639650,193217570,193797224,194378611,194961747,
+195546633,196133284,196721683,197311849,197903795,198497507,199093000,199690275,200289347,200890216,201492882,202097362,202703656,203311763,203921699,204533465,
+205147076,205762517,206379803,206998951,207619945,208242816,208867548,209494159,210122646,210753012,211385271,212019424,212655486,213293458,213933340,214575148,
+215218881,215864541,216512142,217161684,217813169,218466612,219122012,219779386,220438734,221100056,221763368,222428654,223095946,223765244,224436548,225109858,
+225785190,226462544,227141936,227823366,228506834,229192357,229879933,230569580,231261297,231955084,232650958,233348917,234048963,234751111,235455362,236161731,
+236870218,237580839,238293579,239008469,239725494,240444669,241166011,241889519,242615193,243343050,244073090,244805312,245539733,246276352,247015186,247756234,
+248499513,249245023,249992764,250742751,251494985,252249482,253006241,253765264,254526565,255290145,256056019,256824189,257594669,258367461,259142563,259919993,
+260699765,261481864,262266307,263053108,263842268,264633804,265427714,266224000,267022677,267823745,268627220,269433119,270241425,271052169,271865322,272680913,
+273498976,274319478,275142452,275967897,276795813,277626201,278459092,279294487,280132385,280972787,281815724,282661165,283509141,284359685,285212765,286068412,
+286926627,287787409,288650792,289516742,290385292,291256441,292130223,293006604,293885617,294767295,295651604,296538577,297428213,298320514,299215479,300113140,
+301013497,301916550,302822299,303730777,304641982,305555916,306472578,307392000,308314182,309239124,310166859,311097355,312030642,312966754,313905658,314847387,
+315791940,316739318,317689552,318642611,319598558,320557362,321519054,322483603,323451073,324421432,325394711,326370910,327350031,328332072,329317067,330305014,
+331295946,332289830,333286700,334286555,335289426,336295315,337304221,338316143,339331083,340349072,341370110,342394229,343421429,344451711,345485074,346521550,
+347561107,348603810,349649626,350698588,351750695,352805947,353864377,354925984,355990769,357058763,358129935,359204317,360281940,361362805,362446912,363534260,
+364624882,365718778,366815948,367916391,369020140,370127196,371237589,372351320,373468389,374588796,375712574,376839721,377970239,379104158,380241480,381382204,
+382526362,383673955,384824981,385979475,387137434,388298860,389463752,390632143,391804032,392979452,394158402,395340883,396526926,397716501,398909669,400106401,
+401306727,402510648,403718196,404929371,406144172,407362601,408584688,409810466,411039903,412273032,413509851,414750394,415994659,417242648,418494392,
+419749891,421009146,422272188,423539017,424809633,426084069,427362325,428644431,429930358,431220168,432513829,433811374,435112803,436418147,437727407,439040583,
+440357706,441678778,443003829,444332860,445665871,447002862,448343865,449688913,451038004,452391139,453748318,455109574,456474906,457844346,459217894,460595551,
+461977348,463363285,464753395,466147677,467546132,468948792,470355656,471766724,473182030,474601571,476025382,477453462,478885842,480322523,481763505,483208820,
+484658468,486112449,487570795,489033506,490500614,491972120,493448054,494928418,496413211,497902466,499396181,500894391,502397093,503904289,505416011,506932258,
+508453063,509978425,511508377,513042919,514582051,516125804,517674180,519227209,520784892,522347261,523914316,525486057,527062517,528643726,530229654,531820364,
+533415824,535016066,536621123,538230994,539845680,541465244,543089623,544718880,546353015,547992094,549636051,551284951,552938794,554597644,556261436,557930235,
+559604042,561282855,562966740,564655631,566349594,568048628,569752797,571462038,573176414,574895925,576620635,578350481,580085527,581825772,583571281,585321990,
+587077962,588839198,590605697,592377525,594154681,595937164,597724975,599518179,601316775,603120763,604930142,606744915,608565143,610390828,612222033,614058694,
+615900876,617748579,619601866,621460674,623325067,625195044,627070670,628951881,630838740,632731249,634629471,636533341,638442925,640358286,642279360,644206211,
+646138840,648077246,650021493,651971582,653927512,655889284,657856961,659830544,661810033,663795492,665786920,667784318,669787686,671797089,673812525,675833995,
+677861500,679895102,681934803,683980602,686032564,688090688,690154974,692225423,694302098,696385000,698474193,700569613,702671323,704779324,706893680,709014391,
+711141458,713274879,715414719,717560979,719713657,721872820,724038465,726210594,728389271,730574431,732766138,734964457,737169388,739380931,741599086,743823916,
+746055423,748293605,750538528,752790127,755048530,757313673,759585620,761864372,764149993,766442482,768741839,771048065,773361224,775681315,778008404,780342425,
+782683443,785031522,787386663,789748864,792118127,794494515,796878028,799268666,801666494,804071512,806483719,808903180,811329894,813763926,816205212,818653816,
+821109802,823573170,826043920,828522053,831007631,833500656,836001191,838509237,841024793,843547859,846078501,848616781,851162636,853716129,856277326,858846161,
+861422700,864007006,866599015,869198855,871806462,874421901,877045172,879676337,882315399,884962356,887617273,890280150,892950987,895629847,898316732,901011705,
+903714766,906425915,909145216,911872670,914608277,917352099,920104203,922864523,925633124,928410070,931195297,933988933,936790914,939601304,942420103,945247376,
+948083121,950927405,953780226,956641584,959511544,962390106,965277270,968173099,971077659,973990885,976912905,979843655,982783199,985731538,988688735,991654790,
+994629769,997613670,1000606558,1003608368,1006619230,1009639078,1012668042,1015706057,1018753187,1021809497,1024874921,1027949590,1031033438,1034126529,
+1037228929,1040340636,1043461651,1046592038,1049731862,1052881057,1056039753,1059207885,1062385517,1065572714,1068769476,1071975802,1075191757,1078417405,
+1081652682,1084897716,1088152379,1091416799,1094691105,1097975168,1101269116,1104572950,1107886669,1111210403,1114544022,1117887655,1121241302,1124605091,
+1127978894,1131362840,1134756928,1138161158,1141575659,1145000430,1148435473,1151880786,1155336498,1158802481,1162278863,1165765773,1169263081,1172770917,
+1176289281,1179818172,1183357591,1186907665,1190468395,1194039782,1197621952,1201214907,1204818517,1208433040,1212058348;
+
+	setarray .matId[0],7428,7430,7082,6090,6027,1385;
+	setarray .matIdCount[0],10,10,10,75,1,1;
+
+	set $EGO_FAIL_COUNT, 50;
+	end;
+
+OnPCDieEvent:
+	if (Q_EGO >= 3 && getequipid(4) == EGO_ID)
+	{
+		set EGO_FAIL, 1;
+		if (LANGUAGE == 2)
+		{
+			dispbottom "Your Ego Sword entered in fail mode. You have to win 50 times to start raising her power again. You can no more feel the Spirit of Ego.";
+		}
+		else if (LANGUAGE == 1)
+		{
+			dispbottom "Votre Ego Sword est entré en mode Désactivé. Vous devez vaincre 50 monstres pour qu'elle s'active de nouveau. Vous ne pouvez plus sentir l'Esprit d'Ego.";
+		}
+	}
+	end;	
+
+OnNPCKillEvent:
+	if (Q_EGO >= 3)
+	{
+		if (getequipid(4) == EGO_ID)
+		{
+			if (EGO_FAIL == 1)
+			{
+				set EGO_FAIL_COUNT, EGO_FAIL_COUNT + 1;
+				if (EGO_FAIL_COUNT == 50)
+				{
+					set EGO_FAIL_COUNT, 0;
+					set EGO_FAIL, 0;
+					set EGO_STATE, EGO_STATE_MAX;
+					if (LANGUAGE == 2)
+						dispbottom "Your Ego Sword leave fail mode. The Spirit of Ego is back.";
+					else if (LANGUAGE == 1)
+						dispbottom "Votre Ego Sword est active de nouveau. L'Esprit d'Ego est de retour.";
+				}
+			}
+			else
+			{
+				set EGO_XP, EGO_XP + 1;
+
+				if (EGO_XP >= .ego_xp[EGO_XP_RANK]/10)
+				{
+					set EGO_LEVEL_UP, EGO_LEVEL_UP + 1;
+					set EGO_XP_RANK, EGO_XP_RANK + 1;
+					set EGO_STATE_MAX, EGO_STATE_MAX + 1;
+					set EGO_STATE, EGO_STATE_MAX;
+					set EGO_XP, 0;
+					if (LANGUAGE == 2)
+						dispbottom "Your Ego Sword just level up. Go find the Weapon Disciple to raise its power.";
+					else if (LANGUAGE == 1)
+						dispbottom "Votre Ego Sword a gagné un niveau. Allez trouver le Weapon Disciple pour augmenter son pouvoir.";
+				}
+
+				if (SHOWEWEXP)
+				{
+					if (LANGUAGE == 2)
+					{
+						dispbottom "Done " + EGO_XP + "/" + (.ego_xp[EGO_XP_RANK]/10) + " kills";
+					}
+					else if (LANGUAGE == 1)
+					{
+						dispbottom "" + EGO_XP + "/" + (.ego_xp[EGO_XP_RANK]/10) + " monstres tués";
+					}
+				}
+				if (SHOWEWSTATE)
+				{
+					if (LANGUAGE == 2)
+					{
+						dispbottom "Remaining " + EGO_STATE + "/" + EGO_STATE_MAX + " before fail mode";
+					}
+					else if (LANGUAGE == 1)
+					{
+						dispbottom "Reste " + EGO_STATE + "/" + EGO_STATE_MAX + " avant le mode désactivé";
+					}
+				}
+			
+				if (EGO_STATE > 0)
+				{
+					set EGO_STATE, EGO_STATE - 1;
+				}	
+				else
+				{
+					if (EGO_FAIL == 0)
+						set EGO_FAIL, 1;
+					if (LANGUAGE == 2)
+					{
+						dispbottom "Your Ego Sword entered in fail mode. You have to win 50 times to start raising her power again. You can no more feel the Spirit of Ego.";
+					}
+					else if (LANGUAGE == 1)
+					{
+						dispbottom "Votre Ego Sword est entré en mode Désactivé. Vous devez vaincre 50 monstres pour qu'elle s'active de nouveau. Vous ne pouvez plus sentir l'Esprit d'Ego.";
+					}
+				}
+			}
+		}
+	}
+	end;
+
+OnChooseEgo:
+	next;
+	mes .@npcname$;
+	if (getitemslots(getequipid(4)) > 2
+		|| (getequipid(4) >= 21478 && getequipid(4) <= 21488) 
+		|| getequipid(4) == 21496)
+	{
+		if (LANGUAGE == 2)
+		{
+				mes "Sorry but you can't choose a slotted weapon as an Ego Sword.";
+				mes "Not if it has more than 2 slot.";
+				mes "The cards power will enter in conflict with you own Ego.";
+				mes "Nor a Vorpalin Weapon. Their power are too huge to support an Ego Spirit.";
+				close;
+		}
+		else if (LANGUAGE == 1)
+		{
+				mes "Désolé, mais tu ne peux pas choisir une arme slottée comme Ego Sword.";
+				mes "Pas si elle a plus de 2 slots.";
+				mes "Le pouvoir des cartes entre en conflit avec ton Ego.";
+				mes "Pas plus qu'une arme Vorpale. Elles sont trop puissante pour contenir l'Esprit d'Ego.";
+				close;
+		}
+	}
+	if (LANGUAGE == 2)
+	{
+		mes "Allright. From now, your " + getitemname(getequipid(4)) + " will so become your Steel Soul.";
+	}
+	else if (LANGUAGE == 1)
+	{
+		mes "Très bien. A partir de maintenant ton arme " + getitemname(getequipid(4)) + " devient ton Ame d'Acier.";
+	}
+
+	set EGO_ID, getequipid(4);
+	set EGO_XP,0;
+	set EGO_XP_FAIL,0;
+	set EGO_XP_RANK,0;
+	set EGO_STATE_MAX, 1000;
+	set EGO_STATE, 1000;
+	set EGO_LEVEL_UP, 0;
+	set EGO_LEVEL, 0;
+
+	//default bonus is 1 batk, 1 matk, 1 watk
+	set EGO_BONUS$,"1#1#1";
+	for (set .@i,0; .@i<getarraysize(.matId); set .@i,.@i+1)
+	{
+		delitem .matId[.@i], .matIdCount[.@i];
+	}
+	specialeffect2 154;
+
+	if (LANGUAGE == 2)
+	{
+		mes "From now, when you'll kill a monster with that weapon, she'll grow.";
+		mes "When she'll raise her level up, you'll be warned. Find my disciple.";
+		mes "At every level, he'll be able to grant a new power to you weapon.";
+		mes "By default, know that a Ego Sword is unbreakable. It's your soul.";
+		mes "Think of what happens if it breaks, hu?";
+		next;
+		mes .@npcname$;
+		mes "You'll soon understand what I mean, but your weapon has now received a Spirit of Ego.";
+		mes "That's what grants you the power of Ego.";
+		mes "Take care of it.";
+		mes "A Ego Sword got a resist limit. When created, it's 100 by default.";
+		mes "But the more she raise, the more the limit up.";
+		mes "Be careful to that. A limit reach and you'll enter automatically in Fail Mode.";
+		mes "From there, you'll need 50 more wins to start raising the Spirit again.";
+	}
+	else if (LANGUAGE == 1)
+	{
+		mes "A partir de maintenant, à chaque monstre tué, elle grandira.";
+		mes "Quand elle gagnera un level, tu seras averti. Viens alors voir mon disciple.";
+		mes "A chaque level, il pourra garantir un nouveau pouvoir à ton arme.";
+		mes "Rappelle toi. Une Ego Sword est comme ton Ame.";
+		mes "Tu comprends ce qui arrivera si elle se brise?";
+		next;
+		mes .@npcname$;
+		mes "Tu comprendras vite ce que je viens de dire. Désormais, ton arme a reçu un Esprit d'Ego.";
+		mes "C'est ce qui te permet d'utiliser le pouvoir de l'Ego.";
+		mes "Prends en soin.";
+		mes "Une Ego Sword a une limite de résistance. Elle est de 100 par défaut.";
+		mes "Mais plus elle grandit, plus la limite augmente.";
+		mes "Prends garde à cela. Atteindre la limite signifie rentrer immédiatement en mode Désactivé.";
+		mes "Cette résistance baisse d'un point par kill.";
+	}
+
+	set Q_EGO, 4;
+	close;
+}
+
+function	script	GetEgoSpiritState	{
+	if (EGO_FAIL == 0)
+	{
+		if (LANGUAGE == 2)
+		{
+			dispbottom "Your Ego Sword got a limit of " + EGO_STATE + " on " + EGO_STATE_MAX;
+		}
+		else if (LANGUAGE == 1)
+		{
+			dispbottom "Votre Ego Sword a une résistance de " + EGO_STATE + " sur " + EGO_STATE_MAX;
+		}
+	}
+	else 
+	{
+		if (LANGUAGE == 2)
+		{
+			dispbottom "Ego Sword is in Fail mode.";
+		}
+		else if (LANGUAGE == 1)
+		{
+			dispbottom "Votre Ego Sword est en mode Désactivé.";
+		}
+	}
+	end;	
+}
+
+capitale,224,143,4	script	Weapon Disciple::capweadis	63,{
+//green,18,18,4	script	Weapon Disciple::capweadis	63,{
+
+	set .@npcname$, "[Weapon Master]";
+
+	if (LANGUAGE == 2)
+	{
+		mes "Good day to you, " + strcharinfo(0);
+		if (Q_EGO >= 3)
+		{
+			mes "Ho. I see that you've discovered you're Ego Sword.";
+			mes "That's a great, but dangerous power, I must warn you.";
+			mes "Remember the danger of a loss.";
+			mes "But you're not here to hear me talk about that.";
+			mes "What can I do for you?";
+			switch(select("Raise my Ego Sword","Raise the limit up","What's my current bonuses?"))
+			{
+				case 1:
+					next;
+					set .@npcname$, "[Weapon Master]";
+					mes "Sure. Wait a second.";
+					setarray .@chooseItemBonus[0],0;
+					for(set .@i, 21787; .@i<21792; set .@i, .@i+1)
+					{
+						if (countitem(.@i) >= 1)
+						{
+							set .@gotItem, 1;
+							set .@chooseItemBonus[getarraysize(.@chooseItemBonus)], .@i;
+							set .@menu$, .@menu$ + ( .@i ? ":" : "" ) + getitemname(.@chooseItemBonus[getarraysize(.@chooseItemBonus)-1]); 
+						}
+					}
+					if (.@gotItem)
+					{
+						mes "Oh! You've got a Bonus Runestone!";
+						mes "Do you wanna use it?";
+						switch(select("Yes please","No thanks"))
+						{
+							case 1:
+								mes "Sure. Which one?";
+								set .@choice, prompt(.@menu$) - 2;
+								set .bonusItem, .@chooseItemBonus[.@choice];
+								goto OnBonusAdded;
+								break;
+							case 2:
+								mes "As you wish. I'll put a simple bonus on your weapon.";
+								goto OnBonusAdded;
+								break;
+						}
+					}
+					else
+					{
+						goto OnBonusAdded;
+					}
+					break;
+				case 2:
+					mes "Sure. Wait a second.";
+					if (EGO_FAIL == 0)
+					{
+						specialeffect2 154;
+						set EGO_STATE, EGO_STATE_MAX;
+						mes "Your Ego Sword limit has been initialized once more to " + EGO_STATE_MAX + ".";
+					}	
+					else
+					{
+						mes "Sorry but...You're Ego Sword is in fail mode.";
+						mes "I can do nothing.";
+						mes "Kill again " + EGO_FAIL_COUNT + " monsters to leave fail mode and come back to me.";
+					}
+					break;
+				case 3:
+					mes "Your Ego Bonuses? Let's see that...";
+					mes "STR: +" + EGO_BONUS_STR;
+					mes "AGI: +" + EGO_BONUS_AGI;
+					mes "VIT: +" + EGO_BONUS_VIT;
+					mes "INT: +" + EGO_BONUS_INT;
+					mes "DEX: +" + EGO_BONUS_DEX;
+					mes "LUK: +" + EGO_BONUS_LUK;
+					mes "";
+					mes "HP: +" + EGO_BONUS_HP + "%";
+					mes "SP: +" + EGO_BONUS_SP + "%";
+					mes "WEIGHT: +" + EGO_BONUS_WEIGHT + "%";
+					break;
+			}
+		}
+	}
+	else if (LANGUAGE == 1)
+	{
+		mes "Bien le bonjour, " + strcharinfo(0);
+		if (Q_EGO >= 3)
+		{
+			mes "Ho. Je vois que tu as découvert ton Ego Sword.";
+			mes "C'est un pouvoir gigantesque, mais dangereux.";
+			mes "Rappele toi du risque de perte.";
+			mes "Mais tu n'es pas là pour ca.";
+			mes "Que puis-je faire pour toi?";
+			switch(select("Améliorer mon Ego Sword","Réinitialiser la résistance","Quels sont mes bonus actuels?"))
+			{
+				case 1:
+					next;
+					set .@npcname$, "[Weapon Master]";
+					mes "Bien sûr. Une seconde.";
+					set .@first, 1;
+					for(set .@i, 21787; .@i<21792; set .@i, .@i+1)
+					{
+						if (countitem(.@i) >= 1)
+						{
+							set .@gotItem, 1;
+							if (.@first == 1)
+							{
+								setarray .@chooseItemBonus[0],.@i;
+								set .@first, 0;
+							}
+							else
+							{
+								set .@chooseItemBonus[getarraysize(.@chooseItemBonus)], .@i;
+							}
+							set .@menu$, .@menu$ + ( .@i ? ":" : "" ) + getitemname(.@chooseItemBonus[getarraysize(.@chooseItemBonus)-1]); 
+						}
+					}
+					
+					if (.@gotItem)
+					{
+						mes "Oh! Tu as une Bonus Runestone!";
+						mes "Tu veux l'utiliser?";
+						switch(select("Oui svp","Non merci"))
+						{
+							case 1:
+								mes "Bien sûr. Laquelle?";
+								set .@choice, prompt(.@menu$) - 2;
+								set .bonusItem, .@chooseItemBonus[.@choice];
+								goto OnBonusAdded;
+								break;
+							case 2:
+								mes "Très bien. Ce sera donc un bonus simple.";
+								goto OnBonusAdded;
+								break;
+						}
+					}
+					else
+					{
+						goto OnBonusAdded;
+					}
+					break;
+				case 2:
+					mes "Bien sûr. Une seconde.";
+					if (EGO_FAIL == 0)
+					{
+						specialeffect2 154;
+						set EGO_STATE, EGO_STATE_MAX;
+						mes "La limite a été réinitialisée à " + EGO_STATE_MAX + ".";
+					}	
+					else
+					{
+						mes "Désolé je ne peux pas.";
+						mes "Ton Ego Sword est Désactivée.";
+						mes "Tue encore " + EGO_FAIL_COUNT + " monstres pour quitter ce mode et reviens me voir.";
+					}
+					break;
+				case 3:
+					mes "Tes bonus d'Ego? Voyons ça...";
+					mes "STR: +" + EGO_BONUS_STR;
+					mes "AGI: +" + EGO_BONUS_AGI;
+					mes "VIT: +" + EGO_BONUS_VIT;
+					mes "INT: +" + EGO_BONUS_INT;
+					mes "DEX: +" + EGO_BONUS_DEX;
+					mes "LUK: +" + EGO_BONUS_LUK;
+					mes "";
+					mes "HP: +" + EGO_BONUS_HP + "%";
+					mes "SP: +" + EGO_BONUS_SP + "%";
+					mes "WEIGHT: +" + EGO_BONUS_WEIGHT + "%";
+					break;
+			}
+		}
+	}
+	close;
+
+RebuiltEgoBonusList:
+	for(set .@j,0; .@j<getarraysize(getarg(0)); set .@j,.@j+1)
+	{
+		if (.@j == 0)
+			set EGO_BONUS$,getelementofarray(getarg(0),.@j);
+		else
+			set EGO_BONUS$,EGO_BONUS$ + "#" + getelementofarray(getarg(0),.@j);
+	}
+	close;
+
+OnInit:
+	setarray .ego_bonus$[0],"bMatkRate_2","bMatk_50","bFixedCastrate_-3","bVariableCastrate_-3%","bFlee_12","bFlee2_5","bCrit_7",
+"bAtkRate_3","bAtk_50","bAgi_5","bStr_5","bInt_5","bDex_5","bVit_5","bLuk_5","bAtkEle_Ele_Holy","bAtkEle_Ele_Fire",
+"bAtkEle_Ele_Water","bAtkEle_Ele_Wind","bAtkEle_Ele_Earth","bAtkEle_Ele_Ghost","bAtkEle_Ele_Dark","bAddRace_RC_DemiHuman_5","bMagicAddRace_RC_DemiHuman_5",
+"bSubRace_RC_DemiHuman_5","bAutoSpell_NPC_VAMPIRE_GIFT_2_20","bAutoSpell_NPC_WIDESOULDRAIN_3_5_BF_MAGIC_0","bDef_25","bMdef_25","bDoubleRate_25",
+"bIgnoreDefRate_5","bIgnoreMdefRate_5","bAddEff_Eff_Stun_1500","bAddEff_Eff_Stone_1500","bAddEff_Eff_Sleep_1500","bAddEff_Eff_Silence_1500",
+"bAddEff_Eff_Bleeding_1500","bAddEff_Eff_Curse_1500","bAddEff_Eff_Stun_1500","bAddEff_Eff_Poison_1500","bAddEff_Eff_Freeze_1500","bAddRace_RC_Boss_5",
+"bAddRace_RC_NonBoss_5","bAllStats_1","bAspd_3","bAddSize_1_5","bAddSize_2_5","bAddSize_0_5","bSplashRange_3","bMagicDamageReturn_5","bShortWeaponDamageReturn_5",
+"bLongWeaponDamageReturn_5","bMaxHP_2500","bMaxSP_500","bMaxHPRate_5","bMaxSPRate_5","bHealPower_5","bSubRace_Ele_DemiHuman_5","bDelayRate_-5","bNoKnockback_0",
+"bSpeedRate_15","bSubEle_Ele_Fire_7","bSubEle_Ele_Water_7","bSubEle_Ele_Wind_7","bSubEle_Ele_Earth_7";
+
+	setarray .ego_bonus_desc$[0],"Matk +2%","Matk +50","Fixed cast -3%","Variable cast -3%","Flee +12","PDodge +3","PHit +5","Critical +7",
+"Atk +3%","Atk +2%","Weapon Atk +5%","Base Atk +50","Agi +5","Str +5","Int +5","Dex+ 5","Vit +5","Luk +5","Element Holy","Element Fire",
+"Element Water","Element Wind","Element Earth","Element Ghost","Element Dark","Damage DH +5%","Magic damage DH +5%",
+"Resistance DH +5%","Drain HP","Drain SP","Def +25","Mdef +25","Bonus Double Attack",
+"Ignore Def +5%","Ignore Mdef +5%","Add effect Stun","Add effect Stone","Add effect Sleep","Add effect Silence",
+"Add effect Bleeding","Add effect Curse","Add effect Poison","Add effect Freeze","Damage on Boss +5%",
+"Damage non Boss +5%","All Stats +1","Aspd +3","Size Medium +5%","Size Large +5%","Size Small +5%","Splash Attack 3*3","Magic return +5%","Reflect short +5%",
+"Reflect long +5%","Max HP +2500","Max SP +500","Max HP Rate +5%","Max SP Rate +5%","Heal Power +5%","Resistance to neutral +5%","Delay -5%","No Knockback",
+"Movement Speed +15%","Sub Element Fire +7%","Sub Element Water +7%","Sub Element Wind +7%","Sub Element Earth +7%";
+	end;
+
+OnChooseBonus:
+	if (EGO_FAIL == 0)
+	{
+		if (EGO_LEVEL_UP >= 0)
+		{			
+			set .@ok, 1;			
+			//if level is higher than 10 and is a multiple of 10, choose a bonus.
+			if (EGO_LEVEL >= 10)
+			{
+				set .@ok, 0;
+				if (EGO_LEVEL == 10 || EGO_LEVEL == 20 || EGO_LEVEL == 30 || EGO_LEVEL == 40 || EGO_LEVEL == 50
+				|| EGO_LEVEL == 60 || EGO_LEVEL == 70 || EGO_LEVEL == 80 || EGO_LEVEL == 90 || EGO_LEVEL == 100
+				|| EGO_LEVEL == 110 || EGO_LEVEL == 120 || EGO_LEVEL == 130 || EGO_LEVEL == 140 || EGO_LEVEL == 150
+				|| EGO_LEVEL == 160 || EGO_LEVEL == 170 || EGO_LEVEL == 180 || EGO_LEVEL == 190 || EGO_LEVEL == 200
+				|| EGO_LEVEL == 210 || EGO_LEVEL == 220 || EGO_LEVEL == 230 || EGO_LEVEL == 240 || EGO_LEVEL == 250)
+				{	
+					if (LANGUAGE == 2)
+					{
+						mes "Ho! You've reach a level where you can choose a bonus!";
+						mes "Let's see what you can take.";
+						for (set .@i,0; .@i<getarraysize(.ego_bonus_desc$); set .@i,.@i+1)
+						{
+							set .@menu$, .@menu$ + ( .@i ? ":" : "" ) + .ego_bonus_desc$[.@i];
+						}
+						set .@choice, prompt(.@menu$) - 1;
+						if (.@choice != 254)
+						{
+							next;
+							set .@npcname$, "[Weapon Master]";
+							mes "Hum. A " + .ego_bonus_desc$[.@choice] + ", hu?";
+							mes "Allright. That's a wise choice.";
+							explode(.@bonusEgo$,EGO_BONUS$,"#");
+							set .@bonusEgo$[(getarraysize(.@bonusEgo$))],.@choice;	
+							specialeffect2 154;
+							set .@ok, 1;
+						}
+					}
+					else if (LANGUAGE == 1)
+					{
+						mes "Ho! Tu as atteint un niveau ou tu peux choisir un Bonus supplémentaire!";
+						mes "Voyons ce que nous avons.";
+						for (set .@i,0; .@i<getarraysize(.ego_bonus_desc$); set .@i,.@i+1)
+						{
+							set .@menu$, .@menu$ + ( .@i ? ":" : "" ) + .ego_bonus_desc$[.@i];
+						}
+						set .@choice, prompt(.@menu$) - 1;
+						if (.@choice != 254)
+						{
+							next;
+							set .@npcname$, "[Weapon Master]";
+							mes "Hum. Un bonus de " + .ego_bonus_desc$[.@choice] + ", hu?";
+							mes "Très bien. C'est une sage décision.";
+							explode(.@bonusEgo$,EGO_BONUS$,"#");
+							set .@bonusEgo$[(getarraysize(.@bonusEgo$))],.@choice;	
+							specialeffect2 154;
+							set .@ok, 1;
+						}
+					}
+				}
+			}
+			if (.@ok == 1)
+			{
+				set EGO_LEVEL, EGO_LEVEL + 1;
+				//raise batk and matk by 1 per level
+				explode(.@bonusEgo$,EGO_BONUS$,"#");
+				set .@bonusEgo$[0],"" + (atoi(.@bonusEgo$[0])+1);
+				set .@bonusEgo$[1],"" + (atoi(.@bonusEgo$[1])+1);
+				set .@bonusEgo$[2],"" + (atoi(.@bonusEgo$[2])+1);
+				set EGO_LEVEL_UP, EGO_LEVEL_UP - 1;
+				mes "You're Ego Sword has raised.";
+				callsub RebuiltEgoBonusList, .@bonusEgo$;
+			}
+		}
+		else
+		{
+			if (LANGUAGE == 2)
+			{
+				mes "You're not ready. I can't help you.";
+			}
+			else if (LANGUAGE == 1)
+			{
+				mes "Tu n'es pas prêt. Je ne peux rien pour toi.";
+			}
+		}
+	}
+	else
+	{
+		if (LANGUAGE == 2)
+		{
+			mes "Sorry but...You're Ego Sword is in fail mode.";
+			mes "I can do nothing.";
+			mes "Kill again " + EGO_FAIL_COUNT + " monsters to leave fail mode and come back to me.";
+		}
+		else if (LANGUAGE == 1)
+		{
+			mes "Désolé je ne peux pas.";
+			mes "Ton Ego Sword est Désactivée.";
+			mes "Tue encore " + EGO_FAIL_COUNT + " monstres pour quitter ce mode et reviens me voir.";
+		}
+	}
+
+OnPCLoginEvent:
+	if (Q_EGO >= 3)
+	{		
+		if (getequipid(4) == EGO_ID)
+		{
+			//goto OnApplyBonus;
+			if (EGO_STATE_MAX < 1000)
+			{
+				set EGO_STATE_MAX, 1000;
+			}
+		}
+	}
+	end;
+
+OnBonusAdded:
+	if (EGO_FAIL == 0)
+	{
+		if (EGO_LEVEL_UP >= 1)
+		{			
+			set .@ok, 1;	
+			if (.bonusItem > 0)
+			{
+				switch(.bonusItem)
+				{
+					case 21787:
+						statusup2 bStr,1;
+						set EGO_BONUS_STR, EGO_BONUS_STR+1;
+						set .@bonusUp$, "Str +1";
+						break;
+					case 21788:
+						statusup2 bVit,1;
+						set EGO_BONUS_VIT, EGO_BONUS_VIT+1;
+						set .@bonusUp$, "Vit +1";
+						break;
+					case 21789:
+						statusup2 bInt,1;
+						set EGO_BONUS_INT, EGO_BONUS_INT+1;
+						set .@bonusUp$, "Int +1";
+						break;
+					case 21790:	
+						statusup2 bAgi,1;
+						set EGO_BONUS_AGI, EGO_BONUS_AGI+1;
+						set .@bonusUp$, "Agi +1";
+						break;	
+					case 21791:
+						statusup2 bDex,1;
+						set EGO_BONUS_DEX, EGO_BONUS_DEX+1;
+						set .@bonusUp$, "Dex +1";
+						break;
+					case 21792:
+						statusup2 bLuk,1;
+						set EGO_BONUS_LUK, EGO_BONUS_LUK+1;
+						set .@bonusUp$, "Luk +1";
+						break;
+				}	
+				delitem .bonusItem,1;
+			}
+			else
+			{
+				set .@bonusItem, rand(0,5);
+				switch(.@bonusItem)
+				{
+					case 0:
+						statusup2 bStr,1;
+						set EGO_BONUS_STR, EGO_BONUS_STR+1;
+						set .@bonusUp$, "Str +1";
+						break;
+					case 1:
+						statusup2 bVit,1;
+						set EGO_BONUS_VIT, EGO_BONUS_VIT+1;
+						set .@bonusUp$, "Vit +1";
+						break;
+					case 2:
+						statusup2 bInt,1;
+						set EGO_BONUS_INT, EGO_BONUS_INT+1;
+						set .@bonusUp$, "Int +1";
+						break;
+					case 3:	
+						statusup2 bAgi,1;
+						set EGO_BONUS_AGI, EGO_BONUS_AGI+1;
+						set .@bonusUp$, "Agi +1";
+						break;	
+					case 4:
+						statusup2 bDex,1;
+						set EGO_BONUS_DEX, EGO_BONUS_DEX+1;
+						set .@bonusUp$, "Dex +1";
+						break;
+					case 5:
+						statusup2 bLuk,1;
+						set EGO_BONUS_LUK, EGO_BONUS_LUK+1;
+						set .@bonusUp$, "Luk +1";
+						break;
+				}	
+			}
+			//if level is higher than 10 and is a multiple of 10, choose a bonus.
+			if (EGO_LEVEL >= 10)
+			{
+				if (EGO_LEVEL == 10 || EGO_LEVEL == 20 || EGO_LEVEL == 30 || EGO_LEVEL == 40 || EGO_LEVEL == 50
+				|| EGO_LEVEL == 60 || EGO_LEVEL == 70 || EGO_LEVEL == 80 || EGO_LEVEL == 90 || EGO_LEVEL == 100
+				|| EGO_LEVEL == 110 || EGO_LEVEL == 120 || EGO_LEVEL == 130 || EGO_LEVEL == 140 || EGO_LEVEL == 150
+				|| EGO_LEVEL == 160 || EGO_LEVEL == 170 || EGO_LEVEL == 180 || EGO_LEVEL == 190 || EGO_LEVEL == 200
+				|| EGO_LEVEL == 210 || EGO_LEVEL == 220 || EGO_LEVEL == 230 || EGO_LEVEL == 240 || EGO_LEVEL == 250)
+				{	
+					set .@ok, 0;
+					specialeffect2 154;
+
+					if (.bonusItem != 0)
+					{
+						switch(.bonusItem)
+						{
+							case 21787:
+								set .@itemBonus, 0;
+								break;
+							case 21788:
+								set .@itemBonus, 1;
+								break;
+							case 21789:
+								set .@itemBonus, 2;
+								break;
+							case 21790:
+								set .@itemBonus, 3;
+								break;
+							case 21791:
+								set .@itemBonus, 4;
+								break;
+							case 21792:
+								set .@itemBonus, 5;
+								break;
+						}
+					}
+					else
+						set .@itemBonus, rand(0,9);
+
+
+					switch(.@itemBonus)
+					{
+						case 0:
+							set .@rand, rand(1,3);
+							set StatusPoint, StatusPoint + .@rand;
+							statusup2 bStr,.@rand;
+							set EGO_BONUS_STR, EGO_BONUS_STR+.@rand;
+							set .@bonusUp$, .@bonusUp$ + " and Str +" + .@rand;
+							break;
+						case 1:
+							set .@rand, rand(1,3);
+							set StatusPoint, StatusPoint + .@rand;
+							statusup2 bVit,.@rand;
+							set EGO_BONUS_VIT, EGO_BONUS_VIT+.@rand;
+							set .@bonusUp$, .@bonusUp$ + " and Vit +" + .@rand;
+							break;
+						case 2:
+							set .@rand, rand(1,3);
+							set StatusPoint, StatusPoint + .@rand;
+							statusup2 bInt,.@rand;
+							set EGO_BONUS_INT, EGO_BONUS_INT+.@rand;
+							set .@bonusUp$, .@bonusUp$ + " and Int +" + .@rand;
+							break;
+						case 3:	
+							set .@rand, rand(1,3);
+							set StatusPoint, StatusPoint + .@rand;
+							statusup2 bAgi,.@rand;
+							set EGO_BONUS_AGI, EGO_BONUS_AGI+.@rand;
+							set .@bonusUp$, .@bonusUp$ + " and Agi +" + .@rand;
+							break;	
+						case 4:
+							set .@rand, rand(1,3);
+							set StatusPoint, StatusPoint + .@rand;
+							statusup2 bDex,.@rand;
+							set EGO_BONUS_DEX, EGO_BONUS_DEX+.@rand;
+							set .@bonusUp$, .@bonusUp$ + " and Dex +" + .@rand;
+							break;
+						case 5:
+							set .@rand, rand(1,3);
+							set StatusPoint, StatusPoint + .@rand;
+							statusup2 bLuk,.@rand;
+							set EGO_BONUS_LUK, EGO_BONUS_LUK+.@rand;
+							set .@bonusUp$, .@bonusUp$ + " and Luk +" + .@rand;
+							break;
+						case 6:
+							set .@rand, rand(1,3);
+							set MaxHp, MaxHp * .@rand / 100;
+							set EGO_BONUS_HP, EGO_BONUS_HP+.@rand;
+							set .@bonusUp$, .@bonusUp$ + " and Maximum Hp +" + .@rand + "%";
+							break;
+						case 7:
+							set .@rand, rand(1,3);
+							set MaxSp, MaxSp * .@rand / 100;
+							set EGO_BONUS_SP, EGO_BONUS_SP+.@rand;
+							set .@bonusUp$, .@bonusUp$ + " and Maximum Sp +" + .@rand + "%";
+							break;
+						case 8:
+							set .@rand, rand(1,3);
+							set MaxWeight, MaxWeight * .@rand / 100;
+							set EGO_BONUS_WEIGHT, EGO_BONUS_WEIGHT+.@rand;
+							set .@bonusUp$, .@bonusUp$ + " and Maximum Weight +" + .@rand + "%";
+							break;
+						case 9:
+							set EGO_STATE_MAX, EGO_STATE_MAX + 10;
+							set .@bonusUp$, .@bonusUp$ + " and a max limit of your Ego +10";
+							break;
+					}
+					set .@ok, 1;
+				}
+			}
+			if (.@ok == 1)
+			{
+				set EGO_LEVEL, EGO_LEVEL + 1;
+				set EGO_LEVEL_UP, EGO_LEVEL_UP - 1;
+				specialeffect2 154;
+				if (LANGUAGE == 2)
+				{
+					dispbottom "Your Ego Sword received a new bonus of " + .@bonusUp$ ;
+				}
+				else if (LANGUAGE == 1)
+				{
+					dispbottom "Votre Ego Sword a reçu un nouveau bonus: " + .@bonusUp$ ;
+				}
+			}
+		}
+		set .bonusItem, 0;
+	}
+	else
+	{
+		if (LANGUAGE == 2)
+		{
+			mes "Sorry, you're Ego is in fail mode.";
+		}
+		else if (LANGUAGE == 1)
+		{
+			mes "Désolé, ton Ego Sword est désactivée.";
+		}
+	}
+	close;
+
+OnApplyBonus:
+	explode(.@bonusEgo$,EGO_BONUS$,"#");
+	for(set .@i,0; .@i<getarraysize(.@bonusEgo$); set .@i,.@i+1)
+	{
+		if (.@i == 0)
+		{
+			//bonus batk
+			bonus bAtk, 100;//atoi(.@bonusEgo$[.@i]);
+		}
+		else if (.@i == 1)
+		{
+			//bonus matk
+			bonus bBaseAtk, 100;//atoi(.@bonusEgo$[.@i]);
+		}
+		else if (.@i == 2)
+		{
+			//bonus watk
+			bonus bMatk, 100;//atoi(.@bonusEgo$[.@i]);
+		}
+		else
+		{
+			explode(.@bonus$,.ego_bonus$[.@bonusEgo$[.@i]],"_");
+			if (getarraysize(.@bonus$) == 5)
+			{
+				dispbottom "bonus4 " + .@bonus$[0] + "," + .@bonus$[1] + "," + .@bonus$[2] + "," + .@bonus$[3] + "," + .@bonus$[4];
+				bonus4 .@bonus$[0],.@bonus$[1],.@bonus$[2],.@bonus$[3],.@bonus$[4];
+			}
+			else if (getarraysize(.@bonus$) == 4)
+			{
+				dispbottom "bonus4 " + .@bonus$[0] + "," + .@bonus$[1] + "," + .@bonus$[2] + "," + .@bonus$[3];
+				bonus3 .@bonus$[0],.@bonus$[1],.@bonus$[2],.@bonus$[3];
+			}
+			else if (getarraysize(.@bonus$) == 3)
+			{
+				dispbottom "bonus4 " + .@bonus$[0] + "," + .@bonus$[1] + "," + .@bonus$[2];
+				bonus2 .@bonus$[0],.@bonus$[1],.@bonus$[2];
+			}
+			else if (getarraysize(.@bonus$) == 2)
+			{
+				dispbottom "bonus4 " + .@bonus$[0] + "," + .@bonus$[1];
+				bonus .@bonus$[0],.@bonus$[1];
+			}
+		}
+	}
+	close;
+}

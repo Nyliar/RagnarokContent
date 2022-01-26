@@ -1,0 +1,554 @@
+casp_in01,175,195,4	script	Amber Ground	747,{
+	set .@npcname$,"^FF3333Amber Ground^000000";	
+
+	if (LANGUAGE == 1)
+	{	
+		mes "[" + .@npcname$ + "]";
+		set .@ombre$, strcharinfo(0);
+		mes "Bonjour ^3333FF" + .@ombre$ + "^000000 !";
+		mes "As-tu la moindre idée de qui je suis?";
+		mes "On m'appelle Amber. " + .@npcname$ + ".";
+		mes "Je sais, ça fait jaser, mais on ne choisit pas son nom.";
+		mes "En revanche, on peut choisir ce qu'on veut faire.";
+		next;
+		mes "[" + .@npcname$ + "]";
+		mes "Je suis celle qu'on appelle la Marionnettiste de l'Ombre.";
+		mes "Je suis celle qui dirige les gens dans les ténèbres.";
+		mes "Autrement dit, j'ai le pouvoir de te lier à quelqu'un d'autre.";
+		mes "Cette personne deviendra alors ton maître pour un temps donné,";
+		mes "et tu deviendra son Ombre, son mercenaire";
+		next;
+		mes "[" + .@npcname$ + "]";
+		mes "Souhaite-tu te lier à quelqu'un?";
+		next;
+		switch(select("Oui, s'il te plait:Je veux abandonner un Contrat:Non sans façon. J'aime mon indépendance"))
+		{
+			case 1:
+				mes "[" + .@npcname$ + "]";
+				mes "Ainsi donc, tu es sur le point de devenir une Ombre.";
+				mes "Voici comment ça va se passer.";
+				mes "Lorsque je t'aurais donné mon aval,";
+				mes "Toi et ton Maître recevrez chacun un exemplaire de contrat.";
+				mes "Le contrat détermine la récompense, et tu peux l'obtenir";
+				mes "Auprès de mon trésorier.";
+				next;
+				mes "[" + .@npcname$ + "]";
+				mes "Pour obtenir cette récompense,";
+				mes "tu dois obtenir la version du contrat de ton maitre.";
+				mes "Une fois ceci fait, parle à Sleip,";
+				mes "et il te récompenseras pour ton travail.";
+				mes "Ton Maître devra aussi payer une taxe de 25.000 Zenis à la Guilde des Mercenaires.";
+				mes "Tu as tout compris? Es-tu prêt à travailler?";
+				switch(select("Je suis prêt:Je n'en ai plus envie"))
+				{
+					case 1:
+						goto F_MERCENAIRE;
+					case 2:
+						goto QUIT;
+				}
+			case 2:
+				mes "Tient donc.";
+				mes "Quel est le nom de ton Maitre?";
+				input @name$;
+				goto CANCEL_CONTRACT;
+			case 3:
+				goto QUIT;
+		}
+	}
+	else if (LANGUAGE == 2)
+	{	
+		mes "[" + .@npcname$ + "]";
+		set .@ombre$, strcharinfo(0);
+		mes "Hello, ^3333FF" + .@ombre$ + "^000000 !";
+		mes "Do you event know who I am?";
+		mes "I'm called Amber. " + .@npcname$ + ".";
+		mes "I know...So much funny. Nobody choose his own name.";
+		mes "On the other hand, we can choose our path.";
+		next;
+		mes "[" + .@npcname$ + "]";
+		mes "I'm called the Shadows Puppetter.";
+		mes "I'm the one leading the others into darkness.";
+		mes "I can bind anybody to anybody else.";
+		mes "The second become the Master,";
+		mes "and the other, the Shadow, a Mercenary.";
+		next;
+		mes "[" + .@npcname$ + "]";
+		mes "Do you want to be bound to someone?";
+		next;
+		switch(select("Yes please:I want to break a Contract:No thanks. I prefer to be free"))
+		{
+			case 1:
+				mes "[" + .@npcname$ + "]";
+				mes "So, you're about to become a Shadow.";
+				mes "Here's how it works.";
+				mes "Once I'll be ok with your asking,";
+				mes "you and your Master will both receive a Contract.";
+				mes "The Contract make the Reward.";
+				mes "You can claim it at Sleip's office.";
+				next;
+				mes "[" + .@npcname$ + "]";
+				mes "To claim this reward,";
+				mes "you must obtain your master contract version.";
+				mes "Once this will be done, talk to Sleip,";
+				mes "and he'll pay you.";
+				mes "You master have to pay a 25.000z fee to establish the Contract.";
+				mes "Allright?";
+				switch(select("I'm ready:Don't want it anymore"))
+				{
+					case 1:
+						goto F_MERCENAIRE;
+					case 2:
+						goto QUIT;
+				}
+			case 2:
+				mes "Humpf.";
+				mes "What's your master's name?";
+				input @name$;
+				goto CANCEL_CONTRACT;
+			case 3:
+				goto QUIT;
+		}
+	}
+
+OnInit:
+	setarray .contractType$[0],
+		"drop",
+		"pvp",
+		"mercenariat",
+		"assassinat",
+		"donjon";
+	setarray .idItem[0],
+		21000,
+		21003,
+		21001,
+		21002,
+		21004;
+
+	set .timeDelay,60000;
+	end;
+
+F_MERCENAIRE:
+	if (LANGUAGE == 1)
+	{
+		if (countitem(5100) > 0)
+		{
+			mes "[" + .@npcname$ + "]";
+			mes "Alors fait ton entrée";
+			mes "dans le monde des tenèbres.";
+			next;
+			mes "Quel est le nom de ton Maître?";
+			input @name$;
+			mes "Très bien.";
+			mes "Maintenant, le type de contrat.";
+			switch(select("Contrat de Drop:Contrat de Mercenariat:Contrat d'Assassinat:Aide au pvp:Contrat Donjon:Je voudrais annuler un contrat:Aucun de ceux la"))
+			{
+				case 1:
+					set @id$, "drop";
+					break;
+				case 2:
+					set @id$, "mercenariat";
+					break;
+				case 3:
+					set @id$, "assassinat";
+					break;
+				case 4:
+					set @id$, "pvp";
+					break;
+				case 5:
+					set @id$, "donjon";
+					break;
+				case 6:
+					goto CANCEL_CONTRACT;
+				case 7:
+					goto QUIT;
+			}
+			goto GIVE_CONTRACT;
+		}
+		else
+		{
+			next;
+			mes "[" + .@npcname$ + "]";
+			mes "De qui crois-tu te moquer?";
+			mes "Tu n'es même pas un Mercenaire.";
+			mes "Va-t-en d'ici, espèce de fou!";
+			close;
+		}
+	}
+	else if (LANGUAGE == 2)
+	{
+		if (countitem(5100) > 0)
+		{
+			mes "[" + .@npcname$ + "]";
+			mes "So, enter in the Darkness World.";
+			next;
+			mes "What's your Master's name?";
+			input @name$;
+			mes "Allright.";
+			mes "Now, choose a Contract type.";
+			switch(select("Drop Contract:Mercenary Contract:Assassination Contract:PvP Helping:Dungeon Contract:I wanna cancel an old one:None"))
+			{
+				case 1:
+					set @id$, "drop";
+					break;
+				case 2:
+					set @id$, "mercenariat";
+					break;
+				case 3:
+					set @id$, "assassinat";
+					break;
+				case 4:
+					set @id$, "pvp";
+					break;
+				case 5:
+					set @id$, "donjon";
+					break;
+				case 6:
+					goto CANCEL_CONTRACT;
+				case 7:
+					goto QUIT;
+			}
+			goto GIVE_CONTRACT;
+		}
+		else
+		{
+			next;
+			mes "[" + .@npcname$ + "]";
+			mes "Who are you thinking laugthing about?";
+			mes "You're not even a Mercenary.";
+			mes "Go away!";
+			close;
+		}
+	}
+	
+QUIT:
+	if (LANGUAGE == 1)
+	{
+		mes "[" + .@npcname$ + "]";
+		mes "Dans ce cas, tu n'as rien à faire ici.";
+		mes "Reste autant que possible du côté de la Lumière.";
+		mes "Et si un jour tu cherches de l'argent...sale,";
+		mes "reviens me voir.";
+	}
+	else if (LANGUAGE == 2)
+	{
+		mes "[" + .@npcname$ + "]";
+		mes "Then, you've got nothing to do here.";
+		mes "Leave, and stay in Lights.";
+		mes "And if one day, you look for easy but dirty money,";
+		mes "then come back to me.";
+	}
+	close;
+	
+	
+GIVE_CONTRACT:
+	if (LANGUAGE == 1)
+	{
+		if (CONTRACT_Q == 0)
+		{
+			set .innerTicks, gettimetick(0);
+			if (.innerTicks - CONTRACT_DELAY >= .timeDelay)
+			{
+				for ( set @i , 0 ; @i < getarraysize ( .contractType$ ) ; set @i , @i + 1 )
+					if( @id$ == .contractType$[ @i ] )
+					{
+						set .@ID, .idItem[ @i ];
+					}
+					//attache le script au maitre
+				mes "Lançons le processus de Contrat, jeune Ombre.";
+				attachrid(getcharid(3,@name$));
+				if (Zeny >= 25000)
+				{
+					mes "Hello, " + @name$ + ". Veux-tu passer un Contrat avec " + .@ombre$ + "?";
+					mes "Il t'en coûtera 25.000 Zenys.";
+					switch(select("Oui","Non"))
+					{
+						case 1:
+							getnameditem .@ID, .@ombre$;
+							//getitem .@ID, 1;
+							//launch skill on Maitre
+							sc_start SC_MARIONETTE,6000,1;
+							//retire zenis au maitre
+							set Zeny, Zeny - 25000;
+							close2;
+							detachrid;
+							//attacher le script au joueur parlant
+							attachrid(getcharid(3,.@ombre$));
+							getnameditem .@ID, .@ombre$;	
+							//getitem .@ID, 1;
+							//launch skill on Ombre
+							sc_start SC_MARIONETTE2,6000,1;
+							set CONTRACT_Q, 1;
+							//effect devotion
+							break;
+						case 2:
+							detachrid;
+							//attacher le script au joueur parlant
+							attachrid(getcharid(3,.@ombre$));
+							mes "Ton Maître à réfuter ta demande de Contrat.";
+							mes "Ca t'apprendra a essayer d'arnaquer les gens et la Guilde.";
+							if (Zeny >= 25000)
+								set Zeny, Zeny - 25000;	
+							else
+							set Zeny, 0;
+							mes "A bientôt jeune Ombre.";
+							mes "Reviens me voir pour un nouveau Contrat quand celui-ci sera fini.";
+					}
+					
+				}
+				else
+				{
+					detachrid;
+					//attacher le script au joueur parlant
+					attachrid(getcharid(3,.@ombre$));
+					mes "Ton Maitre n'a pas de quoi payer la Guilde.";
+				}
+				close;
+			}
+			else
+			{
+				mes "Désolé, tu ne peux pas encore prendre un nouveau contrat. Tu dois attendre une heure entre chaque contract.";
+			}
+		}
+		else
+		{
+			mes "Désolé, tu as déjà un Contrat en cours.";
+			mes "Reviens quand tu auras terminé celui-là.";
+			close;
+		}
+	}
+	else if (LANGUAGE == 2)
+	{
+		if (CONTRACT_Q == 0)
+		{
+			set .innerTicks, gettimetick(0);
+			if (.innerTicks - CONTRACT_DELAY >= .timeDelay)
+			{
+				for ( set @i , 0 ; @i < getarraysize ( .contractType$ ) ; set @i , @i + 1 )
+					if( @id$ == .contractType$[ @i ] )
+					{
+						set .@ID, .idItem[ @i ];
+					}
+				//attache le script au maitre
+				mes "Let's start the Contract process, young Shadow.";
+				attachrid(getcharid(3,@name$));
+				if (Zeny >= 25000)
+				{
+					mes "Hello, " + @name$ + ". Do you wanna establish a Contract with " + .@ombre$ + "?";
+					mes "It will cost you 25.000 Zenys.";
+					switch(select("Yes","No"))
+					{
+						case 1:
+							getnameditem .@ID, .@ombre$;
+							//getitem .@ID, 1;
+							//launch skill on Maitre
+							sc_start SC_MARIONETTE,6000,1;
+							//retire zenis au maitre
+							set Zeny, Zeny - 25000;
+							close2;
+							detachrid;
+							//attacher le script au joueur parlant
+							attachrid(getcharid(3,.@ombre$));
+							getnameditem .@ID, .@ombre$;	
+							//getitem .@ID, 1;
+							//launch skill on Ombre
+							sc_start SC_MARIONETTE2,6000,1;
+							set CONTRACT_Q, 1;
+							//effect devotion
+							break;
+						case 2:
+							detachrid;
+							//attacher le script au joueur parlant
+							attachrid(getcharid(3,.@ombre$));
+							mes "Your Master refused the Contract demand.";
+							mes "This will learn you not to steal from people and make the Guild loosing time.";
+							if (Zeny >= 25000)
+								set Zeny, Zeny - 25000;	
+							else
+							set Zeny, 0;
+							mes "Come back when you'll be ready.";
+					}
+				}
+				else
+				{
+					detachrid;
+					//attacher le script au joueur parlant
+					attachrid(getcharid(3,.@ombre$));
+					mes "Your Master doesn't have enough to pay the bill.";
+				}
+				close;
+			}
+			else
+			{
+				mes "Sorry, but you have to wait 1 hour between two contracts.";
+			}
+		}
+		else
+		{
+			mes "You already have a contract activated.";
+			mes "Come back when you'll end this one.";
+			close;
+		}
+	}
+	
+CANCEL_CONTRACT:
+	for ( set @i , 0 ; @i < getarraysize ( .contractType$ ) ; set @i , @i + 1 )
+	if( @id$ == .contractType$[ @i ] )
+	{
+		set .@ID, .idItem[ @i ];
+	}
+	
+	if (LANGUAGE == 1)
+	{
+		if (CONTRACT_Q == 1)
+		{
+			mes "Ainsi, tu veux annuler un Contrat.";
+			mes "Je vais donc retirer le Contrat à ton Maitre";
+			mes "N'oublie pas que j'effacerais le premier contrat que je verrais.";
+			mes "Es-tu sûr de toi?";
+			switch(select("Oui:Non, attends un peu"))
+			{
+				case 1:
+					//donner item custom
+					//attache le script au maitre
+					attachrid(getcharid(3,@name$));
+					if (countitem(21001) == 1)
+					{
+						delitem 21001,1;
+					}
+					else if (countitem(21002) == 1)
+					{
+						delitem 21002,1;
+					}
+					else if (countitem(21003) == 1)
+					{
+						delitem 21003,1;
+					}
+					else if (countitem(21004) == 1)
+					{
+						delitem 21004,1;
+					}
+					else if (countitem(21005) == 1)
+					{
+						delitem 21005,1;
+					}
+					detachrid;
+					//attacher le script au joueur parlant
+					attachrid(getcharid(3,.@ombre$));
+					mes "A ton tour, maintenant.";
+					if (countitem(21001) == 1)
+					{
+						delitem 21001,1;
+					}
+					else if (countitem(21002) == 1)
+					{
+						delitem 21002,1;
+					}
+					else if (countitem(21003) == 1)
+					{
+						delitem 21003,1;
+					}
+					else if (countitem(21004) == 1)
+					{
+						delitem 21004,1;
+					}
+					else if (countitem(21005) == 1)
+					{
+						delitem 21005,1;
+					}
+					set CONTRACT_Q, 0;
+					//effect devotion
+					mes "Et je prends la Taxe pour Abandon";
+					set Zeny, Zeny - 35000;
+					mes "A bientôt jeune Ombre.";
+					mes "Reviens me voir avec un nouveau Maître";
+					close;
+				
+				case 2:
+					mes "Bien. J'attends alors";
+					mes "Reviens quand vous serez prêt tout les deux";
+					close;
+			}
+		}
+		else
+		{
+			mes "Tu n'as même pas de Contrat en cours...";
+			close;
+		}
+	}
+	else if (LANGUAGE == 2)
+	{
+		if (CONTRACT_Q == 1)
+		{
+			mes "So you wanna cancel a Contract.";
+			mes "I'll take back your Master's one.";
+			mes "Don't forget I'll delete the first one I'll see.";
+			mes "Are you ready?";
+			switch(select("Yes:No, wait a second"))
+			{
+				case 1:
+					//donner item custom
+					//attache le script au maitre
+					attachrid(getcharid(3,@name$));
+					if (countitem(21001) == 1)
+					{
+						delitem 21001,1;
+					}
+					else if (countitem(21002) == 1)
+					{
+						delitem 21002,1;
+					}
+					else if (countitem(21003) == 1)
+					{
+						delitem 21003,1;
+					}
+					else if (countitem(21004) == 1)
+					{
+						delitem 21004,1;
+					}
+					else if (countitem(21005) == 1)
+					{
+						delitem 21005,1;
+					}
+					detachrid;
+					//attacher le script au joueur parlant
+					attachrid(getcharid(3,.@ombre$));
+					mes "Your turn now.";
+					if (countitem(21001) == 1)
+					{
+						delitem 21001,1;
+					}
+					else if (countitem(21002) == 1)
+					{
+						delitem 21002,1;
+					}
+					else if (countitem(21003) == 1)
+					{
+						delitem 21003,1;
+					}
+					else if (countitem(21004) == 1)
+					{
+						delitem 21004,1;
+					}
+					else if (countitem(21005) == 1)
+					{
+						delitem 21005,1;
+					}
+					set CONTRACT_Q, 0;
+					//effect devotion
+					mes "And I take the fee for Cancelation.";
+					set Zeny, Zeny - 35000;
+					mes "Come back later, Shadow.";
+					close;
+				case 2:
+					mes "Allright. I'll wait a bit.";
+					mes "Come back when you'll both be ready.";
+					close;
+			}
+		}
+		else
+		{
+			mes "You don't event have Contract on...";
+			close;
+		}
+	}
+}

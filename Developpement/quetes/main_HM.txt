@@ -1,0 +1,1166 @@
+prontera,139,169,1	script	Master Hat Maker::prthmmaster	743,{
+set .@npcname$,"Master Hat Maker";
+	
+	setarray @item[0], 7020,7024,7109,1531,12090;
+	setarray @itemCommon[0], 917,1043,928,955,905,909,949,932,940,938;
+
+	//RO-Islands Hat 5751
+	setarray @itemKH[0], 7020,7024,7109,1531,7754,7229;
+	setarray @countitemKH[0], 10, 10, 10, 5, 2, 25;
+
+	//Minstrel Song Hat 5751
+	setarray @itemMSH[0], 1919, 1920, 625, 7229;
+	setarray @countitemMSH[0], 10, 5, 50, 5;
+	
+	//Musketeer Hat 5469
+	setarray @itemMH[0], 2726, 7063, 2221, 7229;
+	setarray @countitemMH[0],10,10,5,5;
+
+	//Flapping Angel Wing  5210
+	setarray @itemFAW[0], 2254, 7441, 2726, 7228;
+	setarray @countitemFAW[0], 5, 10, 10, 5;
+
+	//Red Tailed Ribbon  5801
+	setarray @itemRTB[0], 739, 2244, 7228;
+	setarray @countitemRTB[0], 50, 2, 5;
+	
+	//Parade Hat 5225 
+	setarray @itemPH[0], 949, 1059, 7229;
+	setarray @countitemPH[0], 100, 50, 5;
+	
+	//Zaha Doll Hat 5464
+	setarray @itemADH[0], 742, 7166, 7165, 7229;
+	setarray @countitemZDH[0], 10, 50, 50, 5;
+	
+	//White Petal 5206
+	setarray @itemWP[0], 710, 7864, 7229;
+	setarray @countitemWP[0], 50, 5, 5;
+	
+	//Flapping Angeling 5334
+	setarray @itemFA[0], 2254, 7441, 2726, 7228;
+	setarray @countitemFA[0], 5, 10, 10, 5;
+	
+	//Fish Head Hat 5380
+	setarray @itemFHH[0], 579, 1062, 7229;
+	setarray @countitemFHH[0], 50, 50, 5;
+	
+	//Mitra 5747
+	setarray @itemM[0], 2251, 523, 2611, 7228;
+	setarray @countitemM[0], 10, 10, 25, 5;
+	
+	//Evolved Orc Hero Helm 5224
+	setarray @itemOHH[0], 1063, 2299, 1124, 7228;
+	setarray @countitemOHH[0], 100, 10, 2, 5;
+
+	//Evolved Red Hat Minstrel 5435
+	setarray @itemRMH[0], 5751, 975, 7230;
+	setarray @countitemRMH[0], 1, 2, 5;
+
+	setarray .@1Hatter$[0], getitemname(5751), getitemname(5210), getitemname(5801), getitemname(5225), 
+	getitemname(5206), getitemname(5334), getitemname(5380), getitemname(5747), getitemname(5224), getitemname(5435);
+
+	//Bullock Helm 5300
+	setarray @itemBH[0], 632, 5017, 702, 7230;
+	setarray @countitemBH[0],50,2,50,5;
+
+	//Water Lily Crown 5284
+	setarray @itemLC[0], 12020, 2745, 7228;
+	setarray @countitemLC[0], 50, 15, 5;
+
+	//Aries Crown 5546
+	setarray @itemAC[0], 7106, 7215, 7230;
+	setarray @countitemAC[0], 100, 50, 5;
+	
+	//Defolty Doll hat 5340
+	setarray @itemDDH[0], 7206, 7212, 11003, 7229;
+	setarray @countitemDDH[0], 20, 25, 50, 5;
+	
+	//Dip Schmidt Helm 5757
+	setarray @itemDSH[0], 2609, 6010, 7318, 7230;
+	setarray @countitemDSH[0], 50, 2, 50, 5;
+	
+	//Driver Band 5749
+	setarray @itemDB[0], 7264, 1529, 7230;
+	setarray @countitemDB[0], 25, 2, 5;
+	
+	//Winter Hat 5115
+	setarray @itemWH[0], 7066, 749, 7228;
+	setarray @countitemWH[0], 100, 20, 5;
+
+	//LKH 5013
+	setarray @itemLKH[0], 4065, 7020, 7292, 7024, 7019, 7230;
+	setarray @countitemLKH[0], 10, 30, 25, 25, 100, 12;
+
+	//Evolved Rabbits Heaband 20091
+	setarray @itemERH[0], 2214, 4058, 732, 2391, 7230;
+	setarray @countitemERH[0], 1, 3, 100, 5, 12;
+
+	setarray .@2Hatter$[0], getitemname(5300),getitemname(5284),getitemname(5340),getitemname(5757),getitemname(5749),
+	getitemname(5115),getitemname(5013),getitemname(20091);
+
+	//Gigantic Baphomet Horn 5374
+	setarray @itemGBH[0], 7265, 6032, 923, 642, 7230;
+	setarray @countitemGBH[0], 50, 25, 50, 100, 12;
+	
+	//Helm of Abyss 5363
+	setarray @itemHoA[0], 7799, 7798, 5017, 7229;
+	setarray @countitemHoA[0],20,20,1,5;
+
+	//Magic Eye 5138
+	setarray @itemME[0], 1573, 2252, 7263, 7228;
+	setarray @countitemME[0], 5, 5, 50, 5;
+	
+	//Beanie 5076
+	setarray @itemB[0], 7106, 7215, 7213, 7229;
+	setarray @countitemB[0], 100, 20, 20, 5;
+	
+	//Helm of Angel 5025
+	setarray @itemHoAn[0], 5125, 2254, 1974, 7229;
+	setarray @countitemHoAn[0], 1, 5, 5, 5;
+	
+	//Rune Circlet 5746
+	setarray @itemRC[0], 12735, 12738, 2233, 7229;
+	setarray @countitemRC[0], 50, 50, 10, 5;
+	
+	//Magic Stone Hat 5753
+	setarray @itemMSH[0], 1573, 2252, 2783, 7229;
+	setarray @countitemMSH[0], 5, 5, 50, 5;
+	
+	//Hermode Cap 5481
+	setarray @itemHC[0], 2266, 7750, 979, 7230;
+	setarray @countitemHC[0], 10, 20, 1, 5;
+
+	//Sunglasses 2202
+	setarray @itemS[0], 2201, 2253, 12112, 7020, 536, 7230;
+	setarray @countitemS[0], 25, 20, 10, 5, 100, 12;
+	
+	//Gangster Scarf 5361
+	setarray @itemGS[0], 10019, 2528, 7216, 7230;
+	setarray @countitemGS[0], 50, 10, 25, 5;
+
+	setarray .@3Hatter$[0], getitemname(5374),getitemname(5363),getitemname(5138),getitemname(5076),getitemname(5025),
+	getitemname(5746),getitemname(5753),getitemname(5481),getitemname(2202),getitemname(5361);
+
+	//Gentleman's Pipe 5377
+	setarray @itemGP[0], 2268, 7035, 7230;
+	setarray @countitemGP[0], 1, 10, 5;
+	
+	//Spiked Scarf 5462
+	setarray @itemSS[0], 2727, 7216, 1523, 7230;
+	setarray @countitemSS[0], 20,50,5,5;
+
+	//Crunch Toast 5107
+	setarray @itemCT[0], 580, 12020, 994, 7229;
+	setarray @countitemCT[0], 20, 20, 20, 5;
+
+	//Emperor's Wreath (Up) 5533
+	setarray @itemEW[0], 5002, 511, 4350, 7229;
+	setarray @countitemEW[0], 1, 150, 10, 5;
+	
+	//Robo Eye 5325
+	setarray @itemRE[0], 2276, 7337, 2783, 7230;
+	setarray @countitemRE[0], 1, 2, 10, 12;
+	
+	//Ears of Ifrit 5421
+	setarray @itemEoI[0], 2286, 994, 12374, 7229;
+	setarray @countitemEoI[0], 5, 50, 20, 5;
+
+	//Evolved Masquerade 5326
+	setarray @itemEM[0], 2291, 754, 7228;
+	setarray @countitemEM[0], 20, 20, 5;
+
+	//Victory Wing 5357
+	setarray @itemVW[0], 7063, 2282, 982, 7024, 7229;
+	setarray @countitemVW[0], 100, 20, 2, 5, 5;
+
+	//Pecopeco Hairband 5476 OK
+	setarray @itemPH[0], 2113, 9014, 7101, 7229;
+	setarray @countitemPH[0], 10, 3, 100, 5;
+
+	//Sigrun's Wing 5592
+	setarray @itemSW[0], 1039, 7168, 2726, 7228;
+	setarray @countitemSW[0], 50, 25, 5, 5;
+
+	setarray .@4Hatter$[0], getitemname(5377),getitemname(5462),getitemname(5107),getitemname(5533),getitemname(5325),
+	getitemname(5421),getitemname(5326),getitemname(5357),getitemname(5476),getitemname(5592);
+
+	setarray @itemMaiH[0], 5045, 5085, 7301, 970, 7293, 7229;
+	setarray @countitemMaiH[0], 1, 5, 100, 10, 1, 5;
+	
+	setarray @itemGRH[0], 7189, 1024, 6122, 7229;
+	setarray @countitemGRH[0], 50,20,1,5;
+
+	setarray @itemPE[0], 7101, 925, 736, 2286, 7229;
+	setarray @countitemPE[0], 50, 50, 50, 1, 5;
+	
+	setarray @itemCE[0], 2276, 2614, 7229;
+	setarray @countitemCE[0], 1, 10, 5;
+	
+	setarray @itemAD[0], 5141, 739, 1270, 11003, 7228;
+	setarray @countitemAD[0], 1, 25, 10, 50, 5;
+	
+	setarray @itemTB[0], 7219, 2251, 530, 7228;
+	setarray @countitemTB[0], 100, 5, 100, 5;
+	
+	setarray @itemMagH[0], 7031, 574, 7229;
+	setarray @countitemMagH[0], 100, 50, 5;
+	
+	setarray @itemMW[0], 7187, 969, 7229;
+	setarray @countitemMW[0], 100, 20, 5;
+	
+	//Ramen Hat 5293 OK
+	setarray @itemRH[0], 12395, 10010, 7229;
+	setarray @countitemRH[0], 10, 10, 5;
+	
+	//Bizofnil Feather 5293 OK
+	setarray @itemBF[0], 7441, 10018, 2233, 7230;
+	setarray @countitemBF[0], 50, 1, 25, 5;
+
+	setarray .@5Hatter$[0], getitemname(5211),getitemname(5336),getitemname(5358),getitemname(5132),getitemname(5137),
+	getitemname(5395),getitemname(5365),getitemname(5752),getitemname(5293),getitemname(5480);
+
+	//Well-Chewed Pencil 5574
+	setarray @itemWCP[0], 738, 5113, 958, 7229;
+	setarray @countitemWCP[0], 10, 5, 25, 5;
+	
+	//Mischievous Fairy 5402
+	setarray @itemMF[0], 2286, 1001, 7229;
+	setarray @countitemMF[0],10, 50, 5;
+
+	//Anubis Helm 5490
+	setarray @itemAN[0], 2228, 4138, 930, 7229;
+	setarray @countitemAN[0], 5, 2, 100, 5;
+
+	//Australian Flag Hat 5264
+	setarray @itemAFH[0], 996, 12080, 12085, 7229;
+	setarray @countitemAFH[0], 50, 5, 5, 5;
+	
+	//Filir's Pinion 5664
+	setarray @itemFP[0], 7064, 6090, 7228;
+	setarray @countitemFP[0], 100, 25, 5;
+	
+	//Angel Spirit 5389
+	setarray @itemAS[0], 2254, 2680, 4316, 7228;
+	setarray @countitemAS[0], 10, 5, 2, 5;
+	
+	//viking helm 20261
+	setarray @itemVH[0], 2299, 1387, 7230;
+	setarray @countitemVH[0], 25, 2, 5;
+	
+	//Rose Of Crimson 5548
+	setarray @itemRoC[0], 749, 748, 1963, 13102, 7229;
+	setarray @countitemRoC[0], 25, 25, 5, 10, 5;
+	
+	//Rudolph's Nose 5204
+	setarray @itemRN[0], 7159, 2262, 7564, 7229;
+	setarray @countitemRN[0], 50, 25, 100, 5;
+	
+	//Anniversary Hat 5486
+	setarray @itemAH[0], 539, 538, 550, 7228;
+	setarray @countitemAH[0], 100, 50, 25, 5;
+
+	setarray .@6Hatter$[0], getitemname(5574),getitemname(5402),getitemname(5490),getitemname(5264),getitemname(5664),
+	getitemname(5389),getitemname(20261),getitemname(5548),getitemname(5204),getitemname(5486);
+
+	//Angry Mouth 5521
+	setarray @itemAM[0], 5113, 958, 7229;
+	setarray @countitemAM[0], 50, 100, 5;
+
+	//traveler hat 20230
+	setarray @itemTH[0], 6021, 6010, 6020, 7228;
+	setarray @countitemTH[0], 50, 2, 50, 5;
+
+	//Blush of Groom 5800
+	setarray @itemBG[0], 739, 5040, 7170, 7228;
+	setarray @countitemBG[0], 40, 1, 5, 5;
+
+	//Drooping Medusa
+	setarray @itemDM[0], 1048, 4124, 926, 7229;
+	setarray @countitemDM[0],200,5,100,5;
+	
+	//Ninja Scroll 5362 (2nd, ou 2337)
+	setarray @itemNS[0], 7433, 2359, 13009, 7228;
+	setarray @countitemNS[0], 25, 5, 20, 5;
+	
+	//Rainbow Scarf 5463
+	setarray @itemRS[0], 721, 723, 726, 728, 7230;
+	setarray @countitemRS[0], 10, 10, 10, 10, 5;
+	
+	//Usakoring Hat
+	setarray @itemUH[0], 2228, 7066, 7126, 7229;
+	setarray @countitemUH[0], 10, 50, 50, 5;
+	
+	//Asara Fairy Hat 5505
+	setarray @itemAFH[0], 5650, 1001, 7229;
+	setarray @countitemAFH[0],10, 50, 5;
+	
+	//Ayothaya King's Hat 5312
+	setarray @itemAKH[0], 7298, 7198, 2252, 7228;
+	setarray @countitemAKH[0], 50, 50, 5, 5;
+	
+	//Bandit Hat 5491
+	setarray @itemBaH[0], 2291, 945, 7228;
+	setarray @countitemBaH[0], 25, 100, 5;
+
+	setarray .@7Hatter$[0], getitemname(5521),getitemname(20230),getitemname(5800),getitemname(20389),getitemname(5362),
+	getitemname(5463),getitemname(20270),getitemname(5505),getitemname(5312),getitemname(5491);
+
+	//Beer Hat 5416
+	setarray @itemBH[0], 2203, 746, 508, 7229;
+	setarray @countitemBH[0], 5, 50, 75, 5;
+
+	//Bell Ribbon 5382
+	setarray @itemBR[0], 5091, 5348, 7229;
+	setarray @countitemBR[0], 5, 10, 5;
+
+	//Bennit Doll Hat 5344
+	setarray @itemBDH[0], 7206, 740, 11003, 7229;
+	setarray @countitemBDH[0], 40, 50, 50, 5;
+
+	//Blazing Soul 5754
+	setarray @itemBS[0], 7122, 1914, 7228;
+	setarray @countitemBS[0], 50, 10, 5;
+	
+	//Blue Night Cap 5506
+	setarray @itemBNC[0], 978, 4127, 2226, 7229;
+	setarray @countitemBNC[0], 2, 5, 20, 5;
+	
+	//drooping succubus  20400
+	setarray @itemDS[0], 4218, 5066, 12373, 7229;
+	setarray @countitemDS[0], 5, 20, 50, 5;
+	
+	//Brazil National Flag Hat 5308
+	setarray @itemBNF[0], 996, 12080, 12085, 7228;
+	setarray @countitemBNF[0], 50, 5, 5, 5;
+	
+	//Bright Fury 5567
+	setarray @itemBF[0], 1377, 657, 5351, 7230;
+	setarray @countitemBF[0], 1, 10, 10, 5;
+	
+	//Carmen Miranda's Hat  5307
+	setarray @itemCMH[0], 2321, 2700, 7229;
+	setarray @countitemCMH[0], 10, 5, 5;
+	
+	//Chick Hat 5283
+	setarray @itemCH[0], 9002, 7115, 728, 7229;
+	setarray @countitemCH[0], 25, 50, 5, 5;
+
+	setarray .@8Hatter$[0], getitemname(5416),getitemname(5382),getitemname(5344),getitemname(5754),getitemname(5506),
+	getitemname(20400),getitemname(5308),getitemname(5567),getitemname(5307),getitemname(5283);
+
+	//Chicken Hat 5431
+	setarray @itemCH[0], 7605, 7115, 728, 7228;
+	setarray @countitemCH[0], 25, 50, 5, 5;
+
+	//Crown Parrots 5417
+	setarray @itemCP[0], 2235, 1013, 7229;
+	setarray @countitemCP[0], 10, 50, 5;
+
+	//Rabbit Bonnet 5568
+	setarray @itemRB[0], 2415, 4227, 7229;
+	setarray @countitemRB[0], 1, 1, 5;
+
+	//Drooping Ninetail 5252
+	setarray @itemDNT[0], 1022, 4159, 2210, 7228;
+	setarray @countitemDNT[0], 100, 10, 10, 5;
+	
+	//Dying Swan 5758 
+	setarray @itemDS[0], 604, 7063, 7228;
+	setarray @countitemDS[0], 50, 50, 5;
+	
+	//Festival Pumpkin Hat 5356
+	setarray @itemFP[0], 4109, 1062, 535, 7229;
+	setarray @countitemFP[0], 5, 100, 50, 5;
+	
+	//Filir Hat 5405
+	setarray @itemFH[0], 7142, 7064, 1737, 7230;
+	setarray @countitemFH[0], 50, 100, 1, 5;
+	
+	//Fisherman's Hat 5317
+	setarray @itemFiH[0], 1249, 579, 7228;
+	setarray @countitemFiH[0], 15, 100, 5;
+	
+	//Frog King Hat  5528
+	setarray @itemFKH[0], 4014, 4058, 7230;
+	setarray @countitemFKH[0], 5, 5, 2;
+	
+	//Glaris Doll Hat 5431
+	setarray @itemGDH[0], 7206, 740, 11003, 7229;
+	setarray @countitemGDH[0], 40, 50, 50, 5;
+
+	setarray .@9Hatter$[0], getitemname(5431),getitemname(5417),getitemname(5568),getitemname(5252),getitemname(5758),
+	getitemname(5356),getitemname(5405),getitemname(5317),getitemname(5528),getitemname(5341);
+
+	//fat meow hat  20374
+	setarray @itemFMH[0], 7263, 7206, 7228;
+	setarray @countitemFMH[0], 100, 50, 5;
+
+	//Hyuke's Black Cat Ears 5360
+	setarray @itemBCE[0], 2213, 2747, 1029, 7229;
+	setarray @countitemBCE[0], 10, 10, 10, 5;
+
+	//I Love China 5423
+	setarray @itemLC[0], 7213, 736, 12018, 7229;
+	setarray @countitemLC[0], 50, 100, 5, 5;
+
+	//Jasper Crest 5396
+	setarray @itemJC[0], 2530, 7356, 7358, 7229;
+	setarray @countitemJC[0], 10, 100, 50, 5;
+	
+	//Kettle Hat 5291
+	setarray @itemKH[0], 10010, 7323, 523, 7229;
+	setarray @countitemKH[0], 25, 100, 50, 5;
+	
+	//Koneko Hat 5372
+	setarray @itemKoH[0], 982, 2213, 2747, 1029, 7228;
+	setarray @countitemKoH[0], 1, 10, 10, 10, 5;
+	
+	//Leaf Cat Hat 5555
+	setarray @itemLCH[0], 4195, 2213, 2747, 7229;
+	setarray @countitemLCH[0], 5, 10, 10, 5;
+	
+	//Lif Doll Hat 5253
+	setarray @itemLDH[0], 7206, 740, 706, 7198, 7229;
+	setarray @countitemLDH[0], 40, 50, 50, 25, 5;
+	
+	//Little Angel Doll  5324
+	setarray @itemLAD[0], 7206, 740, 2420, 7229;
+	setarray @countitemLAD[0], 40, 50, 5, 5;
+	
+	//Love Valentine's Hat 5393
+	setarray @itemLV[0], 7213, 561, 12018, 7229;
+	setarray @countitemLV[0], 50, 5, 5, 5;
+
+	setarray .@10Hatter$[0], getitemname(20374),getitemname(5360),getitemname(5423),getitemname(5396),getitemname(5291),
+	getitemname(5372),getitemname(5555),getitemname(5283),getitemname(5324),getitemname(5393);
+
+	//drooping incubus 20383
+	setarray @itemDI[0], 5072, 4269, 12373, 7229;
+	setarray @countitemDI[0], 20, 5, 50, 5;
+		
+	//amistr hat 20293
+	setarray @itemAH[0], 7106, 4001, 4004, 4196, 7228;
+	setarray @countitemAH[0], 100, 20, 10, 5, 5;
+
+	//Poring Cake Hat 5415
+	setarray @itemPCH[0], 539, 7142, 7230;
+	setarray @countitemPCH[0], 300, 1, 5;
+
+	//VanilMirt Hat 5289
+	setarray @itemVH[0], 691, 688, 693, 7229;
+	setarray @countitemVH[0], 50, 50, 50, 5;
+
+	//Crunch Toast 5391
+	setarray @itemCT[0], 580, 12020, 994, 7229;
+	setarray @countitemCT[0], 20, 20, 20, 5;
+
+	//Small Devil Horn 18503
+	setarray @itemSDH[0], 642, 1038, 1039, 947, 7230;
+	setarray @countitemSDH[0], 50, 75, 75, 100, 12;
+
+	//Donut in Mouth 5594
+	setarray @itemDiM[0], 539, 538, 519, 7228;
+	setarray @countitemDiM[0], 50, 50, 75, 5;
+
+	//Fashionable Glass 5047
+	setarray @itemFG[0], 2239, 746, 7229;
+	setarray @countitemFG[0], 2, 50, 5;
+
+	//Cat Ear Beret 18600
+	setarray @itemCEB[0], 5118, 5170, 7230;
+	setarray @countitemCEB[0], 10, 1, 5;
+
+	//Tiger Mask 5098
+	setarray @itemTM[0], 2297, 1030, 1029, 7228;
+	setarray @countitemTM[0], 50, 1, 50, 5;
+
+	setarray .@11Hatter$[0], getitemname(20383),getitemname(5415),getitemname(20293),getitemname(5289),getitemname(5391),
+	getitemname(18503),getitemname(5594),getitemname(5047),getitemname(18600),getitemname(5098);
+
+	//Wandering
+	setarray @itemWWH[0], 920, 4183, 6252, 7229;
+	setarray @countitemWWH[0], 120, 2, 50, 5;
+
+	//Gigantic Baphomet Horn 5518
+	setarray @itemGBHD[0], 7265, 6032, 923, 642, 7230;
+	setarray @countitemGBHD[0], 50, 25, 50, 100, 12;
+
+	//Umbala Spirit 18505
+	setarray @itemUS[0], 15000, 7450, 628, 932, 7230;
+	setarray @countitemUS[0], 10, 1, 50, 250, 12;
+
+	//Crown of Deceit 5564
+	setarray @itemCoD[0], 7754, 7265, 6020, 7229;
+	setarray @countitemCoD[0], 10, 100, 50, 12;
+
+	//Skull Cap 18539
+	setarray @itemSC[0], 10001, 7752, 2609, 2227, 7228;
+	setarray @countitemSC[0], 5, 100, 15, 10, 5;
+
+	// Spare Card 5536
+	setarray @itemSCa[0], 4001, 616, 7059, 7060, 7229;
+	setarray @countitemSCa[0], 5, 30, 1, 1, 5;
+
+	// Takiu's Blindfold 5101
+	setarray @itemTB[0], 5104, 983, 7038, 7230;
+	setarray @countitemTB[0], 1, 3, 100, 5;
+
+	// Samurai Mask 5767
+	setarray @itemSM[0], 1235, 7159, 7157, 4230, 7230;
+	setarray @countitemSM[0], 1, 100, 100, 5, 5;
+
+	// Candy Cane In Mouth 5445
+	setarray @itemCCIM[0], 529, 530, 12018, 7228;
+	setarray @countitemCCIM[0], 100, 100, 100, 5;
+
+	// Fish In Mouth 5403
+	setarray @itemFIM[0], 579, 4077, 4150, 2764, 7228;
+	setarray @countitemFIM[0], 150, 3, 1, 4, 5;		
+
+	setarray .@12Hatter$[0], getitemname(5498),getitemname(5518),getitemname(18505), getitemname(5564), getitemname(18539),getitemname(5536),getitemname(5101),getitemname(5767),getitemname(5445),getitemname(5403);
+
+	// Pirate Dagger 5305 ou 5532
+	setarray @itemPD[0], 5019, 5350, 4073, 7230;
+	setarray @countitemPD[0], 1, 1, 3, 5;
+
+	// Watermelon Bite 18602
+	setarray @itemWB[0], 11520, 6263, 578, 7230;
+	setarray @countitemWB[0], 50, 100, 200, 5;
+
+	// Helm Of Dragon 5467
+	setarray @itemHoD[0], 7451, 1035, 1036, 7443, 7230;
+	setarray @countitemHoD[0], 1, 200, 200, 30, 10;
+
+	// Odin Mask 5483
+	setarray @itemOM[0], 7510, 7511, 7296, 7229;
+	setarray @countitemOM[0], 10, 333, 15, 10;
+
+	// Mask Of Ifrit 5420
+	setarray @itemMoI[0], 2345, 9056, 4431, 4429, 7230;
+	setarray @countitemMoI[0], 1, 5, 1, 1, 12;
+
+	// Black Frame Glasses 5401
+	setarray @itemBFG[0], 2202, 983, 7570, 7229;
+	setarray @countitemBFG[0], 1, 10, 50, 5;
+
+	// Red Glasses 5288
+	setarray @itemRG[0], 2202, 975, 7570, 7229;
+	setarray @countitemRG[0], 1, 10, 50, 5;
+
+	// 4Leaf Clover In Mouth 5596
+	setarray @itemLCIM[0], 5096, 706, 710, 7228;
+	setarray @countitemLCIM[0], 1, 50, 50, 5;
+
+	// Father's White Moustache 5155
+	setarray @itemFWM[0], 5012, 2268, 1629, 7939, 7230;
+	setarray @countitemFWM[0], 1, 1, 5, 150, 12;		
+
+	// Wanderer's Sakkat 5579
+	setarray @itemWS[0], 2280, 978, 983, 930, 7023, 7229;
+	setarray @countitemWS[0], 1, 10, 1, 100, 50, 7;
+
+	setarray .@13Hatter$[0], getitemname(5305),getitemname(18602),getitemname(5467),getitemname(5483),getitemname(5420),getitemname(5401),getitemname(5288),getitemname(5596),getitemname(5155),getitemname(5579);
+
+
+	if (LANGUAGE == 2)
+	{
+		if ($count_hat_make == 100)
+		{
+			mes "[" + .@npcname$ + "]";
+			mes "I...I can't event bear it!";
+			mes "You got them all? According to my recipes!";
+			mes "Unbelievable! You're ready for the last one?";
+			next;
+			switch(select("Yes:No"))
+			{
+				case 1:
+					mes "Then here you are. Get me this back:";
+					mes "Get a note, I won't say it again!";
+					for(set .@i,0; .@i<getarraysize(@itemKH[0]); set .@i,.@i+1)
+						mes "^5555FF"+ getelementofarray(@countitemKH[0],.@i) +" "+ getitemname(getelementofarray(@itemKH[0],.@i)) +"^000000";
+					mes "I'll wait.";
+					set quest_last,1;
+					close;
+				case 2:
+					mes "You're disappointing me...";
+					close;
+			}
+		}	
+		else if (quest_last == 1)
+		{
+			for ( set .@i , 0 ; .@i < getarraysize( @itemKH[0] ) ; set .@i , .@i + 1 )
+				if ( countitem( getelementofarray(@countitemKH[0],.@i) ) < getelementofarray(@itemKH[0],.@i) )
+				{	
+					mes "You're still missing something.";
+					close;
+				}
+
+			mes "[" + .@npcname$ + "]";
+			mes "Wonderful! You're ready!";
+			mes "Here's what I promise. My Suprem Hat!";
+			mes "The Lynes Hat!";
+			set quest_last, 2;
+			//getitem x,1;
+			for ( set .@i , 0 ; .@i < getarraysize( @itemKH[0] ) ; set .@i , .@i + 1 )
+				delitem  getelementofarray(@countitemKH[0],.@i), getelementofarray(@itemKH[0],.@i);
+			close;
+		}
+		else 
+		{
+			for ( set .@kk, 1; .@kk <= 13; set .@kk, .@kk+1)
+			{
+				if (getd("found_hat" + .@kk) == 1)
+				{
+					mes "I see that you found some of my boys. I can make you the item now.";
+					mes "But you'll have to pay twice the price. I'm more talented than them!";
+					mes "I'll ask you twice the coins, and a higher cost. Ok?";
+					switch(select("Ok","Aren't you mad?"))
+					{
+						case 1:
+							next;
+							goto OnDisplayMenu;
+							break;
+						case 2:
+							mes "As you wish, young traveller.";
+							break;
+					}
+					close;
+				}
+			}
+		}
+		
+		mes "[" + .@npcname$ + "]";
+		mes "Hi ^3333FF" + strcharinfo(0) + "^000000 !";
+		mes "My name is Alion. I'm the " + .@npcname$ + ".";
+		mes "For years now, I've travelled around the world, looking for recipes,";
+		mes "or explanations about Hats, and their utilities for Mankind.";
+		next;
+		mes "[" + .@npcname$ + "]";
+		mes "After years and years, I've decided to transmit my knowledge.";
+		mes "Now, I'm not creating anymore. I know, but my apprentices work for me.";
+		next;
+		mes "[" + .@npcname$ + "]";
+		mes "You can't find them easily. They're hidden.";
+		mes "They fear the Völva's anger...";
+		mes "But they won't be able to refuse you a hat if you find them.";
+		mes "Get them all now!";
+		next;
+		mes "[" + .@npcname$ + "]";
+		mes "All my apprentices are hidden in cities";
+		mes "I've send them to look for new recipes.";
+		mes "But I perfectly know that some of them are too lazy to event leave the town...";
+	}
+	else if (LANGUAGE == 1)
+	{
+		if ($count_hat_make == 100)
+		{
+			mes "[" + .@npcname$ + "]";
+			mes "Je...Je le crois pas!";
+			mes "Tu les as tous? Tous, tu les a recréé, d'après mes formules!";
+			mes "Incroyable! Es-tu prêt pour la Dernière Formule, la seule que moi seul connait?";
+			next;
+			switch(select("Oui:Non"))
+			{
+				case 1:
+					mes "Alors allons-y! Ramène moi ça:";
+					mes "Note bien, je ne répète jamais!";
+					for(set .@i,0; .@i<getarraysize(.itemKH[0]); set .@i,.@i+1)
+						mes "^5555FF"+ getelementofarray(.countitemKH[0],.@i) +" "+ getitemname(getelementofarray(.itemKH[0],.@i)) +"^000000";
+					mes "J'attendrais.";
+					set quest_last,1;
+					close;
+				case 2:
+					mes "Tu me déçois...";
+					close;
+			}
+		}	
+		else if (quest_last == 1)
+		{
+			for ( set .@i , 0 ; .@i < getarraysize( .itemKH[0] ) ; set .@i , .@i + 1 )
+				if ( countitem( getelementofarray(.countitemKH[0],.@i) ) < getelementofarray(.itemKH[0],.@i) )
+				{	
+					mes "Il te manque encore quelque chose.";
+					close;
+				}
+
+			mes "[" + .@npcname$ + "]";
+			mes "Magnifique!Tu es prêt!";
+			mes "Alors voilà ce que je t'avais promis! Voilà le Hat Suprème!";
+			mes "Le Island Hat!";
+			getitem x,1;
+			for ( set .@i , 0 ; .@i < getarraysize( .itemKH[0] ) ; set .@i , .@i + 1 )
+				delitem  getelementofarray(.countitemKH[0],.@i), getelementofarray(.itemKH[0],.@i);
+			close;
+		}
+		else 
+		{
+			for ( set .@kk, 1; .@kk <= 13; set .@kk, .@kk+1)
+			{
+				if (getd("found_hat" + .@kk) == 1)
+				{
+					mes "Je vois que tu as trouvé plusieurs de mes disciples. Je peux travailler pour toi.";
+					mes "Seulement, ca te coûtera deux fois plus cher. Je suis tellement plus doué!";
+					switch(select("Ok","Es-tu fou?"))
+					{
+						case 1:
+							next;
+							goto OnDisplayMenu;
+							break;
+						case 2:
+							mes "Comme tu le souhaites, jeune voyageur.";
+							break;
+					}
+					close;
+				}
+			}
+		}
+		
+		mes "[" + .@npcname$ + "]";
+		mes "Bonjour ^3333FF" + strcharinfo(0) + "^000000 !";
+		mes "Je me présente, je suis le " + .@npcname$ + ".";
+		mes "Depuis des années, je parcours le monde, à la recherche de toutes les recettes,";
+		mes "toutes les explications concernant les Chapeaux et leur utilité, leurs effets sur les Hommes.";
+		next;
+		mes "[" + .@npcname$ + "]";
+		mes "Après de nombreuses années et des centaines de formules apprises, j'ai décidé de transmettre mon savoir.";
+		mes "Aujourd'hui, je ne créé plus. Je connais toujours les formules, mais je les ai surtout apprises à mes apprentis.";
+		next;
+		mes "[" + .@npcname$ + "]";
+		mes "Tu ne les trouveras pas aisément. Ils se cachent, harcelés par les Pirates.";
+		mes "Ils craignent la fureur des Dieux, puisqu'ils reproduisent leur savoir.";
+		mes "Mais ils ne pourront te refuser un chapeau si tu les trouves.";
+		mes "Récupère tous les Chapeaux que j'ai découvert!";
+		next;
+		mes "[" + .@npcname$ + "]";
+		mes "Mes apprentis sont cachés dans les villes, et dans les alentours de notre capitale.";
+		mes "Je les ai envoyer à travers le monde chercher de nouvelles choses,";
+		mes "Mais je sais pertinemment que la plupart sont trop feignants pour seulement sortir des villes...";
+	}
+	close;
+
+OnDisplayMenu:
+	if (LANGUAGE == 2)
+	{
+		mes "Allright. Here's what you already found.";
+	}
+	else if (LANGUAGE == 1)
+	{
+		mes "Très bien. Voici ce que tu as déjà trouvé.";
+	}
+	
+	// On créé un menu dynamique
+	set .@count, 0;
+
+	for ( set .@kk, 1; .@kk <= 13; set .@kk, .@kk+1)
+	{
+		if (getd("found_hat" + .@kk) == 1)
+		{
+			set .@menu$, .@menu$ + ":";
+			for ( set .@i, 0; .@i<getarraysize(getd(".@" + .@kk + "Hatter$")); set .@i, .@i+1 )
+			{
+       			set .@menu$, .@menu$ + ( .@i ? ":" : "" ) + getelementofarray(getd(".@" + .@kk + "Hatter$"), .@i);
+				set .@existinghat$[.@count], getelementofarray(getd(".@" + .@kk + "Hatter$"), .@i);
+				set .@count, .@count + 1;
+			}
+		}
+	}
+
+	set .@choice, prompt(.@menu$) - 2;
+
+	if (.@existinghat$[.@choice] ==  getitemname(5751))
+ 		callfunc "mes_getitem",.@npcname$,5751,@itemMSH,@countitemMSH, 1500000;
+
+	else 	if (.@existinghat$[.@choice] ==  getitemname(5210))
+ 		callfunc "mes_getitem",.@npcname$,5210,@itemFAW,@countitemFAW, 1500000;
+
+	else if (.@existinghat$[.@choice] == getitemname(5801))
+ 		callfunc "mes_getitem",.@npcname$,5801,@itemAC,@countitemAC, 1500000;
+
+	else if (.@existinghat$[.@choice] == getitemname(5225))
+		callfunc "mes_getitem",.@npcname$,5225,@itemPH,@countitemPH, 1500000;
+
+	else if (.@existinghat$[.@choice] == getitemname(5206))
+ 		callfunc "mes_getitem",.@npcname$,5206,@itemWP,@countitemWP, 1500000;
+
+	else if (.@existinghat$[.@choice] == getitemname(5334))
+		callfunc "mes_getitem",.@npcname$,5334,@itemFA,@countitemFA, 1500000;
+
+	else if (.@existinghat$[.@choice] == getitemname(5380))
+ 		callfunc "mes_getitem",.@npcname$,5380,@itemFHH,@countitemFHH, 1500000;
+
+	else if (.@existinghat$[.@choice] == getitemname(5747))
+ 		callfunc "mes_getitem",.@npcname$,5747,@itemM,@countitemM, 1500000;
+
+	else if (.@existinghat$[.@choice] == getitemname(5224))
+ 		callfunc "mes_getitem",.@npcname$,5224,@itemOHH,@countitemOHH, 3000000;
+
+	else if (.@existinghat$[.@choice] == getitemname(5435))
+ 		callfunc "mes_getitem",.@npcname$,5435,@itemRMH,@countitemRMH, 1500000;
+
+	else if (.@existinghat$[.@choice] == getitemname(5300))
+ 		callfunc "mes_getitem",.@npcname$,5300,@itemBH,@countitemBH, 1500000;
+
+	else if (.@existinghat$[.@choice] == getitemname(5284))
+ 		callfunc "mes_getitem",.@npcname$,5284,@itemLC,@countitemLC, 1500000;
+
+	else if (.@existinghat$[.@choice] == getitemname(5340))
+		callfunc "mes_getitem",.@npcname$,5340,@itemDDH,@countitemDDH, 1500000;
+
+	else if (.@existinghat$[.@choice] == getitemname(5757))
+ 		callfunc "mes_getitem",.@npcname$,5757,@itemDSH,@countitemDSH, 1500000;
+
+	else if (.@existinghat$[.@choice] == getitemname(5749))
+ 		callfunc "mes_getitem",.@npcname$,5749,@itemDB,@countitemDB, 1500000;
+
+	else if (.@existinghat$[.@choice] == getitemname(5115))
+ 		callfunc "mes_getitem",.@npcname$,5115,@itemWH,@countitemWH, 1500000;
+
+	else if (.@existinghat$[.@choice] == getitemname(5013))
+		callfunc "mes_getitem",.@npcname$,5013,@itemLKH,@countitemLKH, 7500000;
+
+	else if (.@existinghat$[.@choice] == getitemname(20230))
+		callfunc "mes_getitem",.@npcname$,20230,@itemTH,@countitemTH, 3000000;
+
+	else if (.@existinghat$[.@choice] == getitemname(20091))
+		callfunc "mes_getitem",.@npcname$,20091,@itemERH,@countitemERH, 3750000;
+
+	else if (.@existinghat$[.@choice] == getitemname(5374))
+ 		callfunc "mes_getitem",.@npcname$,5374,@itemGBH,@countitemGBH, 2500000;
+
+	else if (.@existinghat$[.@choice] == getitemname(5363))
+ 		callfunc "mes_getitem",.@npcname$,5363,@itemHoA,@countitemHoA, 1500000;
+
+	else if (.@existinghat$[.@choice] == getitemname(5138))
+ 		callfunc "mes_getitem",.@npcname$,5138,@itemME,@countitemME, 1500000;
+
+	else if (.@existinghat$[.@choice] == getitemname(5076))
+		callfunc "mes_getitem",.@npcname$,5076,@itemB,@countitemB, 1500000;
+
+	else if (.@existinghat$[.@choice] == getitemname(5025))
+ 		callfunc "mes_getitem",.@npcname$,5025,@itemHoAn,@countitemHoAn, 1500000;
+
+	else if (.@existinghat$[.@choice] == getitemname(5746))
+ 		callfunc "mes_getitem",.@npcname$,5746,@itemRC,@countitemRC, 1500000;
+
+	else if (.@existinghat$[.@choice] == getitemname(5753))
+ 		callfunc "mes_getitem",.@npcname$,5753,@itemMSH,@countitemMSH, 1500000;
+
+	else if (.@existinghat$[.@choice] == getitemname(5481))
+ 		callfunc "mes_getitem",.@npcname$,5481,@itemHC,@countitemHC, 1500000;
+
+	else if (.@existinghat$[.@choice] == getitemname(2202))
+ 		callfunc "mes_getitem",.@npcname$,2202,@itemS,@countitemS, 3750000;
+
+	else if (.@existinghat$[.@choice] == getitemname(5361))
+ 		callfunc "mes_getitem",.@npcname$,5361,@itemGS,@countitemGS, 1500000;
+	
+	else if (.@existinghat$[.@choice] == getitemname(5377))
+ 		callfunc "mes_getitem",.@npcname$,5377,@itemGP,@countitemGP, 3750000;
+
+	else if (.@existinghat$[.@choice] == getitemname(5462))
+ 		callfunc "mes_getitem",.@npcname$,5462,@itemSS,@countitemSS, 1500000;
+
+	else if (.@existinghat$[.@choice] == getitemname(5107))
+ 		callfunc "mes_getitem",.@npcname$,5107,@itemCT,@countitemCT, 1500000;
+
+	else if (.@existinghat$[.@choice] == getitemname(5533))
+ 		callfunc "mes_getitem",.@npcname$,5533,@itemEW,@countitemEW, 1500000;
+
+	else if (.@existinghat$[.@choice] == getitemname(5325))
+ 		callfunc "mes_getitem",.@npcname$,5325,@itemRE,@countitemRE, 1500000;
+
+	else if (.@existinghat$[.@choice] == getitemname(5421))
+		callfunc "mes_getitem",.@npcname$,5421,@itemEoI,@countitemEoI, 1500000;
+
+	else if (.@existinghat$[.@choice] == getitemname(5326))
+ 		callfunc "mes_getitem",.@npcname$,5326,@itemEM,@countitemEM, 1500000;
+
+	else if (.@existinghat$[.@choice] == getitemname(5357))
+ 		callfunc "mes_getitem",.@npcname$,5357,@itemVW,@countitemVW, 1500000;
+
+	else if (.@existinghat$[.@choice] == getitemname(5476))
+ 		callfunc "mes_getitem",.@npcname$,5476,@itemPH,@countitemPH, 1500000;
+
+	else if (.@existinghat$[.@choice] == getitemname(5592))
+ 		callfunc "mes_getitem",.@npcname$,5592,@itemSW,@countitemSW, 1500000;
+
+		// Maiden Hat
+	else if (.@existinghat$[.@choice] == getitemname(5211))
+ 		callfunc "mes_getitem",.@npcname$,5211,@itemMaiH,@countitemMaiH, 3750000;
+
+		// Guild Recruiting Hat
+	else if (.@existinghat$[.@choice] == getitemname(5336))
+ 		callfunc "mes_getitem",.@npcname$,5336,@itemGRH,@countitemGRH, 1500000;
+
+		// Peco Ears
+	else if (.@existinghat$[.@choice] == getitemname(5358))
+ 		callfunc "mes_getitem",.@npcname$,5358,@itemPE,@countitemPE, 1500000;
+
+		// Cyclop's Eye
+	else if (.@existinghat$[.@choice] == getitemname(5135))
+ 		callfunc "mes_getitem",.@npcname$,5135,@itemCE,@countitemCE, 1500000;
+	
+		// Alice Doll
+	else if (.@existinghat$[.@choice] == getitemname(5137))
+		callfunc "mes_getitem",.@npcname$,5137,@itemAD,@countitemAD, 1500000;
+
+		// Tiraya Bonnet
+	else if (.@existinghat$[.@choice] == getitemname(5395))
+ 		callfunc "mes_getitem",.@npcname$,5395,@itemTB,@countitemTB, 1500000;
+
+		// Magnolia Hat
+	else if (.@existinghat$[.@choice] == getitemname(5365))
+ 		callfunc "mes_getitem",.@npcname$,5365,@itemMagH,@countitemMagH, 1500000;
+
+		// Midas Whisper
+	else if (.@existinghat$[.@choice] == getitemname(5752))
+		callfunc "mes_getitem",.@npcname$,5752,@itemMW,@countitemMW, 1500000;
+		
+		// Ramen Hat
+	else if (.@existinghat$[.@choice] == getitemname(5293))
+ 		callfunc "mes_getitem",.@npcname$,5293,@itemRH,@countitemRH, 1500000;
+		
+		// Bizofnil
+	else if (.@existinghat$[.@choice] == getitemname(5480))
+ 		callfunc "mes_getitem",.@npcname$,5480,@itemBF,@countitemBF, 1500000;
+
+	else if (.@existinghat$[.@choice] == getitemname(5574))
+ 		callfunc "mes_getitem",.@npcname$,5574,@itemWCP,@countitemWCP, 1500000;
+
+	else if (.@existinghat$[.@choice] == getitemname(5402))
+ 		callfunc "mes_getitem",.@npcname$,5402,@itemMF,@countitemMF, 1500000;
+
+	else if (.@existinghat$[.@choice] == getitemname(5490))
+ 		callfunc "mes_getitem",.@npcname$,5490,@itemAH,@countitemAH, 1500000;
+
+	else if (.@existinghat$[.@choice] == getitemname(5264))
+		callfunc "mes_getitem",.@npcname$,5264,@itemAFH,@countitemAFH, 375000;
+
+	else if (.@existinghat$[.@choice] == getitemname(5664))
+ 		callfunc "mes_getitem",.@npcname$,5664,@itemFP,@countitemFP, 1500000;
+
+	else if (.@existinghat$[.@choice] == getitemname(5389))
+		callfunc "mes_getitem",.@npcname$,5389,@itemAS,@countitemAS, 1500000;
+
+	else if (.@existinghat$[.@choice] == getitemname(20261))
+ 		callfunc "mes_getitem",.@npcname$,20261,@itemVH,@countitemVH, 1500000;
+
+	else if (.@existinghat$[.@choice] == getitemname(5548))
+ 		callfunc "mes_getitem",.@npcname$,5548,@itemRoC,@countitemRoC, 1500000;
+	
+	else if (.@existinghat$[.@choice] == getitemname(5204))
+ 		callfunc "mes_getitem",.@npcname$,5204,@itemRN,@countitemRN, 300000;
+
+	else if (.@existinghat$[.@choice] == getitemname(5486))
+ 		callfunc "mes_getitem",.@npcname$,5486,@itemAH,@countitemAH, 3750000;
+
+	else if (.@existinghat$[.@choice] == getitemname(5521))
+ 		callfunc "mes_getitem",.@npcname$,5521,@itemAM,@countitemAM, 1500000;
+
+	else if (.@existinghat$[.@choice] == getitemname(20230))
+ 		callfunc "mes_getitem",.@npcname$,20230,@itemTH,@countitemTH, 1500000;
+
+	else if (.@existinghat$[.@choice] == getitemname(5800))
+ 		callfunc "mes_getitem",.@npcname$,5800,@itemBG,@countitemBG, 1500000;
+
+	else if (.@existinghat$[.@choice] == getitemname(20389))
+		callfunc "mes_getitem",.@npcname$,20389,@itemDM,@countitemDM, 1500000;
+
+	else if (.@existinghat$[.@choice] == getitemname(5362))
+ 		callfunc "mes_getitem",.@npcname$,5362,@itemNS,@countitemNS, 1500000;
+
+	else if (.@existinghat$[.@choice] == getitemname(5463))
+		callfunc "mes_getitem",.@npcname$,5463,@itemRS,@countitemRS, 1500000;
+
+	else if (.@existinghat$[.@choice] == getitemname(20270))
+ 		callfunc "mes_getitem",.@npcname$,20270,@itemUH,@countitemUH, 1500000;
+
+	else if (.@existinghat$[.@choice] == getitemname(5505))
+ 		callfunc "mes_getitem",.@npcname$,5505,@itemAFH,@countitemAFH, 1500000;
+
+	else if (.@existinghat$[.@choice] == getitemname(5312))
+ 		callfunc "mes_getitem",.@npcname$,5312,@itemAKH,@countitemAKH, 1500000;
+
+	else if (.@existinghat$[.@choice] == getitemname(5491))
+ 		callfunc "mes_getitem",.@npcname$,5491,@itemBaH,@countitemBaH, 1500000;
+
+	else if (.@existinghat$[.@choice] == getitemname(5416))
+ 		callfunc "mes_getitem",.@npcname$,5416,@itemBH,@countitemBH, 1500000;
+
+	else if (.@existinghat$[.@choice] == getitemname(5382))
+ 		callfunc "mes_getitem",.@npcname$,5382,@itemBR,@countitemBR, 1500000;
+
+	else if (.@existinghat$[.@choice] == getitemname(5344))
+ 		callfunc "mes_getitem",.@npcname$,5344,@itemBDH,@countitemBDH, 1500000;
+
+	else if (.@existinghat$[.@choice] == getitemname(5754))
+		callfunc "mes_getitem",.@npcname$,5754,@itemBS,@countitemBS, 1500000;
+
+	else if (.@existinghat$[.@choice] == getitemname(5506))
+ 		callfunc "mes_getitem",.@npcname$,5506,@itemBNC,@countitemBNC, 1500000;
+
+	else if (.@existinghat$[.@choice] == getitemname(20400))
+		callfunc "mes_getitem",.@npcname$,20400,@itemDS,@countitemDS, 1500000;
+
+	else if (.@existinghat$[.@choice] == getitemname(5308))
+ 		callfunc "mes_getitem",.@npcname$,5308,@itemBNF,@countitemBNF, 1500000;
+
+	else if (.@existinghat$[.@choice] == getitemname(5567))
+ 		callfunc "mes_getitem",.@npcname$,5567,@itemBF,@countitemBF, 1500000;
+
+	else if (.@existinghat$[.@choice] == getitemname(5307))
+ 		callfunc "mes_getitem",.@npcname$,5307,@itemCMH,@countitemCMH, 1500000;
+
+	else if (.@existinghat$[.@choice] == getitemname(5283))
+ 		callfunc "mes_getitem",.@npcname$,5283,@itemCH,@countitemCH, 1500000;
+
+	else if (.@existinghat$[.@choice] == getitemname(5431))
+ 		callfunc "mes_getitem",.@npcname$,5431,@itemCH,@countitemCH, 1500000;
+
+	else if (.@existinghat$[.@choice] == getitemname(5417))
+ 		callfunc "mes_getitem",.@npcname$,5417,@itemCP,@countitemCP, 1500000;
+
+	else if (.@existinghat$[.@choice] == getitemname(5568))
+ 		callfunc "mes_getitem",.@npcname$,5568,@itemRB,@countitemRB, 1500000;
+
+	else if (.@existinghat$[.@choice] == getitemname(5252))
+		callfunc "mes_getitem",.@npcname$,5252,@itemDNT,@countitemDNT, 1500000;
+
+	else if (.@existinghat$[.@choice] == getitemname(5758))
+ 		callfunc "mes_getitem",.@npcname$,5758,@itemDS,@countitemDS, 1500000;
+
+	else if (.@existinghat$[.@choice] == getitemname(5356))
+		callfunc "mes_getitem",.@npcname$,5356,@itemFP,@countitemFP, 1500000;
+
+	else if (.@existinghat$[.@choice] == getitemname(5405))
+ 		callfunc "mes_getitem",.@npcname$,5405,@itemFH,@countitemFH, 1500000;
+
+	else if (.@existinghat$[.@choice] == getitemname(5317))
+ 		callfunc "mes_getitem",.@npcname$,5317,@itemFiH,@countitemFiH, 1500000;
+
+	else if (.@existinghat$[.@choice] == getitemname(5528))
+ 		callfunc "mes_getitem",.@npcname$,5528,@itemFKH,@countitemFKH, 1500000;
+
+	else if (.@existinghat$[.@choice] == getitemname(5341))
+ 		callfunc "mes_getitem",.@npcname$,5341,@itemGDH,@countitemGDH, 1500000;
+
+	else if (.@existinghat$[.@choice] == getitemname(20374))
+ 		callfunc "mes_getitem",.@npcname$,20374,@itemFMH,@countitemFMH, 1500000;
+
+	else if (.@existinghat$[.@choice] == getitemname(5360))
+ 		callfunc "mes_getitem",.@npcname$,5360,@itemBCE,@countitemBCE, 1500000;
+
+	else if (.@existinghat$[.@choice] == getitemname(5423))
+ 		callfunc "mes_getitem",.@npcname$,5423,@itemLC,@countitemLC, 1500000;
+
+	else if (.@existinghat$[.@choice] == getitemname(5396))
+		callfunc "mes_getitem",.@npcname$,5396,@itemJC,@countitemJC, 1500000;
+
+	else if (.@existinghat$[.@choice] == getitemname(5291))
+ 		callfunc "mes_getitem",.@npcname$,5291,@itemKH,@countitemKH, 1500000;
+
+	else if (.@existinghat$[.@choice] == getitemname(5372))
+		callfunc "mes_getitem",.@npcname$,5372,@itemKO,@countitemKO, 1500000;
+
+	else if (.@existinghat$[.@choice] == getitemname(5555))
+ 		callfunc "mes_getitem",.@npcname$,5555,@itemLCH,@countitemLCH, 1500000;
+
+	else if (.@existinghat$[.@choice] == getitemname(5253))
+ 		callfunc "mes_getitem",.@npcname$,5253,@itemLDH,@countitemLDH, 1500000;
+
+	else if (.@existinghat$[.@choice] == getitemname(5324))
+ 		callfunc "mes_getitem",.@npcname$,5324,@itemLAD,@countitemLAD, 1500000;
+
+	else if (.@existinghat$[.@choice] == getitemname(5393))
+ 		callfunc "mes_getitem",.@npcname$,5393,@itemLV,@countitemLV, 1500000;
+
+	else if (.@existinghat$[.@choice] == getitemname(20383))	
+		callfunc "mes_getitem",.@npcname$,20383,@itemDI,@countitemDI, 1500000;
+
+	else if (.@existinghat$[.@choice] == getitemname(5415))	
+		callfunc "mes_getitem",.@npcname$,5415,@itemPCH,@countitemPCH, 1500000;
+
+	else if (.@existinghat$[.@choice] == getitemname(20293))
+		callfunc "mes_getitem",.@npcname$,20293,@itemAH,@countitemAH, 1500000;
+
+	else if (.@existinghat$[.@choice] == getitemname(5289))
+		callfunc "mes_getitem",.@npcname$,5289,@itemVH,@countitemVH, 1500000;
+
+	else if (.@existinghat$[.@choice] == getitemname(5391))
+		callfunc "mes_getitem",.@npcname$,5391,@itemCT,@countitemCT, 1500000;
+
+	else if (.@existinghat$[.@choice] == getitemname(18503))
+		callfunc "mes_getitem",.@npcname$,18503,@itemSDH,@countitemSDH, 3750000;
+
+	else if (.@existinghat$[.@choice] == getitemname(5594))
+		callfunc "mes_getitem",.@npcname$,5594,@itemDiM,@countitemDiM, 1500000;
+
+	else if (.@existinghat$[.@choice] == getitemname(5047))
+		callfunc "mes_getitem",.@npcname$,5047,@itemFG,@countitemFG, 1500000;
+
+	else if (.@existinghat$[.@choice] == getitemname(18600))
+		callfunc "mes_getitem",.@npcname$,18600,@itemCEB,@countitemCEB, 3750000;
+
+	else if (.@existinghat$[.@choice] == getitemname(5098))
+		callfunc "mes_getitem",.@npcname$,5098,@itemTM,@countitemTM, 3750000;
+
+	else if (.@existinghat$[.@choice] == getitemname(5498))
+		callfunc "mes_getitem",.@npcname$,5498,@itemWWH,@countitemWWH, 1500000;
+
+	else if (.@existinghat$[.@choice] == getitemname(5518))
+		callfunc "mes_getitem",.@npcname$,5518,@itemGBHD,@countitemGBHD, 3750000;
+
+	else if (.@existinghat$[.@choice] == getitemname(18505))
+		callfunc "mes_getitem",.@npcname$,18505,@itemUS,@countitemUS, 1500000;
+
+	else if (.@existinghat$[.@choice] == getitemname(5564))
+		callfunc "mes_getitem",.@npcname$,5564,@itemCoD,@countitemCoD, 3750000;
+
+	else if (.@existinghat$[.@choice] == getitemname(18539))
+		callfunc "mes_getitem",.@npcname$,18539,@itemSC,@countitemSC, 2000000;
+
+	else if (.@existinghat$[.@choice] == getitemname(5536))
+		callfunc "mes_getitem",.@npcname$,5536,@itemSCa,@countitemSCa, 500000;
+
+	else if (.@existinghat$[.@choice] == getitemname(5101))
+		callfunc "mes_getitem",.@npcname$,5101,@itemTB,@countitemTB, 500000;
+
+	else if (.@existinghat$[.@choice] == getitemname(5767))
+		callfunc "mes_getitem",.@npcname$,5767,@itemSM,@countitemSM, 500000;
+
+	else if (.@existinghat$[.@choice] == getitemname(5445))
+		callfunc "mes_getitem",.@npcname$,5445,@itemCCIM,@countitemCCIM, 500000;
+
+	else if (.@existinghat$[.@choice] == getitemname(5403))
+		callfunc "mes_getitem",.@npcname$,5403,@itemFIM,@countitemFIM, 1500000;
+
+	else if (.@existinghat$[.@choice] == getitemname(5305))
+		callfunc "mes_getitem",.@npcname$,5305,@itemPD,@countitemPD, 1000000;
+
+	else if (.@existinghat$[.@choice] == getitemname(18602))
+		callfunc "mes_getitem",.@npcname$,18602,@itemWB,@countitemWB, 2000000;
+
+	else if (.@existinghat$[.@choice] == getitemname(5467))
+		callfunc "mes_getitem",.@npcname$,5467,@itemHoD,@countitemHoD, 2500000;
+
+	else if (.@existinghat$[.@choice] == getitemname(5420))
+		callfunc "mes_getitem",.@npcname$,5420,@itemMoI,@countitemMoI, 2500000;
+
+	else if (.@existinghat$[.@choice] == getitemname(5401))
+		callfunc "mes_getitem",.@npcname$,5401,@itemBFG,@countitemBFG, 1500000;
+
+	else if (.@existinghat$[.@choice] == getitemname(5288))
+		callfunc "mes_getitem",.@npcname$,5288,@itemRG,@countitemRG, 500000;
+
+	else if (.@existinghat$[.@choice] == getitemname(5596))
+		callfunc "mes_getitem",.@npcname$,5596,@itemLCIM,@countitemLCIM, 500000;
+
+	else if (.@existinghat$[.@choice] == getitemname(5155))
+		callfunc "mes_getitem",.@npcname$,5155,@itemFWM,@countitemFWM, 500000;
+
+	else if (.@existinghat$[.@choice] == getitemname(5579))
+		callfunc "mes_getitem",.@npcname$,5579,@itemWS,@countitemWS, 1000000;
+
+	else
+		close;
+}

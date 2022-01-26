@@ -1,0 +1,80 @@
+//prt_in,37,97,1	script	Master Insignia	730,{
+	set .npcname$, "[Master Insignia]";
+	mes .npcname$;
+	mes "Saluation.";
+	mes "After hard work years and decades, I've finally succeded in Insignia Points creation.";
+	mes "So I decided to share my knowledge with other sorcerers.";
+	mes "Therefor, I can sell you some.";
+	switch(select("Interesting. Tell me more","No thanks."))
+	{
+		case 1:
+			next;
+			mes .npcname$;
+			mes "I can do more: sell you some";
+			mes "However, it won't be free. 10.000 zeny and 1 Gold Coin.";
+			mes "Moreover, you'll need some item.";
+			mes "5 Red Blood per Scarlet Point, 5 Crystal Blue per Indigo Point, 5 Wind of Verdure per Yellow Wish Point or 5 Green Live per Lime Green Point.";
+			mes "Still interested?";
+			switch(select("I'm ready.","Sure! Give me just some time."))
+			{
+				case 1:
+					next;
+					mes .npcname$;
+					mes "Allright. What do you want?";
+					switch(prompt("Scarlet Point","Indigo Point","Yellow Wish Point","Lime Green Point"))
+					{
+						case 1:
+							set .@item, 6360;
+							set .@required, 990;
+							break;
+						case 2:
+							set .@item, 6361;
+							set .@required, 991;
+							break;
+						case 3:
+							set .@item, 6362;
+							set .@required, 992;
+							break;
+						case 4:
+							set .@item, 6363;
+							set .@required, 993;
+							break;
+						case 255:
+							mes "Comme tu veux.";
+							close;
+					}
+					mes "How many do you want?";
+					next;
+					input .@count;
+					if (countitem(.@required)>=5*.@count && countitem(671)>=.@count && Zeny >= 10000*.@count)
+					{
+						mes .npcname$;
+						mes "Allright. Here's what you asked for";
+						delitem 671, .@count;
+						delitem .@required, 5*.@count;
+						set Zeny, Zeny-10000*.@count;
+						getitem .@item, .@count;
+						break;
+					}else
+					{
+						mes .npcname$;
+						mes "You don't have enought, sorry.";
+						close;
+					}
+				
+				case 2:
+					next;
+					mes .npcname$;
+					mes "Come back soon.";
+					break;
+			}
+			break;
+		
+		case 2:
+			next;
+			mes .npcname$;
+			mes "Don't know what you're missing.";
+			break;
+	}
+	close;
+}

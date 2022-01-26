@@ -1,0 +1,48 @@
+//df
+thalys, 148,165, 5	script	Ase Fruits Board	837,{
+
+	set .@npc$, "[Ase Fruits]";
+
+	mes .@npc$; 
+	mes "Soit le bienvenue, " + strcharinfo(0) + ".";
+	mes "Que puis-je faire pour toi?";
+	next;
+	switch(select("J'aimerais en savoir plus sur les Ase Fruits:Combien en tombe-t-il?:Où puis-je en trouver?:Rien, je passais dans le coin."))
+	{
+		case 1:
+			mes .@npc$; 
+			mes "Les Ase Fruits sont, comme leur nom l'indique, des fruits venus tout droit des Dieux.";
+			mes "Bien que relativement nombreux (cinquante types ont été recensé à ce jour),";
+			mes "ils sont très rares, et on ne peux n'en croiser aucun en une vie.";
+			mes "Ces fruits confèrent à leur possesseur un pouvoir unique.";
+			mes "Ces pouvoirs vont du très utiles, comme un skill en autocast,";
+			mes "au complètement inutile, comme la transformation en vache.";
+			next;
+			mes "Il faut également savoir que, vu que ces fruits viennent du monde des Ases, les Dieux d'Asgard,";
+			mes "la lumière qui inonde Midgard a un effet néfaste sur eux.";
+			mes "Il est techniquement impossible d'en garder un plus d'une semaine,";
+			mes "si par bonheur tu en trouves un. Tu peux néanmoins récupérer le même plus tard.";
+			mes "Ces fruits se portent en tant qu'accessoire, tu ne peux donc en avoir plus de deux simultanément.";
+			mes "De toute façon, l'énergie qu'ils diffusent serait mortelle dans le cas contraire.";
+			close;
+		case 2:
+			mes "Les Ase Fruits poussent une fois par semaine, toujours le dimanche.";
+			mes "Impossible de savoir quand précisément, cela se passe entre 10 et 20h.";
+			mes "Il en pousse un nombre différent chaque semaine, impossible de le savoir à l'avance.";
+			mes "Pas plus qu'il n'est possible de savoir combien il en reste à cueillir.";
+			close;
+		case 3:
+			mes "Il faut bien comprendre que les fruits ne sont pas 'normaux', ils poussent";
+			mes "de manière hierratique. Tu peux trouver un arbre, récupérer un fruit,";
+			mes "revenir au même endroit la semaine suivante, et récuper un fruit différent.";
+			mes "Voir même pas de fruit du tout...";
+			mes "Impossible de savoir sur quel arbre poussera un fruit, pas plus que de savoir";
+			mes "lequel poussera sur un arbre portant un fruit. Pas d'autre choix alors";
+			mes "que de visiter chaque arbre de ta connaissance pour les vérifier un par un!";
+			mes "Il est donc conseiller de bien garder en mémoire les Ase Trees que l'on a trouvé.";
+			close;
+		case 4: 
+			mes "Fin du panneau.";
+			close;
+	}
+}

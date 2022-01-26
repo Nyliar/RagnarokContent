@@ -1,0 +1,180 @@
+mor_in,25,105,4	script	Sertisseur::sp	928,{
+	set .@npcname$, "[Sertisseur]";
+	mes .@npcname$;
+
+	setarray .@pearlIDs[0], 
+	21099, 21102, 21105, 21108, 21112, 21115, 21133,
+	21136, 21139, 21142, 21145, 21148, 21151, 21154, 21157, 21163, 21166, 21169,
+	21172, 21175, 21176, 21177, 21178, 21181, 21182, 21185, 21188, 21191, 21194, 21197, 21200, 21203, 21206,
+	21209, 21212, 21215, 21218, 21221, 21224, 21227, 21230,
+	21378, 21381, 21384, 21387, 21390, 21393, 21396, 21399, 21402;
+
+	mes "";
+	mes "Bonjour à toi " + strcharinfo(0);
+	mes "Les bijoux sont magnifiques tu ne trouves pas?";
+	mes "Les Pierres précieuses ont toute un sens caché.";
+	mes "Certaines symbolisent la pureté, d'autre la candeur, d'autre le savoir.";
+	if (SUBCLASSING >= 1 
+		&& countitem(21098) >= 1)
+	{
+		next;
+		mes "Je vois que tu as acquis une compétence de Vane.";
+		mes "Je suis moi même un Vane.";
+		mes "Mon métier est de sertir les Perles de Savoir dans Mejingard, la ceinture d'Odin.";
+		mes "Souhaites-tu que je sertisse une pierre pour toi?";
+		next;
+		switch(select("Oui", "Non merci"))
+		{
+			case 1:
+				mes "Sache avant toute chose qu'un sertissage est définitif.";
+				mes "Une Perle incrustée ne peut être récupérée. Et tu ne peux en insérer que 4.";
+				mes "Il serait bête de les gâcher. Alors réfléchi bien avant d'agir.";	
+				mes "Le sertissage est 100% garanti sans échec, donc ne t'inquiètes pas.";
+				mes "On continue?";
+				next;
+				mes "Voici une liste des Perles que je peux sertir pour toi.";
+				mes "Les Perles à sertir sont toutes de niveau 1. A toi de les améliorer une fois serties.";
+				set .@size, getarraysize(.@pearlIDs);
+				set .@count, 0;
+				for ( set .@i, 0; .@i<.@size; set .@i, .@i+1 ) {
+    					if ( countitem(.@pearlIDs[.@i]) )
+					{
+        					set .@menu$, .@menu$ + ( .@menu$ == "" ? "" : ":" ) +  getitemname(.@pearlIDs[.@i]);				
+						setarray .@pearlExistingIds[.@count], .@pearlIDs[.@i];
+						set .@count, .@count + 1;
+					}
+				}
+
+    				// On récupère le choix de l'utilisateur
+    				set .@choice, prompt(.@menu$) - 1;
+				switch(SUBCLASSING)
+				{
+					case 4008:
+						setarray .@pearlID[0], 21099, 21102, 21105, 21108, 21109, 21112, 21115, 21118, 21121, 21124, 21127, 21130, 21133;
+						setarray .@xpUpgradeCount[0], 588548, 588548, 588548, 0, 1678177, 588548, 588548, 588548, 588548, 588548, 588548, 1678177, 588548;
+						break;
+					case 4009:
+						setarray .@pearlID[0], 21136, 21139, 21142, 21145, 21148, 21151, 21154, 21157, 21163, 21166, 21169;
+						setarray .@xpUpgradeCount[0], 588548, 1678177, 588548, 1678177, 588548, 588548, 1678177, 588548, 588548, 1678177, 588548;
+						break;
+					case 4010:
+						setarray .@pearlID[0], 21172, 21175, 21176, 21178, 21177, 21181, 21182, 21191, 21194, 21197, 21200, 21203, 21206;
+						setarray .@xpUpgradeCount[0], 588548, 0, 0, 588548, 0, 0, 1678177, 588548, 1678177, 1678177, 588548, 1678177, 588548, 1678177, 588548;
+						break;
+					case 4011:
+						setarray .@pearlID[0], 21209, 21212, 21215, 21218, 21221, 21224, 21227, 21230;
+						setarray .@xpUpgradeCount[0], 1678177, 588548, 588548, 1678177, 588548, 1678177, 588548, 1678177;
+						break;
+					case 4012:
+						setarray .@pearlID[0], 21233, 21236, 21239, 21242, 21245, 21248, 21251, 21254, 21257;
+						setarray .@xpUpgradeCount[0], 1678177, 1678177, 588548, 588548, 588548, 1678177, 588548, 588548, 588548;
+						break;
+					case 4013:
+						setarray .@pearlID[0], 21260, 21263, 21266, 21269, 21272, 21275, 21278, 21281;
+						setarray .@xpUpgradeCount[0], 1678177, 1678177, 588548, 588548, 588548, 588548, 588548, 588548;
+						break;
+					case 4015:
+						setarray .@pearlID[0], 21284, 21287, 21290, 21293, 21296, 21299, 21302, 21305, 21308, 21311;
+						setarray .@xpUpgradeCount[0], 588548, 1678177, 588548, 1678177, 588548, 588548, 588548, 588548, 588548, 1678177;
+						break;
+					case 4016:
+						setarray .@pearlID[0], 21315, 21318, 21321, 21324, 21327, 21330, 21333, 21336, 21339, 21342;
+						setarray .@xpUpgradeCount[0], 1678177, 588548, 1678177, 588548, 588548, 588548, 1678177, 1678177, 588548, 588548;
+						break;
+					case 4017:
+						setarray .@pearlID[0], 21345, 21348, 21349, 21352, 21355, 21358, 21359, 21360, 21363, 21366, 21369, 21372, 21375;
+						setarray .@xpUpgradeCount[0], 588548, 588548, 1678177, 588548, 1678177, 588548, 588548, 588548, 1678177, 1678177, 588548, 1678177;
+						break;
+					case 4018:
+						setarray .@pearlID[0], 21378, 21381, 21384, 21387, 21390, 21393, 21396, 21399, 21402;
+						setarray .@xpUpgradeCount[0], 1678177, 1678177, 1678177, 588548, 588548, 588548, 588548, 1678177, 588548;
+						break;
+					case 4019:
+						setarray .@pearlID[0], 21405, 21048, 21411, 21414, 21417, 21420, 21423, 21424, 21425;
+						setarray .@xpUpgradeCount[0], 588548, 1678177, 588548, 588548, 588548, 588548, 0, 0, 1678177;
+						break;
+					case 4020:
+						setarray .@pearlID[0], 21428, 21431, 21434, 21437, 21440, 21443;
+						setarray .@xpUpgradeCount[0], 1678177, 588548, 588548, 1678177, 588548, 1678177;
+						break;
+					case 4021:
+						setarray .@pearlID[0], 21446, 21449, 21452, 21455, 21458, 21461;
+						setarray .@xpUpgradeCount[0], 1678177, 588548, 588548, 1678177, 588548, 1678177;
+						break;
+				}
+
+				if (.@choice != 255)
+				{
+					next;
+					mes "On sertit la " + getitemname(.@pearlExistingIds[.@choice]) + "?";
+					switch(select("Oui","Non"))
+					{
+						case 1:
+							mes "Alors allons-y.";
+							set .@done, 0;
+							getinventorylist();
+							npctalk @inventorylist_count;
+							for (set .@i, 0; .@i < @inventorylist_count; set .@i, .@i+1)
+							{
+								set @card1, @inventorylist_card1[.@i];
+								set @card2, @inventorylist_card2[.@i];
+								set @card3, @inventorylist_card3[.@i];
+								set @card4, @inventorylist_card4[.@i];
+
+								if (@inventorylist_id[.@i] == 21098)
+								{								
+									set .@insert, 0;
+									if (@card1 == 0)
+									{
+										set @card1, .@pearlExistingIds[.@choice];
+										set .@insert, 1;
+									}
+									else if (@card2 == 0)
+									{
+										set @card2, .@pearlExistingIds[.@choice];
+										set .@insert, 2;
+									}
+									else if (@card3 == 0)
+									{
+										set @card3, .@pearlExistingIds[.@choice];
+										set .@insert, 3;
+									}
+									else if (@card4 == 0)
+									{
+										set @card4, .@pearlExistingIds[.@choice];
+										set .@insert, 4;
+									}
+									// if at least a slot is free, insert pearl
+									if (.@insert >= 1)
+									{
+										delitem 21098, 1;
+										set .@done, 1;
+										for (set .@j, 0; .@j<getarraysize(.@pearlID); set .@j, .@j+1)
+										{
+											if (.@pearlID[.@j] == .@pearlExistingIds[.@choice])
+												//get the corresponding xp and store it in chara permanent variable
+												set getd(SUBCOUMP + .@insert), .@xpUpgradeCount[.@j];
+										}
+
+										getitem2 21098,1,1,0,0,@card1,@card2,@card3,@card4;
+										delitem .@pearlExistingIds[.@choice], 1;
+									}
+								}
+							}
+							if (.@done == 0)
+								mes "Désolé, mais tu n'as pas de place pour une nouvelle Perle.";
+							break;
+						case 2:
+							mes "Très bien, reviens quand tu auras choisi.";
+							break;
+					}
+				}
+				break;
+			case 2:
+				mes "Sachant qu'un sertissage est définitif, tu as bien raison.";
+				mes "Au plaisir.";
+				break;
+		}
+	}
+	close;
+}

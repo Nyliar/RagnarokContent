@@ -1,0 +1,200 @@
+caspen,208,63,8	script	Chef Mechanic	813,{ 
+
+	mes "[Chef Mechanic]";
+	if (class == 4011 || class == 10){
+		if ( ME_Q < 1)
+		{
+			mes "Bonjour à toi," + strcharinfo(0) + ".";
+			mes "Je suis le Chef Mechanic.";
+			mes "Je peux te faire passer la deuxième épreuve de ton Eveil,";
+			mes "Es-tu intéressé?";
+			next;
+			switch(select("Oui, je voudrais passer le test, s'il vous plait.:Non merci, je me suis trompé de personne.:Un vieux fou m'a envoyé ici après avoir lancé un tetra Vortex sur moi Y^Y."))
+			{
+				case 1:
+					mes "[Chef Mechanic]";
+					mes "Tout d'abord, voyons si tu es prêt physiquement.";
+					next;
+					if ( CHARLO_Q ){
+						mes "[Chef Mechanic]";
+						mes "On dirait bien que ton physique est prêt.";
+						mes "Je vais donc maintenant tester ton mental.";
+						next;
+						mes "[Chef Mechanic]";
+							mes "Il s'agit d'un quizz. Commençons.";
+							next;
+							set min_Q, 0;
+							mes "Quelle est le pourcentage de réussite de Melt Down pour les armures?";
+							switch(select("0.7*SkillLV%:1*SkillLV%:1.5*SkillLV%:2*SkillLV%"))
+							{
+								case 2:
+								case 4:				
+								case 1:
+									set min_Q, min_Q+1;
+								case 3:
+							}
+							next;
+							mes "Quel est le bonus de raffinage avec Weapon Refine au level job 70 par rapport à Hollengren?";
+							switch(select("10:20:30:40"))
+							{
+								case 1:
+									set min_Q, min_Q+1;
+								case 2:
+								case 3:
+								case 4:
+							}
+							next;
+							mes "Quels nombres de zénis dépensent Cart Termination level 7?";
+							switch(select("1300z:1000z:1100z:1200z"))
+							{
+								case 4:
+									set min_Q, min_Q+1;
+								case 1:
+								case 2:
+								case 3:
+							}
+							next;
+							mes "Quel est le bonus de Maximum Overthrust lvl 4?";
+							switch(select("140% ATK:160% ATK:180% ATK:200% ATK"))
+							{
+								case 3:
+									set min_Q, min_Q+1;
+								case 2:
+								case 1:
+								case 4:
+							}
+							next;
+							mes "Combien de temps dure Cart Boost?";
+							switch(select("10s:20s:30s:1 minute"))
+							{
+								case 4:
+									set min_Q, min_Q+1;
+								case 1:
+								case 3:
+								case 2:
+							}
+							next;
+							mes "Quels skill devez vous connaître pour utiliser Iron Tempering?";
+							switch(select("Enchanted Stone Craft:Steel Tempering, Research Oridecon:Enchanted Stone Craft, Steel Tempering:Steel Tempering"))
+							{
+								case 3:
+									set min_Q, min_Q+1;
+								case 1:
+								case 2:
+								case 4:
+							}
+							next;
+							mes "Avec quel item ajoute-t-on l'élément Eau lors d'un craft?";
+							switch(select("Blue Gemstonne:Holy Water:Glacial Heart:Mystic Frozen"))
+							{
+								case 4:
+									set min_Q, min_Q+1;
+								case 2:
+								case 3:
+								case 1:
+							}
+							next;
+							mes "Quel item permet de solidifier un craft?";
+							switch(select("Iron:Phracon:Star Crumb:Oridecon"))
+							{
+								case 3:
+									set min_Q, min_Q+1;
+								case 1:
+								case 2:
+								case 4:
+							}
+							next;
+							mes "De quoi avez vous besoin pour utiliser Full Adrenaline Rush?";
+							switch(select("Etre Soul Linké:Une Red Gemmstone:Rien:Avoir déjà Adrenaline Rush de lancer"))
+							{
+								case 1:
+									set min_Q, min_Q+1;
+								case 4:
+								case 2:
+								case 3:
+							}
+							next;
+							mes "Combien de sp draine Maximize Power au level 5";
+							switch(select("1sp:2sp:3sp:4sp"))
+							{
+								case 1:
+									set min_Q, min_Q+1;
+								case 2:
+								case 3:
+								case 4:
+							}
+							next;
+							mes "[Chef Mechanic]";
+							mes "Bien, voyons tes résultats maintenant...";
+							mes "*Trifouille les résultats du test";
+							next;
+							mes "[Chef Mechanic]";
+							if (min_Q >= 9){
+								mes "Excellent, tu as eu ^FF0000" + min_Q*10 + "%^000000 de bonnes réponses.";
+								mes "On dirait bien que ton Esprit est prêt à passer l'Eveil.";
+								mes "Tu peux passer à l'avant-dernière étape de ta quête, la plus difficile.";
+								mes "Pars donc à la recherche du Mirroir du Mal, il t'expliquera cela plus en détail.";
+								mes "Il se trouve caché quelque part aux alentours de la grande ville de Bastania.";
+								mes "Prends cet objet qui te sera très utile";
+								mes " ";
+								getitem (22003),1;
+								mes "Bon courage.";
+								emotion 21;
+								set ME_Q, 1;
+								close;
+							}
+							else
+							{
+								mes "Désolé, mais tes ^FF0000" + min_Q*10 + "%^000000 de réussite ne seront pas suffisant.";
+								mes "Entraîne encore un peu ton esprit,";
+								mes "Sans quoi, il ne résistera pas à la puissance de l'Eveil.";
+								close;
+							}
+					}		
+					else
+					{
+					mes "[Chef Mechanic]";
+					mes "Désolé, mais tu ne peux pas venir me voir pour l'instant.";
+					mes "Tu dois avant tout tester ton Physique auprès du Maitre de l'Eveil.";
+					close;
+					}
+				case 2:
+					mes "[Chef Mechanic]";
+					mes "Pas de problème.";
+					mes "Vis ta vie avec Espoir,";
+					mes "Elle ne t'en paraîtra que plus belle.";
+					close;
+				case 3:
+					mes "[Chef Mechanic]";
+					mes "Un vieux fou tu dis?";
+					mes "Le Maître du Renouveau est tellement plus que ça";
+					mes "Mais j'avoue qu'il a des tendances un peu cabotine...";
+					close;
+			}
+		}
+		
+		else if ( ME_Q == 1 )
+		{
+			mes "Bonjour à toi," + strcharinfo(0) + ".";
+			mes "Tu peux passer à la dernière étape.";
+			mes "Pars donc à la recherche d'Yggdrasil.";
+			mes "Il se trouve caché quelque part aux alentours de Bastania.";
+			mes "Bon courage.";
+			close;
+		}
+
+		else if ( ME_Q == 3 || class == 4058 || class == 4064)
+		{
+			mes "Bonjour à toi," + strcharinfo(0) + ".";
+			mes "Felicitations, tu es Mechanic !";
+			mes "Que la force soit avec toi !";
+			close;
+		}
+	}
+	else
+	{
+		mes "Gromph je suis pas d'humeur à te parler.";
+		mes "Vas-t'en avant que je ne te fasse tâter ma hache.";
+		close;
+	}
+}

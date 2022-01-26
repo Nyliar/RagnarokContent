@@ -1,0 +1,80 @@
+louyang, 319,271, 5	script	Marijuana Beret	100,{
+
+	set .@npcname$,"[Marijuana Beret]";
+	
+	//Black Marijuana Beret 20163
+	setarray .itemBMB[0], 5172, 983, 7230;
+	setarray .countitemBMB[0], 1, 2, 5;
+	
+	//Blue Marijuana Beret 20164
+	setarray .itemBLMB[0], 5172, 978, 7230;
+	setarray .countitemBLMB[0], 1, 2, 5;
+
+	//Cyan Marijuana Beret 20165
+	setarray .itemCMB[0], 5172, 978, 982, 7230;
+	setarray .countitemCMB[0], 1, 2, 2, 5;
+
+	//Gold Marijuana Beret 20166
+	setarray .itemGMB[0], 5172, 976, 7230;
+	setarray .countitemGMB[0], 1, 2, 5;
+
+	//Green Marijuana Beret 20167
+	setarray .itemGNMB[0], 5172, 979, 7230;
+	setarray .countitemGNMB[0], 1, 2, 5;
+	
+	//Pink  Marijuana Beret 20168
+	setarray .itemPMB[0], 5172, 975, 982, 7230;
+	setarray .countitemPMB[0], 1, 2, 2, 5;
+	
+	//Red Marijuana Beret 20169
+	setarray .itemRMB[0], 5172, 975, 7230;
+	setarray .countitemRMB[0], 1, 2, 5;
+	
+	//White  Marijuana Beret 20170
+	setarray .itemWMB[0], 5172, 982, 7230;
+	setarray .countitemWMB[0], 1, 2, 5;
+	
+	
+	
+	mes .@npcname$;
+	mes "Bonjour ^3333FF" + strcharinfo(0) + "^000000!";
+	mes "Je peux te proposer quelque hats pour customiser ton Marijuana Beret.";
+	mes	"Ca t'interesse?!";
+	next;
+	mes .@npcname$;
+	mes "Voici ce que je peux te proposer:";
+	next;
+
+	switch(select("Black Marijuana Beret:Blue Marijuana Beret:Cyan Marijuana Beret:Gold Marijuana Beret:Green Marijuana Beret:Pink Marijuana Beret:Red Marijuana Beret:White Marijuana Beret:^777777Rien, merci...^000000"))
+	{
+		case 1 :
+ 		callfunc "mes_getitem_colo",.@npcname$,20163,.itemBMB,.countitemBMB, 1000000;
+
+		case 2 :
+ 		callfunc "mes_getitem_colo",.@npcname$,20164,.itemBLMB,.countitemBLMB, 1000000;
+
+		case 3 :
+ 		callfunc "mes_getitem_colo",.@npcname$,20165,.itemCMB,.countitemCMB, 1000000;
+
+		case 4 :
+ 		callfunc "mes_getitem_colo",.@npcname$,20166,.itemGMB,.countitemGMB, 1000000;
+
+		case 5 :
+ 		callfunc "mes_getitem_colo",.@npcname$,20167,.itemGNMB,.countitemGNMB, 1000000;
+
+		case 6 :
+ 		callfunc "mes_getitem_colo",.@npcname$,20168,.itemPMB,.countitemPMB, 1000000;
+		
+		case 7 :
+		callfunc "mes_getitem_colo",.@npcname$,20169,.itemRMB,.countitemRMB, 1000000;
+
+		case 8 :
+ 		callfunc "mes_getitem_colo",.@npcname$,20170,.itemWMB,.countitemWMB, 1000000;
+
+		// Quitter
+		case 9 :
+		mes @npcname$;
+		mes "Très bien. A bientôt !";
+		close;
+	}
+}

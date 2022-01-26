@@ -1,0 +1,142 @@
+//hidden piece
+capitale,119,159,4	script	LynesQuest::alalynque	-1,{
+	end;
+
+OnCloseEvent:
+	set $mimir_killed, 0;
+	set $hel_killed, 0;
+	set $jormungand_killed, 0;
+	set $tutankhammen_killed, 0;
+
+	set $crash_spawn_stopped, 0;
+	set $crash_lynes,0;
+	set $fae_spawn_stopped, 0;
+	set $fae_lynes,0;
+	set $tutankhammen_spawn_stopped, 0;
+	set $tutankhammen_lynes,0;
+	set $jormungand_spawn_stopped, 0;
+	set $jormungand_lynes,0;
+	end;
+
+OnPillarStopped:
+	if ($mimir_spawn_stopped == 1
+		&& $hel_spawn_stopped == 1
+		&& $jormungand_spawn_stopped == 1
+		&& $tutankhammen_spawn_stopped == 1)
+	{
+		//make mvp vulnerable
+		set .vulnerableNpc, 1;
+		stopnpctimer;
+		startnpctimer;
+	}
+	end;
+
+OnCheckStartEvent:
+	if ($mimir_killed == 1
+		&& $hel_killed == 1
+		&& $jormungand_killed == 1
+		&& $tutankhammen_killed == 1)
+	{
+		//start!
+		set .lynes_started, 1;
+		donpcevent "cappill1::OnAllMvpKilled";
+		donpcevent "cappill2::OnAllMvpKilled";
+		donpcevent "cappill3::OnAllMvpKilled";
+		donpcevent "cappill4::OnAllMvpKilled";
+		set .@map$, "capitale";
+		set .idMonster, rand(2501,2679);
+		monster .@map$,0,0,strmobinfo(1,.idMonster),.idMonster,1;
+		areamobuseskill .@map$,221,172,100,.idMonster,685,1,0,0,26,0;
+		night;
+		setBattleFlag "base_exp_rate",1000;
+		setBattleFlag "job_exp_rate",1000;
+		announce "[LynesRO] Midgard inhabitants. The Darkest Hour has arrived.",bc_all;
+		sleep 500;
+		announce "[LynesRO] Somebody has freed the deepest, cruelest monster we've ever met.",bc_all;
+		sleep 500;
+		announce "[LynesRO] We won't be able to kill it without your help.",bc_all;
+		sleep 500;
+		announce "[LynesRO] Our entire world's gonna be changed by this monster!",bc_all;
+		sleep 500;
+		announce "[LynesRO] Look at the xp you win! Look at all this disappeared people!",bc_all;
+		sleep 500;
+		announce "[LynesRO] All of you, please. Help us! For our world! For our freedom! Fight!",bc_all;
+
+		//spawn mvp monster (wounded morocc)
+		set .idMvpMonster, 1917;
+		monster .@map$,0,0,strmobinfo(1,.idMvpMonster),.idMvpMonster,1;
+	
+		startnpctimer;
+	}
+	end;
+
+OnPCLoginEvent:
+	if (.lynes_started == 1)
+	{
+		attachrid getcharid(0);
+		dispbottom "[LynesRO] Midgard inhabitants. The Darkest Hour has arrived.";
+		sleep 500;
+		dispbottom "[LynesRO] Somebody has freed the deepest, cruelest monster we've ever met.";
+		sleep 500;
+		dispbottom "[LynesRO] We won't be able to kill it without your help.";
+		sleep 500;
+		dispbottom "[LynesRO] Our entire world's gonna be changed by this monster!";
+		sleep 500;
+		dispbottom "[LynesRO] Look at the xp you win! Look at all this disappeared people!";
+		sleep 500;
+		dispbottom "[LynesRO] All of you, please. Help us! For our world! For our freedom! Fight!";
+	}
+	end;
+
+OnMvpKilled:
+	day;
+	announce "[LynesRO] Thanks to all of you! Here's your reward!",bc_all;
+
+	setBattleFlag "base_exp_rate",25000;
+	setBattleFlag "job_exp_rate",25000;
+	//spawn random chest all around the capitale
+	for (set .@i, 0; .@i<.count_chest_reward; set .@i, .@i+1)
+	{
+		set .idMonster, rand(1324,1336);
+		monster "capitale",0,0,strmobinfo(1,.idMonster),.idMonster,1,strnpcinfo(3)+"::onChestOpened";
+	}
+	end;
+
+onChestOpened:
+	set HIDDEN_PIECE, 1;
+	end;
+
+OnMobKilled:
+	set .count_mob, .count_mob - 1;
+	end;
+
+OnTimer15000:
+	if (.vulnerableNpc == 0)
+	{
+		//make last monster invulnerable
+		areamobuseskill "capitale",35,109,10,.idMonster,685,1,0,0,26,0;
+		//make mvp invulnerable while pillar aren't stopped
+		areamobuseskill "capitale",35,109,10,.idMvpMonster,685,1,0,0,26,0;
+
+		//spawn a random custom mob on the capitale
+		if (.count_mob < .count_mob_max)
+		{
+			set .idMonster, rand(2501,2679);
+			monster "capitale",0,0,strmobinfo(1,.idMonster),.idMonster,1,strnpcinfo(3)+"::OnMobKilled";
+			set .count_mob, .count_mob + 1;
+		}
+
+		setnpctimer 0;
+	}
+	end;
+
+OnInit:
+	set $mimir_killed, 0;
+	set $hel_killed, 0;
+	set $jormungand_killed, 0;
+	set $tutankhammen_killed, 0;
+	set .count_chest_reward, 10;
+	set .count_mob_max, 100;
+	end;
+}
+

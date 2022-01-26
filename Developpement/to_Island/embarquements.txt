@@ -1,0 +1,314 @@
+
+
+thalys_s,346,92,6	script	Embarquement Mono	987,{
+	set .@npcname$, "[Embarquement Mono]";
+	
+	mes .@npcname$;
+	mes "";
+	
+	if ($ship_traveler < 5)
+	{
+		mes "Vous êtes ici au bout du Ponton de Thalys";
+		mes "Si vous possédez un bateau personnel, vous pouvez rejoindre la mer d'ici.";
+
+		set $idtowarp, getcharid(3);
+		next;
+		attachrid($idtowarp);
+
+		if (SHIP == 1)
+		{
+			mes "Veuillez choisir votre destination:";
+    			query_sql("SELECT `map` FROM `visited_islands` WHERE `char_id`='" + getcharid(0,strcharinfo(0)) + "' ", .@map$);
+   			setarray .@mapdisp$[0], "Ile de Fer", "Ile d'Astres", "Ile Rose", "Ile de l'Arene", "Ile du Crash", "Ile de la Tortue", "Ile des Faes", "Ile de la Fiesta", "Ile Mystério", "Ile de Mornanie", "Ile de la Tranquillité", "Caspen";
+			setarray .@mapname$[0], "scaphis", "zodiac", "1@pi", "colisland", "crash", "tortue", "revencia", "fiesta", "mysterio", "mornanie", "guild01", "caspen";
+
+ 			// On créé un menu dynamique
+    			for ( set .@i, 0; .@i<getarraysize(.@map$); set .@i, .@i+1 )
+			{
+				for ( set .@j, 0; .@j<getarraysize(.@mapdisp$); set .@j, .@j+1 )
+				{
+					if (.@mapname$[.@j] == .@map$[.@i])
+        					set .@menu$, .@menu$ + ( .@i ? ":" : "" ) + .@mapdisp$[.@j];
+				}
+			}
+
+    			// On récupère le choix de l'utilisateur
+    			set .@choice, prompt(.@menu$) - 1;
+
+			if (.@choice != 255)
+			{
+				set @map$, .@map$[.@choice];
+				callfunc "prepare_warp_coordinates", 0;
+			}
+			else
+				mes "Très bien, au plaisir.";
+		}
+	}
+	else
+	{
+		mes "Je suis parti faire mon rapport à la Sailor Company.";
+		mes "Je reviens sous peu.";
+	}
+	close;
+	
+OnMaxCountReach:
+	set .full, 1;
+	setnpcdisplay "Embarquement Mono", 857;
+	end;
+	
+OnMaxCountLeft:
+	set .full, 0;
+	setnpcdisplay "Embarquement Mono", 987;
+	end;
+
+}
+
+thalys_s,362,87,6	script	Embarquement Biplace	709,{
+	set .@npcname$, "[Embarquement Biplace]";
+	
+	mes .@npcname$;
+	mes "";
+	mes "Bonjour, bienvenue sur le pont d'embarquement vers les Biplaces.";
+	mes "Souhaitez-vous embarquer sur un Biplace?";
+	next;
+	switch(select("Oui","Non"))
+	{
+		case 1:
+			mes "Bien sûr! Avez-vous votre ticket?";
+			if (countitem(21061) >= 1)
+			{
+				mes "Parfait.";
+				set $idtowarp, getcharid(3);
+				next;
+				attachrid($idtowarp);
+
+				mes "Veuillez choisir votre destination:";
+    				setarray .@map$[0], "Ile de Fer", "Ile d'Astres", "Ile Rose", "Ile de l'Arene", "Ile du Crash", "Ile de la Tortue", "Ile des Faes", "Ile de la Fiesta", "Ile Mystério", "Ile de Mornanie", "Ile de la Tranquillité", "Caspen";
+				setarray .@mapname$[0], "scaphis", "zodiac", "1@pi", "colisland", "crash", "tortue", "revencia", "fiesta", "mysterio", "mornanie", "guild01", "caspen";
+
+    				// On créé un menu dynamique
+    				for ( set .@i, 0; .@i<getarraysize(.@map$); set .@i, .@i+1 )
+        				set .@menu$, .@menu$ + ( .@i ? ":" : "" ) + .@map$[.@i];
+
+    				// On récupère le choix de l'utilisateur
+    				set .@choice, prompt(.@menu$) - 1;
+
+				if (.@choice != 255)
+				{
+					//for (set .@i, 0; .@i < getarraysize(.@map$); set .@i, .@i+1)
+					//{
+						//if (.@map$[.@i] == .@menu$[.@choice])
+						//{
+							set @map$, .@mapname$[.@choice];
+							callfunc "prepare_warp_coordinates", 1;
+						//}
+					//}
+				}
+				else
+					mes "Très bien, au plaisir.";
+			}		
+			else
+			{
+				mes "Désolé, vous n'avez pas de ticket.";	
+				mes "Adressez-vous auprès du bureau de vente, le bureau 2.";
+			}
+			break;
+		case 2:
+			mes "Bien. Au revoir.";
+			break;
+	}
+	close;
+}
+
+thalys_s,337,66,6	script	Embarquement Navette	740,{
+	set .@npcname$, "[Embarquement Navette]";
+	
+	mes .@npcname$;
+	mes "";
+	mes "Bonjour, bienvenue sur le pont d'embarquement vers les Navettes.";
+	// if (getgmlevel() > 60)
+	// {
+		// mes "Reset les states des maps abordages et voyages?";
+		// switch(select("Oui","Non"))
+		// {
+			// case 1:
+				// if((getmapusers("mer1")==0) && (getmapusers("mer2")==0) && (getmapusers("mer3")==0) && (getmapusers("mer4")==0) && (getmapusers("mer5")==0) && (getmapusers("mer6")==0)) {
+					// setarray $statem[0], 0, 0, 0, 0, 0;
+					// setarray $state[0], 0, 0, 0, 0, 0;
+					// mes "Voila c'est fait !";
+				// }
+				// else {
+					// mes "Désolé mais il y a quelqu'un sur ces maps..";
+				// }
+				// break;
+			// case 2:
+				// mes "ok.";
+				// break;
+		// }
+	// }
+	mes "Souhaitez-vous embarquer sur une Navette?";
+	next;
+	switch(select("Oui","Non","Reset"))
+	{
+		case 1:
+			mes "Bien sûr! Avez-vous votre ticket?";
+			if (countitem(21062) >= 1)
+			{
+				mes "Parfait.";
+				set $idtowarp, getcharid(3);
+				next;
+				attachrid($idtowarp);
+
+
+   				mes "Veuillez choisir votre destination:";
+    				setarray .@map$[0], "Ile de Fer", "Ile d'Astres", "Ile Rose", "Ile de l'Arene", "Ile du Crash", "Ile de la Tortue", "Ile des Faes", "Ile de la Fiesta", "Ile Mystério", "Ile de Mornanie", "Ile de la Tranquillité", "Caspen";
+				setarray .@mapname$[0], "scaphis", "zodiac", "1@pi", "colisland", "crash", "tortue", "revencia", "fiesta", "mysterio", "mornanie", "guild01", "caspen";
+
+    				// On créé un menu dynamique
+    				for ( set .@i, 0; .@i<getarraysize(.@map$); set .@i, .@i+1 )
+        				set .@menu$, .@menu$ + ( .@i ? ":" : "" ) + .@map$[.@i];
+
+    				// On récupère le choix de l'utilisateur
+    				set .@choice, prompt(.@menu$) - 1;
+
+				if (.@choice != 255)
+				{
+					set @map$, .@mapname$[.@choice];
+					callfunc "prepare_warp_coordinates", 2;
+				}
+				else
+					mes "Très bien, au plaisir.";
+			}		
+			else
+			{
+				mes "Désolé, vous n'avez pas de ticket.";	
+				mes "Adressez-vous auprès du bureau de vente, le bureau 2.";
+			}
+			break;
+		case 2:
+			mes "Bien. Au revoir.";
+			break;
+		case 3:
+			mes "Êtes-vous sûr de vouloir Reset les states des maps abordages et voyages?";
+			switch(select("Oui","Non"))
+			{
+				case 1:
+					if((getmapusers("mer1")==0) && (getmapusers("mer2")==0) && (getmapusers("mer3")==0) && (getmapusers("mer4")==0) && (getmapusers("mer5")==0) && (getmapusers("mer6")==0) && (getmapusers("abord1")==0) && (getmapusers("abord2")==0) && (getmapusers("abord3")==0) && (getmapusers("abord4")==0) && (getmapusers("abord5")==0) && (getmapusers("abord6")==0)) {
+						setarray $statem[0], 0, 0, 0, 0, 0;
+						setarray $state[0], 0, 0, 0, 0, 0;
+						mes "Voila c'est fait !";
+					}
+					else {
+						mes "Désolé mais il y a quelqu'un sur ces maps..";
+					}
+					break;
+				case 2:
+					mes "ok.";
+					break;
+			}
+	}
+	close;
+}
+
+
+function	script	prepare_warp_coordinates	{
+	if (@map$ == "scaphis")
+	{
+		set @xdest, 64;
+		set @ydest, 65;
+	}
+	else if (@map$ == "fiesta")
+	{
+		set @xdest, 0;
+		set @ydest, 0;
+	}
+	else if (@map$ == "zodiac")
+	{
+		set @xdest, 111;
+		set @ydest, 36;
+	}
+	else if (@map$ == "colisland")
+	{
+		set @xdest, 115;
+		set @ydest, 41;
+	}
+	else if (@map$ == "tortue")
+	{
+		set @xdest, 83;
+		set @ydest, 151;
+	}
+	else if (@map$ == "1@pi")
+	{
+		set @xdest, 114;
+		set @ydest, 45;
+	}
+	else if (@map$ == "crash")
+	{
+		set @xdest, 196;
+		set @ydest, 244;
+	}
+	else if (@map$ == "revencia")
+	{
+		set @xdest, 269;
+		set @ydest, 15;
+	}
+	else if (@map$ == "mysterio")
+	{
+		set @xdest, 111;
+		set @ydest, 36;
+	}
+	else if (@map$ == "fiesta")
+	{
+		set @xdest, 152;
+		set @ydest, 82;
+	}
+	else if (@map$ == "mornanie")
+	{
+		set @xdest, 108;
+		set @ydest, 63;
+	}
+	else if (@map$ == "guild01")
+	{
+		set @xdest, 108;
+		set @ydest, 63;
+	}
+	else if (@map$ == "caspen")
+	{
+		set @xdest, 246;
+		set @ydest, 52;
+	}
+	else if (@map$ == "e_tower")
+	{
+		set @xdest, 72;
+		set @ydest, 112;
+	}
+	else if (@map$ == "ins_fld")
+	{
+		set @xdest, 286;
+		set @ydest, 240;
+	}
+	else if (@map$ == "genasia")
+	{
+		set @xdest, 104;
+		set @ydest, 87;
+	}
+	else if (@map$ == "bilfrost")
+	{
+		set @xdest, 100;
+		set @ydest, 81;
+	}
+	else if (@map$ == "capitale")
+	{
+		set @xdest, 221;
+		set @ydest, 176;
+	}
+	mes "We're ready to go.";
+	if (getarg(0) == 1)
+		doevent "ship_journey::OnBiplace";	
+	else if (getarg(0) == 2)
+		doevent "ship_journey::OnNavette";
+	else if (getarg(0) == 0)
+		doevent "ship_journey::OnMonoplace";
+	else
+		doevent "prtasepa::OnWarp";
+}

@@ -1,0 +1,73 @@
+morocc, 23, 222, 5	script	Note Headphone	93,{
+
+	set .@npcname$,"[Note Headphone]";
+	
+	//Black Note Headphone 20197
+	setarray @itemBNH[0], 5151, 983, 7230;
+	setarray @countitemBNH[0], 1, 2, 2;
+
+	//Cyan Note Headphone 20198
+	setarray @itemCNH[0], 5151, 978, 982, 7230;
+	setarray @countitemCNH[0], 1, 2, 2, 2;
+
+	//Gold Note Headphone 20199
+	setarray .itNHNH[0], 5151, 976, 7230;
+	setarray .countitNHNH[0], 1, 2, 2;
+
+	//Green Note Headphone 2020
+	setarray @itemGNNH[0], 5151, 979, 7230;
+	setarray @countitemGNNH[0], 1, 2, 2;
+	
+	//Purple  Note Headphone 20201
+	setarray @itemPNH[0], 5151, 981, 7230;
+	setarray @countitemPNH[0], 1, 2, 2;
+	
+	//Red Note Headphone 20202
+	setarray @itemRNH[0], 5151, 975, 7230;
+	setarray @countitemRNH[0], 1, 2, 2;
+	
+	//White Note Headphone 20203
+	setarray @itemWNH[0], 5151, 982, 7230;
+	setarray @countitemWNH[0], 1, 2, 2;
+	
+	
+	
+	mes .@npcname$;
+	mes "Bonjour ^3333FF" + strcharinfo(0) + "^000000!";
+	mes "Je peux te proposer quelque hats pour customiser ton Note Headphone.";
+	mes	"Ca t'interesse?!";
+	next;
+	mes .@npcname$;
+	mes "Voici ce que je peux te proposer:";
+	next;
+
+	switch(select("Black Note Headphone:Green Note Headphone:Cyan Note Headphone:Gold Note Headphone:Purple Note Headphone:Red Note Headphone:White Note Headphone:^777777Rien, merci...^000000"))
+	{
+		case 1 :
+ 		callfunc "mes_getitem_colo",.@npcname$,20197,@itemBNH,@countitemBNH, 1000000;
+
+		case 2 :
+ 		callfunc "mes_getitem_colo",.@npcname$,2020,@itemGNNH,@countitemGNNH, 1000000;
+
+		case 3 :
+ 		callfunc "mes_getitem_colo",.@npcname$,20198,@itemCNH,@countitemCNH, 1000000;
+		
+		case 4 :
+ 		callfunc "mes_getitem_colo",.@npcname$,20199,.itNHNH,.countitNHNH, 1000000;
+
+		case 5 :
+ 		callfunc "mes_getitem_colo",.@npcname$,20201,@itemPNH,@countitemPNH, 1000000;
+		
+		case 6 :
+		callfunc "mes_getitem_colo",.@npcname$,20202,@itemRNH,@countitemRNH, 1000000;
+		
+		case 7 :
+		callfunc "mes_getitem_colo",.@npcname$,20203,@itemWNH,@countitemWNH, 1000000;
+
+		// Quitter
+		case 8 :
+		mes @npcname$;
+		mes "Très bien. A bientôt !";
+		close;
+	}
+}

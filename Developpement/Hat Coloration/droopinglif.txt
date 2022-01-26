@@ -1,0 +1,73 @@
+einbech, 182,151, 5	script	Drooping Lif	123,{
+
+	set .@npcname$,"[Drooping Lif]";
+	
+	//Black Drooping Lif 2065
+	setarray @itemBDL[0], 5253, 983, 7230;
+	setarray @countitemBDL[0], 1, 2, 2;
+	
+	//Blue Drooping Lif 2066
+	setarray @itemBLDL[0], 5253, 978, 7230;
+	setarray @countitemBLDL[0], 1, 2, 2;
+
+	//Cyan Drooping Lif 2067
+	setarray @itemCDL[0], 5253, 978, 982, 7230;
+	setarray @countitemCDL[0], 1, 2, 2, 2;
+
+	//Gold Drooping Lif 2068
+	setarray @itemGDL[0], 5253, 976, 7230;
+	setarray @countitemGDL[0], 1, 2, 2;
+	
+	//Purple  Drooping Lif 2069
+	setarray @itemPDL[0], 5253, 981, 7230;
+	setarray @countitemPDL[0], 1, 2, 2;
+	
+	//Red Drooping Lif 2070
+	setarray @itemRDL[0], 5253, 975, 7230;
+	setarray @countitemRDL[0], 1, 2, 2;
+	
+	//White Drooping Lif 2071
+	setarray @itemWDL[0], 5253, 975, 7230;
+	setarray @countitemWDL[0], 1, 2, 2; 
+	
+	
+	
+	mes .@npcname$;
+	mes "Bonjour ^3333FF" + strcharinfo(0) + "^000000!";
+	mes "Je peux te proposer quelque hats pour customiser ton Drooping Lif.";
+	mes	"Ca t'interesse?!";
+	next;
+	mes .@npcname$;
+	mes "Voici ce que je peux te proposer:";
+	next;
+
+	switch(select("Black Drooping Lif:Blue Drooping Lif:Cyan Drooping Lif:Gold Drooping Lif:Purple Drooping Lif:Red Drooping Lif:White Drooping Lif:^777777Rien, merci...^000000"))
+	{
+		case 1 :
+ 		callfunc "mes_getitem_colo",.@npcname$,20065,@itemBDL,@countitemBDL, 1000000;
+
+		case 2 :
+ 		callfunc "mes_getitem_colo",.@npcname$,20066,@itemBLDL,@countitemBLDL, 1000000;
+
+		case 3 :
+ 		callfunc "mes_getitem_colo",.@npcname$,20067,@itemCDL,@countitemCDL, 1000000;
+
+		case 4 :
+ 		callfunc "mes_getitem_colo",.@npcname$,20068,@itemGDL,@countitemGDL, 1000000;
+
+		case 5 :
+ 		callfunc "mes_getitem_colo",.@npcname$,20069,@itemPDL,@countitemPDL, 1000000;
+		
+		case 6 :
+		callfunc "mes_getitem_colo",.@npcname$,20070,@itemRDL,@countitemRDL, 1000000;
+
+		case 7 :
+		callfunc "mes_getitem_colo",.@npcname$,20071,@itemWDL,.countintemWDL,1000000;
+
+		// Quitter
+		case 8 :
+		mes @npcname$;
+		mes "Très bien. A bientôt !";
+		close;
+	}
+}

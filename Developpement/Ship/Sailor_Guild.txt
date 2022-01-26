@@ -1,0 +1,40 @@
+tha_s_in,387,63,2	script	Hotesse d'accueil	894,{
+	set .@npcname$, "[Selene]";
+	
+	mes .@npcname$;
+	mes "";
+
+	mes "Bonjour, " + strcharinfo(0);
+	mes "Que puis-je faire pour vous?";
+	switch(select("La SC?","Acheter un billet pour une Grande Navette.","Je voudrais un Mono.","Je voudrais améliorer mon Mono.","Rien, je passais seulement pour visiter."))
+	{
+		case 1:
+			mes "La Sailor Company, ou SC, signifie Compagnie des Marins.";
+			mes "C'est ici que vous pouvez faire à peu près tout ce qui a un rapport avec les Marins.";
+			mes "Vous pouvez vous renseigner sur les voyages en navette, acheter un billet, un bateau...";
+			mes "Si vous passez par ailleurs que la SC, sachez que ce sera totalement illégal.";
+			mes "La Sailor Company est la seule accréditée par pour vendre des accès à la Grande Mer.";
+			mes "La Sailor Guild a appris comment dompter les monstres marins, afin de nous faire traverser la Grande Mer.";
+			mes "Il en existe deux types différents, les Grandes Navettes, et les Biplaces.";
+			mes "Vous pouvez aussi obtenir un monstre pour vous seul, les Monos.";
+			set SHIP_I, 1;
+			break;
+		case 3:
+			mes "Pour obtenir un mono, vous devez vous adresser à l'équipe de Domptage.";
+			mes "le responsable se trouve au bureau 3.";
+			break;
+		case 4:
+			mes "Pour améliorer un Mono, vous devez vous adresser à l'équipe de Domptage.";
+			mes "Votre Mono ira plus vite et esquivera plus facilement les Pirates.";
+			mes "le responsable se trouve au bureau 3.";
+			break;
+		case 2:
+			mes "Pour acheter un ticket vers l'une de nos nombreuses destinations,";
+			mes "veuillez vous adresser au bureau 2.";
+			break;
+		case 5:
+			mes "La Sailor Company vous souhaite la bienvenue dans le monde marin.";
+			break;
+	}
+	close;
+}

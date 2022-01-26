@@ -1,0 +1,123 @@
+mid_camp,194,293,5	script	Shadowy Sister::shasis	68,{
+
+	if (LANGUAGE == 2)
+	{
+		set .@npc$, "[^FF0000Shadowy Sister^000000]";
+	}
+	else if (LANGUAGE == 1)
+	{
+		set .@npc$, "[^FF0000Soeur Ténèbreuse^000000]";
+	}
+
+	mes .@npc$; 
+	mes "...";
+	if (LANGUAGE == 2)
+	{
+		mes "Do you know who I am?";
+		switch(select("A well-looking Desert Plant?:Hum....But I don't ask anything more!:A Sha"))
+		{
+			case 1: 
+				mes "Gods Realm belong to simple minded...";
+				mes "Go, and don't come back.";
+				mes "And remember: Plants got Spines, Child.";
+				percentheal -50,-50;
+				close;
+			case 2:
+				mes "You show courage,";
+				mes "but the limit with madness is thin.";
+				mes "Go, come back when you'll know.";
+				close;
+			case 3:
+				if ( CROW_Q == 1 || CROW_Q == 2 )
+				{
+					mes "...";
+					mes ".....";
+					mes "........";
+					mes "Looks like we are Brothers and Sisters.";
+					setnpcdisplay "shasis", 940;
+					set CROW_Q, CROW_Q+1;
+					if ( CROW_Q == 2 )
+					{
+						mes "Look for one more of our Brothers.";
+						mes "Good luck on the Sha's Path.";
+					}
+					else if ( CROW_Q == 3 )
+					{
+						mes "Looks like you're ready.";
+						mes "Come on the Sha's Path";
+						mes "Go back to the Hassanshin,";
+						mes "and tell him what you've became: A Sha.";
+					}
+					next;
+					mes "See you soon, Brother.";
+					setnpcdisplay "shasis", 919;
+					close;
+				}
+				else
+				{
+					mes "I don't think you know who I am.";
+					mes "But luck is part of our Path.";
+					mes "Come back later.";
+					close;
+				}
+		}
+	}
+	else if (LANGUAGE == 1)
+	{
+		mes "Tu sais qui je suis?";
+		switch(select("Une belle plante du désert?:Hum....Non, mais pourquoi ne pas se connaitre mieux?:Une Soeur d'Ombre."))
+		{
+			case 1: 
+				mes "Le Royaume des dieux appartient au simples d'esprits...";
+				mes "Part, et ne reviens pas.";
+				mes "Les plantes du désert on des épines, garçon.";
+				percentheal -50,-50;
+				close;
+			case 2:
+				mes "Tu fais preuve de courage,";
+				mes "mais la frontière avec la folie est mince.";
+				mes "Part, et ne reviens que quand tu sauras";
+				close;
+			case 3:
+				if ( CROW_Q == 1 || CROW_Q == 2 )
+				{
+					mes "...";
+					mes ".....";
+					mes "........";
+					mes "On dirait bien que nous sommes Frère et Soeur";
+					setnpcdisplay "shasis", 940;
+					set CROW_Q, CROW_Q+1;
+					if ( CROW_Q == 2 )
+					{
+						mes "Cherche encore un de nos Frères.";
+						mes "Bon courage sur le chemin de Sha";
+					}
+					else if ( CROW_Q == 3 )
+					{
+						mes "Tu es prêt on dirait.";
+						mes "Rejoins le Chemin de Sha";
+						mes "Retourne voir le Maitre Hassanshin,";
+						mes "et dit lui qui tu es devenu: Un Sha.";
+					}
+					next;
+					mes "A bientôt, Frere";
+					setnpcdisplay "shasis", 919;
+					close;
+				}
+				else
+				{
+					mes "Je ne crois pas que tu saches qui je suis.";
+					mes "Mais la chance est une partie du chemin.";
+					mes "Reviens plus tard";
+					close;
+				}
+		}
+	}
+	close;
+}
+
+thor_camp,243,48,0	duplicate(shasis)	Shadowy Sister::shasis2	69
+kh_dun01,116,46,0	duplicate(shasis)	Shadowy Sister::shasis3	473
+abbey03,49,72,0	duplicate(shasis)	Shadowy Sister::shasis4	66
+ice_dun03,149,161,0	duplicate(shasis)	Shadowy Sister::shasis5	67
+

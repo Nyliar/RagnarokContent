@@ -1,0 +1,76 @@
+mora,46,44,4	script	mainquestitem::mqi	-1,{
+	end;
+
+OnInit:
+	goto InitArray;
+
+OnClock0000:
+	if (gettime(4) == 0)
+	{
+		goto InitArray;
+	}
+	end;
+
+InitArray:
+	setarray $elemental_mark_item[0],994,995,996,997;
+	//reset variables
+	deletearray $elemental_fire_item[0], getarraysize($elemental_fire_item);
+	deletearray $elemental_water_item[0], getarraysize($elemental_water_item);
+	deletearray $elemental_wind_item[0], getarraysize($elemental_wind_item);
+	deletearray $elemental_earth_item[0], getarraysize($elemental_earth_item);
+	//items
+	set $elemental_type, rand(1,5);
+	switch($elemental_type)
+	{
+		case 1:
+			//Elemental Stone
+			setarray $elemental_fire_item[0], 990,994;
+			setarray $elemental_water_item[0], 991,995;
+			setarray $elemental_wind_item[0], 992,996;
+			setarray $elemental_earth_item[0], 993,997;
+			break;
+		case 2:
+			//Elemental Card
+			setarray $elemental_fire_item[0], 4099,4049,4019;
+			setarray $elemental_water_item[0], 4089,4069,4443;
+			setarray $elemental_wind_item[0], 4098,4030,4445;
+			setarray $elemental_earth_item[0], 4101,4065,4444;
+			break;
+		case 3:
+			//Elemental Armors
+			setarray $elemental_fire_item[0], 2344,5528,5529;
+			setarray $elemental_water_item[0], 2346,5512,5513;
+			setarray $elemental_wind_item[0], 2348,5514,5515;
+			setarray $elemental_earth_item[0], 2350,5598,5599;
+			break;
+		case 4:
+			//Elemental Weapons
+			setarray $elemental_fire_item[0], 1392,1113,1247,1258,1555;
+			setarray $elemental_water_item[0], 1393,1131,1249,1256,1553;
+			setarray $elemental_wind_item[0], 1389,1167,1144,1259,1556;
+			setarray $elemental_earth_item[0], 1367,1148,1236,1257,1553;
+			break;
+		case 5:
+			//Elemental Others
+			setarray $elemental_fire_item[0], 2683,13258,12008;
+			setarray $elemental_water_item[0], 2682,13255,12012;
+			setarray $elemental_wind_item[0], 2684,13257,12010;
+			setarray $elemental_earth_item[0], 2685,13256,12011;
+			break;
+	}
+
+	//reset piedestals
+	disablenpc "piedestal1";
+	disablenpc "piedestal2";
+	disablenpc "piedestal3";
+	disablenpc "piedestal4";
+	disablenpc "piedestal5";
+	disablenpc "piedestal6";
+	disablenpc "piedestal7";
+	disablenpc "piedestal8";
+	disablenpc "piedestal9";
+	disablenpc "piedestal10";
+	disablenpc "piedestal11";
+	disablenpc "piedestal12";
+	end;
+}

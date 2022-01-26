@@ -1,0 +1,487 @@
+geffen,71,104, 5	script	Hat Maker Apprentice::ac11	908,{
+
+	set .@npcname$,"[Hat Maker Apprentice]";
+
+	//drooping incubus 20383
+	setarray @itemDI[0], 5072, 4269, 12373, 7229;
+	setarray @countitemDI[0], 20, 5, 50, 5;
+		
+	//amistr hat 20293
+	setarray @itemAH[0], 7106, 4001, 4004, 4196, 7228;
+	setarray @countitemAH[0], 100, 20, 10, 5, 5;
+
+	//Poring Cake Hat 5415
+	setarray @itemPCH[0], 539, 7142, 7230;
+	setarray @countitemPCH[0], 300, 1, 5;
+
+	//VanilMirt Hat 5289
+	setarray @itemVH[0], 691, 688, 693, 7229;
+	setarray @countitemVH[0], 50, 50, 50, 5;
+
+	//Crunch Toast 5391
+	setarray @itemCT[0], 580, 12020, 994, 7229;
+	setarray @countitemCT[0], 20, 20, 20, 5;
+
+	//Small Devil Horn 18503
+	setarray @itemSDH[0], 642, 1038, 1039, 947, 7230;
+	setarray @countitemSDH[0], 50, 75, 75, 100, 12;
+
+	//Donut in Mouth 5594
+	setarray @itemDiM[0], 539, 538, 519, 7228;
+	setarray @countitemDiM[0], 50, 50, 75, 5;
+
+	//Fashionable Glass 5047
+	setarray @itemFG[0], 2239, 746, 7229;
+	setarray @countitemFG[0], 2, 50, 5;
+
+	//Cat Ear Beret 18600
+	setarray @itemCEB[0], 5118, 5170, 7230;
+	setarray @countitemCEB[0], 10, 1, 5;
+
+	//Tiger Mask 5098
+	setarray @itemTM[0], 2297, 1030, 1029, 7228;
+	setarray @countitemTM[0], 50, 1, 50, 5;
+
+	set found_hat11, 1;
+
+if (LANGUAGE == 2)
+{
+	mes .@npcname$;
+	mes "Hello ^3333FF" + strcharinfo(0) + "^000000!";
+	mes "I can make some hat my master learnt me.";
+	mes "Are you interested in some?!";
+	next;
+	mes .@npcname$;
+	mes "Here's what I can offer,";
+	next;
+}
+else if (LANGUAGE == 1)
+{
+	mes .@npcname$;
+	mes "Bonjour ^3333FF" + strcharinfo(0) + "^000000!";
+	mes "Je peux te proposer quelques Chapeaux que mon maître m'a appris à créer.";
+	mes "Ca t'interesse?!";
+	next;
+	mes .@npcname$;
+	mes "Voici ce que je peux te proposer:";
+	next;
+}
+
+	switch(select(getitemname(20383),getitemname(5415),getitemname(20293),getitemname(5289),getitemname(5391),getitemname(18503),getitemname(5594),getitemname(5047),getitemname(18600),getitemname(5098),(LANGUAGE == 2)?"^777777Nothing Thanks^000000":"^777777Rien, merci...^000000"))	
+	{
+		case 1:	
+			callfunc "mes_getitem",.@npcname$,20383,@itemDI,@countitemDI, 1000000;
+
+		case 2:	
+			callfunc "mes_getitem",.@npcname$,5415,@itemPCH,@countitemPCH, 1000000;
+
+		case 3:
+			callfunc "mes_getitem",.@npcname$,20293,@itemAH,@countitemAH, 1000000;
+
+		case 4:
+			callfunc "mes_getitem",.@npcname$,5289,@itemVH,@countitemVH, 1000000;
+
+		case 5:
+			callfunc "mes_getitem",.@npcname$,5391,@itemCT,@countitemCT, 1000000;
+
+		case 6:
+			callfunc "mes_getitem",.@npcname$,18503,@itemSDH,@countitemSDH, 2500000;
+
+		case 7:
+			callfunc "mes_getitem",.@npcname$,5594,@itemDiM,@countitemDiM, 1000000;
+
+		case 8:
+			callfunc "mes_getitem",.@npcname$,5047,@itemFG,@countitemFG, 500000;
+
+		case 9:
+			callfunc "mes_getitem",.@npcname$,18600,@itemCEB,@countitemCEB, 2500000;
+
+		case 10:
+			callfunc "mes_getitem",.@npcname$,5098,@itemTM,@countitemTM, 1000000;
+
+		case 11:
+			mes @npcname$;
+			mes "Allright. See you soon !";
+			close;
+	}
+}
+
+malaya,251,254, 5	script	Hat Maker Apprentice::ac12	908,{
+
+	set .@npcname$,"[Hat Maker Apprentice]";
+
+	//Wandering Wolf Helm 5498
+	setarray @itemWWH[0], 920, 4183, 6252, 7229;
+	setarray @countitemWWH[0], 120, 2, 50, 5;
+
+	//Gigantic Baphomet Horn 5518
+	setarray @itemGBHD[0], 7265, 6032, 923, 642, 7230;
+	setarray @countitemGBHD[0], 50, 25, 50, 100, 12;
+
+	//Umbala Spirit 18505
+	setarray @itemUS[0], 15000, 7450, 628, 932, 7230;
+	setarray @countitemUS[0], 10, 1, 50, 250, 12;
+
+	//Crown of Deceit 5564
+	setarray @itemCoD[0], 7754, 7265, 6020, 7229;
+	setarray @countitemCoD[0], 10, 100, 50, 12;
+
+	//Skull Cap 18539
+	setarray @itemSC[0], 5017, 7752, 2609, 2227, 7228;
+	setarray @countitemSC[0], 5, 100, 15, 10, 5;
+
+	// Spare Card 5536
+	setarray @itemSCa[0], 4001, 616, 7059, 7060, 7229;
+	setarray @countitemSCa[0], 5, 30, 1, 1, 5;
+
+	// Takiu's Blindfold 5101
+	setarray @itemTB[0], 5104, 983, 7038, 7230;
+	setarray @countitemTB[0], 1, 3, 100, 5;
+
+	// Samurai Mask 5767
+	setarray @itemSM[0], 1235, 7159, 7157, 4230, 7230;
+	setarray @countitemSM[0], 1, 100, 100, 5, 5;
+
+	// Candy Cane In Mouth 5445
+	setarray @itemCCIM[0], 529, 530, 12018, 7228;
+	setarray @countitemCCIM[0], 100, 100, 100, 5;
+
+	// Fish In Mouth 5403
+	setarray @itemFIM[0], 579, 4077, 4150, 2764, 7228;
+	setarray @countitemFIM[0], 150, 3, 1, 4, 5;	
+
+	set found_hat12, 1;
+
+if (LANGUAGE == 2)
+{
+	mes .@npcname$;
+	mes "Hello ^3333FF" + strcharinfo(0) + "^000000!";
+	mes "I can make some hat my master learnt me.";
+	mes "Are you interested in some?!";
+	next;
+	mes .@npcname$;
+	mes "Here's what I can offer,";
+	next;
+}
+else if (LANGUAGE == 1)
+{
+	mes .@npcname$;
+	mes "Bonjour ^3333FF" + strcharinfo(0) + "^000000!";
+	mes "Je peux te proposer quelques Chapeaux que mon maître m'a appris à créer.";
+	mes "Ca t'interesse?!";
+	next;
+	mes .@npcname$;
+	mes "Voici ce que je peux te proposer:";
+	next;
+}
+
+	switch(select(getitemname(5498),"Gigantic Baphomet Horn(Def)",getitemname(18505),getitemname(5564),getitemname(18539),getitemname(5536),getitemname(5101),getitemname(5767),getitemname(5445),getitemname(5403),(LANGUAGE == 2)?"^777777Nothing Thanks^000000":"^777777Rien, merci...^000000"))	
+	{
+		case 1:	
+			callfunc "mes_getitem",.@npcname$,5498,@itemWWH,@countitemWWH, 1000000;
+		case 2:	
+			callfunc "mes_getitem",.@npcname$,5518,@itemGBHD,@countitemGBHD, 2500000;
+		case 3:	
+			callfunc "mes_getitem",.@npcname$,18505,@itemUS,@countitemUS, 2500000;
+		case 4:	
+			callfunc "mes_getitem",.@npcname$,5564,@itemCoD,@countitemCoD, 2500000;
+		case 5:	
+			callfunc "mes_getitem",.@npcname$,18539,@itemSC,@countitemSC, 1500000;
+		case 6:	
+			callfunc "mes_getitem",.@npcname$,5536,@itemSCa,@countitemSCa, 500000;
+		case 7:	
+			callfunc "mes_getitem",.@npcname$,5101,@itemTB,@countitemTB, 500000;
+		case 8:	
+			callfunc "mes_getitem",.@npcname$,5767,@itemSM,@countitemSM, 500000;
+		case 9:	
+			callfunc "mes_getitem",.@npcname$,5445,@itemCCIM,@countitemCCIM, 500000;
+		case 10:	
+			callfunc "mes_getitem",.@npcname$,5403,@itemFIM,@countitemFIM, 1500000;
+		case 11:
+			mes @npcname$;
+			mes "Allright. See you soon !";
+			close;
+	}
+}
+
+malangdo,107,140, 5	script	Hat Maker Apprentice::ac13	908,{
+
+	set .@npcname$,"[Hat Maker Apprentice]";
+
+// Pirate Dagger 5305 ou 5532
+setarray @itemPD[0], 5019, 5350, 4073, 7230;
+setarray @countitemPD[0], 1, 1, 3, 5;
+
+// Watermelon Bite 18602
+setarray @itemWB[0], 11520, 6263, 578, 7230;
+setarray @countitemWB[0], 50, 100, 200, 5;
+
+// Helm Of Dragon 5467
+setarray @itemHoD[0], 7451, 1035, 1036, 7443, 7230;
+setarray @countitemHoD[0], 1, 200, 200, 30, 10;
+
+// Odin Mask 5483
+setarray @itemOM[0], 7510, 7511, 7296, 7229;
+setarray @countitemOM[0], 10, 333, 15, 10;
+
+// Mask Of Ifrit 5420
+setarray @itemMoI[0], 2345, 9056, 4431, 4429, 7230;
+setarray @countitemMoI[0], 1, 5, 1, 1, 12;
+
+// Black Frame Glasses 5401
+setarray @itemBFG[0], 2202, 983, 7570, 7229;
+setarray @countitemBFG[0], 1, 10, 50, 5;
+
+// Red Glasses 5288
+setarray @itemRG[0], 2202, 975, 7570, 7229;
+setarray @countitemRG[0], 1, 10, 50, 5;
+
+// 4Leaf Clover In Mouth 5596
+setarray @itemLCIM[0], 5096, 706, 710, 7228;
+setarray @countitemLCIM[0], 1, 50, 50, 5;
+
+// Father's White Moustache 5155
+setarray @itemFWM[0], 5012, 2268, 1629, 7939, 7230;
+setarray @countitemFWM[0], 1, 1, 5, 150, 12;		
+
+// Wanderer's Sakkat 5579
+setarray @itemWS[0], 2280, 978, 983, 930, 7023, 7229;
+setarray @countitemWS[0], 1, 10, 1, 100, 50, 7;
+
+//Snowman Hat 5738
+setarray @itemSH[0], 12374, 749, 536, 4209, 7228;
+setarray @countitemSH[0], 5, 50, 50, 1, 5;
+
+	set found_hat13, 1;
+
+if (LANGUAGE == 2)
+{
+	mes .@npcname$;
+	mes "Hello ^3333FF" + strcharinfo(0) + "^000000!";
+	mes "I can make some hat my master learnt me.";
+	mes "Are you interested in some?!";
+	next;
+	mes .@npcname$;
+	mes "Here's what I can offer,";
+	next;
+}
+else if (LANGUAGE == 1)
+{
+	mes .@npcname$;
+	mes "Bonjour ^3333FF" + strcharinfo(0) + "^000000!";
+	mes "Je peux te proposer quelques Chapeaux que mon maître m'a appris à créer.";
+	mes "Ca t'interesse?!";
+	next;
+	mes .@npcname$;
+	mes "Voici ce que je peux te proposer:";
+	next;
+}
+
+	switch(select(getitemname(5305),getitemname(18602),getitemname(5467),getitemname(5483),getitemname(5420),getitemname(5401),getitemname(5288),getitemname(5596),getitemname(5155),getitemname(5579),getitemname(5738),(LANGUAGE == 2)?"^777777Nothing Thanks^000000":"^777777Rien, merci...^000000"))	
+	{
+		case 1:	
+			callfunc "mes_getitem",.@npcname$,5305,@itemPD,@countitemPD, 1000000;
+		case 2:	
+			callfunc "mes_getitem",.@npcname$,18602,@itemWB,@countitemWB, 2000000;
+		case 3:	
+			callfunc "mes_getitem",.@npcname$,5467,@itemHoD,@countitemHoD, 2500000;
+		case 4:	
+			callfunc "mes_getitem",.@npcname$,5483,@itemOM,@countitemOM, 2500000;
+		case 5:	
+			callfunc "mes_getitem",.@npcname$,5420,@itemMoI,@countitemMoI, 2500000;
+		case 6:	
+			callfunc "mes_getitem",.@npcname$,5401,@itemBFG,@countitemBFG, 1500000;
+		case 7:	
+			callfunc "mes_getitem",.@npcname$,5288,@itemRG,@countitemRG, 500000;
+		case 8:	
+			callfunc "mes_getitem",.@npcname$,5596,@itemLCIM,@countitemLCIM, 500000;
+		case 9:	
+			callfunc "mes_getitem",.@npcname$,5155,@itemFWM,@countitemFWM, 500000;
+		case 10:	
+			callfunc "mes_getitem",.@npcname$,5579,@itemWS,@countitemWS, 1000000;
+		case 11:	
+			callfunc "mes_getitem",.@npcname$,5738,@itemSH,@countitemSH, 1000000;
+		case 12:
+			mes @npcname$;
+			mes "Allright. See you soon !";
+			close;
+	}
+}
+
+caspen,250,172,5	script	Hat Maker Apprentice::ac15	908,{
+
+	set .@npcname$,"[Hat Maker Apprentice]";
+
+// Hell Wing 20610
+setarray @itemHW[0], 5068, 2726, 6326, 4241, 4391, 7228;
+setarray @countitemHW[0], 2, 1, 10, 1, 5, 3;
+
+// True Orc Hero 20613
+setarray @itemTOH[0], 5094, 5224, 2267, 4375, 7230;
+setarray @countitemTOH[0], 1, 1, 10, 5, 3;
+
+// Phreeoni Hat 20612
+setarray @itemPH[0], 1014, 1015, 4101, 4081, 632, 7229;
+setarray @countitemPH[0], 50, 200, 5, 3, 3, 3;
+
+// Raining Cloud 20608
+setarray @itemRC[0], 4262, 6214, 12020, 7230;
+setarray @countitemRC[0], 5, 250, 150, 5;
+
+// Tempest 20617
+setarray @itemT[0], 12374, 2678, 1818, 7228;
+setarray @countitemT[0], 30, 2, 3, 5;
+
+// Vesper Mask 20611
+setarray @itemVM[0], 7095, 7094, 13161, 13156, 2656, 4242;
+setarray @countitemVM[0], 200, 200, 1, 1, 1, 10;
+
+// White Aura 20604
+setarray @itemWA[0], 2268, 7322, 4065, 7230;
+setarray @countitemWA[0], 3, 200, 2, 5;
+
+	set found_hat15, 1;
+
+if (LANGUAGE == 2)
+{
+	mes .@npcname$;
+	mes "Hello ^3333FF" + strcharinfo(0) + "^000000!";
+	mes "I can make some hat my master learnt me.";
+	mes "Are you interested in some?!";
+	next;
+	mes .@npcname$;
+	mes "Here's what I can offer,";
+	next;
+}
+else if (LANGUAGE == 1)
+{
+	mes .@npcname$;
+	mes "Bonjour ^3333FF" + strcharinfo(0) + "^000000!";
+	mes "Je peux te proposer quelques Chapeaux que mon maître m'a appris à créer.";
+	mes "Ca t'interesse?!";
+	next;
+	mes .@npcname$;
+	mes "Voici ce que je peux te proposer:";
+	next;
+}
+
+	switch(select(getitemname(20610),getitemname(20613),getitemname(20612),getitemname(20608),getitemname(20617),getitemname(20611),getitemname(20604),(LANGUAGE == 2)?"^777777Nothing Thanks^000000":"^777777Rien, merci...^000000"))	
+	{
+		case 1:	
+			callfunc "mes_getitem",.@npcname$,20610,@itemHW,@countitemHW, 1000000;
+		case 2:	
+			callfunc "mes_getitem",.@npcname$,20613,@itemTOH,@countitemTOH, 1000000;
+		case 3:	
+			callfunc "mes_getitem",.@npcname$,20612,@itemPH,@countitemPH, 100000;
+		case 4:	
+			callfunc "mes_getitem",.@npcname$,20608,@itemRC,@countitemRC, 1500000;
+		case 5:	
+			callfunc "mes_getitem",.@npcname$,20617,@itemT,@countitemT, 500000;
+		case 6:	
+			callfunc "mes_getitem",.@npcname$,20611,@itemVM,@countitemVM, 1500000;
+		case 7:	
+			callfunc "mes_getitem",.@npcname$,20604,@itemWA,@countitemWA, 500000;
+		case 8:
+			mes @npcname$;
+			mes "Allright. See you soon !";
+			close;
+	}
+}
+
+capitale,127,164,5	script	Hat Maker Apprentice::ac14	908,{
+
+	set .@npcname$,"[Hat Maker Apprentice]";
+
+// Ancient Gold Ornament 18570
+setarray @itemAGO[0], 10016, 7435, 6394, 7228;
+setarray @countitemAGO[0], 1, 100, 25, 5;
+
+// Piece of White Clothe 5559
+setarray @itemPoWC[0], 7751, 982, 6247, 7230;
+setarray @countitemPoWC[0], 200, 2, 50, 5;
+
+// Bag 20607
+setarray @itemB[0], 948, 4074, 4216, 4162, 4188, 1029;
+setarray @countitemB[0], 150, 1, 1, 1, 1, 5;
+
+// Diamond Dust 20603
+setarray @itemDD[0], 7561, 2347, 2787, 7230;
+setarray @countitemDD[0], 400, 1, 5, 3;
+
+// Dog Christmas 20413
+setarray @itemDC[0], 530, 7269, 539, 529, 4023, 7230;
+setarray @countitemDC[0], 200, 10, 40, 50, 3, 3;
+
+// Drooping Maya 20615
+setarray @itemDM[0], 7020, 10006, 2234, 7230;
+setarray @countitemDM[0], 3, 5, 1, 5;
+
+// Drooping Thana 20425
+setarray @itemDT[0], 7450, 7439, 4398, 7228;
+setarray @countitemDT[0], 3, 5, 1, 5;
+
+// Fire Aura 20609
+setarray @itemFA[0], 4439, 7451, 2345, 1965, 994;
+setarray @countitemFA[0], 1, 3, 1, 3, 300;
+
+// Garm Hat 20614
+setarray @itemGH[0], 4323, 7066, 7036, 7228;
+setarray @countitemGH[0], 1, 150, 100, 5;
+
+// Gryphon 20616
+setarray @itemG[0], 7048, 7229, 5025, 7229;
+setarray @countitemG[0], 200, 20, 1, 5;
+
+	set found_hat14, 1;
+
+if (LANGUAGE == 2)
+{
+	mes .@npcname$;
+	mes "Hello ^3333FF" + strcharinfo(0) + "^000000!";
+	mes "I can make some hat my master learnt me.";
+	mes "Are you interested in some?!";
+	next;
+	mes .@npcname$;
+	mes "Here's what I can offer,";
+	next;
+}
+else if (LANGUAGE == 1)
+{
+	mes .@npcname$;
+	mes "Bonjour ^3333FF" + strcharinfo(0) + "^000000!";
+	mes "Je peux te proposer quelques Chapeaux que mon maître m'a appris à créer.";
+	mes "Ca t'interesse?!";
+	next;
+	mes .@npcname$;
+	mes "Voici ce que je peux te proposer:";
+	next;
+}
+
+	switch(select(getitemname(18570),getitemname(5559),getitemname(20607),getitemname(20603),getitemname(20413),getitemname(20615),getitemname(20425),getitemname(20609),getitemname(20614),getitemname(20616),(LANGUAGE == 2)?"^777777Nothing Thanks^000000":"^777777Rien, merci...^000000"))	
+	{
+		case 1:	
+			callfunc "mes_getitem",.@npcname$,18570,@itemAGO,@countitemAGO, 1000000;
+		case 2:	
+			callfunc "mes_getitem",.@npcname$,5559,@itemPoWC,@countitemPoWC, 1000000;
+		case 3:	
+			callfunc "mes_getitem",.@npcname$,20607,@itemB,@countitemB, 100000;
+		case 4:	
+			callfunc "mes_getitem",.@npcname$,20603,@itemDD,@countitemDD, 1500000;
+		case 5:	
+			callfunc "mes_getitem",.@npcname$,20413,@itemDC,@countitemDC, 500000;
+		case 6:	
+			callfunc "mes_getitem",.@npcname$,20615,@itemDM,@countitemDM, 1500000;
+		case 7:	
+			callfunc "mes_getitem",.@npcname$,20425,@itemDT,@countitemDT, 500000;
+		case 8:	
+			callfunc "mes_getitem",.@npcname$,20609,@itemFA,@countitemFA, 1500000;
+		case 9:	
+			callfunc "mes_getitem",.@npcname$,20614,@itemGH,@countitemGH, 500000;
+		case 10:	
+			callfunc "mes_getitem",.@npcname$,20616,@itemG,@countitemG, 1500000;
+		case 11:
+			mes @npcname$;
+			mes "Allright. See you soon !";
+			close;
+	}
+}

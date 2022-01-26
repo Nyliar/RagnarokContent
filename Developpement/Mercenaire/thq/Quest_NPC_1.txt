@@ -1,0 +1,129 @@
+///////Job list 1///////
+//1-1
+mjolnir_09,187,189,6	script	Old Man	107,{
+	if (one_qset==1) goto N_QuestStart;
+	if (one_qset==5) goto N_Questclose;
+	mes "[Old Man]";
+	mes "Wow! Depuis quand un vieil homme ne peux même plus marcher tranquille?";
+	close;
+N_QuestClose:
+	if (countitem(2265)>2)
+	{
+		mes "Bien! Là j'ai du choix!";
+		mes " ";
+		mes "Voici vos Treasure Tokens.";
+		set one_qset,0;
+		set On_Quest,0;
+		set #Treasure_Token,#Treasure_Token+20;
+		close;
+	}
+	else
+	{
+		mes "Ne soyez pas radin!";
+		mes " ";
+		mes "Plus que ça, allons!";
+		close;
+	}
+N_QuestStart:
+	mes "[Old Man]";
+	mes "Eh?! Que me voulez-vous?";
+	mes " ";
+	mes "Après tout, moi j'ai besoin de vous.";
+	mes "Ma vieille pipe à l'air d'avoir trop vécu.";
+	mes "Je voudrais la changer. Vous pouvez m'en rapporter quelques une, que je puisse choisir?";
+	set one_qset, 5;
+	close;
+}
+//1-2;
+pay_arche,86,129,6	script	Archer	732,{
+	if (one_qset == 2) goto N_QuestStart;
+	mes "[Kieth]";
+	mes "Désolé, pas le temps de parler. J'attends un paquet.";
+	close;
+N_QuestStart:
+	mes "[Kieth]";
+	if (countitem(1730) >= 1 && countitem(1732) >= 1 && countitem(1731) >= 1 && countitem(1733) >= 1) {
+		mes "Ahhh, enfin. Merci de vous être déplacé. Voici votre récompense.";
+
+		delitem 1730,1;
+		delitem 1731,1;
+		delitem 1732,1;
+		delitem 1733,1;
+		set one_qset,0;
+		set On_Quest,0;
+		set #Treasure_Token,#Treasure_Token+30;
+		close;
+	}
+	else
+	{
+		mes "Ah! Vous devez être de la Guilde des Mercenaires. Vous m'apportez mes arc??";
+		mes " ";
+		mes "Comment ça de quoi je parle? Je suis un Archer, j'ai besoin d'arc. Un de chaque élément!";
+		mes " ";
+		mes "Dépêchez-vous, j'attends ici.";
+		close;
+	}
+}
+//1-3
+prt_fild06,37,192,6	script	Farmer	125,{
+	if (one_qset==3) goto N_QuestStart;
+	mes "[Billy-Bob]";
+	mes "Arrrg!... Ces saloperies d'insectes ont tout dévoré! Ca ne ressemble même plus à une ferme ici!";
+	close;
+N_QuestComp:
+	mes "[Billy-Bob]";
+	mes "Ohhh, merci! C'est un nouveau départ pour moi!";
+	mes "Avec ça, ces saletés d'insectes ne dévoreront plus mes récoltes.";
+	mes " ";
+	mes "Voici les Treasure Token promis à la Guilde.";
+	mes "C'est moi qui vais les bouffer GYAHAHAHAHAHAHAHA!";
+	delitem 701,50;
+	delitem 12085,1;
+	delitem 1529,1;
+	delitem 7481,1;
+	set one_qset,0;
+	set #Treasure_Token,#Treasure_Token+30;
+	set On_Quest,0;
+	close;
+N_QuestStart:
+	if (countitem(701) >= 50 && countitem(1529) >= 1 && countitem(12085) >= 1 && countitem(7481) >= 1)
+		goto N_QuestComp;
+	else
+	{
+		mes "[Billy-Bob]";
+		mes "Ces saletés d'insectes sont partout!!";
+		mes "Tu dois être de la Guilde des Mercenaires?!";
+		mes "J'ai besoin de certains...objets:50 Ora Ora,1 CookBook level 10, 1 Iron Diver et 1 Immortal Stew";
+		close;
+	}
+}
+//1-4
+prontera,264,353,6	script	Old Lady#thq	103,{
+	if (one_qset == 4 && countitem(934) > 50 && countitem(4189) > 1 && countitem(1164) > 10 ) goto N_QuestComp;
+	if (one_qset == 4) goto N_QuestStart;
+	mes "[Old Lady]";
+	mes "C'est la tombe de mon mari. Je lui rendais juste une petite visite.";
+	close;
+N_QuestComp:
+	mes "[Old Lady]";
+	mes "Vous les avez?";
+	next;
+	mes "[Old Lady]";
+	mes "Merci du fond du coeur! Voici vos 4 Treasure Tokens.";
+	delitem 934,15;
+	set #Treasure_Token,#Treasure_Token+20;
+	set one_qset,0;
+	set On_Quest,0;
+	close;
+N_QuestStart:
+	mes "[Old Lady]";
+	mes "Vous êtes celui que la Guilde a envoyé pour m'aider?";
+	mes " ";
+	mes "Parfait, voici ce que j'attends de vous.";
+	mes "Cette tombe derrière moi est celle de mon mari.";
+	mes "Je lui ai promis de l'enterrer avec les restes de ses meurtriers, mais...";
+	next;
+	mes "[Old Lady]";
+	mes "S'il vous plaît, apportez moi 50 Mementos, 10 Murasama et 1 carte de Wraith Dead pour l'apaiser.";
+	close;
+}

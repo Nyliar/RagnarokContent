@@ -1,0 +1,54 @@
+capitale,203,148,2	script	Lost Smith::capls	796,{
+	if (checkweight(1201,1) == 0) {
+		mes "You're carrying too much stuff. Why don't you put some of it away, and then come back?";
+		close;
+	}
+	mes "[Lost Smith]";
+	mes "It's you that have liberated us from the evil Nacht Sieger.";
+	next;
+	mes "[Lost Smith]";
+	mes "Thank you so much. Now we can escape from this cold and dark place... to heaven.";
+	next;
+	if ((countitem(13412) > 0) && (countitem(13413) > 0)) {
+		mes "[Lost Souls]";
+		mes "Hey, you have the remnants of Nacht Sieger with you.";
+		next;
+		mes "[Lost Smith]";
+		mes "They may appear to be one-handed swords, but I can put them together to make a two-handed one if you want. That's the only way I can repay you for freeing me.";
+		next;
+		switch(select("Make a Two-Handed Sword.:No, thanks.")) {
+		case 1:
+			mes "[Lost Smith]";
+			mes "If it is already upgraded or has a card inside, those effects will be disappear. Is this ok with you?";
+			next;
+			switch(select("It's fine with me. Please make one.:No way!")) {
+			case 1:
+				mes "[Lost Smith]";
+				mes "Good, then I'll combine these to create a two-handed sword.";
+				next;
+				delitem 13412,1; //Twin_Edge_B
+				delitem 13413,1; //Twin_Edge_R
+				getitem 1185,1; //Violet_Fear
+				break;
+			case 2:
+				mes "[Lost Smith]";
+				mes "I see. I guess you aren't as greedy or ambitious as those other adventurers.";
+				next;
+				break;
+			}
+			break;
+		case 2:
+			mes "[Lost Smith]";
+			mes "I see. I guess you aren't as greedy or ambitious as those other adventurers.";
+			next;
+			break;
+		}
+	}
+	mes "[Lost Smith]";
+	mes "I'd like to talk to you more, but I've... I've got to go now.";
+	next;
+	mes "[Lost Smith]";
+	mes "Farewell, young adventurer. I wish you good luck.";
+	close2;
+	end;
+}

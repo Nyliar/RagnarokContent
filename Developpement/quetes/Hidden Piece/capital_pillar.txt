@@ -1,0 +1,127 @@
+capitale,217,167,4	script	Pillar::cappill1	406,{
+	donpcevent "Crash Pillar::OnNpcEnabled";
+	end;
+
+OnInit:
+	hideonnpc strnpcinfo(3);
+	end;
+
+OnNPCKillEvent:
+	if (killedrid == 2536)
+	{
+		hideoffnpc "cappill1";
+		set $mimir_killed, 1;
+		startnpctimer;
+		donpcevent "alalynque::OnCheckStartEvent";
+	}
+	end;
+
+OnTimer3600000:
+	//one hour delay
+	set $mimir_killed, 0;
+	donpcevent "alalynque::OnCloseEvent";
+	hideonnpc strnpcinfo(3);
+	end;
+
+OnAllMvpKilled:
+	npcwalkto 222,172;
+	hideonnpc "cappill1";
+	donpcevent "crashpillar::OnNpcEnabled";
+	end;
+}
+
+capitale,215,174,4	script	Pillar::cappill2	406,{
+	donpcevent "jorpillar::OnNpcEnabled";
+	end;
+
+OnInit:
+	hideonnpc "cappill2";
+	end;
+
+OnNPCKillEvent:
+	if (killedrid == 2629)
+	{
+		hideoffnpc "cappill2";
+		set $jormungand_killed, 1;
+		startnpctimer;
+		donpcevent "alalynque::OnCheckStartEvent";
+	}
+	end;
+
+OnTimer3600000:
+	//one hour delay
+	set $jormungand_killed, 0;
+	donpcevent "alalynque::OnCloseEvent";
+	hideonnpc strnpcinfo(3);
+	end;
+
+OnAllMvpKilled:
+	npcwalkto 222,172;
+	hideonnpc strnpcinfo(3);
+	donpcevent "jorpillar::OnNpcEnabled";
+	end;
+}
+
+capitale,227,168,4	script	Pillar::cappill3	406,{
+	donpcevent "faepillar::OnNpcEnabled";
+	end;
+
+OnInit:
+	hideonnpc "cappill3";
+	end;
+
+OnNPCKillEvent:
+	if (killedrid == 2544)
+	{
+		hideoffnpc "cappill3";
+		set $hel_killed, 1;
+		startnpctimer;
+		donpcevent "alalynque::OnCheckStartEvent";
+	}
+	end;
+
+OnTimer3600000:
+	//one hour delay
+	set $hel_killed, 0;
+	donpcevent "alalynque::OnCloseEvent";
+	hideonnpc strnpcinfo(3);
+	end;
+
+OnAllMvpKilled:
+	npcwalkto 222,172;
+	hideonnpc "cappill3";
+	donpcevent "faepillar::OnNpcEnabled";
+	end;
+}
+
+capitale,228,174,4	script	Pillar::cappill4	406,{
+	donpcevent "caspenpillar::OnNpcEnabled";
+	end;
+
+OnInit:
+	hideonnpc "cappill4";
+	end;
+
+OnNPCKillEvent:
+	if (killedrid == 2662)
+	{
+		hideoffnpc "cappill4";
+		set $tutankhammen_killed, 1;
+		startnpctimer;
+		donpcevent "alalynque::OnCheckStartEvent";
+	}
+	end;
+
+OnTimer3600000:
+	//one hour delay
+	set $tutankhammen_killed, 0;
+	donpcevent "alalynque::OnCloseEvent";
+	hideonnpc strnpcinfo(3);
+	end;
+
+OnAllMvpKilled:
+	npcwalkto 222,172;
+	hideonnpc "cappill4";
+	donpcevent "casppillar::OnNpcEnabled";
+	end;
+}

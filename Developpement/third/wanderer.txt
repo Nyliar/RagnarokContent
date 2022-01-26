@@ -1,0 +1,201 @@
+caspen,128,205,8	script	Maitresse Wanderer	940,{    
+
+	mes "[Maitresse Wanderer]";
+	if (class == 4021 || class == 20)
+	{
+		if ( WAN_Q < 1)
+		{
+			mes "Bonjour à toi," + strcharinfo(0) + ".";
+			mes "Je suis la Maitresse Wanderer.";
+			mes "Je peux te faire passer la deuxième épreuve de ton Eveil,";
+			mes "Es-tu intéressée ?";
+			next;
+			switch(select("Oui, je voudrais passer le test, s'il vous plait.:Non merci, je me suis trompé de personne.:Un vieux fou m'a envoyé ici après avoir lancé un tetra Vortex sur moi Y^Y."))
+			{
+				case 1:
+					mes "[Maitresse Wanderer]";
+					mes "Tout d'abord, voyons si tu es prête physiquement.";
+					next;
+					if ( CHARLO_Q ){
+						mes "[Maitresse Wanderer]";
+						mes "On dirait bien que ton physique est prêt.";
+						mes "Je vais donc maintenant tester ton mental.";
+						next;
+						mes "[Maitresse Wanderer]";
+							mes "Il s'agit d'un quizz. Commençons.";
+							next;
+							set min_Q, 0;
+							mes "Quelle compétence est l'équivalent de Frost Joker?";
+							switch(select("Scream:Wink of Charm:Encore:Lullaby"))
+							{
+								case 2:				
+								case 1:
+									set min_Q, min_Q+1;
+								case 3:
+								case 4:
+							}
+							next;
+							mes "De combien de flèches est équivalent Arrow Vulcan?";
+							switch(select("7:8:9:10"))
+							{
+								case 3:
+									set min_Q, min_Q+1;
+								case 2:
+								case 1:
+								case 4:
+							}
+							next;
+							mes "Quel est l'effet de Longin for Freedom?";
+							switch(select("Permet les attaques sans utiliser de flèches:Permet de bouger pendant les danses / chants:Permet d'utiliser les skills duo en solo, mais en consommant le double de sp:Permet de chanter sans aucunes conséquences"))
+							{
+								case 2:
+									set min_Q, min_Q+1;
+								case 1:
+								case 4:
+								case 3:
+							}
+							next;
+							mes "Quel hat à pour effet d'utiliser Scream?";
+							switch(select("Bucker Hat:Mandragora Hat:Alice Doll:Twin Ribbon"))
+							{
+								case 2:
+									set min_Q, min_Q+1;
+								case 1:
+								case 3:
+								case 4:
+							}
+							next;
+							mes "Quelle attaque à le même genre d'effet que Deep Sleep, le skill de Wanderer?";
+							switch(select("Arrow Vulcan:Ugly Dance:Huming:Lullaby"))
+							{
+								case 4:
+									set min_Q, min_Q+1;
+								case 2:
+								case 3:
+								case 1:
+							}
+							next;
+							mes "Comment s'appelle la compétence de quête des Dancer?";
+							switch(select("Wink of Charm:Lullaby:Scream:A Drum of Battlefield"))
+							{
+								case 1:
+									set min_Q, min_Q+1;
+								case 2:
+								case 3:
+								case 4:
+							}
+							next;
+							mes "Combien existe-t-il de cartes de tarot différentes dans Tarot Card of Fate?";
+							switch(select("10:11:14:15"))
+							{
+								case 3:
+									set min_Q, min_Q+1;
+								case 2:
+								case 1:
+								case 4:
+							}
+							next;
+							mes "Quel est l'effet de Please Don't Forget Me?";
+							switch(select("Réduction de vitesse de déplacement et d'attaque:Réduction de la puissance d'attaque physique et magique:Réduction de la puissance d'attaque magique:Réduction de la puissance d'attaque physique"))
+							{
+								case 1:
+									set min_Q, min_Q+1;
+								case 3:
+								case 2:
+								case 4:
+							}
+							next;
+							mes "Combien de bonus d'attaque donne Dancing Lesson au level 10?";
+							switch(select("ATK + 27:ATK + 28:ATK + 29:ATK + 30"))
+							{
+								case 4:
+									set min_Q, min_Q+1;
+								case 1:
+								case 2:
+								case 3:
+							}
+							next;
+							mes "Ou se passe le test pour devenir Clown, l'indissociable acolyte des Gipsy?";
+							switch(select("Comodo:Lutie:Morroc:Payon"))
+							{
+								case 1:
+									set min_Q, min_Q+1;
+								case 3:
+								case 2:
+								case 4:
+							}
+							next;
+							mes "[Maitresse Wanderer]";
+							mes "Bien, voyons tes résultats maintenant...";
+							mes "*Trifouille les résultats du test";
+							next;
+							mes "[Maitresse Wanderer]";
+							if (min_Q >= 9){
+								mes "Excellent, tu as eu ^FF0000" + min_Q*10 + "%^000000 de bonnes réponses.";
+								mes "On dirait bien que ton Esprit est prêt à passer l'Eveil.";
+								mes "Tu peux passer à l'avant-dernière étape de ta quête, la plus difficile.";
+								mes "Pars donc à la recherche du Mirroir du Mal, il t'expliquera cela plus en détail.";
+								mes "Il se trouve caché quelque part aux alentours de la grande ville de Bastania.";
+								mes "Prends cet objet qui te sera très utile";
+								mes " ";
+								getitem (22011),1;
+								mes "Bon courage";
+								emotion 21;
+								set WAN_Q, 1;
+								close;
+							}
+							else
+							{
+								mes "Désolé, mais tes ^FF0000" + min_Q*10 + "%^000000 de réussite ne seront pas suffisant.";
+								mes "Entraîne encore un peu ton esprit,";
+								mes "Sans quoi, il ne résistera pas à la puissance de l'Eveil.";
+								close;
+							}
+					}		
+					else
+					{
+					mes "[Maitresse Wanderer]";
+					mes "Désolé, mais tu ne peux pas venir me voir pour l'instant.";
+					mes "Tu dois avant tout tester ton Physique auprès du Maitre de l'Eveil.";
+					close;
+					}
+				case 2:
+					mes "[Maitresse Wanderer]";
+					mes "Pas de problème.";
+					mes "Vis ta vie avec Espoir,";
+					mes "Elle ne t'en paraîtra que plus belle.";
+					close;
+				case 3:
+					mes "[Maitresse Wanderer]";
+					mes "Un vieux fou tu dis?";
+					mes "Le Maître du Renouveau est tellement plus que ça";
+					mes "Mais j'avoue qu'il a des tendances un peu cabotine...";
+					close;
+			}
+		}
+		
+		else if ( WAN_Q == 1 )
+		{
+			mes "Bonjour à toi," + strcharinfo(0) + ".";
+			mes "Tu peux passer à la dernière étape.";
+			mes "Pars donc à la recherche d'Yggdrasil.";
+			mes "Il se trouve caché quelque part aux alentours de Bastania.";
+			mes "Bon courage.";
+			close;
+		}
+
+		else if ( WAN_Q == 3 || class == 4069 || class == 4076)
+		{
+			mes "Bonjour à toi," + strcharinfo(0) + ".";
+			mes "Felicitations, tu es Wanderer !";
+			mes "Que la force soit avec toi !";
+			close;
+		}	
+	}
+	else
+	{
+		mes "Me serais-je perdue en cherchant cette douce jeune fille ?";
+		mes ""+( sex ? "A l'evidence ce n'est pas toi..." : "Tu es trèp jolie, mais ce n'est pas toi que je cherche..." )+"";
+		close;
+	}
+}

@@ -1,0 +1,80 @@
+louyang, 321, 108, 5	script	Majestic Goat	411,{
+
+	set .@npcname$,"[Majestic Goat]";
+	
+	//Black Majestic Goat 20155
+	setarray @itemBMG[0], 2256, 983, 7230;
+	setarray @countitemBMG[0], 1, 2, 2;
+	
+	//Blue Majestic Goat 20156
+	setarray @itemBLMG[0], 2256, 978, 7230;
+	setarray @countitemBLMG[0], 1, 2, 2;
+
+	//Cyan Majestic Goat 20157
+	setarray @itemCMG[0], 2256, 978, 982, 7230;
+	setarray @countitemCMG[0], 1, 2, 2, 2;
+
+	//Gold Majestic Goat 20158
+	setarray @itemGMG[0], 2256, 976, 7230;
+	setarray @countitemGMG[0], 1, 2, 2;
+	
+	//Green Majestic Goat 20159
+	setarray @itemGNMG[0], 2256, 979, 7230;
+	setarray @countitemGNMG[0], 1, 2, 2;
+	
+	//Purple  Majestic Goat 20160
+	setarray @itemPMG[0], 2256, 981, 7230;
+	setarray @countitemPMG[0], 1, 2, 2;
+
+	//Red Majestic Goat 20161
+	setarray @itemRMG[0], 2256, 975, 7230;
+	setarray @countitemRMG[0], 1, 2, 2;
+	
+	//White  Majestic Goat 20162
+	setarray @itemWMG[0], 2256, 982, 7230;
+	setarray @countitemWMG[0], 1, 2, 2;
+	
+	
+	
+	mes .@npcname$;
+	mes "Bonjour ^3333FF" + strcharinfo(0) + "^000000!";
+	mes "Je peux te proposer quelque hats pour customiser ton Majestic Goat.";
+	mes	"Ca t'interesse?!";
+	next;
+	mes .@npcname$;
+	mes "Voici ce que je peux te proposer:";
+	next;
+
+	switch(select("Black Majestic Goat:Blue Majestic Goat:Cyan Majestic Goat:Gold Majestic Goat:Green Majestic Goat:Purple Majestic Goat:Red Majestic Goat:White Majestic Goat:^777777Rien, merci...^000000"))
+	{
+		case 1 :
+ 		callfunc "mes_getitem_colo",.@npcname$,20155,@itemBMG,@countitemBMG, 1000000;
+
+		case 2 :
+ 		callfunc "mes_getitem_colo",.@npcname$,20156,@itemBLMG,@countitemBLMG, 1000000;
+
+		case 3 :
+ 		callfunc "mes_getitem_colo",.@npcname$,20157,@itemCMG,@countitemCMG, 1000000;
+
+		case 4 :
+ 		callfunc "mes_getitem_colo",.@npcname$,20158,@itemGMG,@countitemGMG, 1000000;
+
+		case 5 :
+		callfunc "mes_getitem_colo",.@npcname$,20159,@itemGNMG,@countitemGNMG, 1000000;
+
+		case 6 :
+ 		callfunc "mes_getitem_colo",.@npcname$,20160,@itemPMG,@countitemPMG, 1000000;
+
+		case 7 :
+ 		callfunc "mes_getitem_colo",.@npcname$,20161,@itemRMG,@countitemRMG, 1000000;
+
+		case 8 :
+ 		callfunc "mes_getitem_colo",.@npcname$,20162,@itemWMG,@countitemWMG, 1000000;
+
+		// Quitter
+		case 9 :
+		mes @npcname$;
+		mes "Très bien. A bientôt !";
+		close;
+	}
+}

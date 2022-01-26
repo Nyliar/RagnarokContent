@@ -1,0 +1,88 @@
+-	script	OptionsEXP	-1,{
+	end;
+
+OnWhisperGlobal:
+	if (@whispervar0$ == "showewexp")
+	{
+		if (SHOWEWEXP == 0)
+		{
+			set SHOWEWEXP, 1;
+			if (LANGUAGE == 2)
+			{
+				dispbottom "EXP will now be showned for Ego Sword System.";
+			}
+			else if (LANGUAGE == 1)
+			{
+				dispbottom "L'EXP sera désormais affichée pour le Système Ego Sword.";
+			}
+		}
+		else if (SHOWEWEXP == 1)
+		{
+			set SHOWEWEXP, 0;
+			if (LANGUAGE == 2)
+			{
+				dispbottom "EXP will no longer be showned for Ego Sword System.";
+			}
+			else if (LANGUAGE == 1)
+			{
+				dispbottom "L'EXP ne sera désormais plus affichée pour le Système Ego Sword.";
+			}
+		}
+	}
+	else if (@whispervar0$ == "showewstate")
+	{
+		if (SHOWEWSTATE == 0)
+		{
+			set SHOWEWSTATE , 1;
+			if (LANGUAGE == 2)
+			{
+				dispbottom "State will now be showned for Ego Sword System.";
+			}
+			else if (LANGUAGE == 1)
+			{
+				dispbottom "L'état sera désormais affichée pour le Système Ego Sword.";
+			}
+		}
+		else if (SHOWEWSTATE == 1)
+		{
+			set SHOWEWSTATE , 0;
+			if (LANGUAGE == 2)
+			{
+				dispbottom "State will no longer be showned for Ego Sword System.";
+			}
+			else if (LANGUAGE == 1)
+			{
+				dispbottom "L'état ne sera désormais plus affichée pour le Système Ego Sword.";
+			}
+		}
+	}
+
+	else if (@whispervar0$ == "showexpmc")
+	{
+		if (SHOWMCEXP == 0)
+		{
+			set SHOWMCEXP, 1;
+			if (LANGUAGE == 2)
+			{
+				dispbottom "EXP will now be showned for Multi Classing System.";
+			}
+			else if (LANGUAGE == 1)
+			{
+				dispbottom "L'EXP sera désormais affichée pour le Système Multi Classe.";
+			}
+		}
+		else if (SHOWMCEXP== 1)
+		{
+			set SHOWMCEXP, 0;
+			if (LANGUAGE == 2)
+			{
+				dispbottom "EXP will no longer be showned for Multi Classing System.";
+			}
+			else if (LANGUAGE == 1)
+			{
+				dispbottom "L'EXP ne sera désormais plus affichée pour le Système Multi Classe.";
+			}
+		}
+	}
+	end;
+}

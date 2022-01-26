@@ -1,0 +1,188 @@
+//quete volva
+caspen,168,177,2	script	Völva::wvol1	572,{
+//green,21,16,2	script	Völva::wvol1	572,{
+	set .@npcname$, "[Völva]";
+	if (VOLVA_MEM_Q == .maxVolvaMemoryKill)
+	{
+		//success
+		mes "Tu m'as donc trouvé parmi toutes mes Mémoires.";
+		mes "Impressionnant.";
+		mes "Je peux influer sur le Destin de ce continent.";
+
+		if ($Volva == 0)
+		{
+			mes "Je te laisse choisir vers quoi il va pencher pour la prochaine période.";
+			set $Volva_effect, select("XP de base","XP de job","Loot","XP base et job","Tout","Mode Nightmare","Pas de commande","Retour à la normal");
+			mes "Très bien. Cela sera appliqué à minuit, ce soir.";
+		}
+		else
+		{
+			mes "Malheureusement pour toi, un autre à déjà choisi vers quoi on se dirige.";
+			mes "Dommage, hein?";
+		}		
+
+		set VOLVA_MEM_Q, 0;
+		set VOLVA_Q, 0;
+	}
+	else
+	{	
+		mes "Elle ne vous dit rien.";
+		callsub "OnActivateRandomVolva";
+	}
+	close;
+
+OnActivateRandomVolva:
+	//teleport on random point of random map in wolvald
+	hideonnpc strnpcinfo(3);
+	set .@idVolvToActivate, rand(1,getarraysize($wolvald_maps$) - 1);
+	//disable current npc
+	callsub "OnDisableNpc";
+	donpcevent "wvol"+.@idVolvToActivate+"::OnEnableNpc";
+	return;
+
+onEnableNpc:
+	enablenpc strnpcinfo(3);
+	hideonnpc strnpcinfo(3);
+	do
+	{		
+		set .movex,rand(0,255);
+		set .movey,rand(0,255);
+	}
+	while(!checkcell(strnpcinfo(4),.movex,.movey,cell_chkpass));
+	movenpc strnpcinfo(3),.movex,.movey;	
+	hideoffnpc strnpcinfo(3);	
+	end;
+
+OnDisableNpc:
+	disablenpc strnpcinfo(3);
+	return;
+
+onInit:
+	set .maxVolvaMemoryKill, 10;
+	//disablenpc strnpcinfo(3);
+	end;
+}
+
+caspen,168,177,2	script	Völva::wvolmem1	572,{
+//green,18,19,2	script	Völva::wvolmem1	572,{
+	set .@npcname$, "[Völva]";
+	
+	mes .@npcname$;
+	mes "...";
+	mes "Je te vois.";
+	mes "Je vois ton passé.";
+	mes "Je vois ton futur.";
+	mes "Il sera rouge...";
+	if (VOLVA_Q == 0)
+	{
+		mes "Je ne suis pas Völva.";
+		mes "Je ne suis qu'une trace d'un de ses voyages, en ce lieu.";
+		mes "Un souvenir, fugace.";
+		mes "Cherche la vraie Völva.";
+		mes "Mais prends garde.";
+		mes "A partir de maintenant, tout erreur lors d'une rencontre avec un souvenir...";
+		mes "Pourra t'être fatal...";
+		set VOLVA_Q, 1;
+		set VOLVA_MEM_Q, 0;
+		hideonnpc strnpcinfo(3);
+		initnpctimer;
+	}
+	else if (VOLVA_Q >= 1)
+	{
+		mes "Je ne suis pas Völva.";
+		mes "Je suis un souvenir de son pouvoir.";
+		mes "Et ce pouvoir cherche à t'étouffer...";
+		if (VOLVA_MEM_Q < .maxVolvaMemoryKill)
+		{
+			hideonnpc strnpcinfo(3);
+			set .hided_volva, 0;
+			initnpctimer;
+			goto OnInvokMemory;
+		}
+		else
+		{
+			set VOLVA_Q, VOLVA_Q + 1;
+		}
+	}
+	close;
+
+OnInit:
+	//define memories invok monsters id
+	setarray .memoryId[0], 1098,1713,1716,2365,2473,2283,2180,2019,2133,2367,1830,2023,2092,2018,2278,2371,2332,1918,2136,2277,2363,1203,2361,2359,2280,1834,
+	2279,2474,2334,2532,2533,2534,2535,2528,2529,2530,2531,2578,2551,2650,2600,2570,2563,2636,2637,2615,2611,2622,2592;
+	set .maxVolvaMemoryKill, 10;
+	set .pop_count, 3;
+	end;
+
+OnInvokMemory:
+	getmapxy(@mapname$,@mapx,@mapy,0,strcharinfo(0));
+	set .@mobId, .memoryId[rand(0,getarraysize(.memoryId) - 1)];
+	set .kill_count, 0;
+	monster @mapname$,@mapx,@mapy,getmonsterinfo(.@mobId,0),.@mobId,.pop_count,strnpcinfo(3)+"::OnMobDead",2;
+	close;
+
+OnPCDieEvent:
+	if (strcharinfo(3) == strnpcinfo(4))
+	{
+		dispbottom "Völva voyage...Elle se souvient.";
+		dispbottom "Et Völva n'oublie jamais.";
+		if (VOLVA_MEM_Q > 0)
+		{
+			set VOLVA_MEM_Q, VOLVA_MEM_Q - 1;
+		}
+		stopnpctimer;
+		killmonster strnpcinfo(4),strnpcinfo(3)+"::OnMobDead";
+		hideoffnpc strnpcinfo(3);
+		end;
+	}
+
+OnMobDead:
+	set .kill_count,.kill_count+1;
+	if (.kill_count == .pop_count)
+	{
+		dispbottom "Völva voyage...Elle se souvient.";
+		dispbottom "Et Völva n'oublie jamais.";
+		if (VOLVA_MEM_Q < .maxVolvaMemoryKill)
+		{
+			set VOLVA_MEM_Q, VOLVA_MEM_Q + 1;
+		}
+		if (VOLVA_MEM_Q == .maxVolvaMemoryKill)
+		{
+			dispbottom "Tu es prêt à voir Völva.";
+		}
+		else
+		{
+			dispbottom "Encore " + (.maxVolvaMemoryKill - VOLVA_MEM_Q) + " mémoires à affronter...";
+		}
+		stopnpctimer;
+		set .hided_volva, 1;
+		initnpctimer;
+	}
+	end;
+
+OnTimer10000:
+	if (.hided_volva == 1)
+	{		
+		hideoffnpc strnpcinfo(3);
+	}
+	end;
+
+OnTimer300000:
+	if (.hided_volva == 0)
+	{
+		stopnpctimer;
+		//au bout de 5 minutes, tuer le mob invoqué
+		killmonster strnpcinfo(4),strnpcinfo(3)+"::OnMobDead";
+		hideoffnpc strnpcinfo(3);
+	}
+	end;
+
+OnTimer60000:
+	if (.hided_volva == 0)
+	{
+		stopnpctimer;
+		//au bout de 1 minute, montrer le npc à nouveau
+		hideoffnpc strnpcinfo(3);
+	}
+	end;
+}

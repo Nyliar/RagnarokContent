@@ -1,0 +1,71 @@
+//Le Livre d'Ymir http://www.bookofymir.net/
+//traduit par Myllena
+//===== eAthena Script ======================================= 
+//= Advance Class jobchanger after kRO Normals.
+//===== By: ==================================================
+//= Nana
+//= finished, optimized and tested by Lupus
+//===== Current Version: ===================================== 
+//= 1.3
+//===== Compatible With: ===================================== 
+//= eAthena 1.0 +
+//===== Description: ========================================= 
+//= Advance Class jobchanger after kRO Normals.
+//===== Additional Comments: ================================= 
+//= v1.1 Made all into functions, additional checks, etc. [Lupus]
+//= v1.2 Made numbers into constants. [Vicious]
+//= 1.3 Now saves/restores all the quest skills [Lupus]
+//============================================================ 
+
+valkyrie,44,39,5	script	Seigneur Chevalier::Valkyrie	56,{
+	if (ADVJOB == 0 || Upper != 1) {
+		set .@karma_d,rand(1,10);
+		if (.@karma_d > 4) {
+			mes "[Seigneur Chevalier]";
+			mes "Félicitations.";
+			mes "Honneur aux Guerriers!";
+			close;
+		}
+		mes "[Seigneur Chevalier]";
+		mes "Nous autres Chevaliers portons une grande responsabilité... Servir, et protéger.";
+		next;
+		mes "[Seigneur Chevalier]";
+		mes "Même au prix de nos vies, nous devons maintenir la paix et nous sacrifier pour nos camarades.";
+		close;
+	}
+	else if (ADVJOB == Job_Lord_Knight && Class == Job_Swordman_High && JobLevel > 39) {
+		mes "[Seigneur Chevalier]";
+		mes "Votre temps est venu!";
+		mes "Le monde a encore besoin de vous.";
+		next;
+		mes "[Seigneur Chevalier]";
+		mes "Souhaitez-vous devenir Seigneur Chevalier?";
+		next;
+		if (select("Non.:Oui.") == 1) {
+			mes "[Seigneur Chevalier]";
+			mes "Revenez quand vous vous sentirez prêt.";
+			next;
+			mes "[Seigneur Chevalier]";
+			mes "Honneur aux Guerriers!";
+			close;
+		}
+		if (SkillPoint) {
+			mes "[Seigneur Chevalier]";
+			mes "Vous n'avez pas terminé votre apprentissage.";
+			close;
+		}
+		jobchange Job_Lord_Knight;
+		set ADVJOB,0;
+		mes "[Seigneur Chevalier]";
+		mes "Félicitations!";
+		mes "En tant que Seigneur Chevalier, j'espère que vous serez en première ligne de toutes les batailles, afin de mener vos alliés à la victoire!";
+		close;
+	}
+	mes "[Seigneur Chevalier]";
+	mes "Bienvenue au Walhalla, le Hall des Honneurs.";
+	next;
+	mes "[Seigneur Chevalier]";
+	mes "Faites comme chez vous.";
+	mes "Honneur aux Guerriers!";
+	close;
+}

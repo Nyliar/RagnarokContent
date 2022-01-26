@@ -1,0 +1,98 @@
+//Pousse Yggdrasil
+mora,46,44,4	script	Marque Elemental 1#1::me1	747,{
+	switch(atoi(strnpcinfo(2)))
+	{
+		case 1:
+			set .@npcname$, "[Marque de la Terre]";
+			set .@appearance, "à un rocher.";
+			set .@awaitedItem, x;
+			set .@previousElement, y;
+		case 2:
+			set .@npcname$, "[Marque de l'Eau]";
+			set .@appearance, "à une goutte.";
+			set .@awaitedItem, x;
+			set .@previousElement, y;	
+		case 3:
+			set .@npcname$, "[Marque de l'Air]";
+			set .@appearance, "à un souffle de vent.";
+			set .@awaitedItem, x;
+			set .@previousElement, y;
+		case 4:
+			set .@npcname$, "[Marque du Feu]";
+			set .@appearance, "à une flamme.";
+			set .@awaitedItem, x;
+			set .@previousElement, y;
+	}
+
+	set .@countTime, 120000 - atoi(strnpcinfo(2)) * 3000;	
+
+	mes .@npcname$;
+	if (#elemental_favor_q < 10)
+	{
+		mes "Une marque étrange orne ce mur.";
+		mes "Ca ressemble vaguement " + .@appearance;
+	}
+	else
+	{
+		if (countitem(.@awaitedItem)>=1)
+		{
+			mes "Souhaitez-vous insérez la Marque Elementale?";
+			switch(select("Oui","Non"))
+			{
+				case 1:
+					if (.rightTime == 1)
+					{
+						delitem $elemental_mark_item[atoi(strnpcinfo(2)) - 1], 1;
+						mes "Vous insérez la Marque.";
+						if (!atoi(strnpcinfo(2)) == 4)
+						{
+							mes "Il reste " + .@countTime + " secondes au suivant pour agir.";
+							donpcevent "me"+(strnpcinfo(2)+1)+"::onTimerStart";
+						}
+						else
+						{
+							mapannounce strnpcinfo(4),"Les quatres Marques Elementaires ont été activées.",bc_map|bc_yellow;
+							mapannounce strnpcinfo(4),"La porte vers la Pousse est ouverte...",bc_map|bc_yellow;
+							mapannounce strnpcinfo(4),"Elle se trouve là où tout à commencé...",bc_map|bc_yellow;
+							set $favor_elem_quest, 1;
+						}
+					}
+					else if (.rightTime == 0)
+					{
+						mes "Il est déjà trop tard. Vous devez recommencer à la première marque.";
+					}
+					else
+					{
+						mes "Cette marque semble inactive.";
+					}
+					break;
+				case 2:
+					mes "Vous vous écartez prudemment.";
+					break;
+			}
+		}
+		else
+		{
+			mes "Vous n'avez pas ce qu'il faut pour avancer dans le processus.";
+		}
+	}
+	close;
+
+OnInit:
+	set .rightTime, -1;
+	end;
+
+OnTimerStart:
+	set .rightTime, 1;
+	set .@countTime, 120000 - (atoi(strnpcinfo(2)) - 1) * 3000;	//9s, 6s puis 3s
+	addtimer .@countTime, "me"+(strnpcinfo(2))+"::OnTimerEnded";	
+	end;
+
+OnTimerEnded:
+	set .@rightTime, 0;
+	end;
+}
+
+mora,46,44,4	duplicate(me)	Marque Elementaire 2#2::me2	709
+mora,46,44,4	duplicate(me)	Marque Elementaire 3#3::me3	709
+mora,46,44,4	duplicate(me)	Marque Elementaire 4#4::me4	709

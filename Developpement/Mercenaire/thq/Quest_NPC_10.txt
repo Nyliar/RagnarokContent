@@ -1,0 +1,129 @@
+//===== eAthena Script =======================================
+//= Treasure Hunter Script
+//===== Converted By =========================================
+//= Fredzilla
+//= Original
+//////////////////////////////////////////////////////////////
+//                  Treasure Hunter Quests                  //
+//                       By: Ezekial                        //
+//             for the use on nRO run by Newbe5             //
+//                    revised By Warlock                    //
+//////////////////////////////////////////////////////////////
+//===== Version ==============================================
+//= 1.4
+//===== Compatible With ======================================
+//= eAthena 1.0
+//===== Description ==========================================
+//= Start for Treasure hunter quests
+//===== Comments =============================================
+//= Event_THQS - Used to check if you have already registered
+//= #Treasure_Token - used to keep track of tokens
+//= 1.0 - Straight conversionof Aegis NPC file
+//= 1.2 some bugfixes, typos [Lupus]
+//= 1.3 Removed Duplicates [Silent]
+//= 1.4 Further removed duplicates. [L0ne_W0lf]
+//============================================================
+
+
+///////Job list 10///////
+//10-1
+morocc,193,51,6	script	Kreg	48,{
+	if (ten_qset == 1 && countitem(12080) > 1) goto N_QuestComp;
+	if (ten_qset == 1) goto N_QuestStart;
+	mes "[Kreg]";
+	mes "Hello "+strcharinfo(0)+" bienvenue à Morroc.";
+	close;
+N_QuestComp:
+	mes "[Kreg]";
+	mes "Merci mon ami!";
+	next;
+	mes "[Kreg]";
+	mes "ARGHHHHHHHHHH, ca brûleeeeeeeee!";
+	mes "A boireeeeee!";
+	npctalk "On dirait qu'il va se contenter d'un peu d'eau maintenant.";
+	delitem 12080,1;
+	set ten_qset,0;
+	set On_Quest,0;
+	set #Treasure_Token,#Treasure_Token+5;
+	close;
+N_QuestStart:
+	mes "[Kreg]";
+	mes "Il faut trop chaud ici...J'ai besoin de boire un coup!";
+	mes "Ramène moi de quoi me désaltérer. Quelques coktails, pas exemple.";
+	close;
+}
+//10-2;
+pay_fild10,145,252,6	script	Man#02	122,{
+	if (ten_qset == 2 && countitem(7510) > 4) goto N_QuestComp;
+	if (ten_qset == 2) goto N_QuestStart;
+	mes "[Man]";
+	mes "Désolé, j'attends quelqu'un là. Reviens plus tard.";
+	close;
+N_QuestComp:
+	mes "[Man]";
+	mes "Merci de ton aide!";
+	next;
+	mes "[Man]";
+	mes "Voici tes Tokens en récompense.";
+	delitem 7510,5;
+	set ten_qset,0;
+	set On_Quest,0;
+	set #Treasure_Token,#Treasure_Token+15;
+	close;
+N_QuestStart:
+	mes "[Man]";
+	mes "Ahhhh Valkyrie...J'adore ce monstre. Elle est si belle!";
+	mes " ";
+	mes "Ramène moi 5 Fleurs du Valhalla s'il te plait! S'il te plaiiiiiiiiit! J'aurais l'impression de l'avoir près de moi comme ça.";
+	close;
+}
+//10-3;
+moc_fild04,193,51,6	script	Caral	119,{
+	if (ten_qset == 3 && countitem(1175) > 1) goto N_QuestComp;
+	if (ten_qset == 3) goto N_QuestStart;
+	mes "[Caral]";
+	mes "Désolé, j'attends quelqu'un là. Reviens plus tard.";
+	close;
+N_QuestComp:
+	mes "[Caral]";
+	mes "Incroyable! Je ne sais pas comment tu as fait, mais bravo.";
+	next;
+	mes "[Caral]";
+	mes "Tiens, prends ces 10 Token pour récompense!";
+	delitem 1175,2;
+	set ten_qset,0;
+	set On_Quest,0;
+	set #Treasure_Token,#Treasure_Token+15;
+	close;
+N_QuestStart:
+	mes "[Caral]";
+	mes "Atroce...Comme son nom l'indique, c'est un boucher! Et il sont 4! Il faut qu'on les arrête!";
+	mes " ";
+	mes "Ramène moi deux de leurs épées pour preuve!";
+	close;
+}
+//10-4
+moc_fild15,250,251,6	script	Jeni	727,{
+	if (ten_qset == 4 && countitem(1377) > 0) goto N_QuestComp;
+	if (ten_qset == 4) goto N_QuestStart;
+	mes "[Jeni]";
+	mes "Désolé, j'attends quelqu'un là. Reviens plus tard.";
+	close;
+N_QuestComp:
+	mes "[Jeni]";
+	mes "Tu as réussi! incroyable!";
+	next;
+	mes "[Jeni]";
+	mes "Voilà ta récompense.";
+	delitem 1377,1;
+	set ten_qset,0;
+	set On_Quest,0;
+	set #Treasure_Token,#Treasure_Token+15;
+	close;
+N_QuestStart:
+	mes "[Jeni]";
+	mes "Ce fantôme...On a besoin d'être une armée pour le tuer ou quoi? je compte sur toi!";
+	mes " ";
+	mes "Rapporte moi une Hurricane Furry pour preuve que tu l'as vaincu.";
+	close;
+}

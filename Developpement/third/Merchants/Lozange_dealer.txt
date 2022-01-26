@@ -1,0 +1,60 @@
+//Min / Wand dealer 	Protect Neck Candy 11513 Paintful Tear, 6144
+prt_in,34,97,1	script	Master Clown	715,{ 
+	set .npcname$, "[Master Clown]";
+	mes .npcname$;
+
+	mes "Hey!";
+	mes "I'm the entertainment master.";
+	mes "To entertain your guest, nothing's better than some magic.";
+	mes "But for that, you'll need Neck Protection Candy and Paintful Tears.";
+	mes "I can exchange some to you, for some items.";
+	mes "I also ask some money, 1.000 Zenys.";
+	mes "Interested?";
+	switch(select("Ok","No thanks"))
+	{
+		case 1:
+			next;
+			mes "What do you need?";
+			switch(select("Neck Protection Candys", "Paintful Tears"))
+			{
+				case 1:
+					mes "Allright.";
+					mes "How many do you want?";
+					input .@count;
+					if (Zeny >= 1000*.@count)
+					{
+						mes "Perfect, you got it all.";
+						set Zeny, Zeny - 1000*.@count;
+						getitem 11513, 1*.@count;
+						mes "See you soon.";
+					}
+					else	
+					{
+						mes "Sorry but you don't have what I need...";
+					}
+					break;
+				case 2:
+					mes "Allright.";
+					mes "How many do you want?";
+					input .@count;
+					if (Zeny >= 1000*.@count)
+					{
+						mes "Perfect, you got it all.";
+						set Zeny, Zeny - 1000*.@count;
+						getitem 6144, 1*.@count;
+						mes "See you soon.";
+					}
+					else	
+					{
+						mes "Sorry but you don't have what I need...";
+					}
+					break;
+			}
+			break;
+		case 2:
+			mes "As you wish.";
+			mes "Come back when you'll need it.";
+			break;
+	}
+	close;
+}

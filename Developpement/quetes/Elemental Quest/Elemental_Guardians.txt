@@ -1,0 +1,153 @@
+thalys,90,178,4	script	Elemental Guardian::ge	604,{
+	set .@npcname$, "[Elemental Guardian]";
+	mes .@npcname$;
+	setarray .@sentence$[0],"Ahoy, ahoy,",
+		"A violin tune sweeps the sea,",
+		"Ahoy, ahoy,",
+		"Tides are raging freely,",
+		"Ahoy, ahoy,",
+		"The hull shatters on a reef,",
+		"Ahoy, AHOY!",
+		"And the sunset mocks us without grief",
+		"Ahoy, ahoy,",
+		"Drifted by the Waves...",
+		"Ahoy, ahoy,",
+		"Carried by the Wind...",
+		"Ahoy, ahoy,",
+		"Torned by the Earth....",
+		"Ahoy, ahoy,",
+		"Vanished the golden Flames.";
+
+	if (#elemental_favor_q <= 0)
+	{
+		mes "He doesn't answer...";
+	}	
+	else
+	{
+		mes "I see that you've been initiated to the Elemental secrets.";
+		if (#elemental_favor_q < 5)
+		{
+			mes "Nevertheless, you're not ready to write the rest of this story yet.";
+			mes "Come back later.";
+		}
+		else
+		{
+			if (#elemental_favor_q == 5)
+			{
+				mes "It seems that you know the whole story.";
+				mes "You are here because you heard a pirate song, like the others.";
+				mes "A song talking about a treasure. And you want it.";
+				mes "I can understand that.";
+				mes "But prove me that not only the treasure interest you !";
+				mes "Sing. Sing me that song.";
+				set .@success, 1;
+				for (set .@i, 0; .@i<getarraysize(.@sentence$); set .@i, .@i+1)
+				{
+					next;
+					for (set .@j, 0; .@j<.@i-1; set .@j, .@j++)
+					{
+						mes "^FF0000" + .@sentence$[.@j] + "^000000";
+					}
+					
+					input .@phrase$;
+					if (.@phrase$ != .@sentence$[.@i])
+					{
+						set .@success, 0;
+						break;
+					}
+				}
+				next;
+				if (.@success == 0)
+					mes "Go away. Only come back when you'll stop being worthless.";
+				else
+				{
+					mes "Congratulations. It looks like you're ready to write the rest of this story.";
+					mes "I am now going to tell you the story behind the story.";
+					mes "I was, in olden times, a famous Pirate feared throughout the Seas.";
+					mes "The day the Gods arrived, my captain thought defying them was a good idea..";
+					mes "But he lost his mind when Odin punished him. Him, that didn't fear death,";
+					mes "lost way more than just life.";
+					next;
+					mes "But before that sad event, our crew had already scoured the seas: hundreds and hundreds of nautical miles.";
+					mes "We docked in every Island way before that arrogant fool from the Guild.";
+					mes "And on one of those islands, we discovered a Treasure.";
+					mes "A Treasure outpassing everything you could imagine.";
+					mes "We were living in the most complete wealth and kept on plundering just for pleasure.";
+					mes "We were deliriously greedy for blood and power.";
+					next;
+					mes "Then, tragedy striked upon us.";
+					mes "We covet a Treasure on wich we had no rights.";
+					mes "We didn't end up cursed, this only happens in retarded kid's tales.";
+					mes "We became Guardians. The Guardians of this Treasure.";
+					mes "And this, until we die. This was our burden.";
+					next;
+					mes "I don't know what happened next. The captain asked me to tell our story,";
+					mes "then the captain himself disapeared, and with him, the rest of the secret.";									mes "That was a great man though, the Captain O'Hariam.";
+					set #elemental_favor_q, 6;
+				}
+			}
+		}
+	}
+	close;
+}
+
+thalys,150,214,4	script	Gardien#Fire Guardian::gdf	622,{
+	set .@npcname$, "["+strnpcinfo(2)+"]";
+		
+	switch(#elemental_favor_q)
+	{
+		case 6:
+			setarray .@sentences$[0], "At that time, we were all proud sailors and brave fighters.",
+				"Each of us worthed at least ten of the Marine Guild members.",
+				"However, we couldn't do anything against the curse and became Guardians.",
+				"Now, go back to O'Hariam, he will tell you about the next pedestal.";
+			break;
+		case 7:
+			setarray .@sentences$[0], "Even though we were Guardians, we could still feel, and suffer.",
+				"We could also fear the God's wrath if we tried to rise against them.",
+				"They must not be taken lightly.",
+				"Go back to O'Hariam, he'll tell you the way to the next pedestal.";
+			break;
+		case 8:
+			setarray .@sentences$[0], "The Water, the Earth, and now, the Air.",
+				"You freed three of the fourth Guardians. The last one is the strongest.",
+				"If you manage to release him, you'll be able to reach the Shoot of Yggdrasil.",
+				"Go back to O'Hariam, he'll tell you the way to the next pedestal.";
+			break;
+		case 9:
+			setarray .@sentences$[0], "FREE! At last !",
+				"Thank you young adventurer !.",
+				"The path to Yggdrasil is now open.",
+				"However, know that an ultimate trial awaits you before you can approach the Shoot.",
+				"The Tree World is protected. Yes, once again. But we were nothing compared to the Guardian of the Tree.",
+				"He is the last line of defense of the Shoot of Yggdrasil. If you overcome, all your efforts will be rewarded.",
+				"Go back to O'Hariam, he will tell you what to do.";
+			break;
+	}
+
+	mes .@npcname$;
+	mes "Thank you my friend. You released me from such a terrible curse.";
+	mes "I wish no one to lose his mind as it happens when the monster inside of you takes over.";
+	mes "But you're not here to hear my qualms right ?";
+	mes "You're here for the Treasure.";
+	mes "I can only tell you to back down once again but anyway, you won't listen...";
+	mes "We made the same mistake after all.";
+
+	next;
+	for (set .@i, 0; .@i<getarraysize(.@sentences$); set .@i, .@i+1)
+	{
+		mes .@sentences$[.@i];
+	}
+
+	set #guardian_dead,2;
+	disablenpc strnpcinfo(3);	
+	close;
+
+OnInit:
+	disablenpc strnpcinfo(3);
+	end;
+}
+
+thalys,141,214,4	duplicate(gdf)	Gardien#WaterGuardian::gdw	619
+thalys,144,214,4	duplicate(gdf)	Gardien#EarthGuardian::gde	623
+thalys,147,214,4	duplicate(gdf)	Gardien#WindGuardian::gdwi	621

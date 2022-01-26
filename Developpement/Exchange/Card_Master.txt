@@ -1,0 +1,204 @@
+//card master
+
+thalys,105,111,5	script	Le Maitre du Jeu	106,{	
+	set .@npcname$, "[Le Maitre du Jeu]";
+
+	if (.count == 0 || .price == 0)
+		callsub OnInit;
+	
+	mes .@npcname$;
+	mes "";
+	mes "Bienvenue à toi " + strcharinfo(0) + ".";
+	mes "Tu es ici chez moi. Tout ici m'appartient.";
+	mes "J'y ai tout les droits, tout les pouvoirs.";
+	mes "Je peux par exemple te racheter ou t'échanger des cards dont tu ne te sers pas.";
+	mes "Je parie que ça, ça t'intéresse. Pas vrai?";
+
+	switch(prompt("Oui","Non", "Tu propose quoi?"))
+	{
+		case 3:
+			next;
+			mes "Aha! Je le savais.";
+			mes "En effet, je peux te débarasser de tout ce qui t'encombre.";
+			mes "Je rachète une card " + .price + " Zenys, ou en échange " + .count + " DIFFERENTES contre un OCA tout neuf.";
+			mes "Mais si! Un OCA: Old Card Album. Tu jettes " + .count + " cartes inutiles, et tu peux en avoir une nouvelle.";
+			mes "C'est-y pas sympa?";
+		case 1:
+			next;
+			mes "Aha! Alors on dit quoi?";
+			switch(prompt("Vendre","Echanger"))
+			{
+				case 1:
+					goto OnBuyCard;
+				case 2:
+					goto OnTradeCard;
+				case 255:
+					mes "Tant pis pour toi...";
+					break;	
+			}			
+		case 2:
+		case 255:
+			mes "Tu ne sais pas ce que tu loupes, mon ami.";
+			break;
+	}
+	close;
+
+OnBuyCard:
+	mes "On vends alors. Je rachètes pour " + .price + " Zenys. Voyons ce que tu proposes.";
+	getinventorylist;
+	// On créé un menu dynamique
+	set .@count, 0;
+    	for ( set .@i, 0; .@i<getarraysize(@inventorylist_id); set .@i, .@i+1 )
+	{
+		if (@inventorylist_id[.@i] >= 4001 && @inventorylist_id[.@i] <= 4452 )
+		{
+       		set .@menu$, .@menu$ + ( .@i ? ":" : "" ) + getitemname(@inventorylist_id[.@i]);
+			set .@possiblecards[.@count], @inventorylist_id[.@i];
+			set .@count, .@count+1;
+		}
+	}
+	set .@countcard, 0;
+	do
+	{
+    		set .@choice, prompt(.@menu$) - 1;
+
+		if (.@choice != 255)
+		{
+			set .@cards[.@countcard], .@possiblecards[.@choice - 1];	
+			do{
+				next;
+				mes "On parle bien de " + getitemname(.@cards[.@countcard]) + " Ok? Quelle quantité?";
+				input .@sell;
+				if (.@sell > countitem(.@cards[.@countcard]))
+					mes "Tu n'as pas assez de cet item. Tu n'en as que " + countitem(.@cards[.@countcard]) + " exemplaires.";
+			}while (.@sell > countitem(.@cards[.@countcard]));
+			set .@sellcount[.@countcard], .@sell;
+		}
+		mes "On a fini sa petite sélection?";
+		set .@ended, 0;
+		if (select("Oui","Non") == 1)
+			set .@ended, 1;
+		else
+			set .@countcard, .@countcard+1;
+		next;
+	}while(.@ended == 0);
+
+	if (getarraysize(.@cards) >= 1)
+	{
+		mes "C'est parti.";
+		for ( set .@i, 0; .@i<getarraysize(.@cards); set .@i, .@i+1 )
+		{
+			set Zeny, Zeny+(.@sellcount[.@i] * .price);
+			delitem .@cards[.@i], .@sellcount[.@i];
+		}
+	}
+	else
+		mes "Ok, tant pis pour toi.";
+	mes "A bientôt.";
+	deletearray .@cards, getarraysize(.@cards);
+	deletearray .@sell, getarraysize(.@sell);
+	close;	
+
+OnTradeCard:
+	mes "On échange alors. Je t'échange " + .count + " cartes différentes (je le rappelle) contre un OCA. Voyons ce que tu proposes.";
+	// On récupère le choix de l'utilisateur
+	getinventorylist;
+	// On créé un menu dynamique
+	set .@countadd, 0;
+    	for ( set .@i, 0; .@i<getarraysize(@inventorylist_id); set .@i, .@i+1 )
+	{
+		if (@inventorylist_id[.@i] >= 4001 && @inventorylist_id[.@i] <= 4452 )
+		{
+       		set .@menu$, .@menu$ + ( .@i ? ":" : "" ) + getitemname(@inventorylist_id[.@i]);
+			set .@possiblecards[.@countadd], @inventorylist_id[.@i];
+			set .@countadd, .@countadd+1;
+		}
+	}
+	set .@countcard, 0;
+	do
+	{
+		mes "Choisi la carte numéro " + (.@countcard + 1) + ":";
+    		set .@choice, prompt(.@menu$);
+
+		if (.@choice != 255)
+		{
+			if (.@countcard == 0)
+				set .@c, .@choice - 2;
+			else
+				set .@c, .@choice - 1;
+			mes "On ajoute une " + getitemname(.@possiblecards[.@c]) +", on est d'accord?!";
+			set .@cards[.@countcard], .@possiblecards[.@c];
+			deletearray .@possiblecards[.@c], 1;
+				
+			set .@countadd, 0;
+			set .@menu$, "";
+    			for ( set .@i, 0; .@i<getarraysize(.@possiblecards); set .@i, .@i+1 )
+			{
+				if (.@possiblecards[.@i] >= 4001 && .@possiblecards[.@i] <= 4452 )
+				{
+       				set .@menu$, .@menu$ + ( .@i ? ":" : "" ) + getitemname(.@possiblecards[.@i]);
+					set .@possiblecards[.@countadd], .@possiblecards[.@i];
+					set .@countadd, .@countadd+1;
+				}
+			}
+		}
+		else
+			close;
+		next;
+		set .@countcard, .@countcard + 1;
+	}while(.@countcard < .count && .@choice != 255);
+
+	if (.@countcard == .count)
+	{
+		mes "C'est parti.";
+		for ( set .@i, 0; .@i<getarraysize(.@cards); set .@i, .@i+1 )
+		{
+			if (countitem(.@cards[.@i]) >= 1)
+			{
+				mes "Je prends donc une " + getitemname(.@cards[.@i]);
+				delitem .@cards[.@i], 1;
+			}
+			else
+			{
+				mes "Désolé,mais tu as dû te tromper quelque part. Tu n'as pas cet item.";
+				mes "Je te rends ce que je t'ai pris jusque là.";
+				for ( set .@j, 0; .@j<.@i; set .@j, .@j+1 )
+				{
+					getitem .@cards[.@j], 1;
+				}
+				mes "Tu veux recommencer?";
+				switch(select("Oui","Non"))
+				{
+					case 1:
+						next;
+						goto OnTradeCard;
+						break;
+					case 2:
+						mes "Ok, comme tu veux.";
+						break;
+				}
+				close;
+			}
+		}
+		getitem 616, 1;
+	}
+	else
+		mes "Ok, tant pis pour toi.";
+	mes "A bientôt.";
+	close;
+
+OnInit:
+	set .price, 5000;
+	set .count, 6;
+	return;
+
+OnRedPrice:
+	set .price, 15000;
+	set .count, 2;
+	return;
+
+OnUpPrice:
+	set .price, 5000;
+	set .count, 6;
+	return;
+}

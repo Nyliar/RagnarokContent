@@ -1,0 +1,73 @@
+genasia, 65, 143, 5	script	Little Angel Doll	881,{
+
+	set .@npcname$,"[Little Angel Doll]";
+	
+	//Black Little Angel Doll 20118
+	setarray @itemBLAD[0], 5324, 983, 7230;
+	setarray @countitemBLAD[0], 1, 2, 2;
+	
+	//Cyan Little Angel Doll 20119
+	setarray @itemCLAD[0], 5324, 978, 7230;
+	setarray @countitemCLAD[0], 1, 2, 2;
+
+	//Gold Little Angel Doll 20120
+	setarray @itemGLAD[0], 5324, 976, 7230;
+	setarray @countitemGLAD[0], 1, 2, 2;
+
+	//Green Little Angel Doll 20121
+	setarray @itemGNAD[0], 5324, 979, 7230;
+	setarray @countitemGNAD[0], 1, 2, 2;
+	
+	//Purple  Little Angel Doll 20122
+	setarray @itemPLAD[0], 5324, 981, 7230;
+	setarray @countitemPLAD[0], 1, 2, 2;
+	
+	//Red Little Angel Doll 20123
+	setarray @itemRLAD[0], 5324, 975, 7230;
+	setarray @countitemRLAD[0], 1, 2, 2;
+	
+	//White Little Angel Doll 20124
+	setarray @itemWLAD[0], 5324, 982, 7230;
+	setarray @countitemWLAD[0], 1, 2, 2; 
+	
+	
+	
+	mes .@npcname$;
+	mes "Bonjour ^3333FF" + strcharinfo(0) + "^000000!";
+	mes "Je peux te proposer quelque hats pour customiser ton Little Angel Doll.";
+	mes	"Ca t'interesse?!";
+	next;
+	mes .@npcname$;
+	mes "Voici ce que je peux te proposer:";
+	next;
+
+	switch(select("Black Little Angel Doll:Cyan Little Angel Doll:Gold Little Angel Doll:Purple Little Angel Doll:Red Little Angel Doll:White Little Angel Doll:Green Little Angel Doll:^777777Rien, merci...^000000"))
+	{
+		case 1 :
+ 		callfunc "mes_getitem_colo",.@npcname$,20118,@itemBLAD,@countitemBLAD, 1000000;
+
+		case 2 :
+ 		callfunc "mes_getitem_colo",.@npcname$,20119,@itemCLAD,@countitemCLAD, 1000000;
+
+		case 3 :
+ 		callfunc "mes_getitem_colo",.@npcname$,20120,@itemGLAD,@countitemGLAD, 1000000;
+
+		case 4 :
+ 		callfunc "mes_getitem_colo",.@npcname$,20122,@itemPLAD,@countitemPLAD, 1000000;
+		
+		case 5 :
+		callfunc "mes_getitem_colo",.@npcname$,20123,@itemRLAD,@countitemRLAD, 1000000;
+
+		case 6 :
+		callfunc "mes_getitem_colo",.@npcname$,20124,@itemWLAD,@countitemWLAD,1000000;
+
+		case 7 :
+		callfunc "mes_getitem_colo",.@npcname$,20121,@itemGNAD,@countitemGNAD,1000000;
+
+		// Quitter
+		case 8 :
+		mes @npcname$;
+		mes "Très bien. A bientôt !";
+		close;
+	}
+}

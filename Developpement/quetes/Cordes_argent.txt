@@ -1,0 +1,457 @@
+prontera,168,177,2	script	Silver Strings::prtsilverstg	741,{
+
+	set .@npcname$,"^FF3333Simon Silver Strings^000000";
+	
+	setarray .item[0], 7020,7024,7109,1531,12090;
+	setarray .itemCommon[0], 917,1043,928,955,905,909,949,932,940,938;
+
+	
+if (LANGUAGE == 2)
+{
+	mes "[" + .@npcname$ + "]";
+	mes "Hello ^3333FF" + strcharinfo(0) + "^000000 !";
+	mes "No need to tell you my name, you have to know it.";
+	mes "My renowned has travel across the seas, I've sing for the King Beyond,";
+	mes "charming their daughter, and making their womens dream.";
+	next;
+	mes "[" + .@npcname$ + "]";
+	mes "After year of missing, Simon Silver Strings decided to come back in Prontera";
+	mes "to sing his new repertory.";
+	mes "Do you want to here a Ballade? A menuet? Maybe a bawdy song?";
+	next;
+	mes "[" + .@npcname$ + "]";
+	mes "Of course, all my song are subdue to fee";
+	mes "a Bard have to live with his talent!";
+	mes "Give me a subject, some gold, and I'll sing for you!";
+	mes "Interested?!";
+	next;
+
+	switch(select("Ever here about colourist?:^777777Nothing, thanks...^000000"))
+	{
+		case 1 :
+			mes "[" + .@npcname$ + "]";
+			mes "Colourists? I've heard, meet and suspected some!";
+			mes "Which one do you wanna here about?";
+			next;
+			switch(select("Those you see:Those your heard about:Those you suspect:^777777An info, the easiest please^000000"))
+			{
+				case 1:
+					mes "[" + .@npcname$ + "]";
+					mes "*Melodic sound*";
+					mes "Smell the hot meal for Simon!";
+					mes "I told you for 100.0000 Zenys.";
+					switch(select("Yes:No"))
+					{
+						case 1:
+							if (Zeny >= 100000)
+							{
+								set Zeny, Zeny-100000;
+								mes "At this cost, I only tell you. No need to hurt your hears.";
+								switch(select("The first:The second:The third:The fourth:The fifth:The sixth:The seventh:The eighth:The ninth:The tenth"))
+								{
+									case 1:
+										mes "I seen one of this guy in Geffen,";
+										mes "hided behind a house pillar,";
+										mes "not far from where you arrive.";
+										close;
+									case 2:
+										mes "I've seen a girl in Moscovia.";
+										mes "Hided in the bosque,";
+										mes "along from the path leading to the High City.";
+										close;
+									case 3:
+										mes "I've seen this one by going singing";
+										mes "at the Amatsu's King court.";
+										close;
+									case 4:
+										mes "In Payon, one time, I've seen a colourist";
+										mes "hided in one of this round building.";
+										close;
+									case 5:
+										mes "Before, Morocc was a full of life place.";
+										mes "Since the...Accident, ruins allow Colourists to hide.";
+										mes "One of them is there.";
+										close;
+									case 6:
+										mes "Il y en a pas loin d'ici!";
+										mes "Celui là ne se cache même pas. Il vit près de la ferme.";
+										close;
+									case 7:
+										mes "There's one in Izlude,";
+										mes "hided near the Kafra.";
+										close;
+									case 8:
+										mes "I've seen one in Alberta,";
+										mes "hided between two houses, near the entrance of the city.";
+										close;
+									case 9:
+										mes "There's one in Hugel.";
+										mes "Don't know where exactly, but near the north.";
+										close;
+									case 10:
+										mes "There's another one in Payon,";
+										mes "hided under one of this big white tent.";
+										close;
+								}
+							}
+							else
+							{
+								mes "Maybe I'm a bard,";
+								mes "but I can still count!";
+							}
+							close;
+						case 2:
+							mes "Then go away.";
+							close;
+					}
+				case 2:
+					mes "[" + .@npcname$ + "]";
+					mes "*String plucking*";
+					mes "I'll sleep in warm tonight.";
+					mes "Tell you for 50.000 Zenys.";
+					switch(select("Yes:No"))
+					{
+						case 1:
+							if (Zeny >= 50000)
+							{
+								set Zeny, Zeny-50000;
+								mes "Know five songs. Cause of time, I'll only sing a verse, ok?";
+								switch(select("On the Clock Shadow:Those we don't understand:New City:King's Tombstone:From the Sea"))
+								{
+									case 1:
+										mes "The High Tower sings all the hour,";
+										mes "While the merchants from the wall go around.";
+										close;
+									case 2:
+										mes "Ga kluk dio go";
+										mes "Umbala na ka wa.";
+										close;
+									case 3:
+										mes "Freeze spread it's coat,";
+										mes "while the new city awake.";
+										close;
+									case 4:
+										mes "Under the Palm Shadow live the mens.";
+										mes "While the king asleep, kept, by monster in cave.";
+										close;
+									case 5:
+										mes "Naval city, coastal city,";
+										mes "Start of the Zepelin, start of all paths.";
+										close;
+								}
+							}
+							else
+							{
+								mes "Maybe I'm a bard,";
+								mes "but I can still count!";
+							}
+							close;
+						case 2:
+							mes "Then go away.";
+							close;
+					}
+				case 3:
+					mes "[" + .@npcname$ + "]";
+					mes "According my instrument.";
+					mes "*dzing, dzing*";
+					mes "I'll tell you for 25.000 Zenys.";
+					switch(select("Yes:No"))
+					{
+						case 1:
+							if (Zeny >= 25000)
+							{
+								set Zeny, Zeny-25000;
+								mes "Know only three songs. Which one do you want?";
+								switch(select("First:Second:Third"))
+								{
+									case 1:
+										mes "Windy, Snowy Storm,";
+										mes "hiding from man's eyes the merchant.";
+										mes "Newly or ancient conquest,";
+										mes "in these town while the freeze come down.";
+										close;
+									case 2:
+										mes "hided from people eyes,";
+										mes "up there, in firmament";
+										mes "In the grass, under Temple Shadows,";
+										mes "The Sky wast the looking at.";
+										close;
+									case 3:
+										mes "Oceans' Dragon,";
+										mes "Red, long like a snake.";
+										mes "The city it defend,";
+										mes "to the New World belonging.";
+										close;
+								}
+							}
+							else
+							{
+								mes "Maybe I'm a bard,";
+								mes "but I can still count!";
+							}
+							close;
+						case 2:
+							mes "Then go away.";
+							close;
+					}
+				case 4:
+					mes "[" + .@npcname$ + "]";
+					mes "*PLING*";
+					mes "Not today I'm gonna sleep in a Inn...";
+					mes "Tell ya for 10.000 Zenys.";
+					switch(select("Yes:No"))
+					{
+						case 1:
+							if (Zeny >= 10000)
+							{
+								set Zeny, Zeny-10000;
+								mes "i know they're 48,";
+								mes "often living under a bosque shadow,";
+								mes "hided from pedestrian look,";
+								mes "they're waiting into cities.";
+							}
+							else
+							{
+								mes "Maybe I'm a bard,";
+								mes "but I can still count!";
+							}
+							close;
+						case 2:
+							mes "Then go away.";
+							close;
+					}
+			}
+
+		// Quitter
+		case 2 :
+			mes "[" + .@npcname$ + "]";
+			mes "*PLONG*";
+			mes "I don't sing for stupids.";
+			close;
+	}
+}
+else if (LANGUAGE == 1)
+{
+mes "[" + .@npcname$ + "]";
+	mes "Bonjour ^3333FF" + strcharinfo(0) + "^000000 !";
+	mes "Pas besoin de te dire mon nom, je suppose que tu le connais déjà.";
+	mes "Ma renommé a traverser les océans. J'ai chanté à la table des Rois d'Au Delà,";
+	mes "charmer leurs filles et fait rêver leurs femmes.";
+	next;
+	mes "[" + .@npcname$ + "]";
+	mes "Après des années d'absence, Simon Cordes Argent à décider de repasser";
+	mes "par Bastania et ses environs, afin de chanter son nouveau répertoire.";
+	mes "Souhaites-tu entendre une ballade? Un menuet? Une chanson paillarde?";
+	next;
+	mes "[" + .@npcname$ + "]";
+	mes "Bien entendu, je fais toujours payer pour mes chansons,";
+	mes "un barde ne peut vivre de ses seuls talents!";
+	mes "Donne moi un sujet, un peu d'or, et je te composerais une chanson!";
+	mes "Intéressé?!";
+	next;
+
+	switch(select("As-tu entendu parler des Coloristes?:^777777Rien, merci...^000000"))
+	{
+		case 1 :
+			mes "[" + .@npcname$ + "]";
+			mes "Les Coloristes? J'en ai rencontré, entendu parler, soupsonné!";
+			mes "Desquels souhaites-tu entendre la chanson?";
+			next;
+			switch(select("Ce que tu as vu:Ceux dont tu as entendu parler:Ceux que tu soupçonne:^777777Une information, la plus simple^000000"))
+			{
+				case 1:
+					mes "[" + .@npcname$ + "]";
+					mes "*musique mélodieuse*";
+					mes "Ca sent le repas chaud!";
+					mes "Je te le dis pour 1.000.000 Zenys.";
+					switch(select("Oui:Non"))
+					{
+						case 1:
+							if (Zeny >= 1000000)
+							{
+								set Zeny, Zeny-1000000;
+								mes "Bon, a ce prix-là, je t'épargne la chanson, hein.";
+								switch(select("Le premier:Le second:Le troisième:Le quatrième:Le cinquième:Le sixième:Le septième:Le huitième:Le neuvième:Le dixième"))
+								{
+									case 1:
+										mes "J'ai croisé un de ces gars à Geffen,";
+										mes "planqué derrière les piliers d'une maison,";
+										mes "pas très loin de là où nous envoie la téléporteuse.";
+										close;
+									case 2:
+										mes "J'ai croisé une fille caché à Moscovia.";
+										mes "Elle était posé dans les bosquets,";
+										mes "le long du chemin qui mène à la Ville haute.";
+										close;
+									case 3:
+										mes "J'en vu un de ces marchand en allant chanter";
+										mes "à la cours du Roi d'Amatsu.";
+										close;
+									case 4:
+										mes "A Payon, une fois, j'ai vu un Coloriste";
+										mes "caché dans l'un des petits batîments ronds dehors.";
+										close;
+									case 5:
+										mes "Avant, Morocc était un endroit vivant.";
+										mes "Depuis l'accident, les ruines permettent aux Coloristes de se cacher.";
+										mes "L'un d'eux vit là-dedans, dans les ruines d'une maison.";
+										close;
+									case 6:
+										mes "Il y en a pas loin d'ici!";
+										mes "Celui là ne se cache même pas. Il vit près de la ferme.";
+										close;
+									case 7:
+										mes "Il y en a un à Izlude,";
+										mes "caché dans le pâté de maison de la Kafra.";
+										close;
+									case 8:
+										mes "J'en ai croisé un à Alberta,";
+										mes "caché entre deux maisons, à l'entré ouest de la ville.";
+										close;
+									case 9:
+										mes "Il y en a un à Hugel.";
+										mes "Je ne me rapelle pas où exactement, mais au Nord de la ville.";
+										close;
+									case 10:
+										mes "Il y en a un à Payon,";
+										mes "caché sous l'une des grandes tentes blanches tendues un peu partout.";
+										close;
+								}
+							}
+							else
+							{
+								mes "Je suis peut être un barde,";
+								mes "mais je sais encore compter!";
+							}
+							close;
+						case 2:
+							mes "Alors va-t-en.";
+							close;
+					}
+				case 2:
+					mes "[" + .@npcname$ + "]";
+					mes "*pincement des cordes*";
+					mes "Je dormirais au chaud ce soir.";
+					mes "Je te le dis pour 500.000 Zenys.";
+					switch(select("Oui:Non"))
+					{
+						case 1:
+							if (Zeny >= 500000)
+							{
+								set Zeny, Zeny-500000;
+								mes "Je connais cinq chansons. Faute de temps je ne t'en fais qu'un couplet?";
+								switch(select("A l'ombre de l'horloge:Ceux qu'on ne comprend pas:Ville nouvelle:Le tombeau des Rois:Au bord de mer"))
+								{
+									case 1:
+										mes "La grande tour chante toutes les heures,";
+										mes "tandis que les marchands des murailles font le tour.";
+										close;
+									case 2:
+										mes "Ga kluk dio go";
+										mes "Umbala na ka wa.";
+										close;
+									case 3:
+										mes "Le froid étend son manteau,";
+										mes "tandis que la ville nouvelle s'éveille.";
+										close;
+									case 4:
+										mes "A l'ombre des palmiers vivent les hommes cachés.";
+										mes "Où les Rois se reposent, gardés, donjon par les monstres possédés.";
+										close;
+									case 5:
+										mes "Ville maritime, ville côtière,";
+										mes "Départ du Zeppelin, Départ des chemins.";
+										close;
+								}
+							}
+							else
+							{
+								mes "Je suis peut être un barde,";
+								mes "mais je sais encore compter!";
+							}
+							close;
+						case 2:
+							mes "Alors va-t-en.";
+							close;
+					}
+				case 3:
+					mes "[" + .@npcname$ + "]";
+					mes "J'accorde mon instrument.";
+					mes "*dzing, dzing*";
+					mes "Je te le dis pour 250.000 Zenys.";
+					switch(select("Oui:Non"))
+					{
+						case 1:
+							if (Zeny >= 250000)
+							{
+								set Zeny, Zeny-250000;
+								mes "Je connais trois chanson. Laquelle désires-tu?";
+								switch(select("La première:La seconde:La troisième"))
+								{
+									case 1:
+										mes "De vent, de neige les tempètes,";
+										mes "masquent aux yeux des gens les marchands.";
+										mes "Nouvelles ou anciennes conquêtes,";
+										mes "en ces villes, pendant que le froid descend.";
+										close;
+									case 2:
+										mes "Caché aux yeux des gens,";
+										mes "là-haut, au firmament.";
+										mes "Dans les herbes, à l'ombre des temples,";
+										mes "l'étendu du ciel, ils contemplent.";
+										close;
+									case 3:
+										mes "Le Dragon des océans,";
+										mes "rouge, long comme un serpent.";
+										mes "La Ville il défend,";
+										mes "au Nouveau Monde appartenant.";
+										close;
+								}
+							}
+							else
+							{
+								mes "Je suis peut être un barde,";
+								mes "mais je sais encore compter!";
+							}
+							close;
+						case 2:
+							mes "Alors va-t-en.";
+							close;
+					}
+				case 4:
+					mes "[" + .@npcname$ + "]";
+					mes "*PLING*";
+					mes "Pas aujourd'hui que je coucherais à l'Auberge...";
+					mes "Je te le dis pour 100.000 Zenys.";
+					switch(select("Oui:Non"))
+					{
+						case 1:
+							if (Zeny >= 100000)
+							{
+								set Zeny, Zeny-100000;
+								mes "Je les sais être 48,";
+								mes "vivant souvent à l'ombre d'un buis,";
+								mes "caché aux yeux des passants,";
+								mes "ils attendent dans les cités, au gré des vents.";
+							}
+							else
+							{
+								mes "Je suis peut être un barde,";
+								mes "mais je sais encore compter!";
+							}
+							close;
+						case 2:
+							mes "Alors va-t-en.";
+							close;
+					}
+			}
+
+		// Quitter
+		case 2 :
+			mes "[" + .@npcname$ + "]";
+			mes "*PLONG*";
+			mes "Je ne chante pas pour les incultes.";
+			close;
+	}
+}
+}

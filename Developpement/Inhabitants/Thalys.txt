@@ -1,0 +1,197 @@
+thalys,145,134,4	script	Voyageur	735,{
+	set .@npcname$, "[Voyageur]";
+	
+	mes .@npcname$;
+	mes "";
+	mes "Depuis que la Grande Guerre des Dieux s'est achevée, les routes sont envahies de monstres.";
+	mes "C'est devenu difficile pour quelqu'un comme moi de travailler...";
+	close;
+}
+
+thalys,123,135,5	script	Amoureux	740,{
+	set .@npcname$, "[Amoureux]";
+	
+	mes .@npcname$;
+	mes "";
+	mes "Nous envisageons de nous installer...";
+	close;
+}
+
+thalys,125,135,3	script	Amoureuse	728,{
+	set .@npcname$, "[Amoureuse]";
+	
+	mes .@npcname$;
+	mes "";
+	mes "Cette ville est tellement belle!";
+	mes "C'est le centre du nouveau monde.";
+	mes "Et c'est aussi le départ vers toutes les îles.";
+	close;
+}
+
+thalys,153,79,3	script	Garde Porte Sud	734,{
+	set .@npcname$, "[Garde de la Porte Sud]";
+	
+	mes .@npcname$;
+	mes "";
+	mes "Bonjour, voyageur.";
+	mes "Vous vous trouvez à la Porte Sud de Thalys, la Capitale Neutre.";
+	mes "En la franchissant, vous arriverez au Port de la ville.";
+	close;
+}
+
+thalys,146,79,5	script	Garde Porte Sud#t2	734,{
+	set .@npcname$, "[Garde de la Porte Sud]";
+	
+	mes .@npcname$;
+	mes "";
+	mes "Bonjour, voyageur.";
+	mes "Vous vous trouvez à la Porte Sud de Thalys, la Capitale Neutre.";
+	mes "En la franchissant, vous arriverez au Port de la ville.";
+	close;
+}
+
+thalys,46,140,7	script	Garde Porte Ouest	751,{
+	set .@npcname$, "[Garde de la Porte Ouest]";
+	
+	mes .@npcname$;
+	mes "";
+	mes "Bonjour, voyageur.";
+	mes "Vous vous trouvez à la Porte Ouest de Thalys, la Capitale Neutre.";
+	mes "En la franchissant, vous arriverez aux zones agraires de la ville.";
+	close;
+}
+
+thalys,46,147,5	script	Garde Porte Ouest#t2	751,{
+	set .@npcname$, "[Garde de la Porte Ouest]";
+	
+	mes .@npcname$;
+	mes "";
+	mes "Bonjour, voyageur.";
+	mes "Vous vous trouvez à la Porte Ouest de Thalys, la Capitale Neutre.";
+	mes "En la franchissant, vous arriverez aux zones agraires de la ville.";
+	close;
+}
+
+thalys,168,133,5	script	Marchand	749,{
+	set .@npcname$, "[Marchand]";
+	
+	mes .@npcname$;
+	mes "";
+	mes "Approchez, approchez!";
+	mes "Des bijoux en provenance de l'Ile aux Fae!";
+	mes "De l'Or Noir venant directement de Scaphis!";
+	mes "J'ai même des Cocktails en import direct de Fiesta!";
+	mes "N'hésitez pas! Approchez!";
+	close;
+}
+
+thalys,120,154,5	script	Passant	742,{
+	set .@npcname$, "[Passant]";
+	
+	mes .@npcname$;
+	mes "";
+	mes "J'ai pas mal voyagé à travers les îles qui peuplent notre monde.";
+	mes "Mais nulle part, je n'ai retrouvé la quiétude de Thalys.";
+	mes "D'autant qu'on ne peut voyager vers les îles qu'à partir d'ici.";
+	mes "Tout le monde protège cette ville!";
+	close;
+}
+
+thalys,101,120,5	script	Airen	744,{
+	set .@npcname$, "[Airen]";
+	
+	mes .@npcname$;
+	mes "";
+	mes "Bonjour, " + strcharinfo(0);
+	mes "Tu es nouveau en ville?";
+	mes "Il y a beaucoup de chose à voir à Thalys.";
+	mes "Tu pourras trouver le port en bas.";
+	mes "Il y a aussi les Mercenaires en bas à gauche.";
+	mes "Tu devrais te renseigner auprès du Guide.";
+	close;
+}
+
+thalys,191,161,5	script	Mally	770,{
+	set .@npcname$, "[Mally]";
+	
+	mes .@npcname$;
+	mes "";
+	mes "Je cherche mon fils, tu ne l'as pas vu?";
+	mes "Il court un peu partout avec son idiot de chien...";
+	mes "Ces deux là me rendront folle.";
+	close;
+}
+
+thalys,173,188,5	script	Myno	706,{
+	set .@npcname$, "[Myno]";
+	
+	mes .@npcname$;
+	mes "";
+	mes "Ma mère me cherche partout...";
+	mes "Ne dis pas que tu m'as vu où je vais prendre une dérouiller!";
+	close;
+}
+
+thalys,160,179,5	script	Chien	81,{
+	set .@npcname$, "[Chien]";
+	
+	mes .@npcname$;
+	mes "";
+	mes "Wouf?";
+	close;
+}
+
+thalys,98,235,3	script	James	57,{
+	set .@npcname$, "[James]";
+	
+	mes .@npcname$;
+	mes "";
+	mes "Bienvenue au Restaurant Le Thalys.";
+	mes "Vous désirez manger sur place?";
+	mes "Le chef vous propose des plats fameux de la région.";
+	close;
+}
+
+thalys,183,135,5	script	Femme au balcon	91,{
+	set .@npcname$, "[Femme au balcon]";
+	
+	mes .@npcname$;
+	mes "";
+	mes "EH!";
+	mes "Toi! Oui, toi en bas!";
+	mes "Pousse toi, tu m'empêches de regarder les passants.";
+	close;
+}
+
+thalys,95,238,5	script	Pseudo Ermite	120,{
+	set .@npcname$, "[Pseudo Ermite]";
+	
+	mes .@npcname$;
+	mes "";
+	mes "Salut! Je suis ce qu'on appelle un pseudo ermite.";
+	mes "Ca veut dire que je vis tout seul, à l'écart de la ville.";
+	mes "Ca veut aussi dire que je ne veux voir personne.";
+	mes "Merci de me laisser!";
+	close;
+}
+
+thalys,232,63,5	script	Irom	417,{
+	set .@npcname$, "[Irom]";
+	
+	mes .@npcname$;
+	mes "";
+	mes "Bonjour, " + strcharinfo(0);
+	mes "Que puis-je faire pour toi?";
+	close;
+}
+
+thalys,124,156,7	script	Aventurier	733,{
+	set .@npcname$, "[Aventurier]";
+	
+	mes .@npcname$;
+	mes "";
+	mes "Alors voyons sur ce panneau quelle mission j'vais me faire aujourd'hui.";
+	mes "A moins que je ne participe à un Event ...";
+	mes "Choix difficile ...";
+	close;
+}

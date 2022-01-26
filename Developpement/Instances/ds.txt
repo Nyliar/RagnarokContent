@@ -1,0 +1,357 @@
+// -- Instance Devil Square Script ( Tyirial Script Concept )
+// -- Rescripted by Dang Tai Phong, hope you guys like it :d ... version : 1.0
+// -- For more information or new idea, please contact me via yahoo : cainickthoima@yahoo.com
+
+prontera,100,100,5	script	Devil Square Guardian	852,{
+
+	// -- Name
+	set .@ds_name$,"Devil Square";
+
+	if( Baselevel < 100 ) {
+		mes "[ Devil Square Guardian ]";
+		mes "Only users between Levels ^ff0000100 ~ 150^000000 can enter this Dungeon.";
+		close;
+	}
+	
+	mes "[ Devil Square Guardian ]";
+	mes "Welcome to the entrance door to ^FF0000" + .@ds_name$ + "^000000";
+	next;
+	switch( select("Reserve the " + .@ds_name$ + ":Enter the Dungeon:Leave") ) {
+		case 1:
+			set .@party_id, getcharid(1);
+			// -----------------------------
+			if( .@party_id == 0 )
+			{
+				mes "[ Devil Square Guardian ]";
+				mes "You need to be in a group.";
+				close;
+			}		
+			
+			if( getpartyleader(.@party_id,2) != getcharid(0) )
+			{
+				mes "[ Devil Square Guardian ]";
+				mes "Only the party leader can register for " + .@ds_name$ + ".";
+				close;
+			}
+		
+			if( DSquare_Timer >= gettimetick(2) )
+			{
+				mes "[ Devil Square Guardian ]";
+				mes "You cannot enter " + .@ds_name$ + " again until ^0000FF" + callfunc("Time2Str",DSquare_Timer) + "^000000";
+				close;
+			}
+			
+			if( Zeny < 100000 )
+			{
+				mes "[ Devil Square Guardian ]";
+				mes "...I'm sorry, not enough zeny.";
+				close;
+			}
+			
+			set .@ds_instance, instance_create(.@ds_name$, .@party_id);
+			if( .@ds_instance == -1 )
+			{
+				mes "[ Devil Square Guardian ]";
+				mes "Your group is already registered on a Memorial Dungeon.";
+				close;
+			}
+			else if( .@ds_instance < 0 )
+			{
+				mes "[ Devil Square Guardian ]";
+				mes "Instance creation failed: " + .@ds_instance;
+				mes "Please report this to a Game Master.";
+				close;
+			}			
+			
+			if( instance_attachmap("2@ds", .@ds_instance,1) == "" )
+			{
+				instance_destroy(.@ds_instance);
+				mes "[ Devil Square Guardian ]";
+				mes "Instance creation failed. No more free maps.";
+				mes "Please report this to a Game Master.";
+				close;
+			}
+							
+			instance_attach(.@ds_instance);
+			instance_set_timeout 3600,300,.@ds_instance; // One hour
+			set 'dsparty_id, getcharid(1);
+			set 'dsnext_open, gettimetick(2) + 7200; // Next allowed open time for players
+			deletearray 'dsMembers[0],127;
+			instance_init(.@ds_instance);					
+
+			// Some part of disable/enable NPC
+			donpcevent instance_npcname("#HiddenNpc", instance_id())+"::OnEnable";
+			donpcevent instance_npcname("#dswarp-11", instance_id())+"::OnInstanceInit";
+			donpcevent instance_npcname("#dswarp-12", instance_id())+"::OnInstanceInit";
+
+			set DSquare_Timer, 'dsnext_open;
+			set 'dsMembers[0], getcharid(0); // Stores First Char ID
+			set 'dsNext_i, 1;
+			set Zeny, Zeny - 100000;
+			close;
+			
+		case 2:
+			if( has_instance("2@ds") == "" ) {
+				mes "[ Devil Square Guardian ]";
+				mes "Instance Dungeon " + .@ds_name$ + " does not exist.";
+				mes "You are not registered for DS.";
+				close;
+			}
+			
+			set .@ds_instance, instance_id(1); // Store IDs
+			instance_attach(.@ds_instance);
+			
+			for( set .@i, 0; .@i < 'dsNext_i; set .@i, .@i + 1 )
+			{
+				if( getcharid(0) == 'dsMembers[.@i] )
+					break;
+			}
+
+			if( .@i == 'dsNext_i )
+			{
+				if( DSquare_Timer >= gettimetick(2) )
+				{ // User joined the party but has Devil Square Delay
+					mes "[ Devil Square Guardian ]";
+					mes "You cannot enter " + .@ds_name$ + " again until ^0000FF" + callfunc("Time2Str",DSquare_Timer) + "^000000";
+					close;
+				}
+				else if( 'dsNext_i == 127 )
+				{ // This party has invited lots of users to join Devil Square
+					mes "[ Devil Square Guardian ]";
+					mes "No more users can enter " + .@ds_name$ + " registered with this party.";
+					close;
+				}
+				else
+				{ // Add this new user to the member list
+					set DSquare_Timer, 'next_open;
+					set 'dsMembers['dsNext_i], getcharid(0);
+					set 'dsNext_i, 'dsNext_i + 1;
+				}
+			}					
+			warp "2@ds",183,182;
+			end;
+			
+		case 3:
+			close;
+	}
+}
+
+function	script	Time2Str	{
+	set .@Time_Left, getarg(0) - gettimetick(2);
+	
+	set .@Days, .@Time_Left / 86400;
+	set .@Time_Left, .@Time_Left - (.@Days * 86400);
+	set .@Hours, .@Time_Left / 3600;
+	set .@Time_Left, .@Time_Left - (.@Hours * 3600);
+	set .@Minutes, .@Time_Left / 60;
+	set .@Time_Left, .@Time_Left - (.@Minutes * 60);
+	
+	set .@Time$, "";
+	if( .@Days > 1 )
+		set .@Time$, .@Time$ + .@Days + " days, ";
+	else if( .@Days > 0 )
+		set .@Time$, .@Time$ + .@Days + " day, ";
+
+	if( .@Hours > 1 )
+		set .@Time$, .@Time$ + .@Hours + " hours, ";
+	else if( .@Hours > 0 )
+		set .@Time$, .@Time$ + .@Hours + " hour, ";
+
+	if( .@Minutes > 1 )
+		set .@Time$, .@Time$ + .@Minutes + " minutes, ";
+	else if( .@Minutes > 0 )
+		set .@Time$, .@Time$ + .@Minutes + " minute, ";
+
+	if( .@Time_Left > 1 || .@Time_Left == 0 )
+		set .@Time$, .@Time$ + .@Time_Left + " seconds.";
+	else if( .@Time_Left == 1 )
+		set .@Time$, .@Time$ + .@Time_Left + " second.";
+	
+	return .@Time$;
+}
+
+2@ds,44,155,0	script	#HiddenNpc	-1,{
+	end;
+
+OnDisable:
+	killmonster "2@ds",instance_npcname("#HiddenNpc", instance_id())+"::OnDevilDead";
+	end;
+
+OnEnable:
+	areamonster "2@ds",183,182,246,244,"[DS] ALICEL",1735,25,instance_npcname("#HiddenNpc", instance_id())+"::OnDevilDead";
+	areamonster "2@ds",183,182,246,244,"[DS] ALIOT",1736,15,instance_npcname("#HiddenNpc", instance_id())+"::OnDevilDead";
+	areamonster "2@ds",183,182,246,244,"[DS] ARCHDAM",1668,15,instance_npcname("#HiddenNpc", instance_id())+"::OnDevilDead";
+	areamonster "2@ds",183,182,246,244,"[DS] CONSTANT",1745,20,instance_npcname("#HiddenNpc", instance_id())+"::OnDevilDead";
+	areamonster "2@ds",183,182,246,244,"[DS] DARK PRIEST",1198,4,instance_npcname("#HiddenNpc", instance_id())+"::OnDevilDead";
+	areamonster "2@ds",183,182,246,244,"[DS] ARCHANGELING",1388,1,instance_npcname("#HiddenNpc", instance_id())+"::OnDevilDead";
+	end;
+
+OnDevilDead:
+	set .@mobnumber,80;
+	set .@mob_cnumber,mobcount("2@ds",instance_npcname("#HiddenNpc", instance_id())+"::OnDevilDead");
+	set .@mob_dead_number,.@mobnumber - .@mob_cnumber;
+	if( .@mob_dead_number == 55 )
+		instance_announce 0, "Devil Square : 25 mobs to enter the 2nd round..",bc_map,"0xffff00";
+	if( .@mob_dead_number == 75 )
+		instance_announce 0, "Devil Square : 5 mobs to enter 2nd round..",bc_map,"0xffff00";	
+	if( .@mob_dead_number == 80 )
+	{
+		instance_announce 0, "Devil Square : will enter to 2nd round!!!",bc_map,"0xffff00";	
+		goto OnDevilRound_2;
+	}
+	end;
+
+OnDevilRound_2:
+	areamonster "2@ds",183,182,246,244,"[DS] DROSERA",1781,20,instance_npcname("#HiddenNpc", instance_id())+"::OnDevilDead_2";
+	areamonster "2@ds",183,182,246,244,"[DS] NECROMANCER",1870,30,instance_npcname("#HiddenNpc", instance_id())+"::OnDevilDead_2";
+	areamonster "2@ds",183,182,246,244,"[DS] RETRIBUTION",1702,5,instance_npcname("#HiddenNpc", instance_id())+"::OnDevilDead_2";
+	areamonster "2@ds",183,182,246,244,"[DS] OBSERVATION",1700,5,instance_npcname("#HiddenNpc", instance_id())+"::OnDevilDead_2";
+	areamonster "2@ds",183,182,246,244,"[DS] LADY SOLACE",1703,5,instance_npcname("#HiddenNpc", instance_id())+"::OnDevilDead_2";
+	areamonster "2@ds",183,182,246,244,"[DS] SHELTER",1701,5,instance_npcname("#HiddenNpc", instance_id())+"::OnDevilDead_2";
+	end;
+
+OnDevilDead_2:
+	set .@mobnumber,70;
+	set .@mob_cnumber,mobcount("2@ds",instance_npcname("#HiddenNpc", instance_id())+"::OnDevilDead_2");
+	set .@mob_dead_number,.@mobnumber - .@mob_cnumber;
+	if( .@mob_dead_number == 45 )
+		instance_announce 0, "Devil Square : 25 mobs to enter the 3rd round..",bc_map,"0xffff00";
+	if( .@mob_dead_number == 65 )
+		instance_announce 0, "Devil Square : 5 mobs to enter the 3rd round..",bc_map,"0xffff00";	
+	if( .@mob_dead_number == 70 )
+	{
+		instance_announce 0, "Devil Square : will enter to 3rd round!!!",bc_map,"0xffff00";	
+		goto OnDevilRound_3;
+	}
+	end;
+
+OnDevilRound_3:
+	areamonster "2@ds",183,182,246,244,"[DS] DIMIK",1673,10,instance_npcname("#HiddenNpc", instance_id())+"::OnDevilDead_3";
+	areamonster "2@ds",183,182,246,244,"[DS] DIMIK",1672,10,instance_npcname("#HiddenNpc", instance_id())+"::OnDevilDead_3";
+	areamonster "2@ds",183,182,246,244,"[DS] DIMIK",1671,10,instance_npcname("#HiddenNpc", instance_id())+"::OnDevilDead_3";
+	areamonster "2@ds",183,182,246,244,"[DS] DIMIK",1670,10,instance_npcname("#HiddenNpc", instance_id())+"::OnDevilDead_3";
+	areamonster "2@ds",183,182,246,244,"[DS] HIGH PRIEST MAGARETA",1637,6,instance_npcname("#HiddenNpc", instance_id())+"::OnDevilDead_3";
+	areamonster "2@ds",183,182,246,244,"[DS] MORROC SHADOW",1921,3,instance_npcname("#HiddenNpc", instance_id())+"::OnDevilDead_3";
+	areamonster "2@ds",183,182,246,244,"[DS] MORROC SHADOW",1918,3,instance_npcname("#HiddenNpc", instance_id())+"::OnDevilDead_3";
+	areamonster "2@ds",183,182,246,244,"[DS] MORROC SHADOW",1920,3,instance_npcname("#HiddenNpc", instance_id())+"::OnDevilDead_3";
+	areamonster "2@ds",183,182,246,244,"[DS] MORROC SHADOW",1919,3,instance_npcname("#HiddenNpc", instance_id())+"::OnDevilDead_3";
+	end;
+
+OnDevilDead_3:
+	set .@mobnumber,58;
+	set .@mob_cnumber,mobcount("2@ds",instance_npcname("#HiddenNpc", instance_id())+"::OnDevilDead_3");
+	set .@mob_dead_number,.@mobnumber - .@mob_cnumber;
+	if( .@mob_dead_number == 33 )
+		instance_announce 0, "Devil Square : 25 mobs to enter the 4th round..",bc_map,"0xffff00";
+	if( .@mob_dead_number == 53 )
+		instance_announce 0, "Devil Square : 5 mobs to enter the 4th round..",bc_map,"0xffff00";
+	if( .@mob_dead_number == 58 )
+	{
+		instance_announce 0, "Devil Square : will enter to 4th round!!!!!!",bc_map,"0xffff00";
+		donpcevent instance_npcname("#dswarp-12", instance_id())+"::OnEnable";
+		goto OnDevilRound_4;
+	}
+	end;
+	
+OnDevilRound_4:
+	areamonster "2@ds",149,148,149,148,"[DS] Entweihen Crothen",1957,1,instance_npcname("#HiddenNpc", instance_id())+"::OnDevilDead_4";
+	areamonster "2@ds",135,135,165,165,"[DS] Thorny Skeleton",1958,11,instance_npcname("#HiddenNpc", instance_id())+"::OnDevilDead_4";
+	end;
+	
+OnDevilDead_4:
+	set .@mobnumber,12;
+	set .@mob_cnumber,mobcount("2@ds",instance_npcname("#HiddenNpc", instance_id())+"::OnDevilDead_4");
+	set .@mob_dead_number,.@mobnumber - .@mob_cnumber;	
+	if( .@mob_dead_number == 12 )
+	{
+		instance_announce 0, "Devil Square : CONGRATULATION - 10 Treasure Boxs will be yours now",bc_map,"0xffff00";
+		donpcevent instance_npcname("#dswarp-12", instance_id())+"::OnInstanceInit";
+		donpcevent instance_npcname("#dswarp-11", instance_id())+"::OnEnable";
+		goto OnDevilRound_5; // Treasure Spawn Round
+	}
+	end;
+
+OnDevilRound_5:
+	monster "2@ds",231,250,"Treasure Box",1324,1,instance_npcname("#HiddenNpc", instance_id())+"::OnDevilDead_5";
+	monster "2@ds",234,247,"Treasure Box",1328,1,instance_npcname("#HiddenNpc", instance_id())+"::OnDevilDead_5";
+	monster "2@ds",237,244,"Treasure Box",1332,1,instance_npcname("#HiddenNpc", instance_id())+"::OnDevilDead_5";
+	monster "2@ds",240,241,"Treasure Box",1336,1,instance_npcname("#HiddenNpc", instance_id())+"::OnDevilDead_5";
+	monster "2@ds",243,238,"Treasure Box",1340,1,instance_npcname("#HiddenNpc", instance_id())+"::OnDevilDead_5";
+	monster "2@ds",246,235,"Treasure Box",1344,1,instance_npcname("#HiddenNpc", instance_id())+"::OnDevilDead_5";
+	monster "2@ds",249,232,"Treasure Box",1348,1,instance_npcname("#HiddenNpc", instance_id())+"::OnDevilDead_5";
+	monster "2@ds",252,229,"Treasure Box",1352,1,instance_npcname("#HiddenNpc", instance_id())+"::OnDevilDead_5";
+	monster "2@ds",249,241,"Treasure Box",1356,1,instance_npcname("#HiddenNpc", instance_id())+"::OnDevilDead_5";
+	monster "2@ds",240,249,"Treasure Box",1360,1,instance_npcname("#HiddenNpc", instance_id())+"::OnDevilDead_5";
+	end;
+
+OnDevilDead_5:
+	set .@mobnumber,10;
+	set .@mob_cnumber,mobcount("2@ds",instance_npcname("#HiddenNpc", instance_id())+"::OnDevilDead_5");
+	set .@mob_dead_number,.@mobnumber - .@mob_cnumber;
+	instance_announce 0, "Devil Square : "+ strcharinfo(0) +" has opened the treasure box at Devil Square",bc_map,"0xffff00";	
+	if( .@mob_dead_number == 10 )
+		donpcevent instance_npcname("#HiddenNpc", instance_id())+"::OnDestroyInstance";
+	end;
+	
+OnDestroyInstance:
+	initnpctimer;
+	end;
+
+OnTimer500:
+	instance_announce 0, "Devil Square will be closed in few seconds..", bc_map, 0xCCFF00;
+	end;
+
+OnTimer19000:
+	instance_warpall "prontera", 100,100;
+	end;
+	
+OnTimer22500:
+	stopnpctimer;
+	instance_destroy(instance_id());
+	end;
+	
+}
+
+// -- Warp
+2@ds,168,168,0	script	#dswarp-11	45,0,0,{
+
+OnInstanceInit:
+	disablenpc instance_npcname("#dswarp-11", instance_id());
+	end;
+
+OnEnable:
+	enablenpc instance_npcname("#dswarp-11", instance_id());
+	end;
+
+OnTouch:
+	warp "2@ds",189,189;
+	end;
+}
+
+2@ds,184,184,0	script	#dswarp-12	45,0,0,{
+
+OnInstanceInit:
+	disablenpc instance_npcname("#dswarp-12", instance_id());
+	end;
+
+OnEnable:
+	enablenpc instance_npcname("#dswarp-12", instance_id());
+	end;
+
+OnTouch:
+	mes "[ Devil Square Guardian ]";
+	mes "Are you ready..?";
+	if( select("Ready, GO!!!", "Nope") != 1 ) close;
+	close2;
+	warp "2@ds",163,163;
+	end;
+}
+
+// -- Mapflags
+2@ds	mapflag	nowarp
+2@ds	mapflag	nowarpto
+2@ds	mapflag	noteleport
+2@ds	mapflag	nosave	SavePoint
+2@ds	mapflag	nomemo
+2@ds	mapflag	nobranch
+2@ds	mapflag	nopenalty

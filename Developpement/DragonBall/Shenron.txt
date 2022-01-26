@@ -1,0 +1,222 @@
+//
+// [========================================================]
+// [===========       Dragon Ball Project        ===========]
+// [========================================================]
+// [ Shenron Version 1                                      ]
+// [========================================================]
+// [ Original script by: Alayne                             ]
+// [========================================================]
+// [ Description:                                           ]
+// [--------------------------------------------------------]
+// [                                                        ]
+// [========================================================]
+// [ Changelog: (5 last updates)                            ]
+// [--------------------------------------------------------]
+// [                                                        ]
+// [ v0: Creation                      			    ]
+// [                                                        ]
+// [========================================================]
+// [                                                        ]
+// [========================================================]
+
+//capitale,242,193
+prontera,131,190,5	script	Aelro#Shenron::aladbshenron	656,{
+	set .@npcname$, "[" + strnpcinfo(1) + "]";
+
+if (LANGUAGE == 2)
+{
+	if (countitem(21662) >= 1 && countitem(21663) >= 1 && countitem(21664) >= 1 && countitem(21665) >= 1 && 
+		countitem(21666) >= 1 && countitem(21667) >= 1 && countitem(21668) >= 1)
+	{
+		mes .@npcname$;
+		mes "";
+		mes "What's...What's happening?";
+
+		set .@npcname$, "[" + strnpcinfo(2) + "]";
+		night;
+		setnpcdisplay "aladbshenron", 655;
+		next;
+
+		mes .@npcname$;
+		mes "";
+		mes "You've bring the Seven Starred Balls to me.";
+		mes "I can now be revealed.";
+		mes "I'm Shenron. The Starred Balls Guardian.";
+		mes "By getting one of each kind, you've earned the right to access a hidden piece of this world.";
+		mes "So, what's your wish?";
+		
+		next;
+		set .@choice, 0;
+		while(.@choice != 3)
+		{
+			set .@choice, select("Become the World's Master","Stop every War in the World","A powerful Item!");
+			switch(.@choice)
+			{
+				case 1:
+					mes "I can't do that. Odin's is the Master.";
+					break;
+				case 2:
+					mes "I can't do that. Stop being childlish. That's never gonna happens";
+					break;
+				case 3:
+					mes "Allright.";
+					mes "Here you are.";
+					getitem 21669, 3;
+					set SHENRON_USER, 1;
+					break;
+			}
+		}
+
+		mes "The Starred Balls will no be spread around the world again.";
+		mes "My work here is done.";
+		mes "Goodbye.";
+
+		delitem 21662, 1;
+		delitem 21663, 1;
+		delitem 21664, 1;
+		delitem 21665, 1;
+		delitem 21666, 1;
+		delitem 21667, 1;
+		delitem 21668, 1;
+		setnpcdisplay "aladbshenron", 656;
+		day;
+
+		next;
+		set .@npcname$, "[" + strnpcinfo(1) + "]";
+		mes .@npcname$;
+		mes "";
+		mes "What just happens?";
+		next;
+		mes "[" + strcharinfo(0) + "]";
+		mes "*He doesn't seem to remember he just changed to a big green Dragon.";
+		mes "Better for him to ignore it I guess.*";
+
+		set $shenronAppeared, 1;
+	}
+	else
+	{
+		mes .@npcname$;
+		mes "";
+		mes "Hello to you, " + strcharinfo(0);
+		mes "I've heared that there's some big Dragon around here.";
+		mes "It's kinda...frightening. But I haven't seen it right now.";
+		mes "And...strangely, sometimes, the night falls on a second, in the middle of the day.";
+		mes "I...I really don't understand what's happening around here.";
+		next;
+		mes .@npcname$;
+		mes "";
+		mes "And this memory loss...That's driving me crazy!";
+		mes "Now that I think of it, it's always when the night falls actually.";
+		mes "Do you think I'm strange?";
+		switch(select("Not at all...","Leave me alone, creepy!"))
+		{
+			case 1:
+				mes "Thanks. Your heart is pure. I hope I'll become like you one day.";
+				break;
+			case 2:
+				mes "I'm not a monster!";
+				break;
+		}
+	}
+}
+else if (LANGUAGE == 1)
+{
+	if (countitem(21662) >= 1 && countitem(21663) >= 1 && countitem(21664) >= 1 && countitem(21665) >= 1 && 
+		countitem(21666) >= 1 && countitem(21667) >= 1 && countitem(21668) >= 1)
+	{
+		mes .@npcname$;
+		mes "";
+		mes "Que...Que se passe-t-il?";
+
+		set .@npcname$, "[" + strnpcinfo(2) + "]";
+		night;
+		setnpcdisplay "aladbshenron", 655;
+		next;
+
+		mes .@npcname$;
+		mes "";
+		mes "Tu as apporté les Sept Boules Etoilées jusqu'à moi.";
+		mes "Je suis maintenant révélé.";
+		mes "Je suis Shenron. Le gardien des Boules Etoilées.";
+		mes "En trouvant une boule de chaque sorte, tu as gagné le droit de connaître un secret de ce monde.";
+		mes "Que désires-tu?";
+		
+		next;
+		set .@choice, 0;
+		while(.@choice != 3)
+		{
+			set .@choice, select("Devenir le Maitre du Monde","Arrêter toutes les guerres","Un puissant item!");
+			switch(.@choice)
+			{
+				case 1:
+					mes "Je ne peux pas faire ça. Odin est le Maitre.";
+					break;
+				case 2:
+					mes "Je ne peux pas faire. Arrête de faire l'enfant, cela n'arrivera jamais.";
+					break;
+				case 3:
+					mes "Très bien.";
+					mes "Voilà pour toi.";
+					getitem 21669, 3;
+					set SHENRON_USER, 1;
+					break;
+			}
+		}
+
+		mes "The les septs Boules se sont de nouveau éparpillées.";
+		mes "Mon travail ici est terminé.";
+		mes "Au revoir.";
+
+		delitem 21662, 1;
+		delitem 21663, 1;
+		delitem 21664, 1;
+		delitem 21665, 1;
+		delitem 21666, 1;
+		delitem 21667, 1;
+		delitem 21668, 1;
+		setnpcdisplay "aladbshenron", 656;
+		day;
+
+		next;
+		set .@npcname$, "[" + strnpcinfo(1) + "]";
+		mes .@npcname$;
+		mes "";
+		mes "Que vient-il de se passer?";
+		next;
+		mes "[" + strcharinfo(0) + "]";
+		mes "*Il n'a pas l'air de se rappeler qu'il vient juste de se tranformer en gros lézard vert.";
+		mes "Il vaut qu'il l'ignore je suppose.*";
+
+		set $shenronAppeared, 1;
+	}
+	else
+	{
+		mes .@npcname$;
+		mes "";
+		mes "Bonjour à toi, " + strcharinfo(0);
+		mes "J'ai entendu dire qu'il y avait un grand dragon dans le coin.";
+		mes "C'est un peu...Effrayant. Mais je n'ai encore rien vu de tel.";
+		mes "Et...étrangement, la nuit tombe d'un coup parfois. En plein milieu de la journée.";
+		mes "Je...Je ne comprends pas ce qui se passe ici.";
+		next;
+		mes .@npcname$;
+		mes "";
+		mes "Et ces pertes de mémoire...Ca va me rendre fou!";
+		mes "Maintenant que j'y pense, c'est toujours quand la nuit tombe d'un coup.";
+		mes "Tu crois que je suis bizarre?";
+		switch(select("Non, du tout...","Laisse moi tranquille, bizarroide!"))
+		{
+			case 1:
+				mes "Merci! Ton coeur est pur. J'espère devenir comme toi un jour.";
+				break;
+			case 2:
+				mes "Je ne suis pas un monstre!";
+				break;
+		}
+	}
+}
+	
+
+	setnpcdisplay "aladbshenron", 656;
+	close;
+}

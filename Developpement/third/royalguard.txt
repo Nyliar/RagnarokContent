@@ -1,0 +1,203 @@
+caspen,103,263,6	script	Maitre Royal Guard	459,{  
+
+	mes "[Maitre Royal Guard]";
+	if (class == 4015 || class == 14)
+	{
+		if ( RG_Q < 1)
+		{
+			mes "Bonjour à toi," + strcharinfo(0) + ".";
+			mes "Je suis le Maitre Royal Guard.";
+			mes "Je peux te faire passer la deuxième épreuve de ton Eveil,";
+			mes "Es-tu intéressé?";
+			next;
+			switch(select("Oui, je voudrais passer le test, s'il vous plait.:Non merci, je me suis trompé de personne.:Un vieux fou m'a envoyé ici après avoir lancé un tetra Vortex sur moi Y^Y."))
+			{
+				case 1:
+					mes "[Maitre Royal Guard]";
+					mes "Tout d'abord, voyons si tu es prêt physiquement.";
+					next;
+					if ( CHARLO_Q ){
+						mes "[Maitre Royal Guard]";
+						mes "On dirait bien que ton physique est prêt.";
+						mes "Je vais donc maintenant tester ton mental.";
+						next;
+						mes "[Maitre Royal Guard]";
+							mes "Il s'agit d'un quizz. Commençons.";
+							next;
+							set min_Q, 0;
+							mes "De quoi avons nous besoins pour utiliser la majorité des compétences du Paladin?";
+							switch(select("D'un bouclier:D'une lance:D'un autre Paladin:D'un Peco"))
+							{
+								case 2:				
+								case 1:
+									set min_Q, min_Q+1;
+								case 3:
+								case 4:
+							}
+							next;
+							mes "Où achetons-nous un Grand Peco?";
+							switch(select("Devant la guilde des Knight:Devant l'église de Prontera:A Izlude:Faut le capturer"))
+							{
+								case 2:
+									set min_Q, min_Q+1;
+								case 1:
+								case 3:
+								case 4:
+							}
+							next;
+							mes "Combien de pourcentage de dégâts provoque la compétence Shield Chain au level 5?";
+							switch(select("120%:150%:200%:250%"))
+							{
+								case 4:
+									set min_Q, min_Q+1;
+								case 1:
+								case 2:
+								case 3:
+							}
+							next;
+							mes "Comment sont déterminés les dégâts de Shield Chain?";							
+							switch(select("Selon le poids de la lance:Selon le poids du bouclier:Selon le niveau de Faith:Selon l'upgrade du bouclier"))
+							{
+								case 2:
+									set min_Q, min_Q+1;
+								case 1:
+								case 3:
+								case 4:
+							}
+
+							next;
+							mes "A quoi sert la compétence Spear Quicken?";
+							switch(select("Bonus aspd avec 2H Spear:Bonus aspd avec 1H Spear:Rajoute de l'agilité:Bonus hit + Bonus aspd avec une Spear"))
+							{
+								case 1:
+									set min_Q, min_Q+1;
+								case 2:
+								case 3:
+								case 4:
+							}
+							next;
+							mes "Comment peut on esquiver Pressure?";
+							switch(select("En se clockant avant d'être ciblé:On ne peut pas:Avec des Cards:En utilisant Mental Strengh"))
+							{
+								case 1:
+									set min_Q, min_Q+1;
+								case 2:
+								case 3:
+								case 4:
+							}
+							next;
+							mes "Qui d'autre possède Demon Bane, mis à part les Paladin?";
+							switch(select("Les Thiefs:Les Archers:Les Acolytes:Les Merchants"))
+							{
+								case 3:
+									set min_Q, min_Q+1;
+								case 2:
+								case 1:
+								case 4:
+							}
+							next;
+							mes "Combien de pourcentages retournons nous au maximum les dommages avec la compétence Shiled Reflect?";
+							switch(select("40%:30%:50%:20%"))
+							{
+								case 1:
+									set min_Q, min_Q+1;
+								case 3:
+								case 2:
+								case 4:
+							}
+							next;
+							mes "Que permet la compétence Faith?";
+							switch(select("Ajoute d'un bonus de Hp:Multiplie les Hp max:Ajout d'un bonus de Vit:Ajout d'un bonus de regénération Hp"))
+							{
+								case 1:
+									set min_Q, min_Q+1;
+								case 4:
+								case 2:
+								case 3:
+							}
+							next;
+							mes "Quel est le taux de succès de Auto Guard au level max?";
+							switch(select("25%:30%:35%:20%"))
+							{
+								case 2:
+									set min_Q, min_Q+1;
+								case 3:
+								case 1:
+								case 4:
+							}
+							next;
+							mes "[Maitre Royal Guard]";
+							mes "Bien, voyons tes résultats maintenant...";
+							mes "*Trifouille les résultats du test";
+							next;
+							mes "[Maitre Royal Guard]";
+							if (min_Q >= 9){
+								mes "Excellent, tu as eu ^FF0000" + min_Q*10 + "%^000000 de bonnes réponses.";
+								mes "On dirait bien que ton Esprit est prêt à passer l'Eveil.";
+								mes "Tu peux passer à l'avant-dernière étape de ta quête, la plus difficile.";
+								mes "Pars donc à la recherche du Mirroir du Mal, il t'expliquera cela plus en détail.";
+								mes "Il se trouve caché quelque part aux alentours de la grande ville de Bastania.";
+								mes "Prends cet objet qui te sera très utile";
+								mes " ";
+								getitem (22006),1;
+								mes "Bon courage";
+								emotion 21;
+								set RG_Q, 1;
+								close2;end;
+							}
+							else
+							{
+								mes "Désolé, mais tes ^FF0000" + min_Q*10 + "%^000000 de réussite ne seront pas suffisant.";
+								mes "Entraîne encore un peu ton esprit,";
+								mes "Sans quoi, il ne résistera pas à la puissance de l'Eveil.";
+								close2;end;
+							}
+					}		
+					else
+					{
+					mes "[Maitre Royal Guard]";
+					mes "Désolé, mais tu ne peux pas venir me voir pour l'instant.";
+					mes "Tu dois avant tout tester ton Physique auprès du Maitre de l'Eveil.";
+					close2;end;
+					}
+				case 2:
+					mes "[Maitre Royal Guard]";
+					mes "Pas de problème.";
+					mes "Vis ta vie avec Espoir,";
+					mes "Elle ne t'en paraîtra que plus belle.";
+					close2;end;
+				case 3:
+					mes "[Maitre Royal Guard]";
+					mes "Un vieux fou tu dis?";
+					mes "Le Maître du Renouveau est tellement plus que ça";
+					mes "Mais j'avoue qu'il a des tendances un peu cabotine...";
+					close2;end;
+			}
+		}
+		
+		else if ( RG_Q == 1 )
+		{
+			mes "Bonjour à toi," + strcharinfo(0) + ".";
+			mes "Tu peux passer à la dernière étape.";
+			mes "Pars donc à la recherche d'Yggdrasil.";
+			mes "Il se trouve caché quelque part aux alentours de Bastania.";
+			mes "Bon courage.";
+			close2;end;
+		}
+
+		else if ( RG_Q == 3 || class == 4066 || class == 4073)
+		{
+			mes "Bonjour à toi," + strcharinfo(0) + ".";
+			mes "Felicitations, tu es Royal Guard !";
+			mes "Que la force soit avec toi !";
+			close2;end;
+		}
+	}
+	else
+	{
+		mes "Ah, quelle belle faune, quelle belle flore !";
+		mes "Je vais prier pour que tout cela";
+		mes "subsiste, et je le protègerai au péril de ma vie !";
+		close2;end;
+	}
+}

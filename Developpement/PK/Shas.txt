@@ -1,0 +1,193 @@
+//rue 1
+Hallow01,93,56,6	script	Dras::haldras	939,{
+	set .@npcname$, "[Dras]";
+	mes .@npcname$;
+	if (LANGUAGE == 2)
+	{
+		mes "Us, Shas, we live for killing.";
+		mes "What do you want, we like it...Screams, hunting excitation...";
+		mes "I can't live without that!";
+	}
+	else if (LANGUAGE == 1)
+	{
+		mes "Nous autres Shas, nous ne vivons que pour tuer.";
+		mes "Que veux-tu, on aime ça...Le cri, l'excitation de la chasse...";
+		mes "Je ne saurais m'en passer!";
+	}
+	close;
+}
+
+//entrée ville
+Hallow01,111,35,4	script	Vris::halvri	940,{
+	set .@npcname$, "[Vris]";
+	mes .@npcname$;
+	if (LANGUAGE == 2)
+	{
+		mes "Who are you?";
+		mes "What are you doing here?";
+		mes "You're here in Hallow, the Shas city.";
+		mes "If you've come here without knowing what you're doing, know that you risk your life in every way here.";
+	}
+	else if (LANGUAGE == 1)
+	{
+		mes "Qui es-tu?";
+		mes "Que viens-tu faire ici?";
+		mes "Tu es ici en Hallow, la ville des Shas!";
+		mes "Si tu viens ici sans savoir ce que tu fais, saches que tu risques ta vie à chaque coin de rue.";
+	}
+	close;
+}
+
+//maison1
+Hallow01,128,68,4	script	Grus::halgru	943,{
+	set .@npcname$, "[Grus]";
+	mes .@npcname$;
+	if (LANGUAGE == 2)
+	{
+		mes "We're not all like Dras you know?";
+		mes "Some of us has grown here. What could we do?";
+		mes "We don't know anything else.";		
+	}
+	else if (LANGUAGE == 1)
+	{
+		mes "Nous ne sommes pas tous comme Dras, tu sais?";
+		mes "Certains d'entre nous ont grandis ici. Que peut-on faire?";
+		mes "Nous ne connaissons rien d'autre...";
+	}
+	close;
+}
+
+//cimetiere
+Hallow01,123,124,4	script	Ofra::halofr	947,{
+	set .@npcname$, "[Ofra]";
+	mes .@npcname$;
+	if (LANGUAGE == 2)
+	{
+		mes "I come here after every Benediction I give. Do you know why?";
+		mes "Cause even our, killers from our state, got a soul.";
+		mes "We're not always killing by willing, but sometimes to answer a demand,";		
+		mes "or by necessity.";
+	}
+	else if (LANGUAGE == 1)
+	{
+		mes "Je viens ici après chaque Bénédiction que je donne. Tu sais pourquoi?";
+		mes "Parce que nous, tueurs de notre état, avons une âme comme tout le monde.";
+		mes "Nous ne tuons pas toujours par envie, mais parfois pour répondre à une demande,";
+		mes "ou par nécessité.";
+	}
+	close;
+}
+
+//place
+Hallow01,117,108,4	script	LittleKiller::hallit	946,{
+	set .@npcname$, "[LittleKiller]";
+	mes .@npcname$;
+	if (LANGUAGE == 2)
+	{
+		mes "I've no real name. I renonced to it with my first Benediction.";
+		mes "Each time you buy one, you loose a bit of Karma.";
+		mes "Each time you use one, you loose a bit more.";		
+		mes "I don't think Gods, except Loki, like that...";
+		mes "So I loose my name in the same time that my humanity.";
+	}
+	else if (LANGUAGE == 1)
+	{
+		mes "Je n'ai pas de nom. J'y ai renoncé à ma première Bénédiction.";
+		mes "Chaque fois que tu en achète une, tu perds un peu de Karma.";
+		mes "Chaque fois que tu en utilise une, tu en perds un peu plus.";
+		mes "Je ne pense pas que les Dieux, mis à part Loki, aime ça...";
+		mes "J'ai donc renoncé à mon nom en même temps qu'à mon humanité.";
+	}
+	close;
+}
+
+//centre place
+Hallow01,104,98,6	script	Ikram::halikr	929,{
+	set .@npcname$, "[Ikram]";
+	mes .@npcname$;
+	if (LANGUAGE == 2)
+	{
+		mes "Do you hear about the Crowned?";
+		mes "They are those who chase us.";
+		mes "I can understand that our presence is hard to accept,";
+		mes "but they simply spend their lives chasing us.";
+		mes "They don't have any order. Anyone can chase any of us.";
+		mes "Take care of you if you meet one...";
+	}
+	else if (LANGUAGE == 1)
+	{
+		mes "As-tu entendu parler des Couronnés?";
+		mes "Ce sont ceux qui nous chasse.";
+		mes "Je peux comprendre que notre existence soit dur à acceptée,";
+		mes "mais il passe leur vie à nous chasser.";
+		mes "Ils n'ont pas d'ordre. Chacun peut chasser chacun de nous.";
+		mes "Prend garde si tu en croise un...";
+	}
+	close;
+}
+
+//rue 2
+Hallow01,63,117,6	script	Pru::halpru	931,{
+	set .@npcname$, "[Pru]";
+	mes .@npcname$;
+	if (LANGUAGE == 2)
+	{
+		mes "A reknown killer only have one possibility.";
+		mes "When people know you're a Sha, you can go in the Sanctuary to regain your lost Karma.";
+		mes "It's a hard place, where only the strongest survive.";
+		mes "Each time passed there make your Karma up.";
+		mes "But you can also by killed there.";
+		mes "Crowned and Shas make a sort of hunting there...";
+	}
+	else if (LANGUAGE == 1)
+	{
+		mes "Un tueur connu n'a plus qu'une seule possibilité.";
+		mes "Quand les gens savent que tu es un Sha, tu peux aller au Sanctuaire pour regagner ton Karma perdu.";
+		mes "C'est un endroit dur, ou seul les plus fort survive.";
+		mes "Chaque instant passé là-bas fais remonter ton Karma.";
+		mes "Mais tu peux aussi être tué là-bas.";
+		mes "Certains Couronnés et Shas font une sorte de chasse là-bas...";
+	}
+	close;
+}
+
+//maison 2
+Hallow01,77,121,6	script	Arel::halare	930,{
+	set .@npcname$, "[Arel]";
+	mes .@npcname$;
+	if (LANGUAGE == 2)
+	{
+		mes "I've nothing to say.";
+		mes "I'm Sha. That's a way of life I choose long time ago.";
+		mes "And my entire life, I won't regret it.";
+	}
+	else if (LANGUAGE == 1)
+	{
+		mes "Il n'y a rien à dire.";
+		mes "Je suis un Sha. C'est une façon de vivre que j'ai choisi il y a longtemps.";
+		mes "C'est un endroit dur, ou seul les plus fort survive.";
+		mes "Et de toute ma vie, je ne l'ai jamais regretté.";
+	}
+	close;
+}
+
+//rue3
+Hallow01,95,143,6	script	Orel::halore	923,{
+	set .@npcname$, "[Orel]";
+	mes .@npcname$;
+	if (LANGUAGE == 2)
+	{
+		mes "Arel's my sister.";
+		mes "We're both join the Sha's Path long time ago.";
+		mes "But, not like here, I've regretted it with each Benediction.";
+		mes "It's a huge thing to accept...";
+	}
+	else if (LANGUAGE == 1)
+	{
+		mes "Arel est ma soeur.";
+		mes "Nous avons rejoint ensemble la Voie de Sha il y a longtemps.";
+		mes "Mais, contrairement à elle, je l'ai regretté avec chaque Benediction.";
+		mes "C'est un lourd poids à porter...";
+	}
+	close;
+}

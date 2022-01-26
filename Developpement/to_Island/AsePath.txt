@@ -1,0 +1,49 @@
+capitale,217,185,4	script	Ase Path Guardian::prtasepa	618,{
+	set .@npcname$, "[Ase Path Guardian]";
+	set .crystalnb, 5;
+	
+	mes .@npcname$;
+	mes "";
+	mes "Travelling through the Ase Path cost 1 Powerful Tears.";
+	
+	if (countitem(21063) >= 0)
+	{
+		mes "Please, choose you're destination:";
+
+   		next; 
+
+    		// On créé un menu dynamique
+   		setarray .@mapdisp$[0], "Endless Tower", "Endless Cellar", "Astral Temple", "Hided Jungle", "Champions Arena", "Mysterio Island", "Fae's City", "Crash Area", "Bilfrost, the Rainbow", "Genasia",
+"Caspen";//, "Pinky Island",  ;
+		setarray .@mapname$[0],  "e_tower", "e_tower", "zodiac", "ins_fld", "colisland", "mysterio", "revencia", "crash", "bilfrost", "genasia", "caspen";//", "1@pi",;
+
+ 		// On créé un menu dynamique
+		set .@count, 0;
+		for ( set .@j, 0; .@j<getarraysize(.@mapdisp$); set .@j, .@j+1 )
+		{
+        		set .@menu$, .@menu$ + ( .@j ? ":" : "" ) + .@mapdisp$[.@j];
+			set .@maparray$[.@count], .@mapname$[.@j];
+			set .@count, .@count + 1;
+		}
+
+    		// On récupère le choix de l'utilisateur
+    		set .@choice, select(.@menu$);
+		set @map$, .@maparray$[.@choice - 1];
+
+		callfunc "prepare_warp_coordinates", 3;
+
+	}
+	else
+	{
+		mes "You need at least 1 Powerful Tears to travel through the Ase Path.";
+		mes "Find the Powerful Tears Exchanger.";
+	}
+	close;
+
+cancel:
+	close;
+	
+OnWarp:  
+	 delitem 21063,1; warp @map$,@xdest,@ydest;	getmapxy(#LastWarp$,#LastX,#LastY,0);   close;
+
+}

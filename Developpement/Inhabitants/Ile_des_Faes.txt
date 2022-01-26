@@ -1,0 +1,90 @@
+//Ile des fae
+
+revencia,247,13,5	script	Eilan	440,{
+	set .@npcname$, "[Eilan]";
+	
+	mes .@npcname$;
+	mes "";
+	mes "Bienvenue en revencia, l'Ile des Faes.";
+	mes "Prends garde à toi, les environs ne sont plus aussi sûres qu'autrefois.";
+	mes "Nombreux furent les Faes à succomber à l'attaque des hordes de Loki, pendant la dernière Bataille.";
+	mes "Les autres furent maudit par Hel, puisse-t-elle croupir dans les Enfers qu'elle gouverne!";
+	close;
+}
+
+revencia,250,67,5	script	Oyrin	445,{
+	set .@npcname$, "[Oyrin]";
+	
+	mes .@npcname$;
+	mes "";
+	mes "Vous autres Humains ne nous connaissez que par les Histoires.";
+	mes "Nous sommes ici depuis plus longtemps que vous pourtant.";
+	mes "J'ai cru comprendre que vous aimiez particulièrement celle de Lady Fae.";
+	mes "Elle n'est pourtant pas à prendre à la légère...";
+	close;
+}
+
+revencia,236,47,5	script	Garde des Quais	447,{
+	set .@npcname$, "[Garde des Quais]";
+	
+	mes .@npcname$;
+	mes "";
+	mes "Un instant!";
+	mes "Je ne peux pas te laisser aller plus loin. Le coin est dangereux.";
+	mes "Je veux bien t'envoyer de l'autre côté, si ton niveau dépasse 65 et que tu es conscient des riques.";
+	switch(select("Laisse moi passer","Je reviendrais plus tard alors"))
+	{
+		case 1:
+			if (BaseLevel > 65)
+			{
+				mes "Prenez garde à vous.";
+				warp "revencia", 224, 47;
+			}
+			else
+				mes "Désolé, vous n'avez pas le niveau requis.";
+			break;
+		case 2:
+			mes "C'est la bonne décision.";
+			break;
+	}
+	close;
+
+OnInit:
+	setcell "revencia",233,50,233,43,cell_walkable,0;
+	end;
+}
+
+revencia,238,97,5	script	Ruin	444,{
+	set .@npcname$, "[Ruin]";
+	
+	mes .@npcname$;
+	mes "";
+	mes "J'entends parfois les flots porter une voix douce.";
+	mes "Elle semble venir de là haut, et elle est d'une incroyable mélancolie.";
+	close;
+}
+
+revencia,246,136,5	script	Loia	441,{
+	set .@npcname$, "[Loia]";
+	
+	mes .@npcname$;
+	mes "";
+	mes "L'ile des Fae? N'importe quoi. Cette ville s'appelle revencia.";
+	mes "Bien avant que tu ne naisses, elle rayonnait déjà: commerces, cultures, droits...";
+	mes "Mais les Dieux n'ont pas daigner nous épargner dans leurs guerres.";
+	mes "Il parait que nos ancêtres sont les Alfes, habitants d'un autre monde que Midgard.";
+	mes "Je me demande s'ils existent toujours...";
+	close;
+}
+
+revencia,269,133,5	script	Aluin	437,{
+	set .@npcname$, "[Aluin]";
+	
+	mes .@npcname$;
+	mes "";
+	mes "Il parait qu'il existe un passage secret vers un endroit caché aux yeux des Hommes et des Faes.";
+	mes "Il faudrait suivre la voie pour y parvenir,";
+	mes "mais que sans la voix, c'est impossible et mortel.";
+	mes "Ces rumeurs sont toujours tellement étranges...";
+	close;
+}

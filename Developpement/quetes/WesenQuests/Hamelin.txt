@@ -1,0 +1,217 @@
+// [========================================================]
+// [===========      Grim Reaper - Hamelin       ===========]
+// [========================================================]
+// [ Version 1                                              ]
+// [========================================================]
+// [ Original script by: Alayne                             ]
+// [========================================================]
+// [ Description:                                           ]
+// [--------------------------------------------------------]
+// [                                                        ]
+// [ - Grim Reaper quests serie			           ]
+// [ - Hamelin flute player quest			           ]
+// [ - Way to obtain magic and rang bonus item		    ]
+// [========================================================]
+// [ Changelog: (5 last updates)                            ]
+// [--------------------------------------------------------]
+// [                                                        ]
+// [ v0: Creation                      			    ]
+// [                                                        ]
+// [========================================================]
+// [                                                        ]
+// [========================================================]
+
+
+casp_in01,97,190,6	script	wesencore	-1,{
+	end;
+
+OnInit:
+	//id item to loot
+	setarray $changeItemId[0],7883,6252,7612,7313,1546,5539,11706,12321,7936,7266,14569,7441,7062,903,6306,7450,7085,6091,12363,12099,5130,5556,7267,7007,526,7214,5786,944,7079,1016,702,6394,7949,7084,6022,6325;
+
+	//id npc
+	setarray $npcDisplayId[0],64,52,805,817,489,761,780,798,788,793,759,747,739,730,684,686,712,656,664,73,636,609,638,587,581,573,537,534,526,532,482,494,501,493,492,510;
+
+	//id monster
+	setarray $monsterSpawnInfos[0],2145,1013,2679,1102,1056,2072,1166,1106,1402,1262,1126,1376,1314,1271,1177,1783,1622,1029,1263,1256,1989,1317,1415,1175,1303,1111,1881,2071,1009,1209,1146,1320,1372,1369,1213,1304;	
+	end;
+
+}
+
+manuk,291,193,6	script	Hamelin#0::wesham	64,{
+	set .@npcname$, "[" + strnpcinfo(1) + "]";
+	set .@idNpc, atoi(strnpcinfo(2));
+	
+	mes .@npcname$;
+	mes "";
+	
+	if (LANGUAGE == 2)
+	{
+		mes "...";
+		if (WESENQ >= 5)
+		{
+			mes "...";
+			input .@name$;
+			if (.@name$ == "Wesen" || .@name$ == "Grim" || .@name$ == "Reaper")
+			{
+				mes "Grim!";
+				setnpcdisplay strnpcinfo(3), $monsterSpawnInfos[.@idNpc];
+				getmapxy(@mapname$,@mapx,@mapy,1,strnpcinfo(3));
+				if (countitem($changeItemId[.@idNpc]) >= 1)
+				{
+				
+					mes "I...I gonna kill a Grim!";
+					monster strnpcinfo(3),@mapx,@mapy,strnpcinfo(0),$monsterSpawnInfos[.@idNpc],1,strnpcinfo(3)+"::OnMonsterKilled";			
+				}
+				else
+				{
+					mes "What do you want?";
+					mes "Go away!";
+				}
+				setnpcdisplay strnpcinfo(3), $npcDisplayId[.@idNpc];
+				disablenpc strnpcinfo(3);
+			}
+			else
+			{
+				mes "Who are you?";
+			}
+		}
+		else
+		{
+			mes "He doesn't repond.";
+		}
+	}
+	else if (LANGUAGE == 1)
+	{
+		mes "Bonjour.";
+		if (WESENQ >= 5)
+		{
+			mes "...";
+			input .@name$;
+			if (.@name$ == "Wesen" || .@name$ == "Grim" || .@name$ == "Reaper")
+			{
+				mes "Grim!";
+				setnpcdisplay strnpcinfo(3), $monsterSpawnInfos[.@idNpc];
+				if (countitem($changeItemId[.@idNpc]) >= 1)
+				{
+					mes "Je...Je vais tuer un Grim!";
+					monster strnpcinfo(3),@mapx,@mapy,strnpcinfo(0),$monsterSpawnInfos[.@idNpc],1,strnpcinfo(3)+"::OnMonsterKilled";
+				}
+				else
+				{
+					mes "Que me veux-tu? Va-t-en?";
+				}
+				setnpcdisplay strnpcinfo(3), $monsterSpawnInfos[.@idNpc];
+				disablenpc strnpcinfo(3);
+			}
+			else
+			{
+				mes "Who are you?";
+			}
+		}
+		else
+		{
+			mes "Il ne répond pas.";
+		}
+	}
+
+OnMonsterKilled:
+	if (LANGUAGE == 2)
+	{
+		dispbottom "You've killed a Frusth Wesen.";
+		dispbottom "Go see the Wesen Secretary to get your reward.";
+		set WESENREWARDQ, WESENREWARDQ + 1;
+	}
+	else if (LANGUAGE == 1)
+	{
+		dispbottom "Vous avez vaincu un Frusth Wesen.";
+		dispbottom "Retournez voir le Wesen Secretary pour obtenir votre récompense.";
+		set WESENREWARDQ, WESENREWARDQ + 1;
+	}
+	end;
+
+OnNPCKillEvent:
+	set .@idNpc, atoi(strnpcinfo(2));
+	if (WESENQ >= 5 && getd("$" + strnpcinfo(1)+"_Q") == 1)
+	{
+		if (killedrid == $npcDisplayId[.@idNpc * 2 + 1] && countitem(1466) >= 1)
+		{
+			if (rand(0,rand(0,250)) < 10)
+			{
+				getitem $changeItemId[.@idNpc], 1;
+			}
+		}
+	}
+	end;
+}
+
+//loup
+morocc,135,244,0	duplicate(wesham)	Blutbad#1::wesblu	52
+//renard
+genasia,168,136,0	duplicate(wesham)	Fuchsbau#2::wesfuc	805
+//sorciere
+aldebaran,156,193,0	duplicate(wesham)	Hexenbiest#3::weshex	817
+//beaver
+ayothaya,181,150,0	duplicate(wesham)	Eisbiber#4::weseis	810
+//jaguar
+brasilis,57,229,0	duplicate(wesham)	Balam#5::wesbal	761
+//Boar
+prontera,94,293,0	duplicate(wesham)	Bauerschwein#6::wesbau	780
+//coyotl
+veins,206,122,0	duplicate(wesham)	Coyotl#7::wescoy	798
+//crapaud
+amatsu,170,248,0	duplicate(wesham)	CracherMortel#8::wescra	788
+//Dragon
+comodo,256,307,0	duplicate(wesham)	Damonfeuer#9::wesdam	793
+//Goblin
+geffen,68,140,0	duplicate(wesham)	Fuchsteufelwild#10::wesste	759
+//Vautour
+yuno,261,111,0	duplicate(wesham)	Geier#11::wesgei	747
+//Genie
+tur_dun01,122,90,0	duplicate(wesham)	GenioInnocuo#12::wesgen	739
+//Reptile
+cmd_fild03,245,85,0	duplicate(wesham)	Gluhenvolk#13::wesglu	730
+//Troll
+orcsdun02,110,131,0	duplicate(wesham)	Hasslich#14::weshas	752
+//Dog
+veins,202,100,0	duplicate(wesham)	Hundjager#15::weshun	686
+//Bear
+gonryun,240,234,0	duplicate(wesham)	Jagerbar#16::wesjag	712
+//Serpent
+morocc,264,284,0	duplicate(wesham)	Konigschlange#17::weskon	656
+//Ghost
+glast_01,364,310,0	duplicate(wesham)	Llorona#18::wesllo	739
+//Sangsue
+beach_dun,98,176,0	duplicate(wesham)	Lebensauger#19::wesleb	73
+//Lion
+manuk,327,183,0	duplicate(wesham)	Lowen#20::weslow	636
+//Seal
+comodo,213,280,0	duplicate(wesham)	LuisantPecheur#21::weslui	609
+//Tigre
+gonryun,179,107,0	duplicate(wesham)	MauvaisDent#22::wesmau	638
+//Souris
+prontera,48,47,0	duplicate(wesham)	Mauzhertz#23::wessou	587
+//Bee
+gld_dun02,75,43,0	duplicate(wesham)	Mellifer#24::wesmel	581
+//Chauve Souris
+orcsdun02,101,62,0	duplicate(wesham)	Murcielago#25::wesmur	573
+//Elf
+moscovia,149,127,0	duplicate(wesham)	Musai#26::wesmus	537
+//Horse
+brasilis,238,205,0	duplicate(wesham)	Nuckelavee#27::wesnuk	534
+//Condor
+yuno,321,240,0	duplicate(wesham)	Raubkondor#28::wesrau	526
+//rat
+izlude,213,148,0	duplicate(wesham)	Reinigen#29::wesrei	532
+//Chacal
+morocc,261,180,0	duplicate(wesham)	Schakal#30::wessch	482
+//Owl
+aldebaran,81,155,0	duplicate(wesham)	Scharfblicke#31::wesacbl	494
+//Sheep
+yuno,263,237,0	duplicate(wesham)	Seelengut#32::wessee	501
+//Bird
+yuno,185,193,0	duplicate(wesham)	Seltenvogel#33::wessel	493
+//Ogre
+alde_dun02,151,181,0	duplicate(wesham)	Siegbarste#34::wessie	492
+//Araignée
+gld_dun02,102,146,0	duplicate(wesham)	Spinnetod#35::wesspi	510

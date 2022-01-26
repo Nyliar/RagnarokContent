@@ -1,0 +1,109 @@
+///////Job list 5///////
+//5-1;
+prt_maze01,18,184,6	script	Lithin#01	752,{
+	if (five_qset == 1 && countitem(1025) > 49) goto N_QuestComp;
+	if (five_qset == 1) goto N_QuestStart;
+	mes "[Lithin]";
+	mes "Bien le bonjour.";
+	mes "Bienvenue dans le labyrinthe de la Forêt.";
+	close;
+N_QuestComp:
+	mes "[Lithin]";
+	mes "Super! Merci à toi.";
+	next;
+	mes "Tiens, prends ces 5 Tokens.";
+	delitem 1025,50;
+	set five_qset,0;
+	set On_Quest,0;
+	set #Treasure_Token,#Treasure_Token+5;
+	close;
+N_QuestStart:
+	mes "[Lithin]";
+	mes "Bien le bonjour.";
+	mes "Bienvenue dans le labyrinthe de la Forêt. J'ai une requête pour toi.";
+	mes " ";
+	mes "As-tu déjà entendu parler des monstres appelé Giant Spider?";
+	mes "Je hais ces bestioles, mais j'ai besoin de Spider Web. 50 en fait.";
+	mes "Mais il m'en absolument qui viennent d'ici. Je le saurais si tu triches!";
+	close;
+}
+//5-2 goes to 6-2 using callfunc;
+moc_ruins,75,167,6	script	Lithin#02	87,{
+	if (five_qset == 2 && countitem(1005) > 149) goto N_QuestComp;
+	if (five_qset == 2) goto N_QuestStart;
+	if (six_qset == 2) goto N_QuestStart2;
+	mes "[Strange Man]";
+	mes "...";
+	close;
+N_QuestComp:
+	mes "[Strange Man]";
+	mes "Un merci je te dois.";
+	next;
+	mes "Ces 6 Tokens en récompense tu prendras.";
+	delitem 1005,150;
+	set #Treasure_Token,#Treasure_Token+6;
+	set five_qset,0;
+	set On_Quest,0;
+	close;
+N_QuestStart:
+	mes "[Strange Man]";
+	mes "Quelque chose pour moi tu dois faire.";
+	mes "Descendre tout en bas tu dois, et me remonter une preuve tu devras.";
+	mes "Des marteaux j'ai besoin.";
+	mes "150 il m'en faudra.";
+	close;
+N_QuestStart2:
+	callfunc "six_qset2";
+}
+//5-3;
+geffen,57,130,6	script	Blonde Girl	724,{
+	if (five_qset == 3 && countitem(710) > 99) goto N_QuestComp;
+	if (five_qset == 3) goto N_QuestStart;
+	mes "[Blonde Girl]";
+	mes "je me demande ce qu'il est advenu de mes fleurs...";
+	close;
+N_QuestComp:
+	mes "[Blonde Girl]";
+	mes "Oh merci! J'adore ces plantes, elles me rappellent les fées quand je les roules et que...";
+	mes " ";
+	mes "Euh...J'ai rien dit d'accord?";
+	delitem 710, 100;
+	next;
+	mes "[Blonde Girl]";
+	mes "Prends ces Tokens, et on en parle plus.";
+	set five_qset,0;
+	set On_Quest,0;
+	set #Treasure_Token,#Treasure_Token+5;
+	close;
+N_QuestStart:
+	mes "[Blonde Girl]";
+	mes "Bonjour. Tu m'as apporté mes Illusions Flower? Les 100?";
+	close;
+}
+//5-4;
+gef_tower,49,27,6	script	Wizard#01	735,{
+	if (five_qset == 4 && countitem(996) > 99) goto N_QuestComp;
+	if (five_qset == 4) goto N_QuestStart;
+	mes "[Wizard]";
+	mes "Bonjour. Aurais-tu vu des Hunter Fly dans le coin?";
+	close;
+N_QuestComp:
+	mes "[Wizard]";
+	mes "Merci! Je tiens ma vengeance! Un grand coup de Lord of Vermillion!";
+	next;
+	mes "[Wizard]";
+	mes "Voilà tes 4 Tokens.";
+	delitem 996,100;
+	set five_qset,0;
+	set On_Quest,0;
+	set #Treasure_Token,#Treasure_Token+4;
+	close;
+N_QuestStart:
+	mes "[Wizard]";
+	mes "Salut à toi. La raison de ta présence ici, c'est la vengeance.";
+	mes "J'avais un ami chonchon. Il a changé en mangé un objet que j'avais laissé tomber,";
+	mes "Puis, lui m'a laissé tomber après être devenu tout rouge.";
+	mes " ";
+	mes "Rapporte moi 100 Rough Wind!";
+	close;
+}

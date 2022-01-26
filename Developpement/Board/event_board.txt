@@ -1,0 +1,410 @@
+-	script	Event Board#127::ev_b_	-1,{
+	
+	switch(select("Voir les évènements", ( getgmlevel() < 40 )?"":"^FF0000Ajouter un évènement^000000" ))
+	{
+		case 1:
+			mes "["+ strnpcinfo(1) +"]";
+			mes "Voici les évènements prévus prochainement";
+			mes "";
+			next;
+			for ( set .@i, 0; .@i<getarraysize(.tmp_ev_b_n_$); set .@i, .@i+1 )
+			{
+        			set .@menu$, .@menu$ + ( .@i ? ":" : "" ) + .tmp_ev_b_n_$[.@i];
+			}	
+			set .@choice, select(.@menu$);
+			
+			switch(.@choice)
+			{
+				mes "Nom de l'évènement: " + .tmp_ev_b_n_$[.@choice - 1] + ",";
+				mes "Le: " + .tmp_ev_b_da_$[.@choice - 1] + " à " + .tmp_ev_b_t_$[.@choice - 1] + ",";
+				mes "";
+				mes "Description: " + .tmp_ev_b_d_$[.@choice - 1] + ",";
+				mes "";
+				mes "Restriction éventuelle: " + .tmp_ev_b_re_$[.@choice - 1];
+				mes "";
+				mes "";
+				next;
+				switch(select("S'inscrire à l'évènement?", "Voir la liste des inscrits", "Annuler mon inscription", "Rien de plus"))
+				{
+					case 1:
+						mes "["+ strnpcinfo(1) +"]";
+						mes "Vous souhaitez vous inscrire à l'évènement " + .tmp_ev_b_n_$[.@choice - 1];
+						mes "Confirmer?";
+						switch(select("Oui","Non"))
+						{
+							case 1:
+								mes "Inscription en cours...";
+								set .@insc, 0;
+								for (set .@i, 0; .@i<getarraysize(getd(".tmp_ev_b_ins" + (.@choice - 1) + "$")); set .@i, .@i+1)
+								{
+									if (getelementofarray(getd(".tmp_ev_b_ins" + (.@choice - 1) + "$"), .@i) == strcharinfo(0))
+										set .@insc, 1;
+								}
+								if (.@insc == 0)
+								{
+									set getelementofarray(getd(".tmp_ev_b_ins" + (.@choice - 1) + "$"),getarraysize(getd(".tmp_ev_b_ins" + (.@choice - 1) + "$"))), strcharinfo(0);
+									mes "Inscription terminée. Nous vous attendrons le " + .tmp_ev_b_da_$[.@choice - 1] + ".";
+								}
+								else
+								{
+									mes "Vous êtes déjà inscrit à cet évènement.";
+								}
+								break;
+							case 2:
+								mes "Inscription annulée.";
+								mes "A bientôt";
+								break;
+						}
+						break;
+					case 2:
+						mes "["+ strnpcinfo(1) +"]";
+						mes "Voici la liste des inscris pour cet évènement";
+						mes "";
+						for (set .@j,0; .@j<getarraysize(getd(".tmp_ev_b_ins" + (.@choice - 1) + "$")); set .@j,.@j+1)
+						{
+							set .@tmpval, .@j+1;
+							mes "Inscrit numéro " + .@tmpval + ": " + getelementofarray(getd(".tmp_ev_b_ins" + (.@choice - 1) + "$"),.@j);
+							set .@tmpval, 0;
+						}
+						mes "";
+						mes "Fin des inscrits";
+						break;
+					case 3:
+						mes "["+ strnpcinfo(1) +"]";
+						mes "Vous souhaitez vous désinscrire de l'évènement " + .tmp_ev_b_n_$[.@choice - 1];
+						mes "Confirmer?";
+						switch(select("Oui","Non"))
+						{
+							case 1:
+								mes "Desinscription en cours...";
+								for (set .@j,0; .@j<getarraysize(getd(".tmp_ev_b_ins" +( .@choice - 1 )+ "$")); set .@j,.@j+1)
+								{
+									if (getelementofarray(getd(".tmp_ev_b_ins" + (.@choice - 1) + "$"),.@j) == strcharinfo(0))
+										deletearray getelementofarray(getd(".tmp_ev_b_ins" + (.@choice - 1) + "$"),.@j), 1;
+								}
+								mes "Desinscription terminée.";
+								break;
+							case 2:
+								break;
+						}
+						break;
+					case 4:
+						mes "["+ strnpcinfo(1) +"]";
+						mes "Très bien, au revoir.";
+						break;
+				}
+				next;
+			}
+			break;
+		case 2:
+			if ( getgmlevel() < 99 && getgmlevel() > 60) end;
+			while (1) 
+			{
+				if (getarraysize(.tmp_ev_b_n_$)<5)
+				{
+					mes "["+ strnpcinfo(1) +"]";
+					mes "Que souhaitez vous faire?";
+					switch(select("Ajouter un évènement","Editer un évènement","Supprimer un évènement","Tout supprimer"))
+					{
+						case 1:
+							callsub L_Input_Name, getarraysize(.tmp_ev_b_n_$);
+							next;
+							callsub L_Input_Desc, getarraysize(.tmp_ev_b_d_$);
+							next;
+							callsub L_Input_Date, getarraysize(.tmp_ev_b_da_$);
+							next;
+							callsub L_Input_Hour, getarraysize(.tmp_ev_b_t_$);
+							next;
+							callsub L_Input_Res, getarraysize(.tmp_ev_b_re_$);
+							next;
+							mes "["+ strnpcinfo(1) +"]";
+							mes "L'évènement à bien été enregistré";
+							break;
+						case 2:
+							mes "["+ strnpcinfo(1) +"]";
+							mes "Choisissez l'évènement à modifier:";
+ 							// On créé un menu dynamique
+    							for ( set .@i, 0; .@i<getarraysize(.tmp_ev_b_n_$); set .@i, .@i+1 )
+							{
+        							set .@menu$, .@menu$ + ( .@i ? ":" : "" ) + .tmp_ev_b_n_$[.@i];
+							}	
+							set .@choice, select(.@menu$);
+
+							switch(.@choice)
+							{
+								case 1:
+									set .@val, 0;
+									break;
+								case 2:
+									set .@val, 1;
+									break;
+								case 3:
+									set .@val, 2;
+									break;
+								case 4:	
+									set .@val, 3;
+									break;
+								case 5:
+									set .@val, 4;
+									break;
+							}
+							next;
+							callsub L_Update_Even;
+							break;
+						case 3:
+							mes "["+ strnpcinfo(1) +"]";
+							mes "Choisissez l'évènement à supprimer:";
+							for ( set .@i, 0; .@i<getarraysize(.tmp_ev_b_n_$); set .@i, .@i+1 )
+							{
+        							set .@menu$, .@menu$ + ( .@i ? ":" : "" ) + .tmp_ev_b_n_$[.@i];
+							}	
+							set .@choice, select(.@menu$);
+
+							switch(.@choice)
+							{
+
+								case 1:
+									deletearray .tmp_ev_b_n_$[0],1;
+									deletearray .tmp_ev_b_d_$[0],1;
+									deletearray .tmp_ev_b_da_$[0],1;
+									deletearray .tmp_ev_b_t_$[0],1;
+									deletearray .tmp_ev_b_re_$[0],1;
+									deletearray .tmp_ev_b_ins0$;
+									break;
+								case 2:
+									deletearray .tmp_ev_b_n_$[1],1;
+									deletearray .tmp_ev_b_d_$[1],1;
+									deletearray .tmp_ev_b_da_$[1],1;
+									deletearray .tmp_ev_b_t_$[1],1;
+									deletearray .tmp_ev_b_re_$[1],1;
+									deletearray .tmp_ev_b_ins1$;
+									break;
+								case 3:
+									deletearray .tmp_ev_b_n_$[2],1;
+									deletearray .tmp_ev_b_d_$[2],1;
+									deletearray .tmp_ev_b_da_$[2],1;
+									deletearray .tmp_ev_b_t_$[2],1;
+									deletearray .tmp_ev_b_re_$[2],1;
+									deletearray .tmp_ev_b_ins2$;
+									break;
+								case 4:
+									deletearray .tmp_ev_b_n_$[3],1;
+									deletearray .tmp_ev_b_d_$[3],1;
+									deletearray .tmp_ev_b_da_$[3],1;
+									deletearray .tmp_ev_b_t_$[3],1;
+									deletearray .tmp_ev_b_re_$[3],1;
+									deletearray .tmp_ev_b_ins3$;
+									break;
+								case 5:
+									deletearray .tmp_ev_b_n_$[4],1;
+									deletearray .tmp_ev_b_d_$[4],1;
+									deletearray .tmp_ev_b_da_$[4],1;
+									deletearray .tmp_ev_b_t_$[4],1;
+									deletearray .tmp_ev_b_re_$[4],1;
+									deletearray .tmp_ev_b_ins4$;
+									break;
+							}
+							mes "L'évènement a bien été supprimé.";
+							break;
+						case 4:
+							deletearray .tmp_ev_b_n_$;
+							deletearray .tmp_ev_b_d_$;
+							deletearray .tmp_ev_b_da_$;
+							deletearray .tmp_ev_b_t_$;
+							deletearray .tmp_ev_b_re_$;
+							
+							deletearray .tmp_ev_b_ins0;
+							deletearray .tmp_ev_b_ins1;
+							deletearray .tmp_ev_b_ins2;
+							deletearray .tmp_ev_b_ins3;
+							deletearray .tmp_ev_b_ins4;
+							break;
+					}
+				}
+				else
+				{
+					mes "["+ strnpcinfo(1) +"]";
+					mes "La board ne peut recevoir que 5 évènements maximum.";
+					mes "Veuillez effacer les anciens messages avant de tenter d'en ajouter un nouveau.";
+				}
+				break;
+			}
+	}
+	close;
+	
+L_Input_Name:
+	mes "["+ strnpcinfo(1) +"]";
+	set @tmp$,"";
+	mes "Veuillez entrer le nom de votre event (60 caractères max):";
+	input @tmp$;
+	if ( getstrlen(.@tmp$) > 60 ) {
+		mes "Le nom de l'Event ne peux contenir plus de 60 caractères";
+		next;
+	}
+	else if ( compare ( .@tmp$, ":" ) || compare ( .@tmp$, "^" ) ) {
+		mes "Le nom de l'Event ne doit pas contenir les caractères suivants";
+		mes "-> : <- deux points";
+		mes "-> ^ <- accent circonflex";
+		next;
+	}
+	mes "Nom de l'Event: " + @tmp$ + ". Confirmer?";
+	switch(select("Oui:Non"))
+	{
+		case 1:
+			set .tmp_ev_b_n_$[getarg(0)], @tmp$;
+			break;
+		case 2:
+			break;
+	}
+	return;
+	
+L_Input_Desc:
+	mes "["+ strnpcinfo(1) +"]";
+	mes "Veuillez entrer une description courte de votre event (250 caractères max):";
+	set .@tmp1$, "";
+	set .@tmp2$, "";
+	set .@tmp3$, "";
+	set .@tmp4$, "";
+	set .@tmp5$, "";
+	set .@tmp, 0;
+	do {
+			set .@tmp, .@tmp +1 ;
+			input getd(".@tmp"+ .@tmp +"$");
+	} while ( getstrlen( getd(".@tmp"+ .@tmp +"$") ) > 50 && .@tmp < 5 );
+	mes "Description de l'Event: " + .@tmp1$ + .@tmp2$ + .@tmp3$ + .@tmp4$ + .@tmp5$;
+	mes "Confirmer?";
+	switch(prompt("Oui:Non"))
+	{
+		case 1:
+			set .tmp_ev_b_d_$[getarg(0)], .@tmp1$ + .@tmp2$ + .@tmp3$ + .@tmp4$ + .@tmp5$;
+			break;
+		case 2:
+			break;
+		case 255:
+			close;
+	}
+	return;
+
+L_Input_Date:
+	mes "["+ strnpcinfo(1) +"]";
+	mes "Veuillez entrer une date pour votre event:";
+	set .@tmp$, "";
+	set .@tmp1, 0;
+	set .@tmp2, 0;
+	mes "Jour:";
+	input .@tmp1, 0, 31;
+	mes "Mois:";
+	input .@tmp2, 0, 12;
+	if (getstrlen(.@tmp1) == 1)
+		set .@tmp$, "0"+.@tmp1+"/";
+	else
+		set .@tmp$, ""+.@tmp1+"/";
+	if (getstrlen(.@tmp2) == 1)
+		set .@tmp$, .@tmp$+"0"+.@tmp2;
+	else
+		set .@tmp$, .@tmp$+""+.@tmp2;
+	mes "Date de l'évènement: " + .@tmp$; 
+	mes "Confirmer?";
+	switch(prompt("Oui:Non"))
+	{
+		case 1:
+			set .tmp_ev_b_da_$[getarg(0)], .@tmp$;
+			break;
+		case 2:
+			break;
+		case 255:
+			deletearray .tmp_ev_b_d_$[getarg(0)], 1;
+			close;
+	}
+	return;
+
+L_Input_Hour:
+	mes "["+ strnpcinfo(1) +"]";
+	mes "Veuillez entrer un horaire pour votre event:";
+	set .@tmp$, "";
+	set .@tmp1, 0;
+	set .@tmp2, 0;
+	mes "Heure:";
+	input .@tmp1, 0, 23;
+	mes "Minutes:";
+	input .@tmp2, 0, 59;
+	if (getstrlen(.@tmp1) == 1)
+		set .@tmp$, "0"+.@tmp1+":";
+	else
+		set .@tmp$, ""+.@tmp1+":";
+	if (getstrlen(.@tmp2) == 1)
+		set .@tmp$, .@tmp$+"0"+.@tmp2;
+	else
+		set .@tmp$, .@tmp$+""+.@tmp2;
+	mes "Heure de l'évènement: " + .@tmp$; 
+	mes "Confirmer?";
+	switch(prompt("Oui:Non"))
+	{
+		case 1:
+			set .tmp_ev_b_t_$[getarg(0)], .@tmp$;
+			break;
+		case 2:
+			break;
+		case 255:
+			deletearray .tmp_ev_b_d_$[getarg(0)], 1;
+			deletearray .tmp_ev_b_da_$[getarg(0)], 1;
+			close;
+	}
+	return;
+
+L_Input_Res:
+	mes "["+ strnpcinfo(1) +"]";
+	mes "Veuillez entrer une restriction pour votre event (150 caractères max):";
+	set .@tmp1$, "";
+	set .@tmp2$, "";
+	set .@tmp3$, "";
+	set .@tmp, 0;
+	do {
+		set .@tmp, .@tmp +1 ;
+		input getd(".@tmp"+ .@tmp +"$");
+	} while ( getstrlen( getd(".@tmp"+ .@tmp +"$") ) > 50 && .@tmp < 3 );
+	mes "Restriction de l'Event: " + .@tmp1$ + .@tmp2$ + .@tmp3$;
+	mes "Confirmer?";
+	switch(prompt("Oui:Non"))
+	{
+		case 1:
+			set .tmp_ev_b_re_$[getarg(0)], .@tmp1$ + .@tmp2$ + .@tmp3$;
+			break;
+		case 2:
+			break;
+		case 255:
+			deletearray .tmp_ev_b_d_$[getarg(0)], 1;
+			deletearray .tmp_ev_b_da_$[getarg(0)], 1;
+			deletearray .tmp_ev_b_t_$[getarg(0)], 1;
+			close;
+	}
+	return;
+	
+L_Update_Even:
+	while (1)
+	{
+		mes "Que souhaitez-vous modifier?";
+		switch(select("Le nom", "La description", "La date", "L'heure", "Les restrictions"))
+		{
+			case 1:
+				callsub L_Input_Name, .@val;
+				break;
+			case 2:
+				callsub L_Input_Desc, .@val;
+				break;
+			case 3:
+				callsub L_Input_Date, .@val;
+				break;
+			case 4:
+				callsub L_Input_Hour, .@val;
+				break;
+			case 5:	
+				callsub L_Input_Res, .@val;
+				break;
+		}
+		mes "L'évènement a bien été modifié.";
+	}
+	close;
+}
+
+thalys,128,159,5	duplicate(ev_b_)	Thalys Event Board#beb	111

@@ -1,0 +1,61 @@
+mora,46,44,4	script	mainquestitem::mqi	-1,{
+	end;
+
+OnInit:
+	setarray $elemental_mark_item[0],994,995,996,997;
+	end;
+
+OnClock0000:
+	if (gettime(4) == 0)
+	{
+		//reset variables
+		//items
+		set $elemental_type, rand(0,4);
+		switch($elemental_type)
+		{
+			case 1:
+				//Elemental Stone
+				setarray $elemental_fire_item[0], 994;
+				setarray $elemental_water_item[0], 995;
+				setarray $elemental_wind_item[0], 996;
+				setarray $elemental_earth_item[0], 997;
+				break;
+			case 2:
+				//Elemental Card
+				setarray $elemental_fire_item[0], 994;
+				setarray $elemental_water_item[0], 995;
+				setarray $elemental_wind_item[0], 996;
+				setarray $elemental_earth_item[0], 997;
+				break;
+			case 3:
+				//Elemental Armors
+				setarray $elemental_fire_item[0], 994;
+				setarray $elemental_water_item[0], 995;
+				setarray $elemental_wind_item[0], 996;
+				setarray $elemental_earth_item[0], 997;
+				break;
+			case 4:
+				//Elemental Weapons
+				setarray $elemental_fire_item[0], 994;
+				setarray $elemental_water_item[0], 995;
+				setarray $elemental_wind_item[0], 996;
+				setarray $elemental_earth_item[0], 997;
+				break;
+		}
+		//count quest week
+		set $elemental_quest_week, $elemental_quest_week+1;
+		//reset piedestals
+		disablenpc piedestal1;
+		disablenpc piedestal2;
+		disablenpc piedestal3;
+		disablenpc piedestal4;
+		disablenpc piedestal5;
+		disablenpc piedestal6;
+		disablenpc piedestal7;
+		disablenpc piedestal8;
+		disablenpc piedestal9;
+		disablenpc piedestal10;
+		disablenpc piedestal11;
+		disablenpc piedestal12;
+	}
+	close;

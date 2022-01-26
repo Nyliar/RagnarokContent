@@ -1,0 +1,80 @@
+hugel, 133, 202, 5	script	Bandana	719,{
+
+	set .@npcname$,"[Bandana]";
+	
+	//Black Bandana 20571
+	setarray @itemBB[0], 2211, 983, 7230;
+	setarray .countitemBB[0], 1, 2, 2;
+	
+	//Blue Bandana 20572
+	setarray @itemBLB[0], 2211, 978, 7230;
+	setarray .countitemBLB[0], 1, 2, 2;
+
+	//Cyan Bandana 20573
+	setarray @itemCB[0], 2211, 978, 982, 7230;
+	setarray @countitemCB[0], 1, 2, 2, 2;
+
+	//Gold Bandana 20574
+	setarray @itemGB[0], 2211, 976, 7230;
+	setarray @countitemGB[0], 1, 2, 2;
+	
+	//Green Bandana 20575
+	setarray @itemGNB[0], 2211, 979, 7230;
+	setarray @countitemGNB[0], 1, 2, 2;
+	
+	//Purple  Bandana 20576
+	setarray @itemPB[0], 2211, 981, 7230;
+	setarray @countitemPB[0], 1, 2, 2;
+	
+	//Red Bandana 2006
+	setarray @itemRB[0], 2211, 975, 7230;
+	setarray @countitemRB[0], 1, 2, 2;
+	
+	//White  Bandana 20577
+	setarray @itemWB[0], 2211, 982, 7230;
+	setarray @countitemWB[0], 1, 2, 2;
+	
+	
+	
+	mes .@npcname$;
+	mes "Bonjour ^3333FF" + strcharinfo(0) + "^000000!";
+	mes "Je peux te proposer quelque hats pour customiser ton Bandana.";
+	mes	"Ca t'interesse?!";
+	next;
+	mes .@npcname$;
+	mes "Voici ce que je peux te proposer:";
+	next;
+
+	switch(select("Black Bandana:Blue Bandana:Cyan Bandana:Gold Bandana:Green Bandana:Purple Bandana:Red Bandana:White Bandana:^777777Rien, merci...^000000"))
+	{
+		case 1 :
+ 		callfunc "mes_getitem_colo",.@npcname$,20454,@itemBB,@countitemBB, 1000000;
+
+		case 2 :
+ 		callfunc "mes_getitem_colo",.@npcname$,20455,@itemBLB,@countitemBLB, 1000000;
+
+		case 3 :
+ 		callfunc "mes_getitem_colo",.@npcname$,20456,@itemCB,@countitemCB, 1000000;
+
+		case 4 :
+ 		callfunc "mes_getitem_colo",.@npcname$,20457,@itemGB,@countitemGB, 1000000;
+
+		case 5 :
+		callfunc "mes_getitem_colo",.@npcname$,20458,@itemGNB,@countitemGNB, 1000000;
+
+		case 6 :
+ 		callfunc "mes_getitem_colo",.@npcname$,20459,@itemPB,@countitemPB, 1000000;
+		
+		case 7 :
+		callfunc "mes_getitem_colo",.@npcname$,20460,@itemRB,@countitemRB, 1000000;
+
+		case 8 :
+ 		callfunc "mes_getitem_colo",.@npcname$,20461,@itemWB,@countitemWB, 1000000;
+
+		// Quitter
+		case 9 :
+		mes @npcname$;
+		mes "Très bien. A bientôt !";
+		close;
+	}
+}

@@ -1,0 +1,68 @@
+//Le Livre d'Ymir http://www.bookofymir.net/
+//traduit par Myllena, corrigé par Fern
+//===== eAthena Script ======================================= 
+//= Advance Class jobchanger after kRO Normals.
+//===== By: ==================================================
+//= Nana
+//= finished, optimized and tested by Lupus
+//===== Current Version: ===================================== 
+//= 1.3
+//===== Compatible With: ===================================== 
+//= eAthena 1.0 +
+//===== Description: ========================================= 
+//= Advance Class jobchanger after kRO Normals.
+//===== Additional Comments: ================================= 
+//= v1.1 Made all into functions, additional checks, etc. [Lupus]
+//= v1.2 Made numbers into constants. [Vicious]
+//= 1.3 Now saves/restores all the quest skills [Lupus]
+//============================================================ 
+
+valkyrie,44,42,5	script	Grand Prêtre::Haut Prêtre#Valkyrie	60,{
+	if (ADVJOB == 0 || Upper != 1) {
+		set .@karma_d,rand(1,10);
+		if (.@karma_d > 4) {
+			mes "[Grand Prêtre]";
+			mes "Félicitations.";
+			mes "Honneur aux Guerriers!";
+			close;
+		}
+		mes "[Grand Prêtre]";
+		mes "Grâce à la puissance sacrée, puissions-nous trouver la paix, la force, et la protection. Délivrez-nous des forces du Mal...";
+		close;
+	}
+	else if (ADVJOB == Job_High_Priest && Class == Job_Acolyte_High && JobLevel > 39) {
+		mes "[Grand Prêtre]";
+		mes "Notre monde a besoin de gens de talent et de convictions.";
+		mes "Continuez de servir le monde en tant que héros de la sainteté...";
+		next;
+		mes "[Grand Prêtre]";
+		mes "Souhaitez-vous devenir Grand Prêtre?";
+		next;
+		if (select("Non.:Oui.") == 1) {
+			mes "[Grand Prêtre]";
+			mes "Revenez quand vous vous sentirez prêt.";
+			next;
+			mes "[Grand Prêtre]";
+			mes "Honneur aux Guerriers!";
+			close;
+		}
+		if (SkillPoint) {
+			mes "[Grand Prêtre]";
+			mes "Vous n'avez pas terminé votre apprentissage.";
+			close;
+		}
+		jobchange Job_High_Priest;
+		set ADVJOB,0;
+		mes "[Grand Prêtre]";
+		mes "Félicitations.";
+		mes "En tant que Grand Prêtre, j'espère que vous guiderez les autres sur la voie sacrée...";
+		close;
+	}
+	mes "[Grand Prêtre]";
+	mes "Bienvenue au Walhalla, le Hall des Honneurs.";
+	next;
+	mes "[Grand Prêtre]";
+	mes "Faites comme chez vous.";
+	mes "Honneur aux Guerriers!";
+	close;
+}

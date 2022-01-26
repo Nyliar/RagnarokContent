@@ -1,0 +1,73 @@
+moscovia, 208,234, 5	script	Valkyrja Helm	100,{
+
+	set .@npcname$,"[Valkyrja Helm]";
+	
+	//Black Valkyrja Helm 20185
+	setarray @iteBNVH[0], 5171, 983, 7230;
+	setarray @countiteBNVH[0], 1, 2, 2;
+	
+	//Cyan Valkyrja Helm 20188
+	setarray @itemCNVH[0], 5171, 978, 982, 7230;
+	setarray @countitemCNVH[0], 1, 2, 2, 2;
+
+	//Gold Valkyrja Helm 20189
+	setarray @itemGNVH[0], 5171, 976, 7230;
+	setarray @countitemGNVH[0], 1, 2, 2;
+
+	//Green Valkyrja Helm 20190
+	setarray @itemGNNVH[0], 5171, 979, 7230;
+	setarray @countitemGNNVH[0], 1, 2, 2;
+
+	//Purple  Valkyrja Helm 20193
+	setarray @itemPUNVH[0], 5171, 981, 7230;
+	setarray @countitemPUNVH[0], 1, 2, 2;
+	
+	//Red Valkyrja Helm 20194
+	setarray @itemRNVH[0], 5171, 975, 7230;
+	setarray @countitemRNVH[0], 1, 2, 2;
+	
+	//White  Valkyrja Helm 20196
+	setarray @itemWNVH[0], 5171, 982, 7230;
+	setarray @countitemWNVH[0], 1, 2, 2;
+	
+	
+	
+	mes .@npcname$;
+	mes "Bonjour ^3333FF" + strcharinfo(0) + "^000000!";
+	mes "Je peux te proposer quelque hats pour customiser ton Valkyrja Helm.";
+	mes	"Ca t'interesse?!";
+	next;
+	mes .@npcname$;
+	mes "Voici ce que je peux te proposer:";
+	next;
+
+	switch(select("Black Valkyrja Helm:Cyan Valkyrja Helm:Gold Valkyrja Helm:Green Valkyrja Helm:Purple Valkyrja Helm:Red Valkyrja Helm:White Valkyrja Helm:^777777Rien, merci...^000000"))
+	{
+		case 1 :
+ 		callfunc "mes_getitem_colo",.@npcname$,20244,@iteBNVH,@countiteBNVH, 1000000;
+
+		case 2 :
+ 		callfunc "mes_getitem_colo",.@npcname$,20245,@itemCNVH,@countitemCNVH, 1000000;
+
+		case 3 :
+ 		callfunc "mes_getitem_colo",.@npcname$,20246,@itemGNVH,@countitemGNVH, 1000000;
+
+		case 4 :
+ 		callfunc "mes_getitem_colo",.@npcname$,20247,@itemGNNVH,@countitemGNNVH, 1000000;
+
+		case 5 :
+ 		callfunc "mes_getitem_colo",.@npcname$,20248,@itemPUNVH,@countitemPUNVH, 1000000;
+		
+		case 6 :
+		callfunc "mes_getitem_colo",.@npcname$,20249,@itemRNVH,@countitemRNVH, 1000000;
+
+		case 7 :
+ 		callfunc "mes_getitem_colo",.@npcname$,20250,@itemWNVH,@countitemWNVH, 1000000;
+
+		// Quitter
+		case 8 :
+		mes @npcname$;
+		mes "Très bien. A bientôt !";
+		close;
+	}
+}

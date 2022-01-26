@@ -1,0 +1,138 @@
+thalys_s,236,219,1	script	Numéro10	911,{
+
+	set .@npcname$, "^0000FF[ Numéro 10 ]^000000";
+	if(Baselevel <= 35)
+	{	
+		mes .@npcname$;
+		mes "";
+		if((Quete_CacheCache > 1) && (Quete_CacheCache < 4))
+		{
+			mes "Humm je vois que tu as déjà trouvé quelques membres mais pas encore tout le monde, continu comme ça !";
+			close;
+		}
+		else if(Quete_CacheCache == 1)
+		{
+			mes "Je t'attend, va chercher mes amis !";
+			close;
+		}
+		else if(Quete_CacheCache == 4)
+		{
+			mes "HEY félicitation tu as trouvé tout le monde !";
+			next;
+			mes .@npcname$;
+			mes "";			
+			mes "Voilà pour te remercier de m'avoir remplacer.";
+			getexp 2000,1000;
+			getitem 7146,1; //Donne l'item au joueur
+			set Quete_CacheCache,5; //Pour fermer la quete
+			close;
+		}
+		mes "37 ... 36 ...35 ...34 ...33 ...32 ... 21 ... 10 ...";
+		mes "Pfouaaa j'en ai marre c'est toujours moi qui doit compter, tout ça parce que j'suis la seule fille de l'équipe j'suis sure.";
+		next;
+		mes .@npcname$;
+		mes "";
+		mes "T'aurais pas envi de chercher les autres membres de mon équipe pour moi stp ?";
+		next;
+		switch(select("Euh ok pourquoi pas:Nan, désolé.."))
+		{
+			case 1 :
+				mes .@npcname$;
+				mes "";
+				if(Quete_CacheCache > 1) //Je regarde si la variable est supérieur à 1 car elle peut etre a 1 2 3 4 en cours d'event
+				{
+					mes "Humm enfaite non toi tu as déjà joué tu dois connaitre leurs cachettes.";
+					close;
+				}
+				mes "Ok merci c'est sympa, alors il y a numéro 7 et numéro 9 à trouver.";
+				mes "T'inquiète pas ils sont sur cette map, peut être même dans une maison.";
+				next;
+				mes .@npcname$;
+				mes "";
+				mes "Ah oui pardon il y a aussi le Ballon Poring qui joue avec nous.";
+				mes "Je les préviens que tu arrives. Aufaite moi c'est Numéro 10 toi c'est ^3333FF" + strcharinfo(0) + "^000000 si je ne me trompe pas.";
+				next;
+				mes .@npcname$;
+				mes "";
+				npctalk "HEEEEEYYY les gars c'est " + strcharinfo(0) + " qui va venir vous chercher !!!";
+				set Quete_CacheCache,1;
+				close;
+
+			case 2 :
+				mes .@npcname$;
+				mes "";
+				mes "Ok ok bon je reprend alors :";
+				mes "9 ... 8 ... 7 ...";
+				close;
+
+		}
+	}
+	mes .@npcname$;
+	mes "";
+	mes "Laisse moi tranquille on joue à Cache Cache, toi t'es trop fort pour jouer avec nous désolé.";
+	close;
+}
+
+thalys_s,62,116,3	script	Numéro7	912,{
+	set .@npcname$, "^0000FF[ Numéro 7 ]^000000";
+	mes .@npcname$;
+	mes "";
+	if((Quete_CacheCache >= 1) && (Quete_CacheCache < 5)) //Si le joueur est dans la quete
+	{
+		if(Quete_CacheCache7 == 0)
+		{
+			mes "Raaa tu m'as trouvé ...";
+			mes "Trouve le reste de l'équipe si tu les as pas encore trouvé sinon retourne voir numéro 10.";
+			set Quete_CacheCache7,1; //Pour savoir si il a deja parlé a ce npc
+			set Quete_CacheCache,Quete_CacheCache+1;
+			close;
+		}
+		mes "Nan moi tu m'as déjà trouvé, va trouver les autres sauf si tu nous a tous trouver retourne voir numéro 10.";
+		close;
+	}
+	mes "Chuut pas un bruit, fais comme si je ne suis pas là..";
+	close;
+}
+
+tha_s_in,381,101,3	script	Numéro9	913,{
+	set .@npcname$, "^0000FF[ Numéro 9 ]^000000";
+	mes .@npcname$;
+	mes "";
+	if((Quete_CacheCache >= 1) && (Quete_CacheCache < 5)) //Si le joueur est dans la quete
+	{
+		if(Quete_CacheCache9 == 0)
+		{
+			set Quete_CacheCache,Quete_CacheCache+1;
+			set Quete_CacheCache9,1; //Pour savoir si il a deja parlé a ce npc
+			mes "Raaa tu m'as trouvé ...";
+			mes "Trouve le reste de l'équipe si tu les as pas encore trouvé sinon retourne voir numéro 10.";
+			close;
+		}
+		mes "Nan moi tu m'as déjà trouvé, va trouver les autres sauf si tu nous a tous trouver retourne voir numéro 10.";
+		close;
+	}
+	mes "Chuut pas un bruit, fais comme si je ne suis pas là..";
+	close;
+}
+
+
+thalys_s,327,163,7	script	Poring Ball	909,{
+	set .@npcname$, "^0000FF[ Poring Ball ]^000000";
+	mes .@npcname$;
+	mes "";
+	if((Quete_CacheCache >= 1) && (Quete_CacheCache < 5)) //Si le joueur est dans la quete
+	{
+		if(Quete_CacheCacheb == 0)
+		{
+			set Quete_CacheCache,Quete_CacheCache+1;
+			set Quete_CacheCacheb,1; //Pour savoir si il a deja parlé a ce npc
+			mes "Raaa tu m'as trouvé ...";
+			mes "Trouve le reste de l'équipe si tu les as pas encore trouvé sinon retourne voir numéro 10.";
+			close;
+		}
+		mes "Nan moi tu m'as déjà trouvé, va trouver les autres sauf si tu nous a tous trouver retourne voir numéro 10.";
+		close;
+	}
+	mes "Chuut pas un bruit, fais comme si je ne suis pas là..";
+	close;
+}

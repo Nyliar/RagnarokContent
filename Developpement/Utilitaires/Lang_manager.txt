@@ -1,0 +1,66 @@
+//// Language master
+//// Version 1.0
+//// Available language:
+//// 1 - Francais
+//// 0 - Anglais
+//// 2 et 3 to be added
+
+prontera,149,194,5	script	Language Master::prtlanmas	526,{
+	set .@npcname$, "[Language Master]";
+	
+	mes .@npcname$;
+	mes "";
+
+if (LANGUAGE == 2)
+{
+	mes "Hello to you, " + strcharinfo(0);
+	mes "I'm the language master. I can learn how to understand everyone's language around here.";
+	mes "Nothing's simplier. Just choose the language you wanna use, and it'll be done!";
+	switch(select("Français","English","Deutch","Italian"))
+	{
+		case 1:
+			mes "Très bien! Ta langue sera désormais le français!";
+			set LANGUAGE, 1;
+			break;
+		case 2:
+		default:
+			mes "Allright! Your language is now English!";
+			set LANGUAGE, 2;
+			break;
+		case 3:
+		case 4:
+			mes "Sorry this language is not yet supported. You'll be routed to English.";
+			set LANGUAGE, 2;
+			break;
+	}
+}
+else if (LANGUAGE == 1)
+{
+	mes "Bonjour à toi, " + strcharinfo(0);
+	mes "Je suis le maitre du langage. Je peux t'apprendre à comprendre tout le monde ici bas.";
+	mes "Rien n'est plus simple. Tu choisis une langue et POUF! tu comprends tout!";
+	switch(select("Français","English","Deutch","Italian"))
+	{
+		case 1:
+			mes "Très bien! Ta langue sera désormais le français!";
+			set LANGUAGE, 1;
+			break;
+		case 2:
+		default:
+			mes "Allright! Your language is now English!";
+			set LANGUAGE, 2;
+			break;
+		case 3:
+		case 4:
+			mes "Sorry this language is not yet supported. You'll be routed to English.";
+			set LANGUAGE, 2;
+			break;
+	}
+}
+	close;
+OnPCLoginEvent:
+	if (LANGUAGE == 0)
+	{
+		set LANGUAGE, 2;
+	}
+}

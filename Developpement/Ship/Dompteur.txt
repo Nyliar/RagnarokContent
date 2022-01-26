@@ -1,0 +1,144 @@
+thalys_s,130,79,6	script	Dompteur	776,{
+	set .@npcname$, "[Le Dompteur]";
+	
+	mes .@npcname$;
+	mes "";
+	if (checkquest (60369, PLAYTIME) == 2 && mono_given)
+	{
+		goto OnMonoCaptured;
+	}
+	if (SHIP_Q == 0)
+	{
+		mes "Bonjour à toi, " + strcharinfo(0);
+		mes "Que puis-je faire pour toi?";
+		switch(select("Qu'est ce qu'un Dompteur?",(SHIP_I==1)?"Je voudrais un Mono":"","Il parait que tu peux améliorer mon Mono","Rien, je passais seulement."))
+		{
+			case 1:
+				mes "Un Dompteur? C'est quelqu'un comme moi.";
+				mes "Un vieux loup de mer qui, après des années à naviguer, a préféré raccroché.";
+				mes "A la place, nous avons décider de mettre notre savoir-faire au service des autres.";
+				mes "Nous renforçons, préparons, et, pour les meilleurs, domptons des monstres pour naviguer.";
+				mes "Tous ne sont pas fiables, néanmoins. Un savoir faire ne suffit pas, il y a toujours des risques.";
+				break;
+			case 2:
+				mes "Te dompter un Mono? Ca se pourrait que je sache faire.";
+				mes "J'ai appris après des années en mer, à renforcer, naviguer...";
+				mes "C'est pas tout à fait légal, alors je fais payer plus cher. Mais je travaille plus vite.";
+				mes "Un mec de la Guilde te fera ça en une semaine, ca ne me prendra qu'une journée.";
+				mes "Mais je demande des matériaux plus sûrs, plus rares.";
+				mes "En échange, mes Monos sont meilleurs, plus rapide, plus résistant.";
+				mes "Par exemple, mes Monos ont déjà un niveau d'ensorcellement de 2, contre un niveau 0 pour les officiels.";
+				mes "Pour échapper aux pirates, c'est important.";
+				next;
+				mes .@npcname$;
+				mes "";
+				mes "Ca t'intéresse toujours?";
+				switch(select("Oui, bien sûr.","Non, trop dangereux."))
+				{
+					case 1:
+						mes "Alors on va pouvoir bosser. Commence par contacter mes compères.";
+						mes "Ils te fourniront ce dont j'aurais besoin.";
+						mes "Il faudra trouver l'Ebéniste, à Payon, le Poseur d'enduit, à Yuno, l'Enchanteresse à Prontera, et le Fishnet, à Comodo.";
+						mes "J'attendrais là que tu ais tout ce qu'il faut.";
+						set SHIP_Q, 1;
+						set mono_given, 0;
+						break;
+					case 2:
+						mes "Ok, tant pis.";
+						mes "Je reste là si tu changes d'avis.";
+						mes "Garde ça secret où je te brise les os!";
+						break;
+				}
+				break;
+			case 3:
+				mes "Bien sûr. La Guilde m'autorise ça.";
+				mes "En revanche, j'ai besoin de pièce rare pour ça.";
+				mes "Il me faut une Rune Magique par ensorcellement.";
+				mes "Le prix est proportionnel au nombre d'ensorcellement.";
+				mes "La première coûte 200.000 Zeny, la seconde 400.000, la troisième 600.000...";
+				mes "T'es partant?";
+				switch(select("Oui, bien sûr.","Non, trop cher."))
+				{
+					case 1:
+						if (SHIP == 1)
+						{
+							if (countitem(21065) >= 1)
+							{
+								if (Zeny >= 200000*1+UPGRADE_S)
+								{
+									set Zeny, Zeny - 200000*1+UPGRADE_S;
+									mes "C'est parti.";
+									delitem 21065,1;
+									set UPGRADE_S, UPGRADE_S+1;
+										next;
+								mes "*Votre Mono acquiert un niveau d'ensorcellement de " + UPGRADE_S + "*.";
+								}
+								else
+								{
+									mes "Désolé, mais vous n'avez pas assez d'argent.";
+								}
+							}
+							else
+							{
+								mes "Vous n'avez pas la Rune. Sans elle, je ne peux rien faire.";
+							}
+						}
+						else
+							mes "Voyons...Il te faut au minimum un Mono a enchanter...";	
+							break;
+					case 2:
+						mes "Ok, tant pis.";
+						mes "Je reste là si tu changes d'avis.";
+						break;
+				}
+				break;
+			case 4:
+				mes "Ok, tant pis.";
+				mes "Je reste là si tu as besoin un jour.";
+				break;
+		}
+	}
+	else if (SHIP_Q == 1 && EBEN_Q == 2 && CALF_Q == 2 && POSE_Q == 2 && TISS_Q == 3)
+	{
+		set EBEN_Q, 0;
+		set CALF_Q, 0;
+		set POSE_Q, 0;
+		set TISS_Q, 0;
+		mes "Parfait! On dirait que tout est prêt.";
+		mes "Reste à régler le problème de ma petite contribution...";
+		mes "Je ne bosse que pour 500.000 Zeny, pas plus, pas moins.";
+		mes "Ca t'intéresse?";
+		switch(select("Oui, bien sûr.","Non, trop cher."))
+		{
+			case 1:
+				if (Zeny >= 500000)
+				{
+					set Zeny, Zeny - 500000;
+					mes "Ok allons-y!";
+					mes "Ton Mono sera prêt dès demain.";
+					setquest 60379;
+				}
+				else
+				{
+					mes "T'as pas ce qui faut...";
+					mes "Je bosse pas gratis, désolé.";
+				}
+				break;
+			case 2:
+				mes "Ok, tant pis.";
+				break;
+		}
+	}
+	else
+	{
+		mes "T'inquiètes pas, je serais toujours là quand tu reviendras.";
+	}
+	close;
+	
+OnMonoCaptured:
+	dispbottom "Votre Mono est prêt. Vous pouvez y accéder en parlant au Responsable du Port.";
+	set SHIP, 1;
+	set UPGRADE_S, 2;
+	set mono_given, 1;
+	erasequest 60369;
+}

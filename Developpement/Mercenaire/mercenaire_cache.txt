@@ -1,0 +1,232 @@
+thalys,219,116,5	script	Jack	887,{
+	set .@npcname$,"^FF3333Jack^000000";	
+	
+	mes "[" + .@npcname$ + "]";
+	
+if (LANGUAGE == 1)
+{
+	mes "Salut" + (Sex?" m'sire,":" l'dy");
+	mes "Moi c'Jack. 'fin c'comm' ça qui m'appelle au Village.";
+	mes "Mais bon, y'plus d'Village, alors...";
+	mes "Qu'est ce qu'y peut pour un grand d'ce monde, l'Jack?";
+	next;
+	if (M_QUEST == 2)
+	{
+		switch(select("Je veux devenir un Mercenaire:C'te fois c'bon:Rien, je passais simplement"))
+		{
+			case 1:
+				goto L_QUEST;
+			case 2:
+				goto L_TRADE;
+			case 3:
+				goto L_QUIT;
+		}
+	}
+	else
+	{
+		switch(select("Je veux devenir un Mercenaire:Je viens te proposer un échange:Rien, je passais simplement"))
+		{
+			case 1:
+				goto L_QUEST;
+			case 2:
+				goto L_TRADE;
+			case 3:
+				goto L_QUIT;
+		}
+	}
+}
+else if (LANGUAGE == 2)
+{
+	mes "Good day to you, " + (Sex?" m'lord,":" l'dy");
+	mes "I'Jack. 'ut that' ho' they call me in Villag'.";
+	mes "But now, there's no mor' V'llage so...";
+	mes "Wha' can he do for a World big one, Jack?";
+	next;
+	if (M_QUEST == 2)
+	{
+		switch(select("I wanna become a Mercenary:This one' goo':Nothing, simply walking"))
+		{
+			case 1:
+				goto L_QUEST;
+			case 2:
+				goto L_TRADE;
+			case 3:
+				goto L_QUIT;
+		}
+	}
+	else
+	{
+		switch(select("I wanna become a Mercenary:I'm here to offer an exchange:Nothing, simply walking"))
+		{
+			case 1:
+				goto L_QUEST;
+			case 2:
+				goto L_TRADE;
+			case 3:
+				goto L_QUIT;
+		}
+	}
+
+}
+	
+	
+L_QUIT:
+	mes "[" + .@npcname$ + "]";
+	if (LANGUAGE == 1)
+	{
+		mes "Ca, l'Jack, y sait faire!";
+		mes "Rien d'mieux que quand on y d'mande rien, au Jack!";
+	}
+	else if (LANGUAGE == 2)
+	{
+		mes "That, Jack, he can do!";
+		mes "Nothin' bette' when nothing's ask to Jack!";
+	}
+	close;
+	
+L_QUEST:
+	mes "[" + .@npcname$ + "]";
+	if (LANGUAGE == 1)
+	{
+		mes "Un Merc'naire?";
+		mes "J'sais pas c'qu'c'est un Merc'naire, moi.";
+		mes "La mémoire qu'flanche en c'moment...";
+		mes "P't'être qu'avec un cou'd'main, j'm'en rappelerais.";
+	}
+	else if (LANGUAGE == 2)
+	{
+		mes "A Merc'nary?";
+		mes "Dunno what's tha'.";
+		mes "Bad memory, these times...";
+		mes "Maybe with some help, I can rem'mber.";
+	}
+	close;
+
+L_TRADE:
+	if (LANGUAGE == 1)
+	{
+		if (M_QUEST == 1)
+		{
+			if (countitem(969) >= 10)
+			{
+				mes "[" + .@npcname$ + "]";
+				mes "Oh oh oh!";
+				mes "R'ga'de moi ça!";
+				mes "Toi t'sais c'que c'est qu'on aime, nous!";
+				delitem 969, 10;
+				mes "Bon. Bah d'sons qu'je pourrais te r'commander.";
+				mes "M'enfin y a pas qu'ça dans la vie.";
+				mes "Même si on a pas d'honneur, 'n abuse pas un Merc'naire.";
+				mes "Tu sais c'qui compte plus que l'Or, non?";
+				mes "'lors r'mène en un d'un pres'que com'nous.";
+				mes "Un d'ces niveau 1, sans l'âme des Merc'naires.";
+				set M_QUEST, 2;
+				close;
+			}
+			else
+			{
+				mes "[" + .@npcname$ + "]";
+				mes "...";
+				mes "T'sais c'qu'on aime, nous autre, non?";
+				mes "Alors ramènes-en. Une 'tite dizaine, c'bien.";
+				mes "On verra c'qu'on p'faire 'près.";
+				close;
+			}
+		}
+		else if (M_QUEST==2)
+		{
+			mes "[" + .@npcname$ + "]";
+			mes "T'commence à parler com' l'Jack!";
+			mes "Bientôt, t's'ras aussi bien qu'lui!";
+			mes "Voyons s't'as c'qui faut!";
+			if (countitem(12153) == 1 || countitem(12163) == 1 || countitem(12173) == 1)
+			{
+				mes "[" + .@npcname$ + "]";
+				mes "Pas qu'd'la tronche hein?!";
+				mes "Ok pour l'Jack.";
+				mes "Dis le bien à Varys, y t'donnera du taf!";
+				set M_QUEST, 3;
+				close;
+			}
+			else
+			{
+				mes "[" + .@npcname$ + "]";
+				mes "...";
+				mes "T'pas écouter c'que j't'ai dit ou quoi?";
+				mes "Un niveau un. Un papelar, c'pas la mer à boire!";
+				mes "Reviens quand t'en auras un.";
+				close;
+			}
+		}
+		else
+		{
+			mes "[" + .@npcname$ + "]";
+			mes "Un échange? Un 'change d'quoi?";
+			mes "L'seule chose qu'm'intéresse, j'crois pas qu't'en aura assez...";
+			close;
+		}
+	}
+	else if (LANGUAGE == 2)
+	{
+		if (M_QUEST == 1)
+		{
+			if (countitem(969) >= 10)
+			{
+				mes "[" + .@npcname$ + "]";
+				mes "Oh oh oh!";
+				mes "Look at tha'!";
+				mes "Ya kno' wha' we like, hu!";
+				delitem 969, 10;
+				mes "So, let's say that I can recommand you then.";
+				mes "But there's not only that in life.";
+				mes "Even if we don't have Honnor, you can't abuse a Mercenary.";
+				mes "You know what's better than gold, right?";
+				mes "Then bring me back some of our bounded brothers' one.";
+				mes "One of those level 1 Mercenary souls.";
+				set M_QUEST, 2;
+				close;
+			}
+			else
+			{
+				mes "[" + .@npcname$ + "]";
+				mes "...";
+				mes "Y'know wha' we like, hu?";
+				mes "Then bring me back. 10 should do the job.";
+				mes "And I'll see after.";
+				close;
+			}
+		}
+		else if (M_QUEST==2)
+		{
+			mes "[" + .@npcname$ + "]";
+			mes "Start tal'ing lik' Jack, hu!";
+			mes "Soon, you'll be as grea' ashim!";
+			mes "Let's see if you go' it all!";
+			if (countitem(12153) == 1 || countitem(12163) == 1 || countitem(12173) == 1)
+			{
+				mes "[" + .@npcname$ + "]";
+				mes "Not just handsom', hu?!";
+				mes "Allright for Jack.";
+				mes "Tell it to Varys, he'll give you work!";
+				set M_QUEST, 3;
+				close;
+			}
+			else
+			{
+				mes "[" + .@npcname$ + "]";
+				mes "...";
+				mes "Didn't liste' or wha'?";
+				mes "A level 1! A f***ing paper!";
+				mes "Come back when you'll have one.";
+				close;
+			}
+		}
+		else
+		{
+			mes "[" + .@npcname$ + "]";
+			mes "An exchange? Of what?";
+			mes "The only interesting thing, you'll never have enough...";
+			close;
+		}
+	}
+}

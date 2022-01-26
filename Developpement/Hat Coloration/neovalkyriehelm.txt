@@ -1,0 +1,108 @@
+payon, 154, 105, 5	script	Neo Valkyrie Helm	100,{
+
+	set .@npcname$,"[Neo Valkyrie Helm]";
+	
+	//Black Neo Valkyrie Helm 20185
+	setarray @iteBNVH[0], 5171, 983, 7230;
+	setarray @countiteBNVH[0], 3, 2, 2;
+	
+	//Blue Neo Valkyrie Helm 20186
+	setarray @iteBLNVH[0], 5171, 978, 7230;
+	setarray @countiteBLNVH[0], 3, 2, 2;
+
+	//Brown Neo Valkyrie Helm 20187
+	setarray @iteBRNVH[0], 5171, 978, 980, 7230;
+	setarray @countiteBRNVH[0], 3, 2, 2, 2;
+
+	//Cyan Neo Valkyrie Helm 20188
+	setarray @itemCNVH[0], 5171, 978, 982, 7230;
+	setarray @countitemCNVH[0], 3, 2, 2, 2;
+
+	//Gold Neo Valkyrie Helm 20189
+	setarray @itemGNVH[0], 5171, 976, 7230;
+	setarray @countitemGNVH[0], 3, 2, 2;
+
+	//Green Neo Valkyrie Helm 20190
+	setarray @itemGNNVH[0], 5171, 979, 7230;
+	setarray @countitemGNNVH[0], 3, 2, 2;
+
+	//Orange Neo Valkyrie Helm 20191
+	setarray @itemONVH[0], 5171, 980, 7230;
+	setarray @countitemONVH[0], 3, 2, 2;
+	
+	//Pink  Neo Valkyrie Helm 20192
+	setarray @itemPNVH[0], 5171, 975, 982, 7230;
+	setarray @countitemPNVH[0], 3, 2, 2, 2;
+
+	//Purple  Neo Valkyrie Helm 20193
+	setarray @itemPUNVH[0], 5171, 981, 7230;
+	setarray @countitemPUNVH[0], 3, 2, 2;
+	
+	//Red Neo Valkyrie Helm 20194
+	setarray @itemRNVH[0], 5171, 975, 7230;
+	setarray @countitemRNVH[0], 3, 2, 2;
+
+	//Silver  Neo Valkyrie Helm 20195
+	setarray @itemSNVH[0], 5171, 983, 982, 7230;
+	setarray @countitemSNVH[0], 3, 2, 2, 2;
+	
+	//White  Neo Valkyrie Helm 20196
+	setarray @itemWNVH[0], 5171, 982, 7230;
+	setarray @countitemWNVH[0], 3, 2, 2;
+	
+	
+	
+	mes .@npcname$;
+	mes "Bonjour ^3333FF" + strcharinfo(0) + "^000000!";
+	mes "Je peux te proposer quelque hats pour customiser ton Neo Valkyrie Helm.";
+	mes	"Ca t'interesse?!";
+	next;
+	mes .@npcname$;
+	mes "Voici ce que je peux te proposer:";
+	next;
+
+	switch(select("Black Neo Valkyrie Helm:Blue Neo Valkyrie Helm:Brown Neo Valkyrie Helm:Cyan Neo Valkyrie Helm:Gold Neo Valkyrie Helm:Green Neo Valkyrie Helm:Orange Neo Valkyrie Helm:Pink Neo Valkyrie Helm:Purple Neo Valkyrie Helm:Red Neo Valkyrie Helm:Silver Neo Valkyrie Helm:White Neo Valkyrie Helm:^777777Rien, merci...^000000"))
+	{
+		case 1 :
+ 		callfunc "mes_getitem_colo",.@npcname$,20185,@iteBNVH,@countiteBNVH, 1000000;
+
+		case 2 :
+ 		callfunc "mes_getitem_colo",.@npcname$,20186,@iteBLNVH,@countiteBLNVH, 1000000;
+
+		case 3 :
+ 		callfunc "mes_getitem_colo",.@npcname$,20187,@iteBRNVH,@countiteBRNVH, 1000000;
+
+		case 4 :
+ 		callfunc "mes_getitem_colo",.@npcname$,20188,@itemCNVH,@countitemCNVH, 1000000;
+
+		case 5 :
+ 		callfunc "mes_getitem_colo",.@npcname$,20189,@itemGNVH,@countitemGNVH, 1000000;
+
+		case 6 :
+ 		callfunc "mes_getitem_colo",.@npcname$,20190,@itemGNNVH,@countitemGNNVH, 1000000;
+
+		case 7 :
+ 		callfunc "mes_getitem_colo",.@npcname$,20191,@itemONVH,@countitemONVH, 1000000;
+
+		case 8 :
+ 		callfunc "mes_getitem_colo",.@npcname$,20192,@itemPNVH,@countitemPNVH, 1000000;
+
+		case 9 :
+ 		callfunc "mes_getitem_colo",.@npcname$,20193,@itemPUNVH,@countitemPUNVH, 1000000;
+		
+		case 10 :
+		callfunc "mes_getitem_colo",.@npcname$,20194,@itemRNVH,@countitemRNVH, 1000000;
+
+		case 11 :
+		callfunc "mes_getitem_colo",.@npcname$,20195,@itemSNVH,@countitemSNVH, 1000000;
+
+		case 12 :
+ 		callfunc "mes_getitem_colo",.@npcname$,20196,@itemWNVH,@countitemWNVH, 1000000;
+
+		// Quitter
+		case 13 :
+		mes @npcname$;
+		mes "Très bien. A bientôt !";
+		close;
+	}
+}

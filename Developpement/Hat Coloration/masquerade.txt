@@ -1,0 +1,73 @@
+izlude, 109, 176, 5	script	Masquerade	410,{
+
+	set .@npcname$,"[Masquerade]";
+	
+	//Cyan Masquerade 20188
+	setarray @itemCNM[0], 2291, 978, 982, 7230;
+	setarray @countitemCNM[0], 1, 2, 2, 2;
+
+	//Gold Masquerade 20189
+	setarray @itemGNM[0], 2291, 976, 7230;
+	setarray @countitemGNM[0], 1, 2, 2;
+
+	//Green Masquerade 20190
+	setarray @itemGNNM[0], 2291, 979, 7230;
+	setarray @countitemGNNM[0], 1, 2, 2;
+
+	//Purple  Masquerade 20193
+	setarray @itemPUNM[0], 2291, 981, 7230;
+	setarray @countitemPUNM[0], 1, 2, 2;
+	
+	//blue Masquerade 20194
+	setarray @itemBLNM[0], 2291, 978, 7230;
+	setarray @countitemBLNM[0], 1, 2, 2;
+
+	//RED Masquerade 20194
+	setarray @itemRNM[0], 2291, 975, 7230;
+	setarray @countitemRNM[0], 1, 2, 2;
+	
+	//White  Masquerade 20196
+	setarray @itemWNM[0], 2291, 982, 7230;
+	setarray @countitemWNM[0], 1, 2, 2;
+	
+	
+	
+	mes .@npcname$;
+	mes "Bonjour ^3333FF" + strcharinfo(0) + "^000000!";
+	mes "Je peux te proposer quelque hats pour customiser ton Masquerade.";
+	mes	"Ca t'interesse?!";
+	next;
+	mes .@npcname$;
+	mes "Voici ce que je peux te proposer:";
+	next;
+
+	switch(select("Red Masquerade:Blue Masquerade:Cyan Masquerade:Gold Masquerade:Green Masquerade:Purple Masquerade:White Masquerade:^777777Rien, merci...^000000"))
+	{
+		case 1 :
+ 		callfunc "mes_getitem_colo",.@npcname$,20512,@itemRNM,@countitemRNM, 1000000;
+
+		case 2 :
+ 		callfunc "mes_getitem_colo",.@npcname$,20507,@itemBLNM,@countitemBLNM, 1000000;
+
+		case 3 :
+ 		callfunc "mes_getitem_colo",.@npcname$,20508,@itemCNM,@countitemCNM, 1000000;
+
+		case 4 :
+ 		callfunc "mes_getitem_colo",.@npcname$,20509,@itemGNM,@countitemGNM, 1000000;
+
+		case 5 :
+ 		callfunc "mes_getitem_colo",.@npcname$,20510,@itemGNNM,@countitemGNNM, 1000000;
+
+		case 6 :
+ 		callfunc "mes_getitem_colo",.@npcname$,20511,@itemPUNM,@countitemPUNM, 1000000;
+
+		case 7 :
+ 		callfunc "mes_getitem_colo",.@npcname$,20513,@itemWNM,@countitemWNM, 1000000;
+
+		// Quitter
+		case 8 :
+		mes @npcname$;
+		mes "Très bien. A bientôt !";
+		close;
+	}
+}

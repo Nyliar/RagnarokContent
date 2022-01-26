@@ -1,0 +1,98 @@
+//Le Livre d'Ymir http://www.bookofymir.net/
+//traduit par Myllena, corrigé par Fern
+//===== eAthena Script ======================================= 
+//= Advance Class jobchanger after kRO Normals.
+//===== By: ==================================================
+//= Nana
+//= finished, optimized and tested by Lupus
+//===== Current Version: ===================================== 
+//= 1.3
+//===== Compatible With: ===================================== 
+//= eAthena 1.0 +
+//===== Description: ========================================= 
+//= Advance Class jobchanger after kRO Normals.
+//===== Additional Comments: ================================= 
+//= v1.1 Made all into functions, additional checks, etc. [Lupus]
+//= v1.2 Made numbers into constants. [Vicious]
+//= 1.3 Now saves/restores all the quest skills [Lupus]
+//============================================================ 
+
+valkyrie,44,47,5	script	Grand Sorcier::Haut Sorcier#Valkyrie	735,{
+	if (SUBCLASSING == 1 && Class != 4017 && Class != 4010)
+	{
+		mes "[Grand Sorcier]";
+		mes "Tu as choisi le métier de High Wizard en tant que classe Vane?";
+		mes "Es-tu bien sûr de ton choix? Il n'y a pas de machine arrière.";
+		switch(select("Oui","Non", "Je ne sais pas encore. Quels skills sont disponibles?"))
+		{
+			case 1:
+				mes "Très bien. Qu'il en soit ainsi.";
+				set SUBCLASSING, 4010; 
+				getitem 21098, 1;
+				break;
+			case 2:
+				mes "Tu as raison. Réfléchis bien.";
+				break;
+			case 3:
+				mes "Tu veux en savoir plus? Bien sûr!";
+				mes "C'est logique. Vu le poids de ta décision sur ton futur.";
+				mes "En tant que High Wizard, tu peux accéder aux skills suivants:";
+				mes "Soul Drain, Magic Crasher, Amplify Magic Power, Ganbantein, Napalm Vulcan, Gravitation Field.";
+				mes "Fire Pillar, Sight Trasher, Meteor Storm, Jupitel Thunder, Lord of Vermillion, Water Ball, Ice Wall, Storm Gust et Quagmire.";
+				mes "Voilà, tu en sais un peu plus. Réfléchis bien.";
+				break;
+		} 
+		close;
+	}
+	else if (ADVJOB == 0 ||  Upper != 1) {
+		set .@karma_d,rand(1,10);
+		if (.@karma_d > 4) {
+			mes "[Grand Sorcier]";
+			mes "Félicitations.";
+			mes "Honneur aux Guerriers!";
+			close;
+		}
+		mes "[Grand Sorcier]";
+		mes "Nous autres, les Grands Sorciers, avons la responsabilité d'utiliser la magie pour la noble cause.";
+		next;
+		mes "[Grand Sorcier]";
+		mes "Une vie d'entraînement est requise avant de pouvoir devenir Grand Sorcier. Pouvez-vous imaginer ce qui se passerait si notre pouvoir tombait entre de mauvaises mains?!";
+		close;
+	}
+	else if (ADVJOB == Job_High_Wizard && Class == Job_Mage_High && JobLevel > 39) {
+		mes "[Grand Sorcier]";
+		mes "Il est temps.";
+		mes "Rune-Midgard a besoin de ceux qui savent manier la puissance magique...";
+		next;
+		mes "[Grand Sorcier]";
+		mes "Souhaitez-vous devenir Grand Sorcier?";
+		next;
+		if (select("Non.:Oui.") == 1) {
+			mes "[Grand Sorcier]";
+			mes "Revenez quand vous vous sentirez prêt.";
+			next;
+			mes "[Grand Sorcier]";
+			mes "Honneur aux Guerriers!";
+			close;
+		}
+		if (SkillPoint) {
+			mes "[Grand Sorcier]";
+			mes "Vous n'avez pas terminé votre apprentissage.";
+			close;
+		}
+		jobchange Job_high_Wizard;
+		set ADVJOB,0;
+		mes "[Grand Sorcier]";
+		mes "Félicitations.";
+		mes "En tant que Grand Sorcier, j'espère que vous utiliserez vos pouvoirs afin d'apporter la paix aux opprimés.";
+		close;
+	}
+
+	mes "[Grand Sorcier]";
+	mes "Bienvenue au Walhalla, le Hall des Honneurs.";
+	next;
+	mes "[Grand Sorcier]";
+	mes "Faites comme chez vous.";
+	mes "Honneur aux Guerriers!";
+	close;
+}

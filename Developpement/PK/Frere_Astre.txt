@@ -1,0 +1,115 @@
+capitale,152,217,5	script	Frere Lumineux::lubro	935,{
+	if(LANGUAGE == 2)
+	{
+		set .@npc$, "[^FF0000Luminuous Brother^000000]";
+	}
+	else if (LANGUAGE == 1)
+	{
+		set .@npc$, "[^FF0000Frere Lumineux^000000]";
+	}
+
+	mes .@npc$; 
+	mes "...";
+	if(LANGUAGE == 2)
+	{
+		mes "Do you know who I am?";
+		switch(select("A bishop?:...And you, do you know who I am?:You're a Crowned."))
+		{
+			case 1: 
+				mes "The Gods Realm belong to faithfull people.";
+				mes "Pray, and may the light come down on you.";
+				close;
+			case 2:
+				mes "Sorry, I don't have time to play.";
+				mes "Go, pray, and may the light come down on you.";
+				close;
+			case 3:
+				if ( ACE_Q == 1 || ACE_Q == 2 )
+				{
+					mes "...";
+					mes ".....";
+					mes "........";
+					mes "Looks like we're Brothers";
+					setnpcdisplay "lubro", 418;
+					set ACE_Q, ACE_Q+1;
+					if ( ACE_Q == 2 )
+					{
+						mes "Look for one more of our Brothers.";
+						mes "Good luck, welcome on the Crowned Path.";
+					}
+					else if ( ACE_Q == 3 )
+					{
+						mes "Looks like you're ready.";
+						mes "Welcome on the Crowned Path.";
+						mes "Go back to the Spades Ace,";
+						mes "and tell him what you've become: A Crowned.";
+					}
+					next;
+					mes "See you soon, brother.";
+					setnpcdisplay "lubro", 935;
+					close;
+				}
+				else
+				{
+					mes "I don't think you know who I am.";
+					mes "But the chance is a part of our Path.";
+					mes "Come back later.";
+					close;
+				}
+		}
+	}
+	else if (LANGUAGE == 1)
+	{
+		mes "Tu sais qui je suis?";
+		switch(select("Un prêtre?:...Et toi, tu sais qui je suis?:Tu es un Couronné."))
+		{
+			case 1: 
+				mes "Le Royaume des dieux appartient aux gens de foi.";
+				mes "Prie, et peut-être la Lumière te baignera";
+				close;
+			case 2:
+				mes "Désolé, mais je n'ai pas le temps pour jouer.";
+				mes "Part, prie, et ne reviens que quand tu sauras";
+				close;
+			case 3:
+				if ( ACE_Q == 1 || ACE_Q == 2 )
+				{
+					mes "...";
+					mes ".....";
+					mes "........";
+					mes "On dirait bien que nous sommes Frères";
+					setnpcdisplay "lubro", 418;
+					set ACE_Q, ACE_Q+1;
+					if ( ACE_Q == 2 )
+					{
+						mes "Cherche encore un de nos frères.";
+						mes "Bon courage sur le chemin des Couronnés";
+					}
+					else if ( ACE_Q == 3 )
+					{
+						mes "Tu es prêt on dirait.";
+						mes "Rejoins le Chemin des Couronnés";
+						mes "Retourne voir l'Etoile du Nord,";
+						mes "et dit lui qui tu es devenu: Un Couronné";
+					}
+					next;
+					mes "A bientôt, frère";
+					setnpcdisplay "lubro", 935;
+					close;
+				}
+				else
+				{
+					mes "Je ne crois pas que tu saches qui je suis.";
+					mes "Mais la chance est une partie du chemin.";
+					mes "Reviens plus tard";
+					close;
+				}
+		}
+	}
+	close;
+}
+
+alberta,213,27,0	duplicate(lubro)	Luminuous Brother::lubro2	868
+moscovia,135,175,0	duplicate(lubro)	Luminuous Brother::lubro3	869
+brasilis,101,205,0	duplicate(lubro)	Luminuous Brother::lubro4	870
+gonryun,139,193,0	duplicate(lubro)	Luminuous Brother::lubro5	874

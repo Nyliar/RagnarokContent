@@ -1,0 +1,83 @@
+thalys,237,168,2	script	Entrée du Mall	47,{
+	set .@npcname$, "[Entrée du Mall]";
+	
+	mes .@npcname$;
+	mes "";
+	mes "Hello " + strcharinfo(0);
+	mes "Je peux t'envoyer vers le Mall, la Zone Marchande. Intéressé?";
+	switch(select("Oui","Non"))
+	{
+		case 1:
+			mes "C'est parti!";
+			warp "", 0, 0;
+			break;
+		case 2:
+			mes "Comme tu veux.";
+			break;
+	}
+	mes "Au plaisir.";
+	close;
+}
+
+thalys,237,168,2	script	Droit au Port	47,{
+	set .@npcname$, "[Droit au Port]";
+	
+	mes .@npcname$;
+	mes "";
+	mes "Hello " + strcharinfo(0);
+	mes "Je peux t'envoyer vers le Port. Intéressé?";
+	switch(select("Oui","Non"))
+	{
+		case 1:
+			mes "C'est parti!";
+			warp "thalys_s", 0, 0;
+			break;
+		case 2:
+			mes "Comme tu veux.";
+			break;
+	}
+	mes "Au plaisir.";
+	close;
+}
+
+thalys,237,168,2	script	Vers l'Aéorodrome	47,{
+	set .@npcname$, "[Vers l'Aéorodrome]";
+	
+	mes .@npcname$;
+	mes "";
+	mes "Hello " + strcharinfo(0);
+	mes "Je peux t'envoyer vers l'Aérodrome. Intéressé?";
+	switch(select("Oui","Non"))
+	{
+		case 1:
+			mes "C'est parti!";
+			warp "thalys_o", 0, 0;
+			break;
+		case 2:
+			mes "Comme tu veux.";
+			break;
+	}
+	mes "Au plaisir.";
+	close;
+}
+
+thalys,237,168,2	script	A la Gare	47,{
+	set .@npcname$, "[A la Gare]";
+	
+	mes .@npcname$;
+	mes "";
+	mes "Hello " + strcharinfo(0);
+	mes "Je peux t'envoyer vers la Gare. Intéressé?";
+	switch(select("Oui","Non"))
+	{
+		case 1:
+			mes "C'est parti!";
+			warp "thalys_s", 0, 0;
+			break;
+		case 2:
+			mes "Comme tu veux.";
+			break;
+	}
+	mes "Au plaisir.";
+	close;
+}

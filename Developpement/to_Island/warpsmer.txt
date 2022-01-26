@@ -1,0 +1,81 @@
+mer1,14,25,4	script	warpmer::warpmer1	45,2,2,{
+	end;
+	
+OnTouch:
+	undisguise;
+	donpcevent "ship_journey::OnResetStateM";
+	warp @map$, @xdest, @ydest;
+	end;
+}
+
+mer2,115,41,0	duplicate(warpmer1)	Warp::warpmer2	45,2,2
+mer3,115,41,0	duplicate(warpmer1)	Warp::warpmer3	45,2,2
+mer4,115,41,0	duplicate(warpmer1)	Warp::warpmer4	45,2,2
+mer5,115,41,0	duplicate(warpmer1)	Warp::warpmer5	45,2,2
+
+
+
+abord1,78,85,6	script	Grue des Pirates::abord1	111,{
+	if (countitem(21064) >= 1)
+	{
+		mes "Voulez-vous libérer votre Mono?";
+		switch(select("Oui","non"))
+		{
+			case 1:
+				delitem 21064,1;
+				mes "Libération du Mono.";
+				mes "Envoi vers la destination finale.";
+				warp @map$, @xdest, @ydest;
+				callsub OnResetState;
+				break;
+			case 2:
+				mes "Autodestruction enclenchée.";
+				//specialeffect boum;
+				set SHIP, 0;
+				mes "Filet détruit.";
+				dispbottom "Le Mono a été libéré, son enchantement brisé.";
+				dispbottom "Vous avez perdu votre Mono.";
+				dispbottom "Vous échouez lamentablement sur la plage de Thalys.";
+				warp "thalys", 149,147;
+				callsub OnResetState;
+				break;
+		}
+	}
+	else
+	{
+		mes "Vous avez besoin de la Cle du Pirate pour libérer votre navire.";
+	}
+	close;
+
+	
+OnResetState:
+	attachrid($idattach);
+	for (set .@i, 0; .@i<getarraysize($map$); set .@i, .@i+1)
+	{
+		if (strcharinfo(3) == ("abord" + (.@i+1)))
+		{
+			set $state[.@i], 0;
+		}
+	}
+	deltimer strnpcinfo(3)+"::OnCalcAtk";
+	return;
+
+OnResetStateM:
+	attachrid($idattach);
+	for (set .@i, 0; .@i<getarraysize($map$); set .@i, .@i+1)
+	{
+		if (@warpm$ == ("mer" + (.@i+1)))
+		{
+			set $statem[.@i], 0;
+		}
+	}
+	deltimer strnpcinfo(3)+"::OnCalcAtk";
+	return;
+
+
+}
+
+abord2,78,85,6	duplicate(abord1)	Grue des Pirates::abord2	111
+abord3,78,85,6	duplicate(abord1)	Grue des Pirates::abord3	111
+abord4,78,85,6	duplicate(abord1)	Grue des Pirates::abord4	111
+abord5,78,85,6	duplicate(abord1)	Grue des Pirates::abord5	111

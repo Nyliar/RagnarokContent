@@ -1,0 +1,151 @@
+
+tha_in1,46,44,4	script	Gardien Elementaire::ge	747,{
+	set .@npcname$, "[Gardien Elementaire]";
+	mes .@npcname$;
+	setarray .@sentence$[0],"Ohé, ohé,",
+		"Un Air de Violon qui portent sur les flots,",
+		"Ohé, ohé,",
+		"Un rouleau se forme sur la crête des eaux.",
+		"Ohé, Ohé,",
+		"Un récif qui crève la coque,",
+		"Ohé, OHE!",
+		"Et le soleil couchant qui de nous se moque.",
+		"Ohé, ohé,",
+		"Par les Flots balloté...",
+		"Ohé, ohé,",
+		"Dans les Airs emporté...",
+		"Ohé, ohé,",
+		"Par la Terre déchiré...",
+		"Ohé, ohé,",
+		"Finissent les Flammes de l'Or révelées."
+
+	if (#elemental_favor_q <= 0)
+	{
+		mes "Il ne parle pas...";
+	}	
+	else
+	{
+		mes "Je vois que tu as déjà été initié aux secrets des Elementaires.";
+		if (#elemental_favor_q < 5)
+		{
+			mes "Néanmoins, tu n'es pas encore prêt pour écrire la suite de cette histoire.";
+			mes "Reviens un peu plus tard.";
+		}
+		else
+		{
+			if (#elemental_favor_q == 5)
+			{
+				mes "Il semblerait que tu connaisses toute l'histoire.";
+				mes "Tu n'es là comme les autres que parce que tu as entendu une chanson pirate.";
+				mes "Une chanson qui parle d'un trésor. Et tu le veux.";
+				mes "Je peux comprendre cela.";
+				mes "Mais prouve-moi que le trésor seul ne t'intéresses pas.";
+				mes "Chantes moi la chanson.";
+				set .@success, 1;
+				for (set .@i, 0; .@i<getarraysize(.@sentence$); set .@i, .@i+1)
+				{
+					next;
+					for (set .@j, 0; .@j<.@i-1; set .@j, .@j++)
+					{
+						mes "^FF0000" + .@sentence$[.@j] + "^000000";
+					}
+					
+					input .@phrase$;
+					if (.@phrase$ != .@sentence$[.@i])
+					{
+						set .@success, 0;
+						break;
+					}
+				}
+				next;
+				if (.@success == 0)
+					mes "Pars. Ne reviens que quand tu vaudras mieux que ça.";
+				else
+				{
+					mes "Bravo. Visiblement, tu sembles prêt à écrire la suite de cette histoire.";
+					mes "Je vais maintenant te raconter l'histoire derrière l'histoire.";
+					mes "J'étais autrefois un Pirate connu, et crains de par les Mers.";
+					mes "Lorsque les Dieux sont arrivés, mon Capitaine a cru bon de les défier.";
+					mes "Il a perdu la raison lorsqu'Odin l'a puni. Lui qui ne craignait pas la mort,";
+					mes "a perdu bien plus que la vie.";
+					next;
+					mes "Mais avant cette triste étape, notre équipage avait déjà écumée des centaines et des centaines de miles marins.";
+					mes "Nous avions accostés sur toutes les Iles, bien avant ce bouffon bouffi d'orgueil de la Guilde.";
+					mes "Et sur l'une d'entre elle, nous avions découvert un Trésor.";
+					mes "Un Trésor au delà de tout ce que tu pourrais imaginer.";
+					mes "Nous vivions dans l'opulence la plus complète, ne poursuivant nos rapines que pour le plaisir.";
+					mes "Nous étions ivres de sang et de puissance.";
+					next;
+					mes "Et puis la tragédie s'est abattue sur nous.";
+					mes "Nous avons convoité un Trésor sur lequel nous n'avions aucun droit.";
+					mes "Nous n'avons pas fini maudit, il n'y a que dans une histoire pour gamin attardé que ca arrive.";
+					mes "Mais sommes devenu les Gardiens de ce Trésor.";
+					mes "Et ce, jusqu'à notre mort. Nous étions maudit.";
+					next;
+					mes "Je ne sais pas ce qu'il s'est passé ensuite. Le Capitaine m'a chargé de raconter cette histoire,";
+					mes "puis il a lui même disparu, emportant le reste du secret.";
+					mes "C'était pourtant un grand homme, le Capitaine O'Hariam.";
+					set #elemental_favor_q, 6;
+				}
+			}
+		}
+	}
+	close;
+}
+
+tha_in1,46,44,4	script	Gardien#Gardien du Feu::gdf	747,{
+	set .@npcname$, "["+strnpcinfo(2)+"]";
+		
+	switch(#elemental_favor_q)
+	{
+		case 6:
+			setarray .@sentences$[0], "A l'époque, nous étions tous fiers matelots et de vaillants combattants.",
+				"Chacun d'entre nous valait au moins 10 hommes de la Guilde Marine.",
+				"Pourtant, nous n'avons rien pu faire contre la Malédiction, et nous sommes devenus des Gardiens.",
+				"A présent, retourne voir O'Hariam, il t'indiquera le prochain piédestal.";
+			break;
+		case 7:
+			setarray .@sentences$[0], "Tout gardien que nous étions, nous pouvions continuer à sentir, à souffrir.",
+				"Nous pouvions aussi craindre les représailles des Dieux si nous devions nous rebeller.",
+				"Il ne faut pas les prendre à la légère.",
+				"Retourne voir O'Hariam, il t'indiquera le prochain piédestal.";
+			break;
+		case 8:
+			setarray .@sentences$[0], "L'Eau, la Terre, maintenant l'Air.",
+				"Tu as libéré 3 des 4 gardiens. Le dernier est le plus fort de nous tous.",
+				"Si tu parviens à la libérer, tu pourras atteindre la Pousse d'Yggdrasil.",
+				"Retourne voir O'Hariam, il t'indiquera le prochain piédestal.";
+			break;
+		case 9:
+			setarray .@sentences$[0], "Enfin libre!",
+				"Merci à toi, jeune aventurier!.",
+				"Le chemin vers Yggdrasil est a présent ouvert.",
+				"Sache cependant qu'il te reste une ultime épreuve à accomplir avant de pouvoir t'approcher de la Pousse.",
+				"L'Arbre Monde est protégé. Et oui, encore une fois. Mais le Gardien de l'Arbre n'est en rien comparable à nous.",
+				"Il s'agit de la dernière défense de la Pousse d'Yggdrasil. Si tu la passes, tout tes voeux seront récompensés.",
+				"Retourne voir O'Hariam, il t'indiquera la marche à suivre.";
+			break;
+	}
+
+	mes .@npcname$;
+	mes "Merci bien mon ami. Tu m'as libéré d'une bien terrible malédiction.";
+	mes "Je ne souhaite à personne de perdre ses moyens comme cela nous arrive lorsque le monstre en nous prends le dessus.";
+	mes "Mais tu n'es pas là pour entendre mes états d'âme, pas vrai.";
+	mes "Tu es là pour le Trésor.";
+	mes "Je ne peux que te dire de reculer une fois de plus, mais bon, je sais que tu n'écouteras pas.";
+	mes "Nous avons fait la même erreur après tout.";
+
+	next;
+	for (set .@i, 0; .@i<getarraysize(.@sentences$); set .@i, .@i+1)
+	{
+		mes .@sentences$;
+	}
+
+	set #elemental_favor_q, #elemental_favor_q+1;
+	
+	close;
+}
+
+tha_in1,46,44,4	duplicate(gdf)	Gardien#Gardien de l'Eau::gdw	709
+tha_in1,46,44,4	duplicate(gdf)	Gardien#Gardien de la Terre::gde	709
+tha_in1,46,44,4	duplicate(gdf)	Gardien#Gardien du Vent::gdwi	709

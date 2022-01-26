@@ -1,0 +1,55 @@
+
+casp_auct02,31,27,7	script	Joyailler	807,{
+	set .@npcname$, "[Joyailler]";
+	mes .@npcname$;
+	mes "";
+	mes "Salut, " + strcharinfo(0);
+	mes "Je suis à la recherche de toutes les pierres précieuses du monde.";
+	mes "En ce moment, je cherche en particulier des 17 Carats Diamonds.";
+	mes "En as-tu par hasard?";
+	if (countitem(6024) >= 1)
+	{
+		next;
+		mes "Tu en asss!!!Vends les moiiiii";
+		mes "Je te les achètes 50.000 Zenys pièces.";
+		switch(select("Ok","Non"))
+		{
+			case 1:
+				set Zeny, Zeny + 50000*countitem(6024);
+				delitem 6024, countitem(6024);
+				mes "Merci à toi mon ami!";
+			case 2:
+				mes "Ok...Reviens me voir...";
+		}
+	}
+	close;
+}
+
+casp_chc,97,110,7	script	Lucifer's Lament	795,{
+	set .@npcname$, "[Lucifer's Lament]";
+	mes .@npcname$;
+	mes "";
+	mes "Bonjour, " + strcharinfo(0);
+	mes "Je suis Torval, un Dieu déchu...";
+	mes "J'ai été entrainer dans la chute de Loki, mais je m'en repends maintenant.";
+	mes "Simplement, je ne pourrais pas revenir chez moi sans regagner mes droits.";
+	mes "Pour cela, j'ai besoin de Lucifer's Lament. Beaucoup.";
+	if (countitem(7025) >= 1)
+	{
+		next;
+		mes "Je sens que tu as des Lucifer's avec toi.";
+		mes "Participeras-tu au salut de mon âme? Je te serais reconnaissant, crois moi.";	
+		mes "Je suis prêt à t'échanger 10 de ces objets contre un ticket.";
+		switch(select("Ok","Non"))
+		{
+			case 1:
+				set .@countmax, countitem(7025)%10;
+				getitem 7146, (countitem(7025) - .@countmax)/10;
+				delitem 7025, countitem(7025) - .@countmax;
+				mes "Merci à toi mon ami!";
+			case 2:
+				mes "Ok...Reviens me voir...";
+		}
+	}
+	close;
+}

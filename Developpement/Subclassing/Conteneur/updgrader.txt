@@ -1,0 +1,226 @@
+mornanie,89,175,4	script	Maitre Joaillier::mj	945,{
+	set .@npcname$, "[Maitre Joaillier]";
+	mes .@npcname$;
+	mes "";
+	mes "Bonjour à toi " + strcharinfo(0);
+	mes "Je suis le Maitre Joaillier du Vanaheim.";
+	mes "J'ai la capacité à augmenter le pouvoir d'une Perle de Savoir.";
+	mes "Veux-tu profiter de mes compétences?";
+	switch(select("Oui","Non, merci"))
+	{
+		case 1:			
+			getinventorylist();
+			set .@continue, 0;
+
+			for (set .@i, 0; .@i < @inventorylist_count; set .@i, .@i+1)
+			{
+				if (@inventorylist_id[.@i]== 21098)
+				{
+					setarray .@pearCoumpound[0], @inventorylist_card1[.@i];
+					setarray .@pearCoumpound[1], @inventorylist_card2[.@i];
+					setarray .@pearCoumpound[2], @inventorylist_card3[.@i];
+					setarray .@pearCoumpound[3], @inventorylist_card4[.@i];
+
+					set .@count, getarraysize(.@pearlExistingIds);
+					for (set .@j, 0; .@j < getarraysize(.@pearCoumpound); set .@j, .@j+1)
+					{
+						set .@menu$, .@menu$ + ( .@j ? ":" : "" ) + getitemname(.@pearCoumpound[.@j]);
+						setarray .@pearlExistingIds[.@count], .@pearCoumpound[.@j];
+						set .@count, .@count + 1;
+					}
+					set .@continue, 1;
+					break;
+				}
+			}
+
+			switch(SUBCLASSING)
+			{
+				case 4008:
+					setarray .@pearlUpgradeIDs[0], 21099, 21100, 21102, 21103, 21105, 21106, 21110, 21112, 21113, 21115, 21116, 21118, 21119, 21133, 21134;
+					setarray .@pearlUpgradeCount[0], 1, 2, 1, 2, 1, 2, 1, 2, 1, 2, 1, 2, 1, 2, 1, 2, 1, 2, 1, 2, 1, 2;
+					setarray .@xpUpgradeCount[0], 588548, 3124555, 588548, 3124555, 588548, 3124555, 588548, 3124555, 588548, 3124555, 588548, 3124555, 588548, 3124555;
+					break;
+				case 4009:
+					setarray .@pearlUpgradeIDs[0], 21136, 21137, 21139, 21140, 21142, 21143, 21145, 21146, 21148, 21149, 21151, 21152, 21154, 21155, 21157, 21158, 21163, 21164, 21166, 21167, 21169, 21170;
+					setarray .@pearlUpgradeCount[0], 1, 2, 1, 2, 1, 2, 1, 2, 1, 2, 1, 2, 1, 2, 1, 2, 1, 2, 1, 2, 1, 2;
+					setarray .@xpUpgradeCount[0], 588548, 3124555, 1678177, 15275525, 588548, 3124555, 1678177, 15275525, 588548, 3124555, 588548, 3124555, 1678177, 15275525, 588548, 3124555, 588548, 3124555, 1678177, 15275525, 588548, 3124555;
+					break;
+				case 4010:
+					setarray .@pearlUpgradeIDs[0], 21172, 21173, 21178, 21179, 21182, 21183, 21191, 21192, 21194, 21195, 21197, 21198, 21200, 21201, 21203, 21204, 21206, 21207;
+					setarray .@pearlUpgradeCount[0], 1, 2, 1, 2, 1, 2, 1, 2, 1, 2, 1, 2, 1, 2, 1, 2, 1, 2, 1, 2, 1, 2, 1, 2;
+					setarray .@xpUpgradeCount[0], 588548, 3124555, 588548, 3124555, 1678177, 15275525, 588548, 3124555, 1678177, 15275525, 1678177, 15275525, 588548, 3124555, 1678177, 15275525, 588548, 3124555, 1678177, 15275525, 588548, 3124555;
+					break;
+				case 4011:
+					setarray .@pearlUpgradeIDs[0], 21209, 21210, 21212, 21213, 21215, 21216, 21218, 21219, 21221, 21222, 21224, 21225, 21227, 21228, 21230, 21231;
+					setarray .@pearlUpgradeCount[0], 1, 2, 1, 2, 1, 2, 1, 2, 1, 2, 1, 2, 1, 2, 1, 2;
+					setarray .@xpUpgradeCount[0], 1678177, 15275525, 588548, 3124555, 588548, 3124555, 1678177, 15275525, 588548, 3124555, 1678177, 15275525, 588548, 3124555, 1678177, 15275525;
+					break;
+				case 4012:
+					setarray .@pearlUpgradeIDs[0], 21233, 21234, 21236, 21237, 21239, 21240, 21242, 21243, 21245, 21246, 21248, 21249, 21251, 21252, 21254, 21255, 21257, 21258;
+					setarray .@pearlUpgradeCount[0], 1, 2, 1, 2, 1, 2, 1, 2, 1, 2, 1, 2, 1, 2, 1, 2, 1, 2, 1, 2, 1, 2, 1, 2;
+					setarray .@xpUpgradeCount[0], 1678177, 15275525, 1678177, 15275525, 588548, 3124555, 588548, 3124555, 588548, 3124555, 588548, 3124555, 1678177, 15275525, 588548, 3124555, 588548, 3124555, 588548, 3124555;
+					break;
+				case 4013:
+					setarray .@pearlUpgradeIDs[0], 21260, 21261, 21263, 21264, 21266, 21267, 21269, 21270, 21272, 21273, 21275, 21276, 21278, 21279, 21281, 21282;
+					setarray .@pearlUpgradeCount[0], 1, 2, 1, 2, 1, 2, 1, 2, 1, 2, 1, 2, 1, 2, 1, 2;
+					setarray .@xpUpgradeCount[0], 1678177, 15275525, 1678177, 15275525, 588548, 3124555, 588548, 3124555, 588548, 3124555, 588548, 3124555, 588548, 3124555, 588548, 3124555;
+					break;
+				case 4015:
+					setarray .@pearlUpgradeIDs[0], 21284, 21285, 21287, 21288, 21290, 21291, 21293, 21294, 21296, 21297, 21299, 21300, 21302, 21303, 21305, 21306, 21308, 21309, 21311, 21312;
+					setarray .@pearlUpgradeCount[0], 1, 2, 1, 2, 1, 2, 1, 2, 1, 2, 1, 2, 1, 2, 1, 2, 1, 2, 1, 2;
+					setarray .@xpUpgradeCount[0], 588548, 3124555, 1678177, 15275525, 588548, 3124555, 1678177, 15275525, 588548, 3124555, 588548, 3124555, 588548, 3124555, 588548, 3124555, 588548, 3124555, 1678177, 15275525;
+					break;
+				case 4016:
+					setarray .@pearlUpgradeIDs[0], 21315, 21316, 21318, 21319, 21321, 21322, 21324, 21325, 21327, 21328, 21330, 21331, 21333, 21334, 21336, 21337, 21339, 21340, 21342, 21343;
+					setarray .@pearlUpgradeCount[0], 1, 2, 1, 2, 1, 2, 1, 2, 1, 2, 1, 2, 1, 2, 1, 2, 1, 2, 1, 2;
+					setarray .@xpUpgradeCount[0], 1678177, 15275525, 588548, 3124555, 1678177, 15275525, 588548, 3124555, 588548, 3124555, 588548, 3124555, 1678177, 15275525, 1678177, 15275525, 588548, 3124555, 588548, 3124555;
+					break;
+				case 4017:
+					setarray .@pearlUpgradeIDs[0], 21345, 21346, 21349, 21350, 21352, 21353, 21360, 21361, 21363, 21364, 21366, 21367, 21369, 21370, 21372, 21373, 21375, 21376;
+					setarray .@pearlUpgradeCount[0], 1, 2, 1, 2, 1, 2, 1, 2, 1, 2, 1, 2, 1, 2, 1, 2, 1, 2;
+					setarray .@xpUpgradeCount[0], 588548, 3124555, 588548, 3124555, 1678177, 15275525, 1678177, 15275525, 588548, 3124555, 588548, 3124555, 588548, 3124555, 1678177, 15275525, 1678177, 15275525, 588548, 3124555, 1678177, 15275525;
+					break;
+				case 4018:
+					setarray .@pearlUpgradeIDs[0], 21378, 21379, 21381, 21382, 21384, 21385, 21387, 21388, 21390, 21391, 21393, 21394, 21396, 21397, 21399, 21400, 21402, 21403;
+					setarray .@pearlUpgradeCount[0], 1, 2, 1, 2, 1, 2, 1, 2, 1, 2, 1, 2, 1, 2, 1, 2, 1, 2;
+					setarray .@xpUpgradeCount[0], 1678177, 15275525, 1678177, 15275525, 1678177, 15275525, 588548, 3124555, 588548, 3124555, 588548, 3124555, 588548, 3124555;
+					set .@pearlIDs, 21378;
+					break;
+				case 4019:
+					setarray .@pearlUpgradeIDs[0], 21405, 21406, 21048, 21409, 21411, 21412, 21414, 21415, 21417, 21418, 21420, 21421, 21425, 21426;
+					setarray .@pearlUpgradeCount[0], 1, 2, 1, 2, 1, 2, 1, 2, 1, 2, 1, 2, 1, 2;
+					setarray .@xpUpgradeCount[0], 588548, 3124555, 1678177, 15275525, 588548, 3124555, 588548, 3124555, 588548, 3124555, 588548, 3124555, 1678177, 15275525;
+					break;
+				case 4020:
+					setarray .@pearlUpgradeIDs[0], 21428, 21429, 21431, 21342, 21434, 21435, 21437, 21438, 21440, 21441, 21443, 21444;
+					setarray .@pearlUpgradeCount[0], 1, 2, 1, 2, 1, 2, 1, 2, 1, 2, 1, 2;
+					setarray .@xpUpgradeCount[0], 1678177, 15275525, 588548, 3124555, 588548, 3124555, 1678177, 15275525, 588548, 3124555, 1678177, 15275525;
+					break;
+				case 4021:
+					setarray .@pearlUpgradeIDs[0], 21446, 21447, 21449, 21450, 21452, 21453, 21455, 21456, 21458, 21459, 21461, 21462;
+					setarray .@pearlUpgradeCount[0], 1, 2, 1, 2, 1, 2, 1, 2, 1, 2, 1, 2;
+					setarray .@xpUpgradeCount[0], 1678177, 15275525, 588548, 3124555, 588548, 3124555, 1678177, 15275525, 588548, 3124555, 1678177, 15275525;
+					break;
+			}
+
+		if (.@continue == 1)
+		{
+			next;
+			mes "Pour améliorer une Perle, j'ai besoin d'un montant de Perle dépendant du niveau désiré.";
+			mes "J'ai également besoin d'un catalyseur, et d'une source d'énergie magique.";
+			mes "Quelle Perle souhaites-tu améliorer?";
+			// On récupère le choix de l'utilisateur
+    			set .@choice, prompt(.@menu$) - 1;
+
+			if (.@choice == 254)
+			{
+				mes "Comme tu l'entends mon ami.";
+				close;
+			}
+			else
+			{
+				next;
+				mes "On améliore la " + getitemname(.@pearlExistingIds[.@choice]) + "?";	
+				switch(select("Oui","Non"))
+				{
+					case 1:
+						next;
+						for (set .@i, 0; .@i < getarraysize(.@pearlUpgradeIDs); set .@i, .@i+1)
+						{
+							if (.@pearlUpgradeIDs[.@i] == .@pearlExistingIds[.@choice])
+								set .@pearlNeededCount, .@pearlUpgradeCount[.@i];
+						}
+						if (getd(SUBCOUMP + (.@choice + 1)) > 0)
+							mes "Cette Perle doit encore gagner " + getd(SUBCOUMP + (.@choice + 1)) + " points d'expérience.";
+						else
+						{
+							mes "Cette Perle est prête. J'ai maintenant besoin de " + .@pearlNeededCount + " Perle de niveau un pour l'évoluer.";
+							if (countitem(.@pearlIDs) < .@pearlNeededCount)
+							{
+								mes "Or désolé, mais tu n'en as pas assez.";
+								mes "Reviens me voir avec ce dont j'ai besoin.";
+								close;
+							}
+							else
+							{
+								delitem .@pearlIds, .@pearlNeededCount;
+								//upgrade la perle
+								npctalk .@pearlExistingIds[.@choice];
+								if (.@pearCoumpound[0] == .@pearlExistingIds[.@choice])
+								{
+									set @card1, .@pearlExistingIds[.@choice] + 1;
+									set .@insert, 1;
+								}
+								else if (.@pearCoumpound[1] == .@pearlExistingIds[.@choice])
+								{
+									set @card2, .@pearlExistingIds[.@choice] + 1;
+									set .@insert, 2;
+								}
+								else if (.@pearCoumpound[2] == .@pearlExistingIds[.@choice])
+								{
+									set @card3, .@pearlExistingIds[.@choice] + 1;
+									set .@insert, 3;
+								}
+								else if (.@pearCoumpound[3] == .@pearlExistingIds[.@choice])
+								{
+									set @card4, .@pearlExistingIds[.@choice] + 1;
+									set .@insert, 4;
+								}
+								delitem 21098, 1;
+								//get new coumpounded mejingard
+								getitem2 21098,1,1,0,0,@card1,@card2,@card3,@card4;
+
+								for (set .@j, 0; .@j<getarraysize(.@pearlUpgradeIDs); set .@j, .@j+1)
+								{
+									if (.@pearlUpgradeIDs[.@j] == getd("@card" + .@insert))
+										//get the corresponding xp and store it in chara permanent variable
+										set getd(SUBCOUMP + .@insert), .@xpUpgradeCount[.@j];
+								}
+							}
+						}
+						break;
+					case 2:
+						mes "Très bien, comme tu veux.";
+						break;
+				}
+			}
+		}
+		else
+			mes "Désolé, mais tu n'as pas de Meginjard...";
+
+			break;
+		case 2:
+			mes "Comme tu veux. Reviens me voir si tu as besoin.";
+			break;
+	}
+	close;
+
+OnNPCKillEvent:
+	if (SUBCLASSING > 1)
+	{
+		set .@countCoumpound, 0;
+		for (set .@i, 1; .@i<=4; set .@i, .@i+1)
+		{
+			if (getd("" + SUBCOUMP + "" + .@i) > 0)
+			{
+				set .@countCoumpound, .@countCoumpound + 1;
+			}
+			else 
+				set getd("" + SUBCOUMP + "" + .@i), -1;
+		}
+
+		for (set .@i, 1; .@i<=4; set .@i, .@i+1)
+		{
+			if (getd("" + SUBCOUMP + "" + .@i) > 0)
+			{
+				set .@red, strmobinfo(6,killedrid) / .@countCoumpound;
+				if (.@red > getd("" + SUBCOUMP + "" + .@i))
+					set .@red, getd("" + SUBCOUMP + "" + .@i);
+				set getd("" + SUBCOUMP + "" + .@i), getd("" + SUBCOUMP + "" + .@i) - .@red;
+			}
+			if (getd("" + SUBCOUMP + "" + .@i) == 0)
+				dispbottom "L'une de vos Perles de Savoir est prête à être améliorée.";
+		}
+	}
+	end;
+}

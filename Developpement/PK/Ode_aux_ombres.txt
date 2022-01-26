@@ -1,0 +1,110 @@
+Hallow01,96,108,5	script	Shas God::halshago	456,{
+	if (LANGUAGE == 2)
+	{
+		set .@npc$, "[^FF0000Shas God^000000]";
+	}
+	else if (LANGUAGE == 1)
+	{
+		set .@npc$, "[^FF0000Dieu Sha^000000]";
+	}
+	
+	mes .@npc$; 
+	if (LANGUAGE == 2)
+	{
+		mes "I'm Sha, the god of all Shas.";
+		mes "You've answered to my call, and somebody dies under your attack.";
+		mes "Right now, you can claim a reward according to the value of your Karma.";
+	}
+	else if (LANGUAGE == 1)
+		mes "Je suis Sha, le dieu de tout les Shas.";
+		mes "Tu as répondu à mon appel, et quelqu'un est mort sous tes attaques.";
+		mes "Tu peux désormais obtenir une récompense selon la valeur de ton Karma.";
+	}
+	callfunc "get_reward_pk", Karma;
+	close;
+}
+
+function	script	get_reward_pk	{
+	if ( getarg(0) < 0 && getarg(0) > -30 )
+	{
+		if (LANGUAGE == 2)
+		{
+			mes "Sorry, you're not ready for this.";
+			mes "Go on the Sha Path.";
+		}
+		else if (LANGUAGE == 1)
+		{
+			mes "Désolé, tu n'es pas encore prêt pour cette puissance.";
+			mes "Continue ton oeuvre.";
+		}
+		close;
+	}
+	else if ( getarg(0) < -30 && getarg(0) > -50 )
+	{
+		setarray .@reward$[0], "Angrboda's Boots", "Fafnir's Boots", "Hel's Boots", "Odhr's Boots";
+		setarray .@rewardid[0], 23005,23002,23008,23011;
+		setarray .@rewardPrice[0], 15,15,15,15;
+	}
+	else if ( getarg(0) < -50 && getarg(0) > -75 )
+	{
+		setarray .@reward$[0], "Angrboda's Boots", "Fafnir's Boots", "Hel's Boots", "Odhr's Boots",
+		"Angrboda's Garment", "Fafnir's Garment", "Hel's Garment", "Odhr's Garment";
+		setarray .@rewardid[0], 23005,23002,23008,23011,
+		23004,23001,23007,23010;
+		setarray .@rewardPrice[0], 15,15,15,15,
+		30,30,30,30;
+	}
+	else if ( getarg(0) < -75 )
+	{
+		setarray .@reward$[0], "Angrboda's Boots", "Fafnir's Boots", "Hel's Boots", "Odhr's Boots",
+		"Angrboda's Garment", "Fafnir's Garment", "Hel's Garment", "Odhr's Garment", 
+		"Angrboda's Clothes", "Fafnir's Clothes", "Hel's Clothes", "Odhr's Clothes";
+		setarray .@rewardid[0], 23005,23002,23008,23011,
+		23004,23001,23007,23010,
+		23003,23000,23006,23009;
+		setarray .@rewardPrice[0], 15,15,15,15,
+		30,30,30,30,
+		45,45,45,45;
+	}
+	if (LANGUAGE == 2)
+	{
+		mes "First of all, you should know that by taking a reward, you'll up your Karma.";
+		mes "Therefor, you're Sha Ranking will get down. And you'll loose the advantages it give you.";
+		mes "If you're okay with that, then go on, choose a reward.";
+	}
+	else if (LANGUAGE == 1)
+	{
+		mes "Tout d'abord, tu dois savoir que choisir une récompense augmentera ton Karma.";
+		mes "Par conséquent, ton rang de Sha descendra en fonction. Et tu perdras les avantages que cela te procure.";
+		mes "Si cela te convient, alors choisit ta récompense.";
+	}
+	// On créé un menu dynamique
+    for ( set .@i, 0; .@i<getarraysize(.@reward$); set .@i, .@i+1 )
+	{
+    	set .@menu$, .@menu$ + ( .@i ? ":" : "" ) + .@reward$[.@i];
+	}
+	set .@choice, prompt(.@menu$);
+	if (.@choice != 255)
+	{
+		if (LANGUAGE == 2)
+		{
+			mes "Here's your reward.";
+		}
+		else if (LANGUAGE == 1)
+		{
+			mes "Voici ta récompense.";
+		}
+		getitem .@rewardid[.@choice];
+		set Karma, Karma + .@rewardPrice[.@choice]);
+		if (LANGUAGE == 2)
+		{
+			mes "Go on the Sha Path.";
+		}
+		else if (LANGUAGE == 1)
+		{
+			mes "Continue ta progression sur la Voie du Sha.";
+		}
+	}
+
+	close;
+}

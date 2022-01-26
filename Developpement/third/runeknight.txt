@@ -1,0 +1,196 @@
+caspen,127,232,8	script	Maitre Rune Knight	868,{
+
+	mes "[Maitre Rune Knight]";
+	if (class == 4008 || class == 7){
+		if ( RK_Q < 1)
+		{
+			mes "Bonjour à toi," + strcharinfo(0) + ".";
+			mes "Je suis le Grand Maitre Rune Knight.";
+			mes "Je peux te faire passer la deuxième épreuve de ton Eveil,";
+			mes "Es-tu intéressé?";
+			next;
+			switch(select("Oui, je voudrais passer le test, s'il vous plait.:Non merci, je me suis trompé de personne.:Un vieux fou m'a envoyé ici après avoir lancé un tetra Vortex sur moi Y^Y."))
+			{
+				case 1:
+					mes "[Maitre Rune Knight]";
+					mes "Tout d'abord, voyons si tu es prêt physiquement.";
+					next;
+					if ( CHARLO_Q )
+					{
+						mes "[Maitre Rune Knight]";
+						mes "On dirait bien que ton physique est prêt.";
+						mes "Je vais donc maintenant tester ton mental.";
+						next;
+						mes "[Maitre Rune Knight]";
+							mes "Il s'agit d'un quizz. Commençons.";
+							next;
+							set min_Q, 0;
+							mes "De quoi avons nous besoins pour utiliser la compétence One-Handed Quicken?";
+							switch(select("D'un Creator:D'une épée à une mains:D'un High Priest:D'un Soul Link"))
+							{
+								case 2:
+								case 4:				
+									set min_Q, min_Q+1;
+								case 1:
+								case 3:
+							}
+							next;
+							mes "Ou achétons nous un Peco?";
+							switch(select("Devant la guilde des Knight:Devant l'église de Prontera:A Izlude:Faut le capturer"))
+							{
+								case 1:
+									set min_Q, min_Q+1;
+								case 2:
+								case 3:
+								case 4:
+							}
+							next;
+							mes "Combien de pourcentage de dégâts provoque la compétence Bowling Bash au level 10?";
+							switch(select("140%:220%:420%:500%"))
+							{
+								case 4:
+									set min_Q, min_Q+1;
+								case 1:
+								case 2:
+								case 3:
+							}
+							next;
+							mes "De quelles compétence avont nous besoins pour pouvoir utiliser la compétences Spiral Pierce?";
+							switch(select("Riding lvl 1 + Spear Master lvl 5 + Pierce lvl 5 + Spear Stab lvl 5:Riding lvl 1 + Spear Mastery lvl 5 + Pierce lvl 5 + Spear Stab lvl 3:Spear Mastery lvl 5 + Pierce lvl 5 + Spear Stab lvl 5:Rien du tout c'est une compétence qu'on acquiere dès le début"))
+							{
+								case 1:
+									set min_Q, min_Q+1;
+								case 2:
+								case 3:
+								case 4:
+							}
+							next;
+							mes "A partir de quelle lvl pouvons nous utiliser la compétence Berserk?";
+							switch(select("70:80:85:90"))
+							{
+								case 2:
+									set min_Q, min_Q+1;
+								case 1:
+								case 3:
+								case 4:
+							}
+							next;
+							mes "A quoi sert la compétence Fatal Blow?";
+							switch(select("A rajouter des dommages à la compétence Bash:A rajouter des dommages direct à l'arme:A rajouter un stun à la compétence Bash: A débloquer une nouvelle compétence en Knight / Lord Knight "))
+							{
+								case 3:
+									set min_Q, min_Q+1;
+								case 1:
+								case 2:
+								case 4:
+							}
+							next;
+							mes "A quoi sert la compétence Increase Recuperative Power?";
+							switch(select("Elle permet de redonner plus de hp lorsqu'on est assis:Elle permet de diminuer le laps de temps entre chaque regénérations:Elle permet de récupérer des hp même en étant actif:Elle permet de récupérer plus de sp"))
+							{
+								case 1:
+									set min_Q, min_Q+1;
+								case 2:
+								case 3:
+								case 4:
+							}
+							next;
+							mes "Combien de chances avont de bloquer une attaque avec la compétence Parrying?";
+							switch(select("40% pendant 60 secondes:50% pendant 60 secondes:55% pendant 60 secondes:60% pendant 60 secondes"))
+							{
+								case 2:
+									set min_Q, min_Q+1;
+								case 1:
+								case 3:
+								case 4:
+							}
+							next;
+							mes "Quelle est le level max de Charge Attack?";
+							switch(select("5:10:3:1"))
+							{
+								case 4:
+									set min_Q, min_Q+1;
+								case 1:
+								case 2:
+								case 3:
+							}
+							next;
+							mes "Que rajoute et diminue la compétence Concentration au lvl 5";
+							switch(select("Hit+50 attaque +25% def -25%:Hit+50 attaque +20% def -20%:Hit+40 attaque +25% def-25%:Hit+40 attaque +20% def-20%"))
+							{
+								case 1:
+									set min_Q, min_Q+1;
+								case 2:
+								case 3:
+								case 4:
+							}
+							next;
+							mes "[Maitre Rune Knight]";
+							mes "Bien, voyons tes résultats maintenant...";
+							mes "*Trifouille les résultats du test";
+							next;
+							mes "[Maitre Rune Knight]";
+							if (min_Q >= 9)
+							{
+								mes "Excellent, tu as eu ^FF0000" + min_Q*10 + "%^000000 de bonnes réponses.";
+								mes "On dirait bien que ton Esprit est prêt à passer l'Eveil.";
+								mes "Tu peux passer à l'avant-dernière étape de ta quête, la plus difficile.";
+								mes "Pars donc à la recherche du Mirroir du Mal, il t'expliquera cela plus en détail.";
+								mes "Il se trouve caché quelque part aux alentours de la grande ville de Bastania.";
+								mes "Prends cet objet qui te sera très utile";
+								mes " ";
+								getitem (22007),1;
+								mes "Bon courage";
+								emotion 21;
+								set RK_Q, 1;
+								close;
+							}
+							else
+							{
+								mes "Désolé, mais tes ^FF0000" + min_Q*10 + "%^000000 de réussite ne seront pas suffisant.";
+								mes "Entraîne encore un peu ton esprit,";
+								mes "Sans quoi, il ne résistera pas à la puissance de l'Eveil.";
+								close;
+							}
+					}
+
+				case 2:
+					mes "[Maitre Rune Knight]";
+					mes "Pas de problème.";
+					mes "Vis ta vie avec Espoir,";
+					mes "Elle ne t'en paraîtra que plus belle.";
+					close;
+				case 3:
+					mes "[Maitre Rune Knight]";
+					mes "Un vieux fou tu dis?";
+					mes "Le Maître du Renouveau est tellement plus que ça";
+					mes "Mais j'avoue qu'il a des tendances un peu cabotine...";
+					close;
+			}
+		}
+		
+		else if ( RK_Q == 1 )
+		{
+			mes "Bonjour à toi," + strcharinfo(0) + ".";
+			mes "Tu peux passer à la dernière étape.";
+			mes "Pars donc à la recherche d'Yggdrasil.";
+			mes "Il se trouve caché quelque part aux alentours de Bastania.";
+			mes "Bon courage.";
+			close;
+		}
+
+		else if ( RK_Q == 3 || class == 4054 || class == 4060)
+		{
+			mes "Bonjour à toi," + strcharinfo(0) + ".";
+			mes "Felicitations, tu es Rune Knight !";
+			mes "Que la force soit avec toi !";
+			close;
+		}
+	}
+	else
+	{
+		mes "Les Chevaliers sont là pour aider le monde...";
+		mes "Malgré celà je ne peux rien pour toi, désolé.";
+		close;
+	}
+}

@@ -1,0 +1,133 @@
+///////Job list 2///////
+//2-1;
+morocc,59,109,6	script	Erika	700,{
+	if (two_qset == 1 && countitem(1072) > 0) goto N_QuestComp;
+	if (two_qset == 1) goto N_QuestStart;
+	mes "[Erika]";
+	mes "Hello my name is Erika.";
+	close;
+N_QuestComp:
+	mes "[Erika]";
+	mes "Quoi?! Une lettre pour moi?!";
+	mes "Ooooooooooh une lettre! Une lettre d'amour? J'adore en recevoir!";
+	next;
+	mes "[Letter]";
+	mes "Chère Erika";
+	mes " ";
+	mes "Désolé de vous informer que vous avez été remplacée. Merci de vous présenter sous 3 à 5 jours.";
+	mes " ";
+	mes "-L'équipe de managment";
+	next;
+	mes "[Erika]";
+	mes "Oh... um... Ce salop! Il croit qu'il peut me virer? Il ne sait pas à quoi il s'attaque!";
+	mes " ";
+	switch(rand(2))
+	{
+		case 0:
+			mes "On va dire que tu as perdu cette lettre, ok?";
+			mes "Je te donne un seul des deux Tokens prévus, et tu gardes le secret.";
+			mes "Sinon je perds mon boulot ><";
+			delitem 1072,1;
+			set two_qset,0;
+			set #Treasure_Token,#Treasure_Token+5;
+			close;
+		case 1:
+			mes "Je...Je...Je vais le tuerrrrr!";
+			delitem 1072,1;
+			hideonnpc Erika;
+			set two_qset,0;
+			npctalk "On dirait qu'elle est partie sans payer...";	
+			close;
+		case 2:
+			mes "La suite ne vous regarde pas. Voici vos 2 Treasure Token.";
+			delitem 1072,1;
+			set two_qset,0;
+			set #Treasure_Token,#Treasure_Token+10;
+			set On_Quest,0;
+			close;
+	}
+N_QuestStart:
+	mes "[Erika]";
+	mes "Donc vous avez une lettre pour moi?";
+	mes " ";
+	mes "Bien, où est-elle alors?";
+	close;
+}
+//2-2;
+in_moc_16,15,30,6	script	Jeramiah	730,{
+	if (two_qset == 2 && countitem(1264) > 0) goto N_QuestComp;
+	if (two_qset == 2) goto N_QuestStart;
+	mes "[Jeramiah]";
+	mes "C'est tellement ennuyeux de devoir attendre...";
+	close;
+N_QuestComp:
+	mes "[Jeramiah]";
+	mes "Ahh bonjour, vous devez être de la Guilde.";
+	mes "Avez-vous mon Jur? Parfait!";
+	mes "Prenez ces Treasures Tokens.";
+	delitem 1264,1;
+	set two_qset,0;
+	set On_Quest,0;
+	set #Treasure_Token,#Treasure_Token+20;
+	close;
+N_QuestStart:
+	mes "[Jeramiah]";
+	mes "Vous êtes celui qui est censé m'apporter mon Jur?";
+	mes "Bien! Et où est-il?";
+	close;
+}
+//2-3;
+prt_fild07,316,263,6	script	Marsh Man	84,{
+	if (two_qset == 3 && countitem(518) > 199  && countitem(710) > 199) goto N_QuestComp;
+	if (two_qset == 3) goto N_QuestStart;
+	mes "[Lenith]";
+	mes "Bonjour. Désolé, je n'ai pas le temps de parler, j'attends quelqu'un.";
+	close;
+N_QuestComp:
+	mes "[Lenith]";
+	mes "Bonjour! Vous avez mon miel? Mes abeilles et moi vous en serons reconnaissantes!";
+	mes " ";
+	mes "Parfait! Prenez ces deux Treasures Tokens.";
+	delitem 518,200;
+	delitem 710,200;
+	set #Treasure_Token,#Treasure_Token+25;
+	set two_qset,0;
+	set On_Quest,0;
+	close;
+N_QuestStart:
+	mes "[Lenith]";
+	mes "Bonjour, je suis Lenith. J'ai besoin de votre aide.";
+	mes "Il y a peu de temps, un idiot d'ours à volé le miel dans mes ruches. Idiot d'ours!";
+	mes " ";
+	mes "Tout ce que je vous demande, c'est de me trouver 200 Honeys et 200 Illusion Flowers, pour que mes abeilles puissent passer l'hiver.";
+	close;
+}
+//2-4;
+payon,161,72,6	script	Molly	714,{
+	if (two_qset == 4 && countitem(7005) > 249) goto N_QuestComp;
+	if (two_qset == 4) goto N_QuestStart;
+	mes "[Molly]";
+	mes "Désolé, pas le temps de parler. J'attends quelqu'un.";
+	close;
+N_QuestComp:
+	mes "[Molly]";
+	mes "WOW, VOUS Y ETES ARRIVE!";
+	mes " ";
+	mes "VOus aviez l'air fort, j'étais sûr que vous pourriez tuer ces monstres!";
+	mes "Merci infiniment, prenez ces 5 Treasures Tokens.";
+	delitem 7005,250;
+	set two_qset,0;
+	set On_Quest,0;
+	set #Treasure_Token,#Treasure_Token+25;
+	close;
+N_QuestStart:
+	mes "[Molly]";
+	mes "Vous, vous devez être le brave envoyé par la Guilde.";
+	mes "Ok voici ce qui se passe. Je ne sais pas pourquoi, mais un étrange Ronin Squelette rôde à deux maps à l'est d'ici.";
+	next;
+	mes "[Molly]";
+	mes "Je veux que vous le tuiez, lui et ses semblables. Je HAIS les squelettes! Ramènez moi 250 de leurs têtes, et je vous recompenserais.";
+	mes " ";
+	mes "Good Luck";
+	close;
+}

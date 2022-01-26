@@ -1,0 +1,67 @@
+prontera,138,224,6	script	Sorcière	856,{
+	set .@npcname$, "[Sorcière]";
+	
+	mes .@npcname$;
+	mes "";
+	mes "Bonjour à toi, " + strcharinfo(0);
+	mes "Tu sais qu'on ne vient me voir qu'en dernier recours?";
+	mes "Les gens ont peur de moi et de ce que je sais faire.";
+	mes "Visiblement, ce n'est pas ton cas.";
+	if (TISS_Q == 2)
+	{
+		next;
+		mes "Que veux-tu de moi?";
+		switch(select("Un remède pour Markus","Un tonifiant pour moi","Une potion d'amour","rien du tout"))
+		{
+			case 1:
+				mes "Un Remède pour le petit Markus?";
+				mes "Kekeke oui, je vois bien de qui il s'agit.";
+				mes "Je te le donne contre " + Zeny + "  Zeny.";
+				switch(select("Oui","C'est tout ce que j'ai...","Non"))
+				{
+					case 1:
+						next;
+						mes "....";
+						mes "Tu es pur, pas vrai?";
+						mes "Garde ton argent. Je ne suis pas si mauvaise qu'on le dit.";
+						mes "Tiens.";
+						getitem 7765,1;
+						break;
+					case 2:	
+						mes "Il faut savoir sacrifier pour recevoir.";
+						break;
+					case 3:
+						mes "Va t'en.";
+						mes "Tu ne mérites pas mon aide.";
+						break;
+				}
+				break;
+			case 2:
+				mes "Un Tonifiant?";
+				mes "Ca fera 5000 Zeny.";
+				switch(select("Oui","Non"))
+				{
+					case 1:
+						if (Zeny >= 5000)
+						{
+							getitem 501,1;
+							set Zeny, Zeny-5000;
+						}
+						else
+							mes "Tu ne les as même pas...Quelle honte.";
+						break;
+					case 2:
+						mes "Tant pis pour toi, je la garde pour moi.";
+						break;
+				}
+				break;
+			case 3:
+				mes "Ca n'existe que dans les livres idiot...";
+				break;
+			case 4:
+				mes "Alors va t'en!";
+				break;
+		}
+	}
+	close;
+}

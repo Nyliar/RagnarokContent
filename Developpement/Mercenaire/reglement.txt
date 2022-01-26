@@ -1,0 +1,37 @@
+casp_in01,84,192,6	script	Panneau d'information	111,{
+	if (LANGUAGE == 1)
+	{
+		mes " - Règlement de la Guilde des Mercenaires - ";
+		mes "";
+		mes "Un Mercenaire ne vit pas pour l'Honneur,";
+		mes "ne se bat pas pour la Gloire,";
+		mes "ne travaille pas pour l'accomplissement personnel,";
+		mes "n'espère pas l'Amour,";
+		mes "ne doit rien à personne,";
+		mes "n'est redevable qu'à la Guilde, et à lui-même,";
+		mes "n'en est pas moins un Homme (ou une Femme),";
+		mes "et peut donc revenir sur ses pas.";
+		mes "Un Mercenaire vit pour l'Argent,";	
+		mes "et il ne peut le toucher qu'en réponse à un Contrat.";
+		mes "";
+		mes " - Varys le Noir, Chef des Mercenaires - ";
+	}
+	else if (LANGUAGE == 2)
+	{
+		mes " - Mercenary Guild Rules - ";
+		mes "";
+		mes "A Mercenary does not live for Glory,";
+		mes "does not fight for Glory,";
+		mes "does not work for self estime,";
+		mes "does not hope for Love,";
+		mes "owes nothing to nobody,";
+		mes "except the Guild and himself,";
+		mes "is still a Man (or a Woman),";
+		mes "and can so turn his(her) steps back.";
+		mes "A Mercenary live for money,";	
+		mes "and he can have some only by filling a Contract.";
+		mes "";
+		mes " - Varys le Noir, Mercenary Chief - ";
+	}
+	close;
+}

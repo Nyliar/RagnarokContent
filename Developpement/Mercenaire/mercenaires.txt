@@ -1,0 +1,355 @@
+//bar
+casp_in01,59,187,4	script	Horm::caspho	455,{
+	set .@npcname$, "[Horm]";
+	mes .@npcname$;
+	if (LANGUAGE == 2)
+	{
+		mes "Us, Mercenary, only like some few things.";
+		mes "Gold, of course, but also alcohol and...Womens!";
+		mes "Arh arh arh!";
+	}
+	else if (LANGUAGE == 1)
+	{
+		mes "Nous les Mercenaires, nous n'aimons que peu de choses.";
+		mes "L'argent, bien sûr, mais aussi l'alcool et...les femmes!";
+		mes "Arh arh arh!";
+	}
+	close;
+}
+
+//table2
+casp_in01,67,184,4	script	Jörn::caspjor	881,{
+	set .@npcname$, "[Jörn]";
+	mes .@npcname$;
+	if (LANGUAGE == 2)
+	{
+		mes "I'm more a lonely guy. I don't really like teams.";
+		mes "There's always more reward for me this way!";
+	}
+	else if (LANGUAGE == 1)
+	{
+		mes "Je suis plutôt un solitaire. Je n'aime pas beaucoup les équipes.";
+		mes "Ca fait toujours plus de récompenses pour moi!";
+	}
+	close;
+}
+
+//table3
+casp_in01,65,186,6	script	Fran::caspfra	882,{
+	set .@npcname$, "[Fran]";
+	mes .@npcname$;
+	if (LANGUAGE == 2)
+	{
+		mes "Hey, Jörn, remember when we've fight against Drake?";
+		mes "That was pretty dangerous!";
+	}
+	else if (LANGUAGE == 1)
+	{
+		mes "Hey, Jörn! Tu te souviens quand on s'est battu contre Drake?";
+		mes "C'était plutôt dangereux comme truc!";
+	}
+	close;
+}
+
+//table3
+casp_in01,74,193,6	script	Hermann::caspher	107,{
+	set .@npcname$, "[Hermann]";
+	if (LANGUAGE == 2)
+	{
+		mes "This Fran...Always lying about things he said he did...";
+		mes "But a pretty awesome treasure hunter!";
+	}
+	else if (LANGUAGE == 1)
+	{
+		mes "Ce Fran...Toujours en train de mentir à propos de truc qu'il aurait fait...";
+		mes "Mais c'est un excellent chasseur de trésors!";
+	}
+	close;
+}
+
+
+casp_in01,48,188,6	script	Ork::caspork	817,{
+	set .@npcname$, "[Ork]";
+	mes .@npcname$;
+	if (LANGUAGE == 2)
+	{
+		mes "Did you ever hear about the Mercenary Treasure?";
+		mes "It's a hidden secret from our aside's world!";
+		mes "A secret place which is accessible only to the Mercenary,";
+		mes "and which grant access to rare items.";
+	}
+	else if (LANGUAGE == 1)
+	{
+		mes "Tu as déjà entendu parler du Trésor des Mercenaires?";
+		mes "C'est un secret caché de notre monde.";
+		mes "Un endroit caché, accessible seulement aux Mercenaires,";
+		mes "et qui permettrait d'obtenir des items rares.";
+	}
+	close;
+}
+
+casp_in01,58,192,6	script	Belariam le Bleu::caspbel	474,{
+	set .@npcname$, "[Belariam]";
+	mes .@npcname$;
+	if (LANGUAGE == 2)
+	{
+		mes "I'm Belariam, nicknamed le Bleu. Why? I don't know.";
+		mes "Maybe cause I've travel all over the world seas.";
+		mes "I was looking for new places, sometimes found, sometimes lost.";
+		mes "But I was always looking for Marine Card, which bring you to a treasure place.";
+	}
+	else if (LANGUAGE == 1)
+	{
+		mes "Je suis Belariam, surnommé le Bleu. Pourquoi? Je ne sais pas.";
+		mes "Peut être parce que j'ai parcouru toutes les mers de ce monde.";
+		mes "J'y ai cherché de nouvelles contrées, parfois trouvée, parfois perdue.";
+		mes "Mais surtout, j'y cherchais des cartes marines, indiquant l'emplacement d'un trésor.";
+	}
+	close;
+}
+
+casp_in01,250,202,6	script	Alim le Rouge::caspali	451,{
+	set .@npcname$, "[Alim]";
+	mes .@npcname$;
+	if (LANGUAGE == 2)
+	{
+		mes "Do you know who I am?";
+		mes "Everybody know who I am!";
+		mes "Everybody, but me...";
+		mes "I felt on my last travel, recover here and since, I do not remember a single thing...";
+	}
+	else if (LANGUAGE == 1)
+	{
+		mes "Sais-tu qui je suis?";
+		mes "Tout le monde sais qui je suis!";
+		mes "Tout le monde sauf moi...";
+		mes "Je suis tombé pendant mon dernier voyage, je me suis réveillé ici et depuis, je ne me rappelle de rien...";
+	}
+	close;
+}
+
+casp_in01,255,196,6	script	Rahn::caspra	419,{
+	set .@npcname$, "[Rahn]";
+	mes .@npcname$;
+	if (LANGUAGE == 2)
+	{
+		mes "Ahhhh Amber. Do you know her?";
+		mes "I found her so beautiful!";
+		mes "If only she would get angry at me...";
+	}
+	else if (LANGUAGE == 1)
+	{
+		mes "Ahhhh Amber. Tu la connais?";
+		mes "Je la trouve magnifique!";
+		mes "Si seulement elle pouvais s'énerver sur moi...";
+	}
+	close;
+}
+
+//premiere place
+caspen,124,142,6	script	Mouarn::caspmoua	456,{
+	set .@npcname$, "[Mouarn]";
+	mes .@npcname$;
+	if (LANGUAGE == 2)
+	{
+		mes "Welcome to Caspen, the Desert City.";
+		mes "Is it your first visit here?";
+		mes "You'll find here very few people, but everyone got a story to tell.";
+		mes "You should take the time to speak to everybody.";
+		mes "Maybe you'll learn something interesting.";
+	}
+	else if (LANGUAGE == 1)
+	{
+		mes "Bienvenue à Caspen, la Ville Déserte.";
+		mes "C'est ta première visite ici?";
+		mes "Tu trouveras très peu de gens ici, mais chacun a une histoire à raconter.";
+		mes "Tu devrais prendre le temps de parler à chacun.";
+		mes "Peut être que tu apprendras quelque chose d'intéressant.";
+	}
+	close;
+}
+
+//premiere maison
+caspen,114,162,6	script	Vlane::caspvla	810,{
+	set .@npcname$, "[Vlane]";
+	mes .@npcname$;
+	if (LANGUAGE == 2)
+	{
+		mes "I don't really know how I've arrived here.";
+		mes "But this place is full of secret.";
+		mes "You're people are quite interesting for me.";
+	}
+	else if (LANGUAGE == 1)
+	{
+		mes "Je ne sais pas trop comment je suis arrivé ici.";
+		mes "Mais cet endroit est plein de secret.";
+		mes "Les gens de ta race sont très intéressant pour moi.";
+	}
+	close;
+}
+
+//centre
+caspen,126,206,6	script	Baron::caspbar	984,{
+	set .@npcname$, "[Baron]";
+	mes .@npcname$;
+	if (LANGUAGE == 2)
+	{
+		mes "Baron's my name, not my title.";
+		mes "Even if I really was a baron some times ago.";
+		mes "But I let it all flee when the Adventure call my name.";
+	}
+	else if (LANGUAGE == 1)
+	{
+		mes "Baron c'est mon nom, pas mon titre.";
+		mes "Même si j'était vraiment baron autrefois.";
+		mes "Mais j'ai tout laissé tomber quand l'Aventure m'a appelé pour la première fois.";
+	}
+	close;
+}
+
+//banc
+caspen,159,187,6	script	Prun::casppr	418,{
+	set .@npcname$, "[Prun]";
+	mes .@npcname$;
+	if (LANGUAGE == 2)
+	{
+		mes "Some times ago, I was a real Mercenary.";
+		mes "Killing, stealing, raping on demand.";
+		mes "But now...I just want to stay here, listening to birds.";
+		mes "Thanks to all the gold I won by selling my soul.";
+	}
+	else if (LANGUAGE == 1)
+	{
+		mes "Il y a encore peu, j'étais un vrai Mercenaire.";
+		mes "Je tuais, volais, violais sur demande.";
+		mes "Mais maintenant...Je veux rester ici, à écouter les oiseaux.";
+		mes "Tout ça grâce à l'argent que j'ai gagné en vendant mon âme.";
+	}
+	close;
+}
+
+//marché
+caspen,179,183,6	script	Vlaj::caspvlaj	409,{
+	set .@npcname$, "[Vlaj]";
+	mes .@npcname$;
+	if (LANGUAGE == 2)
+	{
+		mes "This place is the city's market.";
+		mes "As you can see, there's nothing to sell, nothing to buy.";
+		mes "Peoples are affraid by us. Leaving in the middle of us is like betting on how long you'll live.";
+	}
+	else if (LANGUAGE == 1)
+	{
+		mes "Cette place est le marché de la ville.";
+		mes "Comme tu peux le voir, il n'y a rien à vendre, rien à acheter.";
+		mes "Les gens sont effrayés par nous. Vivre au milieu de nous, c'est comme parier sur combien de temps il te reste à vivre.";
+	}
+	close;
+}
+
+//devant le bar
+caspen,173,229,6	script	Berg::caspberg	585,{
+	set .@npcname$, "[Berg]";
+	mes .@npcname$;
+	if (LANGUAGE == 2)
+	{
+		mes "Zzzzzzzzz";
+		mes "Just another bier...Hips";
+		mes "*I don't think is in mood to answer my question*";
+	}
+	else if (LANGUAGE == 1)
+	{
+		mes "Zzzzzzzzzzz";
+		mes "Juste une autre bière...Hips";
+		mes "*Je ne pense pas qu'il soit en état de répondre à mes questions*";
+	}
+	close;
+}
+
+//armurerie
+caspen,144,236,6	script	Vurn::caspvur	414,{
+	set .@npcname$, "[Vurn]";
+	mes .@npcname$;
+	if (LANGUAGE == 2)
+	{
+		mes "Hello to you.";
+		mes "You're in front of Caspen's Weapon and Armor Shop.";
+		mes "Sadly, I've got nothing to sell.";
+		mes "Caravans does not come here...";
+	}
+	else if (LANGUAGE == 1)
+	{
+		mes "Bonjour à toi.";
+		mes "Tu es en face du magasin d'armes et armures de Caspen.";
+		mes "Malheureusement, je n'ai rien à te vendre.";
+		mes "Les caravanes ne viennent pas jusqu'ici...";
+	}
+	close;
+}
+
+//eglise
+caspen,88,198,6	script	Bishop::caspbish	964,{
+	set .@npcname$, "[Bishop]";
+	mes .@npcname$;
+	if (LANGUAGE == 2)
+	{
+		mes "Wha...What? Me? Looking on the Sisters Side?";
+		mes "Not at all!";
+		mes "I...I was...Praying.";
+		mes "Yes, that's it. You to!";
+		mes "Pray the Gods.";
+		mes "*Even bishops are strange here...*";
+	}
+	else if (LANGUAGE == 1)
+	{
+		mes "Qu...Quoi? Moi? Regarder du côté des Nonnes?";
+		mes "Pas du tout!";
+		mes "Je...J'étais en train de...Prier.";
+		mes "C'est ça. Toi aussi!";
+		mes "Prie les Dieux.";
+		mes "*Même les prêtres sont bizarres ici...";
+	}
+	close;
+}
+
+//jardin
+caspen,149,130,6	script	Garden Keeper::caspgk	460,{
+	set .@npcname$, "[Garden Keeper]";
+	mes .@npcname$;
+	if (LANGUAGE == 2)
+	{
+		mes "Good day to you!";
+		mes "I'm the Garden Keeper.";
+		mes "I am the one who feed all this bloody bastards.";
+		mes "And believe me, the eat a lot!";
+	}
+	else if (LANGUAGE == 1)
+	{
+		mes "Bonjour à toi!";
+		mes "Je suis le Gardien du Potager!";
+		mes "Je suis celui qui nourris tout ces fils de c*****.";
+		mes "Et crois moi, les Dieux savent qu'ils bouffent!";
+	}
+	close;
+}
+
+//port
+caspen,193,65,6	script	Pref::casppre	475,{
+	set .@npcname$, "[Pref]";
+	mes .@npcname$;
+	if (LANGUAGE == 2)
+	{
+		mes "How do you arrive here?!";
+		mes "Boats never come here...";
+		mes "You've arrived by the Ase Path? Seriously?";
+		mes "I think you should find Varys then. He's in the Bar!";
+	}
+	else if (LANGUAGE == 1)
+	{
+		mes "Comment es-tu arrivé là?!";
+		mes "Les bateaux ne viennent jamais par ici...";
+		mes "Tu es venu par la Voie des Ases? Sérieusement?";
+		mes "Je pense que tu devrais aller voir Varys. Il est au Bar.";
+	}
+	close;
+}

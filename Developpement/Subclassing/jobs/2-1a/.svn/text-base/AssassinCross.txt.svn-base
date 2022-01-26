@@ -1,0 +1,83 @@
+//Le Livre d'Ymir http://www.bookofymir.net/
+//traduit par Myllena, corrigé par Fern
+//===== eAthena Script ======================================= 
+//= Advance Class jobchanger after kRO Normals.
+//===== By: ==================================================
+//= Nana
+//= finished, optimized and tested by Lupus
+//===== Current Version: ===================================== 
+//= 1.3
+//===== Compatible With: ===================================== 
+//= eAthena 1.0 +
+//===== Description: ========================================= 
+//= Advance Class jobchanger after kRO Normals.
+//===== Additional Comments: ================================= 
+//= v1.1 Made all into functions, additional checks, etc. [Lupus]
+//= v1.2 Made numbers into constants. [Vicious]
+//= 1.3 Now saves/restores all the quest skills [Lupus]
+//============================================================ 
+
+valkyrie,44,58,5	script	Assassin Cross#Valkyrie	725,{
+	if (ADVJOB == 0 || Upper != 1) {
+		set .@karma_d,rand(1,10);
+		if (.@karma_d > 4) {
+			mes "[Assassin Cross]";
+			mes "Félicitations...";
+			next;
+			mes "[Assassin Cross]";
+			mes "...";
+			next;
+			mes "[Assassin Cross]";
+			mes "...";
+			mes "......";
+			next;
+			mes "[Assassin Cross]";
+			mes "...";
+			mes "......";
+			mes "Honneur aux Guerriers.";
+			close;
+		}
+		mes "[Assassin Cross]";
+		mes "Nous sommes les guerriers du désert. Personne ne nous prend de haut. Personne...";
+		close;
+	}
+	else if (ADVJOB == Job_Assassin_Cross && Class == Job_Thief_High && JobLevel > 39) {
+		mes "[Assassin Cross]";
+		mes "Le temps est venu.";
+		mes "Le monde a besoin de vous...";
+		mes "Plus que jamais.";
+		next;
+		mes "[Assassin Cross]";
+		mes "Je vous demande de continuer à vivre dans l'ombre, mais vous aurez besoin de plus de puissance, de changer d'apparence.";
+		next;
+		mes "[Assassin Cross]";
+		mes "Souhaitez-vous devenir Assassin Cross?";
+		next;
+		if (select("Non.:Oui.") == 1) {
+			mes "[Assassin Cross]";
+			mes "Revenez quand vous vous sentirez prêt.";
+			next;
+			mes "[Assassin Cross]";
+			mes "Honneur aux Guerriers!";
+			close;
+		}
+		if (SkillPoint) {
+			mes "[Assassin Cross]";
+			mes "Vous n'avez pas terminé votre apprentissage.";
+			close;
+		}
+		jobchange Job_Assassin_Cross;
+		set ADVJOB,0;
+		mes "[Assassin Cross]";
+		mes "Félicitations.";
+		mes "En tant qu'Assassin Cross, j'espère que vous combattrez pour un futur meilleur.";
+		close;
+	}
+	mes "[Assassin Cross]";
+	mes "Bienvenue au Walhalla, le Hall des Honneurs.";
+	next;
+	mes "[Assassin Cross]";
+	mes "Faites comme chez vous.";
+	mes "Honneur aux Guerriers!";
+	close;
+}

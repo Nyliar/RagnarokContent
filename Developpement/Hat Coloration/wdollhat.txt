@@ -1,0 +1,72 @@
+gonryun, 97, 141, 5	script	W Doll Hat	100,{
+
+	set .@npcname$,"[W Doll Hat]";
+	
+	//Black W Doll Hat 20294
+	setarray @iteBWDH[0], 5345, 983, 7230;
+	setarray @countiteBWDH[0], 1, 2, 2;
+	
+	//Blue W Doll Hat 20295
+	setarray @iteBLWDH[0], 5345, 978, 7230;
+	setarray @countiteBLWDH[0], 1, 2, 2;
+
+	//Cyan W Doll Hat 20296
+	setarray @itemCWDH[0], 5345, 978, 982, 7230;
+	setarray @countitemCWDH[0], 1, 2, 2, 2;
+
+	//Green W Doll Hat 20298
+	setarray @itemGNWDH[0], 5345, 979, 7230;
+	setarray @countitemGNWDH[0], 1, 2, 2;
+
+	//Purple  W Doll Hat 20301
+	setarray @itemPUWDH[0], 5345, 981, 7230;
+	setarray @countitemPUWDH[0], 1, 2, 2;
+	
+	//Red W Doll Hat 20302
+	setarray @itemRWDH[0], 5345, 975, 7230;
+	setarray @countitemRWDH[0], 1, 2, 2;
+
+	//White  W Doll Hat 20304
+	setarray @itemWWDH[0], 5345, 982, 7230;
+	setarray @countitemWWDH[0], 1, 2, 2;	
+	
+	
+	mes .@npcname$;
+	mes "Bonjour ^3333FF" + strcharinfo(0) + "^000000!";
+	mes "Je peux te proposer quelque hats pour customiser ton W Doll Hat.";
+	mes	"Ca t'interesse?!";
+	next;
+	mes .@npcname$;
+	mes "Voici ce que je peux te proposer:";
+	next;
+
+	switch(select("Black W Doll Hat:Blue W Doll Hat:Cyan W Doll Hat:Green W Doll Hat:Purple W Doll Hat:Red W Doll Hat:White W Doll Hat:^777777Rien, merci...^000000"))
+	{
+		case 1 :
+ 		callfunc "mes_getitem_colo",.@npcname$,20328,@iteBWDH,@countiteBWDH, 1000000;
+
+		case 2 :
+ 		callfunc "mes_getitem_colo",.@npcname$,20329,@iteBLWDH,@countiteBLWDH, 1000000;
+
+		case 3 :
+ 		callfunc "mes_getitem_colo",.@npcname$,20330,@itemCWDH,@countitemCWDH, 1000000;
+
+		case 4 :
+ 		callfunc "mes_getitem_colo",.@npcname$,20331,@itemGNWDH,@countitemGNWDH, 1000000;
+
+		case 5 :
+ 		callfunc "mes_getitem_colo",.@npcname$,20332,@itemPUWDH,@countitemPUWDH, 1000000;
+		
+		case 6 :
+		callfunc "mes_getitem_colo",.@npcname$,20333,@itemRWDH,@countitemRWDH, 1000000;
+
+		case 7 :
+		callfunc "mes_getitem_colo",.@npcname$,20334,@itemWWDH,@countitemWWDH, 1000000;
+
+		// Quitter
+		case 8 :
+		mes @npcname$;
+		mes "Très bien. A bientôt !";
+		close;
+	}
+}

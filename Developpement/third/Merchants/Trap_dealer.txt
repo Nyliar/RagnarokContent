@@ -1,0 +1,59 @@
+prt_in,43,97,1	script	Master Braconner	456,{
+	set .npcname$, "[Master Braconner]";
+	mes .npcname$;
+	mes "Hi there,";
+	mes "Just like you, I spent my young time hunting with normal traps.";
+	mes "BUT! Think that you've got the only person in front of you that can enhance their destruction power.";
+	switch(select("Interesting. Can you show me?","Well no thanks."))
+	{
+		case 1:
+			next;
+			mes .npcname$;
+			mes "I use the mecanism of the ^FF00005 old traps^000000, the heat produced by ^FF00001 Burning Hearts^000000 to make mecanism fusionned.";
+			mes "But it won't be free, ^FF00001 000 zeny^000000 will be enough.";
+			mes "Still ready?";
+			switch(select("I've got all.","Sure, just leave me some time."))
+			{
+				case 1:
+					next;
+					mes .npcname$;
+					mes "How many do you want? Max is 1000.";
+					next;
+					while(input(.@Nombre_de_Trap, 1, 1000))
+					{
+						mes .npcname$;
+						mes "Stop laugthing at me. Enter a number between 1 and 1000.";
+						next;
+					}
+					if (countitem(1065)>=5*.@Nombre_de_Trap && countitem(7097)>=1*.@Nombre_de_Trap && Zeny >= 1000*.@Nombre_de_Trap)
+					{
+						mes .npcname$;
+						mes "Sure! Here's what you want";
+						delitem 1065, 5*.@Nombre_de_Trap;
+						delitem 7097, 1*.@Nombre_de_Trap;
+						set Zeny, Zeny-1000*.@Nombre_de_Trap;
+						getitem 7940, 1*.@Nombre_de_Trap;
+						break;
+					}else
+					{
+						mes .npcname$;
+						mes "You don't have enough!";
+						close;
+					}
+				
+				case 2:
+					next;
+					mes .npcname$;
+					mes "Come back when you want.";
+					break;
+			}
+			break;
+		
+		case 2:
+			next;
+			mes .npcname$;
+			mes "As you wish.";
+			break;
+	}
+	close;
+}

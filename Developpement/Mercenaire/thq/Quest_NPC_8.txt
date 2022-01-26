@@ -1,0 +1,97 @@
+///////Job list 8///////
+//8-1
+function	script	eight_qset1	{
+	if (eight_qset == 1 && countitem(12048) > 49) goto N_QuestComp2;
+	mes "[Girl]";
+	mes "Vous revoilà? L'étape suivante, c'est le thé. Il me faut 50 thé aux herbes et au miel!";
+	mes "I want 5 of them.";
+	close;
+N_QuestComp2:
+	mes "[Girl]";
+	mes "Merci! Merci!";
+	next;
+	mes "[Girl]";
+	mes "Prenez donc ces 5 Tokens.";
+	delitem 12048,50;
+	set eight_qset,0;
+	set On_Quest,0;
+	set #Treasure_Token,#Treasure_Token+5;
+	close;
+}
+//8-2;
+morocc,165,55,6	script	Klye	48,{
+	if (eight_qset == 2 && countitem(7799) > 199) goto N_QuestComp;
+	if (eight_qset == 2) goto N_QuestStart;
+	mes "[Klye]";
+	mes "Salut, "+strcharinfo(0)+".";
+	close;
+N_QuestComp:
+	mes "[Klye]";
+	mes "Merci pour tout!";
+	next;
+	mes "[Klye]";
+	mes "Voilà ta récompense";
+	delitem 7799,199;
+	set eight_qset,0;
+	set On_Quest,0;
+	set #Treasure_Token,#Treasure_Token+10;
+	close;
+N_QuestStart:
+	mes "[Kyle]";
+	mes "...";
+	mes "Je veux que tu chasses les Ombres qui planent sur nous...";
+	mes "Rapporte moi 200 Crystal of Drakness.";
+	close;
+
+}
+//8-3;
+prt_maze02,103,86,6	script	Zack	751,{
+	if (eight_qset == 3 && countitem(923) > 49 && countitem(1476) > 0) goto N_QuestComp;
+	if (eight_qset == 3) goto N_QuestStart;
+	mes "[Zack]";
+	mes "Salut salut. J'ai perdu mon copain Ghostring. Tu l'as pas vu des fois?";
+	close;
+N_QuestComp:
+	mes "[Zack]";
+	mes "Ahahahaha! Mort, ils sont morts!";
+	next;
+	mes "[Zack]";
+	mes "Voilà ta récompense!";
+	delitem 923,50;
+	set eight_qset,0;
+	set On_Quest,0;
+	set #Treasure_Token,#Treasure_Token+7;
+	close;
+N_QuestStart:
+	mes "[Zack]";
+	mes "Salut! La raison pour laquelle tu es ici est simple. Je veux le cadavre de Baphomet.";
+	mes "Lui, et ses petits, je veux les voir morts!";
+	mes " ";
+	mes "Ramène moi la Faux du grand, et des Evil Horn pour les petits. J'en veux 50.";
+	close;
+}
+//8-4;
+payon,136,129,6	script	Flower	703,{
+	if (eight_qset == 4 && countitem(746) > 249) goto N_QuestComp;
+	if (eight_qset == 4) goto N_QuestStart;
+	mes "[Flower]";
+	mes "Désolé, j'attends quelqu'un là...";
+	close;
+N_QuestComp:
+	mes "[Flower]";
+	mes "Fiou! J'ai crains le pire! Merci de ton aide.";
+	next;
+	mes "[Flower]";
+	mes "Voilà tes 4 Tokens.";
+	delitem 746,250;
+	set eight_qset,0;
+	set On_Quest,0;
+	set #Treasure_Token,#Treasure_Token+4;
+	close;
+N_QuestStart:
+	mes "[Flower]";
+	mes "Aide moi! Aide moi! J'ai promis à mon frère de lui ramener des billes, mais je les ai toutes perdues!";
+	mes " ";
+	mes "Ramène moi 250 Glass Beads!";
+	close;
+}

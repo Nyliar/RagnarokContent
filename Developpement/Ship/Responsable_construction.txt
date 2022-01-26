@@ -1,0 +1,132 @@
+tha_s_in,385,69,6	script	Responsable Domptage	813,{
+	set .@npcname$, "[Oharim]";
+	
+	setarray .listem[0],1019,938,1059,7850;
+	setarray .listemcount[0], 1000, 500, 150, 500;
+	
+	mes .@npcname$;
+	mes "";
+
+	mes "Bonjour, " + strcharinfo(0);
+	mes "Que puis-je faire pour vous?";
+	if (checkquest (60370, PLAYTIME) == 2 && mono_given)
+	{
+		goto OnMonoCaptured;
+	}
+	switch(select("Je voudrais un Mono.","Je voudrais améliorer mon Mono.","Un Mono? C'est quoi?", "Rien, je passais seulement pour visiter."))
+	{
+		case 1:
+			next;
+			if (SHIP == 0)
+			{
+				mes "Acheter un Mono? Bien entendu que c'est possible.";
+				mes "Il faut bien savoir que les voyages personnels ne sont pas protégés contre les attaques pirates.";
+				mes "De plus, un monstre personnelle est beaucoup plus à même d'être englouti par l'un des nombreux tourbillons.";
+				mes "Le coût de domptage est également très élevé, mais si vous avez les moyens...";
+				mes "Ca vous intéresse?";
+				switch(select("Oui, bien sûr.","Non, je vais plutôt m'orienter vers les Navettes"))
+				{
+					case 1:
+						mes "Très bien. Pour vous dompter un Mono, nous avons besoin de:";
+						set COUNT1, .listemcount[0];
+						set COUNT2, .listemcount[1];
+						set COUNT3, .listemcount[2];
+						set COUNT4, .listemcount[3];
+						callfunc "display_list", .listem, .listemcount;
+						mes "Ainsi que 300.000 Zeny.";
+						set SHIP, 1;
+						break;
+					case 2:
+						mes "Dans ce cas, veuillez vous rendre au bureau 2.";
+						break;
+				}
+			}
+			else
+			{
+				next;
+				mes "Voyons si vous avez ce qu'il nous faut.";
+				set @check, callfunc ("check_list", .listem, .listemcount);
+				if (@check == 1)
+				{
+					mes "On dirait bien que tout y est. Parfait!";
+					mes "Nous attaquons immédiatement le Domptage.";
+					callfunc "clear_list",.listem,.listemcount;
+					mes "Votre Mono sera disponible d'ici à une semaine.";
+					set mono_given, 0;
+					setquest 60370;
+				}
+				else
+				{
+					mes "Il vous en manque! Je ne peux pas travailler dans ces conditions!";
+					mes "Ramenez-moi: ";
+					callfunc "display_list", .listem, .listemcount;
+				}
+			}
+			break;
+		case 2:
+			next;
+			mes "Bien sûr.";
+			mes "Pour une amélioration, une pièce rare est requise.";
+			mes "Il me faut une Rune Magique par ensorcellement.";
+			mes "Le prix est aussi proportionnel au nombre d'ensorcellement.";
+			mes "La première coûte 200.000 Zeny, la seconde 400.000, la troisième 600.000...";
+			mes "En échange, votre Mono gagne une protection magique qui le rend moins visible aux Pirates";
+			mes "Et plus prompt à esquiver les tourbillons.";
+			mes "Cela vous convient-il?";
+			next;
+			switch(select("Oui, bien sûr.","Non, trop cher."))
+			{
+				case 1:
+					if (SHIP == 1)
+					{
+						if (countitem(21065) >= 1)
+						{
+							if (Zeny >= 200000*1+UPGRADE_S)
+							{
+								set Zeny, Zeny - 200000*1+UPGRADE_S;
+								mes "C'est parti.";
+								delitem 21065,1;
+								set UPGRADE_S, UPGRADE_S+1;
+								next;
+								mes "*Votre Mono acquiert un niveau d'ensorcellement de " + UPGRADE_S + "*.";
+							}
+							else
+							{
+								mes "Désolé, mais vous n'avez pas assez d'argent.";
+							}
+						}
+						else
+						{
+							mes "Vous n'avez pas la Rune. Sans elle, je ne peux rien faire.";
+						}
+					}
+					else
+						mes "Voyons...Il te faut au minimum un Mono a enchanter...";
+					break;
+				case 2:
+					mes "La Sailor Company reste à votre disposition.";
+					mes "N'oubliez pas, les ensorcellements permettent de mieux détecter les pirates";
+					mes "et ainsi réduire le risque d'attaque.";
+					break;
+			}
+			break;
+		case 3:
+			next;
+			mes "Un Mono est un monstre capturé et dressé spécialement pour toi.";
+			mes "Il te parait d'arriver plus vite, et gratuitement sur les Iles que tu as déjà visité.";
+			mes "En revanche, tu risques beaucoup plus de rencontrer des pirates...";
+			break;
+		case 4:
+			next;
+			mes "La Sailor Company vous souhaite la bienvenue dans le monde marin.";
+			break;
+	}
+	close;
+	
+OnMonoCaptured:
+	dispbottom "Votre Mono est prêt. Vous pouvez y accéder en parlant au Responsable du Port.";
+	set SHIP, 1;
+	set UPGRADE_S, 0;
+	set mono_given, 1;
+	erasequest 60370;
+}

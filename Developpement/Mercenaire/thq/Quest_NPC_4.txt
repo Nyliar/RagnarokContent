@@ -1,0 +1,116 @@
+///////Job list 4///////
+//4-1;
+pay_arche,45,138,6	script	Flora	724,{
+	if (four_qset == 1 && countitem(921) > 49) goto N_QuestComp;
+	if (four_qset == 1) goto N_QuestStart;
+	mes "[Flora]";
+	mes "Fais attention en entrant la dedans. On nous rapporte que pas mal de monstres ont débarqués...";
+	close;
+N_QuestComp:
+	mes "[Flora]";
+	mes "Enfin te revoilà! J'ai cru que...Bah, ces monstres ne sont pas si forts que ça!";
+	mes "Merci pour ton travail. Voilà tes 4 Tokens.";
+	delitem 921,50;
+	set #Treasure_Token,#Treasure_Token+20;
+	set four_qset,0;
+	set On_Quest,0;
+	close;
+N_QuestStart:
+	mes "[Flora]";
+	mes "Bonjour!";
+	mes " ";
+	mes "J'ai absolument besoin de récupérer des items, dont je sais qu'on en trouve ici.";
+	mes " ";
+	mes "Il me faut des spore de Champignon, pour soigner ma mère.";
+	next;
+	mes "[Flora]";
+	mes "Bonne chance.";
+	mes "Ramène moi 50 ";
+	close;
+}
+//4-2;
+yuno,45,138,6	script	Zed	735,{
+	if (four_qset == 2 && countitem(1618) > 0) goto N_QuestComp;
+	if (four_qset == 2) goto N_QuestStart;
+	mes "[Zed]";
+	mes "Casse toi de devant! Allez, dégage!";
+	close;
+N_QuestComp:
+	mes "[Zed]";
+	mes "Ca t'a pris longtemps hein? On est pas doué, hein?!";
+	mes "Tu sais combien coûte le temps que tu me fais perdre?!!!!";
+	mes "Jamais plus je ne te confierais un boulot!";
+	next;
+	mes "[Zed]";
+	mes "Tiens, voilà le pris de ma pitié. 5 Token, c'est tout ce que ça mérite!";
+	delitem 1618,1;
+	set On_Quest,0;
+	set four_qset,0;
+	set #Treasure_Token,#Treasure_Token+40;
+	close;
+N_QuestStart:
+	mes "[Zed]";
+	mes "Et mon bâton?";
+	mes "Tu devais m'apporter un Survivor Rod slotté!";
+	close;
+}
+//4-3;
+prontera,176,204,6	script	Dassy	95,{
+	if (four_qset == 3 && countitem(7166) > 99) goto N_QuestComp;
+	if (four_qset == 3) goto N_QuestStart;
+	mes "[Dassy]";
+	mes "Saluuuuuut!";
+	close;
+N_QuestComp:
+	mes "[Dassy]";
+	mes "Kyahhh! Trop biennn!";
+	mes "Je vais pouvoir me faire ma robe qui déchire!";
+	mes "Voilà ton récompense!";
+	delitem 7166,100;
+	set On_Quest,0;
+	set four_qset,0;
+	set #Treasure_Token,#Treasure_Token+40;
+	close;
+N_QuestStart:
+	mes "[Dassy]";
+	mes "Salut, toi!";
+	mes "Tu es là pour m'aider, hein? Hein? Hein?!";
+	mes " ";
+	mes "ok, alors n'en dit pas plus. J'ai besoin de toi pour me ramener 100 Soft Silk";
+	mes "Thank you mon ange ;p !";
+	close;
+}
+//4-4;
+prt_gld,157,99,6	script	Czhore	752,{
+	if (four_qset == 4 && countitem(987) > 0  && countitem(915) > 99) goto N_QuestComp;
+	if (four_qset == 4) goto N_QuestStart;
+	mes "[Czhore]";
+	mes "Salut mon pote!";
+	mes "Tu es venu pour regarder ce Hall de Guilde, toi aussi?";
+	close;
+N_QuestComp:
+	mes "[Czhore]";
+	mes "Nom de...";
+	mes " ";
+	mes "T'es trop fort! Merci beaucoup, "+strcharinfo(0)+".";
+	next;
+	mes "[Czhore]";
+	mes "Voilà ce que je t'avais promis: 5 Tokens";
+	mes "Et un de mes vieux trésors.";
+	delitem 987,1;
+	delitem 915,100;
+	monster "prt_gld",155,99,"Old Man's Treasure",1324,1;
+	set four_qset,0;
+	set On_Quest,0;
+	set #Treasure_Token,#Treasure_Token+50;
+	close;
+N_QuestStart:
+	mes "[Czhore]";
+	mes "Bonjour, ami!";
+	mes "Ca va peut être te paraître stupide, mais quand j'étais petit, je revais d'avoir un emperium.";
+	mes "Maintenant, je veux être forgeron, mais j'suis un peu vieux.";
+	mes "Mais j'suis têtu, donc il me faut une Golden Anvil et 100 Oridecon Hammer!";
+	mes " ";
+	mes "Ramène moi ça, et tu ne le regrettera pas!";
+	close;
+}

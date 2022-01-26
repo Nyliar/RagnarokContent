@@ -1,0 +1,201 @@
+caspen,178,233,2	script	Maitre Shadow Chaser	997,{
+
+	mes "[Maitre Shadow Chaser]";
+	if (class == 4018 || class == 17)
+	{
+		if ( SC_Q < 1)
+		{
+			mes "Bonjour à toi," + strcharinfo(0) + ".";
+			mes "Je suis le Grand Maitre Shadow Chaser.";
+			mes "Je peux te faire passer la deuxième épreuve de ton Eveil,";
+			mes "Es-tu intéressé?";
+			next;
+			switch(select("Oui, je voudrais passer le test, s'il vous plait.:Non merci, je me suis trompé de personne.:Un vieux fou m'a envoyé ici après avoir lancé un tetra Vortex sur moi Y^Y."))
+			{
+				case 1:
+					mes "[Maitre Shadow Chaser]";
+					mes "Tout d'abord, voyons si tu es prêt physiquement.";
+					next;
+					if ( CHARLO_Q ){
+						mes "[Maitre Shadow Chaser]";
+						mes "On dirait bien que ton physique est prêt.";
+						mes "Je vais donc maintenant tester ton mental.";
+						next;
+						mes "[Maitre Shadow Chaser]";
+							mes "Il s'agit d'un quizz. Commençons.";
+							next;
+							set min_Q, 0;
+							mes "Quel est le pourcentage de réussite de Full Strip lvl 5?";
+							switch(select("15%:10%:20%:5%"))
+							{
+								case 1:			
+									set min_Q, min_Q+1;
+								case 2:	
+								case 3:
+								case 4:
+							}
+							next;
+							mes "Quelles armes sont réfléchies par Reject Sword?";
+							switch(select("Dague et Epée:Epée:Dague et Hache:Toutes"))
+							{
+								case 1:
+									set min_Q, min_Q+1;
+								case 2:
+								case 3:
+								case 4:
+							}
+							next;
+							mes "Quel est le coût pour lancer Chase Walk durant la WoE?";
+							switch(select("10:30:40:50"))
+							{
+								case 4:
+									set min_Q, min_Q+1;
+								case 1:
+								case 2:
+								case 3:
+							}
+							next;
+							mes "Combien de temps dure Preserve?";
+							switch(select("1 minute:5 minute:10 minute:15 minute"))
+							{
+								case 3:
+									set min_Q, min_Q+1;
+								case 2:
+								case 1:
+								case 4:
+							}
+							next;
+							mes "Quelles armes peuvent être utilisées en tant que Rogue?";
+							switch(select("Dague et Arc:Arc et Epée uniquement:Dague et Hache uniquement:Dague, Arc, Epée et Hache"))
+							{
+								case 4:
+									set min_Q, min_Q+1;
+								case 1:
+								case 3:
+								case 2:
+							}
+							next;
+							mes "Comment peut on annuler Close Confine?";
+							switch(select("On ne peut pas:Avec Dispell:En se téléportant:Avec le status Mute "))
+							{
+								case 3:
+									set min_Q, min_Q+1;
+								case 1:
+								case 2:
+								case 4:
+							}
+							next;
+							mes "Quel skill peut être copié par Plagiarism Level 7?";
+							switch(select("Skill de niveau 5:Skill de niveau 6 et plus:Skill de niveau 8:Skill de niveau 7 et moins"))
+							{
+								case 1:
+								case 2:
+								case 4:
+									set min_Q, min_Q+1;
+								case 3:
+							}
+							next;
+							mes "Que nécessite Graffity pour être lancé?";
+							switch(select("Un pinceau:Un Red Blood:Une Red Gemstone:Une bombe de peinture"))
+							{
+								case 3:
+									set min_Q, min_Q+1;
+								case 1:
+								case 2:
+								case 4:
+							}
+							next;
+							mes "Quel est l'effet de Strip Helm sur les monstres?";
+							switch(select("Int-40%:Str -40%:Agi -40%:Dex -40%"))
+							{
+								case 1:
+									set min_Q, min_Q+1;
+								case 4:
+								case 2:
+								case 3:
+							}
+							next;
+							mes "Quels équipements ne peuvent pas être Strip?";
+							switch(select("Les accessoires:Les Garments:Un équipement avec Eremes Card:Aucun, tout est stripable"))
+							{
+								case 1:
+									set min_Q, min_Q+1;
+								case 2:
+								case 3:
+								case 4:
+							}
+							next;
+							mes "[Maitre Shadow Chaser]";
+							mes "Bien, voyons tes résultats maintenant...";
+							mes "*Trifouille les résultats du test";
+							next;
+							mes "[Maitre Shadow Chaser]";
+							if (min_Q >= 9){
+								mes "Excellent, tu as eu ^FF0000" + min_Q*10 + "%^000000 de bonnes réponses.";
+								mes "On dirait bien que ton Esprit est prêt à passer l'Eveil.";
+								mes "Tu peux passer à l'avant-dernière étape de ta quête, la plus difficile.";
+								mes "Pars donc à la recherche du Mirroir du Mal, il t'expliquera cela plus en détail.";
+								mes "Il se trouve caché quelque part aux alentours de la grande ville de Bastania.";
+								mes "Prends cet objet qui te sera très utile";
+								mes " ";
+								getitem (22008),1;
+								mes "Bon courage";
+								emotion 21;
+								set SC_Q, 1;
+								close;
+							}
+							else
+							{
+								mes "Désolé, mais tes ^FF0000" + min_Q*10 + "%^000000 de réussite ne seront pas suffisant.";
+								mes "Entraîne encore un peu ton esprit,";
+								mes "Sans quoi, il ne résistera pas à la puissance de l'Eveil.";
+								close;
+							}
+					}		
+					else
+					{
+					mes "[Maitre Shadow Chaser]";
+					mes "Désolé, mais tu ne peux pas venir me voir pour l'instant.";
+					mes "Tu dois avant tout tester ton Physique auprès du Maitre de l'Eveil.";
+					close;
+					}
+				case 2:
+					mes "[Maitre Shadow Chaser]";
+					mes "Pas de problème.";
+					mes "Vis ta vie avec Espoir,";
+					mes "Elle ne t'en paraîtra que plus belle.";
+					close;
+				case 3:
+					mes "[Maitre Shadow Chaser]";
+					mes "Un vieux fou tu dis?";
+					mes "Le Maître du Renouveau est tellement plus que ça";
+					mes "Mais j'avoue qu'il a des tendances un peu cabotine...";
+					close;
+			}
+		}
+		
+		else if ( SC_Q == 1 )
+		{
+			mes "Bonjour à toi," + strcharinfo(0) + ".";
+			mes "Tu peux passer à la dernière étape.";
+			mes "Pars donc à la recherche d'Yggdrasil.";
+			mes "Il se trouve caché quelque part aux alentours de Bastania.";
+			mes "Bon courage.";
+			close;
+		}
+
+		else if ( SC_Q == 3 || class == 4072 || class == 4079)
+		{
+			mes "Bonjour à toi," + strcharinfo(0) + ".";
+			mes "Felicitations, tu es Shadow Chaser !";
+			mes "Que la force soit avec toi !";
+			close;
+		}
+	}
+	else
+	{
+		mes "Salut nabot, un petit conseil :";
+		mes "décampe de là avant que j't'éclate la tronche, t'as compris ?";
+		close;
+	}
+}

@@ -1,0 +1,142 @@
+tha_in1,46,44,4	script	Piedestal::piedestal1	747,{
+	set .@npcname$, "[Piedestal]";
+	mes .@npcname$;
+	
+	if (#elemental_favor_q >= 6 && #elemental_favor_q <=10)
+	{
+		mes "Une étrange lueur émane de ce piédestal en pierre.";
+		mes "Vous cherchez d'où cela peut provenir quand un interstice s'ouvre, et révèle une trappe.";
+		switch(select("Y mettre la main","Y mettre l'offrande","Laissez ça comme c'est"))
+		{
+			case 1:
+				mes "Il n'y a rien dedans, mais vous sentez un espèce de picotement au bout du doigt.";
+				break;
+			case 2:
+				mes "Vous souhaitez insérer une offrande.";
+				switch(#elemental_favor_q)
+				{
+					case 6:
+						set .@type$, "water_item";
+						break;
+					case 7:
+						set .@type$, "earth_item";
+						break;
+					case 8:
+						set .@type$, "wind_item";
+						break;
+					case 9:
+						set .@type$, "fire_item";
+						break;
+				}
+ 				// On créé un menu dynamique
+    				for ( set .@i, 0; .@i<getarraysize(getd("$elemental_"+.@type$)); set .@i, .@i+1 )
+				{
+        				set .@menu$, .@menu$ + ( .@i ? ":" : "" ) + getd("$elemental_"+.@type$)[.@i];
+				}
+				   // On récupère le choix de l'utilisateur
+    				set .@choice, prompt(.@menu$) - 1;
+
+				if (.@choice != 255)
+				{
+					if (countitem(getd("$elemental_"+.@type$)[.@choice]) >= 1)
+						goto L_CALL_GUARDIAN;
+				}
+				else
+				{
+					mes "Vous vous éloignez sans rien toucher.";
+				}
+				break;
+			case 3:
+				mes "La lueur s'éteint tandis que vous reculez.";
+				break;
+		}
+	}
+	else
+	{
+		mes "Il n'y a rien d'intéressant ici.";
+	}
+	close;
+
+L_CALL_GUARDIAN:
+	mes "Vous déposer votre offrande.";
+	mes "La trappe se referme, et le piedestal se met à briller plus violemment.";
+	mes "Préparez vous au combat!";
+	disablenpc strnpcinfo(3);
+	switch(#elemental_favor_q)
+	{
+		case 6:
+			//water
+			set .@monsterid[0],;
+			break;
+		case 7:
+			//earth
+			set .@monsterid[0],;
+			break;
+		case 8:
+			//wind
+			set .@monsterid[0],;
+			break;
+		case 9:
+			//fire
+			set .@monsterid[0],;
+			break;
+	}
+	getpartymember(getcharid(1));
+	set .@countParty, getarraysize($@partymembername$);
+	if (.@countParty == 0)
+		set .@rank, 0;
+	else if (.@countParty >= 1 && .@countParty <= 3)
+		set .@rank, 1;
+	else if (.@countParty >= 4 && .@countParty <= 6)
+		set .@rank, 2;
+	else if (.@countParty > 6)
+		set .@rank, 3;
+
+	set .@guardianid, .@monsterid[.@rand];
+	getmapxy(@mapname$,@mapx,@mapy,1,strnpcinfo(3));
+	monster @mapname$, @mapx, @mapy, "Gardien", .@guardianid, 1, strnpcinfo+"::OnGuardianDead";
+	initnpctimer;
+	set #guardian_dead, 1;
+	close;
+
+OnTimer7200000:
+	//au bout de deux heures max, tuer le monstre.
+	getmapxy(@mapname$,@mapx,@mapy,1,strnpcinfo(3));
+	killmonster @mapname$, "All";
+	mapannounce @mapname$,"Le Gardien a regagné son piédestal.",0;
+	enablenpc strnpcinfo(3);
+	
+OnGuardianDead:
+	set #elemental_favor_q, #elemental_favor_q+1;
+	getmapxy(@mapname$,@mapx,@mapy,1,strnpcinfo(3));
+	mapannounce @mapname$,"Vous avez rendu son apparence au Gardien. Retournez là où se trouvait le Piedestal.",0;
+	switch(#elemental_favor_q)
+	{
+		case 6:
+			enablenpc "gde";
+			break;
+		case 7:
+			enablenpc "gdt";
+			break;
+		case 8:
+			enablenpc "gda";
+			break;
+		case 9:
+			enablenpc "gdf";
+			break;
+	}
+	set #guardian_dead, 2;
+	set #info_favor, 0;
+	end;
+
+OnPCLogOutEvent:
+	getmapxy(@mapname$,@mapx,@mapy,1,strnpcinfo(3));
+	//check if the loging out char is on the same map as npc and that a has the quest on.
+	if (@mapname$ == strcharinfo(3) && #elemental_favor_q >= 6 && #elemental_favor_q <=10)
+	{
+		set #elemental_favor_q, #elemental_favor_q-1;
+		//kill all monster called by command
+		killmonster strcharinfo(3), "All";
+		mapannounce @mapname$,"Le Gardien a regagné son piédestal.",0;
+	}
+}

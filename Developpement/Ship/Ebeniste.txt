@@ -1,0 +1,136 @@
+payon,215,274,6	script	Ebeniste	804,{
+
+	set .@npcname$, "[L'Ebéniste]";
+	setarray .listee[0],1019,6008,7189,7222,7850;
+	setarray .listeecount[0],1000,100,500,500,1000;
+	
+	mes .@npcname$;
+	mes "";
+	mes "Bonjour à toi, " + strcharinfo(0);
+	if (SHIP_Q == 1)
+	{
+		if (EBEN_Q == 0)
+		{
+			mes "Tu dis?";
+			mes "Tu viens de la part du Dompteur, prêt de la capitale?";
+			mes "Incroyable, il est toujours en activité?";
+			mes "Il cherche les ennuis ma parole.";
+			mes "Pas moyen que je bosse pour un mec comme lui.";
+			mes "Je tiens à ma license...";
+			next;
+			if (Zeny >= 250000)
+			{
+				mes .@npcname$;
+				mes "";
+				mes "..........";
+				mes "On pourrait s'arranger tu sais...";
+				mes "Une license coûte cher, mais si je peux la récupérer...";
+				mes "Je veux bien bosser contre 250.000 Zeny.";
+				mes "On fait affaire?";
+				switch(select("Oui, bien sûr.","Non, trop dangereux."))
+				{
+					case 1:
+						mes "Ca marche!";
+						set Zeny, Zeny - 250000;
+						next;
+						mes .@npcname$;
+						mes "";
+						mes "Bien. La première étape, c'est de créer une cage ou enfermer ton Mono encore sauvage.";
+						mes "Pour ça, j'ai besoin de matière première.";
+						mes "Du bois flotté pour la structure, du bois de chêne pour les montants...";
+						mes "De l'ébène pour les décos...";
+						mes "Ok. Ramène moi ça:";
+						set COUNT1, .listeecount[0];
+						set COUNT2, .listeecount[1];
+						set COUNT3, .listeecount[2];
+						set COUNT4, .listeecount[3];
+						set COUNT5, .listeecount[4];
+						set EBEN_Q, 1;
+						callfunc "display_list",.listee,.listeecount;
+						break;
+					case 2:
+						mes "Ok, tant pis pour toi...";
+						break;
+				}
+			}
+		}
+		else
+		{
+			mes "Tu as tout ce que je t'ai demandé?";
+			switch(select("Oui, voilà!","Euh, presque. En voilà déjà une partie.","Non, désolé, tu peux me rappeler la liste?"))
+			{
+				case 1:
+					if (callfunc ("check_list",.listee,.listeecount) == 1)
+					{
+						mes "On dirait bien que tu as tout. Parfait!";
+						mes "Je m'y met tout de suite.";
+						callfunc "clear_list",.listee,.listeecount;
+						mes "Voilà, tu as la carlingue. Je l'envoie directement au Fishnet.";
+						mes "Il saura que tu viens de ma part.";
+						set EBEN_Q, 2;
+					}
+					else
+						mes "Il t'en manques! Je ne peux pas travailler dans ces conditions!";
+					break;
+				case 2:
+					mes "Voyons ça.";
+					callfunc "update_list",.listee,.listeecount;
+					mes "Il te manque donc:";
+					callfunc "display_list",.listee,.listeecount;
+					break;
+				case 3:
+					mes "Tête en l'air hein?";
+					mes "J'ai besoin de:";
+					callfunc "display_list",.listee,.listeecount;
+					mes "J'attendrais dans le coin.";
+					break;
+			}
+		}
+	}
+	else
+	{
+		mes "J'adore travailler le bois.";
+		mes "Depuis la Bataille, il y a des quantités de bois flotté.";
+		mes "C'est excellent comme matériau de base!";
+		mes "Je peux faire des meubles, des montants, un peu de tout.";
+	}
+	close;
+	
+	
+OnInit:
+	end;
+}
+
+function	script	display_list	{
+	for(set .@i,0; .@i<getarraysize(getarg(0)); set .@i,.@i+1)
+		mes "^5555FF"+ getd("COUNT" + (.@i+1)) +" "+ getitemname(getelementofarray(getarg(0),.@i)) +"^000000";
+	return 1;
+}
+
+function	script	clear_list	{
+	for(set .@i,0; .@i<getarraysize(getarg(0)); set .@i,.@i+1)
+		delitem getitemname(getelementofarray(getarg(0),.@i)), getd("COUNT" + (.@i+1));
+	return 1;
+}
+
+function	script	check_list	{
+	set @check, 1;
+	for ( set .@i , 0 ; .@i < getarraysize( getarg(0) ) ; set .@i , .@i + 1 )
+	{
+		if ( countitem( getelementofarray(getarg(0),.@i) ) < getd("COUNT" + (.@i+1)) )
+		{	
+			set @check, 0;
+		}
+	}
+	return @check;
+}
+
+function	script	update_list	{
+	for ( set .@i , 0 ; .@i < getarraysize( getarg(0) ) ; set .@i , .@i + 1 )
+	{
+		if (countitem( getelementofarray(getarg(0),.@i) ) > 0)
+			set getd("COUNT" + (.@i+1)), getd("COUNT" + (.@i+1)) - countitem( getelementofarray(getarg(0),.@i) );
+		delitem getelementofarray(getarg(0),.@i), countitem( getelementofarray(getarg(0),.@i) );
+	}
+	return 1;
+}

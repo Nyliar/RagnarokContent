@@ -1,0 +1,118 @@
+thier_cave,26,16,5	script	Shadowy Brother::shabro	880,{
+	if(LANGUAGE == 2)
+	{
+		set .@npc$, "[^FF0000Shadowy Brother^000000]";
+	}
+	else if (LANGUAGE == 1)
+	{
+		set .@npc$, "[^FF0000Frere Sombre^000000]";
+	}
+
+	mes .@npc$; 
+	mes "...";
+	if(LANGUAGE == 2)
+	{
+		mes "Do you know who I am?";
+		switch(select("A desert inhabitants?:...And you, do you know who I am?:A Sha."))
+		{
+			case 1: 
+				mes "Gods Realm belong to simple minded...";
+				mes "Go, and don't come back.";
+				close;
+			case 2:
+				mes "You show courage,";
+				mes "but the limit with madness is thin.";
+				mes "Go, come back when you'll know.";
+				close;
+			case 3:
+				if ( CROW_Q == 1 || CROW_Q == 2 )
+				{
+					mes "...";
+					mes ".....";
+					mes "........";
+					mes "Looks like we are Brothers.";
+					setnpcdisplay "shabro", 939;
+					set CROW_Q, CROW_Q+1;
+					if ( CROW_Q == 2 )
+					{
+						mes "Look for one more of our Brothers.";
+						mes "Good luck on the Sha's Path.";
+					}
+					else if ( CROW_Q == 3 )
+					{
+						mes "Looks like you're ready.";
+						mes "Come on the Sha's Path";
+						mes "Go back to the Hassanshin,";
+						mes "and tell him what you've became: A Sha.";
+					}
+					next;
+					mes "See you soon, Brother.";
+					setnpcdisplay "shabro", 880;
+					close;
+				}
+				else
+				{
+					mes "I don't think you know who I am.";
+					mes "But luck is part of our Path.";
+					mes "Come back later.";
+					close;
+				}
+		}
+	}
+	else if (LANGUAGE == 1)
+	{
+		mes "Tu sais qui je suis?";
+		switch(select("Un bédouin dans le désert?:...Et toi, tu sais qui je suis?:Tu es un Sha"))
+		{
+			case 1: 
+				mes "Le Royaume des dieux appartient au simples d'esprits...";
+				mes "Part, et ne reviens pas.";
+				close;
+			case 2:
+				mes "Tu fais preuve de courage,";
+				mes "mais la frontière avec la folie est mince.";
+				mes "Part, et ne reviens que quand tu sauras";
+				close;
+			case 3:
+				if ( CROW_Q == 1 || CROW_Q == 2 )
+				{
+					mes "...";
+					mes ".....";
+					mes "........";
+					mes "On dirait bien que nous sommes Frères";
+					setnpcdisplay "shabro", 939;
+					set CROW_Q, CROW_Q+1;
+					if ( CROW_Q == 2 )
+					{
+						mes "Cherche encore un de nos frères.";
+						mes "Bon courage sur le chemin de Sha";
+					}
+					else if ( CROW_Q == 3 )
+					{
+						mes "Tu es prêt on dirait.";
+						mes "Rejoins le Chemin de Sha.";
+						mes "Retourne voir le Hassanshin,";
+						mes "et dit lui qui tu es devenu: Un Sha.";
+					}
+					next;
+					mes "A bientôt, Frere";
+					setnpcdisplay "shabro", 880;
+					close;
+				}
+				else
+				{
+					mes "Je ne crois pas que tu saches qui je suis.";
+					mes "Mais la chance est une partie du chemin.";
+					mes "Reviens plus tard";
+					close;
+				}
+		}
+	}
+	close;
+}
+
+
+prontera,246,263,0	duplicate(shabro)	Shadowy Brother::shabro2	809
+morocc,141,293,0	duplicate(shabro)	Shadowy Brother::shabro3	819
+glast_01,102,333,0	duplicate(shabro)	Shadowy Brother::shabro4	832
+nameless_n,228,232,0	duplicate(shabro)	Shadowy Brother::shabro5	996

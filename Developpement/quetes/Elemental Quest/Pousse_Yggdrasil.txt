@@ -1,0 +1,276 @@
+shitsu,55,47,4	script	Yggdrasil Shoot::yggshoo	613,5,5,{
+	enablenpc "yggshomob1";
+	if ($favor_elem_quest == 3)
+	{
+		set .@npcname$, "[Yggdrasil Shoot]";
+		mes .@npcname$;
+		mes "You're welcomed, " + strcharinfo(0);
+		mes "You're here in the Birthplace of Yggdrasil, the Tree of Life.";
+		mes "The Ground Master sent you here cause he thinks that you're ready to take part in the greatest battle.";
+		mes "You have to protect the Yggdrasil from its foe.";
+		mes "It's gonna be greatly dangerous. Are you ready for that?";
+		next;
+		switch(select("Yes","A speaking plant!!!!","Give us more time"))
+		{
+			case 1:
+				mes .@npcname$;
+				break;
+			case 2:
+				mes .@npcname$;
+				mes "Stop being stupid! There's no time for that!";
+				break;
+		}
+	}
+	else
+	{
+		mes "*She can't talk right now.*";
+	}
+	close;
+
+OnInit:
+OnBloomAwake:
+	switch($element_rank)
+	{
+		case 0:
+			set .bloomLife, 2;
+			set .maxBloomLife, 2;
+			setarray .monstersIdCount[0],1,1,2;
+			set .waveDelay, 60000;
+			break;
+		case 1:
+			set .bloomLife, 4;
+			set .maxBloomLife, 4;
+			setarray .monstersIdCount[0],2,2,4;
+			set .waveDelay, 45000;
+			break;
+		case 2:
+			set .bloomLife, 7;
+			set .maxBloomLife, 7;
+			setarray .monstersIdCount[0],4,4,6;
+			set .waveDelay, 30000;
+			break;
+		case 3:
+			set .bloomLife, 16;
+			set .maxBloomLife, 16;
+			setarray .monstersIdCount[0],8,8,8;
+			set .waveDelay, 15000;
+			break;
+	}
+	end;
+
+OnTimer15000:
+	if ($element_rank == 3)
+	{
+		enablenpc "yggshomob1";
+		donpcevent "yggshomob1::OnReachTarget";
+	}
+	else if ($element_rank == 1)
+	{ 
+		enablenpc "yggshomob3";
+		donpcevent "yggshomob3::OnReachTarget";
+	}
+	end;
+
+OnTimer30000:
+	if ($element_rank == 2)
+	{
+		enablenpc "yggshomob2";
+		donpcevent "yggshomob2::OnReachTarget";
+	}
+	end;
+
+OnTimer60000:
+	if ($element_rank == 0)
+	{
+		mapannounce "shitsu","Timer 6000.",0; 
+		enablenpc "yggshomob4";
+		donpcevent "yggshomob4::OnReachTarget";
+	}
+	end;
+
+OnBloomTouched:
+	set .bloomLife, .bloomLife - 1;
+	mapannounce "shitsu","Te Shoot can survive only " + .bloomLife + " more. Help her!",0;
+	if (.bloomLife == 0)
+	{
+		mapannounce "shitsu","The Bloom died under the monsters attacks. You failed protecting her.",0; 
+		set .bloom_started, 0;
+		stopnpctimer;
+	}
+	else
+	{
+		mapannounce "shitsu","Protect the bloom! Next wave in " + .waveDelay + "!",0;
+		setnpctimer 0;
+	}
+	end;
+
+OnMobKilled:
+	stopnpctimer;
+	set .@mob_dead_num,mobcount("shitsu","yggshoo::OnMobKilled");
+	if (.@mob_dead_num < 1)
+	{
+		goto OnAllMobKilled;
+	}
+	else
+	{
+		setnpctimer 0;
+	}
+	end;
+
+OnAllMobKilled:
+	mapannounce "shitsu","Congratulations! The Bloom is safe right now!",0;
+	mapannounce "shitsu","Here's you reward!",0;
+
+	stopnpctimer;
+
+	attachrid($elemental_leader_id);
+	getpartymember $elemental_party_id,2;
+
+	set .@countParty, $@partymembercount;
+	if (.@countParty == 0)
+		set reward_rank, 0;
+	else if (.@countParty >= 1 && .@countParty <= 3)
+		set reward_rank, 1;
+	else if (.@countParty >= 4 && .@countParty <= 6)
+		set reward_rank, 2;
+	else if (.@countParty > 6)
+		set reward_rank, 3;
+
+	for(set .@i,0; .@i<$@partymembercount; set .@i,.@i+1)
+	{
+		attachrid $@partymemberaid[.@i];
+		
+		if ($element_type == 0)
+		{
+			getmapxy(@mapname$,@mapx,@mapy,0,strcharinfo(0));
+			monster @mapname$,@mapx,@mapy,"Bloom Treasure",1328,2;
+			monster @mapname$,@mapx,@mapy,"Bloom Treasure",1329,2;
+		}
+		else if ($element_type == 1)
+		{
+			getitem 12623, 3;
+			getitem 12902, 1;
+			getitem 12912, 1;
+			getitem 12922, 1;
+		}
+		else if ($element_type == 2)
+		{
+			getitem 21669, 3;
+		}
+		else if ($element_type == 3)
+		{
+			set .@id, 0;
+			while(getitemname(.@id) != 0)
+			{
+				mes "input an item id you want to obtain:";
+				input .@id;
+			}
+			getitem .@id, 1;			
+		}
+	}
+	set .bloom_started, 0;
+
+	end;
+
+OnStartWaves:
+	if (.bloom_started == 0)
+	{
+		switch($element_rank)
+		{
+			case 0:
+				set .@countFenrir, 1;
+				set .@countNydd, 1;
+				set .@countDuneyrr, 2;
+				break;
+			case 1:
+				set .@countFenrir, 2;
+				set .@countNydd, 2;
+				set .@countDuneyrr, 3;
+				break;
+			case 2:
+				set .@countFenrir, 3;
+				set .@countNydd, 3;
+				set .@countDuneyrr, 5;
+				break;
+			case 3:
+				set .@countFenrir, 4;
+				set .@countNydd, 4;
+				set .@countDuneyrr, 8;
+				break;
+		}	
+
+		monster "shitsu",0,0,"Fenrir",1785,.@countFenrir,strnpcinfo(3)+"::OnMobKilled";
+		monster "shitsu",0,0,"Nydhogg",2022,.@countNydd,strnpcinfo(3)+"::OnMobKilled";
+		monster "shitsu",0,0,"Duneyrr",2018,.@countDuneyrr,strnpcinfo(3)+"::OnMobKilled";
+
+		disablenpc "yggshomob1";
+		disablenpc "yggshomob2";
+		disablenpc "yggshomob3";
+		disablenpc "yggshomob4";
+
+		mapannounce "shitsu","Protect the bloom! Next wave in " + .waveDelay + "!",0;
+		startnpctimer;
+
+		set .bloom_started, 1;
+	}
+	end;
+
+OnTouch:
+	if ($favor_elem_quest == 2)
+	{
+		if (.bloomLife < .maxBloomLife)
+		{
+			specialeffect2 216;
+			switch($elemental_rank)
+			{
+				case 0:
+					percentheal -25,-25;
+					set .bloomLife, .bloomLife + 1;
+					break;
+				case 1:
+					percentheal -50,-50;
+					set .bloomLife, .bloomLife + 1;
+					break;
+				case 2:
+					percentheal -75,-75;
+					set .bloomLife, .bloomLife + 1;
+					break;
+				case 3:
+					percentheal -90,-90;
+					set .bloomLife, .bloomLife + 1;
+					break;
+			}
+			mapannounce "shitsu","The Bloom healed herself with your life. She'll survive a bit longer.",0;
+			mapannounce "shitsu","Te Shoot can survive " + .bloomLife + " more. Help her!",0;
+		}
+	}
+	end;
+}
+
+shitsu,48,58,4	duplicate(yggshoo)	Yggdrasil Shoot::yggshoo2	613,5,5
+shitsu,48,47,4	duplicate(yggshoo)	Yggdrasil Shoot::yggshoo3	613,5,5
+shitsu,55,58,4	duplicate(yggshoo)	Yggdrasil Shoot::yggshoo4	613,5,5
+
+//Duneyrr: 2018, Nydd: 2022, Atroce: 1785
+shitsu,46,61,4	script	Fenrir#1::yggshomob1	1785,5,5,{
+	end;
+
+OnInit:
+	disablenpc strnpcinfo(3);
+	end;
+
+OnReachTarget:
+	mapannounce "shitsu","Spawn monster!",0;
+	specialeffect 901;
+	donpcevent "yggshoo" + strnpcinfo(2) + "::OnBloomTouched";
+	sleep2 5000;
+	disablenpc strnpcinfo(3);
+	end;
+}
+
+
+shitsu,58,60,4	duplicate(yggshomob1)	Nyddhog#1::yggshomob2	2022,5,5
+
+shitsu,57,45,4	duplicate(yggshomob1)	Duneyrr#1::yggshomob3	2018,5,5
+shitsu,45,46,4	duplicate(yggshomob1)	Duneyrr#2::yggshomob4	2018,5,5
+

@@ -1,0 +1,72 @@
+gonryun, 193, 206, 5	script	Defolty Hat	411,{
+
+	set .@npcname$,"[Defolty Hat]";
+
+	//Black Defolty Hat 20215
+	setarray @itemBDH[0], 5340, 978, 7230;
+	setarray @countitemBDH[0], 1, 2, 2;
+
+	//Cyan Defolty Hat 20217
+	setarray @itemCDH[0], 5340, 978, 982, 7230;
+	setarray @countitemCDH[0], 1, 2, 2, 2;
+
+	//Gold Defolty Hat 20218
+	setarray @itemGDH[0], 5340, 976, 7230;
+	setarray @countitemGDH[0], 1, 2, 2;
+
+	//Green Defolty Hat 20219
+	setarray @itemGNDH[0], 5340, 976, 7230;
+	setarray @countitemGNDH[0], 1, 2, 2;
+	
+	//Purple Defolty Hat 20220
+	setarray @itemPDH[0], 5340, 981, 7230;
+	setarray @countitemPDH[0], 1, 2, 2;
+	
+	//Red Defolty Hat 20221
+	setarray @itemRDH[0], 5340, 975, 7230;
+	setarray @countitemRDH[0], 1, 2, 2;
+
+	//White Defolty Hat 20222
+	setarray @itemWDH[0], 5340, 982, 7230;
+	setarray @countitemWDH[0], 1, 2, 2;
+	
+	mes .@npcname$;
+	mes "Bonjour ^3333FF" + strcharinfo(0) + "^000000!";
+	mes "Je peux te proposer quelque hats pour customiser ton Defolty Hat.";
+	mes	"Ca t'interesse?!";
+	next;
+	mes .@npcname$;
+	mes "Voici ce que je peux te proposer:";
+	next;
+
+	switch(select("Gold Defolty Hat:Green Defolty Hat:Cyan Defolty Hat:Purple Defolty Hat:Red Defolty Hat:White Defolty Hat:Black Defolty Hat:^777777Rien, merci...^000000"))
+	{
+		case 6 :
+ 		callfunc "mes_getitem_colo",.@npcname$,20307,@itemGDH,@countitemGDH, 1000000;
+		
+		case 1 :
+ 		callfunc "mes_getitem_colo",.@npcname$,20308,@itemGNDH,@countitemGNDH, 1000000;
+
+		case 3 :
+		callfunc "mes_getitem_colo",.@npcname$,20306,@itemCDH,@countitemCDH, 1000000;
+		
+		case 2 :
+		callfunc "mes_getitem_colo",.@npcname$,20309,@itemPDH,@countitemPDH, 1000000;
+		
+		case 4 :
+		callfunc "mes_getitem_colo",.@npcname$,20310,@itemRDH,@countitemRDH, 1000000;
+
+		case 5 :
+		callfunc "mes_getitem_colo",.@npcname$,20311,@itemWDH,@countitemWDH, 1000000;
+
+		case 7 :
+		callfunc "mes_getitem_colo",.@npcname$,20305,@itemBDH,@countitemBDH, 1000000;
+
+
+		// Quitter
+		case 8 :
+		mes @npcname$;
+		mes "Très bien. A bientôt !";
+		close;
+	}
+}

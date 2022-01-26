@@ -1,0 +1,290 @@
+mora,182,157,6	script	Vieux Sage::Yggdrasil	965,{
+
+	set @job, eaclass();
+
+	mes "[Vieux Sage]";
+	if(CHARLO_Q == 2 || @job&EAJL_THIRD)
+	{
+		mes "Salut l'ami !";
+		mes "Que la vie te soit belle, remplie de bonheur, et que la force soit avec toi !";
+		close;
+	}
+	if( !((Upper && Class != 4001) && CHARLO_Q && (AB_Q == 2 || GE_Q == 2 || GLT_Q == 2 || ME_Q == 2 || MI_Q == 2 || RA_Q == 2 || RG_Q == 2 || RK_Q == 2 || SC_Q == 2 || SR_Q == 2 || SU_Q == 2 || WAN_Q == 2 || WAR_Q == 2 )) )
+	{
+		mes "Mmmmmm ?";
+		mes "Que me veux-tu ?";
+		next;
+		switch(select("Qui êtes-vous ?:Rien, je passais par ici."))
+		{
+			case 1:
+				mes "[Vieux Sage]";
+				mes "Je suis le Maitre de l'Eveil";
+				mes "Celui qui sur tout être veille";
+				mes "J'insufle forces et merveilles";
+				mes "Alors ouvre bien tes oreilles";
+				mes " ";
+				mes "J'ai un pouvoir immense en moi";
+				mes "Qui peut causer peur et effroie";
+				mes "Ainsi qu'envie et jalousie";
+				mes "Mais qui peut te changer la vie";
+				mes " ";
+				mes "...";
+				close;
+				
+			case 2:
+				mes "[Vieux Sage]";
+				mes "D'accord...";
+				mes "Vas visiter un peu le coin";
+				mes "Il mérite un peu d'attention";
+				close;
+		}
+	}
+	else
+	{
+		mes "*Bruit de vent dans les feuilles*";
+		mes "Bonjour " + strcharinfo(0) + "...";
+		mes "Te voilà enfin ?!";
+		next;
+		switch(select("Je voudrais connaitre la dernière étape de l'Eveil.:Rien, je passais juste par là."))
+		{						
+			case 2:
+				mes "[Vieux Sage]";
+				mes "Visite le coin tranquillement.";
+				mes "Il est assez sympathique.";
+				mes "Vis pleinement, et reviens me voir plus tard.";
+				close;
+				
+			case 1:
+				mes "[Vieux Sage]";
+				mes "Mmmmmm ?";
+				mes "L'Eveil dis-tu ?!";
+				mes "*le vent forcit*";
+				mes "Sais-tu seulement à quoi tu t'exposes ?";
+				mes "Es-tu prêt à changer complètement ta façon de vivre ?";
+				next;
+				switch(select("Oui, bien sure !:Non, pas encore..."))
+				{
+					case 2:
+						mes "[Vieux Sage]";
+						mes "Très bien, viens me revoir quand tu le seras";
+						mes "A bientôt je l'espère !";
+						close;
+						
+					case 1:
+					//setnpcdisplay "Yggdrasil",971;
+					//mes "[Yggdrasil]";
+					//mes "Je suis Yggdrasil, l'Arbre de Vie,";
+					mes "[Vieux Sage]";
+					mes "Très bien tout d'abord je vais procéder à une petite vérification...";
+					next;
+					mes "[Vieux Sage]";
+					mes "*vérification*";
+					mes "...";
+					next;
+					mes "[Vieux Sage]";
+					if( (@job&EAJL_2 && JobLevel < 70) || (Class > 4001 && Class < 4008 && JobLevel < 50) )
+					{
+						mes "Je suis désolé, mais ton level Job est trop faible !";
+						mes "Reviens me voir quand tu seras Level Job " + (@job&EAJL_2 ? "70" : "50") +".";
+						close;
+					}
+					else
+					{
+						if(SkillPoint != 0)
+						{
+							mes "Je suis désolé mais tu dois mettre tous tes poits de skill pour continuer !";
+							mes "Reviens me voir quand tu auras fini de les mettre !";
+							close;
+						}
+						mes "Je vois que tu es pret !";
+						mes "...";
+						mes "....";
+						mes ".....";
+						mes "......";
+						next;
+						setnpcdisplay "Yggdrasil","Yggdrasil",971;
+						mes "[Yggdrasil]";
+						mes "Me voici, me voilà !!!";
+						mes "Je te dévoile mon vrai visage, et je vais te dévoiler mon pouvoir !!!";
+						specialeffect 84;
+						specialeffect 220;	
+						next;							
+						mes "[Yggdrasil]";
+						mes "Prépare-toi à engranger de la puissance !!!";
+						next;
+						specialeffect2 514;
+						specialeffect2 203;
+						specialeffect2 348;
+						switch(Class)
+						{
+							//Jobs venant de rebirth
+							case Job_Swordman_High:
+								if(RK_Q)
+								{
+									jobchange Job_Rune_Knight;
+									set RK_Q, RK_Q + 1;
+								}
+								else
+								{
+									jobchange Job_Royal_Guard;
+									set RG_Q, RG_Q + 1;
+								}
+								break;
+								
+							case Job_Mage_High:
+								if(WAR_Q)
+								{
+									jobchange Job_Warlock;
+									set WAR_Q, WAR_Q + 1;
+								}
+								else
+								{
+									jobchange Job_Sorcerer;
+									set SR_Q, SR_Q + 1;
+								}
+								break;
+								
+							case Job_Archer_High:
+								if(RA_Q)
+								{
+									jobchange Job_Ranger;
+									set RA_Q, RA_Q + 1;
+								}
+								else
+								{
+									if(MI_Q)
+									{
+										jobchange Job_Minstrel;
+										set MI_Q, MI_Q + 1;
+									}
+									else
+									{
+										jobchange Job_Wanderer;
+										set WAN_Q, WAN_Q + 1;
+									}
+								}
+								break;
+								
+							case Job_Acolyte_High:
+								if(AB_Q)
+								{
+									jobchange Job_Arch_Bishop;
+									set AB_Q, AB_Q + 1;
+								}
+								else
+								{
+									jobchange Job_Sura;
+									set SU_Q, SU_Q + 1;
+								}
+								break;
+								
+							case Job_Merchant_High:
+								if(ME_Q)
+								{
+									jobchange Job_Mechanic;
+									set ME_Q, ME_Q + 1;
+								}
+								else
+								{
+									jobchange Job_Genetic;
+									set GE_Q, GE_Q + 1;
+								}
+								break;
+								
+							case Job_Thief_High:	
+								if(GLT_Q)
+								{
+									jobchange Job_Guillotine_Cross;
+									set GLT_Q, GLT_Q + 1;
+								}
+								else
+								{
+									jobchange Job_Shadow_Chaser;
+									set SC_Q, SC_Q + 1;
+								}
+								break;
+								
+							//Jobs rebirth							
+							case Job_Lord_Knight:
+							case Job_Lord_Knight2:
+								jobchange Job_Rune_Knight_T;
+								set RK_Q, RK_Q + 1;
+								break;
+								
+							case Job_High_Priest:
+								jobchange Job_Arch_Bishop_T;
+								set AB_Q, AB_Q + 1;
+								break;
+								
+							case Job_High_Wizard:
+								jobchange Job_Warlock_T;
+								set WAR_Q, WAR_Q + 1;
+								break;
+								
+							case Job_Whitesmith:
+								jobchange Job_Mechanic_T;
+								set ME_Q, ME_Q + 1;
+								break;
+								
+							case Job_Sniper:
+								jobchange Job_Ranger_T;
+								set RA_Q, RA_Q + 1;
+								break;
+								
+							case Job_Assassin_Cross:
+								jobchange Job_Guillotine_Cross_T;
+								set GLT_Q, GLT_Q + 1;
+								break;
+								
+							case Job_Paladin:
+							case Job_Paladin2:
+								jobchange Job_Royal_Guard_T;
+								set RG_Q, RG_Q + 1;
+								break;
+								
+							case Job_Champion:
+								jobchange Job_Sura_T;
+								set SU_Q, SU_Q + 1;
+								break;
+								
+							case Job_Professor:
+								jobchange Job_Sorcerer_T;
+								set SR_Q, SR_Q + 1;
+								break;
+								
+							case Job_Stalker:
+								jobchange Job_Shadow_Chaser_T;
+								set SC_Q, SC_Q + 1;
+								break;
+								
+							case Job_Creator:
+								jobchange Job_Genetic_T;
+								set GE_Q, GE_Q + 1;
+								break;
+								
+							case Job_Clown:
+								jobchange Job_Minstrel_T;
+								set MI_Q, MI_Q + 1;
+								break;
+								
+							case Job_Gypsy:
+								jobchange Job_Wanderer_T;
+								set WAN_Q, WAN_Q + 1;
+								break;
+						}
+						next;
+						mes "[Yggdrasil]";
+						mes "Te voilà enfin 3ème Classe !";
+						mes "Une puissance nouvelle va s'éveiller en toi";
+						mes "Fais-en un bon usage, mais n'en abuse pas";
+						next;
+						mes "[Yggdrasil]";
+						mes "Sur ce je te laisse en paix, et n'oublie pas : LE 42 VAINCRA !";
+						set CHARLO_Q, CHARLO_Q + 1;
+						setnpcdisplay "Yggdrasil","Vieux Sage",965;
+						close;
+					}
+				}
+		}	
+	}
+}

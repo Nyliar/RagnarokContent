@@ -1,0 +1,41 @@
+//===== eAthena Script =======================================
+//= Guarantee Refine Ticket
+//===== By: ==================================================
+//= Euphy / GM Takumirai
+//===== Current Version: =====================================
+//= 1.1a
+//===== Description: =========================================
+//= Uses [Guarantee Refine Ticket] to refine weapons/armor.
+//============================================================
+
+function	script	GuaranteeRefine	{
+
+	set .@CleanEquip,1;	// Only refine +0 equipment? (1:yes / 0:no)
+
+	if (!getarg(1)) {
+		message strcharinfo(0)," ~~ Guarantee Refine Ticket +"+getarg(0)+" ~~ ";
+		for(set .@i,1; .@i<=10; set .@i,.@i+1) {
+			if (getequipisequiped(.@i) && !getiteminfo(getequipid(.@i),13)) set .@menu$, .@menu$+getequipname(.@i);
+			set .@menu$, .@menu$+":"; }
+		set .@s, select(.@menu$); }
+	else set .@s, getarg(1);
+	if (!getequipisequiped(.@s)) {
+		dispbottom "Nothing is equipped!"; close; }
+	if (!getequipisenableref(.@s)) {
+		dispbottom getequipname(.@s)+" cannot be refined."; close; }
+	if (getequiprefinerycnt(.@s) >= 20 || (.@CleanEquip && getequiprefinerycnt(.@s))) {
+		dispbottom "+"+getequiprefinerycnt(.@s)+" "+getequipname(.@s)+" cannot be refined any further."; close; }
+	if (getarg(1)) message strcharinfo(0)," ~~ Guarantee Refine Ticket +"+getarg(0)+" ~~ ";
+	if(select("^0055FFRefine +"+getequiprefinerycnt(.@s)+" "+getequipname(.@s)+":^777777Cancel^000000")==2) close;
+	pcblockmove getcharid(3),1;
+	specialeffect2 348;
+	progressbar "",2;
+	if (!countitem(getarg(2))) {
+		dispbottom "Refine failed. Ticket not found."; close; }
+	for(set .@i,0; .@i<getarg(0); set .@i,.@i+1) {
+		if (getequiprefinerycnt(.@s) >= 20) break;
+		successrefitem .@s; }
+	delitem getarg(2),1;
+	pcblockmove getcharid(3),0;
+	close;
+}

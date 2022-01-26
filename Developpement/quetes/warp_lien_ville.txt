@@ -1,0 +1,367 @@
+caspen,268,277,0	warp	caps-grot	1,1,grottor_lb,128,51
+grottor_lb,131,51,0	warp	grot-casp	1,1,caspen,268,273
+
+grottor_lb,66,139,5	script	Warp Master::grotwarmas	552,{
+	set .@npcname$, "[Warp Master]";
+	mes .@npcname$;
+
+	if (LANGUAGE == 2)
+	{
+		mes "Hello, " + strcharinfo(0);
+		mes "I'm the Warp Master.";
+		mes "I'm the only one who knows where you can go from here.";
+		mes "The only sure thing is that you can go to Caspen by the warp you've entered.";
+		mes "Any other warp here is dependent of my volontee.";
+		next;
+		mes .@npcname$;
+		mes "So. Where do you wanna go?";
+		switch(select("To Thalys","To Mornanie","To Thiercellieux","To Melodya","To Hallow","To Crystallia"))
+		{
+			case 1:
+				set .@dest_map$, "thalys";
+				set .@price, 1000000;
+				set .@x, 254;
+				set .@y, 228;
+				break;
+			case 2:
+				set .@dest_map$, "mornanie";
+				set .@price, 1000000;
+				set .@x, 107;
+				set .@y, 77;
+				break;
+			case 3:
+				set .@dest_map$, "thier_cave";
+				set .@price, 5000000;
+				set .@x, 22;
+				set .@y, 67;
+				break;
+			case 4:
+				set .@dest_map$, "melodya";
+				set .@price, 10000000;
+				set .@x, 50;
+				set .@y, 2;
+				break;
+			case 5:
+				set .@dest_map$, "Hallow01";
+				set .@price, 10000000;
+				set .@x, 146;
+				set .@y, 61;
+				break;
+			case 6:
+				set .@dest_map$, "Crystilia";
+				set .@price, 20000000;
+				set .@x, 167;
+				set .@y, 107;
+				break;
+		}
+		mes "Allright. From now, you're in my power as long as you stay around here.";
+		mes "I'll warp you to the desired final destination if you pay me " + .@price + "z, and one Poring Coins.";
+		mes "You can also try to go there by you're own capacities, but I can't promise anything.";
+		mes "You can also be hurt, I must warn you!";
+		mes "But it'll be free...";
+		mes "Your choice...";
+		next;
+		switch(select("Pay the price","Try walking"))
+		{
+			case 1:
+				if (Zeny >= .@price && countitem(7539) >= 1)
+				{
+					mes "Thank you!";
+					delitem 7539, 1;
+					set Zeny, Zeny - .@price;
+					warp .@dest_map$, .@x, .@y;
+				}		
+				else
+				{
+					mes "You can't pay that...";
+					set COUNT_WARP_NEED, rand(0,10);
+					set BAD_LUCK, rand(0,5);
+					set COUNT_WARP, 0;
+					set MAP_X, .@x;
+					set MAP_Y, .@y;
+					set MAP_DEST, .@dest_map$;
+					enablenpc "grotwarp";
+					disablenpc "grotwarp5";
+				}
+				break;
+			case 2:
+				mes "Allright! Have fun then!";
+				set COUNT_WARP_NEED, rand(0,10);
+				set BAD_LUCK, rand(0,5);
+				set COUNT_WARP, 0;
+				set MAP_X, .@x;
+				set MAP_Y, .@y;
+				set MAP_DEST, .@dest_map$;
+				enablenpc "grotwarp";
+				disablenpc "grotwarp5";
+				break;
+		}
+	}
+	else if (LANGUAGE == 1)
+	{
+		mes "Bonjour, " + strcharinfo(0);
+		mes "Je suis le Warp Master.";
+		mes "Je suis le seul à savoir où tu peux aller à partir d'ici.";
+		mes "La seule chose de sûr, c'est que tu peux repartir d'où tu viens par le warp par lequel tu viens d'arriver.";
+		mes "Tout les autres warps sont dépendants de ma volontée.";
+		next;
+		mes .@npcname$;
+		mes "Donc. Ou veux-tu aller?";
+		switch(select("A Thalys","En Mornanie","A Thiercellieux","A Melodya","A Hallow","A Crystallia"))
+		{
+			case 1:
+				set .@dest_map$, "thalys";
+				set .@price, 1000000;
+				set .@x, 254;
+				set .@y, 228;
+				break;
+			case 2:
+				set .@dest_map$, "mornanie";
+				set .@price, 1000000;
+				set .@x, 32;
+				set .@y, 19;
+				break;
+			case 3:
+				set .@dest_map$, "thier_cave";
+				set .@price, 5000000;
+				set .@x, 106;
+				set .@y, 33;
+				break;
+			case 4:
+				set .@dest_map$, "melodya";
+				set .@price, 10000000;
+				set .@x, 185;
+				set .@y, 222;
+				break;
+			case 5:
+				set .@dest_map$, "Hallow01";
+				set .@price, 10000000;
+				set .@x, 146;
+				set .@y, 61;
+				break;
+			case 6:
+				set .@dest_map$, "Crystilia";
+				set .@price, 20000000;
+				set .@x, 50;
+				set .@y, 4;
+				break;
+		}
+		mes "Très bien! A partir de maintenant, tu es en mon pouvoir, et ce tant que tu seras dans cette zone.";
+		mes "Je t'envoie ou tu veux si tu payes " + .@price + "z, et une Poring Coins.";
+		mes "Tu peux aussi essayer d'y aller par tes propres moyens, mais je ne peux rien garantir.";
+		mes "Pas plus que ta sécurité!";
+		mes "Mais ce serait gratuit...";
+		mes "C'est ton choix...";
+		next;
+		switch(select("Payer le prix","Essayer a pied"))
+		{
+			case 1:
+				if (Zeny >= .@price && countitem(7539) >= 1)
+				{
+					mes "Parfait, merci bien!";
+					delitem 7539, 1;
+					set Zeny, Zeny - .@price;
+					warp .@dest_map$, .@x, .@y;
+				}		
+				else
+				{
+					mes "Tu n'as pas les moyens...";
+					set COUNT_WARP_NEED, rand(0,10);
+					set BAD_LUCK, rand(0,5);
+					set COUNT_WARP, 0;
+					set MAP_X, .@x;
+					set MAP_Y, .@y;
+					set MAP_DEST$, .@dest_map$;
+					enablenpc "grotwarp";
+					disablenpc "grotwarp5";
+				}
+				break;
+			case 2:
+				mes "Très bien. Amuse toi bien alors!";
+				set COUNT_WARP_NEED, rand(1,10);
+				set BAD_LUCK, rand(0,5);
+				set COUNT_WARP, 0;
+				set MAP_X, .@x;
+				set MAP_Y, .@y;
+				set MAP_DEST$, .@dest_map$;
+				enablenpc "grotwarp";
+				disablenpc "grotwarp5";
+				break;
+		}
+	}
+	close;
+
+OnInit:
+	setarray $idMvp[0],1038,1039,1046,1059,1086,1087,1112,1115,1147,1150,1157,1159,1190,1251,1252,1272,1312,1373,
+	                  1389,1399,1418,1492,1502,1511,1583,1623,1630,1646,1647,1648,1649,1650,1651,1658,1685,1688,
+				   1708,1719,1734,1751,1768,1779,1785,1802,1832,1871,1874,1885,1917,1980,2022,2068,2087,2131,
+				   2156,2165;
+
+	set $BlackList$, "1003,1006,1017,1021,1022,1027,1043,1075,1136,1137,1168," + 
+	    "1171,1172,1173,1181,1187,1210,1217,1218,1222,1223,1224,1225,1226,1227,1228," + 
+	    "1233,1284,1407,1411,1414,1495,1501,1900,1996,2000,2001,2002,2003,2004," + 
+	    "2005,2006,2007,2011,2012,2025,2028,2029,2030,2031,2032,2033,2034,2035," + 
+	    "2036,2037,2038,2039,2040,2041,2042,2043,2044,2045,2046,2047,2048,2049," + 
+	    "2050,2051,2052,2053,2054,2055,2056,2057,2058,2059,2060,2061,2062,2063," + 
+	    "2064,2065,2066,2067,2075,2076,2077,2078,2079,2080,2081,2083,2084,2085," + 
+	    "2086,2087,2088,2089,2090,2091,2092,2093,2094,2095,2096,2097,2098,2099," + 
+	    "2100,2101,2012,2103,2104,2105,2106,2107,2108,2109,2110,2111,2112,2113," + 
+	    "2114,2115,2116,2117,2118,2119,2120,2121,2123,2124,2125,1496,";
+	end;
+
+}
+
+
+grottor_lb,123,141,5	script	Warp::grotwarp	45,2,2,{
+	end;
+
+OnInit:
+	disablenpc strnpcinfo(3);
+	end;
+
+OnTouch:
+	dispbottom (COUNT_WARP+1) + "/" + COUNT_WARP_NEED;
+	if (COUNT_WARP_NEED > 0)
+	{
+		set .@rank_warp, rand(1,4);	
+		set COUNT_WARP, COUNT_WARP + 1;
+		if (COUNT_WARP < COUNT_WARP_NEED)
+		{
+			switch(.@rank_warp)
+			{
+				case 1:
+					set .@tmpx, 91;
+					set .@tmpy, 145;
+					break;
+				case 2:
+					set .@tmpx, 167;
+					set .@tmpy, 165;
+					break;
+				case 3:
+					set .@tmpx, 168;
+					set .@tmpy, 38;
+					break;
+				case 4:
+					set .@tmpx, 27;
+					set .@tmpy, 31;
+					break;
+			}
+			atcommand "@jump " + .@tmpx +" " + .@tmpy; 
+		}
+		else
+		{
+			atcommand "@jump 27 36";
+			set .@idPop, 2655;
+			disablenpc "grotwarp1";
+			disablenpc "grotwarp2";
+			disablenpc "grotwarp3";
+			disablenpc "grotwarp4";
+			getmapxy(.@mapname$, .@xmap, .@ymap, 0);
+			monster .@mapname$,.@xmap,.@ymap,strmobinfo(1,.@idPop),.@idPop,1,"grotwarp::OnFinalMobDead";
+		}
+		if (.@rank_warp == BAD_LUCK)
+		{
+			if (BAD_LUCK == 1)
+			{
+				// pop random mvp on player
+				set .@idPop, $idMvp[rand(0,getarraysize($idMvp))];
+				getmapxy(.@mapname$, .@xmap, .@ymap, 0);
+				monster .@mapname$,.@xmap,.@ymap,strmobinfo(1,.@idPop),.@idPop,1,"grotwarp::OnMobDead";
+				if (LANGUAGE == 2)
+					dispbottom "You have to kill this monster to continue.";
+				else if (LANGUAGE == 1)
+					dispbottom "Vous devez tuer ce monstre pour continuer.";
+				disablenpc "grotwarp1";
+				disablenpc "grotwarp2";
+				disablenpc "grotwarp3";
+				disablenpc "grotwarp4";
+				disablenpc "grotwarp";
+				set MOB_SPAWN, .@idPop;
+				set COUNT_WARP, COUNT_WARP - 1;
+			}
+			else if (BAD_LUCK == 2)
+			{
+				// pop random monster on player
+				set .@idPop, rand(1001,2380);
+				while(compare($BlackList$,""+.@idPop) == 1)
+				{
+					set .@idPop, rand(0,getarraysize(.idAllMob));
+				}
+				getmapxy(.@mapname$, .@xmap, .@ymap, 0);
+				monster .@mapname$,.@xmap,.@ymap,strmobinfo(1,.@idPop),.@idPop,1,"grotwarp::OnMobDead";
+				if (LANGUAGE == 2)
+					dispbottom "You have to kill this monster to continue.";
+				else if (LANGUAGE == 1)
+					dispbottom "Vous devez tuer ce monstre pour continuer.";
+				disablenpc "grotwarp1";
+				disablenpc "grotwarp2";
+				disablenpc "grotwarp3";
+				disablenpc "grotwarp4";
+				disablenpc "grotwarp";
+				set MOB_SPAWN, .@idPop;
+				set COUNT_WARP, COUNT_WARP - 1;
+			}
+			else if (BAD_LUCK == 3)
+			{
+				//reinit warp count and bad luck value with higher max values
+				set COUNT_WARP, 0;
+				set COUNT_WARP_NEED, rand(0,15);
+				set BAD_LUCK, rand(0,5);
+			}
+			else if (BAD_LUCK == 4)
+			{
+				// warp player back to last load map
+				atcommand "@load";
+				if (LANGUAGE == 2)
+					dispbottom "The Warp Master send you back to your save point...";
+				else if (LANGUAGE == 1)
+					dispbottom "Le Warp Master vous a renvoyé à votre point de départ...";
+			}
+		}
+	}
+	end;
+
+OnPCLogoutEvent:
+	atcommand "@load";
+	killmonster "grottor_lb",strnpcinfo(3)+"::OnMobDead";
+	end;
+
+OnPCDieEvent:
+	if (strcharinfo(3) == "grottor_lb")
+	{
+		killmonster "grottor_lb",strnpcinfo(3)+"::OnMobDead";
+	}	
+	end;
+
+OnMobDead:
+	enablenpc "grotwarp1";
+	enablenpc "grotwarp2";
+	enablenpc "grotwarp3";
+	enablenpc "grotwarp4";
+	end;
+
+OnFinalMobDead:
+	enablenpc "grotwarp1";
+	enablenpc "grotwarp2";
+	enablenpc "grotwarp3";
+	enablenpc "grotwarp4";
+	enablenpc "grotwarp5";
+	end;
+}
+
+grottor_lb,165,53,0	duplicate(grotwarp)	Warp::grotwarp1	45,2,2
+grottor_lb,28,70,0	duplicate(grotwarp)	Warp::grotwarp2	45,2,2
+grottor_lb,164,142,0	duplicate(grotwarp)	Warp::grotwarp3	45,2,2
+grottor_lb,27,45,0	duplicate(grotwarp)	Warp::grotwarp4	45,2,2
+
+grottor_lb,26,16,5	script	Warp::grotwarp5	45,2,2,{
+	end;
+
+OnTouch:
+	if (COUNT_WARP_NEED == COUNT_WARP && COUNT_WARP != 0)
+	{
+		warp MAP_DEST$, MAP_X, MAP_Y;
+	}
+	disablenpc "grotwarp5";
+	end;
+}
