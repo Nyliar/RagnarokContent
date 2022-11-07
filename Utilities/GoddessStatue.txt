@@ -414,7 +414,7 @@ OnChangeJob:
 		mes "You can now become a Gangsi.";
 		mes "Be doing so, you'll be reset to 1/1 once more. You won't be able to use your skills from now.";
 		mes "But you'll be able to use any skills, as long as you're equipped with the right weapon.";
-		mes "Be careful. Training will be more hard than ever!";
+		mes "Be careful. Training will be more difficult than ever!";
 		if(select("Ok","Cancel") == 1)
 		{
 			specialeffect2 EF_ANGEL2;
