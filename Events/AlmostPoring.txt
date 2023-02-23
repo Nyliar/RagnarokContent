@@ -1,8 +1,5 @@
 prontera,163,288,6	script	Almost Poring::almopo	909,{
-	set .eventMap$, "poring_w01";
-	
-	set .@npcname$, "[Almost Poring]";
-	mes .@npcname$;
+	mes .npcname$;
 	
 	if ($@StartAlmostPoring == 1) {
 		mes " ";
@@ -11,7 +8,7 @@ prontera,163,288,6	script	Almost Poring::almopo	909,{
 		switch( select ("~ Yes:~ No:~ Rules") )
 		{
 			case 1:
-				mes .@npcname$;
+				mes .npcname$;
 				mes " ";
 				mes "Allright, let's go !";
 				close2;
@@ -20,13 +17,13 @@ prontera,163,288,6	script	Almost Poring::almopo	909,{
 				end;
 				
 			case 2:
-				mes .@npcname$;
+				mes .npcname$;
 				mes " ";
 				mes "Farewell then.";
 				close;
 				
 			case 3:
-				mes .@npcname$;
+				mes .npcname$;
 				mes " ";
 				mes "The one who find the Almost Poring wins.";
 				mes "Be careful, errors can be deadly !";
@@ -35,7 +32,6 @@ prontera,163,288,6	script	Almost Poring::almopo	909,{
 		}
 	}
 	else {
-		mes .@npcname$;
 		mes "Sorry the event isn't active now...";
 		close;
 	}
@@ -109,13 +105,13 @@ OnPopoNameDead:
 			
 	if (.rewardMode == 1)
 	{
-		set .@id,rand( getarraysize(.@Prix) );
-		getitem .@Prix[.@id],1; // Prix reçus
+		set .@id,rand( getarraysize(.reward) );
+		getitem .reward[.@id],1;
 	}
 	else
 	{
 		logmes "[AlmostPoring] " + strcharinfo(0) + " wins the event and obtains " + .rewardAmt + " Currency Points.";
-		callfunc ("AddPoints",getcharid(3),.rewardAmt);
+		// callfunc ("AddPoints",getcharid(3),.rewardAmt);
 	}
 
 	goto OnEventEnd;
@@ -154,6 +150,7 @@ OnInit:
 	7145;	// T-Shirt
 	set .rewardAmt, 250;
 	set .eventMap$, "poring_w01";
+	set .npcname$, "[Almost Poring]";
 	setarray $eventalpUsersAId[0],0;
 	end;
 }
